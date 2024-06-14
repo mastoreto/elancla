@@ -1,0 +1,9 @@
+---
+import {Icon} from 'astro-icon/components';
+import Nav from './Nav.astro';
+---
+<header class="fixed flex justify-between md:justify-center px-5 md:px-0 border-b-[0.1rem] border-primary-500 h-[5rem] bg-white w-screen">
+    <img src="/images/anclarojo.png" alt="logo" class="w-[3rem] h-[3rem] mt-[1rem] mb-[1rem] md:hidden" />
+    <Icon name="mdi:menu" id="menu-toggle" class="w-[3rem] h-[3rem] mt-[1rem] mb-[1rem] fill-current text-primary-500 md:hidden" />
+    <Nav />
+</header>

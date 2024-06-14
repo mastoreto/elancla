@@ -1,0 +1,60 @@
+---
+import { Icon } from 'astro-icon/components';
+
+const year = new Date().getFullYear();
+---
+<footer class="flex flex-col bg-primary-500 md:h-[30rem] w-screen font-montserrat">
+    <div class="flex flex-col md:flex-row w-full md:h-4/6 px-10 py-10">
+        <div class="border-b-[0.1rem] md:border-b-[0rem] md:border-r-[0.1rem] border-solid border-white py-10 md:py-0 pl-10 md:pl-16">
+            <p class="text-white font-bold text-3xl mb-3">El Ancla</p>
+            <ul class="text-white h-[6rem] flex flex-col justify-between text-sm pr-5">
+                <li class="text-white">Misión, Visión y Valores</li>
+                <li class="text-white">Historia</li>
+                <li class="text-white">¿Qué creemos?</li>
+            </ul>
+        </div>
+        <div class="border-b-[0.1rem] md:border-b-[0rem] md:border-r-[0.1rem] border-solid border-white py-10 md:py-0 px-8">
+            <p class="text-white font-bold text-3xl mb-3">Ministerios</p>
+           <div class="flex flex-row">
+            <ul class="text-white h-[10rem] flex flex-col justify-between mr-5">
+                <li class="text-white">Predicación</li>
+                <li class="text-white">Enseñanza</li>
+                <li class="text-white">Misiones</li>
+                <li class="text-white">Alabanza</li>
+                <li class="text-white">Oración</li>
+                <li class="text-white">Espacio Mujer</li>
+            </ul>
+            <ul class="text-white h-[10rem] flex flex-col justify-between">
+                <li class="text-white">Hombres</li>
+                <li class="text-white">Jovenés</li>
+                <li class="text-white">Adolescentes</li>
+                <li class="text-white">Servicio</li>
+                <li class="text-white">Multimedia</li>
+            </ul>
+           </div>
+        </div>
+        <div class="py-10 md:py-0 px-10">
+            <p class="text-white font-bold text-3xl mb-3">Redes</p>
+            <ul class="text-white font-bold h-[6.5rem] flex flex-col justify-between">
+                <li class="flex flex-row text-white"><Icon name="mdi:youtube" class="text-2xl" /> @iglesiaelanclauy</li>
+                <li class="flex flex-row text-white"><Icon name="mdi:instagram" class="text-2xl" /> @iglesiaelancla</li>
+                <li class="flex flex-row text-white"><Icon name="mdi:facebook" class="text-2xl" /> @iglesiabautistaelancla</li>
+            </ul>
+        </div>
+    </div>
+    <div class="w-full h-2/6 px-10">
+        <div class="flex flex-col md:flex-row border-t-[0.1rem] border-white border-solid w-full h-full">
+            <div class="flex flex-row items-center w-full md:w-2/5">
+                <img src="images/anclablanco.png" alt="Logo Ancla Blanco" width="150">
+                <div>
+                    <p class="text-sm md:text-md text-white text-left">IGLESIA BAUTISTA</p>
+                    <p class="font-bold text-2xl md:text-4xl text-white text-left">EL ANCLA</p>
+                </div>
+            </div>
+            <div class="md:w-3/5 text-white h-full flex flex-col justify-center content-center">
+                <p class="text-[0.8rem] text-center md:text-right my-2 md:my-0 md:text-md">Av Dr Luis Alberto de Herrera 3101, esq Juan Arrieta | Montevideo, Uruguay</p>
+                <p class="text-[0.8rem] text-center md:text-right my-2 md:my-0 md:text-md">Todos los derechos reservados | {year}</p>
+            </div>
+        </div>
+    </div>
+</footer>
