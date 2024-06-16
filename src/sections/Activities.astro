@@ -1,4 +1,6 @@
 ---
+import { Icon } from 'astro-icon/components';
+
 interface Props {
     size: string;
 }
@@ -6,5 +8,55 @@ interface Props {
 const { size } = Astro.props;
 ---
 <section class=`${size}` id="actividades">
-aaaa
+    <h2 class="text-montserrat text-4xl md:text-5xl font-bold my-10 mx-8 md:mx-24 md:my-10">Actividades</h2>
+    <p class="text-montserrat text-wrap text-sm w-full md:w-4/6 my-5 mx-8 md:mx-24 md:my-10">
+        Una iglesia viva es una iglesia activa que se edifica y sirve a su comunidad. Aquí, la fe se traduce en acciones concretas, 
+        creando un ambiente de amor, apoyo y crecimiento espiritual. A través de obras de caridad y eventos comunitarios, 
+        nos convertimos en un pilar de esperanza y apoyo, fortaleciendo tanto a la comunidad como a nuestros miembros.
+    </p>
+    <div class="bg-gray-300 w-full h-full px-5 md:px-0 pb-[15rem] pt-[5rem] flex flex-col">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex justify-center md:justify-end ">
+                <div class="p-4 border rounded-md flex items-center bg-white pr-[5rem]">
+                    <Icon name="fa6-solid:book-bible" class="text-[5rem] md:text-[6rem] text-primary-500" />
+                    <div class="ml-5 w-full">
+                        <h3 class="font-bold text-xl md:text-2xl">Escuela Biblica</h3>
+                        <p>Domingos</p>
+                        <p>10:00hs</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-center md:justify-start">
+                <div class="p-4 border rounded-md flex items-center bg-white">
+                    <Icon name="fa6-solid:cross" class="text-[5rem] md:text-[6rem] text-primary-500" />
+                    <div class="ml-5 w-full">
+                        <h3 class="font-bold text-xl md:text-2xl">Culto de celebración</h3>
+                        <p>Domingos</p>
+                        <p>11:15hs</p>
+                    </div>
+                </div>
+            </div>
+            <div class=" md:col-span-2 flex justify-center">
+                <div class="p-4 border rounded-md flex items-center  bg-white">
+                    <Icon name="fa6-solid:person-praying" class="text-[5rem] md:text-[6rem] text-primary-500" />
+                    <div class="ml-5 w-full">
+                        <h3 class="font-bold text-xl md:text-2xl">Reunión de oración</h3>
+                        <div class="flex flex-row">
+                            <div class="border-r pr-4 border-gray-300">
+                                <p>Miércoles</p>
+                                <p>19:00hs</p>
+                            </div>
+                            <div class="pl-4">
+                                <p>1° y 3° Presencial</p>
+                                <p>2° y 4° Online</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <a href="/actividades" class="w-1/2 md:w-1/5 mx-auto mt-10 mb-10 bg-primary-500 text-white text-center py-2 rounded-md text-2xl font-bold font-montserrat">Calendario</a>
+    </div>
 </section>
