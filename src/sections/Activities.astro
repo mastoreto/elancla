@@ -1,0 +1,58 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+    size: string;
+}
+
+const { size } = Astro.props;
+---
+<section class={`${size} mt-[10rem]`} id="actividades">
+    <h2 class="text-montserrat text-4xl md:text-[5rem] font-bold my-5 mx-8 md:mx-24">Actividades</h2>
+    <p class="text-montserrat text-wrap text-xl w-full md:w-[70rem] my-[5rem] mx-8 md:mx-24">
+        Una iglesia viva es una iglesia activa que se edifica y sirve a su comunidad. Aquí, la fe se traduce en acciones concretas, 
+        creando un ambiente de amor, apoyo y crecimiento espiritual. A través de obras de caridad y eventos comunitarios, 
+        nos convertimos en un pilar de esperanza y apoyo, fortaleciendo tanto a la comunidad como a nuestros miembros.
+    </p>
+    <div class="bg-gray-100 w-full h-full px-5 md:px-0 py-10 flex flex-col items-center">
+        <!-- Ajustamos la grilla para la distribución deseada -->
+        <div class="grid grid-rows-2 grid-cols-2 gap-8 md:w-4/5" style="grid-template-areas: 'item1 item2' 'item3 item3';">
+            <!-- Tarjeta 1 -->
+            <div class="flex items-center p-5 font-montserrat justify-end" style="grid-area: item1;">
+                <div class="p-4 rounded-md flex items-center justify-center">
+                    <Icon name="fa6-solid:book-bible" class="text-primary-500 text-[2rem] md:text-[5rem]" />
+                </div>
+                <div class="ml-4">
+                    <h3 class="font-bold text-lg md:text-xl text-bold">Escuela Biblica</h3>
+                    <p>Domingos</p>
+                    <p>10:00hs</p>
+                </div>
+            </div>
+            <!-- Tarjeta 2 -->
+            <div class="flex items-center p-5 font-montserrat justify-start" style="grid-area: item2;">
+                <div class="p-4 rounded-md flex items-center justify-center">
+                    <Icon name="fa6-solid:cross" class="text-primary-500 text-[2rem] md:text-[5rem]" />
+                </div>
+                <div class="ml-4">
+                    <h3 class="font-bold text-lg md:text-xl text-bold">Culto de celebración</h3>
+                    <p>Domingos</p>
+                    <p>11:15hs</p>
+                </div>
+            </div>
+            <!-- Tarjeta 3 -->
+            <div class="flex items-center p-5 font-montserrat justify-center" style="grid-area: item3;">
+                <div class="p-4 rounded-md flex items-center justify-center">
+                    <Icon name="fa6-solid:person-praying" class="text-primary-500 text-[2rem] md:text-[5rem]" />
+                </div>
+                <div class="ml-4">
+                    <h3 class="font-bold text-lg md:text-xl text-bold">Reunión de oración</h3>
+                    <p>Miércoles</p>
+                    <p>1° y 3° Presencial</p>
+                    <p>19:00hs</p>
+                </div>
+            </div>
+        </div>
+        
+        <a href="/actividades" class="w-3/4 md:w-1/4 mt-10 bg-primary-500 text-white text-center py-3 rounded-md text-xl font-bold font-montserrat">Calendario</a>
+    </div>
+</section>
