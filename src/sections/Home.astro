@@ -1,0 +1,27 @@
+---
+import { Icon } from 'astro-icon/components';
+interface Props{
+    size: string;
+}
+
+const {size} = Astro.props;
+---
+<section class=`${size} flex flex-col md:flex-row relative` id="inicio">
+    <div class="absolute bg-white p-5 rounded-xl top-[16rem] sm:top-[20rem] md:top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+        <img src="/images/anclarojo.png" alt="logo" width="99" height="127" class="px-4 py-1"/>
+    </div>
+    <div class="w-full md:w-1/2 h-full flex flex-col justify-center items-center">
+        <ul class="flex flex-row text-primary-500 font-bold font-montserrat">
+            <li class="text-sm md:flex flex-row justify-center items-center mx-2 hidden"><Icon name="mdi:google-maps" class="text-md" /> Av Dr Luis Alberto de Herrera 3101</li>
+            <li class="text-sm flex flex-row justify-center items-center"><Icon name="mdi:instagram" class="text-md" /> @iglesiaelancla</li>
+        </ul>
+        <h1 class="font-montserrat text-[3rem] sm:text-[4rem] md:text-[4rem] font-bold">Bienvenidos</h1>
+        <div>
+            <p class="font-montserrat text-xl text-primary-500 font-bold">Iglesia Bautista El Ancla</p>
+        </div>
+    </div>
+    <div class="w-[21-5rem] h-[100rem] sm:h-[150rem] m-5 rounded-xl md:rounded-none md:m-0 xl:w-1/2 xl:h-full bg-home-banner bg-cover bg-center grayscale"></div>
+    <ul class="flex flex-row text-primary-500 font-bold font-montserrat mx-auto mb-5 mt-2">
+        <li class="text-sm flex flex-row justify-center items-center mx-2 md:hidden"><Icon name="mdi:google-maps" class="text-md" /> Av Dr Luis Alberto de Herrera 3101</li>
+    </ul>
+</section>

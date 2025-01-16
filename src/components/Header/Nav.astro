@@ -1,0 +1,14 @@
+---
+import { Icon } from "astro-icon/components";
+---
+<nav id="menu" class="fixed hidden top-0 left-0 md:static md:block w-screen h-screen md:h-full md:w-full bg-primary-500 md:bg-white">
+    <Icon id="menu-close" name="mdi:close-thick" class="md:hidden absolute top-4 right-4 text-white text-4xl" />
+    <ul class="flex flex-col md:flex-row justify-between h-full items-center py-[5rem] md:py-0 md:mx-[20rem] font-montserrat font-bold">
+        <li class="text-white md:text-black"><a href="#inicio">INICIO</a></li>
+        <li class="text-white md:text-black"><a href="#elancla">EL ANCLA</a></li>
+        <li class="text-white md:text-black"><a href="#actividades">ACTIVIDADES</a></li>
+        <li class="text-white md:text-black"><a href="#sermones">SERMONES</a></li>
+        <li class="text-white md:text-black"><a href="#ministerios">MINISTERIOS</a></li>
+        <li class="bg-primary-500 px-6 py-2 text-white rounded-md"><a href="#visitanos">Visítanos</a></li>
+    </ul>
+  </nav>

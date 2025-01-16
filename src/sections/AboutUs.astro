@@ -1,0 +1,19 @@
+---
+    interface Props {
+    size: string;
+    }
+    const { size } = Astro.props;
+---
+<section class=`${size} flex flex-col px-[2rem] md:pt-28 md:px-[15rem]` id="elancla">
+    <h2 class="text-3xl md:text-[3.750rem] text-red-500 font-bold font-montserrat mt-10 mb-5 md:my-10">¡Gracias por querer conocernos! </h2>
+    <p class="font-montserrat 2xl:text-[1.875rem] my-5 md:text-xl text-center md:text-left md:w-4/5">
+        Conocer una iglesia es un gran desafió en estos tiempos,
+        esperamos que con la información que encuentres aquí,
+        puedas tener un mayor panorama de quienes somos y lo
+        que creemos. Eres bienvenido a visitarnos cuando quieras. 
+    </p>
+    <div class="bg-aboutus relative bg-cover bg-center rounded-[3rem] my-5 h-[100rem]">
+        <div class="absolute h-full w-full backdrop-blur border-[0.1rem] border-solid border-primary-500 bg-primary-500 bg-opacity-50 rounded-[3rem] flex items-center justify-center"></div>
+        <p class="font-montserrat text-white text-[3.125rem] font-bold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">Nuestra Historia</p>
+    </div>
+</section>
