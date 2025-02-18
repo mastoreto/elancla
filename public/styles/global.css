@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'FuturaNo2D';
+    src: url('/assets/fonts/futura-no2-d-bold.woff2') format('woff2'),
+         url('/assets/fonts/futura-no2-d-bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Barastika';
+    src: url('/assets/fonts/Barastika-Black.woff2') format('woff2'),
+         url('/assets/fonts/Barastika-Black.woff') format('woff');
+    font-weight: medium;
+    font-style: normal;
+}

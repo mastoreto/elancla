@@ -20,6 +20,9 @@ export default {
 			},
 			fontFamily: {
 				montserrat: ['Montserrat', 'sans-serif'],
+				barastika: ['Barastika', 'sans-serif'],
+				"futura-bold" : ['FuturaNo2D', 'open-type'],
+
 			},
 			backgroundImage: {
 				'home-banner': "url('/images/homebanner.jpeg')",
