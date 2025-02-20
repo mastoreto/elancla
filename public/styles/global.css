@@ -12,8 +12,8 @@
 
 @font-face {
     font-family: 'Barastika';
-    src: url('/assets/fonts/Barastika-Black.woff2') format('woff2'),
-         url('/assets/fonts/Barastika-Black.woff') format('woff');
+    src: url('/assets/fonts/Brastika-Black.woff2') format('woff2'),
+         url('/assets/fonts/Brastika-Black.woff') format('woff');
     font-weight: medium;
     font-style: normal;
 }

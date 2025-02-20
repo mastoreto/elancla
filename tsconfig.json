@@ -1,9 +1,16 @@
 {
   "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@*": ["./src/*"]
-    }
+      "@elancla": ["./src/*"]
+    },
+    "plugins": [
+      {
+        "name": "@astrojs/ts-plugin"
+      }
+    ],
   },
+  "exclude": ["dist"]
 }

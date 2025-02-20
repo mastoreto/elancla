@@ -1,35 +1,53 @@
 ---
-import { Icon } from 'astro-icon/components';
+import Card from '../components/Card.astro';
+import cn from '../utils/cn.ts';
+
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
+const classes = {
+    section: cn(
+        'flex flex-col mt-[25rem]',
+    ),
+    title: cn(
+        'font-barastika text-primary-500 text-4xl',
+        'md:text-[5rem] font-bold my-5 mx-8 md:mx-24'
+    )
+}
+
 
 const {size} = Astro.props;
 ---
-<section class={`${size}`} id="sermones">
-    <h2 class="text-montserrat text-primary-500 text-4xl md:text-[5rem] font-bold my-5 mx-8 md:mx-24">Sermones</h2>
-    <div class="py-5 px-5">
-        <div class="border-[0.1rem] border-primary-500 border-solid w-[21.688rem] h-[28.625rem] rounded-md flex flex-col">
-            <div class="h-1/3">
-
-            </div>
-            <div class="h-2/3 flex flex-col text-sm font-montserrat justify-between px-3 text-primary-500">
-                <p class="text-right">Fecha:  21 de Mayo 2024</p>
-                <div>
-                    <h3 class="font-bold">Serie: Hebreos</h3>
-                    <p>Expositor: Pr. Juan Olivera</p>
-                </div>
-                <a
-                    href="#"
-                    target="_blank"
-                    target-rel="noopener noreferrer"
-                    class="border-[0.1rem] border-primary-500 border-solid text-primary-500 rounded-xl py-1 mt-2 w-[10rem] text-center px-5 "
-                >
-                   <span class="flex flex-row">
-                    Ver Ahora
-                    <Icon name="fa-brands:youtube" class="text-primary-500 text-[1.5rem] ml-2" />
-                   </span>
-                </a>
-            </div>
-
+<section class={`${size} ${classes.section}`} id="sermones">
+    <h2 class={classes.title}>Sermones</h2>
+    <div class="swiper">
+        <div class="swiper-wrapper">
+            <Card swiper="swipper-slide"/>
+            <Card swiper="swipper-slide"/>
+            <Card swiper="swipper-slide"/>
+            <Card swiper="swipper-slide"/>
+            <Card swiper="swipper-slide"/>
         </div>
+        <div class="swiper-scrollbar"></div>
     </div>
 </section>
-
+<style>
+    .swiper {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<script type="module" is:inline>
+import Swiper from '';
+const swiper = new Swiper('.swiper', {
+      // Optional parameters
+      direction: 'vertical',
+      loop: true,
+    
+      // And if we need scrollbar
+      scrollbar: {
+        el: '.swiper-scrollbar',
+      },
+    });
+</script>
