@@ -5,7 +5,7 @@ const classes = {
     card: cn(
         'w-[21.688rem] h-[28.625rem]',
         'rounded-md flex flex-col',
-        'shadow-xl mx-5'
+        'shadow-xl'
     ),
     cardBody: cn(
         'h-3/5 flex flex-col text-sm',
@@ -18,9 +18,8 @@ const classes = {
     ),
 }
 
-const { swipper } = Astro.props;
 ---
-<div class={`${classes.card} ${swipper}`}>
+<div class={`${classes.card}`}>
     <div class="h-2/5">
         <img
             src="/images/miniaturas.png"
