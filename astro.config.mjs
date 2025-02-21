@@ -7,5 +7,6 @@ import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind(), sitemap(), icon()],
+  output: "static",
+  integrations: [tailwind(), sitemap(), icon()]
 });
