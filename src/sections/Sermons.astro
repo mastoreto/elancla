@@ -1,0 +1,85 @@
+---
+import Card from '../components/Card.astro';
+import cn from '../utils/cn.ts';
+
+const classes = {
+    section: cn(
+        'flex flex-col mt-[25rem]',
+    ),
+    title: cn(
+        'font-barastika text-primary-500 text-4xl',
+        'md:text-[5rem] font-bold my-5 mx-8 md:mx-24'
+    )
+}
+
+
+const {size} = Astro.props;
+---
+<section class={`${size} ${classes.section}`} id="sermones">
+    <h2 class={classes.title}>Sermones</h2>
+    <div class="swiper sermon-swiper">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <Card/>
+            </div>
+            <div class="swiper-slide">
+                <Card/>
+            </div>
+  
+            <div class="swiper-slide">
+                <Card/>
+            </div>
+  
+            <div class="swiper-slide">
+                <Card/>
+            </div>
+  
+            <div class="swiper-slide">
+                <Card/>
+            </div>
+  
+            <div class="swiper-slide">
+                <Card/>
+            </div>
+            <div class="swiper-slide">
+                <Card/>
+            </div>
+            <div class="swiper-slide">
+                <Card/>
+            </div>
+            <div class="swiper-slide">
+                <Card/>
+            </div>
+  
+  
+        </div>
+        <div class="swiper-scrollbar"></div>
+    </div>
+</section>
+<style>
+    .swiper {
+      width: 100%;
+      height: 100%;
+      padding: 0 '1rem' 0 '1rem';
+    }
+
+  
+</style>
+<script>
+import Swiper from 'swiper/bundle';
+import 'swiper/css/bundle';
+
+
+   const swiper = new Swiper('.sermon-swiper', {
+      direction: 'horizontal',
+      slidesPerView: 4,
+      spaceBetween: 5,
+      autoplay: {
+        delay: 7500,
+      },
+      scrollbar: {
+        el: ".swiper-scrollbar",
+        hide: false,
+      },
+    });
+</script>

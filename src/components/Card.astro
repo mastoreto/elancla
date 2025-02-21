@@ -1,0 +1,52 @@
+---
+import cn from '../utils/cn.ts';
+
+const classes = {
+    card: cn(
+        'w-[21.688rem] h-[28.625rem]',
+        'rounded-md flex flex-col',
+        'shadow-xl'
+    ),
+    cardBody: cn(
+        'h-3/5 flex flex-col text-sm',
+        'font-montserrat justify-between px-3 py-3'
+    ),
+    link: cn(
+        'bg-primary-500 font-montserrat',    
+        'text-white text-xl font-bold rounded-xl py-2 mt-2 w-[10rem]',
+        'text-center px-5 w-full mb-2 mx-auto'
+    ),
+}
+
+---
+<div class={`${classes.card}`}>
+    <div class="h-2/5">
+        <img
+            src="/images/miniaturas.png"
+            alt="Sermon"
+            class="w-full h-full object-cover rounded-t-md"
+        />
+    </div>
+    <div class={classes.cardBody}>
+        <p class="text-right font-montserrat text-sm">21 de Mayo 2024</p>
+        <div>
+            <div class="mb-3">
+                <h3 class="font-montserrat">Serie</h3>
+                <span class="font-barastika text-2xl">Hebreos</span>
+            </div>
+            <div class="font-montserrat">
+                <p class="text-md">Expositor</p>
+                <p class="font-barastika font-bold text-2xl">Pr. Juan Olivera</p>
+            </div>
+        </div>
+        <a
+            href="#"
+            target="_blank"
+            target-rel="noopener noreferrer"
+            class={classes.link}
+        >
+            Ver Ahora
+        </a>
+    </div>
+
+</div>
