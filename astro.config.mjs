@@ -1,12 +1,12 @@
 import { defineConfig } from 'astro/config';
 import path from 'path';
-import tailwind from "@astrojs/tailwind";
-import sitemap from "@astrojs/sitemap";
+import tailwind from '@astrojs/tailwind';
+import sitemap from '@astrojs/sitemap';
 
-import icon from "astro-icon";
+import icon from 'astro-icon';
 
 // https://astro.build/config
 export default defineConfig({
-  output: "static",
-  integrations: [tailwind(), sitemap(), icon()]
+  output: 'static',
+  integrations: [tailwind(), sitemap(), icon()],
 });

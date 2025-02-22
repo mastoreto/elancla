@@ -7,27 +7,30 @@ import Activities from '../sections/Activities.astro';
 import Sermons from '../sections/Sermons.astro';
 
 const classes = {
-	decoratorOne: cn(
-		'w-[30rem]',
-		'absolute',
-		'top-[-15rem]',
-		'right-[-10rem]',
-		'transform rotate-[160deg]',
-		'z-10',
-	),
-	decoratorTwo: cn(
-		'w-[30rem]',
-		'absolute',
-		'bottom-[-10rem]',
-		'left-[-13rem]',
-	),
-}
+  decoratorOne: cn(
+    'w-[30rem]',
+    'absolute',
+    'top-[-15rem]',
+    'right-[-10rem]',
+    'transform rotate-[160deg]',
+    'z-10'
+  ),
+  decoratorTwo: cn('w-[30rem]', 'absolute', 'bottom-[-10rem]', 'left-[-13rem]'),
+};
 ---
 
 <Layout title="Iglesia Bautista El Ancla">
-	<img src="/images/decorators.svg" alt="Decorators" class={classes.decoratorOne} />
-	<Home size="w-screen h-screen" />
-	<img src="/images/decorators.svg" alt="Decorators" class={classes.decoratorTwo} />
-	<AboutUs size="w-screen h-screen" />
-	<Activities size="w-screen h-screen" />
+  <img
+    src="/images/decorators.svg"
+    alt="Decorators"
+    class={classes.decoratorOne}
+  />
+  <Home size="w-screen h-screen" />
+  <img
+    src="/images/decorators.svg"
+    alt="Decorators"
+    class={classes.decoratorTwo}
+  />
+  <AboutUs size="w-screen h-screen" />
+  <Activities size="w-screen h-screen" />
 </Layout>

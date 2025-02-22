@@ -8,9 +8,7 @@
         "name": "@astrojs/ts-plugin"
       }
     ],
-    "types": [
-      "swiper/types"
-    ],
+    "types": ["swiper/types"],
     "allowSyntheticDefaultImports": true
   },
   "exclude": ["dist"]

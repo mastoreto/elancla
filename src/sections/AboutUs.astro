@@ -1,97 +1,91 @@
 ---
-import cn from "../utils/cn.ts";
-    interface Props {
-    size: string;
-    }
+import cn from '../utils/cn.ts';
+interface Props {
+  size: string;
+}
 
-    const classes = {
-        section: cn(
-            'flex',
-            'flex-row',
-            'px-[2rem]',
-            'md:pt-28',
-            'md:px-[5rem]'
-        ),
-        title: cn(
-            'w-auto',
-            'h-auto',
-            'text-3xl',
-            'leading-sm',
-            'md:text-6xl',
-            'text-red-500',
-            'font-bold', 
-            'font-futura-bold',
-            'mt-10', 
-            'mb-5', 
-            'md:my-10',
-           
-        ),
-        overlay: cn(
-            'w-[21-5rem]',
-            'h-[100rem]', 
-            'sm:h-[150rem]', 
-            'm-5', 
-            'md:m-0', 
-            'xl:w-full', 
-            'xl:h-full',
-            'rounded-xl', 
-            'bg-home-banner', 
-            'bg-cover', 
-            'bg-center', 
-            'grayscale'
-        ),
-        text: cn(
-            'font-boston-angel',
-            'text-[1.5rem]',
-            'my-5',
-            'md:text-xl',
-            'md:text-wrap',
-            'md:w-4/5',
-            'xl:text-[1.5rem]',
-        ),
-        description: cn(
-            'w-full',
-            'h-full',
-            'flex',
-            'flex-col',
-            'justify-center',
-            'items-center',
-            'md:w-1/2',
-            'md:justify-center',
-            'md:items-start',
-            'md:pl-10',
-            'md:pr-5',
-            'xl:pl-20',
-            'xl:pr-10'
-        ),
-        image: cn(
-            'w-full',
-            'h-full',
-            'flex',
-            'flex-col',
-            'justify-center',
-            'items-center',
-            'md:w-1/2',
-            'md:justify-end',
-            'md:items-end',
-            'md:pr-10',
-            'xl:pr-20',
-        ),
-    }
+const classes = {
+  section: cn('flex', 'flex-row', 'px-[2rem]', 'md:pt-28', 'md:px-[5rem]'),
+  title: cn(
+    'w-auto',
+    'h-auto',
+    'text-3xl',
+    'leading-sm',
+    'md:text-6xl',
+    'text-red-500',
+    'font-bold',
+    'font-futura-bold',
+    'mt-10',
+    'mb-5',
+    'md:my-10'
+  ),
+  overlay: cn(
+    'w-[21-5rem]',
+    'h-[100rem]',
+    'sm:h-[150rem]',
+    'm-5',
+    'md:m-0',
+    'xl:w-full',
+    'xl:h-full',
+    'rounded-xl',
+    'bg-home-banner',
+    'bg-cover',
+    'bg-center',
+    'grayscale'
+  ),
+  text: cn(
+    'font-boston-angel',
+    'text-[1.5rem]',
+    'my-5',
+    'md:text-xl',
+    'md:text-wrap',
+    'md:w-4/5',
+    'xl:text-[1.5rem]'
+  ),
+  description: cn(
+    'w-full',
+    'h-full',
+    'flex',
+    'flex-col',
+    'justify-center',
+    'items-center',
+    'md:w-1/2',
+    'md:justify-center',
+    'md:items-start',
+    'md:pl-10',
+    'md:pr-5',
+    'xl:pl-20',
+    'xl:pr-10'
+  ),
+  image: cn(
+    'w-full',
+    'h-full',
+    'flex',
+    'flex-col',
+    'justify-center',
+    'items-center',
+    'md:w-1/2',
+    'md:justify-end',
+    'md:items-end',
+    'md:pr-10',
+    'xl:pr-20'
+  ),
+};
 
-    const { size } = Astro.props;
+const { size } = Astro.props;
 ---
+
 <section class=`${size} ${classes.section}` id="elancla">
-   <div class={classes.description}>
-        <h2 class={classes.title}>¡Gracias por querer conocernos! </h2>
-        <p class={classes.text}>
-            Conocer una iglesia es un gran desafió en estos tiempos,
-            esperamos que con la información que encuentres aquí,
-            puedas tener un mayor panorama de quienes somos y lo
-            que creemos. Eres bienvenido a visitarnos cuando quieras. 
-        </p>
-   </div>
-   <div class={classes.image}>
-        <div class={classes.overlay}></div>
-   </div>
+  <div class={classes.description}>
+    <h2 class={classes.title}>¡Gracias por querer conocernos!</h2>
+    <p class={classes.text}>
+      Conocer una iglesia es un gran desafió en estos tiempos, esperamos que con
+      la información que encuentres aquí, puedas tener un mayor panorama de
+      quienes somos y lo que creemos. Eres bienvenido a visitarnos cuando
+      quieras.
+    </p>
+  </div>
+  <div class={classes.image}>
+    <div class={classes.overlay}></div>
+  </div>
 </section>

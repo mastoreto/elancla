@@ -1,107 +1,100 @@
 ---
 import { Icon } from 'astro-icon/components';
 import cn from '../utils/cn.ts';
-interface Props{
-    size: string;
+interface Props {
+  size: string;
 }
 
 const classes = {
-    section: cn(
-        'flex',
-        'flex-col',
-        'md:flex-row',
-        'bg-secondary-100',
-        'relative',
-        'overflow-x-hidden'
-    ),
-    logo: cn(
-        'flex',
-        'flex-col',
-        'justify-center',
-        'items-center',
-    ),
-    img: cn(
-        'w-[30rem]',
-        'absolute',
-        'bottom-[-10rem]',
-        'left-[-13rem]',
-    ),
-    opImg: cn(
-        'w-[30rem]',
-        'absolute',
-        'top-[-15rem]',
-        'right-[-10rem]',
-        'transform rotate-[160deg]',
-    ),
-    welcomeDiv: cn(
-        'w-full',
-        'h-full',
-        'flex',
-        'flex-col',
-        'justify-center',
-        'items-center',
-    ),
-    title: cn(
-        'font-barastika',
-        'text-primary-800',
-        'text-[3rem]',
-        'sm:text-[4rem]',
-        'md:text-[4rem]',
-        'xl:text-[8rem]',
-        'font-bold',
-        'h-auto',
-        'leading-[8rem]',
-    ),
-    ul: cn(
-        'flex',
-        'flex-row',
-        'text-primary-500',
-        'font-bold',
-        'font-montserrat',
-        'mx-auto',
-        'mb-5',
-        'mt-2'
-    ),
-    li: cn(
-        'text-sm',
-        'flex',
-        'flex-row',
-        'justify-center',
-        'items-center',
-        'mx-2',
-        'md:hidden'
-    ),
-    anchorImg: cn(
-        'w-8',
-        'h-8',
-        'mr-2',
-    ),
-    anchor: cn(
-        'font-futura-bold',
-        'text-3xl',
-        'leading-3',
-    ),
-    church: cn(
-        'font-futura',
-        'text-[1.1rem]'
-    ),
-}
+  section: cn(
+    'flex',
+    'flex-col',
+    'md:flex-row',
+    'bg-secondary-100',
+    'relative',
+    'overflow-x-hidden'
+  ),
+  logo: cn('flex', 'flex-col', 'justify-center', 'items-center'),
+  img: cn('w-[30rem]', 'absolute', 'bottom-[-10rem]', 'left-[-13rem]'),
+  opImg: cn(
+    'w-[30rem]',
+    'absolute',
+    'top-[-15rem]',
+    'right-[-10rem]',
+    'transform rotate-[160deg]'
+  ),
+  welcomeDiv: cn(
+    'w-full',
+    'h-full',
+    'flex',
+    'flex-col',
+    'justify-center',
+    'items-center'
+  ),
+  title: cn(
+    'font-barastika',
+    'text-primary-800',
+    'text-[3rem]',
+    'sm:text-[4rem]',
+    'md:text-[4rem]',
+    'xl:text-[8rem]',
+    'font-bold',
+    'h-auto',
+    'leading-[8rem]'
+  ),
+  ul: cn(
+    'flex',
+    'flex-row',
+    'text-primary-500',
+    'font-bold',
+    'font-montserrat',
+    'mx-auto',
+    'mb-5',
+    'mt-2'
+  ),
+  li: cn(
+    'text-sm',
+    'flex',
+    'flex-row',
+    'justify-center',
+    'items-center',
+    'mx-2',
+    'md:hidden'
+  ),
+  anchorImg: cn('w-8', 'h-8', 'mr-2'),
+  anchor: cn('font-futura-bold', 'text-3xl', 'leading-3'),
+  church: cn('font-futura', 'text-[1.1rem]'),
+};
 
-const {size} = Astro.props;
+const { size } = Astro.props;
 ---
+
 <section class=`${size} ${classes.section}` id="inicio">
-    <div class={classes.welcomeDiv}>
-        <div class=`${classes.logo}`>
-            <img src="/images/anclarojo.png" alt="logo" width="99" height="127" class={classes.anchorImg}/>
-            <div>
-                <p class={classes.church}>IGLESIA BAUTISTA</p>
-                <p class={classes.anchor}>EL ANCLA</p>
-            </div>
-        </div>
-        <h1 class={classes.title}>Bienvenidos</h1>   
+  <div class={classes.welcomeDiv}>
+    <div class=`${classes.logo}`>
+      <img
+        src="/images/anclarojo.png"
+        alt="logo"
+        width="99"
+        height="127"
+        class={classes.anchorImg}
+      />
+      <div>
+        <p class={classes.church}>IGLESIA BAUTISTA</p>
+        <p class={classes.anchor}>EL ANCLA</p>
+      </div>
     </div>
-   
-    <ul class="flex flex-row text-primary-500 font-bold font-montserrat mx-auto mb-5">
-        <li class="text-sm flex flex-row justify-center items-center mx-2 md:hidden"><Icon name="mdi:google-maps" class="text-md" /> Av Dr Luis Alberto de Herrera 3101</li>
-    </ul>
+    <h1 class={classes.title}>Bienvenidos</h1>
+  </div>
+
+  <ul
+    class="flex flex-row text-primary-500 font-bold font-montserrat mx-auto mb-5"
+  >
+    <li
+      class="text-sm flex flex-row justify-center items-center mx-2 md:hidden"
+    >
+      <Icon name="mdi:google-maps" class="text-md" /> Av Dr Luis Alberto de Herrera
+      3101
+    </li>
+  </ul>
 </section>
