@@ -19,3 +19,29 @@
     font-weight: medium;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'Futura No2 D OT Medium';
+    src: url('/assets/fonts/futura-no2-d-ot-medium.woff2') format('woff2'),
+         url('/assets/fonts/futura-no2-d-ot-medium.woff') format('woff');
+    font-weight: 500; /* Medium weight */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Boston Angel Regular';
+    src: url('/assets/fonts/Boston Angel Regular.woff2') format('woff2'),
+         url('/assets/fonts/Boston Angel Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Boston Angel Bold';
+    src: url('/assets/fonts/Boston Angel Bold.woff2') format('woff2'),
+         url('/assets/fonts/Boston Angel Bold.woff') format('woff');
+    font-weight: Bold;
+    font-style: normal;
+}
+
+

@@ -16,12 +16,28 @@ export default {
 					'800': '#b70010',
 					'900': '#940814',
 					'950': '#520007',
-    			}
+    			},
+				'secondary': {
+					'50': '#f8f7f4',
+					'100': '#f3f1ec',
+					'200': '#ddd8cb',
+					'300': '#c8bda9',
+					'400': '#b19f86',
+					'500': '#a18a6e',
+					'600': '#947a62',
+					'700': '#7c6452',
+					'800': '#655247',
+					'900': '#53443b',
+					'950': '#2c231e',
+				},
 			},
 			fontFamily: {
 				montserrat: ['Montserrat', 'sans-serif'],
 				barastika: ['Barastika', 'sans-serif'],
 				"futura-bold" : ['FuturaNo2D', 'open-type'],
+				futura: ['Futura No2 D OT Medium', 'open-type'],
+				"boston-angel": ['Boston Angel', 'sans-serif'],
+				"boston-angel-bold": ['Boston Angel Bold', 'sans-serif']
 
 			},
 			backgroundImage: {
