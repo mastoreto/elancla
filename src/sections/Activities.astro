@@ -8,12 +8,15 @@ interface Props {
 const { size } = Astro.props;
 ---
 <section class={`${size} mt-[10rem]`} id="actividades">
-    <h2 class="font-barastika text-4xl md:text-[5rem] font-bold my-5 mx-8 md:mx-24">Actividades</h2>
-    <p class="text-montserrat text-wrap text-xl w-full md:w-[70rem] my-[5rem] mx-8 md:mx-24">
-        Una iglesia viva es una iglesia activa que se edifica y sirve a su comunidad. Aquí, la fe se traduce en acciones concretas, 
-        creando un ambiente de amor, apoyo y crecimiento espiritual. A través de obras de caridad y eventos comunitarios, 
-        nos convertimos en un pilar de esperanza y apoyo, fortaleciendo tanto a la comunidad como a nuestros miembros.
-    </p>
+    <div>
+        <h2 class="font-barastika text-4xl md:text-[5rem] font-bold my-5 mx-8 md:mx-24">Actividades</h2>
+        <p class="text-montserrat text-wrap text-xl w-full md:w-[70rem] my-[5rem] mx-8 md:mx-24">
+            Una iglesia viva es una iglesia activa que se edifica y sirve a su comunidad. Aquí, la fe se traduce en acciones concretas, 
+            creando un ambiente de amor, apoyo y crecimiento espiritual. A través de obras de caridad y eventos comunitarios, 
+            nos convertimos en un pilar de esperanza y apoyo, fortaleciendo tanto a la comunidad como a nuestros miembros.
+        </p>
+        <a href="/actividades" class="w-3/4 md:w-1/4 mt-10 bg-primary-500 text-white text-center py-3 rounded-md text-xl font-bold font-montserrat">Calendario</a>
+    </div>
     <div class="bg-gray-100 w-full h-full px-5 md:px-0 py-10 flex flex-col items-center">
         <!-- Ajustamos la grilla para la distribución deseada -->
         <div class="grid grid-rows-2 grid-cols-2 gap-8 md:w-4/5" style="grid-template-areas: 'item1 item2' 'item3 item3';">
@@ -53,6 +56,6 @@ const { size } = Astro.props;
             </div>
         </div>
         
-        <a href="/actividades" class="w-3/4 md:w-1/4 mt-10 bg-primary-500 text-white text-center py-3 rounded-md text-xl font-bold font-montserrat">Calendario</a>
+       
     </div>
 </section>
