@@ -46,3 +46,7 @@
   font-weight: Bold;
   font-style: normal;
 }
+
+.clip-path {
+  clip-path: 'box-border';
+}
