@@ -4,13 +4,16 @@ import cn from '../utils/cn.ts';
 
 const classes = {
   section: cn(
-    'flex flex-col md:flex-row w-screen h-auto px-5 md:px-[10rem] py-8 mt-[50rem] md:mt-[10rem]'
+    'flex flex-col xl:flex-row w-screen h-auto px-5 md:px-[10rem] py-8 mt-[50rem] md:mt-[10rem]'
   ),
   title: cn('text-7xl font-barastika '),
   paragraph: cn('text-2xl font-montserrat'),
-  visitus: cn('flex flex-col justify-center w-full md:w-1/2'),
-  maps: cn('w-full md:w-1/2'),
-  map: cn('rounded-xl mx-auto', 'h-[30rem] md:h-[23rem] w-[90%] md:w-[80%]'),
+  visitus: cn('flex flex-col justify-center w-full xl:w-1/2'),
+  maps: cn('w-full xl:w-1/2'),
+  map: cn(
+    'rounded-xl mx-auto',
+    'h-[30rem] md:h-[23rem] w-[90%] md:w-full xl:w-[80%]'
+  ),
 };
 ---
 

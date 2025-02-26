@@ -4,8 +4,8 @@ import cn from '../utils/cn.ts';
 const classes = {
   section: cn(
     'w-screen h-screen',
-    'flex flex-col md:flex-row',
-    'px-[2rem] md:pt-28 md:px-[5rem]'
+    'flex flex-col xl:flex-row',
+    'px-[2rem] xl:pt-28 xl:px-[5rem]'
   ),
   title: cn(
     'w-auto',
@@ -21,15 +21,9 @@ const classes = {
     'md:my-10'
   ),
   overlay: cn(
-    'w-[20rem] h-[20rem] md:w-[21-5rem] md:h-[100rem] sm:h-[150rem]',
-    'm-5',
-    'md:m-0',
-    'xl:w-full',
-    'xl:h-full',
-    'rounded-xl',
-    'bg-home-banner',
-    'bg-cover',
-    'bg-center',
+    'w-[20rem] h-[20rem] md:w-full md:h-[100rem] xl:w-[21-5rem] xl:h-[100rem]',
+    'm-5 md:m-0 rounded-xl',
+    'bg-home-banner bg-cover bg-center',
     'grayscale'
   ),
   text: cn(
@@ -48,7 +42,7 @@ const classes = {
     'flex-col',
     'justify-center',
     'items-center',
-    'md:w-1/2',
+    'md:w-full',
     'md:justify-center',
     'md:items-start',
     'md:pl-10',
@@ -63,7 +57,7 @@ const classes = {
     'flex-col',
     'justify-center',
     'items-center',
-    'md:w-1/2',
+    'md:w-full',
     'md:justify-end',
     'md:items-end',
     'md:pr-10',
