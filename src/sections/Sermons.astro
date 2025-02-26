@@ -58,7 +58,7 @@ const { size } = Astro.props;
     padding: 0 0 0 13rem;
 
     @media screen and (max-width: 1024px) {
-      padding: 0 0 0 13rem;
+      padding: 0 0 0 2rem;
     }
     @media screen and (max-width: 768px) {
       padding: 0 0 0 1.4rem;
@@ -81,9 +81,17 @@ const { size } = Astro.props;
       delay: 7500,
     },
     breakpoints: {
-      1024: {
+      1440: {
         slidesPerView: 3,
         spaceBetween: 3,
+      },
+      1360: {
+        slidesPerView: 2,
+        spaceBetween: 5,
+      },
+      1024: {
+        slidesPerView: 2,
+        spaceBetween: 8,
       },
       768: {
         slidesPerView: 2,
