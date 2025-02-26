@@ -57,10 +57,10 @@ const { size } = Astro.props;
     height: 100%;
     padding: 0 0 0 13rem;
 
-    @media screen and (max-width: 1px) {
+    @media screen and (max-width: 1024px) {
       padding: 0 0 0 13rem;
     }
-    @media screen and (max-width: 320px) {
+    @media screen and (max-width: 768px) {
       padding: 0 0 0 1.4rem;
     }
   }
@@ -76,6 +76,7 @@ const { size } = Astro.props;
     direction: 'horizontal',
     slidesPerView: 3,
     spaceBetween: 3,
+    loop: true,
     autoplay: {
       delay: 7500,
     },
