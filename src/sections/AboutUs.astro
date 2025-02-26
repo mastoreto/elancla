@@ -1,15 +1,16 @@
 ---
 import cn from '../utils/cn.ts';
-interface Props {
-  size: string;
-}
 
 const classes = {
-  section: cn('flex', 'flex-row', 'px-[2rem]', 'md:pt-28', 'md:px-[5rem]'),
+  section: cn(
+    'w-screen h-screen',
+    'flex flex-col md:flex-row',
+    'px-[2rem] md:pt-28 md:px-[5rem]'
+  ),
   title: cn(
     'w-auto',
     'h-auto',
-    'text-3xl',
+    'text-4xl md:text-3xl',
     'leading-sm',
     'md:text-6xl',
     'text-red-500',
@@ -20,9 +21,7 @@ const classes = {
     'md:my-10'
   ),
   overlay: cn(
-    'w-[21-5rem]',
-    'h-[100rem]',
-    'sm:h-[150rem]',
+    'w-[20rem] h-[20rem] md:w-[21-5rem] md:h-[100rem] sm:h-[150rem]',
     'm-5',
     'md:m-0',
     'xl:w-full',
@@ -34,11 +33,11 @@ const classes = {
     'grayscale'
   ),
   text: cn(
-    'font-boston-angel',
-    'text-[1.5rem]',
+    'font-boston-angel text-[1.2rem] md:text-[1.5rem]',
     'my-5',
     'md:text-xl',
     'md:text-wrap',
+    'w-full',
     'md:w-4/5',
     'xl:text-[1.5rem]'
   ),
@@ -71,11 +70,9 @@ const classes = {
     'xl:pr-20'
   ),
 };
-
-const { size } = Astro.props;
 ---
 
-<section class=`${size} ${classes.section}` id="elancla">
+<section class={classes.section} id="elancla">
   <div class={classes.description}>
     <h2 class={classes.title}>¡Gracias por querer conocernos!</h2>
     <p class={classes.text}>

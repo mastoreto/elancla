@@ -1,36 +1,32 @@
 ---
 import cn from '../utils/cn';
+import Decorators from 'src/components/Decorators.astro';
 import Layout from '../layouts/Layout.astro';
 import Home from '../sections/Home.astro';
 import AboutUs from '../sections/AboutUs.astro';
 import Activities from '../sections/Activities.astro';
 import Sermons from '../sections/Sermons.astro';
+import Ministries from 'src/sections/Ministries.astro';
+import Contact from '../sections/Contact.astro';
 
 const classes = {
-  decoratorOne: cn(
-    'w-[30rem]',
+  decoratorTwo: cn(
     'absolute',
-    'top-[-15rem]',
-    'right-[-10rem]',
-    'transform rotate-[160deg]',
-    'z-10'
+    'top-[30rem]',
+    'left-[-10rem]',
+    'w-[25%]',
+    'h-[25%]',
+    'z-0'
   ),
-  decoratorTwo: cn('w-[30rem]', 'absolute', 'bottom-[-10rem]', 'left-[-13rem]'),
 };
 ---
 
 <Layout title="Iglesia Bautista El Ancla">
-  <img
-    src="/images/decorators.svg"
-    alt="Decorators"
-    class={classes.decoratorOne}
-  />
-  <Home size="w-screen h-screen" />
-  <img
-    src="/images/decorators.svg"
-    alt="Decorators"
-    class={classes.decoratorTwo}
-  />
-  <AboutUs size="w-screen h-screen" />
-  <Activities size="w-screen h-screen" />
+  <Home />
+  <Decorators type="bottom" customClass={classes.decoratorTwo} />
+  <AboutUs />
+  <Activities />
+  <Sermons />
+  <Ministries />
+  <Contact />
 </Layout>
