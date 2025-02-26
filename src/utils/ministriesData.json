@@ -1,0 +1,12 @@
+[
+  { "name": "Predicación", "icon": "/images/ministries/Predicación.svg" },
+  { "name": "Servicio", "icon": "/images/ministries/servicio.svg" },
+  { "name": "Enseñanza", "icon": "/images/ministries/Enseñanaza.svg" },
+  { "name": "Misiones", "icon": "/images/ministries/Misiones.svg" },
+  { "name": "Adolescentes", "icon": "/images/ministries/Multimedia.svg" },
+  { "name": "Jovenes", "icon": "/images/ministries/Jovenes.svg" },
+  { "name": "Hombres", "icon": "/images/ministries/Hombres.svg" },
+  { "name": "Espacio Mujer", "icon": "/images/ministries/EMujer.svg" },
+  { "name": "Multimedia", "icon": "/images/ministries/Multimedia.svg" },
+  { "name": "Alabanza", "icon": "/images/ministries/Alabanza.svg" }
+]

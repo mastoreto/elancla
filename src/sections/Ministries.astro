@@ -1,0 +1,29 @@
+---
+import cn from '../utils/cn.ts';
+import ministries from '../utils/ministriesData.json';
+
+const classes = {
+  section: cn('w-screen h-screen px-5 md:px-[35rem] py-8'),
+  title: cn('text-7xl font-barastika text-center'),
+  mininstries: cn('grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 mt-24'),
+  card: cn(
+    'flex items-center justify-between bg-secondary-100 hover:cursor-pointer',
+    'p-5 rounded-xl',
+    'font-montserrat'
+  ),
+};
+---
+
+<section class={classes.section}>
+  <h2 class={classes.title}>Ministerios</h2>
+  <div class={classes.mininstries}>
+    {
+      ministries.map((ministry) => (
+        <div class={classes.card}>
+          <img src={ministry.icon} alt={ministry.name} class="w-20 h-20" />
+          <h3 class="text-4xl font-montserrat">{ministry.name}</h3>
+        </div>
+      ))
+    }
+  </div>
+</section>
