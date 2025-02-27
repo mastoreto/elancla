@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import cn from 'src/utils/cn';
-// Tipos para los props
+import menuSlice from 'src/stores/menuSlice';
+
 interface PathProps {
   d?: string;
   variants: Variants;
   transition?: { duration: number };
   className?: string;
-}
-
-interface MenuToggleProps {
-  toggle: () => void;
-  isOpen: boolean;
 }
 
 // Componente Path para cada línea
@@ -26,7 +22,10 @@ const Path: React.FC<PathProps> = (props) => (
 );
 
 // Componente principal de Toggle
-const MenuToggle: React.FC<MenuToggleProps> = ({ toggle, isOpen }) => {
+const MenuToggle: React.FC = () => {
+  const isOpen = menuSlice((state) => state.isOpen);
+  const toggle = menuSlice((state) => state.toggleMenu);
+
   const classes = {
     background: cn(
       'outline-none border-0 select-none cursor-pointer',

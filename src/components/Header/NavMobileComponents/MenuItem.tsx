@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import cn from 'src/utils/cn';
+import menuSlice from 'src/stores/menuSlice';
+
 const colors = ['#FF008C', '#D309E1', '#9C1AFF', '#7700FF', '#4400FF'];
 
 const itemVariants = {
@@ -19,27 +21,33 @@ const itemVariants = {
     },
   },
 };
-
-const MenuItem = ({ i }: { i: number }) => {
-  const border = `2px solid ${colors[i]}`;
+interface IItem {
+  id: number;
+  name: string;
+  url: string;
+  button: boolean;
+}
+const MenuItem = ({ i }: { i: IItem }) => {
+  const isOpen = menuSlice((state) => state.isOpen);
   const classes = {
     listItem: cn(
-      'flex items-center justify-start',
-      'w-full p-0 mb-20 mt-0 ml-0 mr-0 cursor-pointer',
-      'rounded-md list-none'
+      'flex items-center justify-center font-futura',
+      'w-full p-0 cursor-pointer',
+      'rounded-md list-none z-50 text-center'
     ),
-    iconPlaceholder: cn('w-12 h-12 mr-4', 'rounded-md flex', `${border}`),
-    textPlaceholder: cn('w-32 h-6', 'rounded-md', `${border}`),
+    listButton: cn(
+      'bg-primary-500 px-6 py-2 text-white rounded-md z-50 font-futura text-center'
+    ),
   };
   return (
     <motion.li
-      className={classes.listItem}
+      className={i.button ? classes.listButton : classes.listItem}
       variants={itemVariants}
+      animate={isOpen ? 'open' : 'closed'}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
     >
-      <div className={classes.iconPlaceholder} />
-      <div className={classes.textPlaceholder} />
+      <a href={i.url}>{i.name}</a>
     </motion.li>
   );
 };

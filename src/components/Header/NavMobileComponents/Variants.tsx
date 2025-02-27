@@ -3,6 +3,7 @@ import * as motion from 'motion/react-client';
 import Navigation from './Navigation';
 import MenuToggle from './MenuToggle';
 import cn from 'src/utils/cn';
+import menuSlice from 'src/stores/menuSlice';
 
 /**
  * ==============   Utils   ================
@@ -26,7 +27,8 @@ const useDimensions = (ref: React.RefObject<HTMLDivElement | null>) => {
 };
 
 const Variants: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const isOpen = menuSlice((state) => state.isOpen);
+  const setIsOpen = menuSlice((state) => state.toggleMenu);
   const containerRef = useRef<HTMLDivElement>(null);
   const { height } = useDimensions(containerRef);
 
@@ -80,7 +82,7 @@ const Variants: React.FC = () => {
             variants={sidebarVariants}
           />
           <Navigation />
-          <MenuToggle toggle={() => setIsOpen(!isOpen)} isOpen={isOpen} />
+          <MenuToggle />
         </motion.nav>
       </div>
     </div>
