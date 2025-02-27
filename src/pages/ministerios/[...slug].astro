@@ -1,0 +1,70 @@
+---
+import cn from 'src/utils/cn.ts';
+import Layout from 'src/layouts/Layout.astro';
+
+interface Props {
+  title: string;
+  text: string;
+}
+
+export async function getStaticPaths() {
+  const pages = [
+    {
+      slug: 'predicacion',
+      title: 'Predicación',
+      text: 'Welcome to the Astro store!',
+    },
+    {
+      slug: 'servicio',
+      title: 'Servicio',
+      text: 'We have lots of products for you',
+    },
+    {
+      slug: 'ensenanza',
+      title: 'Enseñanza',
+      text: 'We have lots of products for you',
+    },
+    {
+      slug: 'misiones',
+      title: 'Misiones',
+      text: 'We have lots of products for you',
+    },
+    {
+      slug: 'adolescentes',
+      title: 'Adolescentes',
+      text: 'We have lots of products for you',
+    },
+    {
+      slug: 'hombres',
+      title: 'Hombres',
+      text: 'We have lots of products for you',
+    },
+    {
+      slug: 'multimedia',
+      title: 'Multimedia',
+      text: 'We have lots of products for you',
+    },
+    {
+      slug: 'jovenes',
+      title: 'Jovenes',
+      text: 'We have lots of products for you',
+    },
+  ];
+  return pages.map(({ slug, title, text }) => {
+    return {
+      params: { slug },
+      props: { title, text },
+    };
+  });
+}
+
+const { slug } = Astro.params;
+const { title, text } = Astro.props;
+---
+
+<Layout title={`El Ancla | ${title}`}>
+  <section class="w-screen h-screen flex flex-col items-center justify-center">
+    <h1 class="text-4xl font-bold">{title}</h1>
+    <p class="text-lg">{text}</p>
+  </section>
+</Layout>

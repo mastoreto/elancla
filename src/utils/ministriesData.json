@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Predicación",
+    "icon": "/images/ministries/Predicación.svg",
+    "url": "/ministerios/predicacion"
+  },
+  {
+    "name": "Servicio",
+    "icon": "/images/ministries/servicio.svg",
+    "url": "/ministerios/servicio"
+  },
+  {
+    "name": "Enseñanza",
+    "icon": "/images/ministries/Enseñanaza.svg",
+    "url": "/ministerios/enseñanza"
+  },
+  {
+    "name": "Misiones",
+    "icon": "/images/ministries/Misiones.svg",
+    "url": "/ministerios/misiones"
+  },
+  {
+    "name": "Adolescentes",
+    "icon": "/images/ministries/Multimedia.svg",
+    "url": "/ministerios/adolescentes"
+  },
+  {
+    "name": "Jovenes",
+    "icon": "/images/ministries/Jovenes.svg",
+    "url": "/ministerios/jovenes"
+  },
+  {
+    "name": "Hombres",
+    "icon": "/images/ministries/Hombres.svg",
+    "url": "/ministerios/hombres"
+  },
+  {
+    "name": "Espacio Mujer",
+    "icon": "/images/ministries/EMujer.svg",
+    "url": "https://espaciomujer.elancla.uy/"
+  },
+  {
+    "name": "Multimedia",
+    "icon": "/images/ministries/Multimedia.svg",
+    "url": "/ministerios/multimedia"
+  },
+  {
+    "name": "Alabanza",
+    "icon": "/images/ministries/Alabanza.svg",
+    "url": "/ministerios/alabanza"
+  }
+]

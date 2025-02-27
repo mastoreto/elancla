@@ -1,58 +1,123 @@
 ---
+import cn from '../utils/cn';
 import { Icon } from 'astro-icon/components';
 
-interface Props {
-    size: string;
-}
-
-const { size } = Astro.props;
+const classes = {
+  section: cn(
+    'w-screen h-auto',
+    'flex flex-col xl:flex-row mt-[30rem] xl:mt-[10rem]'
+  ),
+  activities: cn(
+    'w-full xl:w-1/2 flex-2 order-1 xl:order-2',
+    'mx-auto',
+    'flex',
+    'flex-col',
+    'justify-center',
+    'px-10 xl:px-[5rem] 2xl:px-[12rem]'
+  ),
+  cards: cn(
+    'w-full xl:w-1/2 order-2 xl:order-1',
+    'h-full',
+    'px-5',
+    'md:px-0',
+    'py-10',
+    'flex',
+    'flex-col',
+    'items-center',
+    'justify-center'
+  ),
+  title: cn(
+    'font-barastika text-black text-6xl md:text-4xl text-left',
+    'md:text-[5rem] font-bold  '
+  ),
+  paragraph: cn(
+    'text-montserrat text-wrap text-[0.9rem] md:text-xl w-full my-[2rem] text-left'
+  ),
+  grids: cn('grid grid-rows-3', 'grid-cols-1 gap-16'),
+  card: cn(
+    'flex',
+    'items-center',
+    'p-5',
+    'font-montserrat',
+    'bg-secondary-100',
+    'rounded-xl',
+    'justify-between'
+  ),
+  button: cn(
+    'w-full',
+    'bg-primary-500 text-white',
+    'text-center py-3 mt-5 rounded-md ',
+    'font-bold font-montserrat text-xl'
+  ),
+};
 ---
-<section class={`${size} mt-[10rem]`} id="actividades">
-    <h2 class="font-barastika text-4xl md:text-[5rem] font-bold my-5 mx-8 md:mx-24">Actividades</h2>
-    <p class="text-montserrat text-wrap text-xl w-full md:w-[70rem] my-[5rem] mx-8 md:mx-24">
-        Una iglesia viva es una iglesia activa que se edifica y sirve a su comunidad. Aquí, la fe se traduce en acciones concretas, 
-        creando un ambiente de amor, apoyo y crecimiento espiritual. A través de obras de caridad y eventos comunitarios, 
-        nos convertimos en un pilar de esperanza y apoyo, fortaleciendo tanto a la comunidad como a nuestros miembros.
-    </p>
-    <div class="bg-gray-100 w-full h-full px-5 md:px-0 py-10 flex flex-col items-center">
-        <!-- Ajustamos la grilla para la distribución deseada -->
-        <div class="grid grid-rows-2 grid-cols-2 gap-8 md:w-4/5" style="grid-template-areas: 'item1 item2' 'item3 item3';">
-            <!-- Tarjeta 1 -->
-            <div class="flex items-center p-5 font-montserrat justify-end" style="grid-area: item1;">
-                <div class="p-4 rounded-md flex items-center justify-center">
-                    <Icon name="fa6-solid:book-bible" class="text-primary-500 text-[2rem] md:text-[5rem]" />
-                </div>
-                <div class="ml-4">
-                    <h3 class="font-bold text-lg md:text-xl text-bold">Escuela Biblica</h3>
-                    <p>Domingos</p>
-                    <p>10:00hs</p>
-                </div>
-            </div>
-            <!-- Tarjeta 2 -->
-            <div class="flex items-center p-5 font-montserrat justify-start" style="grid-area: item2;">
-                <div class="p-4 rounded-md flex items-center justify-center">
-                    <Icon name="fa6-solid:cross" class="text-primary-500 text-[2rem] md:text-[5rem]" />
-                </div>
-                <div class="ml-4">
-                    <h3 class="font-bold text-lg md:text-xl text-bold">Culto de celebración</h3>
-                    <p>Domingos</p>
-                    <p>11:15hs</p>
-                </div>
-            </div>
-            <!-- Tarjeta 3 -->
-            <div class="flex items-center p-5 font-montserrat justify-center" style="grid-area: item3;">
-                <div class="p-4 rounded-md flex items-center justify-center">
-                    <Icon name="fa6-solid:person-praying" class="text-primary-500 text-[2rem] md:text-[5rem]" />
-                </div>
-                <div class="ml-4">
-                    <h3 class="font-bold text-lg md:text-xl text-bold">Reunión de oración</h3>
-                    <p>Miércoles</p>
-                    <p>1° y 3° Presencial</p>
-                    <p>19:00hs</p>
-                </div>
-            </div>
+
+<section class={classes.section} id="actividades">
+  <div class={classes.cards}>
+    <div class={classes.grids}>
+      <div class={classes.card}>
+        <div class="p-4 rounded-md flex items-center justify-center">
+          <Icon
+            name="fa6-solid:cross"
+            class="text-primary-500 text-[4rem] md:text-[5rem]"
+          />
         </div>
-        
-        <a href="/actividades" class="w-3/4 md:w-1/4 mt-10 bg-primary-500 text-white text-center py-3 rounded-md text-xl font-bold font-montserrat">Calendario</a>
+        <div class="ml-4">
+          <div class="text-right">
+            <p>Domingos</p>
+            <p>11:15hs</p>
+          </div>
+          <h3 class="font-bold text-lg md:text-xl text-bold">
+            Culto de celebración
+          </h3>
+        </div>
+      </div>
+      <div class={classes.card}>
+        <div class="p-4 rounded-md flex items-center justify-center">
+          <Icon
+            name="fa6-solid:book-bible"
+            class="text-primary-500 text-[4rem] md:text-[5rem]"
+          />
+        </div>
+        <div class="ml-4">
+          <div class="text-right">
+            <p>Domingos</p>
+            <p>10:00hs</p>
+          </div>
+          <h3 class="font-bold text-lg md:text-xl text-bold">
+            Escuela Biblica
+          </h3>
+        </div>
+      </div>
+      <div class={classes.card}>
+        <div class="p-4 rounded-md flex items-center justify-center">
+          <Icon
+            name="fa6-solid:person-praying"
+            class="text-primary-500 text-[4rem] md:text-[5rem]"
+          />
+        </div>
+        <div class="ml-4">
+          <div class="text-right">
+            <p>Miércoles</p>
+            <p>1° y 3° Presencial</p>
+            <p>19:00hs</p>
+          </div>
+          <h3 class="font-bold text-lg md:text-xl text-bold">
+            Reunión de oración
+          </h3>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class={classes.activities}>
+    <h2 class={classes.title}>Actividades</h2>
+    <p class={classes.paragraph}>
+      Una iglesia viva es una iglesia activa que se edifica y sirve a su
+      comunidad. Aquí, la fe se traduce en acciones concretas, creando un
+      ambiente de amor, apoyo y crecimiento espiritual. A través de obras de
+      caridad y eventos comunitarios, nos convertimos en un pilar de esperanza y
+      apoyo, fortaleciendo tanto a la comunidad como a nuestros miembros.
+    </p>
+    <a href="/actividades" class={classes.button}>Calendario</a>
+  </div>
 </section>

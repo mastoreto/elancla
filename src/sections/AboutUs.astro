@@ -1,72 +1,82 @@
 ---
-import cn from "../utils/cn.ts";
-    interface Props {
-    size: string;
-    }
+import cn from '../utils/cn.ts';
 
-    const classes = {
-        section: cn(
-            'flex',
-            'flex-col',
-            'px-[2rem]',
-            'md:pt-28',
-            'md:px-[15rem]'
-        ),
-        title: cn(
-            'text-3xl', 
-            'md:text-6xl',
-            'text-red-500',
-            'font-bold', 
-            'font-montserrat',
-            'mt-10', 
-            'mb-5', 
-            'md:my-10',
-            'font-barastika'
-        ),
-        bg: cn(
-            'bg-aboutus',
-            'relative',
-            'bg-cover',
-            'bg-center',
-            'rounded-[3rem]',
-            'my-5',
-            'h-[100rem]'
-        ),
-        overlay: cn(
-            'absolute',
-            'h-full',
-            'w-full',
-            'backdrop-blur',
-            'bg-primary-500',
-            'bg-opacity-50',
-            'rounded-[3rem]',
-            'flex',
-            'items-center',
-            'justify-center'
-        ),
-        text: cn(
-            'font-montserrat',
-            'text-[1.5rem]',
-            'my-5',
-            'md:text-xl',
-            'md:text-wrap',
-            'md:w-4/5',
-            'xl:text-[1.5rem]',
-        ),
-    }
-
-    const { size } = Astro.props;
+const classes = {
+  section: cn(
+    'w-screen h-screen',
+    'flex flex-col xl:flex-row',
+    'px-[2rem] xl:pt-28 xl:px-[5rem]'
+  ),
+  title: cn(
+    'w-auto',
+    'h-auto',
+    'text-4xl md:text-3xl',
+    'leading-sm',
+    'md:text-6xl',
+    'text-red-500',
+    'font-bold',
+    'font-futura-bold',
+    'mt-10',
+    'mb-5',
+    'md:my-10'
+  ),
+  overlay: cn(
+    'w-[20rem] h-[20rem] md:w-full md:h-[100rem] xl:w-[21-5rem] xl:h-[100rem]',
+    'm-5 md:m-0 rounded-xl',
+    'bg-home-banner bg-cover bg-center',
+    'grayscale'
+  ),
+  text: cn(
+    'font-boston-angel text-[1.2rem] md:text-[1.5rem]',
+    'my-5',
+    'md:text-xl',
+    'md:text-wrap',
+    'w-full',
+    'md:w-4/5',
+    'xl:text-[1.5rem]'
+  ),
+  description: cn(
+    'w-full',
+    'h-full',
+    'flex',
+    'flex-col',
+    'justify-center',
+    'items-center',
+    'md:w-full',
+    'md:justify-center',
+    'md:items-start',
+    'md:pl-10',
+    'md:pr-5',
+    'xl:pl-20',
+    'xl:pr-10'
+  ),
+  image: cn(
+    'w-full',
+    'h-full',
+    'flex',
+    'flex-col',
+    'justify-center',
+    'items-center',
+    'md:w-full',
+    'md:justify-end',
+    'md:items-end',
+    'md:pr-10',
+    'xl:pr-20'
+  ),
+};
 ---
-<section class=`${size} ${classes.section}` id="elancla">
-    <h2 class={classes.title}>¡Gracias por querer conocernos! </h2>
-    <div class={classes.bg}>
-        <div class={classes.overlay}></div>
-        <p class="font-montserrat text-white text-[3.125rem] font-bold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">Nuestra Historia</p>
-    </div>
+
+<section class={classes.section} id="elancla">
+  <div class={classes.description}>
+    <h2 class={classes.title}>¡Gracias por querer conocernos!</h2>
     <p class={classes.text}>
-        Conocer una iglesia es un gran desafió en estos tiempos,
-        esperamos que con la información que encuentres aquí,
-        puedas tener un mayor panorama de quienes somos y lo
-        que creemos. Eres bienvenido a visitarnos cuando quieras. 
+      Conocer una iglesia es un gran desafió en estos tiempos, esperamos que con
+      la información que encuentres aquí, puedas tener un mayor panorama de
+      quienes somos y lo que creemos. Eres bienvenido a visitarnos cuando
+      quieras.
     </p>
+  </div>
+  <div class={classes.image}>
+    <div class={classes.overlay}></div>
+  </div>
 </section>

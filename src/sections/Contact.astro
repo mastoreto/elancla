@@ -1,0 +1,49 @@
+---
+import { Icon } from 'astro-icon/components';
+import cn from '../utils/cn.ts';
+
+const classes = {
+  section: cn(
+    'flex flex-col xl:flex-row w-screen h-auto px-5 md:px-[10rem] py-8 mt-[50rem] md:mt-0 xl:mt-[10rem]'
+  ),
+  title: cn('text-7xl font-barastika '),
+  paragraph: cn('text-2xl font-montserrat'),
+  visitus: cn('flex flex-col justify-center w-full xl:w-1/2'),
+  maps: cn('w-full xl:w-1/2'),
+  map: cn(
+    'rounded-xl mx-auto',
+    'h-[30rem] md:h-[23rem] w-[90%] md:w-full xl:w-[80%]'
+  ),
+};
+---
+
+<section class={classes.section}>
+  <div class={classes.visitus}>
+    <h2 class={classes.title}>Visitanos</h2>
+    <p class={classes.paragraph}>
+      Si necesitas más información puedes contactarnos por nuestras redes
+      sociales.
+    </p>
+    <ul
+      class="text-primary-800 font-bold h-[6.5rem] flex flex-col md:flex-row font-montserrat mt-5"
+    >
+      <li class="flex flex-row text-primary-800 mr-5 mb-5 md:mb-0 text-xl">
+        <Icon name="mdi:youtube" class="text-3xl" /> @iglesiaelanclauy
+      </li>
+      <li class="flex flex-row text-primary-800 text-xl">
+        <Icon name="mdi:instagram" class="text-3xl" /> @iglesiaelancla
+      </li>
+    </ul>
+  </div>
+  <div class={classes.maps}>
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3273.3336069700877!2d-56.1614292!3d-34.872968199999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x959f80619e924ca9%3A0xb604f8c13a196671!2sIglesia%20Bautista%20El%20Ancla!5e0!3m2!1ses-419!2suy!4v1740605934485!5m2!1ses-419!2suy"
+      width="600"
+      height="300"
+      style="border:0;"
+      allowfullscreen=""
+      loading="lazy"
+      class={classes.map}
+      referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+</section>
