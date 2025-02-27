@@ -1,7 +1,7 @@
 ---
 import { SEO } from 'astro-seo';
 import cn from '../utils/cn.ts';
-import Header from '../components/Header/Header.astro';
+import Header from '../components/Header/index.tsx';
 import Footer from '../components/Footer.astro';
 
 interface Props {
@@ -46,25 +46,26 @@ const { title } = Astro.props;
     />
   </head>
   <body class="overflow-x-hidden">
+    <Header client:only="react" />
     <main class={classes.main}>
       <slot />
     </main>
     <Footer />
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const menu = document.getElementById('menu');
-        const menuToggle = document.getElementById('menu-toggle');
-        const menuClose = document.getElementById('menu-close');
-
-        menuToggle?.addEventListener('click', function () {
-          console.log('click');
-          menu?.classList.toggle('hidden');
+      import Vivus from 'vivus';
+      window.onload = function () {
+        new Vivus('vivus-svg', {
+          duration: 1000,
+          type: 'delayed',
+          start: 'autostart',
         });
 
-        menuClose?.addEventListener('click', function () {
-          menu?.classList.toggle('hidden');
+        new Vivus('vivus-svg-two', {
+          duration: 1000,
+          type: 'delayed',
+          start: 'autostart',
         });
-      });
+      };
     </script>
   </body>
 </html>

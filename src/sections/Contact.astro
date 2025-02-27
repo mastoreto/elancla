@@ -14,19 +14,20 @@ const classes = {
     'rounded-xl mx-auto',
     'h-[30rem] md:h-[23rem] w-[90%] md:w-full xl:w-[80%]'
   ),
+  ul: cn(
+    'text-primary-800 font-bold h-[6.5rem] flex flex-col md:flex-row font-montserrat mt-5'
+  ),
 };
 ---
 
-<section class={classes.section}>
+<section class={classes.section} id="visitanos">
   <div class={classes.visitus}>
     <h2 class={classes.title}>Visitanos</h2>
     <p class={classes.paragraph}>
       Si necesitas más información puedes contactarnos por nuestras redes
       sociales.
     </p>
-    <ul
-      class="text-primary-800 font-bold h-[6.5rem] flex flex-col md:flex-row font-montserrat mt-5"
-    >
+    <ul class={classes.ul}>
       <li class="flex flex-row text-primary-800 mr-5 mb-5 md:mb-0 text-xl">
         <Icon name="mdi:youtube" class="text-3xl" /> @iglesiaelanclauy
       </li>

@@ -1,6 +1,11 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
+  "include": [
+    ".astro/types.d.ts",
+    "**/*",
+    "./node_modules/swiper/types",
+    "./node_modules/@types"
+  ],
   "compilerOptions": {
     "baseUrl": ".",
     "plugins": [
@@ -8,8 +13,10 @@
         "name": "@astrojs/ts-plugin"
       }
     ],
-    "types": ["swiper/types"],
-    "allowSyntheticDefaultImports": true
+    "typeRoots": ["./node_modules/@types", "./node_modules/swiper/types"],
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
   },
   "exclude": ["dist"]
 }

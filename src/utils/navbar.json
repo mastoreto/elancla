@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "INICIO",
+    "url": "/",
+    "button": false
+  },
+  {
+    "id": 2,
+    "name": "SOBRE NOSOTROS",
+    "url": "#about",
+    "button": false
+  },
+  {
+    "id": 3,
+    "name": "ACTIVIDADES",
+    "url": "#contact",
+    "button": false
+  },
+  {
+    "id": 4,
+    "name": "MINISTERIOS",
+    "url": "#ministerios",
+    "button": false
+  },
+  {
+    "id": 5,
+    "name": "CONTACTO",
+    "url": "#contact",
+    "button": true
+  }
+]

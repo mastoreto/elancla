@@ -5,8 +5,10 @@ import sitemap from '@astrojs/sitemap';
 
 import icon from 'astro-icon';
 
+import react from '@astrojs/react';
+
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
-  integrations: [tailwind(), sitemap(), icon()],
+  integrations: [tailwind(), sitemap(), icon(), react()],
 });
