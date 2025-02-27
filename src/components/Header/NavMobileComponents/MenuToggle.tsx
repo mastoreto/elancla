@@ -34,12 +34,12 @@ const MenuToggle: React.FC = () => {
     ),
   };
   return (
-    <button onClick={toggle} className={classes.background}>
+    <button onClick={() => toggle()} className={classes.background}>
       <motion.svg
         width="23"
         height="23"
         viewBox="0 0 23 23"
-        initial={false}
+        initial="closed"
         animate={isOpen ? 'open' : 'closed'}
       >
         <Path

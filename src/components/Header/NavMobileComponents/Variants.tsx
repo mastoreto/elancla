@@ -28,7 +28,6 @@ const useDimensions = (ref: React.RefObject<HTMLDivElement | null>) => {
 
 const Variants: React.FC = () => {
   const isOpen = menuSlice((state) => state.isOpen);
-  const setIsOpen = menuSlice((state) => state.toggleMenu);
   const containerRef = useRef<HTMLDivElement>(null);
   const { height } = useDimensions(containerRef);
 

@@ -43,6 +43,7 @@ const MenuItem = ({ i }: { i: IItem }) => {
     <motion.li
       className={i.button ? classes.listButton : classes.listItem}
       variants={itemVariants}
+      initial="closed"
       animate={isOpen ? 'open' : 'closed'}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}

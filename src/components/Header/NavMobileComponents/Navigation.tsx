@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import MenuItem from './MenuItem';
 import cn from 'src/utils/cn';
 import items from 'src/utils/navbar.json';
+import useMenuStore from 'src/stores/menuSlice';
 
 const navVariants = {
   open: {
@@ -20,6 +21,7 @@ interface IItem {
 }
 
 const Navigation = () => {
+  const isOpen = useMenuStore((state) => state.isOpen);
   const classes = {
     list: cn(
       'list-none py-[4rem] px-[3rem] m-0',
@@ -30,7 +32,12 @@ const Navigation = () => {
   };
 
   return (
-    <motion.ul className={classes.list} variants={navVariants}>
+    <motion.ul
+      className={classes.list}
+      initial="closed"
+      animate={isOpen ? 'open' : 'closed'}
+      variants={navVariants}
+    >
       {items.map((item: IItem) => (
         <MenuItem i={item} key={item.id} />
       ))}
