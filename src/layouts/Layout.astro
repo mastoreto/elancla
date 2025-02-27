@@ -46,6 +46,7 @@ const { title } = Astro.props;
     />
   </head>
   <body class="overflow-x-hidden">
+    <Header />
     <main class={classes.main}>
       <slot />
     </main>
@@ -65,6 +66,25 @@ const { title } = Astro.props;
           menu?.classList.toggle('hidden');
         });
       });
+    </script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/vivus/0.4.6/vivus.min.js"
+      defer></script>
+    <script>
+      window.onload = function () {
+        // Se instancia Vivus sobre el elemento SVG (id "my-svg")
+        new Vivus('vivus-svg', {
+          duration: 1000, // Ajusta la duración (en cuadros) según necesites
+          type: 'delayed', // Con 'sync' el dibujo se realiza de forma uniforme y simultánea
+          start: 'autostart',
+        });
+
+        new Vivus('vivus-svg-two', {
+          duration: 1000,
+          type: 'delayed',
+          start: 'autostart',
+        });
+      };
     </script>
   </body>
 </html>
