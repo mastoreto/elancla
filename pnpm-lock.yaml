@@ -80,10 +80,16 @@ importers:
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
+      vivus:
+        specifier: ^0.4.6
+        version: 0.4.6
       zustand:
         specifier: ^5.0.3
         version: 5.0.3(@types/react@19.0.10)(react@19.0.0)
     devDependencies:
+      '@types/vivus':
+        specifier: 0.4.7
+        version: 0.4.7
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.24.1
         version: 8.24.1(@typescript-eslint/parser@8.24.1(eslint@9.21.0(jiti@1.21.7))(typescript@5.7.3))(eslint@9.21.0(jiti@1.21.7))(typescript@5.7.3)
@@ -942,6 +948,9 @@ packages:
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
+
+  '@types/vivus@0.4.7':
+    resolution: {integrity: sha512-c0gE1Wd5Jv3752DpoHGY4pTpMfpwE4x+eb9vL1uUrYo0QDUPF/Ty1Dca3gCFnW5E80umraDzpsHi7gWPKgx7WA==}
 
   '@types/yauzl@2.10.3':
     resolution: {integrity: sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==}
@@ -2949,6 +2958,9 @@ packages:
       vite:
         optional: true
 
+  vivus@0.4.6:
+    resolution: {integrity: sha512-q6cDPTGqw/bq9sKF2h2T6GJ9PlwAFncHq7MdaK95WTSyd/7gz//UHTZbJ3B+r8f7AhcISPTC3sv9+u65BmmFbw==}
+
   volar-service-css@0.0.62:
     resolution: {integrity: sha512-JwNyKsH3F8PuzZYuqPf+2e+4CTU8YoyUHEHVnoXNlrLe7wy9U3biomZ56llN69Ris7TTy/+DEX41yVxQpM4qvg==}
     peerDependencies:
@@ -4026,6 +4038,8 @@ snapshots:
       minipass: 4.2.8
 
   '@types/unist@3.0.3': {}
+
+  '@types/vivus@0.4.7': {}
 
   '@types/yauzl@2.10.3':
     dependencies:
@@ -6446,6 +6460,8 @@ snapshots:
   vitefu@1.0.5(vite@6.1.1(@types/node@22.13.4)(jiti@1.21.7)(sass@1.85.0)(yaml@2.7.0)):
     optionalDependencies:
       vite: 6.1.1(@types/node@22.13.4)(jiti@1.21.7)(sass@1.85.0)(yaml@2.7.0)
+
+  vivus@0.4.6: {}
 
   volar-service-css@0.0.62(@volar/language-service@2.4.11):
     dependencies:

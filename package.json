@@ -36,9 +36,11 @@
     "tailwind-merge": "^3.0.1",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3",
+    "vivus": "^0.4.6",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@types/vivus": "0.4.7",
     "@typescript-eslint/eslint-plugin": "^8.24.1",
     "@typescript-eslint/parser": "^8.24.1",
     "eslint": "^9.21.0",
