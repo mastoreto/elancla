@@ -116,12 +116,14 @@ const Navbar: React.FC = () => {
             ACTIVIDADES
           </a>
         </li>
-        <li
-          className=""
-          onClick={(e) => handleSmoothScroll(e, '#sermones')}
-          className={linkClass('#sermones')}
-        >
-          <a href="#sermones">SERMONES</a>
+        <li>
+          <a
+            href="#sermones"
+            onClick={(e) => handleSmoothScroll(e, '#sermones')}
+            className={linkClass('#sermones')}
+          >
+            SERMONES
+          </a>
         </li>
         <li>
           <a
@@ -132,11 +134,14 @@ const Navbar: React.FC = () => {
             MINISTERIOS
           </a>
         </li>
-        <li
-          onClick={(e) => handleSmoothScroll(e, '#visitanos')}
-          className={`bg-primary-500 px-6 py-2 text-white rounded-md ${linkClass('#visitanos', true)}`}
-        >
-          <a href="#visitanos">Visítanos</a>
+        <li>
+          <a
+            href="#visitanos"
+            onClick={(e) => handleSmoothScroll(e, '#visitanos')}
+            className={`bg-primary-500 px-6 py-2 text-white rounded-md ${linkClass('#visitanos', true)}`}
+          >
+            Visítanos
+          </a>
         </li>
       </ul>
     </nav>
