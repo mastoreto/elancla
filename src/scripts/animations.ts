@@ -76,9 +76,7 @@ export function initAnimations() {
           el.classList.toggle('shadow-xl', idx + 1 === index);
         });
     }
-  }, 100);
 
-  setTimeout(() => {
     gsap.from('.fade-sermons', {
       opacity: 0,
       y: 50,
@@ -89,5 +87,67 @@ export function initAnimations() {
         toggleActions: 'play none none reverse',
       },
     });
+
+    gsap.from('.swiper-slide', {
+      opacity: 0,
+      y: 100,
+      rotate: -5, // Pequeña inclinación inicial
+      duration: 0.6,
+      stagger: 0.2, // Aparecen en cascada
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.swiper', // El contenedor principal
+        start: 'top 80%', // Ajustá según el scroll
+        toggleActions: 'play none none reverse', // Reaparece si vuelve a scrollear
+      },
+    });
   }, 100);
+}
+
+export function animateMinistries() {
+  const cards = document.querySelectorAll<HTMLDivElement>('.mcard');
+
+  if (cards.length === 0) {
+    console.warn('No se encontraron cards de ministerios.');
+    return;
+  }
+
+  cards.forEach((card) => {
+    const img = card.querySelector<HTMLImageElement>('.mcard-img');
+    const text = card.querySelector<HTMLElement>('.mcard-text');
+
+    if (!img || !text) {
+      console.warn('Falta img o text en una card de ministerio.');
+      return;
+    }
+
+    // Ocultamos el texto para el efecto typewriter
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: card,
+        start: 'top 85%', // Ajustá según la visibilidad deseada
+        toggleActions: 'play none none reverse',
+      },
+    });
+
+    // Animación de la imagen (fade + subida suave)
+    tl.from(img, {
+      opacity: 0,
+      y: 50,
+      duration: 0.6,
+      ease: 'power2.out',
+    });
+
+    tl.from(
+      text,
+      {
+        opacity: 0,
+        y: 20,
+        duration: 0.8,
+        ease: 'power2.out',
+      },
+      '-=0.3'
+    );
+  });
 }
