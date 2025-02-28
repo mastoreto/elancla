@@ -4,50 +4,36 @@ import { Icon } from 'astro-icon/components';
 
 const classes = {
   section: cn(
-    'w-screen h-auto',
-    'flex flex-col xl:flex-row mt-[30rem] xl:mt-[10rem]'
+    'w-screen h-[300vh]',
+    'flex flex-col xl:flex-row justify-start',
+    'mt-[0rem] xl:mt-[0rem]'
+  ),
+  activitiesWrapper: cn(
+    'w-full xl:w-1/2 flex-2 order-1 xl:order-2', // Sin act-desc acá, lo movemos
+    'relative flex items-start justify-center act-desc'
   ),
   activities: cn(
-    'w-full xl:w-1/2 flex-2 order-1 xl:order-2',
-    'mx-auto',
-    'flex',
-    'flex-col',
-    'justify-center',
-    'px-10 xl:px-[5rem] 2xl:px-[12rem]'
+    'w-full max-w-3xl px-10 xl:px-[5rem] py-[15rem] 2xl:px-[0rem]',
+    'flex flex-col justify-start h-screen' // Garantiza centrado vertical
   ),
   cards: cn(
     'w-full xl:w-1/2 order-2 xl:order-1',
-    'h-full',
-    'px-5',
-    'md:px-0',
-    'py-10',
-    'flex',
-    'flex-col',
-    'items-center',
-    'justify-center'
+    'h-screen pt-[10rem] flex flex-col items-center justify-center transition duration-200'
   ),
   title: cn(
     'font-barastika text-black text-6xl md:text-4xl text-left',
-    'md:text-[5rem] font-bold  '
+    'md:text-[5rem] font-bold'
   ),
   paragraph: cn(
     'text-montserrat text-wrap text-[0.9rem] md:text-xl w-full my-[2rem] text-left'
   ),
-  grids: cn('grid grid-rows-3', 'grid-cols-1 gap-16'),
+  grids: cn('grid grid-rows-3 grid-cols-1 gap-16 timeline-section'),
   card: cn(
-    'flex',
-    'items-center',
-    'p-5',
-    'font-montserrat',
-    'bg-secondary-100',
-    'rounded-xl',
-    'justify-between'
+    'flex items-center p-5 font-montserrat bg-secondary-100 rounded-xl justify-between',
+    'w-full max-w-[500px]'
   ),
   button: cn(
-    'w-full',
-    'bg-primary-500 text-white',
-    'text-center py-3 mt-5 rounded-md ',
-    'font-bold font-montserrat text-xl'
+    'w-full bg-primary-500 text-white text-center py-3 mt-5 rounded-md font-bold font-montserrat text-xl'
   ),
 };
 ---
@@ -55,7 +41,7 @@ const classes = {
 <section class={classes.section} id="actividades">
   <div class={classes.cards}>
     <div class={classes.grids}>
-      <div class={classes.card}>
+      <div class={`card-1 ${classes.card}`}>
         <div class="p-4 rounded-md flex items-center justify-center">
           <Icon
             name="fa6-solid:cross"
@@ -67,12 +53,11 @@ const classes = {
             <p>Domingos</p>
             <p>11:15hs</p>
           </div>
-          <h3 class="font-bold text-lg md:text-xl text-bold">
-            Culto de celebración
-          </h3>
+          <h3 class="font-bold text-lg md:text-xl">Culto de celebración</h3>
         </div>
       </div>
-      <div class={classes.card}>
+
+      <div class={`card-2 ${classes.card}`}>
         <div class="p-4 rounded-md flex items-center justify-center">
           <Icon
             name="fa6-solid:book-bible"
@@ -84,12 +69,11 @@ const classes = {
             <p>Domingos</p>
             <p>10:00hs</p>
           </div>
-          <h3 class="font-bold text-lg md:text-xl text-bold">
-            Escuela Biblica
-          </h3>
+          <h3 class="font-bold text-lg md:text-xl">Escuela Biblica</h3>
         </div>
       </div>
-      <div class={classes.card}>
+
+      <div class={`card-3 ${classes.card}`}>
         <div class="p-4 rounded-md flex items-center justify-center">
           <Icon
             name="fa6-solid:person-praying"
@@ -102,22 +86,24 @@ const classes = {
             <p>1° y 3° Presencial</p>
             <p>19:00hs</p>
           </div>
-          <h3 class="font-bold text-lg md:text-xl text-bold">
-            Reunión de oración
-          </h3>
+          <h3 class="font-bold text-lg md:text-xl">Reunión de oración</h3>
         </div>
       </div>
     </div>
   </div>
-  <div class={classes.activities}>
-    <h2 class={classes.title}>Actividades</h2>
-    <p class={classes.paragraph}>
-      Una iglesia viva es una iglesia activa que se edifica y sirve a su
-      comunidad. Aquí, la fe se traduce en acciones concretas, creando un
-      ambiente de amor, apoyo y crecimiento espiritual. A través de obras de
-      caridad y eventos comunitarios, nos convertimos en un pilar de esperanza y
-      apoyo, fortaleciendo tanto a la comunidad como a nuestros miembros.
-    </p>
-    <a href="/actividades" class={classes.button}>Calendario</a>
+
+  <!-- Nueva estructura: envolvente + act-desc -->
+  <div class={classes.activitiesWrapper}>
+    <div class={classes.activities}>
+      <h2 class={classes.title}>Actividades</h2>
+      <p class={classes.paragraph}>
+        Una iglesia viva es una iglesia activa que se edifica y sirve a su
+        comunidad. Aquí, la fe se traduce en acciones concretas, creando un
+        ambiente de amor, apoyo y crecimiento espiritual. A través de obras de
+        caridad y eventos comunitarios, nos convertimos en un pilar de esperanza
+        y apoyo, fortaleciendo tanto a la comunidad como a nuestros miembros.
+      </p>
+      <a href="/actividades" class={classes.button}>Calendario</a>
+    </div>
   </div>
 </section>
