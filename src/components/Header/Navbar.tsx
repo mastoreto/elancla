@@ -89,7 +89,7 @@ const Navbar: React.FC = () => {
   return (
     <nav id="menu" className={classes.nav}>
       <ul className={classes.ul}>
-        <li className="text-white md:text-black">
+        <li>
           <a
             href="#inicio"
             onClick={(e) => handleSmoothScroll(e, '#inicio')}
@@ -98,7 +98,7 @@ const Navbar: React.FC = () => {
             INICIO
           </a>
         </li>
-        <li className="text-white md:text-black">
+        <li>
           <a
             href="#elancla"
             onClick={(e) => handleSmoothScroll(e, '#elancla')}
@@ -107,7 +107,7 @@ const Navbar: React.FC = () => {
             EL ANCLA
           </a>
         </li>
-        <li className="text-white md:text-black">
+        <li>
           <a
             href="#actividades"
             onClick={(e) => handleSmoothScroll(e, '#actividades')}
@@ -117,13 +117,13 @@ const Navbar: React.FC = () => {
           </a>
         </li>
         <li
-          className="text-white md:text-black"
+          className=""
           onClick={(e) => handleSmoothScroll(e, '#sermones')}
           className={linkClass('#sermones')}
         >
           <a href="#sermones">SERMONES</a>
         </li>
-        <li className="text-white md:text-black">
+        <li>
           <a
             href="#ministerios"
             onClick={(e) => handleSmoothScroll(e, '#ministerios')}
