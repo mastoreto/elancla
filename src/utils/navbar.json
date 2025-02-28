@@ -8,13 +8,13 @@
   {
     "id": 2,
     "name": "SOBRE NOSOTROS",
-    "url": "#about",
+    "url": "#elancla",
     "button": false
   },
   {
     "id": 3,
     "name": "ACTIVIDADES",
-    "url": "#contact",
+    "url": "#actividades",
     "button": false
   },
   {
@@ -26,7 +26,7 @@
   {
     "id": 5,
     "name": "CONTACTO",
-    "url": "#contact",
+    "url": "#visitanos",
     "button": true
   }
 ]
