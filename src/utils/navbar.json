@@ -2,7 +2,7 @@
   {
     "id": 1,
     "name": "INICIO",
-    "url": "/",
+    "url": "#inicio",
     "button": false
   },
   {
@@ -19,12 +19,18 @@
   },
   {
     "id": 4,
+    "name": "SERMONES",
+    "url": "#sermones",
+    "button": false
+  },
+  {
+    "id": 5,
     "name": "MINISTERIOS",
     "url": "#ministerios",
     "button": false
   },
   {
-    "id": 5,
+    "id": 6,
     "name": "CONTACTO",
     "url": "#visitanos",
     "button": true
