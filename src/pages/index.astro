@@ -34,10 +34,10 @@ const classes = {
   import { initAnimations, animateActivitiesDesktop,animateActivitiesMobile } from '../scripts/animations.ts';
   const windowSize = window.innerWidth;
   setTimeout(initAnimations, 100);
-  if (windowSize > 1024)
-{
+  if (windowSize > 768)
+  {
     setTimeout(animateActivitiesDesktop, 100);
-}else{
+  }else{
     setTimeout(animateActivitiesMobile, 100);
-}
+  }
 </script>
