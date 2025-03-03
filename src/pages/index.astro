@@ -30,3 +30,14 @@ const classes = {
   <Ministries />
   <Contact />
 </Layout>
+<script>
+  import { initAnimations, animateActivitiesDesktop,animateActivitiesMobile } from '../scripts/animations.ts';
+  const windowSize = window.innerWidth;
+  setTimeout(initAnimations, 100);
+  if (windowSize > 1024)
+{
+    setTimeout(animateActivitiesDesktop, 100);
+}else{
+    setTimeout(animateActivitiesMobile, 100);
+}
+</script>

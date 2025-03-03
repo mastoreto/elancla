@@ -3,17 +3,15 @@ import Card from '../components/Card.astro';
 import cn from '../utils/cn.ts';
 
 const classes = {
-  section: cn('flex flex-col mt-[10rem]'),
+  section: cn('flex flex-col mt-[10rem] fade-sermons'),
   title: cn(
     'font-barastika text-primary-500 text-6xl md:text-4xl',
     'md:text-[5rem] font-bold my-5 mx-8 md:mx-24'
   ),
 };
-
-const { size } = Astro.props;
 ---
 
-<section class={`${size} ${classes.section}`} id="sermones">
+<section class={classes.section} id="sermones">
   <h2 class={classes.title}>Sermones</h2>
   <div class="swiper sermon-swiper mt-5">
     <div class="swiper-wrapper">
