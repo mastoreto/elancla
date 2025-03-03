@@ -218,7 +218,7 @@ export function animateActivitiesMobile() {
         onStart: () => setActiveCard(3),
       });
 
-    function setActiveCard(index) {
+    function setActiveCard(index: number) {
       document
         .querySelectorAll('.timeline-section .card')
         .forEach((el, idx) => {
