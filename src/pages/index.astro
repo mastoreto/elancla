@@ -31,6 +31,13 @@ const classes = {
   <Contact />
 </Layout>
 <script>
-  import { initAnimations } from '../scripts/animations.ts';
+  import { initAnimations, animateActivitiesDesktop,animateActivitiesMobile } from '../scripts/animations.ts';
+  const windowSize = window.innerWidth;
   setTimeout(initAnimations, 100);
+  if (windowSize > 1024)
+{
+    setTimeout(animateActivitiesDesktop, 100);
+}else{
+    setTimeout(animateActivitiesMobile, 100);
+}
 </script>

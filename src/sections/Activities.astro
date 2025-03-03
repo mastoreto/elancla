@@ -4,12 +4,12 @@ import { Icon } from 'astro-icon/components';
 
 const classes = {
   section: cn(
-    'w-screen h-[300vh]',
+    'w-screen h-[300vh] md:h-[300vh]',
     'flex flex-col xl:flex-row justify-start',
     'mt-[0rem] xl:mt-[0rem]'
   ),
   activitiesWrapper: cn(
-    'w-full xl:w-1/2 flex-2 order-1 xl:order-2', // Sin act-desc acá, lo movemos
+    'w-full h-full xl:w-1/2 flex-2 order-1 xl:order-2', // Sin act-desc acá, lo movemos
     'relative flex items-start justify-center act-desc'
   ),
   activities: cn(
@@ -18,7 +18,7 @@ const classes = {
   ),
   cards: cn(
     'w-full xl:w-1/2 order-2 xl:order-1',
-    'h-screen pt-[10rem] flex flex-col items-center justify-center transition duration-200'
+    'h-full pt-[10rem] flex flex-col items-center justify-center transition duration-200'
   ),
   title: cn(
     'font-barastika text-black text-6xl md:text-4xl text-left',
