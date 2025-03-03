@@ -116,7 +116,7 @@ export function animateActivitiesDesktop() {
       scrollTrigger: {
         trigger: '.timeline-section',
         start: 'top+=-100px 10rem',
-        end: '+=200%',
+        end: '+=100%',
         scrub: true,
         pin: true,
         pinSpacing: false,
