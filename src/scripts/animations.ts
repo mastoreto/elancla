@@ -109,7 +109,6 @@ export function animateActivitiesDesktop() {
       pin: true,
       pinSpacing: false, // Asegura que GSAP no agregue espacio raro
       scrub: true,
-      markers: true,
     });
 
     // Timeline para centrar cada card
@@ -121,7 +120,7 @@ export function animateActivitiesDesktop() {
         scrub: true,
         pin: true,
         pinSpacing: false,
-        markers: true,
+
         snap: {
           snapTo: 'labels',
           duration: { min: 0.2, max: 0.8 },
@@ -175,7 +174,6 @@ export function animateActivitiesMobile() {
       pin: true,
       pinSpacing: false,
       scrub: true,
-      markers: true,
     });
 
     const timeline = gsap.timeline({
@@ -191,7 +189,7 @@ export function animateActivitiesMobile() {
           duration: { min: 0.2, max: 0.8 },
           ease: 'power1.inOut',
         },
-        markers: true,
+
       },
     });
 
