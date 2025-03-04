@@ -244,7 +244,7 @@ export function initAnimations() {
       ScrollTrigger.create({
         trigger: '.act-desc',
         start: 'top 0rem',
-        end: '+=200%',
+        end: '+=350%',
         pin: true,
         pinSpacing: false, 
         scrub: true,
@@ -254,7 +254,7 @@ export function initAnimations() {
         scrollTrigger: {
           trigger: '.timeline-section',
           start: 'top+=-100px 10rem',
-          end: '+=100%',
+          end: '+=170%',
           scrub: true,
           pin: true,
           pinSpacing: false,
