@@ -5,31 +5,50 @@ import {
   motion,
   AnimatePresence,
 } from 'framer-motion';
+import { useMediaQuery } from 'src/utils/hooks';
 import Navbar from './Navbar';
 import cn from '../../utils/cn';
 
 const Header = () => {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+  const isDesktopXl = useMediaQuery('(min-width: 1280px)');
+  const isDesktop2Xl = useMediaQuery('(min-width: 1536px)');
 
-  // Actualizamos el estado cuando se supera el scroll deseado.
   useMotionValueEvent(scrollY, 'change', (value) => {
     setScrolled(value > 100);
   });
 
-  // Variants para el header principal
-  const headerVariants = {
+  const headerVariants = isDesktop2Xl ?
+  {
     initial: { width: '100%', marginTop: '0' },
-    scrolled: { width: '40%', marginTop: '2rem' },
-  };
+    scrolled: { width: '40%', marginTop: '1rem' },
+  }: isDesktopXl ? {
+    initial: { width: '100%', marginTop: '0' },
+    scrolled: { width: '55%', marginTop: '1rem' },
+  } : isDesktop ? {
+    initial: { width: '100%', marginTop: '0' },
+    scrolled: { width: '60%', marginTop: '1rem' },
+  } : {
+    initial: { width: '100%', marginTop: '0' },
+    scrolled: { width: '60%', marginTop: '1rem' },
+  }  ;
 
-  // Variants para el contenedor que ajusta el padding
-  const paddingVariants = {
+  const paddingVariants = isDesktop2Xl ? {
     initial: { paddingLeft: '20rem', paddingRight: '20rem' },
     scrolled: { paddingLeft: '1rem', paddingRight: '1rem' },
-  };
+  } : isDesktopXl ? {
+    initial: { paddingLeft: '20rem', paddingRight: '20rem' },
+    scrolled: { paddingLeft: '1rem', paddingRight: '1rem' },
+  } : isDesktop ? {
+    initial: { paddingLeft: '20rem', paddingRight: '20rem' },
+    scrolled: { paddingLeft: '1rem', paddingRight: '1rem' },
+  } :{
+    initial: { width: '100%', marginTop: '0' },
+    scrolled: { width: '60%', marginTop: '1rem' },
+  } ;
 
-  // Variants para el fondo animado
   const backgroundVariants = {
     initial: { opacity: 0 },
     visible: { opacity: 1 },
@@ -45,13 +64,12 @@ const Header = () => {
       'mx-auto',
       'h-[8rem]',
       'bg-transparent',
-      'w-screen',
       'z-50'
     ),
     animateHeader: cn(
-      'mx-auto absolute top-0 left-0 right-0 z-10',
+      ' absolute top-0 left-0 right-0 z-10',
       'bg-white/30 backdrop-blur-md',
-      'w-full',
+      'mx-auto',
       'h-full rounded-xl'
     ),
   };

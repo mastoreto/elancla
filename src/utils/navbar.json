@@ -3,31 +3,54 @@
     "id": 1,
     "name": "INICIO",
     "url": "#inicio",
-    "button": false
+    "button": false,
+    "subMenu": false
   },
   {
     "id": 2,
     "name": "SOBRE NOSOTROS",
     "url": "#elancla",
-    "button": false
+    "button": false,
+    "subMenu": false
   },
   {
     "id": 3,
     "name": "ACTIVIDADES",
     "url": "#actividades",
-    "button": false
+    "button": false,
+    "subMenu": false
   },
   {
     "id": 4,
-    "name": "SERMONES",
+    "name": "RECURSOS",
     "url": "#sermones",
-    "button": false
+    "button": false,
+    "subMenu": true,
+    "items": [
+      {
+        "id": 1,
+        "name": "SERMONES",
+        "url": "/sermones"
+      },
+      {
+        "id": 2,
+        "external": true,
+        "name": "Desafio de Verano 2025",
+        "url": "https://desafio.elancla.uy/"
+      },
+      {
+        "id": 3,
+        "name": "Reseña de libros",
+        "url": "/resenias"
+      }
+    ]
   },
   {
     "id": 5,
     "name": "MINISTERIOS",
     "url": "#ministerios",
-    "button": false
+    "button": false,
+    "subMenu": false
   },
   {
     "id": 6,
