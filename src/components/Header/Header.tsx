@@ -64,13 +64,12 @@ const Header = () => {
       'mx-auto',
       'h-[8rem]',
       'bg-transparent',
-      'w-screen',
       'z-50'
     ),
     animateHeader: cn(
-      'mx-auto absolute top-0 left-0 right-0 z-10',
+      ' absolute top-0 left-0 right-0 z-10',
       'bg-white/30 backdrop-blur-md',
-      'w-full',
+      'mx-auto',
       'h-full rounded-xl'
     ),
   };
