@@ -1,0 +1,15 @@
+---
+import Layout from 'src/layouts/Layout.astro';
+import Timeline from 'src/components/Timeline';
+import cn from 'src/utils/cn';
+
+const classes = {
+  section: cn('min-h-screen flex flex-col', 'relative', 'overflow-x-hidden'),
+};
+---
+
+<Layout title="Confesión de fe">
+  <section class={classes.section}>
+    <Timeline client:load />
+  </section>
+</Layout>

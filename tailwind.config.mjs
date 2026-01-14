@@ -5,6 +5,7 @@ export default {
     extend: {
       colors: {
         primary: {
+          DEFAULT: '#FF2E34',
           50: '#ffeff0',
           100: '#ffdcdf',
           200: '#ffbfc5',
@@ -30,8 +31,14 @@ export default {
           900: '#53443b',
           950: '#2c231e',
         },
+        'background-light': '#FDFBF7',
+        'background-dark': '#121212',
+        'paper-light': '#FFFFFF',
+        'paper-dark': '#1E1E1E',
       },
       fontFamily: {
+        display: ["'Playfair Display'", 'serif'],
+        body: ["'Inter'", 'sans-serif'],
         montserrat: ['Montserrat', 'sans-serif'],
         barastika: ['Barastika', 'sans-serif'],
         'futura-bold': ['FuturaNo2D', 'open-type'],
