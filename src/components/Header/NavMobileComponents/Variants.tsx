@@ -55,7 +55,8 @@ const Variants: React.FC = () => {
     container: cn(
       'fixed flex justify-start align-stretch',
       'flex-1 w-screen h-screen',
-      'overflow-hidden z-20'
+      'overflow-hidden z-20',
+      isOpen ? 'pointer-events-auto' : 'pointer-events-none'
     ),
     nav: cn('w-full'),
     background: cn(
@@ -68,6 +69,7 @@ const Variants: React.FC = () => {
 
   return (
     <div>
+      <MenuToggle />
       <div className={classes.container}>
         <motion.nav
           initial={false}
@@ -81,7 +83,6 @@ const Variants: React.FC = () => {
             variants={sidebarVariants}
           />
           <Navigation />
-          <MenuToggle />
         </motion.nav>
       </div>
     </div>
