@@ -9,7 +9,11 @@ import { useMediaQuery } from 'src/utils/hooks';
 import Navbar from './Navbar';
 import cn from '../../utils/cn';
 
-const Header = () => {
+interface HeaderProps {
+  isBlog?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ isBlog = false }) => {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
   const isDesktop = useMediaQuery('(min-width: 1024px)');
@@ -20,34 +24,52 @@ const Header = () => {
     setScrolled(value > 100);
   });
 
-  const headerVariants = isDesktop2Xl ?
-  {
-    initial: { width: '100%', marginTop: '0' },
-    scrolled: { width: '40%', marginTop: '1rem' },
-  }: isDesktopXl ? {
-    initial: { width: '100%', marginTop: '0' },
-    scrolled: { width: '55%', marginTop: '1rem' },
-  } : isDesktop ? {
-    initial: { width: '100%', marginTop: '0' },
-    scrolled: { width: '60%', marginTop: '1rem' },
-  } : {
-    initial: { width: '100%', marginTop: '0' },
-    scrolled: { width: '60%', marginTop: '1rem' },
-  }  ;
+  const headerVariants = isDesktop2Xl
+    ? {
+        initial: { width: '100%', marginTop: '0' },
+        scrolled: { width: '40%', marginTop: '1rem' },
+      }
+    : isDesktopXl
+      ? {
+          initial: { width: '100%', marginTop: '0' },
+          scrolled: { width: '55%', marginTop: '1rem' },
+        }
+      : isDesktop
+        ? {
+            initial: { width: '100%', marginTop: '0' },
+            scrolled: { width: '60%', marginTop: '1rem' },
+          }
+        : {
+            initial: { width: '100%', marginTop: '0' },
+            scrolled: { width: '60%', marginTop: '1rem' },
+          };
 
-  const paddingVariants = isDesktop2Xl ? {
-    initial: { paddingLeft: '20rem', paddingRight: '20rem' },
-    scrolled: { paddingLeft: '1rem', paddingRight: '1rem' },
-  } : isDesktopXl ? {
-    initial: { paddingLeft: '20rem', paddingRight: '20rem' },
-    scrolled: { paddingLeft: '1rem', paddingRight: '1rem' },
-  } : isDesktop ? {
-    initial: { paddingLeft: '20rem', paddingRight: '20rem' },
-    scrolled: { paddingLeft: '1rem', paddingRight: '1rem' },
-  } :{
-    initial: { width: '100%', marginTop: '0' },
-    scrolled: { width: '60%', marginTop: '1rem' },
-  } ;
+  const usedHeaderVariants = isBlog
+    ? {
+        initial: { width: '100%', marginTop: '0' },
+        scrolled: { width: '100%', marginTop: '0' },
+      }
+    : headerVariants;
+
+  const paddingVariants = isDesktop2Xl
+    ? {
+        initial: { paddingLeft: '20rem', paddingRight: '20rem' },
+        scrolled: { paddingLeft: '1rem', paddingRight: '1rem' },
+      }
+    : isDesktopXl
+      ? {
+          initial: { paddingLeft: '20rem', paddingRight: '20rem' },
+          scrolled: { paddingLeft: '1rem', paddingRight: '1rem' },
+        }
+      : isDesktop
+        ? {
+            initial: { paddingLeft: '20rem', paddingRight: '20rem' },
+            scrolled: { paddingLeft: '1rem', paddingRight: '1rem' },
+          }
+        : {
+            initial: { width: '100%', marginTop: '0' },
+            scrolled: { width: '60%', marginTop: '1rem' },
+          };
 
   const backgroundVariants = {
     initial: { opacity: 0 },
@@ -62,7 +84,7 @@ const Header = () => {
       'transition duration-200',
       'md:justify-center md:items-center',
       'mx-auto',
-      'h-[8rem]',
+      isBlog ? 'h-[5rem]' : 'h-[8rem]',
       'bg-transparent',
       'z-50'
     ),
@@ -77,7 +99,7 @@ const Header = () => {
   return (
     <motion.header
       className={classes.header}
-      variants={headerVariants}
+      variants={usedHeaderVariants}
       animate={scrolled ? 'scrolled' : 'initial'}
       transition={{ duration: 0.4, ease: 'easeInOut' }}
     >
@@ -110,7 +132,7 @@ const Header = () => {
           alt="logo"
           className="w-[3rem] h-[3rem] mt-[1rem] mb-[1rem] hidden"
         />
-        <Navbar />
+        <Navbar showSearch={isBlog} />
       </motion.div>
     </motion.header>
   );
