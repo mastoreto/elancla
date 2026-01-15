@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "FuturaNo2D";
+  src:
+    url("/assets/fonts/futura-no2-d-bold.woff2") format("woff2"),
+    url("/assets/fonts/futura-no2-d-bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Barastika";
+  src:
+    url("/assets/fonts/Brastika-Black.woff2") format("woff2"),
+    url("/assets/fonts/Brastika-Black.woff") format("woff");
+  font-weight: medium;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Futura No2 D OT Medium";
+  src:
+    url("/assets/fonts/futura-no2-d-ot-medium.woff2") format("woff2"),
+    url("/assets/fonts/futura-no2-d-ot-medium.woff") format("woff");
+  font-weight: 500; /* Medium weight */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Boston Angel Regular";
+  src:
+    url("/assets/fonts/Boston Angel Regular.woff2") format("woff2"),
+    url("/assets/fonts/Boston Angel Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Boston Angel Bold";
+  src:
+    url("/assets/fonts/Boston Angel Bold.woff2") format("woff2"),
+    url("/assets/fonts/Boston Angel Bold.woff") format("woff");
+  font-weight: Bold;
+  font-style: normal;
+}
+
+.clip-path {
+  clip-path: "box-border";
+}
+
+/* Masonry Grid */
+.masonry-grid {
+  column-count: 1;
+  column-gap: 2rem;
+}
+@media (min-width: 640px) {
+  .masonry-grid {
+    column-count: 2;
+  }
+}
+@media (min-width: 1024px) {
+  .masonry-grid {
+    column-count: 3;
+  }
+}
+.break-inside-avoid {
+  break-inside: avoid;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

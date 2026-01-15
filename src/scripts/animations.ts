@@ -49,8 +49,8 @@ export function initAnimations() {
     });
   }, 100);
 
- // Celular (Mobile): hasta 767px
-  mm.add("(max-width: 767px)", () => {
+  // Celular (Mobile): hasta 767px
+  mm.add('(max-width: 767px)', () => {
     setTimeout(() => {
       ScrollTrigger.create({
         trigger: '.act-desc',
@@ -60,7 +60,7 @@ export function initAnimations() {
         pinSpacing: false,
         scrub: true,
       });
-  
+
       const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: '.timeline-section',
@@ -74,10 +74,9 @@ export function initAnimations() {
             duration: { min: 0.2, max: 0.8 },
             ease: 'power1.inOut',
           },
-  
         },
       });
-  
+
       timeline
         .addLabel('card1')
         .from('.card-1', {
@@ -100,7 +99,7 @@ export function initAnimations() {
           duration: 1,
           onStart: () => setActiveCard(3),
         });
-  
+
       function setActiveCard(index: number) {
         document
           .querySelectorAll('.timeline-section .card')
@@ -113,7 +112,7 @@ export function initAnimations() {
   });
 
   // Tablet: entre 768px y 1023px
-  mm.add("(min-width: 768px) and (max-width: 1023px)", () => {
+  mm.add('(min-width: 768px) and (max-width: 1023px)', () => {
     setTimeout(() => {
       ScrollTrigger.create({
         trigger: '.act-desc',
@@ -123,7 +122,7 @@ export function initAnimations() {
         pinSpacing: false,
         scrub: true,
       });
-  
+
       const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: '.timeline-section',
@@ -137,10 +136,9 @@ export function initAnimations() {
             duration: { min: 0.2, max: 0.8 },
             ease: 'power1.inOut',
           },
-  
         },
       });
-  
+
       timeline
         .addLabel('card1')
         .from('.card-1', {
@@ -163,7 +161,7 @@ export function initAnimations() {
           duration: 1,
           onStart: () => setActiveCard(3),
         });
-  
+
       function setActiveCard(index: number) {
         document
           .querySelectorAll('.timeline-section .card')
@@ -176,14 +174,14 @@ export function initAnimations() {
   });
 
   // Desktop: entre 1024px y 1279px
-  mm.add("(min-width: 1024px) and (max-width: 1279px)", () => {
+  mm.add('(min-width: 1024px) and (max-width: 1279px)', () => {
     setTimeout(() => {
       ScrollTrigger.create({
         trigger: '.act-desc',
         start: 'top 30rem',
         end: '+=200%',
         pin: true,
-        pinSpacing: false, 
+        pinSpacing: false,
         scrub: true,
       });
 
@@ -195,7 +193,7 @@ export function initAnimations() {
           scrub: true,
           pin: true,
           pinSpacing: false,
-  
+
           snap: {
             snapTo: 'labels',
             duration: { min: 0.2, max: 0.8 },
@@ -203,7 +201,7 @@ export function initAnimations() {
           },
         },
       });
-  
+
       timeline
         .addLabel('card1')
         .from('.card-1', {
@@ -226,7 +224,7 @@ export function initAnimations() {
           duration: 1,
           onStart: () => setActiveCard(3),
         });
-  
+
       function setActiveCard(index: number) {
         document
           .querySelectorAll('.timeline-section .card')
@@ -239,14 +237,14 @@ export function initAnimations() {
   });
 
   // Desktop XL: entre 1280px y 1535px
-  mm.add("(min-width: 1280px) and (max-width: 1535px)", () => {
+  mm.add('(min-width: 1280px) and (max-width: 1535px)', () => {
     setTimeout(() => {
       ScrollTrigger.create({
         trigger: '.act-desc',
         start: 'top 0rem',
         end: '+=350%',
         pin: true,
-        pinSpacing: false, 
+        pinSpacing: false,
         scrub: true,
       });
 
@@ -258,7 +256,7 @@ export function initAnimations() {
           scrub: true,
           pin: true,
           pinSpacing: false,
-  
+
           snap: {
             snapTo: 'labels',
             duration: { min: 0.2, max: 0.8 },
@@ -266,7 +264,7 @@ export function initAnimations() {
           },
         },
       });
-  
+
       timeline
         .addLabel('card1')
         .from('.card-1', {
@@ -289,7 +287,7 @@ export function initAnimations() {
           duration: 1,
           onStart: () => setActiveCard(3),
         });
-  
+
       function setActiveCard(index: number) {
         document
           .querySelectorAll('.timeline-section .card')
@@ -301,7 +299,7 @@ export function initAnimations() {
     }, 100);
   });
 
-  mm.add("(min-width: 1536px)", () => {
+  mm.add('(min-width: 1536px)', () => {
     setTimeout(() => {
       ScrollTrigger.create({
         trigger: '.act-desc',
@@ -311,7 +309,7 @@ export function initAnimations() {
         pinSpacing: false, // Asegura que GSAP no agregue espacio raro
         scrub: true,
       });
-  
+
       // Timeline para centrar cada card
       const timeline = gsap.timeline({
         scrollTrigger: {
@@ -321,7 +319,7 @@ export function initAnimations() {
           scrub: true,
           pin: true,
           pinSpacing: false,
-  
+
           snap: {
             snapTo: 'labels',
             duration: { min: 0.2, max: 0.8 },
@@ -329,7 +327,7 @@ export function initAnimations() {
           },
         },
       });
-  
+
       // Aparecen centradas una a una
       timeline
         .addLabel('card1')
@@ -353,7 +351,7 @@ export function initAnimations() {
           duration: 1,
           onStart: () => setActiveCard(3),
         });
-  
+
       function setActiveCard(index: number) {
         document
           .querySelectorAll('.timeline-section .card')
