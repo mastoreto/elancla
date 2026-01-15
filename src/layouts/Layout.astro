@@ -1,18 +1,20 @@
 ---
 import { SEO } from 'astro-seo';
+import '../styles/global.css';
 import cn from '../utils/cn.ts';
 import Header from '../components/Header/index.tsx';
 import Footer from '../components/Footer.astro';
 
 interface Props {
   title: string;
+  isBlog?: boolean;
 }
 
 const classes = {
   main: cn('max-w-full flex flex-col', 'relative', 'overflow-x-hidden'),
 };
 
-const { title } = Astro.props;
+const { title, isBlog = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -37,7 +39,6 @@ const { title } = Astro.props;
         },
       }}
     />
-    <link rel="stylesheet" href="/styles/global.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -48,9 +49,21 @@ const { title } = Astro.props;
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Noto+Sans:wght@400;500;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
   </head>
   <body class="overflow-x-hidden">
-    <Header client:only="react" />
+    <Header client:only="react" isBlog={isBlog} />
     <main class={classes.main}>
       <slot />
     </main>
