@@ -86,27 +86,42 @@ const Navbar: React.FC<NavbarProps> = ({ showSearch = false }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const isHashLink = (target: string) => target.startsWith('#');
+  const isHomePage = () => {
+    if (typeof window === 'undefined') {
+      return true;
+    }
+    return window.location.pathname === '/' || window.location.pathname === '';
+  };
+  const getResolvedHref = (target: string) => {
+    if (!isHashLink(target)) {
+      return target;
+    }
+    return isHomePage() ? target : `/${target}`;
+  };
   const handleSmoothScroll = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
     target: string
   ) => {
-    if (target.startsWith('https')) {
+    if (!isHashLink(target) || !isHomePage()) {
+      return;
+    }
+
+    const targetElement = document.querySelector(target);
+    if (!targetElement) {
       return;
     }
 
     e.preventDefault();
 
-    const targetElement = document.querySelector(target);
-    if (targetElement) {
-      gsap.to(window, {
-        duration: 1.2,
-        scrollTo: {
-          y: targetElement,
-          autoKill: false,
-        },
-        ease: 'power2.out',
-      });
-    }
+    gsap.to(window, {
+      duration: 1.2,
+      scrollTo: {
+        y: targetElement,
+        autoKill: false,
+      },
+      ease: 'power2.out',
+    });
   };
 
   const handleMouseEnter = (index: number) => {
@@ -131,7 +146,7 @@ const Navbar: React.FC<NavbarProps> = ({ showSearch = false }) => {
       onMouseLeave={handleMouseLeave}
     >
       <a
-        href={item.url}
+        href={getResolvedHref(item.url)}
         onClick={(e) => handleSmoothScroll(e, item.url)}
         className={linkClass(item.url, item.button)}
       >
@@ -144,7 +159,7 @@ const Navbar: React.FC<NavbarProps> = ({ showSearch = false }) => {
               <li key={subIndex}>
                 <a
                   key={subIndex}
-                  href={subItem.url}
+                  href={getResolvedHref(subItem.url)}
                   onClick={(e) => handleSmoothScroll(e, subItem.url)}
                   className={'text-white'}
                   {...(subItem?.external

@@ -80,23 +80,42 @@ const MenuItem = ({ i }: { i: IItem }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const isHashLink = (target: string) => target.startsWith('#');
+  const isHomePage = () => {
+    if (typeof window === 'undefined') {
+      return true;
+    }
+    return window.location.pathname === '/' || window.location.pathname === '';
+  };
+  const getResolvedHref = (target: string) => {
+    if (!isHashLink(target)) {
+      return target;
+    }
+    return isHomePage() ? target : `/${target}`;
+  };
   const handleSmoothScroll = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
     target: string
   ) => {
-    e.preventDefault();
+    if (!isHashLink(target) || !isHomePage()) {
+      return;
+    }
 
     const targetElement = document.querySelector(target);
-    if (targetElement) {
-      gsap.to(window, {
-        duration: 1.2,
-        scrollTo: {
-          y: targetElement,
-          autoKill: false,
-        },
-        ease: 'power2.out',
-      });
+    if (!targetElement) {
+      return;
     }
+
+    e.preventDefault();
+
+    gsap.to(window, {
+      duration: 1.2,
+      scrollTo: {
+        y: targetElement,
+        autoKill: false,
+      },
+      ease: 'power2.out',
+    });
   };
   return (
     <motion.li
@@ -108,7 +127,7 @@ const MenuItem = ({ i }: { i: IItem }) => {
       whileTap={{ scale: 0.95 }}
     >
       <a
-        href={i.url}
+        href={getResolvedHref(i.url)}
         onClick={(e) => handleSmoothScroll(e, i.url)}
         className={linkClass(i.url)}
       >
