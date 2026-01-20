@@ -1,5 +1,5 @@
+/** biome-ignore-all assist/source/organizeImports: <false positive> */
 import { defineConfig } from 'astro/config';
-import path from 'path';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
