@@ -1,4 +1,68 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+
+@theme {
+  --color-primary: #FF2E34;
+  --color-primary-50: #ffeff0;
+  --color-primary-100: #ffdcdf;
+  --color-primary-200: #ffbfc5;
+  --color-primary-300: #ff929c;
+  --color-primary-400: #ff5463;
+  --color-primary-500: #ff1f33;
+  --color-primary-600: #ff0016;
+  --color-primary-700: #db0013;
+  --color-primary-800: #b70010;
+  --color-primary-900: #940814;
+  --color-primary-950: #520007;
+
+  --color-secondary-50: #f8f7f4;
+  --color-secondary-100: #f3f1ec;
+  --color-secondary-200: #ddd8cb;
+  --color-secondary-300: #c8bda9;
+  --color-secondary-400: #b19f86;
+  --color-secondary-500: #a18a6e;
+  --color-secondary-600: #947a62;
+  --color-secondary-700: #7c6452;
+  --color-secondary-800: #655247;
+  --color-secondary-900: #53443b;
+  --color-secondary-950: #2c231e;
+
+  --color-primary-dark: #D91A23;
+  --color-background-light: #FAF8F5;
+  --color-background-dark: #1a1a1a;
+  --color-surface-light: #ffffff;
+  --color-surface-dark: #2a2a2a;
+  --color-neutral-850: #1f1f1f;
+  --color-paper-light: #FFFFFF;
+  --color-paper-dark: #1E1E1E;
+
+  --font-display: "Newsreader", serif;
+  --font-sans: "Noto Sans", sans-serif;
+  --font-body: "Merriweather", serif;
+  --font-montserrat: "Montserrat", sans-serif;
+  --font-barastika: "Barastika", sans-serif;
+  --font-futura-bold: "FuturaNo2D", "open-type";
+  --font-futura: "Futura No2 D OT Medium", "open-type";
+  --font-boston-angel: "Boston Angel", sans-serif;
+  --font-boston-angel-bold: "Boston Angel Bold", sans-serif;
+
+  --background-image-home-banner: url('/images/homebanner.jpeg');
+  --background-image-aboutus: url('/images/aboutus.jpg');
+
+  --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+
+  --radius: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
+/* Enable class-based dark mode */
+@variant dark (&:where(.dark, .dark *));
 
 @font-face {
   font-family: "FuturaNo2D";
@@ -47,6 +111,49 @@
 
 .clip-path {
   clip-path: "box-border";
+}
+
+/* Typography Overrides */
+.prose {
+  color: var(--color-gray-700);
+  font-family: var(--font-body);
+}
+
+.prose h2 {
+  font-family: var(--font-display);
+  color: var(--color-gray-900);
+}
+
+.prose h3 {
+  font-family: var(--font-display);
+  color: var(--color-gray-900);
+}
+
+.prose strong {
+  color: var(--color-gray-900);
+}
+
+.prose blockquote {
+  font-family: var(--font-display);
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+  font-style: italic;
+}
+
+.dark .prose {
+  color: var(--color-gray-300);
+}
+
+.dark .prose h2 {
+  color: var(--color-white);
+}
+
+.dark .prose h3 {
+  color: var(--color-white);
+}
+
+.dark .prose strong {
+  color: var(--color-white);
 }
 
 /* Masonry Grid */
