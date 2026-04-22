@@ -4,18 +4,22 @@ import cn from '../utils/cn.ts';
 
 const classes = {
   section: cn(
-    'flex flex-col xl:flex-row w-screen h-auto px-5 md:px-[10rem] py-8 mt-[50rem] md:mt-[10rem] xl:mt-[10rem]'
+    'flex flex-col xl:flex-row w-screen h-auto',
+    'px-5 sm:px-8 md:px-16 xl:px-[10rem]',
+    'py-16 md:py-20 xl:py-16',
+    'mt-12 md:mt-16 xl:mt-10'
   ),
-  title: cn('text-7xl font-barastika '),
-  paragraph: cn('text-2xl font-montserrat'),
+  title: cn('text-6xl sm:text-7xl font-barastika leading-tight'),
+  paragraph: cn('text-lg sm:text-xl md:text-2xl font-montserrat mt-4 md:mt-6'),
   visitus: cn('flex flex-col justify-center w-full xl:w-1/2'),
-  maps: cn('w-full xl:w-1/2'),
+  maps: cn('w-full xl:w-1/2 mt-10 xl:mt-0'),
   map: cn(
     'rounded-xl mx-auto',
-    'h-[30rem] md:h-[23rem] w-[90%] md:w-full xl:w-[80%]'
+    'h-64 sm:h-80 md:h-96 xl:h-[28rem] w-full xl:w-[90%]'
   ),
   ul: cn(
-    'text-primary-800 font-bold h-[6.5rem] flex flex-col md:flex-row font-montserrat mt-5'
+    'text-primary-800 font-bold flex flex-col sm:flex-row gap-3 sm:gap-6',
+    'font-montserrat mt-6'
   ),
 };
 ---
@@ -28,11 +32,13 @@ const classes = {
       sociales.
     </p>
     <ul class={classes.ul}>
-      <li class="flex flex-row text-primary-800 mr-5 mb-5 md:mb-0 text-xl">
-        <Icon name="mdi:youtube" class="text-3xl" /> @iglesiaelanclauy
+      <li class="flex flex-row items-center gap-2 text-primary-800 text-lg sm:text-xl">
+        <Icon name="mdi:youtube" class="text-3xl shrink-0" />
+        @iglesiaelanclauy
       </li>
-      <li class="flex flex-row text-primary-800 text-xl">
-        <Icon name="mdi:instagram" class="text-3xl" /> @iglesiaelancla
+      <li class="flex flex-row items-center gap-2 text-primary-800 text-lg sm:text-xl">
+        <Icon name="mdi:instagram" class="text-3xl shrink-0" />
+        @iglesiaelancla
       </li>
     </ul>
   </div>

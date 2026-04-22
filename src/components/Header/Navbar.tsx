@@ -1,71 +1,78 @@
-import React, { useState, useEffect } from 'react';
-import { gsap } from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import cn from 'src/utils/cn';
-import { sections } from 'src/utils/constants';
-import navbarData from 'src/utils/navbar.json';
-import SearchBar from './SearchBar';
+import React, { useState, useEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import cn from "src/utils/cn";
+import { sections } from "src/utils/constants";
+import navbarData from "src/utils/navbar.json";
+import SearchBar from "./SearchBar";
 
 gsap.registerPlugin(ScrollToPlugin);
 
 interface NavbarProps {
   showSearch?: boolean;
+  isCompacted?: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ showSearch = false }) => {
-  const [activeSection, setActiveSection] = useState<string>('');
+const Navbar: React.FC<NavbarProps> = ({
+  showSearch = false,
+  isCompacted = false,
+}) => {
+  const [activeSection, setActiveSection] = useState<string>("");
   const [activeSubMenu, setActiveSubMenu] = useState<number | null>(null);
   const [subMenuTimeout, setSubMenuTimeout] = useState<NodeJS.Timeout | null>(
-    null
+    null,
   );
 
   const linkClass = (section: string, isButton: boolean = false) =>
     cn(
-      `cursor-pointer transition-colors duration-300 ${
+      `cursor-pointer transition-all duration-300 ${
         activeSection === section
-          ? 'text-primary-500'
+          ? "text-primary-500"
           : isButton
-            ? 'text-white bg-primary-500 px-6 py-2 rounded-md'
-            : 'text-gray-600'
-      }`
+            ? "text-white bg-primary-500 px-6 py-2 rounded-md"
+            : "text-slate-900 dark:text-white"
+      }`,
+      isCompacted && "px-3",
     );
 
   const classes = {
     nav: cn(
-      'h-full w-full px-5 z-40',
-      showSearch && 'flex items-center justify-between'
+      "h-full w-full px-5 z-40",
+      showSearch && "flex items-center justify-between",
     ),
     icon: cn(
-      'md:hidden',
-      'absolute',
-      'top-4',
-      'right-4',
-      'text-white',
-      'text-4xl'
+      "md:hidden",
+      "absolute",
+      "top-4",
+      "right-4",
+      "text-white",
+      "text-4xl",
     ),
     ul: cn(
-      'flex',
-      'flex-row',
-      showSearch ? 'justify-start gap-8' : 'justify-between',
-      'h-full',
-      'items-center',
-      'py-[5rem]',
-      'md:py-0',
-      'font-futura'
+      "flex",
+      "flex-row",
+      showSearch ? "justify-start gap-8" : "justify-between",
+      "h-full",
+      "items-center",
+      isCompacted ? "py-2 gap-6" : "py-[5rem] md:py-0",
+      "md:py-0",
+      "font-futura",
+      isCompacted && "text-base md:text-lg",
     ),
-    li: cn('text-white', 'md:text-black'),
+    li: cn("text-white", "md:text-black"),
 
-    bg: cn('bg-primary-500', 'px-6', 'py-2', 'text-white', 'rounded-md'),
+    bg: cn("bg-primary-500", "px-6", "py-2", "text-white", "rounded-md"),
     subMenu: cn(
-      'absolute top-24 left-0 rounded-xl',
-      'w-[15rem] h-auto py-4 px-6',
-      'bg-primary-800/30 backdrop-blur-md'
+      "absolute left-0 rounded-xl",
+      isCompacted ? "top-12 w-[14rem]" : "top-24 w-[15rem]",
+      "h-auto py-4 px-6",
+      "bg-primary-800/30 backdrop-blur-md",
     ),
   };
 
   useEffect(() => {
     const handleScroll = () => {
-      let foundSection = '';
+      let foundSection = "";
 
       sections.forEach((section) => {
         const element = document.querySelector(section);
@@ -80,18 +87,18 @@ const Navbar: React.FC<NavbarProps> = ({ showSearch = false }) => {
       setActiveSection(foundSection);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     handleScroll(); // Ejecutar al cargar
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isHashLink = (target: string) => target.startsWith('#');
+  const isHashLink = (target: string) => target.startsWith("#");
   const isHomePage = () => {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       return true;
     }
-    return window.location.pathname === '/' || window.location.pathname === '';
+    return window.location.pathname === "/" || window.location.pathname === "";
   };
   const getResolvedHref = (target: string) => {
     if (!isHashLink(target)) {
@@ -101,7 +108,7 @@ const Navbar: React.FC<NavbarProps> = ({ showSearch = false }) => {
   };
   const handleSmoothScroll = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    target: string
+    target: string,
   ) => {
     if (!isHashLink(target) || !isHomePage()) {
       return;
@@ -120,7 +127,7 @@ const Navbar: React.FC<NavbarProps> = ({ showSearch = false }) => {
         y: targetElement,
         autoKill: false,
       },
-      ease: 'power2.out',
+      ease: "power2.out",
     });
   };
 
@@ -141,7 +148,7 @@ const Navbar: React.FC<NavbarProps> = ({ showSearch = false }) => {
   const navItems = navbarData.map((item, index) => (
     <li
       key={index}
-      className={item.subMenu ? 'relative' : ''}
+      className={`${classes.li} ${item.subMenu ? "relative" : ""}`}
       onMouseEnter={() => handleMouseEnter(index)}
       onMouseLeave={handleMouseLeave}
     >
@@ -161,9 +168,11 @@ const Navbar: React.FC<NavbarProps> = ({ showSearch = false }) => {
                   key={subIndex}
                   href={getResolvedHref(subItem.url)}
                   onClick={(e) => handleSmoothScroll(e, subItem.url)}
-                  className={'text-white'}
+                  className={
+                    "text-slate-900 dark:text-white hover:text-primary-500 transition-colors"
+                  }
                   {...(subItem?.external
-                    ? { target: '_blank', rel: 'noreferrer noopener' }
+                    ? { target: "_blank", rel: "noreferrer noopener" }
                     : {})}
                 >
                   {subItem.name}
