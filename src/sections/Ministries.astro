@@ -3,29 +3,34 @@ import cn from '../utils/cn.ts';
 import ministries from '../utils/ministriesData.json';
 
 const classes = {
-  section: cn('w-screen h-screen px-5 xl:px-[20rem] 2xl:px-[35rem] py-8'),
-  title: cn('mcard-text text-7xl font-barastika text-center'),
-  mininstries: cn('grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 mt-24'),
+  section: cn(
+    'w-screen min-h-screen',
+    'px-5 sm:px-10 md:px-16 xl:px-[12rem] 2xl:px-[25rem]',
+    'py-16 md:py-20'
+  ),
+  title: cn('mcard-text text-6xl sm:text-7xl font-barastika text-center'),
+  ministries: cn('grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 mt-16 md:mt-24'),
   card: cn(
     'mcard flex items-center justify-between bg-secondary-100 hover:cursor-pointer',
-    'p-5 rounded-xl',
-    'font-montserrat'
+    'p-4 sm:p-5 rounded-xl',
+    'font-montserrat',
+    'transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-md active:scale-[0.99]'
   ),
 };
 ---
 
 <section class={classes.section} id="ministerios">
   <h2 class={classes.title}>Ministerios</h2>
-  <div class={classes.mininstries}>
+  <div class={classes.ministries}>
     {
       ministries.map((ministry) => (
         <a href={ministry.url} class={classes.card}>
           <img
             src={ministry.icon}
             alt={ministry.name}
-            class="w-14 h-14 md:w-20 md:h-20 mcard-img"
+            class="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 mcard-img"
           />
-          <h3 class="text-4xl mcard-text font-montserrat">{ministry.name}</h3>
+          <h3 class="text-3xl sm:text-4xl mcard-text font-montserrat">{ministry.name}</h3>
         </a>
       ))
     }

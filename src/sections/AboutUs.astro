@@ -3,65 +3,42 @@ import cn from '../utils/cn.ts';
 
 const classes = {
   section: cn(
-    'w-screen h-screen',
+    'w-screen min-h-screen',
     'flex flex-col xl:flex-row',
-    'px-[2rem] xl:pt-28 xl:px-[5rem] mb-0 md:mb-[10rem] xl:mb-0 2xl:mb-0  fade-in'
+    'px-5 md:px-12 xl:pt-28 xl:px-[5rem]',
+    'mb-0 xl:mb-0 fade-in'
   ),
   title: cn(
-    'w-auto',
-    'h-auto',
-    'text-4xl md:text-3xl',
-    'leading-sm',
-    'md:text-6xl',
-    'text-red-500',
-    'font-bold',
-    'font-futura-bold',
-    'mt-10',
-    'mb-5',
-    'md:my-10'
+    'w-auto h-auto',
+    'text-4xl sm:text-5xl md:text-6xl',
+    'text-red-500 font-bold font-futura-bold',
+    'mt-10 mb-4 md:my-10',
+    'leading-tight'
   ),
   overlay: cn(
-    'w-[20rem] h-[20rem] md:w-full md:h-[100rem] xl:w-[21-5rem] xl:h-[100rem]',
-    'm-5 md:m-0 rounded-xl',
+    'w-full h-56 sm:h-72 md:h-96 xl:h-full',
+    'm-0 rounded-xl',
     'bg-home-banner bg-cover bg-center',
     'grayscale'
   ),
   text: cn(
-    'font-boston-angel text-[1.2rem] md:text-[1.5rem]',
-    'my-5',
-    'md:text-xl',
-    'md:text-wrap',
-    'w-full',
-    'md:w-4/5',
-    'xl:text-[1.5rem]'
+    'font-boston-angel leading-relaxed',
+    'text-base sm:text-lg md:text-xl xl:text-[1.4rem]',
+    'my-4 md:my-6',
+    'w-full md:w-4/5'
   ),
   description: cn(
-    'w-full',
-    'h-full',
-    'flex',
-    'flex-col',
-    'justify-center',
-    'items-center',
-    'md:w-full',
-    'md:justify-center',
-    'md:items-start',
-    'md:pl-10',
-    'md:pr-5',
-    'xl:pl-20',
-    'xl:pr-10'
+    'w-full h-full flex flex-col justify-center items-center',
+    'md:justify-center md:items-start',
+    'md:pl-10 md:pr-5',
+    'xl:pl-20 xl:pr-10'
   ),
   image: cn(
-    'w-full',
-    'h-full',
-    'flex',
-    'flex-col',
-    'justify-center',
-    'items-center',
-    'md:w-full',
-    'md:justify-end',
-    'md:items-end',
-    'md:pr-0',
-    'xl:pr-20'
+    'w-full flex flex-col justify-center items-center',
+    'xl:h-full',
+    'mt-8 xl:mt-0',
+    'md:justify-end md:items-end',
+    'md:pr-0 xl:pr-20'
   ),
 };
 ---
@@ -70,7 +47,7 @@ const classes = {
   <div class={classes.description}>
     <h2 class={classes.title}>¡Gracias por querer conocernos!</h2>
     <p class={classes.text}>
-      Conocer una iglesia es un gran desafió en estos tiempos, esperamos que con
+      Conocer una iglesia es un gran desafío en estos tiempos, esperamos que con
       la información que encuentres aquí, puedas tener un mayor panorama de
       quienes somos y lo que creemos. Eres bienvenido a visitarnos cuando
       quieras.

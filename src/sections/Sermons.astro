@@ -3,10 +3,12 @@ import Card from '../components/Card.astro';
 import cn from '../utils/cn.ts';
 
 const classes = {
-  section: cn('flex flex-col mt-[10rem] fade-sermons'),
+  section: cn('flex flex-col mt-20 md:mt-28 xl:mt-32 fade-sermons'),
   title: cn(
-    'font-barastika text-primary-500 text-6xl md:text-4xl',
-    'md:text-[5rem] font-bold my-5 mx-8 md:mx-24'
+    'font-barastika text-primary-500 font-bold',
+    'text-5xl sm:text-6xl md:text-[4.5rem] xl:text-[5rem]',
+    'my-5 mx-6 sm:mx-10 md:mx-20 xl:mx-24',
+    'leading-tight'
   ),
 };
 ---
@@ -15,37 +17,15 @@ const classes = {
   <h2 class={classes.title}>Sermones</h2>
   <div class="swiper sermon-swiper mt-5">
     <div class="swiper-wrapper">
-      <div class="swiper-slide">
-        <Card />
-      </div>
-      <div class="swiper-slide">
-        <Card />
-      </div>
-
-      <div class="swiper-slide">
-        <Card />
-      </div>
-
-      <div class="swiper-slide">
-        <Card />
-      </div>
-
-      <div class="swiper-slide">
-        <Card />
-      </div>
-
-      <div class="swiper-slide">
-        <Card />
-      </div>
-      <div class="swiper-slide">
-        <Card />
-      </div>
-      <div class="swiper-slide">
-        <Card />
-      </div>
-      <div class="swiper-slide">
-        <Card />
-      </div>
+      <div class="swiper-slide"><Card /></div>
+      <div class="swiper-slide"><Card /></div>
+      <div class="swiper-slide"><Card /></div>
+      <div class="swiper-slide"><Card /></div>
+      <div class="swiper-slide"><Card /></div>
+      <div class="swiper-slide"><Card /></div>
+      <div class="swiper-slide"><Card /></div>
+      <div class="swiper-slide"><Card /></div>
+      <div class="swiper-slide"><Card /></div>
     </div>
   </div>
 </section>
@@ -53,17 +33,20 @@ const classes = {
   .swiper {
     width: 100%;
     height: 100%;
-    padding: 0 0 0 13rem;
+    padding: 0 0 0 6rem;
 
-    @media screen and (max-width: 1024px) {
+    @media screen and (min-width: 1280px) {
+      padding: 0 0 0 13rem;
+    }
+    @media screen and (max-width: 1023px) {
       padding: 0 0 0 2rem;
     }
-    @media screen and (max-width: 768px) {
-      padding: 0 0 0 1.4rem;
+    @media screen and (max-width: 639px) {
+      padding: 0 0 0 1rem;
     }
   }
   .swiper-wrapper {
-    padding: 5rem 0;
+    padding: 4rem 0;
   }
 </style>
 <script>
@@ -73,7 +56,7 @@ const classes = {
   const swiper = new Swiper('.sermon-swiper', {
     direction: 'horizontal',
     slidesPerView: 3,
-    spaceBetween: 3,
+    spaceBetween: 12,
     loop: true,
     autoplay: {
       delay: 7500,
@@ -81,11 +64,11 @@ const classes = {
     breakpoints: {
       1440: {
         slidesPerView: 3,
-        spaceBetween: 3,
+        spaceBetween: 12,
       },
-      1360: {
-        slidesPerView: 2,
-        spaceBetween: 5,
+      1280: {
+        slidesPerView: 3,
+        spaceBetween: 8,
       },
       1024: {
         slidesPerView: 2,
@@ -93,11 +76,15 @@ const classes = {
       },
       768: {
         slidesPerView: 2,
-        spaceBetween: 3,
+        spaceBetween: 6,
       },
-      320: {
+      480: {
+        slidesPerView: 1.2,
+        spaceBetween: 8,
+      },
+      0: {
         slidesPerView: 1,
-        spaceBetween: 5,
+        spaceBetween: 8,
       },
     },
   });

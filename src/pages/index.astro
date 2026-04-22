@@ -32,5 +32,6 @@ const classes = {
 </Layout>
 <script>
   import { initAnimations } from '../scripts/animations.ts';
-  setTimeout(initAnimations, 100);
+  // Aumentar timeout para Astro 6.0 - esperar a que los elementos estén cargados
+  setTimeout(initAnimations, 500);
 </script>
