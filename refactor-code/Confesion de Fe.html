@@ -1,0 +1,1625 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Confesión de Fe — El Ancla</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=Libre+Franklin:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                DEFAULT: "#FF2E34",
+                500: "#ff1f33",
+                600: "#ff0016",
+                700: "#db0013",
+                800: "#b70010",
+                900: "#940814",
+              },
+              paper: "#FAF8F5",
+              ink: "#141414",
+            },
+            fontFamily: {
+              display: ['"Fraunces"', "serif"],
+              sans: ['"Libre Franklin"', "sans-serif"],
+              ui: ['"Inter"', "sans-serif"],
+              mono: ['"JetBrains Mono"', "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :root {
+        --paper: #faf8f5;
+        --ink: #141414;
+        --primary: #ff2e34;
+        --grid: rgba(20, 20, 20, 0.06);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Libre Franklin", sans-serif;
+        background: var(--paper);
+        color: var(--ink);
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      .font-display {
+        font-family: "Fraunces", serif;
+        font-variation-settings: "opsz" 144;
+      }
+      .grain::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.35;
+        background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.035 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+        mix-blend-mode: multiply;
+      }
+      .grid-bg {
+        background-image: linear-gradient(var(--grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+        background-size: 72px 72px;
+      }
+
+      /* ENTRANCE */
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translate3d(0, 32px, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+      @keyframes lineGrow {
+        from {
+          transform: scaleX(0);
+        }
+        to {
+          transform: scaleX(1);
+        }
+      }
+      .reveal {
+        opacity: 0;
+        transform: translate3d(0, 24px, 0);
+        transition:
+          opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+          transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: none;
+      }
+      .reveal-delay-1 {
+        transition-delay: 0.08s;
+      }
+      .reveal-delay-2 {
+        transition-delay: 0.16s;
+      }
+      .reveal-delay-3 {
+        transition-delay: 0.24s;
+      }
+      .reveal-delay-4 {
+        transition-delay: 0.32s;
+      }
+      .reveal-delay-5 {
+        transition-delay: 0.4s;
+      }
+
+      .hero-line {
+        overflow: hidden;
+        display: block;
+      }
+      .hero-line > span {
+        display: inline-block;
+        transform: translate3d(0, 110%, 0);
+        animation: heroRise 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+      @keyframes heroRise {
+        to {
+          transform: translate3d(0, 0, 0);
+        }
+      }
+      .hero-line:nth-child(1) > span {
+        animation-delay: 0.1s;
+      }
+      .hero-line:nth-child(2) > span {
+        animation-delay: 0.22s;
+      }
+      .hero-line:nth-child(3) > span {
+        animation-delay: 0.34s;
+      }
+
+      .line-grow {
+        transform-origin: left;
+        animation: lineGrow 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+      }
+
+      /* NAV */
+      .ulink {
+        position: relative;
+        display: inline-block;
+      }
+      .ulink::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -2px;
+        height: 1px;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .ulink:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+      .cta-arrow {
+        transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .cta-btn:hover .cta-arrow {
+        transform: translate(4px, -4px);
+      }
+      .btn-primary {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+      }
+      .btn-primary::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: #0a0a0a;
+        transform: translateY(101%);
+        transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        z-index: -1;
+      }
+      .btn-primary:hover::before {
+        transform: translateY(0);
+      }
+
+      /* CORNERS */
+      .corner {
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        border: 1.5px solid var(--ink);
+      }
+      .corner.tl {
+        top: -1px;
+        left: -1px;
+        border-right: 0;
+        border-bottom: 0;
+      }
+      .corner.tr {
+        top: -1px;
+        right: -1px;
+        border-left: 0;
+        border-bottom: 0;
+      }
+      .corner.bl {
+        bottom: -1px;
+        left: -1px;
+        border-right: 0;
+        border-top: 0;
+      }
+      .corner.br {
+        bottom: -1px;
+        right: -1px;
+        border-left: 0;
+        border-top: 0;
+      }
+
+      /* PROGRESS bar */
+      #readprog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2px;
+        background: var(--primary);
+        width: 0;
+        z-index: 60;
+        transition: width 0.12s linear;
+      }
+
+      /* INDEX (sticky side) */
+      .idx-item {
+        position: relative;
+        padding-left: 44px;
+        transition: color 0.3s ease;
+      }
+      .idx-item::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 1px;
+        background: rgba(20, 20, 20, 0.2);
+        transition:
+          background 0.3s ease,
+          width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .idx-item:hover::before,
+      .idx-item.active::before {
+        background: var(--primary);
+        width: 36px;
+      }
+      .idx-item.active {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .idx-item.active .idx-num {
+        color: var(--primary);
+      }
+
+      /* DOCTRINE ROWS */
+      .doctrine-row {
+        position: relative;
+        border-top: 1px solid rgba(20, 20, 20, 0.12);
+        transition: background 0.5s ease;
+        cursor: pointer;
+      }
+      .doctrine-row:hover {
+        background: rgba(20, 20, 20, 0.015);
+      }
+      .doctrine-row:hover .row-title {
+        color: var(--primary);
+      }
+      .doctrine-row:hover .row-plus {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+        transform: rotate(90deg);
+      }
+      .doctrine-row.open .row-plus {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--ink);
+        transform: rotate(45deg);
+      }
+      .row-plus {
+        transition:
+          transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+          background 0.35s ease,
+          color 0.35s ease,
+          border-color 0.35s ease;
+      }
+      .row-title {
+        transition: color 0.4s ease;
+      }
+      .row-content {
+        max-height: 0;
+        overflow: hidden;
+        transition:
+          max-height 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+          opacity 0.7s ease;
+        opacity: 0;
+      }
+      .doctrine-row.open .row-content {
+        max-height: 3000px;
+        opacity: 1;
+      }
+
+      /* Quote mark */
+      .quote-mark {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-size: 12rem;
+        line-height: 0.7;
+        color: var(--primary);
+        opacity: 0.18;
+        user-select: none;
+      }
+
+      /* Scroll cue */
+      @keyframes scrollBar {
+        0% {
+          transform: scaleY(0);
+          transform-origin: top;
+        }
+        50% {
+          transform: scaleY(1);
+          transform-origin: top;
+        }
+        50.01% {
+          transform: scaleY(1);
+          transform-origin: bottom;
+        }
+        100% {
+          transform: scaleY(0);
+          transform-origin: bottom;
+        }
+      }
+      .scroll-bar {
+        animation: scrollBar 2.4s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+      }
+
+      /* Marquee */
+      .marquee {
+        display: flex;
+        animation: marquee 38s linear infinite;
+      }
+      @keyframes marquee {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* Featured card (Jesucristo) */
+      .featured {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+      }
+      .featured::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse at 90% 10%,
+            rgba(255, 255, 255, 0.18),
+            transparent 50%
+          ),
+          linear-gradient(180deg, #ff2e34, #c90d16);
+        z-index: -1;
+      }
+
+      /* Circular seal */
+      @keyframes sealSpin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .seal-rot {
+        animation: sealSpin 28s linear infinite;
+        transform-origin: center;
+      }
+
+      /* Ref chip */
+      .ref-chip {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        padding: 4px 10px;
+        border: 1px solid rgba(20, 20, 20, 0.15);
+        border-radius: 999px;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+      .ref-chip:hover {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--ink);
+      }
+
+      /* live pulse */
+      @keyframes pulseRing {
+        0% {
+          transform: scale(0.6);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(2.2);
+          opacity: 0;
+        }
+      }
+      .live-dot::after {
+        content: "";
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        background: rgba(255, 46, 52, 0.35);
+        animation: pulseRing 1.8s ease-out infinite;
+      }
+      .live-dot {
+        position: relative;
+      }
+
+      .section-counter {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(20, 20, 20, 0.5);
+      }
+
+      .fig-frame {
+        aspect-ratio: 3/4;
+        background:
+          radial-gradient(
+            ellipse at 30% 20%,
+            rgba(255, 255, 255, 0.15),
+            transparent 60%
+          ),
+          linear-gradient(160deg, #1a1a1a 0%, #2a2a2a 100%);
+      }
+
+      /* Anchor breathing */
+      @keyframes floatSoft {
+        0%,
+        100% {
+          transform: translateY(0) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-6px) rotate(1deg);
+        }
+      }
+      .anchor-float {
+        animation: floatSoft 5s ease-in-out infinite;
+      }
+
+      /* Detail body */
+      .detail-body p {
+        font-family: "Libre Franklin", sans-serif;
+        font-size: 16px;
+        line-height: 1.75;
+        color: rgba(20, 20, 20, 0.78);
+        margin-bottom: 12px;
+      }
+      .detail-body h4 {
+        font-family: "Inter", sans-serif;
+        font-size: 10.5px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin: 24px 0 10px;
+        font-weight: 700;
+      }
+      .detail-body ul,
+      .detail-body ol {
+        padding-left: 1.1rem;
+        margin-bottom: 12px;
+      }
+      .detail-body li {
+        font-family: "Libre Franklin", sans-serif;
+        font-size: 15px;
+        line-height: 1.7;
+        color: rgba(20, 20, 20, 0.78);
+        margin-bottom: 6px;
+      }
+      .detail-body ul {
+        list-style: none;
+      }
+      .detail-body ul li {
+        position: relative;
+        padding-left: 18px;
+      }
+      .detail-body ul li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.85em;
+        width: 8px;
+        height: 1px;
+        background: var(--primary);
+      }
+      .detail-body ol {
+        list-style: none;
+        counter-reset: orditem;
+      }
+      .detail-body ol li {
+        position: relative;
+        padding-left: 30px;
+        counter-increment: orditem;
+      }
+      .detail-body ol li::before {
+        content: counter(orditem, decimal-leading-zero) ".";
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        color: var(--primary);
+        font-weight: 600;
+        letter-spacing: 0.05em;
+      }
+      .detail-body b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .verse-callout {
+        border-left: 2px solid var(--primary);
+        padding: 12px 0 12px 20px;
+        margin: 16px 0 20px;
+      }
+      .verse-callout p {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 22px;
+        line-height: 1.4;
+        color: var(--ink);
+        margin: 0;
+      }
+      .verse-callout .ref {
+        font-family: "Inter", sans-serif;
+        font-size: 10.5px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(20, 20, 20, 0.55);
+        margin-top: 8px;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="readprog"></div>
+
+    <!-- NAV -->
+    <header class="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+      <div class="mx-auto max-w-[1600px] px-6 md:px-10 pt-6">
+        <nav
+          id="nav"
+          class="pointer-events-auto flex items-center justify-between rounded-full border border-ink/10 bg-paper/80 backdrop-blur-xl px-5 md:px-6 py-3 transition-all duration-500"
+          style="background: rgba(250, 248, 245, 0.72)"
+        >
+          <a href="Rediseno El Ancla.html" class="flex items-center gap-3">
+            <img
+              src="assets/anclarojo.png"
+              alt=""
+              class="w-7 h-7 object-contain"
+            />
+            <div class="leading-none">
+              <div
+                class="text-[9px] tracking-[0.22em] font-ui font-semibold text-ink/60"
+              >
+                IGLESIA BAUTISTA
+              </div>
+              <div
+                class="font-display text-[17px] tracking-tight font-semibold leading-none"
+              >
+                El Ancla
+              </div>
+            </div>
+          </a>
+
+          <ul
+            class="hidden lg:flex items-center gap-9 font-ui text-[13px] font-medium text-ink/80"
+          >
+            <li><a href="Rediseno El Ancla.html" class="ulink">Inicio</a></li>
+            <li>
+              <a href="Rediseno El Ancla.html#nosotros" class="ulink">Nosotros</a>
+            </li>
+            <li>
+              <a href="Rediseno El Ancla.html#actividades" class="ulink"
+                >Actividades</a
+              >
+            </li>
+            <li>
+              <a href="Rediseno El Ancla.html#sermones" class="ulink">Sermones</a>
+            </li>
+            <li>
+              <a href="#" class="ulink font-semibold text-primary"
+                >Confesión de Fe</a
+              >
+            </li>
+          </ul>
+
+          <div class="flex items-center gap-3">
+            <span
+              class="hidden md:flex items-center gap-2 text-[11px] font-ui font-medium text-ink/60 uppercase tracking-wider"
+            >
+              <span class="w-1.5 h-1.5 rounded-full bg-primary live-dot"></span>
+              Dom · 11:15
+            </span>
+            <a
+              href="Rediseno El Ancla.html#visitanos"
+              class="cta-btn btn-primary inline-flex items-center gap-2 rounded-full bg-ink text-paper px-5 py-2.5 font-ui text-[12px] font-semibold tracking-wide uppercase"
+            >
+              Visítanos
+              <svg
+                class="cta-arrow"
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+              >
+                <path
+                  d="M2 10L10 2M10 2H4M10 2V8"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="relative min-h-[92vh] pt-32 pb-20 overflow-hidden grain">
+      <div class="absolute inset-0 grid-bg opacity-60"></div>
+
+      <!-- Decorative spinning seal -->
+      <div
+        class="hidden lg:block absolute top-[22%] right-[-6%] w-[42vw] h-[42vw] max-w-[680px] max-h-[680px] pointer-events-none opacity-90"
+      >
+        <div class="relative w-full h-full">
+          <svg
+            class="absolute inset-0 w-full h-full seal-rot"
+            viewBox="0 0 300 300"
+          >
+            <defs>
+              <path
+                id="circlePath"
+                d="M 150,150 m -130,0 a 130,130 0 1,1 260,0 a 130,130 0 1,1 -260,0"
+              />
+            </defs>
+            <text
+              font-family="Inter, sans-serif"
+              font-size="10.5"
+              font-weight="600"
+              letter-spacing="5"
+              fill="#141414"
+              opacity="0.35"
+            >
+              <textPath href="#circlePath">
+                CREEMOS · CONFESAMOS · PROCLAMAMOS · CREEMOS · CONFESAMOS ·
+                PROCLAMAMOS ·
+              </textPath>
+            </text>
+          </svg>
+          <svg
+            class="absolute inset-0 w-full h-full"
+            viewBox="0 0 300 300"
+          >
+            <circle
+              cx="150"
+              cy="150"
+              r="90"
+              fill="none"
+              stroke="#141414"
+              stroke-width="0.5"
+              opacity="0.15"
+            />
+            <circle
+              cx="150"
+              cy="150"
+              r="54"
+              fill="none"
+              stroke="#141414"
+              stroke-width="0.5"
+              opacity="0.18"
+            />
+          </svg>
+          <div
+            class="absolute inset-0 flex items-center justify-center anchor-float"
+          >
+            <img
+              src="assets/anclarojo.png"
+              alt=""
+              class="w-[22%] h-auto object-contain"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="relative mx-auto max-w-[1600px] px-6 md:px-10">
+        <!-- breadcrumb / meta -->
+        <div class="flex items-center justify-between mb-10 md:mb-16">
+          <div
+            class="flex items-center gap-3 font-ui text-[11px] tracking-[0.2em] uppercase text-ink/60"
+          >
+            <a href="Rediseno El Ancla.html" class="ulink">El Ancla</a>
+            <span class="opacity-50">/</span>
+            <span>Confesión de fe</span>
+          </div>
+          <div
+            class="hidden md:block font-ui text-[11px] tracking-[0.2em] uppercase text-ink/60"
+          >
+            IX · Pilares doctrinales
+          </div>
+        </div>
+
+        <div class="max-w-[68rem]">
+          <div
+            class="section-counter mb-8 line-grow origin-left inline-block"
+          >
+            [ 00 — Fundamentos ]
+          </div>
+          <h1
+            class="font-display text-[18vw] md:text-[13vw] lg:text-[11vw] leading-[0.88] tracking-[-0.04em] font-light"
+          >
+            <span class="hero-line"
+              ><span>Creemos que</span></span
+            >
+            <span class="hero-line"
+              ><span>la <em class="italic font-normal text-primary">doctrina</em></span></span
+            >
+            <span class="hero-line"
+              ><span>importa.</span></span
+            >
+          </h1>
+
+          <div
+            class="mt-12 md:mt-16 flex flex-col md:flex-row md:items-end md:justify-between gap-8"
+          >
+            <div class="max-w-xl">
+              <div class="h-px bg-ink/30 line-grow origin-left w-24 mb-5"></div>
+              <p
+                class="font-ui text-[15px] md:text-[17px] leading-relaxed text-ink/75"
+              >
+                Estos son los pilares esenciales de lo que creemos, enseñamos y
+                vivimos como comunidad de fe. Nueve doctrinas, arraigadas en la
+                Escritura, que sostienen y definen nuestra vida en común.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <a
+                href="#doctrinas"
+                class="cta-btn btn-primary inline-flex items-center gap-3 rounded-full bg-primary text-white px-7 py-4 font-ui text-[13px] font-semibold tracking-wide uppercase"
+              >
+                Leer confesión
+                <svg
+                  class="cta-arrow"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                >
+                  <path
+                    d="M2 10L10 2M10 2H4M10 2V8"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </a>
+              <button
+                id="expandAll"
+                class="hidden md:inline-flex items-center gap-2 font-ui text-[13px] font-semibold tracking-wide uppercase ulink"
+              >
+                <span id="expandAllLabel">Expandir todas</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- bottom scroll cue -->
+        <div
+          class="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2"
+        >
+          <span
+            class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50"
+            >Desliza</span
+          >
+          <span class="block w-px h-10 bg-ink/20 relative overflow-hidden">
+            <span class="block w-px h-full bg-ink scroll-bar"></span>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <section
+      class="border-y border-ink/10 py-5 overflow-hidden bg-paper"
+    >
+      <div
+        class="marquee whitespace-nowrap font-display italic text-2xl md:text-4xl text-ink/70"
+      >
+        <span class="px-6">Sola Scriptura</span
+        ><span class="px-6 text-primary">✦</span>
+        <span class="px-6">Solus Christus</span
+        ><span class="px-6 text-primary">✦</span>
+        <span class="px-6">Sola Gratia</span
+        ><span class="px-6 text-primary">✦</span>
+        <span class="px-6">Sola Fide</span
+        ><span class="px-6 text-primary">✦</span>
+        <span class="px-6">Soli Deo Gloria</span
+        ><span class="px-6 text-primary">✦</span>
+        <span class="px-6">Sola Scriptura</span
+        ><span class="px-6 text-primary">✦</span>
+        <span class="px-6">Solus Christus</span
+        ><span class="px-6 text-primary">✦</span>
+        <span class="px-6">Sola Gratia</span
+        ><span class="px-6 text-primary">✦</span>
+        <span class="px-6">Sola Fide</span
+        ><span class="px-6 text-primary">✦</span>
+        <span class="px-6">Soli Deo Gloria</span
+        ><span class="px-6 text-primary">✦</span>
+      </div>
+    </section>
+
+    <!-- FEATURED VERSE CALLOUT -->
+    <section class="relative py-20 md:py-28 overflow-hidden">
+      <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          <div class="lg:col-span-1 lg:col-start-2 hidden lg:flex items-center justify-center">
+            <span class="quote-mark">"</span>
+          </div>
+          <div class="lg:col-span-8 reveal">
+            <p class="font-display italic font-light text-[clamp(1.6rem,3.4vw,3rem)] leading-[1.15] tracking-tight text-ink/90">
+              Toda la Escritura es inspirada por Dios, y útil para enseñar,
+              para <span class="text-primary">redargüir</span>, para corregir,
+              para instruir en justicia.
+            </p>
+            <div class="mt-6 flex items-center gap-4 font-ui text-[11px] tracking-[0.25em] uppercase text-ink/60">
+              <span class="w-10 h-px bg-ink/30"></span>
+              2 Timoteo 3:16
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOCTRINAS — main -->
+    <section
+      id="doctrinas"
+      class="relative py-20 md:py-28 bg-white border-t border-ink/10"
+    >
+      <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+        <div class="flex items-baseline gap-6 mb-14 md:mb-20">
+          <span class="section-counter">[ 01 — Nueve doctrinas ]</span>
+          <span class="flex-1 h-px bg-ink/15"></span>
+          <span class="section-counter hidden md:inline">Haz clic para expandir</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+          <!-- Sticky index -->
+          <aside class="lg:col-span-3">
+            <div class="lg:sticky lg:top-32">
+              <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-6">
+                Índice
+              </div>
+              <ul id="index" class="flex flex-col gap-3 font-ui text-[14px] text-ink/60">
+                <!-- injected -->
+              </ul>
+
+              <div class="mt-12 pt-8 border-t border-ink/10 text-ink/60">
+                <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-3">
+                  Recursos
+                </div>
+                <a
+                  href="#"
+                  class="block font-ui text-[13px] ulink mb-2 w-fit"
+                  >Descargar PDF</a
+                >
+                <a
+                  href="#"
+                  class="block font-ui text-[13px] ulink mb-2 w-fit"
+                  >Estudios bíblicos</a
+                >
+                <a
+                  href="#"
+                  class="block font-ui text-[13px] ulink w-fit"
+                  >Contactar al pastor</a
+                >
+              </div>
+            </div>
+          </aside>
+
+          <!-- Rows -->
+          <div id="rowsRoot" class="lg:col-span-9"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CENTERPIECE — Jesucristo featured (invert block) -->
+    <section class="relative py-24 md:py-32 overflow-hidden">
+      <div class="absolute inset-0 bg-ink"></div>
+
+      <div class="relative mx-auto max-w-[1600px] px-6 md:px-10 text-white">
+        <div class="flex items-baseline gap-6 mb-14 md:mb-20">
+          <span class="section-counter" style="color: rgba(245, 243, 238, 0.5)"
+            >[ 02 — En el centro ]</span
+          >
+          <span
+            class="flex-1 h-px"
+            style="background: rgba(245, 243, 238, 0.15)"
+          ></span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          <div class="lg:col-span-7 reveal">
+            <div class="font-ui text-[11px] tracking-[0.25em] uppercase text-primary mb-4 font-semibold">
+              Cristocentrismo
+            </div>
+            <h2
+              class="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-tight font-light"
+            >
+              Toda nuestra fe se sostiene en una sola <em class="italic text-primary">Persona.</em>
+            </h2>
+            <p class="mt-8 font-ui text-[16px] md:text-[18px] leading-relaxed text-white/75 max-w-xl">
+              Jesucristo es el eterno Hijo de Dios, nacido de María, que vivió
+              sin pecado, murió en la cruz por su pueblo, resucitó al tercer día
+              y volverá en gloria. Él es el centro absoluto de la Escritura, de
+              la historia y de nuestra confesión.
+            </p>
+            <a
+              href="#doctrine-jesucristo"
+              class="mt-10 inline-flex items-center gap-3 font-ui text-[13px] font-semibold tracking-wide uppercase ulink text-primary"
+              onclick="openDoctrine('jesucristo')"
+            >
+              Leer la doctrina completa
+              <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+            </a>
+          </div>
+
+          <div class="lg:col-span-5 reveal reveal-delay-2">
+            <div class="relative fig-frame">
+              <div class="corner tl" style="border-color: #f5f3ee"></div>
+              <div class="corner tr" style="border-color: #f5f3ee"></div>
+              <div class="corner bl" style="border-color: #f5f3ee"></div>
+              <div class="corner br" style="border-color: #f5f3ee"></div>
+              <!-- minimal cross composition -->
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="relative w-full h-full flex items-center justify-center">
+                  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1px] h-[62%] bg-white/80"></div>
+                  <div class="absolute top-[42%] left-1/2 -translate-x-1/2 w-[34%] h-[1px] bg-white/80"></div>
+                  <div class="absolute bottom-6 left-6 font-mono text-[10px] tracking-[0.22em] uppercase text-white/50">
+                    1 Timoteo 2:5
+                  </div>
+                  <div class="absolute top-6 left-6 font-display italic text-white/30 text-xl">
+                    ✦
+                  </div>
+                  <div class="absolute top-6 right-6 font-mono text-[10px] tracking-[0.2em] uppercase text-white/50 text-right">
+                    02<br/><span class="text-white/30">Christus</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 font-display italic font-light text-xl md:text-2xl text-white/85 leading-relaxed">
+              "Porque hay un solo Dios, y un solo mediador entre Dios y los hombres, Jesucristo hombre."
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLOSING / CTA -->
+    <section class="relative py-24 md:py-32">
+      <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          <div class="lg:col-span-7 reveal">
+            <h3
+              class="font-display text-[clamp(2.2rem,5vw,4.2rem)] leading-[0.96] tracking-tight font-light"
+            >
+              Si quieres conversar sobre lo que <em class="italic text-primary">creemos,</em> estamos cerca.
+            </h3>
+            <p class="mt-8 font-ui text-[15px] md:text-[17px] leading-relaxed text-ink/70 max-w-xl">
+              Ningún resumen reemplaza una conversación. Si tienes preguntas sobre
+              alguna de estas doctrinas, escríbenos o acércate un domingo.
+            </p>
+          </div>
+          <div class="lg:col-span-5 flex flex-col gap-4 reveal reveal-delay-2">
+            <a
+              href="Rediseno El Ancla.html#visitanos"
+              class="cta-btn btn-primary flex items-center justify-between gap-3 rounded-2xl bg-ink text-paper px-7 py-6 font-ui text-[14px] font-semibold tracking-wide uppercase"
+            >
+              <span class="flex flex-col gap-1 items-start">
+                <span class="text-[10px] tracking-[0.25em] opacity-70">01</span>
+                Visítanos un domingo
+              </span>
+              <svg class="cta-arrow" width="18" height="18" viewBox="0 0 12 12" fill="none">
+                <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+            </a>
+            <a
+              href="Rediseno El Ancla.html#sermones"
+              class="flex items-center justify-between gap-3 rounded-2xl border border-ink/15 px-7 py-6 font-ui text-[14px] font-semibold tracking-wide uppercase hover:bg-ink/5 transition"
+            >
+              <span class="flex flex-col gap-1 items-start">
+                <span class="text-[10px] tracking-[0.25em] text-ink/50">02</span>
+                Escuchar sermones
+              </span>
+              <svg width="18" height="18" viewBox="0 0 12 12" fill="none">
+                <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="relative bg-primary text-white py-20 overflow-hidden">
+      <div class="absolute bottom-[-4vw] left-0 right-0 pointer-events-none select-none">
+        <div class="font-display italic font-light text-[28vw] leading-[0.8] text-white/10 tracking-tighter text-center">
+          El Ancla
+        </div>
+      </div>
+      <div class="relative mx-auto max-w-[1600px] px-6 md:px-10">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-14">
+          <div class="md:col-span-5">
+            <div class="flex items-center gap-3">
+              <img src="assets/anclablanco.png" alt="" class="w-10 h-10 object-contain" />
+              <div>
+                <div class="font-ui text-[10px] tracking-[0.22em] font-semibold opacity-80">IGLESIA BAUTISTA</div>
+                <div class="font-display text-2xl">El Ancla</div>
+              </div>
+            </div>
+            <p class="mt-6 font-ui text-[14px] leading-relaxed opacity-85 max-w-xs">
+              Tenemos esta esperanza como firme y segura ancla del alma.
+              <span class="opacity-60">— Heb. 6:19</span>
+            </p>
+          </div>
+          <div class="md:col-span-4">
+            <div class="font-ui text-[10px] tracking-[0.25em] uppercase opacity-70 mb-4">Navegación</div>
+            <ul class="grid grid-cols-2 gap-y-2 font-ui text-[13.5px]">
+              <li><a href="Rediseno El Ancla.html" class="ulink">Inicio</a></li>
+              <li><a href="#" class="ulink">Confesión</a></li>
+              <li><a href="Rediseno El Ancla.html#nosotros" class="ulink">Nosotros</a></li>
+              <li><a href="Rediseno El Ancla.html#sermones" class="ulink">Sermones</a></li>
+              <li><a href="Rediseno El Ancla.html#actividades" class="ulink">Actividades</a></li>
+              <li><a href="Rediseno El Ancla.html#ministerios" class="ulink">Ministerios</a></li>
+            </ul>
+          </div>
+          <div class="md:col-span-3">
+            <div class="font-ui text-[10px] tracking-[0.25em] uppercase opacity-70 mb-4">Dirección</div>
+            <p class="font-ui text-[13.5px] leading-relaxed opacity-90">
+              Av. Luis A. de Herrera 3101, esq. Juan Arrieta — Montevideo, Uruguay
+            </p>
+          </div>
+        </div>
+        <div class="border-t border-white/20 pt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 font-ui text-[12px] opacity-85">
+          <div>Confesión de Fe · Iglesia Bautista El Ancla</div>
+          <div>© <span id="year"></span> Todos los derechos reservados.</div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      /* ——— Doctrine data (structured) ——— */
+      const doctrines = [
+        {
+          id: "dios",
+          number: "01",
+          title: "Dios",
+          subtitle: "Creador, soberano, eterno",
+          tag: "Trinidad",
+          summary:
+            "Creemos en un solo Dios verdadero, Creador y soberano del universo, quien hizo todas las cosas de la nada y las sostiene por su poder.",
+          verse: "Oye, Israel: Jehová nuestro Dios, Jehová uno es.",
+          verseRef: "Deuteronomio 6:4",
+          sections: [
+            {
+              h: "Naturaleza",
+              body: "<p>Este Dios único existe eternamente en tres Personas: Padre, Hijo y Espíritu Santo, iguales en esencia, poder y gloria, pero distintos en sus funciones.</p>",
+            },
+            {
+              h: "Relación entre las personas",
+              body: "<p>Los tres comparten la misma naturaleza divina y actúan en perfecta unidad.</p>",
+            },
+          ],
+          refs: [
+            "Deut 6:4",
+            "Gen 1:1-2",
+            "Sal 104:24",
+            "Sal 33:6",
+            "Heb 1:3",
+            "Mt 3:16-17",
+            "Mt 28:19",
+            "2 Co 13:14",
+            "1 Co 8:4-6",
+            "Jn 10:30",
+          ],
+        },
+        {
+          id: "jesucristo",
+          number: "02",
+          title: "Jesucristo",
+          subtitle: "El único mediador",
+          tag: "Cristocentrismo",
+          featured: true,
+          summary:
+            "Jesucristo es el eterno Hijo de Dios, consustancial con el Padre y el Espíritu Santo. Su muerte y resurrección son la base de nuestra salvación.",
+          verse:
+            "Porque hay un solo Dios, y un solo mediador entre Dios y los hombres, Jesucristo hombre.",
+          verseRef: "1 Timoteo 2:5",
+          sections: [
+            {
+              h: "Identidad",
+              body: "<p>Jesucristo es el eterno Hijo de Dios, consustancial con el Padre y el Espíritu Santo.</p>",
+            },
+            {
+              h: "Vida",
+              body: "<p>Nacido de la virgen María por obra del Espíritu Santo, vivió una vida humana perfecta y sin pecado.</p>",
+            },
+            {
+              h: "Muerte",
+              body: "<p>Entregó su vida en la cruz como sacrificio perfecto y suficiente para la expiación de los pecados de su pueblo.</p>",
+            },
+            {
+              h: "Resurrección",
+              body: "<p>Resucitó corporalmente al tercer día, demostrando su victoria sobre el pecado y la muerte.</p>",
+            },
+            {
+              h: "Ascensión y regreso",
+              body: "<p>Ascendió al cielo, se sentó a la diestra del Padre y volverá en gloria como Rey y Señor de señores.</p>",
+            },
+          ],
+          refs: [
+            "Jn 1:1,14",
+            "Col 2:9",
+            "Mt 1:18-23",
+            "Lc 1:35",
+            "1 Pe 2:22-24",
+            "2 Co 5:21",
+            "Heb 4:15",
+            "1 Pe 3:18",
+            "Col 2:13-14",
+            "Is 53:4-6",
+            "1 Co 15:3-4",
+            "Mt 28:5-7",
+            "Ro 4:25",
+            "Mr 16:19",
+            "Hch 1:9-11",
+            "Ap 1:7",
+            "Tit 2:13",
+          ],
+        },
+        {
+          id: "espiritu",
+          number: "03",
+          title: "El Espíritu Santo",
+          subtitle: "Consolador, maestro y sello",
+          tag: "Trinidad",
+          summary:
+            "La tercera Persona de la Trinidad, plenamente Dios, quien convence de pecado, regenera, mora en el creyente y guía a toda verdad.",
+          verse:
+            "Mas el Consolador, el Espíritu Santo, a quien el Padre enviará en mi nombre, él os enseñará todas las cosas.",
+          verseRef: "Juan 14:26",
+          sections: [
+            {
+              h: "Identidad",
+              body: "<p>El Espíritu Santo es la tercera Persona de la Trinidad, plenamente Dios, con los mismos atributos divinos que el Padre y el Hijo.</p>",
+            },
+            {
+              h: "Obra",
+              body: `<ul>
+                <li>Convence al mundo de pecado, justicia y juicio.</li>
+                <li>Regenera y da vida nueva al creyente.</li>
+                <li>Mora permanentemente en cada cristiano desde la conversión.</li>
+                <li>Enseña y guía a toda verdad.</li>
+                <li>Concede dones espirituales para la edificación de la Iglesia.</li>
+              </ul>`,
+            },
+            {
+              h: "Vida cristiana",
+              body: "<p>El creyente debe vivir bajo el control del Espíritu, produciendo fruto espiritual.</p>",
+            },
+          ],
+          refs: [
+            "Hch 5:3-4",
+            "Jn 16:8-11",
+            "Jn 3:5-8",
+            "Tit 3:5",
+            "Ef 1:13-14",
+            "Jn 14:26",
+            "Jn 16:13",
+            "1 Co 12:4-11",
+            "Gá 5:16-25",
+          ],
+        },
+        {
+          id: "biblia",
+          number: "04",
+          title: "La Biblia",
+          subtitle: "Palabra inspirada e infalible",
+          tag: "Sola Scriptura",
+          summary:
+            "La Palabra de Dios inspirada, inerrante e infalible. Es nuestra autoridad final y suficiente para la fe y la práctica.",
+          verse:
+            "Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir, para instruir en justicia.",
+          verseRef: "2 Timoteo 3:16",
+          sections: [
+            {
+              h: "Naturaleza",
+              body: "<p>La Biblia, compuesta por el Antiguo y Nuevo Testamento, es la Palabra de Dios inspirada, inerrante en sus escritos originales e infalible en todo lo que afirma.</p>",
+            },
+            {
+              h: "Autoridad",
+              body: "<p>Es la revelación final y suficiente de Dios para guiar la fe y la práctica, y no puede ser añadida ni quitada.</p>",
+            },
+          ],
+          refs: ["2 Ti 3:16", "2 Pe 1:20-21", "Sal 19:7-11", "Mt 4:4", "Ap 22:18-19"],
+        },
+        {
+          id: "iglesia",
+          number: "05",
+          title: "La Iglesia",
+          subtitle: "Cuerpo de Cristo, familia de fe",
+          tag: "Eclesiología",
+          summary:
+            "El cuerpo de Cristo, compuesto por todos los creyentes verdaderos, expresado localmente para adorar, servir y proclamar.",
+          verse:
+            "Y sometió todas las cosas bajo sus pies, y lo dio por cabeza sobre todas las cosas a la iglesia.",
+          verseRef: "Efesios 1:22",
+          sections: [
+            {
+              h: "Identidad",
+              body: "<p>La Iglesia es el cuerpo de Cristo, compuesta por todos los creyentes verdaderos (<b>iglesia universal</b>) y expresada localmente en congregaciones que se reúnen para adorar, enseñar, servir y cumplir la misión de Cristo (<b>iglesia local</b>).</p>",
+            },
+            {
+              h: "Propósito y función",
+              body: `<ol>
+                <li>Glorificar a Dios.</li>
+                <li>Edificación del creyente.</li>
+                <li>Proclamar el evangelio.</li>
+              </ol>`,
+            },
+            {
+              h: "Dinámica interna",
+              body: `<ul>
+                <li><b>Relación:</b> Cada creyente debe cultivar un vínculo profundo y activo con su iglesia local.</li>
+                <li><b>Dependencia:</b> Los miembros del cuerpo dependen unos de otros para cumplir la misión.</li>
+                <li><b>Servicio:</b> Los dones espirituales deben ejercerse para edificación mutua.</li>
+                <li><b>Trabajo:</b> La vida cristiana implica participación intencional y activa en la obra de la Iglesia.</li>
+              </ul>`,
+            },
+          ],
+          refs: [
+            "Ef 1:22-23",
+            "Hch 2:42",
+            "Ef 3:21",
+            "1 Pe 2:9",
+            "Ef 4:11-13",
+            "Mt 28:19-20",
+            "Heb 10:24-25",
+            "Ro 12:4-5",
+            "1 Pe 4:10",
+            "1 Co 15:58",
+          ],
+        },
+        {
+          id: "hombre",
+          number: "06",
+          title: "El Hombre",
+          subtitle: "Imagen de Dios, caído por el pecado",
+          tag: "Antropología",
+          summary:
+            "Creado a imagen de Dios, pero caído y bajo condenación, muerto espiritualmente y en necesidad de redención.",
+          verse:
+            "Y creó Dios al hombre a su imagen, a imagen de Dios lo creó; varón y hembra los creó.",
+          verseRef: "Génesis 1:27",
+          sections: [
+            {
+              h: "Origen",
+              body: "<p>Creado a imagen y semejanza de Dios para reflejar su gloria.</p>",
+            },
+            {
+              h: "Condición actual",
+              body: `<p>Por el pecado de Adán, toda la humanidad está bajo condenación, corrompida en todas las áreas de su ser (<b>depravación total</b>).</p>
+              <ul>
+                <li>Enemigo de Dios.</li>
+                <li>No quiere ni puede agradar a Dios.</li>
+                <li>Muerto espiritualmente y esclavo del pecado.</li>
+              </ul>`,
+            },
+          ],
+          refs: [
+            "Gen 1:26-27",
+            "Ro 5:10",
+            "Col 1:21",
+            "Ro 8:7-8",
+            "Jer 17:9",
+            "Gen 6:5",
+            "Ef 2:1-3",
+            "Jn 8:34",
+          ],
+        },
+        {
+          id: "salvacion",
+          number: "07",
+          title: "La Salvación",
+          subtitle: "Por gracia, por medio de la fe",
+          tag: "Soteriología",
+          summary:
+            "Es por gracia, a través de la fe en Cristo, no por obras. Un regalo gratuito de Dios que incluye elección, justificación y santificación.",
+          verse:
+            "Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios.",
+          verseRef: "Efesios 2:8",
+          sections: [
+            {
+              h: "Definición",
+              body: "<p>Obra soberana de Dios que rescata al pecador por gracia, mediante la fe en Jesucristo.</p>",
+            },
+            {
+              h: "Aspectos",
+              body: `<ul>
+                <li>Elección</li>
+                <li>Justificación</li>
+                <li>Regeneración</li>
+                <li>Santificación</li>
+                <li>Glorificación</li>
+              </ul>`,
+            },
+            {
+              h: "Seguridad",
+              body: "<p>El creyente está guardado por el poder de Dios hasta el fin.</p>",
+            },
+          ],
+          refs: [
+            "Ef 2:8-9",
+            "Tit 3:5",
+            "Ef 1:4-5",
+            "Ro 3:24-26",
+            "Jn 3:5-8",
+            "1 Ts 4:3",
+            "Ro 8:30",
+            "Jn 10:28",
+            "Flp 1:6",
+          ],
+        },
+        {
+          id: "ordenanzas",
+          number: "08",
+          title: "Ordenanzas",
+          subtitle: "Bautismo y Cena del Señor",
+          tag: "Sacramentos",
+          summary:
+            "Practicamos el Bautismo por inmersión y la Cena del Señor como actos de obediencia, símbolo y memoria.",
+          verse:
+            "Por tanto, id, y haced discípulos a todas las naciones, bautizándolos en el nombre del Padre, y del Hijo, y del Espíritu Santo.",
+          verseRef: "Mateo 28:19",
+          sections: [
+            {
+              h: "a) Bautismo por inmersión",
+              body: "<p>Símbolo de la unión con Cristo en su muerte, sepultura y resurrección.</p>",
+            },
+            {
+              h: "b) Cena del Señor",
+              body: "<p>Memorial de la obra de Cristo y proclamación de su regreso.</p>",
+            },
+          ],
+          refs: ["Mt 3:13-16", "Hch 8:36-38", "Ro 6:4", "1 Co 11:23-26"],
+        },
+        {
+          id: "escatologia",
+          number: "09",
+          title: "Escatología",
+          subtitle: "La esperanza del regreso",
+          tag: "Últimos tiempos",
+          summary:
+            "Cristo regresará personal, visible y gloriosamente para consumar la historia y establecer cielos nuevos y tierra nueva.",
+          verse:
+            "He aquí yo vengo pronto, y mi galardón conmigo, para recompensar a cada uno según sea su obra.",
+          verseRef: "Apocalipsis 22:12",
+          sections: [
+            {
+              h: "Regreso glorioso",
+              body: "<p>Cristo regresará personal, visible y gloriosamente para consumar la historia y establecer cielos nuevos y tierra nueva.</p>",
+            },
+            {
+              h: "Para la Iglesia, esta esperanza es",
+              body: `<ul>
+                <li>Una esperanza viva.</li>
+                <li>Motivo de consuelo.</li>
+                <li>Estímulo para santidad y servicio.</li>
+              </ul>`,
+            },
+          ],
+          refs: [
+            "Hch 1:9-11",
+            "Mt 24:30",
+            "Ap 22:12",
+            "Tit 2:13",
+            "1 Pe 1:13",
+            "1 Ts 4:18",
+            "1 Jn 3:2-3",
+          ],
+        },
+      ];
+
+      /* ——— Render index ——— */
+      const idxEl = document.getElementById("index");
+      doctrines.forEach((d) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <a href="#doctrine-${d.id}" class="idx-item block group" data-id="${d.id}">
+            <span class="idx-num font-mono text-[11px] text-ink/40 mr-2 transition">${d.number}</span>
+            <span>${d.title}</span>
+          </a>`;
+        idxEl.appendChild(li);
+      });
+
+      /* ——— Render rows ——— */
+      const rootEl = document.getElementById("rowsRoot");
+      doctrines.forEach((d, i) => {
+        const row = document.createElement("article");
+        row.id = `doctrine-${d.id}`;
+        row.className = "doctrine-row";
+        row.dataset.id = d.id;
+
+        const sectionsHTML = d.sections
+          .map(
+            (s) => `
+          <h4>${s.h}</h4>
+          ${s.body}
+        `
+          )
+          .join("");
+
+        const refsHTML = d.refs
+          .map((r) => `<span class="ref-chip">${r}</span>`)
+          .join("");
+
+        const featuredDot = d.featured
+          ? '<span class="ml-3 inline-flex items-center gap-1.5 text-[10px] tracking-[0.22em] uppercase text-primary font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span>Centro</span>'
+          : "";
+
+        row.innerHTML = `
+          <div class="row-summary grid grid-cols-12 gap-4 py-8 md:py-10 items-center">
+            <div class="col-span-1 font-mono text-[12px] text-ink/40">${d.number}</div>
+            <div class="col-span-10 md:col-span-7 flex items-baseline flex-wrap">
+              <h3 class="row-title font-display text-[clamp(1.7rem,3vw,2.7rem)] leading-[1.05] tracking-tight">${d.title}</h3>
+              ${featuredDot}
+              <div class="w-full mt-1.5 font-ui text-[12.5px] text-ink/50">${d.subtitle}</div>
+            </div>
+            <div class="hidden md:block col-span-3">
+              <span class="inline-block font-ui text-[10.5px] tracking-[0.22em] uppercase text-ink/55 border border-ink/15 rounded-full px-3 py-1.5">${d.tag}</span>
+            </div>
+            <div class="col-span-1 flex justify-end">
+              <button class="row-plus w-11 h-11 rounded-full border border-ink/15 flex items-center justify-center" aria-label="Expandir">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M6 1V11M1 6H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="row-content">
+            <div class="grid grid-cols-12 gap-4 pb-12">
+              <div class="col-span-12 md:col-span-7 md:col-start-2">
+                <p class="font-ui text-[15.5px] leading-relaxed text-ink/70 max-w-2xl">
+                  ${d.summary}
+                </p>
+                <div class="verse-callout mt-6">
+                  <p>"${d.verse}"</p>
+                  <span class="ref">${d.verseRef}</span>
+                </div>
+                <div class="detail-body mt-8 max-w-2xl">
+                  ${sectionsHTML}
+                </div>
+              </div>
+              <aside class="col-span-12 md:col-span-3 md:col-start-9 mt-6 md:mt-0">
+                <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-4">
+                  Referencias
+                </div>
+                <div class="flex flex-wrap gap-2 mb-8">
+                  ${refsHTML}
+                </div>
+                <div class="pt-6 border-t border-ink/10">
+                  <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-2">
+                    Doctrina ${d.number} de ${String(doctrines.length).padStart(2, "0")}
+                  </div>
+                  <div class="font-display text-lg italic text-ink/80">
+                    ${d.tag}
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
+        `;
+        rootEl.appendChild(row);
+      });
+
+      /* ——— Row toggle ——— */
+      document.querySelectorAll(".doctrine-row").forEach((row) => {
+        const head = row.querySelector(".row-summary");
+        head.addEventListener("click", () => {
+          row.classList.toggle("open");
+          updateExpandAllLabel();
+        });
+      });
+
+      window.openDoctrine = function (id) {
+        const row = document.getElementById("doctrine-" + id);
+        if (!row) return;
+        if (!row.classList.contains("open")) row.classList.add("open");
+        setTimeout(() => {
+          window.scrollTo({
+            top: row.offsetTop - 90,
+            behavior: "smooth",
+          });
+        }, 60);
+        updateExpandAllLabel();
+      };
+
+      /* ——— Expand all / collapse all ——— */
+      const expandBtn = document.getElementById("expandAll");
+      const expandLabel = document.getElementById("expandAllLabel");
+      function updateExpandAllLabel() {
+        const all = document.querySelectorAll(".doctrine-row");
+        const open = document.querySelectorAll(".doctrine-row.open");
+        expandLabel.textContent =
+          open.length === all.length ? "Cerrar todas" : "Expandir todas";
+      }
+      expandBtn.addEventListener("click", () => {
+        const all = document.querySelectorAll(".doctrine-row");
+        const open = document.querySelectorAll(".doctrine-row.open");
+        const shouldOpen = open.length < all.length;
+        all.forEach((r) => r.classList.toggle("open", shouldOpen));
+        updateExpandAllLabel();
+      });
+
+      /* ——— Scroll reveal + progress + active index ——— */
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("in");
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -10% 0px" }
+      );
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+      const idxItems = document.querySelectorAll(".idx-item");
+      function onScroll() {
+        const max = document.body.scrollHeight - window.innerHeight;
+        document.getElementById("readprog").style.width =
+          (window.scrollY / max) * 100 + "%";
+
+        const nav = document.getElementById("nav");
+        if (window.scrollY > 40) {
+          nav.style.background = "rgba(250,248,245,0.92)";
+          nav.style.boxShadow = "0 8px 30px -10px rgba(20,20,20,0.08)";
+        } else {
+          nav.style.background = "rgba(250,248,245,0.72)";
+          nav.style.boxShadow = "none";
+        }
+
+        // active idx
+        const y = window.scrollY + window.innerHeight * 0.35;
+        let active = null;
+        doctrines.forEach((d) => {
+          const el = document.getElementById("doctrine-" + d.id);
+          if (el && el.offsetTop <= y) active = d.id;
+        });
+        idxItems.forEach((it) => {
+          it.classList.toggle("active", it.dataset.id === active);
+        });
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+      /* Smooth scroll for hash links (offset for sticky nav) */
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", (e) => {
+          const href = a.getAttribute("href");
+          if (href.length > 1) {
+            const el = document.querySelector(href);
+            if (el) {
+              e.preventDefault();
+              window.scrollTo({
+                top: el.offsetTop - 90,
+                behavior: "smooth",
+              });
+            }
+          }
+        });
+      });
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
