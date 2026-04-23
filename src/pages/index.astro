@@ -1,37 +1,25 @@
 ---
-import cn from '../utils/cn';
-import Decorators from 'src/components/Decorators.astro';
 import Layout from '../layouts/Layout.astro';
-import Home from '../sections/Home.astro';
 import AboutUs from '../sections/AboutUs.astro';
 import Activities from '../sections/Activities.astro';
-import Sermons from '../sections/Sermons.astro';
-import Ministries from 'src/sections/Ministries.astro';
 import Contact from '../sections/Contact.astro';
-
-const classes = {
-  decoratorTwo: cn(
-    'absolute',
-    'top-[-5rem]',
-    'left-[-10rem]',
-    'w-[35%]',
-    'h-[35%]',
-    'z-0'
-  ),
-};
+import Home from '../sections/Home.astro';
+import Marquee from '../sections/Marquee.astro';
+import Ministries from '../sections/Ministries.astro';
+import Sermons from '../sections/Sermons.astro';
 ---
 
 <Layout title="Iglesia Bautista El Ancla">
   <Home />
-  <Decorators type="bottom" customClass={classes.decoratorTwo} />
+  <Marquee />
   <AboutUs />
   <Activities />
   <Sermons />
   <Ministries />
   <Contact />
 </Layout>
+
 <script>
-  import { initAnimations } from '../scripts/animations.ts';
-  // Aumentar timeout para Astro 6.0 - esperar a que los elementos estén cargados
-  setTimeout(initAnimations, 500);
+  import { initLanding } from '../scripts/landing.ts';
+  initLanding();
 </script>

@@ -1,0 +1,105 @@
+---
+import cn from '../utils/cn.ts';
+
+interface ResourceItem {
+  label: string;
+  href: string;
+  description?: string;
+}
+
+const recursos: ResourceItem[] = [
+  { label: 'Confesión de fe', href: '/confesion-de-fe', description: 'IX pilares doctrinales' },
+];
+
+const styles = {
+  header: cn(
+    'fixed top-0 left-0 right-0 z-50 pointer-events-none'
+  ),
+  wrapper: cn(
+    'mx-auto max-w-[1600px] px-6 md:px-10 pt-6'
+  ),
+  nav: cn(
+    'pointer-events-auto flex items-center justify-between',
+    'rounded-full border border-ink/10',
+    'bg-paper/80 backdrop-blur-xl',
+    'px-5 md:px-6 py-3 transition-all duration-500'
+  ),
+  logoLink: cn('flex items-center gap-3'),
+  logoImg: cn('w-7 h-7 object-contain'),
+  logoLabel: cn('text-[9px] tracking-[0.22em] font-ui font-semibold text-ink/60'),
+  logoName: cn('font-display text-[17px] tracking-tight font-semibold leading-none'),
+  navList: cn('hidden lg:flex items-center gap-9 font-ui text-[13px] font-medium text-ink/80'),
+  actions: cn('flex items-center gap-3'),
+  liveChip: cn('hidden md:flex items-center gap-2 text-[11px] font-ui font-medium text-ink/60 uppercase tracking-wider'),
+  liveDot: cn('w-1.5 h-1.5 rounded-full bg-primary live-dot'),
+  ctaBtn: cn(
+    'cta-btn btn-primary inline-flex items-center gap-2',
+    'rounded-full bg-ink text-paper',
+    'px-5 py-2.5 font-ui text-[12px] font-semibold tracking-wide uppercase'
+  ),
+};
+---
+
+<!-- NAV -->
+<header class={styles.header} id="siteHeader">
+  <div class={styles.wrapper}>
+    <nav
+      class={styles.nav}
+      style="background: rgba(250,248,245,0.72)"
+      id="nav"
+    >
+      <a href="#inicio" class={styles.logoLink}>
+        <img
+          src="/images/anclarojo.png"
+          alt=""
+          class={styles.logoImg}
+        />
+        <div class="leading-none">
+          <div class={styles.logoLabel}>IGLESIA BAUTISTA</div>
+          <div class={styles.logoName}>El Ancla</div>
+        </div>
+      </a>
+
+      <ul class={styles.navList}>
+        <li><a href="#inicio" class="nav-item ulink" data-section="inicio">Inicio</a></li>
+        <li><a href="#nosotros" class="nav-item ulink" data-section="nosotros">Nosotros</a></li>
+        <li><a href="#actividades" class="nav-item ulink" data-section="actividades">Actividades</a></li>
+        <li><a href="#sermones" class="nav-item ulink" data-section="sermones">Sermones</a></li>
+        <li><a href="#ministerios" class="nav-item ulink" data-section="ministerios">Ministerios</a></li>
+        <li class="relative group/recursos">
+          <button type="button" class="nav-item ulink flex items-center gap-1.5 cursor-pointer select-none">
+            Recursos
+            <svg class="w-2.5 h-2.5 opacity-50 transition-transform duration-300 group-hover/recursos:rotate-180" viewBox="0 0 10 6" fill="none">
+              <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="recursos-dropdown absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 -translate-y-1 pointer-events-none group-hover/recursos:opacity-100 group-hover/recursos:translate-y-0 group-hover/recursos:pointer-events-auto transition-all duration-200 ease-out">
+            <div class="rounded-2xl border border-ink/10 bg-paper/95 backdrop-blur-xl shadow-[0_8px_30px_-8px_rgba(20,20,20,0.15)] min-w-[220px] p-2">
+              {recursos.map((item) => (
+                <a href={item.href} class="flex flex-col gap-0.5 px-4 py-3 rounded-xl hover:bg-ink/5 transition-colors">
+                  <span class="font-ui text-[13px] font-medium text-ink/90">{item.label}</span>
+                  {item.description && (
+                    <span class="font-ui text-[11px] text-ink/45">{item.description}</span>
+                  )}
+                </a>
+              ))}
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <div class={styles.actions}>
+        <span class={styles.liveChip}>
+          <span class={styles.liveDot}></span>
+          Dom · 11:15
+        </span>
+        <a href="#visitanos" class={styles.ctaBtn}>
+          Visítanos
+          <svg class="cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>

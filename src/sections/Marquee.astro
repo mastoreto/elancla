@@ -1,0 +1,29 @@
+---
+import cn from '../utils/cn.ts';
+
+const styles = {
+  section: cn('border-y border-ink/10 py-6 overflow-hidden bg-paper'),
+  track: cn('marquee whitespace-nowrap font-display italic text-3xl md:text-5xl text-ink/70'),
+  separator: cn('px-8 text-primary'),
+};
+
+const words = ['Gracia', 'Palabra', 'Comunidad', 'Misión', 'Oración', 'Familia'];
+---
+
+<!-- MARQUEE -->
+<section class={styles.section}>
+  <div class={styles.track}>
+    {words.map((w) => (
+      <>
+        <span class="px-8">{w}</span>
+        <span class={styles.separator}>✦</span>
+      </>
+    ))}
+    {words.map((w) => (
+      <>
+        <span class="px-8">{w}</span>
+        <span class={styles.separator}>✦</span>
+      </>
+    ))}
+  </div>
+</section>

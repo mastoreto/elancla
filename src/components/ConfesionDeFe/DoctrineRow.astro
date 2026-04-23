@@ -1,0 +1,75 @@
+---
+import type { Doctrine } from 'src/data/doctrines';
+
+interface Props {
+  doctrine: Doctrine;
+  total: string;
+}
+
+const { doctrine: d, total } = Astro.props;
+---
+
+<article id={`doctrine-${d.id}`} class="doctrine-row" data-id={d.id}>
+
+  <!-- Clickable header -->
+  <div class="row-summary grid grid-cols-12 gap-4 py-8 md:py-10 items-center cursor-pointer">
+    <div class="col-span-1 font-mono text-[12px] text-ink/40">{d.number}</div>
+    <div class="col-span-10 md:col-span-7 flex items-baseline flex-wrap">
+      <h3 class="row-title font-display text-[clamp(1.7rem,3vw,2.7rem)] leading-[1.05] tracking-tight">{d.title}</h3>
+      {d.featured && (
+        <span class="ml-3 inline-flex items-center gap-1.5 text-[10px] tracking-[0.22em] uppercase text-primary font-semibold">
+          <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>Centro
+        </span>
+      )}
+      <div class="w-full mt-1.5 font-ui text-[12.5px] text-ink/50">{d.subtitle}</div>
+    </div>
+    <div class="hidden md:block col-span-3">
+      <span class="inline-block font-ui text-[10.5px] tracking-[0.22em] uppercase text-ink/55 border border-ink/15 rounded-full px-3 py-1.5">{d.tag}</span>
+    </div>
+    <div class="col-span-1 flex justify-end">
+      <button type="button" class="row-plus w-11 h-11 rounded-full border border-ink/15 flex items-center justify-center" aria-label="Expandir">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M6 1V11M1 6H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Expandable content -->
+  <div class="row-content">
+    <div class="grid grid-cols-12 gap-4 pb-12">
+      <div class="col-span-12 md:col-span-7 md:col-start-2">
+        <p class="font-ui text-[15.5px] leading-relaxed text-ink/70 max-w-2xl">{d.summary}</p>
+        <div class="verse-callout mt-6">
+          <p>"{d.verse}"</p>
+          <span class="ref">{d.verseRef}</span>
+        </div>
+        <div class="detail-body mt-8 max-w-2xl">
+          {d.sections.map((section) => (
+            <>
+              <h4>{section.h}</h4>
+              <Fragment set:html={section.body} />
+            </>
+          ))}
+        </div>
+      </div>
+
+      <!-- References sidebar -->
+      <aside class="col-span-12 md:col-span-3 md:col-start-9 mt-6 md:mt-0">
+        <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-4">Referencias</div>
+        <div class="flex flex-wrap gap-2 mb-8">
+          {d.refs.map((ref) => (
+            <span class="ref-chip">{ref}</span>
+          ))}
+        </div>
+        <div class="pt-6 border-t border-ink/10">
+          <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-2">
+            Doctrina {d.number} de {total}
+          </div>
+          <div class="font-display text-lg italic text-ink/80">{d.tag}</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+</article>

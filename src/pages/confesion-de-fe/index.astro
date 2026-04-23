@@ -1,15 +1,26 @@
 ---
 import Layout from 'src/layouts/Layout.astro';
-import Timeline from 'src/components/Timeline';
-import cn from 'src/utils/cn';
+import { doctrines, solas } from 'src/data/doctrines';
+import ConfesionHero from 'src/components/ConfesionDeFe/ConfesionHero.astro';
+import ConfesionMarquee from 'src/components/ConfesionDeFe/ConfesionMarquee.astro';
+import ConfesionQuote from 'src/components/ConfesionDeFe/ConfesionQuote.astro';
+import DoctrineList from 'src/components/ConfesionDeFe/DoctrineList.astro';
+import ConfesionChristus from 'src/components/ConfesionDeFe/ConfesionChristus.astro';
+import ConfesionCTA from 'src/components/ConfesionDeFe/ConfesionCTA.astro';
+import 'src/styles/ConfesionDeFe.css';
 
-const classes = {
-  section: cn('min-h-screen flex flex-col', 'relative', 'overflow-x-hidden'),
-};
+const total = String(doctrines.length).padStart(2, '0');
 ---
 
 <Layout title="Confesión de fe">
-  <section class={classes.section}>
-    <Timeline client:load />
-  </section>
+  <ConfesionHero />
+  <ConfesionMarquee solas={solas} />
+  <ConfesionQuote />
+  <DoctrineList doctrines={doctrines} total={total} />
+  <ConfesionChristus />
+  <ConfesionCTA />
 </Layout>
+
+<script>
+  import 'src/scripts/confesion.ts';
+</script>

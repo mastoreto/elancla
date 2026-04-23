@@ -1,0 +1,1528 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>El Ancla — Rediseño</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Libre+Franklin:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                DEFAULT: "#FF2E34",
+                50: "#ffeff0",
+                100: "#ffdcdf",
+                200: "#ffbfc5",
+                300: "#ff929c",
+                400: "#ff5463",
+                500: "#ff1f33",
+                600: "#ff0016",
+                700: "#db0013",
+                800: "#b70010",
+                900: "#940814",
+                950: "#520007",
+              },
+              secondary: {
+                50: "#f8f7f4",
+                100: "#f3f1ec",
+                200: "#ddd8cb",
+                300: "#c8bda9",
+                400: "#b19f86",
+                500: "#a18a6e",
+                600: "#947a62",
+                700: "#7c6452",
+                800: "#655247",
+                900: "#53443b",
+                950: "#2c231e",
+              },
+              paper: "#FAF8F5",
+              ink: "#141414",
+            },
+            fontFamily: {
+              display: ['"Fraunces"', "serif"],
+              sans: ['"Libre Franklin"', "sans-serif"],
+              ui: ['"Inter"', "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :root {
+        --paper: #faf8f5;
+        --ink: #141414;
+        --primary: #ff2e34;
+        --grid: rgba(20, 20, 20, 0.06);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Libre Franklin", sans-serif;
+        background: var(--paper);
+        color: var(--ink);
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      .font-display {
+        font-family: "Fraunces", serif;
+        font-variation-settings: "opsz" 144;
+      }
+
+      /* — Elegant text clipping for big hero — */
+      .hero-title {
+        font-family: "Fraunces", serif;
+        font-variation-settings: "opsz" 144;
+        font-weight: 300;
+        letter-spacing: -0.04em;
+        line-height: 0.88;
+      }
+      .hero-title em {
+        font-style: italic;
+        font-weight: 400;
+        color: var(--primary);
+      }
+
+      /* ————— ENTRANCE ANIMS ————— */
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translate3d(0, 32px, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+      @keyframes slideRight {
+        from {
+          opacity: 0;
+          transform: translate3d(-24px, 0, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes lineGrow {
+        from {
+          transform: scaleX(0);
+        }
+        to {
+          transform: scaleX(1);
+        }
+      }
+      @keyframes floatSoft {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+      @keyframes drawCircle {
+        from {
+          stroke-dashoffset: 628;
+        }
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translate3d(0, 24px, 0);
+        transition:
+          opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+          transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: none;
+      }
+      .reveal-delay-1 {
+        transition-delay: 0.08s;
+      }
+      .reveal-delay-2 {
+        transition-delay: 0.16s;
+      }
+      .reveal-delay-3 {
+        transition-delay: 0.24s;
+      }
+      .reveal-delay-4 {
+        transition-delay: 0.32s;
+      }
+
+      /* Hero staggered entrance */
+      .hero-line {
+        overflow: hidden;
+        display: block;
+      }
+      .hero-line > span {
+        display: inline-block;
+        transform: translate3d(0, 110%, 0);
+        animation: heroRise 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+      @keyframes heroRise {
+        to {
+          transform: translate3d(0, 0, 0);
+        }
+      }
+      .hero-line:nth-child(1) > span {
+        animation-delay: 0.1s;
+      }
+      .hero-line:nth-child(2) > span {
+        animation-delay: 0.22s;
+      }
+      .hero-line:nth-child(3) > span {
+        animation-delay: 0.34s;
+      }
+
+      /* Divider thin line grows */
+      .line-grow {
+        transform-origin: left;
+        animation: lineGrow 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+      }
+
+      /* Number ticker */
+      .ticker {
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* Card hover */
+      .card-hover {
+        transition:
+          transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+          border-color 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-4px);
+        box-shadow:
+          0 30px 60px -20px rgba(20, 20, 20, 0.12),
+          0 10px 20px -8px rgba(20, 20, 20, 0.06);
+      }
+
+      /* Subtle paper grain */
+      .grain::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.35;
+        background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.035 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+        mix-blend-mode: multiply;
+      }
+
+      /* Marquee */
+      .marquee {
+        display: flex;
+        animation: marquee 38s linear infinite;
+      }
+      @keyframes marquee {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* Link underline */
+      .ulink {
+        position: relative;
+        display: inline-block;
+      }
+      .ulink::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -2px;
+        height: 1px;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .ulink:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      /* Big CTA arrow */
+      .cta-arrow {
+        transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .cta-btn:hover .cta-arrow {
+        transform: translate(4px, -4px);
+      }
+
+      /* Primary button */
+      .btn-primary {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+      }
+      .btn-primary::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: #0a0a0a;
+        transform: translateY(101%);
+        transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        z-index: -1;
+      }
+      .btn-primary:hover::before {
+        transform: translateY(0);
+      }
+
+      /* Nav dot indicator */
+      .nav-item {
+        position: relative;
+      }
+      .nav-item[data-active="true"]::before {
+        content: "";
+        position: absolute;
+        left: -14px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--primary);
+        animation: fadeIn 0.4s ease;
+      }
+
+      /* Image duotone */
+      .duotone {
+        filter: grayscale(1) contrast(1.05) brightness(0.95);
+        transition: filter 0.8s ease;
+      }
+      .duotone:hover {
+        filter: grayscale(0) contrast(1.02);
+      }
+
+      /* Grid bg */
+      .grid-bg {
+        background-image:
+          linear-gradient(var(--grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+        background-size: 72px 72px;
+      }
+
+      /* Spinner anchor */
+      .anchor-wrap {
+        animation: floatSoft 4s ease-in-out infinite;
+      }
+
+      /* Scroll indicator */
+      @keyframes scrollBar {
+        0% {
+          transform: scaleY(0);
+          transform-origin: top;
+        }
+        50% {
+          transform: scaleY(1);
+          transform-origin: top;
+        }
+        50.01% {
+          transform: scaleY(1);
+          transform-origin: bottom;
+        }
+        100% {
+          transform: scaleY(0);
+          transform-origin: bottom;
+        }
+      }
+      .scroll-bar {
+        animation: scrollBar 2.4s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+      }
+
+      /* Marker corners */
+      .corner {
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        border: 1.5px solid var(--ink);
+      }
+      .corner.tl {
+        top: -1px;
+        left: -1px;
+        border-right: 0;
+        border-bottom: 0;
+      }
+      .corner.tr {
+        top: -1px;
+        right: -1px;
+        border-left: 0;
+        border-bottom: 0;
+      }
+      .corner.bl {
+        bottom: -1px;
+        left: -1px;
+        border-right: 0;
+        border-top: 0;
+      }
+      .corner.br {
+        bottom: -1px;
+        right: -1px;
+        border-left: 0;
+        border-top: 0;
+      }
+
+      /* — Ministry cell hover (ascii arrow) — */
+      .mini-cell {
+        transition: background-color 0.4s ease;
+      }
+      .mini-cell .mini-arrow {
+        opacity: 0;
+        transform: translateX(-6px);
+        transition:
+          opacity 0.4s ease,
+          transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .mini-cell:hover .mini-arrow {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .mini-cell:hover .mini-num {
+        color: var(--primary);
+      }
+
+      /* Theme B overrides (dark inverted) */
+      body.theme-b {
+        background: #111010;
+        color: #f5f3ee;
+      }
+      body.theme-b .paper-bg {
+        background: #111010;
+      }
+      body.theme-b .text-ink {
+        color: #f5f3ee !important;
+      }
+      body.theme-b .border-ink\/10 {
+        border-color: rgba(245, 243, 238, 0.1) !important;
+      }
+      body.theme-b .border-ink\/15 {
+        border-color: rgba(245, 243, 238, 0.15) !important;
+      }
+      body.theme-b .bg-ink {
+        background: #f5f3ee !important;
+        color: #111010 !important;
+      }
+      body.theme-b .bg-white {
+        background: #1a1818 !important;
+      }
+      body.theme-b .bg-paper {
+        background: #111010 !important;
+      }
+      body.theme-b .text-ink\/60 {
+        color: rgba(245, 243, 238, 0.6) !important;
+      }
+      body.theme-b .text-ink\/70 {
+        color: rgba(245, 243, 238, 0.7) !important;
+      }
+      body.theme-b .text-ink\/50 {
+        color: rgba(245, 243, 238, 0.5) !important;
+      }
+      body.theme-b .corner {
+        border-color: #f5f3ee;
+      }
+      body.theme-b {
+        --grid: rgba(245, 243, 238, 0.05);
+        --ink: #f5f3ee;
+      }
+
+      /* Hero layout variants */
+      body[data-hero="centered"] .hero-left {
+        text-align: center;
+        align-items: center;
+      }
+      body[data-hero="centered"] .hero-title {
+        text-align: center;
+      }
+      body[data-hero="centered"] .hero-meta-row {
+        justify-content: center;
+      }
+
+      /* Tweaks panel */
+      #tweaks {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 100;
+        font-family: "Inter", sans-serif;
+        font-size: 12px;
+        background: #fff;
+        color: #141414;
+        border: 1px solid rgba(20, 20, 20, 0.1);
+        border-radius: 12px;
+        padding: 14px 16px;
+        width: 240px;
+        box-shadow: 0 20px 40px -10px rgba(20, 20, 20, 0.18);
+        display: none;
+      }
+      #tweaks.open {
+        display: block;
+      }
+      #tweaks h4 {
+        font-family: "Fraunces", serif;
+        font-size: 16px;
+        margin-bottom: 10px;
+        letter-spacing: -0.01em;
+      }
+      #tweaks label {
+        display: block;
+        margin-top: 10px;
+        color: #6b6b6b;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 10px;
+        font-weight: 600;
+      }
+      #tweaks .seg {
+        display: flex;
+        gap: 4px;
+        margin-top: 6px;
+      }
+      #tweaks .seg button {
+        flex: 1;
+        padding: 7px 8px;
+        border: 1px solid rgba(20, 20, 20, 0.1);
+        background: #fafafa;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 11px;
+        transition: all 0.2s;
+      }
+      #tweaks .seg button.active {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+      }
+      #tweaks .swatches {
+        display: flex;
+        gap: 6px;
+        margin-top: 6px;
+      }
+      #tweaks .swatches button {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      #tweaks .swatches button.active {
+        border-color: #141414;
+        transform: scale(1.1);
+      }
+
+      /* Progress bar */
+      #readprog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2px;
+        background: var(--primary);
+        width: 0;
+        z-index: 60;
+        transition: width 0.12s linear;
+      }
+
+      /* Section counter */
+      .section-counter {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(20, 20, 20, 0.5);
+      }
+
+      /* Nav chip */
+      .nav-chip {
+        transition: background 0.3s ease;
+      }
+      body.theme-b .nav-chip {
+        color: #111;
+      }
+
+      /* Glow behind primary accents */
+      .glow-primary {
+        position: relative;
+      }
+
+      /* Tab button */
+      .tab-btn {
+        transition:
+          color 0.3s ease,
+          border-color 0.3s ease;
+      }
+
+      /* Make aspect-ratio cards respond */
+      .ratio-4-5 {
+        aspect-ratio: 4/5;
+      }
+      .ratio-3-4 {
+        aspect-ratio: 3/4;
+      }
+      .ratio-16-9 {
+        aspect-ratio: 16/9;
+      }
+
+      /* Sermon slide */
+      .sermon-track {
+        scrollbar-width: none;
+      }
+      .sermon-track::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Play button */
+      .play-btn {
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .sermon-card:hover .play-btn {
+        transform: scale(1.08);
+      }
+      .sermon-card:hover .thumb-img {
+        transform: scale(1.04);
+      }
+      .thumb-img {
+        transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      /* About image animated frame */
+      .frame-img {
+        transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+        clip-path: inset(100% 0 0 0);
+      }
+      .reveal.in .frame-img {
+        clip-path: inset(0 0 0 0);
+      }
+
+      /* Accordion */
+      details[open] .chev {
+        transform: rotate(45deg);
+      }
+      .chev {
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      /* Invert section (dark) */
+      .invert-block {
+        background: #141414;
+        color: #f5f3ee;
+      }
+      .invert-block .text-ink {
+        color: #f5f3ee;
+      }
+
+      /* Scroll snapping horizontal */
+      .snap-x-container {
+        scroll-snap-type: x mandatory;
+      }
+      .snap-x-container > * {
+        scroll-snap-align: start;
+      }
+
+      /* "live" dot */
+      .live-dot {
+        position: relative;
+      }
+      .live-dot::after {
+        content: "";
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        background: rgba(255, 46, 52, 0.35);
+        animation: pulseRing 1.8s ease-out infinite;
+      }
+      @keyframes pulseRing {
+        0% {
+          transform: scale(0.6);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(2.2);
+          opacity: 0;
+        }
+      }
+
+      /* Image parallax */
+      .parallax-img {
+        will-change: transform;
+      }
+
+      /* Link arrow */
+      .arrow-link:hover .arrow-ico {
+        transform: translateX(6px);
+      }
+      .arrow-ico {
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+    </style>
+  </head>
+  <body class="paper-bg selection:bg-primary selection:text-white" data-hero="split">
+    <div id="readprog"></div>
+
+    <!-- ———————————— NAV ———————————— -->
+    <header
+      class="fixed top-0 left-0 right-0 z-50 pointer-events-none"
+      id="siteHeader"
+    >
+      <div class="mx-auto max-w-[1600px] px-6 md:px-10 pt-6">
+        <nav
+          class="pointer-events-auto flex items-center justify-between rounded-full border border-ink/10 bg-paper/80 backdrop-blur-xl px-5 md:px-6 py-3 transition-all duration-500"
+          style="background: rgba(250,248,245,0.72)"
+          id="nav"
+        >
+          <a href="#inicio" class="flex items-center gap-3">
+            <img
+              src="assets/anclarojo.png"
+              alt=""
+              class="w-7 h-7 object-contain"
+            />
+            <div class="leading-none">
+              <div
+                class="text-[9px] tracking-[0.22em] font-ui font-semibold text-ink/60"
+              >
+                IGLESIA BAUTISTA
+              </div>
+              <div
+                class="font-display text-[17px] tracking-tight font-semibold leading-none"
+              >
+                El Ancla
+              </div>
+            </div>
+          </a>
+
+          <ul
+            class="hidden lg:flex items-center gap-9 font-ui text-[13px] font-medium text-ink/80"
+          >
+            <li><a href="#inicio" class="nav-item ulink" data-section="inicio">Inicio</a></li>
+            <li><a href="#nosotros" class="nav-item ulink" data-section="nosotros">Nosotros</a></li>
+            <li><a href="#actividades" class="nav-item ulink" data-section="actividades">Actividades</a></li>
+            <li><a href="#sermones" class="nav-item ulink" data-section="sermones">Sermones</a></li>
+            <li><a href="#ministerios" class="nav-item ulink" data-section="ministerios">Ministerios</a></li>
+          </ul>
+
+          <div class="flex items-center gap-3">
+            <span class="hidden md:flex items-center gap-2 text-[11px] font-ui font-medium text-ink/60 uppercase tracking-wider">
+              <span class="w-1.5 h-1.5 rounded-full bg-primary live-dot"></span>
+              Dom · 11:15
+            </span>
+            <a
+              href="#visitanos"
+              class="cta-btn btn-primary inline-flex items-center gap-2 rounded-full bg-ink text-paper px-5 py-2.5 font-ui text-[12px] font-semibold tracking-wide uppercase"
+            >
+              Visítanos
+              <svg class="cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ———————————— HERO ———————————— -->
+    <section id="inicio" class="relative min-h-screen pt-32 pb-16 overflow-hidden grain">
+      <div class="absolute inset-0 grid-bg opacity-60"></div>
+
+      <!-- decorative big circle -->
+      <svg
+        class="absolute top-[20%] right-[-10%] w-[55vw] h-[55vw] opacity-[0.05] pointer-events-none"
+        viewBox="0 0 200 200"
+      >
+        <circle
+          cx="100" cy="100" r="100" fill="none"
+          stroke="#141414" stroke-width="0.4"
+        />
+        <circle
+          cx="100" cy="100" r="70" fill="none"
+          stroke="#141414" stroke-width="0.4"
+        />
+        <circle
+          cx="100" cy="100" r="40" fill="none"
+          stroke="#141414" stroke-width="0.4"
+        />
+      </svg>
+
+      <div class="relative mx-auto max-w-[1600px] px-6 md:px-10">
+        <!-- tiny label row -->
+        <div class="flex items-center justify-between mb-10 md:mb-16">
+          <div class="flex items-center gap-3 font-ui text-[11px] tracking-[0.2em] uppercase text-ink/60">
+            <span class="w-8 h-px bg-ink/40"></span>
+            <span>Montevideo · Uruguay</span>
+          </div>
+          <div class="hidden md:block font-ui text-[11px] tracking-[0.2em] uppercase text-ink/60">
+            Fundada · MCMXCVII
+          </div>
+        </div>
+
+        <!-- HERO big title -->
+        <div class="hero-left flex flex-col">
+          <h1 class="hero-title text-[18vw] md:text-[14vw] lg:text-[12vw] text-ink">
+            <span class="hero-line"><span>Una iglesia</span></span>
+            <span class="hero-line"><span>con <em>ancla</em> en</span></span>
+            <span class="hero-line"><span>el evangelio.</span></span>
+          </h1>
+
+          <div class="hero-meta-row mt-10 md:mt-14 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+            <div class="max-w-md">
+              <div class="h-px bg-ink/30 line-grow origin-left w-24 mb-5"></div>
+              <p class="font-ui text-[15px] md:text-[17px] leading-relaxed text-ink/75">
+                Somos una comunidad cristiana bautista en el corazón de
+                Montevideo. Creemos en la gracia, la Palabra y la familia de
+                la fe.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <a
+                href="#nosotros"
+                class="cta-btn btn-primary inline-flex items-center gap-3 rounded-full bg-primary text-white px-7 py-4 font-ui text-[13px] font-semibold tracking-wide uppercase"
+              >
+                Conocer más
+                <svg class="cta-arrow" width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </a>
+              <a
+                href="#sermones"
+                class="hidden md:inline-flex items-center gap-2 font-ui text-[13px] font-semibold tracking-wide uppercase ulink arrow-link"
+              >
+                Últimos sermones
+                <svg class="arrow-ico" width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- floating quick service card -->
+        <div
+          class="mt-16 md:mt-24 grid grid-cols-2 md:grid-cols-4 gap-[1px] bg-ink/10 border border-ink/10 rounded-2xl overflow-hidden"
+        >
+          <div class="bg-paper p-6 md:p-7 reveal">
+            <div class="font-ui text-[10px] tracking-[0.2em] uppercase text-ink/50 mb-2">01 · Domingos</div>
+            <div class="font-display text-2xl md:text-3xl leading-none">11:15</div>
+            <div class="mt-3 font-ui text-[13px] text-ink/70">Culto de celebración</div>
+          </div>
+          <div class="bg-paper p-6 md:p-7 reveal reveal-delay-1">
+            <div class="font-ui text-[10px] tracking-[0.2em] uppercase text-ink/50 mb-2">02 · Domingos</div>
+            <div class="font-display text-2xl md:text-3xl leading-none">10:00</div>
+            <div class="mt-3 font-ui text-[13px] text-ink/70">Escuela bíblica</div>
+          </div>
+          <div class="bg-paper p-6 md:p-7 reveal reveal-delay-2">
+            <div class="font-ui text-[10px] tracking-[0.2em] uppercase text-ink/50 mb-2">03 · Miércoles</div>
+            <div class="font-display text-2xl md:text-3xl leading-none">19:00</div>
+            <div class="mt-3 font-ui text-[13px] text-ink/70">Reunión de oración</div>
+          </div>
+          <div class="bg-primary text-white p-6 md:p-7 reveal reveal-delay-3 relative group">
+            <div class="font-ui text-[10px] tracking-[0.2em] uppercase text-white/70 mb-2">En vivo</div>
+            <div class="font-display text-2xl md:text-3xl leading-none">YouTube</div>
+            <div class="mt-3 font-ui text-[13px] text-white/90 flex items-center gap-2">
+              Transmisión dominical
+              <svg class="transition-transform group-hover:translate-x-1" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scroll cue -->
+        <div class="hidden md:flex absolute bottom-6 left-1/2 -translate-x-1/2 flex-col items-center gap-2">
+          <span class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50">Descubre</span>
+          <span class="block w-px h-10 bg-ink/20 relative overflow-hidden">
+            <span class="block w-px h-full bg-ink scroll-bar"></span>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ———————————— MARQUEE ———————————— -->
+    <section class="border-y border-ink/10 py-6 overflow-hidden bg-paper">
+      <div class="marquee whitespace-nowrap font-display italic text-3xl md:text-5xl text-ink/70">
+        <span class="px-8">Gracia</span><span class="px-8 text-primary">✦</span>
+        <span class="px-8">Palabra</span><span class="px-8 text-primary">✦</span>
+        <span class="px-8">Comunidad</span><span class="px-8 text-primary">✦</span>
+        <span class="px-8">Misión</span><span class="px-8 text-primary">✦</span>
+        <span class="px-8">Oración</span><span class="px-8 text-primary">✦</span>
+        <span class="px-8">Familia</span><span class="px-8 text-primary">✦</span>
+        <!-- duplicate for seamless loop -->
+        <span class="px-8">Gracia</span><span class="px-8 text-primary">✦</span>
+        <span class="px-8">Palabra</span><span class="px-8 text-primary">✦</span>
+        <span class="px-8">Comunidad</span><span class="px-8 text-primary">✦</span>
+        <span class="px-8">Misión</span><span class="px-8 text-primary">✦</span>
+        <span class="px-8">Oración</span><span class="px-8 text-primary">✦</span>
+        <span class="px-8">Familia</span><span class="px-8 text-primary">✦</span>
+      </div>
+    </section>
+
+    <!-- ———————————— ABOUT ———————————— -->
+    <section id="nosotros" class="relative py-24 md:py-36">
+      <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+        <div class="flex items-baseline gap-6 mb-14 md:mb-20">
+          <span class="section-counter">[ 01 — Nosotros ]</span>
+          <span class="flex-1 h-px bg-ink/15"></span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+          <div class="lg:col-span-7 reveal">
+            <h2 class="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-tight">
+              Gracias por querer <em class="italic text-primary">conocernos.</em>
+            </h2>
+            <p class="mt-8 font-ui text-[16px] md:text-[19px] leading-relaxed text-ink/75 max-w-2xl">
+              Conocer una iglesia es un gran desafío en estos tiempos. Esperamos
+              que con la información que encuentres aquí, puedas tener un mayor
+              panorama de quiénes somos y lo que creemos. Eres bienvenido a
+              visitarnos cuando quieras.
+            </p>
+
+            <!-- pillars -->
+            <div class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-0 border-t border-ink/10">
+              <div class="py-6 sm:pr-6 border-b sm:border-b-0 sm:border-r border-ink/10 reveal reveal-delay-1">
+                <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-primary font-semibold mb-2">I.</div>
+                <div class="font-display text-xl md:text-2xl mb-1">Centrados en Cristo</div>
+                <div class="font-ui text-[13px] text-ink/60">La cruz es el centro de todo lo que hacemos.</div>
+              </div>
+              <div class="py-6 sm:px-6 border-b sm:border-b-0 sm:border-r border-ink/10 reveal reveal-delay-2">
+                <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-primary font-semibold mb-2">II.</div>
+                <div class="font-display text-xl md:text-2xl mb-1">Fieles a la Palabra</div>
+                <div class="font-ui text-[13px] text-ink/60">La Escritura es nuestra autoridad y guía.</div>
+              </div>
+              <div class="py-6 sm:pl-6 reveal reveal-delay-3">
+                <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-primary font-semibold mb-2">III.</div>
+                <div class="font-display text-xl md:text-2xl mb-1">Familia de la fe</div>
+                <div class="font-ui text-[13px] text-ink/60">Crecer juntos en amor y servicio.</div>
+              </div>
+            </div>
+
+            <!-- stats -->
+            <div class="mt-14 flex flex-wrap gap-x-12 gap-y-8">
+              <div class="reveal">
+                <div class="font-display text-5xl md:text-6xl ticker tracking-tight" data-count="29">29</div>
+                <div class="font-ui text-[11px] tracking-[0.2em] uppercase text-ink/50 mt-1">Años en Montevideo</div>
+              </div>
+              <div class="reveal reveal-delay-1">
+                <div class="font-display text-5xl md:text-6xl ticker tracking-tight" data-count="10">10</div>
+                <div class="font-ui text-[11px] tracking-[0.2em] uppercase text-ink/50 mt-1">Ministerios activos</div>
+              </div>
+              <div class="reveal reveal-delay-2">
+                <div class="font-display text-5xl md:text-6xl ticker tracking-tight">∞</div>
+                <div class="font-ui text-[11px] tracking-[0.2em] uppercase text-ink/50 mt-1">Gracia abundante</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image + corner marks -->
+          <div class="lg:col-span-5 reveal reveal-delay-2">
+            <div class="relative">
+              <div class="corner tl"></div>
+              <div class="corner tr"></div>
+              <div class="corner bl"></div>
+              <div class="corner br"></div>
+              <div class="relative overflow-hidden ratio-4-5">
+                <img
+                  src="assets/homebanner.jpeg"
+                  alt=""
+                  class="w-full h-full object-cover duotone frame-img"
+                />
+                <!-- overlay label -->
+                <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/60 to-transparent text-white">
+                  <div class="font-ui text-[10px] tracking-[0.25em] uppercase opacity-70 mb-1">Av. Luis A. de Herrera 3101</div>
+                  <div class="font-display text-xl">Nuestra casa</div>
+                </div>
+              </div>
+            </div>
+            <!-- signature -->
+            <div class="mt-6 flex items-center gap-4 reveal reveal-delay-3">
+              <div class="w-14 h-14 rounded-full bg-ink/10 flex items-center justify-center font-display italic text-xl">
+                JO
+              </div>
+              <div>
+                <div class="font-ui text-[12px] text-ink/60">Pastoreada por</div>
+                <div class="font-display text-lg">Pr. Juan Olivera</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ———————————— ACTIVITIES ———————————— -->
+    <section id="actividades" class="relative py-24 md:py-36 bg-white">
+      <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+        <div class="flex items-baseline gap-6 mb-14 md:mb-20">
+          <span class="section-counter">[ 02 — Actividades ]</span>
+          <span class="flex-1 h-px bg-ink/15"></span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+          <div class="lg:col-span-5 lg:sticky lg:top-32 reveal">
+            <h2 class="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-tight">
+              La fe <em class="italic text-primary">en acción</em>, cada semana.
+            </h2>
+            <p class="mt-8 font-ui text-[16px] md:text-[17px] leading-relaxed text-ink/70 max-w-md">
+              Una iglesia viva es una iglesia activa que se edifica y sirve a
+              su comunidad. A través de obras de amor y encuentros concretos,
+              traducimos la fe en pasos reales.
+            </p>
+            <a
+              href="#"
+              class="mt-8 inline-flex items-center gap-3 font-ui text-[13px] font-semibold tracking-wide uppercase ulink arrow-link"
+            >
+              Ver calendario completo
+              <svg class="arrow-ico" width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </a>
+          </div>
+
+          <div class="lg:col-span-7 flex flex-col gap-0 divide-y divide-ink/10 border-y border-ink/10">
+            <!-- activity row -->
+            <div class="group grid grid-cols-12 gap-4 py-8 md:py-10 items-center reveal">
+              <div class="col-span-1 font-ui text-[12px] text-ink/40 font-mono">01</div>
+              <div class="col-span-5 md:col-span-5">
+                <div class="font-display text-2xl md:text-3xl">Culto de celebración</div>
+                <div class="font-ui text-[12px] text-ink/50 mt-1 tracking-wide uppercase">Presencial · Online</div>
+              </div>
+              <div class="col-span-3 md:col-span-3 font-ui text-[13px] text-ink/70">
+                <div class="font-semibold text-ink">Domingos</div>
+                <div>11:15 hs</div>
+              </div>
+              <div class="col-span-3 md:col-span-3 flex justify-end">
+                <div class="w-12 h-12 rounded-full border border-ink/15 flex items-center justify-center group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-all duration-500">
+                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="group grid grid-cols-12 gap-4 py-8 md:py-10 items-center reveal reveal-delay-1">
+              <div class="col-span-1 font-ui text-[12px] text-ink/40 font-mono">02</div>
+              <div class="col-span-5 md:col-span-5">
+                <div class="font-display text-2xl md:text-3xl">Escuela bíblica</div>
+                <div class="font-ui text-[12px] text-ink/50 mt-1 tracking-wide uppercase">Adultos · Niños</div>
+              </div>
+              <div class="col-span-3 md:col-span-3 font-ui text-[13px] text-ink/70">
+                <div class="font-semibold text-ink">Domingos</div>
+                <div>10:00 hs</div>
+              </div>
+              <div class="col-span-3 md:col-span-3 flex justify-end">
+                <div class="w-12 h-12 rounded-full border border-ink/15 flex items-center justify-center group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-all duration-500">
+                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="group grid grid-cols-12 gap-4 py-8 md:py-10 items-center reveal reveal-delay-2">
+              <div class="col-span-1 font-ui text-[12px] text-ink/40 font-mono">03</div>
+              <div class="col-span-5 md:col-span-5">
+                <div class="font-display text-2xl md:text-3xl">Reunión de oración</div>
+                <div class="font-ui text-[12px] text-ink/50 mt-1 tracking-wide uppercase">1° y 3° miércoles</div>
+              </div>
+              <div class="col-span-3 md:col-span-3 font-ui text-[13px] text-ink/70">
+                <div class="font-semibold text-ink">Miércoles</div>
+                <div>19:00 hs</div>
+              </div>
+              <div class="col-span-3 md:col-span-3 flex justify-end">
+                <div class="w-12 h-12 rounded-full border border-ink/15 flex items-center justify-center group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-all duration-500">
+                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="group grid grid-cols-12 gap-4 py-8 md:py-10 items-center reveal reveal-delay-3">
+              <div class="col-span-1 font-ui text-[12px] text-ink/40 font-mono">04</div>
+              <div class="col-span-5 md:col-span-5">
+                <div class="font-display text-2xl md:text-3xl">Grupos de crecimiento</div>
+                <div class="font-ui text-[12px] text-ink/50 mt-1 tracking-wide uppercase">En hogares</div>
+              </div>
+              <div class="col-span-3 md:col-span-3 font-ui text-[13px] text-ink/70">
+                <div class="font-semibold text-ink">Varios días</div>
+                <div>Consultar</div>
+              </div>
+              <div class="col-span-3 md:col-span-3 flex justify-end">
+                <div class="w-12 h-12 rounded-full border border-ink/15 flex items-center justify-center group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-all duration-500">
+                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ———————————— SERMONES ———————————— -->
+    <section id="sermones" class="relative py-24 md:py-36 overflow-hidden">
+      <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+        <div class="flex items-baseline gap-6 mb-10 md:mb-16">
+          <span class="section-counter">[ 03 — Sermones ]</span>
+          <span class="flex-1 h-px bg-ink/15"></span>
+        </div>
+
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+          <h2 class="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-tight">
+            Prediquen <em class="italic text-primary">la Palabra.</em>
+          </h2>
+          <div class="flex items-center gap-2">
+            <button id="sermPrev" class="w-12 h-12 rounded-full border border-ink/15 flex items-center justify-center hover:bg-ink hover:text-paper transition-all duration-500">
+              <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M10 6H2M2 6L6 2M2 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <button id="sermNext" class="w-12 h-12 rounded-full border border-ink/15 flex items-center justify-center hover:bg-ink hover:text-paper transition-all duration-500">
+              <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sermon track -->
+        <div id="sermTrack" class="sermon-track flex gap-5 overflow-x-auto snap-x-container scroll-smooth pb-4 -mx-6 px-6 md:-mx-10 md:px-10">
+          <!-- sermon cards -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ———————————— MINISTERIOS ———————————— -->
+    <section id="ministerios" class="relative py-24 md:py-36 invert-block">
+      <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+        <div class="flex items-baseline gap-6 mb-14 md:mb-20">
+          <span class="section-counter" style="color: rgba(245,243,238,0.5)">[ 04 — Ministerios ]</span>
+          <span class="flex-1 h-px" style="background: rgba(245,243,238,0.15)"></span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-14 md:mb-20">
+          <div class="lg:col-span-7 reveal">
+            <h2 class="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-tight">
+              Diez maneras de servir <em class="italic text-primary">juntos.</em>
+            </h2>
+          </div>
+          <div class="lg:col-span-5 flex items-end reveal reveal-delay-2">
+            <p class="font-ui text-[15px] md:text-[16px] leading-relaxed opacity-75">
+              Cada ministerio es una invitación: un lugar para crecer, usar tus
+              dones, y servir a otros en nombre de Cristo. Encuentra el tuyo.
+            </p>
+          </div>
+        </div>
+
+        <div id="ministeriosGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-0 border-t border-l" style="border-color: rgba(245,243,238,0.12)">
+          <!-- ministries injected -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ———————————— CONTACT ———————————— -->
+    <section id="visitanos" class="relative py-24 md:py-36">
+      <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+        <div class="flex items-baseline gap-6 mb-14 md:mb-20">
+          <span class="section-counter">[ 05 — Visítanos ]</span>
+          <span class="flex-1 h-px bg-ink/15"></span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+          <div class="lg:col-span-5 reveal">
+            <h2 class="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-tight">
+              Te esperamos <em class="italic text-primary">el domingo.</em>
+            </h2>
+            <p class="mt-8 font-ui text-[16px] md:text-[17px] leading-relaxed text-ink/70 max-w-md">
+              Si necesitas más información puedes contactarnos por nuestras
+              redes sociales. Nos encanta recibir visitas.
+            </p>
+
+            <div class="mt-12 space-y-6 font-ui">
+              <div>
+                <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-2">Dirección</div>
+                <div class="text-lg">Av. Dr. Luis A. de Herrera 3101</div>
+                <div class="text-sm text-ink/60">Esq. Juan Arrieta · Montevideo, Uruguay</div>
+              </div>
+              <div>
+                <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-2">Horarios</div>
+                <div class="text-lg">Dom 10:00 · 11:15 — Mié 19:00</div>
+              </div>
+              <div>
+                <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-3">Redes</div>
+                <div class="flex flex-col gap-3">
+                  <a href="#" class="flex items-center gap-3 text-[15px] ulink w-fit">
+                    <span class="w-9 h-9 rounded-full bg-ink/5 flex items-center justify-center">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814M9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    </span>
+                    @iglesiaelanclauy
+                  </a>
+                  <a href="#" class="flex items-center gap-3 text-[15px] ulink w-fit">
+                    <span class="w-9 h-9 rounded-full bg-ink/5 flex items-center justify-center">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.849.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849s-.012 3.584-.069 4.849c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.849.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                    </span>
+                    @iglesiaelancla
+                  </a>
+                  <a href="#" class="flex items-center gap-3 text-[15px] ulink w-fit">
+                    <span class="w-9 h-9 rounded-full bg-ink/5 flex items-center justify-center">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </span>
+                    @iglesiabautistaelancla
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 reveal reveal-delay-2">
+            <div class="relative">
+              <div class="corner tl"></div>
+              <div class="corner tr"></div>
+              <div class="corner bl"></div>
+              <div class="corner br"></div>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3273.3336069700877!2d-56.1614292!3d-34.872968199999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x959f80619e924ca9%3A0xb604f8c13a196671!2sIglesia%20Bautista%20El%20Ancla!5e0!3m2!1ses-419!2suy!4v1740605934485!5m2!1ses-419!2suy"
+                class="w-full h-[480px] md:h-[560px] grayscale"
+                style="border:0"
+                allowfullscreen
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ———————————— FOOTER ———————————— -->
+    <footer class="relative bg-primary text-white py-20 overflow-hidden">
+      <!-- giant word behind -->
+      <div class="absolute bottom-[-4vw] left-0 right-0 pointer-events-none select-none">
+        <div class="font-display italic font-light text-[28vw] leading-[0.8] text-white/10 tracking-tighter text-center">
+          El Ancla
+        </div>
+      </div>
+
+      <div class="relative mx-auto max-w-[1600px] px-6 md:px-10">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-14">
+          <div class="md:col-span-4">
+            <div class="flex items-center gap-3">
+              <img src="assets/anclablanco.png" alt="" class="w-10 h-10 object-contain" />
+              <div>
+                <div class="font-ui text-[10px] tracking-[0.22em] font-semibold opacity-80">IGLESIA BAUTISTA</div>
+                <div class="font-display text-2xl">El Ancla</div>
+              </div>
+            </div>
+            <p class="mt-6 font-ui text-[14px] leading-relaxed opacity-85 max-w-xs">
+              Tenemos esta esperanza como firme y segura ancla del alma.
+              <span class="opacity-60">— Heb. 6:19</span>
+            </p>
+          </div>
+
+          <div class="md:col-span-2">
+            <div class="font-ui text-[10px] tracking-[0.25em] uppercase opacity-70 mb-4">Iglesia</div>
+            <ul class="space-y-2 font-ui text-[13.5px]">
+              <li><a href="#" class="ulink">Misión y valores</a></li>
+              <li><a href="#" class="ulink">Historia</a></li>
+              <li><a href="#" class="ulink">¿Qué creemos?</a></li>
+              <li><a href="#" class="ulink">Confesión de fe</a></li>
+            </ul>
+          </div>
+
+          <div class="md:col-span-3">
+            <div class="font-ui text-[10px] tracking-[0.25em] uppercase opacity-70 mb-4">Ministerios</div>
+            <ul class="grid grid-cols-2 gap-y-2 font-ui text-[13.5px]">
+              <li><a href="#" class="ulink">Predicación</a></li>
+              <li><a href="#" class="ulink">Hombres</a></li>
+              <li><a href="#" class="ulink">Enseñanza</a></li>
+              <li><a href="#" class="ulink">Jóvenes</a></li>
+              <li><a href="#" class="ulink">Misiones</a></li>
+              <li><a href="#" class="ulink">Adolescentes</a></li>
+              <li><a href="#" class="ulink">Alabanza</a></li>
+              <li><a href="#" class="ulink">Multimedia</a></li>
+              <li><a href="#" class="ulink">Oración</a></li>
+              <li><a href="#" class="ulink">Espacio Mujer</a></li>
+            </ul>
+          </div>
+
+          <div class="md:col-span-3">
+            <div class="font-ui text-[10px] tracking-[0.25em] uppercase opacity-70 mb-4">Redes</div>
+            <ul class="space-y-2 font-ui text-[13.5px]">
+              <li><a href="#" class="ulink">YouTube · @iglesiaelanclauy</a></li>
+              <li><a href="#" class="ulink">Instagram · @iglesiaelancla</a></li>
+              <li><a href="#" class="ulink">Facebook · @iglesiabautistaelancla</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border-t border-white/20 pt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 font-ui text-[12px] opacity-85">
+          <div>Av. Luis A. de Herrera 3101, esq. Juan Arrieta — Montevideo, Uruguay</div>
+          <div>© <span id="year"></span> Iglesia Bautista El Ancla. Todos los derechos reservados.</div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- TWEAKS PANEL -->
+    <div id="tweaks">
+      <h4>Tweaks</h4>
+
+      <label>Tema</label>
+      <div class="seg" data-group="theme">
+        <button data-val="light" class="active">Claro</button>
+        <button data-val="dark">Oscuro</button>
+      </div>
+
+      <label>Hero</label>
+      <div class="seg" data-group="hero">
+        <button data-val="split" class="active">Izquierda</button>
+        <button data-val="centered">Centrado</button>
+      </div>
+
+      <label>Acento</label>
+      <div class="swatches" data-group="accent">
+        <button data-val="#FF2E34" class="active" style="background:#FF2E34"></button>
+        <button data-val="#D91A23" style="background:#D91A23"></button>
+        <button data-val="#E04E1F" style="background:#E04E1F"></button>
+        <button data-val="#1F3BA1" style="background:#1F3BA1"></button>
+        <button data-val="#2F6F4B" style="background:#2F6F4B"></button>
+      </div>
+
+      <label>Densidad</label>
+      <div class="seg" data-group="density">
+        <button data-val="comfortable" class="active">Cómoda</button>
+        <button data-val="compact">Compacta</button>
+      </div>
+    </div>
+
+    <script>
+      /* ————— STATIC DATA (sermones + ministerios) ————— */
+      const sermones = [
+        { date: "14 Abr 2026", serie: "Hebreos", pastor: "Pr. Juan Olivera", ref: "Heb. 11:1-6", episode: "E12" },
+        { date: "07 Abr 2026", serie: "Hebreos", pastor: "Pr. Juan Olivera", ref: "Heb. 10:19-25", episode: "E11" },
+        { date: "31 Mar 2026", serie: "Semana Santa", pastor: "Pr. Invitado", ref: "Juan 19", episode: "E01" },
+        { date: "24 Mar 2026", serie: "Hebreos", pastor: "Pr. Juan Olivera", ref: "Heb. 9:11-22", episode: "E10" },
+        { date: "17 Mar 2026", serie: "Salmos vivos", pastor: "Diácono F. Rivera", ref: "Salmo 23", episode: "E04" },
+        { date: "10 Mar 2026", serie: "Hebreos", pastor: "Pr. Juan Olivera", ref: "Heb. 8:1-13", episode: "E09" },
+        { date: "03 Mar 2026", serie: "Cartas cortas", pastor: "Pr. Invitado", ref: "3 Juan", episode: "E02" },
+      ];
+
+      const ministerios = [
+        { nom: "Predicación", desc: "La Palabra, expuesta fielmente" },
+        { nom: "Enseñanza", desc: "Crecer en entendimiento" },
+        { nom: "Misiones", desc: "Al fin del mundo" },
+        { nom: "Alabanza", desc: "Cantar con entendimiento" },
+        { nom: "Oración", desc: "Clamar juntos" },
+        { nom: "Espacio Mujer", desc: "Mujeres en la Palabra" },
+        { nom: "Hombres", desc: "Discipulado entre varones" },
+        { nom: "Jóvenes", desc: "Una generación para Cristo" },
+        { nom: "Adolescentes", desc: "Raíces en la adolescencia" },
+        { nom: "Servicio", desc: "Manos que cuidan" },
+        { nom: "Multimedia", desc: "Contar la historia" },
+      ];
+
+      /* ————— SERMON CARDS ————— */
+      const track = document.getElementById("sermTrack");
+      sermones.forEach((s, i) => {
+        const tint = i % 3 === 0 ? "#ff2e34" : i % 3 === 1 ? "#141414" : "#947a62";
+        const el = document.createElement("a");
+        el.href = "#";
+        el.className = "sermon-card snap-start shrink-0 w-[88%] sm:w-[46%] md:w-[32%] lg:w-[24%] group";
+        el.innerHTML = `
+          <div class="relative overflow-hidden ratio-4-5 rounded-none bg-ink/5">
+            <div class="absolute inset-0 duotone" style="background:linear-gradient(135deg, ${tint}33, ${tint}99), url('assets/homebanner.jpeg') center/cover"></div>
+            <div class="thumb-img absolute inset-0"></div>
+            <div class="absolute top-4 left-4 right-4 flex items-start justify-between text-white">
+              <div class="font-ui text-[10px] tracking-[0.22em] uppercase font-semibold opacity-90">${s.episode} · ${s.serie}</div>
+              <div class="font-ui text-[10px] tracking-[0.18em] uppercase opacity-80">${s.date}</div>
+            </div>
+            <div class="play-btn absolute bottom-4 right-4 w-12 h-12 rounded-full bg-white/95 text-ink flex items-center justify-center">
+              <svg width="12" height="12" viewBox="0 0 10 12" fill="currentColor"><path d="M0 0L10 6L0 12V0Z"/></svg>
+            </div>
+          </div>
+          <div class="mt-4 flex items-start justify-between gap-4">
+            <div>
+              <div class="font-display text-xl leading-tight">${s.serie}</div>
+              <div class="font-ui text-[12px] text-ink/50 mt-1">${s.pastor} · ${s.ref}</div>
+            </div>
+            <svg class="shrink-0 mt-1 opacity-40 group-hover:opacity-100 group-hover:text-primary transition" width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+        `;
+        track.appendChild(el);
+      });
+
+      document.getElementById("sermPrev").addEventListener("click", () => {
+        track.scrollBy({ left: -track.clientWidth * 0.7, behavior: "smooth" });
+      });
+      document.getElementById("sermNext").addEventListener("click", () => {
+        track.scrollBy({ left: track.clientWidth * 0.7, behavior: "smooth" });
+      });
+
+      /* ————— MINISTERIOS GRID ————— */
+      const mini = document.getElementById("ministeriosGrid");
+      ministerios.forEach((m, i) => {
+        const cell = document.createElement("a");
+        cell.href = "#";
+        cell.className = "mini-cell group relative flex flex-col justify-between p-6 md:p-7 border-r border-b min-h-[180px] md:min-h-[200px]";
+        cell.style.borderColor = "rgba(245,243,238,0.12)";
+        cell.innerHTML = `
+          <div class="flex items-start justify-between">
+            <span class="mini-num font-ui text-[11px] tracking-[0.22em] uppercase opacity-50 transition-colors">${String(i+1).padStart(2,'0')}</span>
+            <svg class="mini-arrow" width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div class="font-display text-2xl md:text-[1.7rem] leading-tight">${m.nom}</div>
+            <div class="font-ui text-[12.5px] opacity-55 mt-1.5">${m.desc}</div>
+          </div>
+        `;
+        mini.appendChild(cell);
+      });
+
+      /* ————— SCROLL REVEAL ————— */
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("in");
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -10% 0px" }
+      );
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+      /* ————— NUMBER TICKER ————— */
+      document.querySelectorAll("[data-count]").forEach((el) => {
+        const final = parseInt(el.dataset.count, 10);
+        const dur = 1400;
+        let started = false;
+        const run = () => {
+          if (started) return;
+          started = true;
+          const start = performance.now();
+          const tick = (now) => {
+            const p = Math.min(1, (now - start) / dur);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(eased * final).toString();
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        };
+        const ob = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) run();
+            });
+          },
+          { threshold: 0.6 }
+        );
+        ob.observe(el);
+      });
+
+      /* ————— ACTIVE NAV SECTION ————— */
+      const navLinks = document.querySelectorAll(".nav-item");
+      const sections = [
+        "inicio",
+        "nosotros",
+        "actividades",
+        "sermones",
+        "ministerios",
+      ];
+      const onScroll = () => {
+        const y = window.scrollY + window.innerHeight * 0.35;
+        let active = "inicio";
+        sections.forEach((id) => {
+          const el = document.getElementById(id);
+          if (el && el.offsetTop <= y) active = id;
+        });
+        navLinks.forEach((l) => {
+          l.dataset.active = l.dataset.section === active ? "true" : "false";
+        });
+        // progress
+        const max = document.body.scrollHeight - window.innerHeight;
+        document.getElementById("readprog").style.width =
+          (window.scrollY / max) * 100 + "%";
+        // nav shrink
+        const nav = document.getElementById("nav");
+        if (window.scrollY > 40) {
+          nav.style.background = "rgba(250,248,245,0.92)";
+          nav.style.boxShadow = "0 8px 30px -10px rgba(20,20,20,0.08)";
+        } else {
+          nav.style.background = "rgba(250,248,245,0.72)";
+          nav.style.boxShadow = "none";
+        }
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+      /* ————— SMOOTH SCROLL ————— */
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", (e) => {
+          const href = a.getAttribute("href");
+          if (href.length > 1) {
+            const el = document.querySelector(href);
+            if (el) {
+              e.preventDefault();
+              window.scrollTo({
+                top: el.offsetTop - 70,
+                behavior: "smooth",
+              });
+            }
+          }
+        });
+      });
+
+      /* ————— YEAR ————— */
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      /* ————— TWEAKS ————— */
+      const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+        "theme": "light",
+        "hero": "split",
+        "accent": "#FF2E34",
+        "density": "comfortable"
+      }/*EDITMODE-END*/;
+
+      let tweakState = { ...TWEAK_DEFAULTS };
+
+      function applyTweaks(s) {
+        document.body.classList.toggle("theme-b", s.theme === "dark");
+        document.body.dataset.hero = s.hero;
+        document.documentElement.style.setProperty("--primary", s.accent);
+        document.body.style.fontSize = s.density === "compact" ? "15px" : "16px";
+      }
+      applyTweaks(tweakState);
+
+      // listener FIRST
+      window.addEventListener("message", (e) => {
+        if (!e.data) return;
+        if (e.data.type === "__activate_edit_mode") {
+          document.getElementById("tweaks").classList.add("open");
+        }
+        if (e.data.type === "__deactivate_edit_mode") {
+          document.getElementById("tweaks").classList.remove("open");
+        }
+      });
+      // THEN announce
+      window.parent.postMessage({ type: "__edit_mode_available" }, "*");
+
+      const panel = document.getElementById("tweaks");
+      panel.querySelectorAll(".seg, .swatches").forEach((grp) => {
+        const key = grp.dataset.group;
+        grp.querySelectorAll("button").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            grp.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            tweakState[key] = btn.dataset.val;
+            applyTweaks(tweakState);
+            window.parent.postMessage(
+              { type: "__edit_mode_set_keys", edits: { [key]: btn.dataset.val } },
+              "*"
+            );
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,218 @@
+/* ── Seal rotation ── */
+@keyframes sealSpin {
+  to { transform: rotate(360deg); }
+}
+.seal-rot {
+  animation: sealSpin 28s linear infinite;
+  transform-origin: center;
+}
+
+/* ── Decorative quote mark ── */
+.quote-mark {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-size: 12rem;
+  line-height: 0.7;
+  color: var(--color-primary);
+  opacity: 0.18;
+  user-select: none;
+}
+
+/* ── Sticky index ── */
+.idx-item {
+  position: relative;
+  padding-left: 44px;
+  transition: color 0.3s ease;
+}
+.idx-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 1px;
+  background: rgba(20, 20, 20, 0.2);
+  transition: background 0.3s ease, width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.idx-item:hover::before,
+.idx-item.active::before {
+  background: var(--color-primary);
+  width: 36px;
+}
+.idx-item.active {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+.idx-item.active .idx-num {
+  color: var(--color-primary);
+}
+
+/* ── Doctrine accordion row ── */
+.doctrine-row {
+  position: relative;
+  border-top: 1px solid rgba(20, 20, 20, 0.12);
+  transition: background 0.5s ease;
+}
+.doctrine-row:hover {
+  background: rgba(20, 20, 20, 0.015);
+}
+.doctrine-row:hover .row-title {
+  color: var(--color-primary);
+}
+.doctrine-row:hover .row-plus,
+.doctrine-row.open .row-plus {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+.doctrine-row:hover .row-plus {
+  transform: rotate(90deg);
+}
+.doctrine-row.open .row-plus {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  transform: rotate(45deg);
+}
+.row-plus {
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease;
+}
+.row-title {
+  transition: color 0.4s ease;
+}
+.row-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.7s ease;
+}
+.doctrine-row.open .row-content {
+  max-height: 3000px;
+  opacity: 1;
+}
+
+/* ── Verse callout ── */
+.verse-callout {
+  border-left: 2px solid var(--color-primary);
+  padding: 12px 0 12px 20px;
+  margin: 16px 0 20px;
+}
+.verse-callout p {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 22px;
+  line-height: 1.4;
+  color: var(--color-ink);
+  margin: 0;
+}
+.verse-callout .ref {
+  font-family: "Inter", sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(20, 20, 20, 0.55);
+  margin-top: 8px;
+  display: block;
+}
+
+/* ── Detail body typography ── */
+.detail-body p {
+  font-family: "Libre Franklin", sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  color: rgba(20, 20, 20, 0.78);
+  margin-bottom: 12px;
+}
+.detail-body h4 {
+  font-family: "Inter", sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin: 24px 0 10px;
+  font-weight: 700;
+}
+.detail-body ul,
+.detail-body ol {
+  padding-left: 1.1rem;
+  margin-bottom: 12px;
+}
+.detail-body li {
+  font-family: "Libre Franklin", sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(20, 20, 20, 0.78);
+  margin-bottom: 6px;
+}
+.detail-body ul {
+  list-style: none;
+}
+.detail-body ul li {
+  position: relative;
+  padding-left: 18px;
+}
+.detail-body ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.85em;
+  width: 8px;
+  height: 1px;
+  background: var(--color-primary);
+}
+.detail-body ol {
+  list-style: none;
+  counter-reset: orditem;
+}
+.detail-body ol li {
+  position: relative;
+  padding-left: 30px;
+  counter-increment: orditem;
+}
+.detail-body ol li::before {
+  content: counter(orditem, decimal-leading-zero) ".";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: "JetBrains Mono", "Fira Mono", monospace;
+  font-size: 12px;
+  color: var(--color-primary);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.detail-body b {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+/* ── Reference chip ── */
+.ref-chip {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  padding: 4px 10px;
+  border: 1px solid rgba(20, 20, 20, 0.15);
+  border-radius: 999px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  color: rgba(20, 20, 20, 0.65);
+}
+.ref-chip:hover {
+  background: var(--color-ink);
+  color: var(--color-canvas);
+  border-color: var(--color-ink);
+}
+
+/* ── Jesus block figure frame ── */
+.fig-frame {
+  aspect-ratio: 3 / 4;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.15), transparent 60%),
+    linear-gradient(160deg, #1a1a1a 0%, #2a2a2a 100%);
+}
