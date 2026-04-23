@@ -1,0 +1,80 @@
+---
+import cn from 'src/utils/cn';
+
+const container = cn('mx-auto max-w-[1600px] px-6 md:px-10');
+---
+
+<section class="relative min-h-[92vh] pt-32 pb-20 overflow-hidden grain">
+  <div class="absolute inset-0 grid-bg opacity-60"></div>
+
+  <!-- Decorative spinning seal (desktop only) -->
+  <div class="hidden lg:block absolute top-[22%] right-[-6%] w-[42vw] h-[42vw] max-w-[680px] max-h-[680px] pointer-events-none opacity-90">
+    <div class="relative w-full h-full">
+      <svg aria-hidden="true" class="absolute inset-0 w-full h-full seal-rot" viewBox="0 0 300 300">
+        <defs>
+          <path id="circlePath" d="M 150,150 m -130,0 a 130,130 0 1,1 260,0 a 130,130 0 1,1 -260,0" />
+        </defs>
+        <text font-family="Inter, sans-serif" font-size="10.5" font-weight="600" letter-spacing="5" fill="#141414" opacity="0.35">
+          <textPath href="#circlePath">CREEMOS · CONFESAMOS · PROCLAMAMOS · CREEMOS · CONFESAMOS · PROCLAMAMOS ·</textPath>
+        </text>
+      </svg>
+      <svg aria-hidden="true" class="absolute inset-0 w-full h-full" viewBox="0 0 300 300">
+        <circle cx="150" cy="150" r="90" fill="none" stroke="#141414" stroke-width="0.5" opacity="0.15" />
+        <circle cx="150" cy="150" r="54" fill="none" stroke="#141414" stroke-width="0.5" opacity="0.18" />
+      </svg>
+      <div class="absolute inset-0 flex items-center justify-center anchor-wrap">
+        <img src="/images/anclarojo.png" alt="" class="w-[22%] h-auto object-contain" />
+      </div>
+    </div>
+  </div>
+
+  <div class={container + ' relative'}>
+    <!-- Breadcrumb -->
+    <div class="flex items-center justify-between mb-10 md:mb-16">
+      <div class="flex items-center gap-3 font-ui text-[11px] tracking-[0.2em] uppercase text-ink/60">
+        <a href="/" class="ulink">El Ancla</a>
+        <span class="opacity-50">/</span>
+        <span>Confesión de fe</span>
+      </div>
+      <div class="hidden md:block font-ui text-[11px] tracking-[0.2em] uppercase text-ink/60">IX · Pilares doctrinales</div>
+    </div>
+
+    <div class="max-w-[68rem]">
+      <div class="section-counter mb-8 line-grow origin-left inline-block">[ 00 — Fundamentos ]</div>
+      <h1 class="font-display text-[18vw] md:text-[13vw] lg:text-[11vw] leading-[0.88] tracking-[-0.04em] font-light">
+        <span class="hero-line"><span>Creemos que</span></span>
+        <span class="hero-line"><span>la <em class="italic font-normal text-primary">doctrina</em></span></span>
+        <span class="hero-line"><span>importa.</span></span>
+      </h1>
+
+      <div class="mt-12 md:mt-16 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+        <div class="max-w-xl">
+          <div class="h-px bg-ink/30 line-grow origin-left w-24 mb-5"></div>
+          <p class="font-ui text-[15px] md:text-[17px] leading-relaxed text-ink/75">
+            Estos son los pilares esenciales de lo que creemos, enseñamos y vivimos como comunidad de fe.
+            Nueve doctrinas, arraigadas en la Escritura, que sostienen y definen nuestra vida en común.
+          </p>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="#doctrinas" class="cta-btn btn-primary inline-flex items-center gap-3 rounded-full bg-primary text-white px-7 py-4 font-ui text-[13px] font-semibold tracking-wide uppercase">
+            Leer confesión
+            <svg class="cta-arrow" width="14" height="14" viewBox="0 0 12 12" fill="none">
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </a>
+          <button id="expandAll" class="hidden md:inline-flex items-center gap-2 font-ui text-[13px] font-semibold tracking-wide uppercase ulink">
+            <span id="expandAllLabel">Expandir todas</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2">
+      <span class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50">Desliza</span>
+      <span class="block w-px h-10 bg-ink/20 relative overflow-hidden">
+        <span class="block w-px h-full bg-ink scroll-bar"></span>
+      </span>
+    </div>
+  </div>
+</section>

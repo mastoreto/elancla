@@ -1,0 +1,24 @@
+---
+interface Props {
+  solas: string[];
+}
+
+const { solas } = Astro.props;
+---
+
+<section class="border-y border-ink/10 py-5 overflow-hidden bg-paper">
+  <div class="marquee whitespace-nowrap font-display italic text-2xl md:text-4xl text-ink/70">
+    {solas.map((s) => (
+      <>
+        <span class="px-6">{s}</span>
+        <span class="px-6 text-primary">✦</span>
+      </>
+    ))}
+    {solas.map((s) => (
+      <>
+        <span class="px-6">{s}</span>
+        <span class="px-6 text-primary">✦</span>
+      </>
+    ))}
+  </div>
+</section>
