@@ -1,91 +1,112 @@
 ---
-import Card from '../components/Card.astro';
 import cn from '../utils/cn.ts';
 
-const classes = {
-  section: cn('flex flex-col mt-20 md:mt-28 xl:mt-32 fade-sermons'),
-  title: cn(
-    'font-barastika text-primary-500 font-bold',
-    'text-5xl sm:text-6xl md:text-[4.5rem] xl:text-[5rem]',
-    'my-5 mx-6 sm:mx-10 md:mx-20 xl:mx-24',
-    'leading-tight'
+const styles = {
+  section: cn('relative py-24 md:py-36 overflow-hidden'),
+  container: cn('mx-auto max-w-[1600px] px-6 md:px-10'),
+  sectionHeader: cn('flex items-baseline gap-6 mb-10 md:mb-16'),
+  headerLine: cn('flex-1 h-px bg-ink/15'),
+  topRow: cn('flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12'),
+  headline: cn('font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-tight'),
+  navBtns: cn('flex items-center gap-2'),
+  navBtn: cn(
+    'w-12 h-12 rounded-full border border-ink/15',
+    'flex items-center justify-center',
+    'hover:bg-ink hover:text-paper transition-all duration-500'
   ),
+  track: cn(
+    'sermon-track flex gap-5 overflow-x-auto snap-x-container scroll-smooth pb-4',
+    '-mx-6 px-6 md:-mx-10 md:px-10'
+  ),
+  card: cn('sermon-card snap-start shrink-0 w-[88%] sm:w-[46%] md:w-[32%] lg:w-[24%] group'),
+  cardThumb: cn('relative overflow-hidden ratio-4-5 bg-ink/5'),
+  cardMeta: cn('mt-4 flex items-start justify-between gap-4'),
+  cardTitle: cn('font-display text-xl leading-tight'),
+  cardSub: cn('font-ui text-[12px] text-ink/50 mt-1'),
 };
+
+const sermones = [
+  { date: '14 Abr 2026', serie: 'Hebreos',       pastor: 'Pr. Juan Olivera',  ref: 'Heb. 11:1-6',   episode: 'E12', tint: '#ff2e34' },
+  { date: '07 Abr 2026', serie: 'Hebreos',       pastor: 'Pr. Juan Olivera',  ref: 'Heb. 10:19-25', episode: 'E11', tint: '#141414' },
+  { date: '31 Mar 2026', serie: 'Semana Santa',  pastor: 'Pr. Invitado',      ref: 'Juan 19',        episode: 'E01', tint: '#947a62' },
+  { date: '24 Mar 2026', serie: 'Hebreos',       pastor: 'Pr. Juan Olivera',  ref: 'Heb. 9:11-22',  episode: 'E10', tint: '#ff2e34' },
+  { date: '17 Mar 2026', serie: 'Salmos vivos',  pastor: 'Diácono F. Rivera', ref: 'Salmo 23',       episode: 'E04', tint: '#141414' },
+  { date: '10 Mar 2026', serie: 'Hebreos',       pastor: 'Pr. Juan Olivera',  ref: 'Heb. 8:1-13',   episode: 'E09', tint: '#947a62' },
+  { date: '03 Mar 2026', serie: 'Cartas cortas', pastor: 'Pr. Invitado',      ref: '3 Juan',         episode: 'E02', tint: '#ff2e34' },
+];
 ---
 
-<section class={classes.section} id="sermones">
-  <h2 class={classes.title}>Sermones</h2>
-  <div class="swiper sermon-swiper mt-5">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide"><Card /></div>
-      <div class="swiper-slide"><Card /></div>
-      <div class="swiper-slide"><Card /></div>
-      <div class="swiper-slide"><Card /></div>
-      <div class="swiper-slide"><Card /></div>
-      <div class="swiper-slide"><Card /></div>
-      <div class="swiper-slide"><Card /></div>
-      <div class="swiper-slide"><Card /></div>
-      <div class="swiper-slide"><Card /></div>
+<!-- SERMONES -->
+<section id="sermones" class={styles.section}>
+  <div class={styles.container}>
+    <div class={styles.sectionHeader}>
+      <span class="section-counter">[ 03 — Sermones ]</span>
+      <span class={styles.headerLine}></span>
+    </div>
+
+    <div class={styles.topRow}>
+      <h2 class={styles.headline}>
+        Prediquen <em class="italic text-primary">la Palabra.</em>
+      </h2>
+      <div class={styles.navBtns}>
+        <button id="sermPrev" class={styles.navBtn} aria-label="Anterior">
+          <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+            <path d="M10 6H2M2 6L6 2M2 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button id="sermNext" class={styles.navBtn} aria-label="Siguiente">
+          <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+            <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="sermTrack" class={styles.track}>
+      {sermones.map((s) => (
+        <a href="#" class={styles.card}>
+          <div class={styles.cardThumb}>
+            <div
+              class="absolute inset-0 duotone"
+              style={`background: linear-gradient(135deg, ${s.tint}33, ${s.tint}99), url('/images/homebanner.jpeg') center/cover`}
+            ></div>
+            <div class="thumb-img absolute inset-0"></div>
+            <div class="absolute top-4 left-4 right-4 flex items-start justify-between text-white">
+              <div class="font-ui text-[10px] tracking-[0.22em] uppercase font-semibold opacity-90">
+                {s.episode} · {s.serie}
+              </div>
+              <div class="font-ui text-[10px] tracking-[0.18em] uppercase opacity-80">{s.date}</div>
+            </div>
+            <div class="play-btn absolute bottom-4 right-4 w-12 h-12 rounded-full bg-white/95 text-ink flex items-center justify-center">
+              <svg width="12" height="12" viewBox="0 0 10 12" fill="currentColor">
+                <path d="M0 0L10 6L0 12V0Z"/>
+              </svg>
+            </div>
+          </div>
+          <div class={styles.cardMeta}>
+            <div>
+              <div class={styles.cardTitle}>{s.serie}</div>
+              <div class={styles.cardSub}>{s.pastor} · {s.ref}</div>
+            </div>
+            <svg
+              class="shrink-0 mt-1 opacity-40 group-hover:opacity-100 group-hover:text-primary transition"
+              width="14" height="14" viewBox="0 0 12 12" fill="none"
+            >
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </a>
+      ))}
     </div>
   </div>
 </section>
-<style>
-  .swiper {
-    width: 100%;
-    height: 100%;
-    padding: 0 0 0 6rem;
 
-    @media screen and (min-width: 1280px) {
-      padding: 0 0 0 13rem;
-    }
-    @media screen and (max-width: 1023px) {
-      padding: 0 0 0 2rem;
-    }
-    @media screen and (max-width: 639px) {
-      padding: 0 0 0 1rem;
-    }
-  }
-  .swiper-wrapper {
-    padding: 4rem 0;
-  }
-</style>
 <script>
-  import Swiper from 'swiper/bundle';
-  import 'swiper/css/bundle';
-
-  const swiper = new Swiper('.sermon-swiper', {
-    direction: 'horizontal',
-    slidesPerView: 3,
-    spaceBetween: 12,
-    loop: true,
-    autoplay: {
-      delay: 7500,
-    },
-    breakpoints: {
-      1440: {
-        slidesPerView: 3,
-        spaceBetween: 12,
-      },
-      1280: {
-        slidesPerView: 3,
-        spaceBetween: 8,
-      },
-      1024: {
-        slidesPerView: 2,
-        spaceBetween: 8,
-      },
-      768: {
-        slidesPerView: 2,
-        spaceBetween: 6,
-      },
-      480: {
-        slidesPerView: 1.2,
-        spaceBetween: 8,
-      },
-      0: {
-        slidesPerView: 1,
-        spaceBetween: 8,
-      },
-    },
+  const track = document.getElementById('sermTrack') as HTMLElement;
+  document.getElementById('sermPrev')?.addEventListener('click', () => {
+    track.scrollBy({ left: -track.clientWidth * 0.7, behavior: 'smooth' });
+  });
+  document.getElementById('sermNext')?.addEventListener('click', () => {
+    track.scrollBy({ left: track.clientWidth * 0.7, behavior: 'smooth' });
   });
 </script>

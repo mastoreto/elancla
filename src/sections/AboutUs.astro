@@ -1,59 +1,129 @@
 ---
 import cn from '../utils/cn.ts';
 
-const classes = {
-  section: cn(
-    'w-screen min-h-screen',
-    'flex flex-col xl:flex-row',
-    'px-5 md:px-12 xl:pt-28 xl:px-[5rem]',
-    'mb-0 xl:mb-0 fade-in'
+const styles = {
+  section: cn('relative py-24 md:py-36'),
+  container: cn('mx-auto max-w-[1600px] px-6 md:px-10'),
+  sectionHeader: cn('flex items-baseline gap-6 mb-14 md:mb-20'),
+  headerLine: cn('flex-1 h-px bg-ink/15'),
+  grid: cn('grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16'),
+  colLeft: cn('lg:col-span-7 reveal'),
+  headline: cn('font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-tight'),
+  lead: cn('mt-8 font-ui text-[16px] md:text-[19px] leading-relaxed text-ink/75 max-w-2xl'),
+  pillarsGrid: cn('mt-12 grid grid-cols-1 sm:grid-cols-3 gap-0 border-t border-ink/10'),
+  pillarOne: cn('py-6 sm:pr-6 border-b sm:border-b-0 sm:border-r border-ink/10 reveal reveal-delay-1'),
+  pillarTwo: cn('py-6 sm:px-6 border-b sm:border-b-0 sm:border-r border-ink/10 reveal reveal-delay-2'),
+  pillarThree: cn('py-6 sm:pl-6 reveal reveal-delay-3'),
+  pillarNum: cn('font-ui text-[10px] tracking-[0.25em] uppercase text-primary font-semibold mb-2'),
+  pillarTitle: cn('font-display text-xl md:text-2xl mb-1'),
+  pillarDesc: cn('font-ui text-[13px] text-ink/60'),
+  statsRow: cn('mt-14 flex flex-wrap gap-x-12 gap-y-8'),
+  statNumber: cn('font-display text-5xl md:text-6xl ticker tracking-tight'),
+  statLabel: cn('font-ui text-[11px] tracking-[0.2em] uppercase text-ink/50 mt-1'),
+  colRight: cn('lg:col-span-5 reveal reveal-delay-2'),
+  imageWrap: cn('relative'),
+  imageInner: cn('relative overflow-hidden ratio-4-5'),
+  image: cn('w-full h-full object-cover duotone frame-img'),
+  imageOverlay: cn(
+    'absolute bottom-0 left-0 right-0 p-5',
+    'bg-gradient-to-t from-black/60 to-transparent text-white'
   ),
-  title: cn(
-    'w-auto h-auto',
-    'text-4xl sm:text-5xl md:text-6xl',
-    'text-red-500 font-bold font-futura-bold',
-    'mt-10 mb-4 md:my-10',
-    'leading-tight'
+  overlayLabel: cn('font-ui text-[10px] tracking-[0.25em] uppercase opacity-70 mb-1'),
+  overlayTitle: cn('font-display text-xl'),
+  signature: cn('mt-6 flex items-center gap-4 reveal reveal-delay-3'),
+  avatar: cn(
+    'w-14 h-14 rounded-full bg-ink/10',
+    'flex items-center justify-center font-display italic text-xl'
   ),
-  overlay: cn(
-    'w-full h-56 sm:h-72 md:h-96 xl:h-full',
-    'm-0 rounded-xl',
-    'bg-home-banner bg-cover bg-center',
-    'grayscale'
-  ),
-  text: cn(
-    'font-boston-angel leading-relaxed',
-    'text-base sm:text-lg md:text-xl xl:text-[1.4rem]',
-    'my-4 md:my-6',
-    'w-full md:w-4/5'
-  ),
-  description: cn(
-    'w-full h-full flex flex-col justify-center items-center',
-    'md:justify-center md:items-start',
-    'md:pl-10 md:pr-5',
-    'xl:pl-20 xl:pr-10'
-  ),
-  image: cn(
-    'w-full flex flex-col justify-center items-center',
-    'xl:h-full',
-    'mt-8 xl:mt-0',
-    'md:justify-end md:items-end',
-    'md:pr-0 xl:pr-20'
-  ),
+  sigLabel: cn('font-ui text-[12px] text-ink/60'),
+  sigName: cn('font-display text-lg'),
 };
+
+const pillars = [
+  { num: 'I.',   title: 'Centrados en Cristo', desc: 'La cruz es el centro de todo lo que hacemos.' },
+  { num: 'II.',  title: 'Fieles a la Palabra',  desc: 'La Escritura es nuestra autoridad y guía.' },
+  { num: 'III.', title: 'Familia de la fe',      desc: 'Crecer juntos en amor y servicio.' },
+];
 ---
 
-<section class={classes.section} id="elancla">
-  <div class={classes.description}>
-    <h2 class={classes.title}>¡Gracias por querer conocernos!</h2>
-    <p class={classes.text}>
-      Conocer una iglesia es un gran desafío en estos tiempos, esperamos que con
-      la información que encuentres aquí, puedas tener un mayor panorama de
-      quienes somos y lo que creemos. Eres bienvenido a visitarnos cuando
-      quieras.
-    </p>
-  </div>
-  <div class={classes.image}>
-    <div class={classes.overlay}></div>
+<!-- ABOUT -->
+<section id="nosotros" class={styles.section}>
+  <div class={styles.container}>
+    <div class={styles.sectionHeader}>
+      <span class="section-counter">[ 01 — Nosotros ]</span>
+      <span class={styles.headerLine}></span>
+    </div>
+
+    <div class={styles.grid}>
+      <!-- columna izquierda -->
+      <div class={styles.colLeft}>
+        <h2 class={styles.headline}>
+          Gracias por querer <em class="italic text-primary">conocernos.</em>
+        </h2>
+        <p class={styles.lead}>
+          Conocer una iglesia es un gran desafío en estos tiempos. Esperamos
+          que con la información que encuentres aquí, puedas tener un mayor
+          panorama de quiénes somos y lo que creemos. Eres bienvenido a
+          visitarnos cuando quieras.
+        </p>
+
+        <!-- pilares -->
+        <div class={styles.pillarsGrid}>
+          {pillars.map((p, i) => (
+            <div class={i === 0 ? styles.pillarOne : i === 1 ? styles.pillarTwo : styles.pillarThree}>
+              <div class={styles.pillarNum}>{p.num}</div>
+              <div class={styles.pillarTitle}>{p.title}</div>
+              <div class={styles.pillarDesc}>{p.desc}</div>
+            </div>
+          ))}
+        </div>
+
+        <!-- stats -->
+        <div class={styles.statsRow}>
+          <div class="reveal">
+            <div class={styles.statNumber} data-count="29">29</div>
+            <div class={styles.statLabel}>Años en Montevideo</div>
+          </div>
+          <div class="reveal reveal-delay-1">
+            <div class={styles.statNumber} data-count="10">10</div>
+            <div class={styles.statLabel}>Ministerios activos</div>
+          </div>
+          <div class="reveal reveal-delay-2">
+            <div class={styles.statNumber}>∞</div>
+            <div class={styles.statLabel}>Gracia abundante</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- columna derecha: imagen -->
+      <div class={styles.colRight}>
+        <div class={styles.imageWrap}>
+          <div class="corner tl"></div>
+          <div class="corner tr"></div>
+          <div class="corner bl"></div>
+          <div class="corner br"></div>
+          <div class={styles.imageInner}>
+            <img
+              src="/images/homebanner.jpeg"
+              alt="Nuestra casa"
+              class={styles.image}
+            />
+            <div class={styles.imageOverlay}>
+              <div class={styles.overlayLabel}>Av. Luis A. de Herrera 3101</div>
+              <div class={styles.overlayTitle}>Nuestra casa</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- firma pastor -->
+        <div class={styles.signature}>
+          <div class={styles.avatar}>JO</div>
+          <div>
+            <div class={styles.sigLabel}>Pastoreada por</div>
+            <div class={styles.sigName}>Pr. Juan Olivera</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
