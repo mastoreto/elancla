@@ -1,0 +1,41 @@
+---
+import type { ContentPage } from 'src/data/contentPages';
+import ContentHero from './ContentHero.astro';
+import ContentFigure from './ContentFigure.astro';
+import StickyToc from './StickyToc.astro';
+import ContentSection from './ContentSection.astro';
+import ContentCTA from './ContentCTA.astro';
+
+interface Props {
+  page: ContentPage;
+}
+
+const { page } = Astro.props;
+---
+
+<article class="content-page">
+  <ContentHero hero={page.hero} />
+
+  {
+    page.featuredImage && (
+      <section class="relative">
+        <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+          <ContentFigure figure={page.featuredImage} />
+        </div>
+      </section>
+    )
+  }
+
+  <section class="relative py-20 md:py-28">
+    <div class="mx-auto max-w-[1280px] px-6 md:px-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+        <StickyToc sections={page.sections} shortcuts={page.shortcuts} />
+        <div class="lg:col-span-9 order-1 lg:order-2 flex flex-col gap-24 md:gap-32">
+          {page.sections.map((section) => <ContentSection section={section} />)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {page.cta && <ContentCTA cta={page.cta} />}
+</article>

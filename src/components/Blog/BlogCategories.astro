@@ -1,0 +1,88 @@
+---
+import type { BlogCategory } from 'src/data/blog';
+
+interface Props {
+  categories: BlogCategory[];
+}
+
+const { categories } = Astro.props;
+---
+
+<section id="categorias" class="relative bg-white py-24 md:py-32">
+  <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+    <div class="mb-14 flex items-baseline gap-6 md:mb-20">
+      <span class="section-counter">[ 02 - Categorías ]</span>
+      <span class="h-px flex-1 bg-ink/15"></span>
+    </div>
+
+    <div class="mb-14 grid grid-cols-1 gap-10 md:mb-16 lg:grid-cols-12 lg:gap-16">
+      <div class="reveal lg:col-span-6">
+        <h2 class="font-display text-4xl leading-none text-ink md:text-5xl lg:text-6xl">
+          Siete áreas en las que <em class="italic text-primary">pensamos juntos.</em>
+        </h2>
+      </div>
+      <div class="reveal reveal-delay-2 flex items-end lg:col-span-5 lg:col-start-8">
+        <p class="font-ui text-[15px] leading-relaxed text-ink/70 md:text-[16px]">
+          Organizamos el contenido por temas para que encuentres lo que buscas:
+          desde el púlpito del domingo hasta la mesa de la cocina.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 border-t border-l border-ink/10 md:grid-cols-2 lg:grid-cols-4">
+      {
+        categories.map((category) => (
+          <a
+            href="#articulos"
+            class:list={[
+              'blog-category-tile group relative border-r border-b border-ink/10 p-7 text-ink md:p-8',
+              category.featured ? 'is-featured bg-ink text-paper' : 'bg-white',
+            ]}
+            data-category-jump={category.filter}
+          >
+            <div class="mb-12 flex items-start justify-between">
+              <span
+                class:list={[
+                  'font-mono text-[11px] tracking-[0.2em] blog-category-num',
+                  category.featured ? 'text-primary' : 'text-ink/40',
+                ]}
+              >
+                {category.number}
+              </span>
+              <svg class="blog-category-arrow" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+              </svg>
+            </div>
+            <div class="mb-3 font-display text-2xl leading-none md:text-[1.85rem]">
+              {category.name}
+            </div>
+            <div
+              class:list={[
+                'min-h-10 font-ui text-[13.5px] leading-snug',
+                category.featured ? 'opacity-70' : 'text-ink/60',
+              ]}
+            >
+              {category.blurb}
+            </div>
+            <div
+              class:list={[
+                'mt-8 flex items-baseline justify-between border-t pt-4',
+                category.featured ? 'border-paper/15' : 'border-ink/10',
+              ]}
+            >
+              <span
+                class:list={[
+                  'font-ui text-[10px] uppercase tracking-[0.22em]',
+                  category.featured ? 'opacity-60' : 'text-ink/50',
+                ]}
+              >
+                {category.featured ? 'Total' : 'Artículos'}
+              </span>
+              <span class="font-display text-2xl">{category.count}</span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>

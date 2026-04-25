@@ -1,0 +1,96 @@
+---
+import type { BlogArticle } from 'src/data/blog';
+import { getBlogArticlePath } from 'src/data/blog';
+
+interface Props {
+  article: BlogArticle;
+}
+
+const { article } = Astro.props;
+const href = getBlogArticlePath(article);
+---
+
+<section class="relative py-24 md:py-32">
+  <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+    <div class="mb-12 flex items-baseline gap-6 md:mb-16">
+      <span class="section-counter">[ 01 - Lectura destacada ]</span>
+      <span class="h-px flex-1 bg-ink/15"></span>
+      <span class="hidden font-ui text-[11px] uppercase tracking-[0.2em] text-ink/50 md:inline">
+        Editor pick
+      </span>
+    </div>
+
+    <article class="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-14">
+      <div class="reveal lg:col-span-7">
+        <a href={href} class="block">
+          <div class="relative">
+            <div class="corner tl"></div>
+            <div class="corner tr"></div>
+            <div class="corner bl"></div>
+            <div class="corner br"></div>
+            <div
+              class="content-placeholder-img blog-featured-cover relative overflow-hidden"
+              style={`--placeholder-tint: ${article.tint};`}
+            >
+              <div class="text-center">
+                <div class="content-chip mb-2 text-ink/40">{article.coverLabel}</div>
+                <div class="blog-featured-glyph font-display italic text-ink/30">
+                  "{article.coverGlyph}"
+                </div>
+              </div>
+              <div class="content-chip absolute top-5 left-5 rounded-full bg-primary px-3 py-1.5 text-white">
+                Destacado
+              </div>
+              <div class="absolute bottom-5 right-5 font-mono text-[10px] uppercase tracking-widest text-ink/50">
+                {article.issue}
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="reveal reveal-delay-2 lg:col-span-5">
+        <div class="mb-6 flex items-center gap-3">
+          <span class="content-chip text-primary">{article.category}</span>
+          <span class="h-1 w-1 rounded-full bg-ink/30"></span>
+          <span class="font-mono text-[11px] text-ink/50">{article.displayDate}</span>
+        </div>
+
+        <h2 class="mb-6 font-display text-4xl leading-none text-ink md:text-5xl lg:text-6xl">
+          {article.title}
+        </h2>
+
+        <p class="mb-8 font-ui text-[16px] leading-relaxed text-ink/75 md:text-[18px]">
+          {article.excerpt}
+        </p>
+
+        <div class="blog-meterbar mb-6"><span style="width: 18%"></span></div>
+        <div class="mb-10 flex items-center justify-between font-ui text-[12px] text-ink/60">
+          <span>Lectura · {article.readTime}</span>
+          <span>{article.wordCount}</span>
+        </div>
+
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-ink/10 font-display text-lg italic">
+              {article.author.initials}
+            </div>
+            <div>
+              <div class="font-ui text-[11px] uppercase tracking-[0.2em] text-ink/50">Por</div>
+              <div class="font-display text-[17px]">{article.author.name}</div>
+            </div>
+          </div>
+          <a
+            href={href}
+            class="cta-btn btn-primary inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 font-ui text-[12px] font-semibold uppercase tracking-wide text-paper"
+          >
+            Leer
+            <svg class="cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

@@ -1,0 +1,126 @@
+---
+import type { BlogArticle } from 'src/data/blog';
+import { blogNewsletter } from 'src/data/blog';
+
+interface Props {
+  compact?: boolean;
+  article?: BlogArticle;
+}
+
+const { compact = false, article } = Astro.props;
+---
+
+<section
+  id={compact ? undefined : 'newsletter'}
+  class:list={[
+    'relative overflow-hidden',
+    compact ? 'bg-white py-20 md:py-28' : 'grain py-24 md:py-36',
+  ]}
+>
+  {!compact && <div class="grid-bg absolute inset-0 opacity-50"></div>}
+
+  <div class="relative mx-auto max-w-[1600px] px-6 md:px-10">
+    {
+      !compact && (
+        <div class="mb-14 flex items-baseline gap-6 md:mb-20">
+          <span class="section-counter">[ 06 - Newsletter ]</span>
+          <span class="h-px flex-1 bg-ink/15"></span>
+        </div>
+      )
+    }
+
+    <div
+      class:list={[
+        'grid grid-cols-1 gap-10 lg:grid-cols-12',
+        compact ? 'items-end' : 'items-end lg:gap-16',
+      ]}
+    >
+      <div class:list={[compact ? 'lg:col-span-7' : 'reveal lg:col-span-7']}>
+        <div class="mb-4 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/50">
+          {compact ? 'Cada martes · 7 min' : blogNewsletter.eyebrow}
+        </div>
+        <h2
+          class:list={[
+            'font-display leading-none text-ink',
+            compact ? 'text-3xl md:text-5xl' : 'text-4xl md:text-6xl lg:text-7xl',
+          ]}
+        >
+          {
+            compact ? (
+              <>
+                ¿Te gustó? <em class="italic text-primary">Recibilos cada martes.</em>
+              </>
+            ) : (
+              <>
+                <em class="italic text-primary">Carta semanal</em>
+                <br />
+                al correo, sin ruido.
+              </>
+            )
+          }
+        </h2>
+        {
+          !compact && (
+            <p class="mt-8 max-w-2xl font-ui text-[16px] leading-relaxed text-ink/75 md:text-[18px]">
+              {blogNewsletter.description}
+            </p>
+          )
+        }
+        {
+          compact && article && (
+            <p class="mt-5 max-w-xl font-ui text-[15px] leading-relaxed text-ink/70">
+              Nuevos artículos como "{article.title}" directo en tu correo.
+            </p>
+          )
+        }
+      </div>
+
+      <div class:list={[compact ? 'lg:col-span-5' : 'reveal reveal-delay-2 lg:col-span-5']}>
+        <form
+          class:list={[
+            'blog-newsletter-form',
+            compact ? 'flex items-center gap-3 border-b border-ink/30 pb-3' : 'flex flex-col gap-4',
+          ]}
+        >
+          {
+            !compact && (
+              <div class="flex flex-col gap-2">
+                <label class="font-ui text-[10px] uppercase tracking-[0.25em] text-ink/50">
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  placeholder="Tu nombre"
+                  class="blog-search-input border-0 border-b border-ink/30 bg-transparent py-3 font-ui text-[16px] placeholder:text-ink/30 focus:ring-0"
+                />
+              </div>
+            )
+          }
+          <div class:list={[compact ? 'min-w-0 flex-1' : 'flex flex-col gap-2']}>
+            {!compact && <label class="font-ui text-[10px] uppercase tracking-[0.25em] text-ink/50">Correo</label>}
+            <input
+              type="email"
+              placeholder="tu@correo.com"
+              class:list={[
+                'blog-search-input w-full border-0 bg-transparent font-ui text-[16px] placeholder:text-ink/30 focus:ring-0',
+                !compact && 'border-b border-ink/30 py-3',
+              ]}
+            />
+          </div>
+          <div class:list={[compact ? 'flex-shrink-0' : 'mt-4 flex items-center justify-between']}>
+            {!compact && <span class="font-ui text-[12px] text-ink/50">{blogNewsletter.readers}</span>}
+            <button
+              type="submit"
+              class="cta-btn btn-primary inline-flex items-center gap-3 rounded-full bg-primary px-5 py-2.5 font-ui text-[12px] font-semibold uppercase tracking-wide text-white md:px-7 md:py-4"
+            >
+              <span data-newsletter-label>Suscribirme</span>
+              <svg class="cta-arrow" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

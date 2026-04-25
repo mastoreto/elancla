@@ -1,0 +1,14 @@
+---
+import type { ContentVerseBlock } from 'src/data/contentPages';
+
+interface Props {
+  block: ContentVerseBlock;
+}
+
+const { block } = Astro.props;
+---
+
+<blockquote class="content-verse mt-10">
+  <span class="ref">{block.reference}</span>
+  <p>{block.text}</p>
+</blockquote>

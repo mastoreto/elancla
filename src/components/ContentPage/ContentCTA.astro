@@ -1,0 +1,44 @@
+---
+import type { ContentCta } from 'src/data/contentPages';
+import InlineText from './InlineText.astro';
+
+interface Props {
+  cta: ContentCta;
+}
+
+const { cta } = Astro.props;
+---
+
+<section class="relative py-24 md:py-32 bg-white border-y border-ink/10">
+  <div class="mx-auto max-w-[1280px] px-6 md:px-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      <div class="lg:col-span-7">
+        <div class="font-mono text-[11px] tracking-[0.2em] uppercase text-primary mb-4">{cta.eyebrow}</div>
+        <h2 class="font-display text-[clamp(2.2rem,6vw,4.6rem)] leading-[0.96] tracking-tight font-light">
+          <InlineText value={cta.title} />
+        </h2>
+        <p class="mt-6 font-ui text-[16px] md:text-[17px] leading-relaxed text-ink/70 max-w-xl">
+          {cta.body}
+        </p>
+      </div>
+      <div class="lg:col-span-5 flex flex-col gap-3">
+        <a href={cta.primary.href} class="cta-btn btn-primary inline-flex items-center justify-between gap-3 rounded-full bg-ink text-paper px-7 py-5 font-ui text-[13px] font-semibold tracking-wide uppercase">
+          {cta.primary.label}
+          <svg class="cta-arrow" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </a>
+        {
+          cta.secondary && (
+            <a href={cta.secondary.href} class="inline-flex items-center justify-between gap-3 rounded-full border border-ink/20 px-7 py-5 font-ui text-[13px] font-semibold tracking-wide uppercase hover:bg-ink hover:text-paper transition-colors">
+              {cta.secondary.label}
+              <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>

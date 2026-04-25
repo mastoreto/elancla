@@ -1,0 +1,110 @@
+---
+import type { BlogArticle } from 'src/data/blog';
+import { getArticleToc } from 'src/data/blog';
+import BlogArticleBody from './BlogArticleBody.astro';
+import BlogArticleHero from './BlogArticleHero.astro';
+import BlogArticleNav from './BlogArticleNav.astro';
+import BlogAuthorBlock from './BlogAuthorBlock.astro';
+import BlogNewsletter from './BlogNewsletter.astro';
+import BlogRelated from './BlogRelated.astro';
+
+interface Props {
+  article: BlogArticle;
+  related: BlogArticle[];
+  previous: BlogArticle | null;
+  next: BlogArticle | null;
+}
+
+const { article, related, previous, next } = Astro.props;
+const toc = getArticleToc(article);
+---
+
+<article class="blog-page">
+  <BlogArticleHero article={article} />
+
+  <section class="relative">
+    <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+      <div class="relative">
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+        <div
+          class="content-placeholder-img blog-article-cover relative"
+          style={`--placeholder-tint: ${article.tint};`}
+        >
+          <div class="text-center">
+            <div class="content-chip mb-3 text-ink/40">{article.coverLabel}</div>
+            <div class="blog-article-cover-glyph font-display italic text-ink/25">
+              "{article.coverGlyph}"
+            </div>
+          </div>
+          <div class="content-chip absolute top-5 left-5 rounded-full bg-white/85 px-3 py-1.5 text-ink backdrop-blur-sm">
+            Portada
+          </div>
+          <div class="absolute bottom-5 right-5 font-mono text-[10px] uppercase tracking-widest text-ink/50">
+            {article.issue}
+          </div>
+        </div>
+      </div>
+      <div class="mt-3 flex items-baseline gap-4 font-ui text-[12px] text-ink/55">
+        <span class="content-figure-label">[ FIG.01 ]</span>
+        <span>{article.coverCaption}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative py-20 md:py-28">
+    <div class="mx-auto max-w-[1280px] px-6 md:px-10">
+      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
+        <aside class="order-2 lg:order-1 lg:col-span-3">
+          <div class="lg:sticky lg:top-32">
+            <div class="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/45">
+              [ Índice ]
+            </div>
+            <nav class="flex flex-col">
+              {
+                toc.map((item) => (
+                  <a href={`#${item.id}`} class="content-toc-link" data-target={item.id}>
+                    <span class="num">{item.number}</span>
+                    {item.label}
+                  </a>
+                ))
+              }
+            </nav>
+
+            <div class="mt-10 hidden border-t border-ink/10 pt-8 lg:block">
+              <div class="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/45">
+                [ Compartir ]
+              </div>
+              <div class="flex flex-col gap-2">
+                <a href="https://www.instagram.com/iglesiaelancla" class="w-fit font-ui text-[12.5px] text-ink/70 ulink">
+                  Instagram
+                </a>
+                <a href="https://www.facebook.com/iglesiabautistaelancla" class="w-fit font-ui text-[12.5px] text-ink/70 ulink">
+                  Facebook
+                </a>
+                <button
+                  type="button"
+                  data-copy-link
+                  class="w-fit text-left font-ui text-[12.5px] text-ink/70 ulink"
+                >
+                  <span data-copy-label>Copiar enlace</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="order-1 lg:order-2 lg:col-span-9">
+          <BlogArticleBody article={article} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <BlogAuthorBlock author={article.author} />
+  <BlogArticleNav previous={previous} next={next} />
+  <BlogRelated articles={related} />
+  <BlogNewsletter compact article={article} />
+</article>

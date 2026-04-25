@@ -1,0 +1,13 @@
+---
+import type { ContentProseBlock } from 'src/data/contentPages';
+
+interface Props {
+  block: ContentProseBlock;
+}
+
+const { block } = Astro.props;
+---
+
+<div class="content-prose-block mt-8 max-w-2xl">
+  {block.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
+</div>

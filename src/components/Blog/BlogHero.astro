@@ -1,0 +1,124 @@
+---
+interface Props {
+  totalArticles: number;
+  categoryCount: number;
+}
+
+const { totalArticles, categoryCount } = Astro.props;
+---
+
+<section class="blog-hero grain relative min-h-[86vh] overflow-hidden pb-16 pt-32">
+  <div class="grid-bg absolute inset-0 opacity-60"></div>
+  <svg
+    class="pointer-events-none absolute top-[10%] right-[-12%] h-[44rem] w-[44rem] max-w-none opacity-[0.05]"
+    viewBox="0 0 200 200"
+    aria-hidden="true"
+  >
+    <circle cx="100" cy="100" r="100" fill="none" stroke="#141414" stroke-width="0.4"></circle>
+    <circle cx="100" cy="100" r="70" fill="none" stroke="#141414" stroke-width="0.4"></circle>
+    <circle cx="100" cy="100" r="40" fill="none" stroke="#141414" stroke-width="0.4"></circle>
+  </svg>
+
+  <div class="relative mx-auto max-w-[1600px] px-6 md:px-10">
+    <div class="mb-10 flex items-center justify-between md:mb-16">
+      <div
+        class="flex items-center gap-3 font-ui text-[11px] uppercase tracking-[0.2em] text-ink/60"
+      >
+        <span class="h-px w-8 bg-ink/40"></span>
+        <a href="/" class="ulink">El Ancla</a>
+        <span class="opacity-50">/</span>
+        <span>Blog</span>
+      </div>
+      <div
+        class="hidden font-ui text-[11px] uppercase tracking-[0.2em] text-ink/60 md:block"
+      >
+        Edición · MMXXVI
+      </div>
+    </div>
+
+    <div class="flex flex-col">
+      <div class="reveal in mb-6 flex items-center gap-4">
+        <span class="content-chip text-primary">Diario de la iglesia</span>
+        <span class="font-mono text-[10px] text-ink/40">N. 042 · ABRIL 2026</span>
+      </div>
+
+      <h1
+        class="blog-hero-title font-display text-6xl font-light leading-none text-ink sm:text-7xl md:text-8xl lg:text-9xl"
+      >
+        <span class="hero-line"><span>Palabras</span></span>
+        <span class="hero-line">
+          <span>para <em class="italic text-primary">anclar</em></span>
+        </span>
+        <span class="hero-line"><span>la fe en la</span></span>
+        <span class="hero-line"><span>semana.</span></span>
+      </h1>
+
+      <div class="mt-10 flex flex-col gap-8 md:mt-14 md:flex-row md:items-end md:justify-between">
+        <div class="max-w-xl">
+          <div class="line-grow mb-5 h-px w-24 origin-left bg-ink/30"></div>
+          <p class="font-ui text-[15px] leading-relaxed text-ink/75 md:text-[17px]">
+            Reflexiones, estudios bíblicos y crónicas de la vida de la iglesia.
+            Lo que predicamos el domingo, lo que conversamos en casa, y lo que
+            aprendemos en el camino.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4">
+          <a
+            href="#articulos"
+            class="cta-btn btn-primary inline-flex items-center gap-3 rounded-full bg-primary px-7 py-4 font-ui text-[13px] font-semibold uppercase tracking-wide text-white"
+          >
+            Últimos artículos
+            <svg class="cta-arrow" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+          </a>
+          <a
+            href="#newsletter"
+            class="arrow-link hidden items-center gap-2 font-ui text-[13px] font-semibold uppercase tracking-wide md:inline-flex"
+          >
+            <span class="ulink">Suscribirme</span>
+            <svg class="arrow-ico" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-ink/10 bg-ink/10 md:mt-24 md:grid-cols-4">
+      <div class="reveal bg-paper p-6 md:p-7">
+        <div class="mb-2 font-ui text-[10px] uppercase tracking-[0.2em] text-ink/50">01 · Publicados</div>
+        <div class="font-display text-2xl leading-none md:text-3xl">{totalArticles}</div>
+        <div class="mt-3 font-ui text-[13px] text-ink/70">Artículos en línea</div>
+      </div>
+      <div class="reveal reveal-delay-1 bg-paper p-6 md:p-7">
+        <div class="mb-2 font-ui text-[10px] uppercase tracking-[0.2em] text-ink/50">02 · Categorías</div>
+        <div class="font-display text-2xl leading-none md:text-3xl">{String(categoryCount).padStart(2, '0')}</div>
+        <div class="mt-3 font-ui text-[13px] text-ink/70">Áreas temáticas</div>
+      </div>
+      <div class="reveal reveal-delay-2 bg-paper p-6 md:p-7">
+        <div class="mb-2 font-ui text-[10px] uppercase tracking-[0.2em] text-ink/50">03 · Frecuencia</div>
+        <div class="font-display text-2xl leading-none md:text-3xl">Semanal</div>
+        <div class="mt-3 font-ui text-[13px] text-ink/70">Cada martes</div>
+      </div>
+      <div class="reveal reveal-delay-3 bg-primary p-6 text-white md:p-7">
+        <div class="mb-2 font-ui text-[10px] uppercase tracking-[0.2em] text-white/70">Ahora</div>
+        <div class="break-words font-display text-xl leading-none md:text-3xl">Serie Hebreos</div>
+        <div class="mt-3 flex items-center gap-2 font-ui text-[13px] text-white/90">
+          5 entregas en curso
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 md:flex">
+      <span class="font-ui text-[10px] uppercase tracking-[0.25em] text-ink/50">Leer</span>
+      <span class="relative block h-10 w-px overflow-hidden bg-ink/20">
+        <span class="scroll-bar block h-full w-px bg-ink"></span>
+      </span>
+    </div>
+  </div>
+</section>

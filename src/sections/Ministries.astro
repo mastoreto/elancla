@@ -23,17 +23,17 @@ const styles = {
 };
 
 const ministerios = [
-  { nom: 'Predicación',   desc: 'La Palabra, expuesta fielmente' },
-  { nom: 'Enseñanza',     desc: 'Crecer en entendimiento' },
-  { nom: 'Misiones',      desc: 'Al fin del mundo' },
-  { nom: 'Alabanza',      desc: 'Cantar con entendimiento' },
-  { nom: 'Oración',       desc: 'Clamar juntos' },
-  { nom: 'Espacio Mujer', desc: 'Mujeres en la Palabra' },
-  { nom: 'Hombres',       desc: 'Discipulado entre varones' },
-  { nom: 'Jóvenes',       desc: 'Una generación para Cristo' },
-  { nom: 'Adolescentes',  desc: 'Raíces en la adolescencia' },
-  { nom: 'Servicio',      desc: 'Manos que cuidan' },
-  { nom: 'Multimedia',    desc: 'Contar la historia' },
+  { nom: 'Predicación', desc: 'La Palabra, expuesta fielmente', href: '/ministerios/predicacion' },
+  { nom: 'Enseñanza', desc: 'Crecer en entendimiento', href: '/ministerios/ensenanza' },
+  { nom: 'Misiones', desc: 'Al fin del mundo', href: '/ministerios/misiones' },
+  { nom: 'Alabanza', desc: 'Cantar con entendimiento', href: '/ministerios/alabanza' },
+  { nom: 'Oración', desc: 'Clamar juntos', href: '/#visitanos' },
+  { nom: 'Espacio Mujer', desc: 'Mujeres en la Palabra', href: 'https://emujer.elancla.uy/' },
+  { nom: 'Hombres', desc: 'Discipulado entre varones', href: '/ministerios/hombres' },
+  { nom: 'Jóvenes', desc: 'Una generación para Cristo', href: '/ministerios/jovenes' },
+  { nom: 'Adolescentes', desc: 'Raíces en la adolescencia', href: '/ministerios/adolescentes' },
+  { nom: 'Servicio', desc: 'Manos que cuidan', href: '/ministerios/servicio' },
+  { nom: 'Multimedia', desc: 'Contar la historia', href: '/ministerios/multimedia' },
 ];
 
 const borderColor = 'rgba(245,243,238,0.12)';
@@ -64,8 +64,10 @@ const borderColor = 'rgba(245,243,238,0.12)';
     <div class={styles.grid} style={`border-color: ${borderColor}`}>
       {ministerios.map((m, i) => (
         <a
-          href="#"
+          href={m.href}
           class={styles.cell}
+          target={m.href.startsWith('http') ? '_blank' : undefined}
+          rel={m.href.startsWith('http') ? 'noopener noreferrer' : undefined}
           style={`border-color: ${borderColor}`}
         >
           <div class={styles.cellTop}>

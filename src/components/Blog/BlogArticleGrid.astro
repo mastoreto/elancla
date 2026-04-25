@@ -1,0 +1,85 @@
+---
+import type { BlogArticle, BlogCategory } from 'src/data/blog';
+import BlogArticleCard from './BlogArticleCard.astro';
+
+interface Props {
+  articles: BlogArticle[];
+  categories: BlogCategory[];
+}
+
+const { articles, categories } = Astro.props;
+const filters = [
+  { label: 'Todos', value: 'todos' },
+  ...categories
+    .filter((category) =>
+      ['reflexion', 'estudio', 'iglesia', 'familia'].includes(category.filter)
+    )
+    .map((category) => ({ label: category.name.replace(' bíblico', ''), value: category.filter })),
+];
+---
+
+<section id="articulos" class="relative py-24 md:py-32">
+  <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+    <div class="mb-12 flex items-baseline gap-6 md:mb-16">
+      <span class="section-counter">[ 03 - Todos los artículos ]</span>
+      <span class="h-px flex-1 bg-ink/15"></span>
+    </div>
+
+    <div class="mb-12 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+      <h2 class="max-w-3xl font-display text-4xl leading-none text-ink md:text-5xl lg:text-6xl">
+        Lo último del <em class="italic text-primary">diario</em>.
+      </h2>
+
+      <div class="flex flex-col gap-4 md:flex-row md:items-center">
+        <div class="flex flex-wrap items-center gap-2">
+          {
+            filters.map((filter, index) => (
+              <button
+                type="button"
+                class="blog-filter-button rounded-full border border-ink/15 px-4 py-2 font-ui text-[12px] font-semibold uppercase tracking-wide"
+                data-blog-filter-button
+                data-filter={filter.value}
+                data-on={index === 0 ? 'true' : 'false'}
+              >
+                {filter.label}
+              </button>
+            ))
+          }
+        </div>
+
+        <label class="flex items-center gap-2 rounded-full border border-ink/15 bg-paper px-4 py-2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+          <span class="sr-only">Buscar artículos</span>
+          <input
+            id="blogSearchInput"
+            type="search"
+            placeholder="Buscar..."
+            class="blog-search-input w-36 border-0 bg-transparent font-ui text-[13px] placeholder:text-ink/40 focus:ring-0"
+          />
+        </label>
+      </div>
+    </div>
+
+    <div id="blogArticleGrid" class="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
+      {articles.map((article, index) => <BlogArticleCard article={article} wide={index === 0} />)}
+    </div>
+
+    <div class="mt-16 flex items-center justify-between border-t border-ink/10 pt-10">
+      <div class="font-ui text-[12px] uppercase tracking-wider text-ink/50">
+        Mostrando <span class="font-semibold text-ink">1-{articles.length}</span> de 142
+      </div>
+      <button
+        type="button"
+        class="cta-btn btn-primary inline-flex items-center gap-3 rounded-full bg-ink px-7 py-4 font-ui text-[12px] font-semibold uppercase tracking-wide text-paper"
+      >
+        Cargar más
+        <svg class="cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M6 2v8M6 10L2 6M6 10l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
