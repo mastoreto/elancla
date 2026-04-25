@@ -1,8 +1,15 @@
 export function initLanding(): void {
+  const routeState = window as typeof window & {
+    __elanclaRouteController?: AbortController;
+  };
+  routeState.__elanclaRouteController?.abort();
+  const controller = new AbortController();
+  routeState.__elanclaRouteController = controller;
+
   initScrollReveal();
   initNumberTicker();
-  initActiveNav();
-  initSmoothScroll();
+  initActiveNav(controller.signal);
+  initSmoothScroll(controller.signal);
 }
 
 function initScrollReveal(): void {
@@ -46,7 +53,7 @@ function initNumberTicker(): void {
   });
 }
 
-function initActiveNav(): void {
+function initActiveNav(signal: AbortSignal): void {
   const navLinks = document.querySelectorAll<HTMLElement>('.nav-item');
   const sectionIds = ['inicio', 'nosotros', 'actividades', 'sermones', 'ministerios'];
   const nav = document.getElementById('nav');
@@ -83,11 +90,11 @@ function initActiveNav(): void {
     }
   };
 
-  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('scroll', onScroll, { passive: true, signal });
   onScroll();
 }
 
-function initSmoothScroll(): void {
+function initSmoothScroll(signal: AbortSignal): void {
   document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
     a.addEventListener('click', (e) => {
       const href = a.getAttribute('href');
@@ -97,6 +104,6 @@ function initSmoothScroll(): void {
         e.preventDefault();
         window.scrollTo({ top: (target as HTMLElement).offsetTop - 70, behavior: 'smooth' });
       }
-    });
+    }, { signal });
   });
 }

@@ -1,0 +1,70 @@
+---
+import type { BlogAuthor } from 'src/data/blog';
+
+interface Props {
+  author: BlogAuthor;
+}
+
+const { author } = Astro.props;
+---
+
+<section class="blog-author-block relative py-20 md:py-28">
+  <div class="mx-auto max-w-[1280px] px-6 md:px-10">
+    <div class="mb-12 flex items-baseline gap-6">
+      <span class="section-counter text-paper/50">[ Autor ]</span>
+      <span class="h-px flex-1 bg-paper/15"></span>
+    </div>
+
+    <div class="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-3">
+        <div class="content-placeholder-img aspect-square w-full max-w-[260px] bg-[#1a1818]">
+          <span class="font-display text-7xl italic text-paper/25">{author.initials}</span>
+        </div>
+      </div>
+      <div class="lg:col-span-6">
+        <div class="mb-3 font-mono text-[11px] uppercase tracking-[0.2em] opacity-60">
+          Escrito por
+        </div>
+        <h3 class="font-display text-4xl leading-tight md:text-5xl">
+          {author.name.replace('Pr. ', '')}
+        </h3>
+        <p class="mt-5 max-w-xl font-ui text-[15px] leading-relaxed opacity-80 md:text-[16px]">
+          {author.bio}
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a
+            href="/blog"
+            class="cta-btn btn-primary inline-flex items-center gap-2 rounded-full bg-paper px-5 py-3 font-ui text-[12px] font-semibold uppercase tracking-wide text-ink"
+          >
+            Ver todos sus artículos
+            <svg class="cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+          </a>
+          <a
+            href="/#sermones"
+            class="inline-flex items-center gap-2 rounded-full border border-paper/25 px-5 py-3 font-ui text-[12px] font-semibold uppercase tracking-wide"
+          >
+            Sermones
+          </a>
+        </div>
+      </div>
+      {
+        author.stats && (
+          <div class="border-paper/15 lg:col-span-3 lg:border-l lg:pl-10">
+            <div class="grid grid-cols-2 gap-x-4 gap-y-6">
+              {author.stats.map((stat) => (
+                <div>
+                  <div class="font-display text-3xl">{stat.value}</div>
+                  <div class="mt-1 font-ui text-[10px] uppercase tracking-[0.2em] opacity-60">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

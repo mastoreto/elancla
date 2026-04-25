@@ -1,5 +1,6 @@
 ---
 import cn from '../utils/cn.ts';
+import MobileMenu from './MobileMenu.astro';
 
 interface ResourceItem {
   label: string;
@@ -33,9 +34,14 @@ const styles = {
   liveChip: cn('hidden md:flex items-center gap-2 text-[11px] font-ui font-medium text-ink/60 uppercase tracking-wider'),
   liveDot: cn('w-1.5 h-1.5 rounded-full bg-primary live-dot'),
   ctaBtn: cn(
-    'cta-btn btn-primary inline-flex items-center gap-2',
+    'cta-btn btn-primary hidden lg:inline-flex items-center gap-2',
     'rounded-full bg-ink text-paper',
     'px-5 py-2.5 font-ui text-[12px] font-semibold tracking-wide uppercase'
+  ),
+  hamburger: cn(
+    'lg:hidden flex items-center justify-center',
+    'w-9 h-9 rounded-full border border-ink/10',
+    'bg-ink/5 text-ink transition-colors hover:bg-ink/10'
   ),
 };
 ---
@@ -48,7 +54,7 @@ const styles = {
       style="background: rgba(250,248,245,0.72)"
       id="nav"
     >
-      <a href="#inicio" class={styles.logoLink}>
+      <a href="/#inicio" class={styles.logoLink}>
         <img
           src="/images/anclarojo.png"
           alt=""
@@ -61,11 +67,19 @@ const styles = {
       </a>
 
       <ul class={styles.navList}>
-        <li><a href="#inicio" class="nav-item ulink" data-section="inicio">Inicio</a></li>
-        <li><a href="#nosotros" class="nav-item ulink" data-section="nosotros">Nosotros</a></li>
-        <li><a href="#actividades" class="nav-item ulink" data-section="actividades">Actividades</a></li>
-        <li><a href="#sermones" class="nav-item ulink" data-section="sermones">Sermones</a></li>
-        <li><a href="#ministerios" class="nav-item ulink" data-section="ministerios">Ministerios</a></li>
+        <li><a href="/#inicio" class="nav-item ulink" data-section="inicio">Inicio</a></li>
+        <li>
+          <a
+            href="/#nosotros"
+            class="nav-item ulink"
+            data-section="nosotros"
+          >
+            Nosotros
+          </a>
+        </li>
+        <li><a href="/#actividades" class="nav-item ulink" data-section="actividades">Actividades</a></li>
+        <li><a href="/#sermones" class="nav-item ulink" data-section="sermones">Sermones</a></li>
+        <li><a href="/#ministerios" class="nav-item ulink" data-section="ministerios">Ministerios</a></li>
         <li class="relative group/recursos">
           <button type="button" class="nav-item ulink cursor-pointer select-none">
             <span class="inline-flex items-center gap-1.5 leading-none">
@@ -95,7 +109,22 @@ const styles = {
           <span class={styles.liveDot}></span>
           Dom · 11:15
         </span>
-        <a href="#visitanos" class={styles.ctaBtn}>
+
+        <!-- Hamburguesa visible solo en mobile -->
+        <button
+          id="menuToggle"
+          class={styles.hamburger}
+          aria-label="Abrir menú"
+          aria-expanded="false"
+          aria-controls="mobileMenu"
+        >
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+            <path d="M0 1H16M0 6H16M0 11H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        <!-- CTA oculto en mobile, visible en desktop -->
+        <a href="/#visitanos" class={styles.ctaBtn}>
           Visítanos
           <svg class="cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
             <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -105,3 +134,5 @@ const styles = {
     </nav>
   </div>
 </header>
+
+<MobileMenu recursos={recursos} />

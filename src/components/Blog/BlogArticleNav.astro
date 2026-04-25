@@ -1,0 +1,87 @@
+---
+import type { BlogArticle } from 'src/data/blog';
+import { getBlogArticlePath } from 'src/data/blog';
+
+interface Props {
+  previous: BlogArticle | null;
+  next: BlogArticle | null;
+}
+
+const { previous, next } = Astro.props;
+---
+
+<section class="relative border-b border-ink/10 bg-paper py-16 md:py-20">
+  <div class="mx-auto max-w-[1280px] px-6 md:px-10">
+    <div class="grid grid-cols-1 gap-px border border-ink/10 bg-ink/10 md:grid-cols-2">
+      {
+        previous ? (
+          <a
+            href={getBlogArticlePath(previous)}
+            class="group flex flex-col gap-4 bg-paper p-8 transition-colors hover:bg-white md:p-10"
+          >
+            <div class="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/50">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M10 6H2M2 6L6 2M2 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+              </svg>
+              Anterior · {previous.issue}
+            </div>
+            <div class="font-display text-2xl leading-tight transition-colors group-hover:text-primary md:text-[1.75rem]">
+              {previous.title}
+            </div>
+            <div class="font-ui text-[12px] text-ink/55">
+              {previous.displayDate} · {previous.category}
+            </div>
+          </a>
+        ) : (
+          <a
+            href="/blog"
+            class="group flex flex-col gap-4 bg-paper p-8 transition-colors hover:bg-white md:p-10"
+          >
+            <div class="font-mono text-[11px] uppercase tracking-[0.2em] text-ink/50">
+              Volver
+            </div>
+            <div class="font-display text-2xl leading-tight transition-colors group-hover:text-primary md:text-[1.75rem]">
+              Todos los artículos
+            </div>
+            <div class="font-ui text-[12px] text-ink/55">Blog · El Ancla</div>
+          </a>
+        )
+      }
+
+      {
+        next ? (
+          <a
+            href={getBlogArticlePath(next)}
+            class="group flex flex-col items-end gap-4 bg-paper p-8 text-right transition-colors hover:bg-white md:p-10"
+          >
+            <div class="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/50">
+              Siguiente · {next.issue}
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+              </svg>
+            </div>
+            <div class="font-display text-2xl leading-tight transition-colors group-hover:text-primary md:text-[1.75rem]">
+              {next.title}
+            </div>
+            <div class="font-ui text-[12px] text-ink/55">
+              {next.displayDate} · {next.category}
+            </div>
+          </a>
+        ) : (
+          <a
+            href="/blog#newsletter"
+            class="group flex flex-col items-end gap-4 bg-paper p-8 text-right transition-colors hover:bg-white md:p-10"
+          >
+            <div class="font-mono text-[11px] uppercase tracking-[0.2em] text-ink/50">
+              Próximo
+            </div>
+            <div class="font-display text-2xl leading-tight transition-colors group-hover:text-primary md:text-[1.75rem]">
+              Recibir la próxima entrega
+            </div>
+            <div class="font-ui text-[12px] text-ink/55">Newsletter semanal</div>
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>

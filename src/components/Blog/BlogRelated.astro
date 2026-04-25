@@ -1,0 +1,32 @@
+---
+import type { BlogArticle } from 'src/data/blog';
+import BlogArticleCard from './BlogArticleCard.astro';
+
+interface Props {
+  articles: BlogArticle[];
+}
+
+const { articles } = Astro.props;
+---
+
+<section class="relative py-24 md:py-32">
+  <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+    <div class="mb-12 flex items-baseline gap-6 md:mb-16">
+      <span class="section-counter">[ Relacionados ]</span>
+      <span class="h-px flex-1 bg-ink/15"></span>
+      <a
+        href="/blog"
+        class="arrow-link inline-flex items-center gap-2 font-ui text-[12px] uppercase tracking-wide"
+      >
+        <span class="ulink">Volver al blog</span>
+        <svg class="arrow-ico" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+        </svg>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-3">
+      {articles.map((article) => <BlogArticleCard article={article} />)}
+    </div>
+  </div>
+</section>

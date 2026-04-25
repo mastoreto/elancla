@@ -1,15 +1,20 @@
 ---
 import Footer from '../components/Footer.astro';
+import LoadingOverlay from '../components/LoadingOverlay.astro';
 import Nav from '../components/Nav.astro';
 import '../styles/global.css';
 import { SEO } from 'astro-seo';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title: string;
+  description?: string;
   isBlog?: boolean;
 }
 
-const { title } = Astro.props;
+const defaultDescription =
+  'El Ancla, situada en Montevideo, es una iglesia bautista que busca ser un lugar de encuentro con Dios y con los demás.';
+const { title, description = defaultDescription } = Astro.props;
 ---
 
 <!doctype html>
@@ -24,21 +29,35 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <SEO
       title={title}
-      description="El Ancla, situada en montevideo, es una iglesia bautista que busca ser un lugar de encuentro con Dios y con los demás."
+      description={description}
       openGraph={{
         basic: {
-          title: 'Iglesia Bautista El Ancla',
+          title,
           type: 'website',
           image:
             'https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png',
         },
       }}
     />
+    <script is:inline>
+      (() => {
+        const storageKey = 'elancla:loader-seen';
+        try {
+          const hasSeenLoader = sessionStorage.getItem(storageKey) === 'true';
+          document.documentElement.classList.add(
+            hasSeenLoader ? 'site-loader-skip-initial' : 'site-loader-pending'
+          );
+        } catch {
+          document.documentElement.classList.add('site-loader-pending');
+        }
+      })();
+    </script>
+    <ClientRouter fallback="animate" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Fuentes del rediseño -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Libre+Franklin:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Libre+Franklin:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <!-- Fuentes anteriores (mantenidas) -->
@@ -64,6 +83,7 @@ const { title } = Astro.props;
     />
   </head>
   <body class="overflow-x-hidden selection:bg-primary selection:text-white">
+    <LoadingOverlay />
     <div id="readprog"></div>
     <Nav />
     <main class="max-w-full flex flex-col relative overflow-x-hidden">

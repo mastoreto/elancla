@@ -1,0 +1,135 @@
+---
+import type {
+  BlogArchiveItem,
+  BlogAuthor,
+  BlogPopularItem,
+} from 'src/data/blog';
+import { getBlogArticlePath } from 'src/data/blog';
+
+interface Props {
+  popular: BlogPopularItem[];
+  tags: string[];
+  archive: BlogArchiveItem[];
+  author: BlogAuthor;
+}
+
+const { popular, tags, archive, author } = Astro.props;
+---
+
+<section class="relative bg-white py-24 md:py-32">
+  <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+    <div class="mb-14 flex items-baseline gap-6 md:mb-16">
+      <span class="section-counter">[ 05 - Más leído & explorar ]</span>
+      <span class="h-px flex-1 bg-ink/15"></span>
+    </div>
+
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
+      <div class="reveal lg:col-span-7">
+        <div class="mb-8 flex items-baseline gap-3">
+          <h3 class="font-display text-2xl md:text-3xl">Más leído este mes</h3>
+          <span class="font-mono text-[11px] text-ink/40">→ ABR 2026</span>
+        </div>
+        <ol class="divide-y divide-ink/10 border-y border-ink/10">
+          {
+            popular.map((item, index) => (
+              <li class="group">
+                <a
+                  href={getBlogArticlePath(item.article)}
+                  class="grid grid-cols-[48px_1fr_auto] items-center gap-5 py-5 md:grid-cols-[60px_1fr_auto] md:gap-6 md:py-6"
+                >
+                  <span class="font-display text-3xl italic text-ink/30 transition-colors group-hover:text-primary md:text-4xl">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <div>
+                    <div class="mb-1 font-mono text-[10px] uppercase tracking-[0.2em] text-ink/45">
+                      {item.article.category}
+                    </div>
+                    <div class="font-display text-lg leading-snug transition-colors group-hover:text-primary md:text-xl">
+                      {item.article.title}
+                    </div>
+                  </div>
+                  <div class="font-ui text-[12px] tabular-nums text-ink/50">{item.reads}</div>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <aside class="flex flex-col gap-12 lg:col-span-5">
+        <div class="reveal">
+          <div class="mb-6 flex items-baseline gap-3">
+            <h3 class="font-display text-2xl md:text-3xl">Etiquetas</h3>
+            <span class="font-mono text-[11px] text-ink/40">→ TOPICS</span>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            {
+              tags.map((tag) => (
+                <a
+                  href="/blog"
+                  class="content-chip rounded-full border border-ink/15 px-3 py-1.5 transition-colors hover:bg-ink hover:text-paper"
+                >
+                  {tag}
+                </a>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="reveal reveal-delay-2 relative border border-ink/10 bg-paper p-8">
+          <div class="corner tl"></div>
+          <div class="corner tr"></div>
+          <div class="corner bl"></div>
+          <div class="corner br"></div>
+          <div class="mb-3 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/50">
+            Autor del mes
+          </div>
+          <div class="flex items-center gap-5">
+            <div class="content-placeholder-img flex h-20 w-20 items-center justify-center">
+              <span class="font-display text-3xl italic text-ink/40">{author.initials}</span>
+            </div>
+            <div class="flex-1">
+              <div class="font-display text-2xl leading-tight md:text-[1.7rem]">{author.name}</div>
+              <div class="mt-1 font-ui text-[12px] text-ink/60">
+                {author.role} · {author.articleCount} artículos
+              </div>
+            </div>
+          </div>
+          <p class="mt-5 font-ui text-[14px] leading-relaxed text-ink/70">
+            {author.bio}
+          </p>
+          <a
+            href="/blog"
+            class="arrow-link mt-5 inline-flex items-center gap-2 font-ui text-[12px] font-semibold uppercase tracking-wide"
+          >
+            <span class="ulink">Ver todos sus artículos</span>
+            <svg class="arrow-ico" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+          </a>
+        </div>
+
+        <div class="reveal reveal-delay-3">
+          <div class="mb-6 flex items-baseline gap-3">
+            <h3 class="font-display text-2xl md:text-3xl">Archivo</h3>
+            <span class="font-mono text-[11px] text-ink/40">→ ÍNDICE</span>
+          </div>
+          <ul class="divide-y divide-ink/10 border-y border-ink/10 font-ui text-[14px]">
+            {
+              archive.map((item) => (
+                <li class="flex items-center justify-between py-3">
+                  <a href="/blog" class="ulink">{item.label}</a>
+                  <span class="font-mono text-[11px] text-ink/40">{item.count}</span>
+                </li>
+              ))
+            }
+            <li class="flex items-center justify-between py-3">
+              <a href="/blog" class="ulink">Ver archivo completo →</a>
+              <span class="font-mono text-[11px] text-ink/40">142</span>
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>

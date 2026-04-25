@@ -1,5 +1,9 @@
 @import "tailwindcss";
 @import "./Landing.css";
+@import "./ContentPage.css";
+@import "./blog.css";
+@import "./loading.css";
+@import "./PageTransitions.css";
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/forms";
 

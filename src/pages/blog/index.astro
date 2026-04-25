@@ -1,263 +1,37 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-
-const articles = [
-  {
-    category: 'Teología',
-    date: '12 Dic, 2023',
-    year: '2023',
-    month: '12',
-    day: '12',
-    slug: 'el-significado-del-adviento',
-    title: 'El Significado del Adviento',
-    description:
-      'Una inmersión profunda en el significado teológico del silencio, la preparación y la naturaleza activa de la espera durante la temporada santa.',
-    author: 'Rev. Juan Perez',
-    authorImg:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDxiq4z0cLg-eORYUZUYCzPgCpZ9wALbMvGyTB4m59_9zIW2eMyb_N0ILleL-4UQ8X7ZjAbQ952cOU_tLMRpC_DCNroSiUoEQQg891jGYIqz2ZHPxD7hDoKkdLslgFvt2Ws4qJDsWzGlXvMT2_yTKyiUG5yOZj4STZgJVihInjywt5BogBc_85gfWk0XdWX0Hz99-sVHKpfsu7uVS8O6Cp92k9C1-zHdza7UDzfA6F3ES29bu604qOG_FRPRbLqvquvSYP0HVnBf27w',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuBNRJeY4LHNa7FVLuKxnTC_16wd4TurD6ClOFpHRo0PU81BgKj6zWYfjsbmVYRirzKw_rs2JMy3OCmr6Ygz2azZWFda6EVVenKBUZjSjhnSdj1l-Ltyl9d5B8F499zwZEXNVqtRJihUea98oQG56boLIVsCbHOapt_D2kURkx5QYk6iCpJCmh56tziiNZ52o3_qiX7-dyxFrboHVMaPJCODad4QSodsfVej-i_h0X5OBpt74n3Kg-FALnIA-bNAy7XMYs3VkpeqtHN8',
-    readTime: '5 min',
-    featured: true,
-    type: 'article',
-  },
-  {
-    category: 'Comunidad',
-    date: '10 Mar, 2024',
-    year: '2024',
-    month: '03',
-    day: '10',
-    slug: 'resumen-picnic-voluntarios',
-    title: 'Resumen del Picnic de Voluntarios',
-    description:
-      'Lo más destacado de nuestra reunión anual donde celebramos a los más de 200 voluntarios que hacen posible el servicio dominical.',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuAa_O2ogTu5FpZpvA6lGKDy9y4cc9ztlwYbj99I3WCwwBEtgUPV_N30OVgvf2yDbIYzKRbVa_8pEzKW1KSLkf6QS9tA63f7jPKUlnwxtNCneI4X_1rgHyO_PcW_jXFbFXb3Dhrn8MBT3zUBFBgGj5YBiFHZ952G7O0ntAkpe3ORH92qtq3o9Io7jzmEh2hAB6D9QicPyNF9qtZDUaDuyvT3iBmKGEQ5zgJNnvI3cTVZFtERzC7I0Sd586xIBvBIlPmvH55npF-_nvNY',
-    readTime: '3 min lectura',
-    type: 'article',
-  },
-  {
-    category: 'Alabanza',
-    date: '05 Abr, 2024',
-    year: '2024',
-    month: '04',
-    day: '05',
-    slug: 'nuevo-album-ecos-de-gracia',
-    title: 'Nuevo Álbum: "Ecos de Gracia"',
-    description:
-      'Escucha las nuevas canciones grabadas en vivo durante nuestro servicio de Pascua. Disponible ahora.',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCrFC3PpFyYrq4ExCSAtLncmfaSiiJ9FTI6V1li_oxlZqb50bcAL37UcH-QzdbbYY8_m_QVTAr5zeq2DHMseievzzNwg3wgJe_uZs2zPbv_bFRq0xGXOOG6gmJRcCdK9hqpGfKlQWf5x0X0KT9RfinX5HmwjgWPApys_a702DSYrW815m0WeAnmgWe1wBYs7dPS1rEWY1IuYmCtrCGX7MmbZrop8e0N4nAi6SkB3eFS355Ch7YPLj7QkrZs-fa9u0lwVpAAiONcBitD',
-    readTime: '2 min lectura',
-    cta: 'Escuchar Ahora',
-    type: 'article',
-  },
-  {
-    category: 'Vida Cristiana',
-    date: '21 May, 2024',
-    year: '2024',
-    month: '05',
-    day: '21',
-    slug: 'jesus-en-la-tormenta',
-    title: 'Encontrando Paz en la Ansiedad',
-    description:
-      'Perspectivas bíblicas sobre la salud mental y pasos prácticos para encontrar estabilidad cuando el mundo se siente caótico.',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCIostA-7nr77xF1H3lCGKDU3Fksk8H0IvoClkwxSXvEoSH_HToapS36U7DEl2jXOo0w57O6_RF0MMCJ6nWlE3aqJjoTt8PtlIq8RoiIQad2gz9GFmmlG307HZG4ae3B-I_SVDkHcgK_7fyePGauPgoS42Woz-2sfDtb5vTprLpEe75NH_zAC3BAu7OV1zJ--dnOm5xc8hOk6VuVJL7WEktm9oJODqNlWT2ZicR0sUTakSZZK_UfVTeWkMfjgy8U2wnsUbt8ahR6kpU',
-    readTime: '7 min lectura',
-    type: 'article',
-  },
-  {
-    type: 'quote',
-    quote:
-      'La fe es dar el primer paso incluso cuando no ves toda la escalera.',
-    author: 'Martin Luther King, Jr.',
-    label: 'Frase de la Semana',
-  },
-  {
-    category: 'Misiones',
-    date: '15 Jun, 2024',
-    year: '2024',
-    month: '06',
-    day: '15',
-    slug: 'sirviendo-al-projimo',
-    title: 'Sirviendo al Prójimo',
-    description:
-      'Recolectamos más de 500 lbs de comida. Aquí te decimos cómo puedes involucrarte el próximo mes.',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuBFgbmD8YDC6CXlRktAYksrWT5NfiihfiCSewHNbFJsEG9L5iIq_520zc8WotnIcRyEo4-fcOAn9e4CmHJp3mqbabLRyw3UW1j8gF4C9P9zYIwM9rxaVwEVX2UTvS9KPdNgl0GUodLxwl1po-bXIkW8g-xpXABlCintE__A5zMH1fXQj2_6xSxBKhpxREamxu92uaTiQX2BvaGLWYcJgqaoAClgaNtujOWwP47PQyqLLAloPe6WbwtMAg2EeKf0DZtwEmHLryPGwIde',
-    readTime: '4 min lectura',
-    type: 'article',
-  },
-  {
-    category: 'Fe y Trabajo',
-    date: '01 Jul, 2024',
-    year: '2024',
-    month: '07',
-    day: '01',
-    slug: 'liturgia-lunes-manana',
-    title: 'Liturgia del Lunes por la Mañana',
-    description:
-      'Cómo llevar el espíritu de la adoración dominical a la sala de juntas y a la rutina diaria sin perder tu alma.',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuAmJRS5jonFTQCEahCr63d1u1gn7pdZlQ98XoP5-fQNsyjdeX7LtkfDJowwPM5PdUhzhUYCLjS1HuPMDomMNBmVSk_GqwF_PFW8tn_w6A2rEFhXTAfwafa6u6AhZ369YwStWix0dhA7x2TTt4rpjp4A-QB2UJBsJ4VC8AimQPBaWoyUOi2MBzXf2y-J6WP-3athu-atJ1iP75JGB07f0MjF4syJfQa8B5eHrkjkmnnyPkLJWTJnZ5D0e0x3-EMundv_whAuIB8nxmtg',
-    readTime: '6 min lectura',
-    type: 'article',
-  },
-];
+import BlogPageTemplate from 'src/components/Blog/BlogPageTemplate.astro';
+import {
+  blogArchive,
+  blogArticles,
+  blogCategories,
+  blogMarqueeItems,
+  blogPopularItems,
+  blogSeries,
+  blogTags,
+  featuredArticle,
+} from 'src/data/blog';
+import Layout from 'src/layouts/Layout.astro';
 ---
 
-<Layout title="Blog - El Ancla" isBlog={true}>
-  <section
-    class="pt-16 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center mt-20"
-  >
-    <div class="flex flex-col items-center justify-center gap-6 pb-8">
-      <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-primary text-3xl"
-          >auto_stories</span
-        >
-        <p class="text-primary font-bold tracking-widest text-sm uppercase">
-          Nuestro Blog
-        </p>
-      </div>
-      <h1
-        class="text-6xl md:text-8xl font-display font-black tracking-tight text-primary mb-2"
-      >
-        Artículos & <span class="text-neutral-900 dark:text-white"
-          >Reflexiones</span
-        >
-      </h1>
-      <p
-        class="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 font-sans font-medium leading-relaxed max-w-2xl"
-      >
-        Recursos para fortalecer tu fe, conocer más de Dios y vivir el evangelio
-        en comunidad.
-      </p>
-    </div>
-  </section>
-
-  <div
-    class="sticky top-20 z-40 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-primary/10 mb-12 shadow-sm"
-  >
-    <div
-      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto no-scrollbar py-4"
-    >
-      <div class="flex justify-center w-full">
-        <div class="flex gap-3 items-center">
-          <button
-            class="whitespace-nowrap rounded-lg bg-primary text-white px-6 py-2.5 text-sm font-bold tracking-wide transition-all shadow-lg shadow-primary/30 hover:bg-primary-dark"
-            >Todos</button
-          >
-          <button
-            class="whitespace-nowrap rounded-lg bg-white dark:bg-surface-dark text-neutral-600 dark:text-neutral-300 border border-transparent hover:border-primary/20 hover:text-primary px-6 py-2.5 text-sm font-bold shadow-sm hover:shadow-md transition-all"
-            >Teología</button
-          >
-          <button
-            class="whitespace-nowrap rounded-lg bg-white dark:bg-surface-dark text-neutral-600 dark:text-neutral-300 border border-transparent hover:border-primary/20 hover:text-primary px-6 py-2.5 text-sm font-bold shadow-sm hover:shadow-md transition-all"
-            >Vida Cristiana</button
-          >
-          <button
-            class="whitespace-nowrap rounded-lg bg-white dark:bg-surface-dark text-neutral-600 dark:text-neutral-300 border border-transparent hover:border-primary/20 hover:text-primary px-6 py-2.5 text-sm font-bold shadow-sm hover:shadow-md transition-all"
-            >Alabanza</button
-          >
-          <button
-            class="whitespace-nowrap rounded-lg bg-white dark:bg-surface-dark text-neutral-600 dark:text-neutral-300 border border-transparent hover:border-primary/20 hover:text-primary px-6 py-2.5 text-sm font-bold shadow-sm hover:shadow-md transition-all"
-            >Misiones</button
-          >
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <section class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-32">
-    <div class="masonry-grid">
-      {
-        articles.map((article) => (
-          <>
-            {article.type === 'quote' ? (
-              <article class="break-inside-avoid mb-10 group flex flex-col justify-center bg-primary text-white rounded-3xl shadow-card p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl relative overflow-hidden">
-                <span class="material-symbols-outlined absolute -top-4 -left-4 text-9xl text-white/10 rotate-12">
-                  format_quote
-                </span>
-                <div class="relative z-10 flex flex-col gap-4">
-                  <div class="text-xs font-black tracking-widest uppercase text-white/70">
-                    {article.label}
-                  </div>
-                  <blockquote class="text-2xl font-display font-bold leading-tight italic">
-                    "{article.quote}"
-                  </blockquote>
-                  <p class="text-white/80 text-sm font-bold mt-2">
-                    — {article.author}
-                  </p>
-                </div>
-              </article>
-            ) : (
-              <a
-                href={`/blog/${article.year}/${article.month}/${article.day}/${article.slug}`}
-                class="block break-inside-avoid mb-10 group no-underline"
-              >
-                <article class="flex flex-col bg-white dark:bg-surface-dark rounded-3xl shadow-card overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ring-1 ring-neutral-100 dark:ring-neutral-800">
-                  <div
-                    class={`relative overflow-hidden ${article.featured ? 'h-64' : 'h-56'}`}
-                  >
-                    {article.featured && (
-                      <div class="absolute top-4 right-4 z-10">
-                        <span class="inline-flex items-center rounded-full bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-wider text-white shadow-lg">
-                          Destacado
-                        </span>
-                      </div>
-                    )}
-                    <div
-                      class="w-full h-full bg-cover bg-center transform transition-transform duration-700 ease-out group-hover:scale-110"
-                      style={`background-image: url('${article.image}')`}
-                    />
-                  </div>
-                  <div class="p-6 flex flex-col gap-3">
-                    <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-neutral-400">
-                      <span>{article.category}</span>
-                      <span>{article.date || article.readTime}</span>
-                    </div>
-                    <h2 class="text-2xl md:text-3xl font-display font-black leading-tight text-neutral-900 dark:text-white group-hover:text-primary transition-colors">
-                      {article.title}
-                    </h2>
-                    <p class="text-neutral-600 dark:text-neutral-400 text-base leading-relaxed line-clamp-3">
-                      {article.description}
-                    </p>
-                    {article.author && (
-                      <div class="mt-4 pt-4 border-t border-neutral-100 dark:border-neutral-700 flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                          <img
-                            alt="Author"
-                            class="size-8 rounded-full border-2 border-white shadow-sm"
-                            src={article.authorImg}
-                          />
-                          <span class="text-xs font-bold text-neutral-700 dark:text-neutral-300">
-                            {article.author}
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                    <div class="mt-4 w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-primary/20 text-center">
-                      {article.cta || 'Leer Artículo'}
-                    </div>
-                  </div>
-                </article>
-              </a>
-            )}
-          </>
-        ))
-      }
-    </div>
-    <div class="mt-8 flex justify-center pb-8">
-      <button
-        class="group flex items-center gap-3 rounded-full border-2 border-primary bg-transparent px-8 py-3 text-sm font-bold uppercase tracking-widest text-primary transition-all hover:bg-primary hover:text-white hover:shadow-lg hover:shadow-primary/30"
-      >
-        Cargar Más Artículos
-        <span
-          class="material-symbols-outlined transition-transform duration-300 group-hover:translate-y-1"
-          >expand_more</span
-        >
-      </button>
-    </div>
-  </section>
+<Layout
+  title="Blog | Iglesia Bautista El Ancla"
+  description="Reflexiones, estudios bíblicos y crónicas de la vida de Iglesia Bautista El Ancla."
+  isBlog={true}
+>
+  <BlogPageTemplate
+    articles={blogArticles}
+    categories={blogCategories}
+    featured={featuredArticle}
+    marqueeItems={blogMarqueeItems}
+    series={blogSeries}
+    popular={blogPopularItems}
+    tags={blogTags}
+    archive={blogArchive}
+  />
 </Layout>
+
+<script>
+  import { initBlog } from 'src/scripts/blog';
+
+  initBlog();
+</script>

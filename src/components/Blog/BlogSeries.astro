@@ -1,0 +1,89 @@
+---
+import type { BlogSeriesItem } from 'src/data/blog';
+
+interface Props {
+  series: BlogSeriesItem[];
+}
+
+const { series } = Astro.props;
+---
+
+<section class="invert-block relative py-24 md:py-32">
+  <div class="mx-auto max-w-[1600px] px-6 md:px-10">
+    <div class="mb-14 flex items-baseline gap-6 md:mb-16">
+      <span class="section-counter text-paper/50">[ 04 - Serie en curso ]</span>
+      <span class="h-px flex-1 bg-paper/15"></span>
+      <span class="content-chip text-primary">5 entregas</span>
+    </div>
+
+    <div class="mb-12 grid grid-cols-1 gap-10 md:mb-16 lg:grid-cols-12 lg:gap-16">
+      <div class="reveal lg:col-span-7">
+        <div class="mb-4 font-mono text-[11px] uppercase tracking-[0.2em] opacity-60">
+          Hebreos · estudio expositivo
+        </div>
+        <h2 class="font-display text-4xl leading-none md:text-5xl lg:text-6xl">
+          Una <em class="italic text-primary">esperanza mejor.</em>
+        </h2>
+      </div>
+      <div class="reveal reveal-delay-2 flex items-end lg:col-span-5">
+        <p class="font-ui text-[15px] leading-relaxed opacity-75 md:text-[16px]">
+          Atravesamos la carta a los Hebreos en cinco entregas dominicales.
+          Cada artículo acompaña al sermón con notas, citas y preguntas para
+          reflexionar en familia.
+        </p>
+      </div>
+    </div>
+
+    <div class="border-t border-paper/15">
+      {
+        series.map((item) => (
+          <a
+            href={item.href}
+            class="blog-serie-row group grid items-center gap-5 border-b border-paper/15 px-1 py-7 transition-colors hover:bg-white/[0.03] md:py-8"
+          >
+            <div
+              class:list={[
+                'font-display text-3xl italic md:text-5xl',
+                item.status === 'current' ? 'text-primary' : 'opacity-50',
+              ]}
+            >
+              {item.number}
+            </div>
+            <div>
+              <div
+                class:list={[
+                  'font-display text-xl md:text-2xl',
+                  item.status === 'published' && 'opacity-70',
+                ]}
+              >
+                {item.title}
+              </div>
+              <div class="mt-1.5 font-mono text-[11px] uppercase tracking-[0.18em] opacity-60">
+                {item.reference} · {item.date} · {item.readTime}
+              </div>
+            </div>
+            <div class="hidden md:block">
+              {
+                item.status === 'current' ? (
+                  <span class="content-chip inline-flex items-center gap-2 rounded-full border border-primary px-2.5 py-1 text-primary">
+                    <span class="live-dot h-1.5 w-1.5 rounded-full bg-primary"></span>
+                    Ahora
+                  </span>
+                ) : (
+                  <span class="content-chip rounded-full border border-white/20 px-2.5 py-1 opacity-50">
+                    {item.status === 'published' ? 'Publicado' : 'Próximo'}
+                  </span>
+                )
+              }
+            </div>
+            <div class="opacity-60 transition-opacity group-hover:opacity-100">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+              </svg>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>

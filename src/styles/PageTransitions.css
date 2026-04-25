@@ -1,0 +1,123 @@
+/* ============================================================
+   PageTransitions.css — suave transición entre rutas internas
+   ============================================================ */
+
+@keyframes pageContentOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.996);
+    filter: blur(2px);
+  }
+}
+
+@keyframes pageContentIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.996);
+    filter: blur(3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes pageContentBackOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.996);
+    filter: blur(2px);
+  }
+}
+
+@keyframes pageContentBackIn {
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.996);
+    filter: blur(3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+#siteHeader {
+  view-transition-name: site-header;
+}
+
+main {
+  view-transition-name: page-content;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
+  animation-duration: 180ms;
+  animation-timing-function: var(--motion-ease-standard);
+}
+
+::view-transition-old(page-content) {
+  animation: pageContentOut 220ms var(--motion-ease-standard) both;
+}
+
+::view-transition-new(page-content) {
+  animation: pageContentIn 420ms var(--motion-ease-emphasized) 80ms both;
+}
+
+html[data-astro-transition="back"]::view-transition-old(page-content) {
+  animation-name: pageContentBackOut;
+}
+
+html[data-astro-transition="back"]::view-transition-new(page-content) {
+  animation-name: pageContentBackIn;
+}
+
+html[data-astro-transition-fallback="old"] main {
+  animation: pageContentOut 220ms var(--motion-ease-standard) both;
+}
+
+html[data-astro-transition-fallback="new"] main {
+  animation: pageContentIn 420ms var(--motion-ease-emphasized) 80ms both;
+}
+
+html[data-astro-transition="back"][data-astro-transition-fallback="old"] main {
+  animation-name: pageContentBackOut;
+}
+
+html[data-astro-transition="back"][data-astro-transition-fallback="new"] main {
+  animation-name: pageContentBackIn;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #siteHeader,
+  main {
+    view-transition-name: none;
+  }
+
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  html[data-astro-transition-fallback] main {
+    animation: none !important;
+  }
+}

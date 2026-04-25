@@ -1,0 +1,55 @@
+---
+import type {
+  BlogArchiveItem,
+  BlogArticle,
+  BlogCategory,
+  BlogPopularItem,
+  BlogSeriesItem,
+} from 'src/data/blog';
+import BlogArticleGrid from './BlogArticleGrid.astro';
+import BlogCategories from './BlogCategories.astro';
+import BlogExplore from './BlogExplore.astro';
+import BlogFeatured from './BlogFeatured.astro';
+import BlogHero from './BlogHero.astro';
+import BlogMarquee from './BlogMarquee.astro';
+import BlogNewsletter from './BlogNewsletter.astro';
+import BlogSeries from './BlogSeries.astro';
+
+interface Props {
+  articles: BlogArticle[];
+  categories: BlogCategory[];
+  featured: BlogArticle;
+  marqueeItems: string[];
+  series: BlogSeriesItem[];
+  popular: BlogPopularItem[];
+  tags: string[];
+  archive: BlogArchiveItem[];
+}
+
+const {
+  articles,
+  categories,
+  featured,
+  marqueeItems,
+  series,
+  popular,
+  tags,
+  archive,
+} = Astro.props;
+---
+
+<article class="blog-page">
+  <BlogHero totalArticles={142} categoryCount={categories.length - 1} />
+  <BlogMarquee items={marqueeItems} />
+  <BlogFeatured article={featured} />
+  <BlogCategories categories={categories} />
+  <BlogArticleGrid articles={articles} categories={categories} />
+  <BlogSeries series={series} />
+  <BlogExplore
+    popular={popular}
+    tags={tags}
+    archive={archive}
+    author={featured.author}
+  />
+  <BlogNewsletter />
+</article>

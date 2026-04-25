@@ -10,6 +10,16 @@ const styles = {
   colLeft: cn('lg:col-span-7 reveal'),
   headline: cn('font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-tight'),
   lead: cn('mt-8 font-ui text-[16px] md:text-[19px] leading-relaxed text-ink/75 max-w-2xl'),
+  ctaRow: cn('mt-8 flex flex-col gap-3 sm:flex-row sm:items-center'),
+  ctaPrimary: cn(
+    'cta-btn btn-primary inline-flex items-center justify-center gap-3',
+    'rounded-full bg-primary px-6 py-3.5 font-ui text-[12px] font-semibold uppercase tracking-wide text-white'
+  ),
+  ctaSecondary: cn(
+    'inline-flex items-center justify-center gap-3 rounded-full border border-ink/15',
+    'px-6 py-3.5 font-ui text-[12px] font-semibold uppercase tracking-wide text-ink',
+    'transition-colors hover:border-ink hover:bg-ink hover:text-paper'
+  ),
   pillarsGrid: cn('mt-12 grid grid-cols-1 sm:grid-cols-3 gap-0 border-t border-ink/10'),
   pillarOne: cn('py-6 sm:pr-6 border-b sm:border-b-0 sm:border-r border-ink/10 reveal reveal-delay-1'),
   pillarTwo: cn('py-6 sm:px-6 border-b sm:border-b-0 sm:border-r border-ink/10 reveal reveal-delay-2'),
@@ -66,6 +76,21 @@ const pillars = [
           panorama de quiénes somos y lo que creemos. Eres bienvenido a
           visitarnos cuando quieras.
         </p>
+
+        <div class={styles.ctaRow}>
+          <a href="/nosotros#historia" class={styles.ctaPrimary}>
+            Nuestra historia
+            <svg class="cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+          </a>
+          <a href="/nosotros#valores" class={styles.ctaSecondary}>
+            Lo que creemos
+            <svg class="arrow-ico" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            </svg>
+          </a>
+        </div>
 
         <!-- pilares -->
         <div class={styles.pillarsGrid}>

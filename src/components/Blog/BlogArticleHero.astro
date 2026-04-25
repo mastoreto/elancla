@@ -1,0 +1,116 @@
+---
+import type { BlogArticle } from 'src/data/blog';
+
+interface Props {
+  article: BlogArticle;
+}
+
+const { article } = Astro.props;
+const [firstTitlePart, ...restTitleParts] = article.title.split(': ');
+const titleLines =
+  article.slug === 'el-ancla-del-alma-una-esperanza-que-no-averguenza'
+    ? ['El ancla del alma:', 'una esperanza', 'que no avergüenza.']
+    : restTitleParts.length > 0
+    ? [firstTitlePart + ':', restTitleParts.join(': ')]
+    : [article.title];
+---
+
+<section class="blog-article-hero grain relative overflow-hidden pb-12 pt-32">
+  <div class="grid-bg absolute inset-0 opacity-50"></div>
+
+  <div class="relative mx-auto max-w-[1280px] px-6 md:px-10">
+    <div
+      class="mb-10 flex items-center gap-3 font-ui text-[11px] uppercase tracking-[0.2em] text-ink/60"
+    >
+      <span class="h-px w-8 bg-ink/40"></span>
+      <a href="/" class="ulink">El Ancla</a>
+      <span class="opacity-50">/</span>
+      <a href="/blog" class="ulink">Blog</a>
+      <span class="opacity-50">/</span>
+      <span>{article.category}</span>
+    </div>
+
+    <div class="reveal in mb-8 flex flex-wrap items-center gap-3">
+      <span class="content-chip text-primary">{article.category}</span>
+      <span class="h-1 w-1 rounded-full bg-ink/30"></span>
+      <span class="font-mono text-[11px] text-ink/60">{article.displayDate}</span>
+      <span class="h-1 w-1 rounded-full bg-ink/30"></span>
+      <span class="font-mono text-[11px] text-ink/60">{article.issue}</span>
+      <span class="h-1 w-1 rounded-full bg-ink/30"></span>
+      <span class="font-ui text-[11px] uppercase tracking-wider text-ink/60">
+        Lectura · {article.readTime}
+      </span>
+    </div>
+
+    <h1
+      class="blog-article-title max-w-5xl font-display text-4xl font-light leading-none text-ink sm:text-5xl md:text-6xl lg:text-7xl"
+    >
+      {
+        titleLines.map((line) => (
+          <span class="hero-line">
+            <span>
+              {line.includes('esperanza') ? (
+                <>
+                  {line.replace('esperanza', '')}
+                  <em class="italic text-primary">esperanza</em>
+                </>
+              ) : (
+                line
+              )}
+            </span>
+          </span>
+        ))
+      }
+    </h1>
+
+    <p class="mt-10 max-w-3xl font-ui text-[18px] leading-relaxed text-ink/75 md:text-[20px]">
+      {article.description}
+    </p>
+
+    <div class="mt-14 flex flex-col gap-8 border-t border-ink/10 pt-8 md:flex-row md:items-end md:justify-between">
+      <div class="flex items-center gap-5">
+        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-ink/10 font-display text-xl italic">
+          {article.author.initials}
+        </div>
+        <div>
+          <div class="font-ui text-[10px] uppercase tracking-[0.22em] text-ink/50">Por</div>
+          <div class="font-display text-[1.3rem] leading-tight">{article.author.name}</div>
+          <div class="mt-0.5 font-ui text-[12px] text-ink/55">{article.author.role}</div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          data-copy-link
+          class="inline-flex items-center gap-2 rounded-full border border-ink/15 px-4 py-2.5 font-ui text-[12px] font-semibold uppercase tracking-wide transition-colors hover:bg-ink hover:text-paper"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7"></path>
+          </svg>
+          <span data-copy-label>Compartir</span>
+        </button>
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 rounded-full border border-ink/15 px-4 py-2.5 font-ui text-[12px] font-semibold uppercase tracking-wide transition-colors hover:bg-ink hover:text-paper"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
+          </svg>
+          Guardar
+        </button>
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 rounded-full border border-ink/15 px-4 py-2.5 font-ui text-[12px] font-semibold uppercase tracking-wide transition-colors hover:bg-ink hover:text-paper"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect width="12" height="8" x="6" y="14"></rect>
+          </svg>
+          Imprimir
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,81 @@
+---
+import type { BlogArticle } from 'src/data/blog';
+import { getBlogArticlePath } from 'src/data/blog';
+
+interface Props {
+  article: BlogArticle;
+  wide?: boolean;
+}
+
+const { article, wide = false } = Astro.props;
+const href = getBlogArticlePath(article);
+const glyph =
+  article.coverGlyph.length <= 3
+    ? article.coverGlyph
+    : article.title
+        .split(' ')
+        .slice(0, 2)
+        .map((word) => word[0])
+        .join('')
+        .toUpperCase();
+---
+
+<article
+  class:list={['blog-article-card group flex flex-col', wide && 'lg:col-span-2']}
+  data-blog-article-card
+  data-blog-filter={article.filter}
+>
+  <a href={href} class="block no-underline">
+    <div
+      class:list={[
+        'content-placeholder-img blog-card-art overflow-hidden',
+        wide ? 'blog-ratio-wide' : 'blog-ratio-landscape',
+      ]}
+      style={`--placeholder-tint: ${article.tint}; --blog-card-accent: ${article.accent};`}
+    >
+      <div class="blog-card-glyph" aria-hidden="true">{glyph}</div>
+      <span
+        class="content-chip absolute top-3 left-3 rounded-full bg-white/85 px-2.5 py-1 text-ink backdrop-blur-sm"
+      >
+        {article.category}
+      </span>
+    </div>
+  </a>
+
+  <div
+    class="mt-5 flex items-center gap-3 font-ui text-[11px] uppercase tracking-wider text-ink/50"
+  >
+    <span class="font-mono">{article.displayDate}</span>
+    <span class="h-1 w-1 rounded-full bg-ink/30"></span>
+    <span>{article.readTime}</span>
+  </div>
+
+  <h3
+    class:list={[
+      'mt-3 font-display leading-[1.08] text-ink transition-colors group-hover:text-primary',
+      wide ? 'text-3xl md:text-4xl' : 'text-2xl md:text-[1.7rem]',
+    ]}
+  >
+    <a href={href} class="ulink">{article.title}</a>
+  </h3>
+
+  <p
+    class:list={[
+      'mt-3 font-ui text-[14.5px] leading-relaxed text-ink/70',
+      wide && 'max-w-2xl',
+    ]}
+  >
+    {article.excerpt}
+  </p>
+
+  <div class="mt-5 flex items-center gap-3">
+    <div
+      class="flex h-8 w-8 items-center justify-center rounded-full bg-ink/10 font-display text-[12px] italic"
+    >
+      {article.author.initials}
+    </div>
+    <span class="font-ui text-[12.5px] text-ink/70">
+      {article.author.name}
+    </span>
+  </div>
+</article>

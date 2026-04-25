@@ -1,0 +1,92 @@
+---
+import type { ContentHero } from 'src/data/contentPages';
+import InlineText from './InlineText.astro';
+
+interface Props {
+  hero: ContentHero;
+}
+
+const { hero } = Astro.props;
+---
+
+<section class="content-hero relative pt-32 pb-12 overflow-hidden grain">
+  <div class="absolute inset-0 grid-bg opacity-50"></div>
+
+  <svg
+    aria-hidden="true"
+    class="absolute top-[15%] right-[-10%] w-[55vw] h-[55vw] opacity-[0.05] pointer-events-none"
+    viewBox="0 0 200 200"
+  >
+    <circle cx="100" cy="100" r="100" fill="none" stroke="#141414" stroke-width="0.4" />
+    <circle cx="100" cy="100" r="70" fill="none" stroke="#141414" stroke-width="0.4" />
+    <circle cx="100" cy="100" r="40" fill="none" stroke="#141414" stroke-width="0.4" />
+  </svg>
+
+  <div class="relative mx-auto max-w-[1600px] px-6 md:px-10">
+    <div class="flex items-center gap-3 font-ui text-[11px] tracking-[0.2em] uppercase text-ink/60 mb-10">
+      <span class="w-8 h-px bg-ink/40"></span>
+      {
+        hero.breadcrumbs.map((crumb, index) => (
+          <>
+            {crumb.href ? (
+              <a href={crumb.href} class="ulink">
+                {crumb.label}
+              </a>
+            ) : (
+              <span>{crumb.label}</span>
+            )}
+            {index < hero.breadcrumbs.length - 1 && <span class="opacity-50">/</span>}
+          </>
+        ))
+      }
+    </div>
+
+    <div class="flex flex-wrap items-center gap-3 mb-8">
+      {hero.chip && <span class="content-chip text-primary">{hero.chip}</span>}
+      {
+        hero.meta.map((item) => (
+          <>
+            <span class="w-1 h-1 rounded-full bg-ink/30"></span>
+            <span class="font-ui text-[11px] tracking-wider uppercase text-ink/60">{item}</span>
+          </>
+        ))
+      }
+    </div>
+
+    <h1 class="font-display text-[clamp(2.5rem,8vw,7.5rem)] leading-[0.92] tracking-[-0.035em] max-w-6xl font-light">
+      {
+        hero.titleLines.map((line) => (
+          <span class="hero-line">
+            <span>
+              <InlineText value={line} />
+            </span>
+          </span>
+        ))
+      }
+    </h1>
+
+    <div class="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-10 items-end pt-10 border-t border-ink/10">
+      <div class={hero.stats?.length ? 'lg:col-span-7' : 'lg:col-span-9'}>
+        <p class="font-ui text-[18px] md:text-[20px] leading-relaxed text-ink/75 max-w-3xl">
+          {hero.standfirst}
+        </p>
+      </div>
+      {
+        hero.stats?.length && (
+          <div class="lg:col-span-5 lg:border-l lg:pl-10 border-ink/10">
+            <div class="grid grid-cols-3 gap-4">
+              {hero.stats.map((stat) => (
+                <div>
+                  <div class="font-display text-3xl md:text-4xl tracking-tight">{stat.value}</div>
+                  <div class="font-ui text-[10px] tracking-[0.2em] uppercase text-ink/50 mt-1">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

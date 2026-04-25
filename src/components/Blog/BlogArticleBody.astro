@@ -1,0 +1,195 @@
+---
+import type { BlogArticle, BlogArticleBodyBlock } from 'src/data/blog';
+
+interface Props {
+  article: BlogArticle;
+}
+
+const { article } = Astro.props;
+
+const figureRatio = (block: Extract<BlogArticleBodyBlock, { type: 'figure' }>) => {
+  if (block.aspect === 'wide') return 'blog-ratio-wide';
+  if (block.aspect === 'square') return 'aspect-square';
+  return 'blog-ratio-landscape';
+};
+---
+
+<article class="blog-article-body">
+  {
+    article.body.map((block) => (
+      <>
+        {block.type === 'paragraph' && (
+          <p class:list={[block.dropCap && 'blog-drop-cap']} set:html={block.html} />
+        )}
+
+        {block.type === 'heading' && block.level === 2 && (
+          <h2 id={block.id}>
+            {block.eyebrow && <span class="blog-heading-num">{block.eyebrow}</span>}
+            {block.text}
+          </h2>
+        )}
+
+        {block.type === 'heading' && block.level === 3 && <h3>{block.text}</h3>}
+
+        {block.type === 'verse' && (
+          <blockquote class="content-verse">
+            <span class="ref">{block.reference}</span>
+            <p>{block.text}</p>
+          </blockquote>
+        )}
+
+        {block.type === 'figure' && (
+          <figure class="blog-figure">
+            <div class="frame">
+              <div
+                class:list={['content-placeholder-img', figureRatio(block)]}
+                style={block.tint ? `--placeholder-tint: ${block.tint};` : undefined}
+              >
+                <span class="glyph">{block.glyph}</span>
+              </div>
+            </div>
+            <figcaption>
+              <span class="content-figure-label">{block.label}</span>
+              <span>{block.caption}</span>
+            </figcaption>
+          </figure>
+        )}
+
+        {block.type === 'pullquote' && (
+          <blockquote class="content-pullquote">
+            {block.quote}
+            {block.cite && <cite>{block.cite}</cite>}
+          </blockquote>
+        )}
+
+        {block.type === 'list' && !block.ordered && (
+          <ul>{block.items.map((item) => <li set:html={item} />)}</ul>
+        )}
+
+        {block.type === 'list' && block.ordered && (
+          <ol>{block.items.map((item) => <li set:html={item} />)}</ol>
+        )}
+
+        {block.type === 'video' && (
+          <>
+            <div class="blog-video-frame group mt-2">
+              <div class="blog-video-stripes"></div>
+              <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <div class="font-display text-7xl font-light italic text-white/15 md:text-8xl">
+                  "sermón"
+                </div>
+              </div>
+              <div class="play">
+                <div class="circle">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+                    <path d="M8 5v14l11-7z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="meta">
+                <div class="flex flex-col gap-1">
+                  <span class="content-chip text-primary">{block.eyebrow}</span>
+                  <span class="font-display text-xl md:text-2xl">{block.title}</span>
+                </div>
+                <div class="hidden flex-col items-end gap-1 md:flex">
+                  <span class="font-mono text-[10px] uppercase tracking-[0.2em] opacity-70">
+                    {block.meta}
+                  </span>
+                  <span class="font-mono text-[12px] tabular-nums">{block.duration}</span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 flex items-baseline gap-4 font-ui text-[12px] text-ink/55">
+              <span class="content-figure-label">[ VIDEO.01 ]</span>
+              <span>{block.caption}</span>
+            </div>
+          </>
+        )}
+
+        {block.type === 'note' && (
+          <div class="content-aside-note">
+            <span class="ribbon">{block.label}</span>
+            <p set:html={block.html} />
+          </div>
+        )}
+
+        {block.type === 'links' && (
+          <div class="flex flex-col gap-4">
+            {block.links.map((link) => (
+              <a href={link.href} class="content-url-card">
+                <div class="thumb">
+                  <span>{link.glyph}</span>
+                </div>
+                <div class="body">
+                  <div>
+                    <div class="src">
+                      <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+                      {link.sourceLabel}
+                    </div>
+                    <div class="ttl">{link.title}</div>
+                    <div class="desc">{link.description}</div>
+                  </div>
+                  <div class="mt-3 flex items-center gap-2 font-ui text-[11px] text-ink/50">
+                    <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                      <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                    </svg>
+                    {link.meta}
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+
+        {block.type === 'divider' && (
+          <div class="blog-divider"><span></span><span class="star">+</span><span></span></div>
+        )}
+
+        {block.type === 'tags' && (
+          <div class="mt-16 border-t border-ink/10 pt-10">
+            <div class="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/45">
+              [ Etiquetas ]
+            </div>
+            <div class="flex flex-wrap gap-2">
+              {block.tags.map((tag) => (
+                <a
+                  href="/blog"
+                  class="content-chip no-style rounded-full border border-ink/15 px-3 py-1.5 transition-colors hover:bg-ink hover:text-paper"
+                >
+                  {tag}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {block.type === 'reactions' && (
+          <div class="mt-12 border-t border-ink/10 pt-10">
+            <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+              <div>
+                <div class="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-ink/45">
+                  [ ¿Te llegó? ]
+                </div>
+                <div class="font-display text-2xl">{block.prompt}</div>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                {block.reactions.map((reaction) => (
+                  <button
+                    type="button"
+                    class="blog-react-pill"
+                    data-blog-reaction
+                    data-active="false"
+                  >
+                    <span class="icn">{reaction.icon}</span>
+                    {reaction.label}
+                    <span class="ct blog-react-count">{reaction.count}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    ))
+  }
+</article>
