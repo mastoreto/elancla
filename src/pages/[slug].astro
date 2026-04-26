@@ -5,16 +5,32 @@ import Layout from 'src/layouts/Layout.astro';
 
 interface Props {
   page: ContentPage;
+  isAlias?: boolean;
 }
 
 export function getStaticPaths() {
   return getContentPageStaticPaths('root');
 }
 
-const { page } = Astro.props;
+const { page, isAlias = false } = Astro.props;
+
+const canonicalPath = `/${page.slug}`;
+const canonical = new URL(canonicalPath, Astro.site).toString();
+const breadcrumbs = [
+  { name: 'Inicio', url: '/' },
+  { name: page.title, url: canonicalPath },
+];
 ---
 
-<Layout title={page.seoTitle ?? page.title} description={page.description}>
+<Layout
+  title={page.seoTitle ?? page.title}
+  description={page.description}
+  breadcrumbs={breadcrumbs}
+  image={page.featuredImage?.src}
+  imageAlt={page.featuredImage?.alt}
+  canonical={canonical}
+  noindex={isAlias}
+>
   <ContentPageTemplate page={page} />
 </Layout>
 
