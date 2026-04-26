@@ -2,4 +2,15 @@
 import Layout from 'src/layouts/Layout.astro';
 ---
 
-<Layout title="Sobre Nosotros"> Sobre nosotros </Layout>
+<Layout
+  title="Sobre Nosotros"
+  description="Conocé a la familia pastoral y al equipo de servicio de Iglesia Bautista El Ancla en Montevideo."
+  noindex={true}
+  breadcrumbs={[
+    { name: 'Inicio', url: '/' },
+    { name: 'Ministerios', url: '/#ministerios' },
+    { name: 'Sobre Nosotros', url: '/ministerios/sobre-nosotros' },
+  ]}
+>
+  Sobre nosotros
+</Layout>

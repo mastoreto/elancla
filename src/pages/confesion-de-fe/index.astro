@@ -12,7 +12,21 @@ import 'src/styles/ConfesionDeFe.css';
 const total = String(doctrines.length).padStart(2, '0');
 ---
 
-<Layout title="Confesión de fe">
+<Layout
+  title="Confesión de fe"
+  description="Confesión de fe de Iglesia Bautista El Ancla: doce artículos doctrinales y los cinco solas de la Reforma que guían nuestra vida y enseñanza."
+  keywords={[
+    'confesión de fe',
+    'doctrina bautista',
+    'cinco solas',
+    'reforma protestante',
+    'Iglesia Bautista El Ancla',
+  ]}
+  breadcrumbs={[
+    { name: 'Inicio', url: '/' },
+    { name: 'Confesión de fe', url: '/confesion-de-fe' },
+  ]}
+>
   <ConfesionHero />
   <ConfesionMarquee solas={solas} />
   <ConfesionQuote />

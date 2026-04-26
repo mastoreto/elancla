@@ -621,10 +621,11 @@ export function getContentPagesByRouteGroup(routeGroup: ContentPageRouteGroup): 
 }
 
 export function getContentPageStaticPaths(routeGroup: ContentPageRouteGroup) {
-  return getContentPagesByRouteGroup(routeGroup).flatMap((page) =>
-    [page.slug, ...(page.aliases ?? [])].map((slug) => ({
+  return getContentPagesByRouteGroup(routeGroup).flatMap((page) => {
+    const slugs = [page.slug, ...(page.aliases ?? [])];
+    return slugs.map((slug) => ({
       params: { slug },
-      props: { page },
-    }))
-  );
+      props: { page, isAlias: slug !== page.slug },
+    }));
+  });
 }

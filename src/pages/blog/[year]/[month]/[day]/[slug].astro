@@ -27,12 +27,28 @@ export function getStaticPaths() {
 const { article } = Astro.props;
 const related = getRelatedArticles(article);
 const { previous, next } = getPreviousNextArticles(article);
+
+const articleUrl = `/blog/${article.year}/${article.month}/${article.day}/${article.slug}`;
+const breadcrumbs = [
+  { name: 'Inicio', url: '/' },
+  { name: 'Blog', url: '/blog' },
+  { name: article.title, url: articleUrl },
+];
 ---
 
 <Layout
-  title={article.seoTitle ?? `${article.title} | Blog El Ancla`}
+  title={article.seoTitle ?? article.title}
   description={article.description}
   isBlog={true}
+  pageType="article"
+  breadcrumbs={breadcrumbs}
+  keywords={article.tags}
+  article={{
+    publishedAt: article.publishedAt,
+    authorName: article.author.name,
+    section: article.category,
+    tags: article.tags,
+  }}
 >
   <BlogArticleTemplate
     article={article}
