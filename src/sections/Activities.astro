@@ -1,6 +1,12 @@
 ---
 import cn from '../utils/cn.ts';
 
+interface Props {
+  copy: any;
+}
+
+const { copy } = Astro.props;
+
 const styles = {
   section: cn('relative py-24 md:py-36 bg-white'),
   container: cn('mx-auto max-w-[1600px] px-6 md:px-10'),
@@ -31,13 +37,6 @@ const styles = {
   ),
 };
 
-const activities = [
-  { num: '01', title: 'Culto de celebración', tag: 'Presencial · Online', day: 'Domingos',    time: '11:15 hs' },
-  { num: '02', title: 'Escuela bíblica',       tag: 'Adultos · Niños',   day: 'Domingos',    time: '10:00 hs' },
-  { num: '03', title: 'Reunión de oración',    tag: '1° y 3° miércoles', day: 'Miércoles',   time: '19:00 hs' },
-  { num: '04', title: 'Grupos de crecimiento', tag: 'En hogares',         day: 'Varios días', time: 'Consultar' },
-];
-
 const arrowSvg = `<svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
 ---
 
@@ -45,7 +44,7 @@ const arrowSvg = `<svg width="14" height="14" viewBox="0 0 12 12" fill="none"><p
 <section id="actividades" class={styles.section}>
   <div class={styles.container}>
     <div class={styles.sectionHeader}>
-      <span class="section-counter">[ 02 — Actividades ]</span>
+      <span class="section-counter">{copy.counter}</span>
       <span class={styles.headerLine}></span>
     </div>
 
@@ -53,15 +52,13 @@ const arrowSvg = `<svg width="14" height="14" viewBox="0 0 12 12" fill="none"><p
       <!-- sticky intro -->
       <div class={styles.sticky}>
         <h2 class={styles.headline}>
-          La fe <em class="italic text-primary">en acción</em>, cada semana.
+          {copy.headline.before}<em class="italic text-primary">{copy.headline.emphasis}</em>{copy.headline.after}
         </h2>
         <p class={styles.lead}>
-          Una iglesia viva es una iglesia activa que se edifica y sirve a
-          su comunidad. A través de obras de amor y encuentros concretos,
-          traducimos la fe en pasos reales.
+          {copy.lead}
         </p>
         <a href="#" class={styles.calLink}>
-          Ver calendario completo
+          {copy.calendarCta}
           <svg class="arrow-ico" width="14" height="14" viewBox="0 0 12 12" fill="none">
             <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
@@ -70,7 +67,7 @@ const arrowSvg = `<svg width="14" height="14" viewBox="0 0 12 12" fill="none"><p
 
       <!-- lista de actividades -->
       <div class={styles.list}>
-        {activities.map((a, i) => (
+        {copy.items.map((a: any, i: number) => (
           <div class={`${styles.row}${i > 0 ? ` reveal-delay-${i}` : ''}`}>
             <div class={styles.rowNum}>{a.num}</div>
             <div class={styles.rowInfo}>

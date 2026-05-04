@@ -1,13 +1,14 @@
 ---
 import type { BlogArticle } from 'src/data/blog';
-import { blogNewsletter } from 'src/data/blog';
 
 interface Props {
   compact?: boolean;
   article?: BlogArticle;
+  copy: any;
 }
 
-const { compact = false, article } = Astro.props;
+const { compact = false, article, copy } = Astro.props;
+const compactBody = article ? copy.compactBody.replace('{title}', article.title) : '';
 ---
 
 <section
@@ -23,7 +24,7 @@ const { compact = false, article } = Astro.props;
     {
       !compact && (
         <div class="mb-14 flex items-baseline gap-6 md:mb-20">
-          <span class="section-counter">[ 06 - Newsletter ]</span>
+          <span class="section-counter">{copy.counter}</span>
           <span class="h-px flex-1 bg-ink/15"></span>
         </div>
       )
@@ -37,7 +38,7 @@ const { compact = false, article } = Astro.props;
     >
       <div class:list={[compact ? 'lg:col-span-7' : 'reveal lg:col-span-7']}>
         <div class="mb-4 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/50">
-          {compact ? 'Cada martes · 7 min' : blogNewsletter.eyebrow}
+          {copy.eyebrow}
         </div>
         <h2
           class:list={[
@@ -48,13 +49,13 @@ const { compact = false, article } = Astro.props;
           {
             compact ? (
               <>
-                ¿Te gustó? <em class="italic text-primary">Recibilos cada martes.</em>
+                {copy.compactHeadlineBefore}<em class="italic text-primary">{copy.compactHeadlineEmphasis}</em>
               </>
             ) : (
               <>
-                <em class="italic text-primary">Carta semanal</em>
+                <em class="italic text-primary">{copy.headlineEmphasis}</em>
                 <br />
-                al correo, sin ruido.
+                {copy.headlineRest}
               </>
             )
           }
@@ -62,14 +63,14 @@ const { compact = false, article } = Astro.props;
         {
           !compact && (
             <p class="mt-8 max-w-2xl font-ui text-[16px] leading-relaxed text-ink/75 md:text-[18px]">
-              {blogNewsletter.description}
+              {copy.description}
             </p>
           )
         }
         {
           compact && article && (
             <p class="mt-5 max-w-xl font-ui text-[15px] leading-relaxed text-ink/70">
-              Nuevos artículos como "{article.title}" directo en tu correo.
+              {compactBody}
             </p>
           )
         }
@@ -86,21 +87,21 @@ const { compact = false, article } = Astro.props;
             !compact && (
               <div class="flex flex-col gap-2">
                 <label class="font-ui text-[10px] uppercase tracking-[0.25em] text-ink/50">
-                  Nombre
+                  {copy.name}
                 </label>
                 <input
                   type="text"
-                  placeholder="Tu nombre"
+                  placeholder={copy.namePlaceholder}
                   class="blog-search-input border-0 border-b border-ink/30 bg-transparent py-3 font-ui text-[16px] placeholder:text-ink/30 focus:ring-0"
                 />
               </div>
             )
           }
           <div class:list={[compact ? 'min-w-0 flex-1' : 'flex flex-col gap-2']}>
-            {!compact && <label class="font-ui text-[10px] uppercase tracking-[0.25em] text-ink/50">Correo</label>}
+            {!compact && <label class="font-ui text-[10px] uppercase tracking-[0.25em] text-ink/50">{copy.email}</label>}
             <input
               type="email"
-              placeholder="tu@correo.com"
+              placeholder={copy.emailPlaceholder}
               class:list={[
                 'blog-search-input w-full border-0 bg-transparent font-ui text-[16px] placeholder:text-ink/30 focus:ring-0',
                 !compact && 'border-b border-ink/30 py-3',
@@ -108,12 +109,12 @@ const { compact = false, article } = Astro.props;
             />
           </div>
           <div class:list={[compact ? 'flex-shrink-0' : 'mt-4 flex items-center justify-between']}>
-            {!compact && <span class="font-ui text-[12px] text-ink/50">{blogNewsletter.readers}</span>}
+            {!compact && <span class="font-ui text-[12px] text-ink/50">{copy.readers}</span>}
             <button
               type="submit"
               class="cta-btn btn-primary inline-flex items-center gap-3 rounded-full bg-primary px-5 py-2.5 font-ui text-[12px] font-semibold uppercase tracking-wide text-white md:px-7 md:py-4"
             >
-              <span data-newsletter-label>Suscribirme</span>
+              <span data-newsletter-label>{copy.submit}</span>
               <svg class="cta-arrow" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                 <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
               </svg>

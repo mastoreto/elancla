@@ -1,6 +1,8 @@
 ---
 import ContentPageTemplate from 'src/components/ContentPage/ContentPageTemplate.astro';
 import { getContentPageStaticPaths, type ContentPage } from 'src/data/contentPages';
+import { defaultLocale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout.astro';
 
 interface Props {
@@ -9,18 +11,18 @@ interface Props {
 }
 
 export function getStaticPaths() {
-  return getContentPageStaticPaths('ministerios');
+  return getContentPageStaticPaths('ministerios', defaultLocale);
 }
 
 const { page, isAlias = false } = Astro.props;
+const locale = defaultLocale;
 
 const canonicalPath = `/ministerios/${page.slug}`;
-const canonical = new URL(canonicalPath, Astro.site).toString();
-const breadcrumbs = [
-  { name: 'Inicio', url: '/' },
-  { name: 'Ministerios', url: '/#ministerios' },
-  { name: page.title, url: canonicalPath },
-];
+const canonical = new URL(localizePath(canonicalPath, locale), Astro.site).toString();
+const breadcrumbs = page.hero.breadcrumbs.map((item) => ({
+  name: item.label,
+  url: item.href ?? canonicalPath,
+}));
 ---
 
 <Layout
@@ -31,6 +33,7 @@ const breadcrumbs = [
   imageAlt={page.featuredImage?.alt}
   canonical={canonical}
   noindex={isAlias}
+  locale={locale}
 >
   <ContentPageTemplate page={page} />
 </Layout>

@@ -1,0 +1,192 @@
+{
+  "nosotros": {
+    "routeGroup": "root",
+    "slug": "nosotros",
+    "title": "About us",
+    "seoTitle": "About us | El Ancla Baptist Church",
+    "description": "Learn who we are, what we believe, and how we live the faith as El Ancla Baptist Church in Montevideo.",
+    "hero": {
+      "breadcrumbs": [
+        { "label": "El Ancla", "href": "/" },
+        { "label": "About us" }
+      ],
+      "chip": "Church",
+      "meta": ["Sec. 01 / About us", "Montevideo · UY"],
+      "titleLines": [
+        { "text": "A church" },
+        { "emphasis": "anchored", "after": " in the" },
+        { "text": "gospel." }
+      ],
+      "standfirst": "Getting to know a church is a real challenge in these times. We hope the information here helps you understand who we are, what we believe, and how we have lived the faith in Montevideo since 1997.",
+      "stats": [
+        { "value": "29", "label": "Years" },
+        { "value": "10", "label": "Ministries" },
+        { "value": "∞", "label": "Grace" }
+      ]
+    },
+    "featuredImage": {
+      "src": "/images/homebanner.jpeg",
+      "alt": "Home of El Ancla Baptist Church in Montevideo",
+      "label": "[ FIG.01 ]",
+      "caption": "Church house · Av. Dr. Luis A. de Herrera 3101 corner of Juan Arrieta.",
+      "badge": "Av. L. A. de Herrera 3101",
+      "meta": "— Montevideo · UY",
+      "aspect": "wide"
+    },
+    "shortcuts": [
+      { "label": "Statement of faith", "href": "/confesion-de-fe" },
+      { "label": "Ministries", "href": "/#ministerios" },
+      { "label": "How to visit", "href": "/#visitanos" },
+      { "label": "Blog", "href": "/blog" }
+    ],
+    "sections": [
+      {
+        "id": "identidad",
+        "eyebrow": "01 — Identity",
+        "tocLabel": "Who we are",
+        "title": { "before": "Thank you for wanting to ", "emphasis": "know us." },
+        "blocks": [
+          {
+            "type": "prose",
+            "paragraphs": [
+              "We are a <strong>Baptist Christian community</strong> in the heart of Montevideo. For almost three decades we have gathered around the Word, the sacraments, and prayer. We are not a perfect church — and we do not pretend to be — but we do want to be an honest church, trying to live the gospel in ordinary life.",
+              "Our name comes from <strong>Hebrews 6:19</strong>: \"we have this hope as an anchor for the soul, firm and secure.\" That image says a lot about us: ordinary people holding on to what sustains us when circumstances move."
+            ]
+          },
+          { "type": "verse", "reference": "Hebrews 6 · 19", "text": "We have this hope as an anchor for the soul, firm and secure, entering the inner sanctuary behind the curtain." }
+        ]
+      },
+      {
+        "id": "valores",
+        "eyebrow": "02 — Confession",
+        "tocLabel": "What we believe",
+        "title": { "before": "Three convictions that ", "emphasis": "order us." },
+        "description": "A church is not defined only by what it says it believes, but by what orders its life. These are the three convictions that shape almost everything we do in practice.",
+        "blocks": [
+          {
+            "type": "values",
+            "values": [
+              { "number": "I.", "title": "Centered on Christ", "description": "The cross and resurrection are not topics among others: they are the center of our preaching, singing, and pastoral care." },
+              { "number": "II.", "title": "Faithful to the Word", "description": "The Scriptures are our final authority for doctrine and practice. That is why we preach whole texts, not isolated verses." },
+              { "number": "III.", "title": "Family of faith", "description": "We grow together in hospitality, service, and prayer. Faith is learned by walking with others, not alone." }
+            ],
+            "note": { "label": "Note · Confession", "html": "If you want to read in detail what we believe, we wrote a <a href=\"/confesion-de-fe\">Statement of Faith</a> organized in twelve articles. It is the longer and more careful version of what we summarize here in three words." }
+          }
+        ]
+      },
+      {
+        "id": "historia",
+        "eyebrow": "03 — Journey",
+        "tocLabel": "Our story",
+        "title": { "before": "Almost three decades ", "emphasis": "on the same corner." },
+        "description": "The story of El Ancla fits into one avenue and a few families who decided to stay. These milestones shaped who we are today.",
+        "blocks": [
+          {
+            "type": "timeline",
+            "items": [
+              { "year": "1997", "title": "Founding", "description": "A handful of families in a borrowed house in Cordón." },
+              { "year": "2003", "title": "Move to Herrera", "description": "The current building opens its doors at Av. de Herrera 3101." },
+              { "year": "2007", "title": "Current pastorate", "description": "Pr. Juan Olivera becomes the main pastor of the congregation." },
+              { "year": "2015", "title": "Ten ministries", "description": "The youth, women, children, and missions ministries are consolidated." },
+              { "year": "Today", "title": "2026 · 29 years", "description": "A stable, intergenerational community open to the city.", "isCurrent": true }
+            ]
+          },
+          { "type": "pullquote", "quote": "A local church is not measured by what happens on a Sunday morning, but by what sustains a thousand Mondays in a row.", "cite": "— Pr. Juan Olivera, anniversary sermon 2024" },
+          { "type": "figure", "figure": { "src": "/images/aboutus.jpg", "alt": "El Ancla Baptist Church congregation at the end of Sunday worship", "label": "[ FIG.02 ]", "caption": "The congregation at the end of Sunday worship · 2024.", "aspect": "landscape" } }
+        ]
+      },
+      {
+        "id": "equipo",
+        "eyebrow": "04 — Team",
+        "tocLabel": "Pastoral team",
+        "title": { "before": "Those who shepherd ", "emphasis": "the house." },
+        "description": "The church leadership is a plural team that shares teaching, prayer, and pastoral care for the congregation.",
+        "blocks": [
+          {
+            "type": "team",
+            "people": [
+              { "initials": "JO", "role": "Lead pastor", "name": "Pr. Juan Olivera", "bio": "Pastoring since 2007. Leads Sunday preaching and the expository series in Hebrews." },
+              { "initials": "MR", "role": "Associate pastor", "name": "Pr. Martín Recalde", "bio": "Coordinates teaching, growth groups, and discipleship for new believers.", "tint": "#e6e2d6" },
+              { "initials": "SP", "role": "Elder", "name": "Sebastián Pérez", "bio": "Supports pastoral care for men and oversees local missions.", "tint": "#ece6da" },
+              { "initials": "CV", "role": "Deaconess", "name": "Carolina Vidal", "bio": "Leads Women's Space and the congregation's hospitality and care network.", "tint": "#efe9dc" },
+              { "initials": "DA", "role": "Deacon", "name": "Diego Acosta", "bio": "Coordinates logistics, finances, and Sunday service operations.", "tint": "#e9e4d6" },
+              { "initials": "LN", "role": "Youth leader", "name": "Lucía Núñez", "bio": "Walks with teens and young adults in biblical formation for those under 25.", "tint": "#ece5d4" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "enlaces",
+        "eyebrow": "05 — Keep going",
+        "tocLabel": "Keep going",
+        "title": { "before": "If you want to ", "emphasis": "keep getting to know us." },
+        "description": "A few internal links and resources to go deeper into who we are, what we believe, and what happens during the week.",
+        "blocks": [
+          {
+            "type": "linkGrid",
+            "links": [
+              { "href": "/confesion-de-fe", "sourceLabel": "elancla.uy / confession", "title": "Statement of Faith — twelve articles", "description": "The longer detail of our doctrinal convictions about God, Scripture, the gospel, and the church.", "meta": "Read · 12 articles", "glyph": "C" },
+              { "href": "/#ministerios", "sourceLabel": "elancla.uy / ministries", "title": "Ten ministries where you can serve", "description": "Every ministry is an invitation: a place to grow, use your gifts, and serve others in the name of Christ.", "meta": "See full list", "glyph": "M", "tint": "#e6e2d4" },
+              { "href": "/blog", "sourceLabel": "elancla.uy / blog", "title": "Blog · reflections and pastoral notes", "description": "A weekly journal with sermons, guided readings, and brief notes about church life.", "meta": "Every Tuesday · 7 min", "glyph": "B", "tint": "#ece5d2" },
+              { "href": "https://youtube.com/@iglesiaelanclauy", "sourceLabel": "youtube · @iglesiaelanclauy", "title": "Sermons on video", "description": "The full archive of Sunday sermons and special events, streamed live every Sunday.", "meta": "Open channel", "glyph": "Y", "external": true, "tint": "#efe7d4" }
+            ]
+          }
+        ]
+      }
+    ],
+    "cta": {
+      "eyebrow": "[ Next step ]",
+      "title": { "before": "The best thing is to ", "emphasis": "come." },
+      "body": "Getting to know a church happens by walking into it on a Sunday morning. We are waiting for you at 11:15 AM at Av. Dr. Luis A. de Herrera 3101. No codes, no requirements.",
+      "primary": { "label": "How to get there", "href": "/#visitanos" },
+      "secondary": { "label": "See weekly times", "href": "/#actividades" }
+    }
+  },
+  "ministryTemplate": {
+    "summaries": {
+      "predicacion": "The Word faithfully taught",
+      "servicio": "Hands that care",
+      "ensenanza": "Growing in understanding",
+      "misiones": "To the ends of the earth",
+      "adolescentes": "Roots in adolescence",
+      "jovenes": "A generation for Christ",
+      "hombres": "Discipleship among men",
+      "multimedia": "Telling the story",
+      "alabanza": "Singing with understanding"
+    },
+    "fallbackSummary": "A space to grow and serve together",
+    "breadcrumbs": { "home": "El Ancla", "ministries": "Ministries" },
+    "chip": "Ministry",
+    "metaLocation": "Montevideo · UY",
+    "titleSuffixBefore": "at ",
+    "titleSuffixEmphasis": "El Ancla.",
+    "standfirst": "Every ministry is an invitation: a place to grow, use your gifts, and serve others in the name of Christ.",
+    "figureLabel": "[ MINISTRY ]",
+    "figureMeta": "— Montevideo · UY",
+    "shortcuts": { "all": "All ministries", "visit": "How to visit", "confession": "Statement of faith" },
+    "sections": {
+      "identityEyebrow": "01 — Ministry",
+      "identityToc": "About the ministry",
+      "identityTitleBefore": "{name}: ",
+      "identityDescription": "This page uses the shared editorial template so each ministry can grow with its own content without duplicating structure.",
+      "paragraphs": [
+        "The <strong>{name}</strong> ministry exists to accompany the church through a concrete form of service. Today we leave a simple, ordered base for publishing its purpose, activities, leaders, and next steps.",
+        "The intention is that every ministry page can evolve from typed data: content is added to the record and the template handles the design, index, images, links, and mobile experience."
+      ],
+      "values": [
+        { "number": "I.", "title": "Grow", "description": "Form people rooted in Christ and in the Word." },
+        { "number": "II.", "title": "Serve", "description": "Use concrete gifts to care for and build up the church." },
+        { "number": "III.", "title": "Walk with others", "description": "Walk with others in hospitality, prayer, and perseverance." }
+      ],
+      "nextEyebrow": "02 — Next step",
+      "nextToc": "Connect",
+      "nextTitleBefore": "A place to ",
+      "nextTitleEmphasis": "serve together.",
+      "links": [
+        { "href": "/#ministerios", "sourceLabel": "elancla.uy / ministries", "title": "Return to the ministry list", "description": "Explore the other spaces for service and growth in the church.", "meta": "See ministries", "glyph": "M" },
+        { "href": "/#visitanos", "sourceLabel": "elancla.uy / visit", "title": "Meet us on a Sunday", "description": "The best way to connect with a ministry is to come and talk after worship.", "meta": "Sundays · 11:15", "glyph": "V", "tint": "#e6e2d4" }
+      ]
+    },
+    "cta": { "eyebrow": "[ Connect ]", "titleBefore": "Join ", "body": "If you want to know more about this ministry, visit us on a Sunday or write through the church contact channels.", "primary": "How to get there", "secondary": "See ministries" }
+  }
+}

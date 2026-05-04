@@ -198,6 +198,34 @@
   color-scheme: light;
 }
 
+:root.dark {
+  color-scheme: dark;
+  --paper: #171614;
+  --ink: #f7f2ea;
+  --grid: rgba(247, 242, 234, 0.075);
+
+  --color-canvas: #141312;
+  --color-paper: #171614;
+  --color-canvas-muted: #201f1d;
+  --color-canvas-strong: #f7f2ea;
+  --color-surface: #1d1c1a;
+  --color-surface-muted: #242220;
+  --color-surface-strong: #f7f2ea;
+  --color-surface-inverse: #f7f2ea;
+  --color-ink: #f7f2ea;
+  --color-ink-soft: rgba(247, 242, 234, 0.78);
+  --color-ink-muted: rgba(247, 242, 234, 0.56);
+  --color-ink-inverse: #171614;
+  --color-border: rgba(247, 242, 234, 0.14);
+  --color-border-strong: rgba(247, 242, 234, 0.28);
+  --color-border-inverse: rgba(20, 19, 18, 0.18);
+  --color-accent-soft: rgba(255, 46, 52, 0.16);
+  --shadow-soft: 0 12px 34px -24px rgba(0, 0, 0, 0.72);
+  --shadow-card: 0 22px 56px -32px rgba(0, 0, 0, 0.76);
+  --shadow-elevated: 0 22px 70px -28px rgba(0, 0, 0, 0.82);
+  --shadow-outline: 0 0 0 1px rgba(247, 242, 234, 0.08);
+}
+
 html {
   scroll-behavior: smooth;
   background: var(--color-canvas);
@@ -218,8 +246,31 @@ body {
 body.dark,
 .dark body {
   color-scheme: dark;
-  background: var(--color-background-dark);
-  color: var(--color-ink-inverse);
+  background: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+:root.dark .bg-white,
+:root.dark .bg-secondary-100 {
+  background-color: var(--color-surface) !important;
+}
+
+:root.dark .text-secondary-900,
+:root.dark .text-secondary-800,
+:root.dark .text-secondary-700 {
+  color: var(--color-ink) !important;
+}
+
+:root.dark .border-white\/70 {
+  border-color: rgba(247, 242, 234, 0.14) !important;
+}
+
+:root.dark .grid-bg {
+  opacity: 0.42;
+}
+
+:root.dark .duotone {
+  filter: saturate(0.8) contrast(1.05) brightness(0.82);
 }
 
 :where(img, svg, video, canvas) {

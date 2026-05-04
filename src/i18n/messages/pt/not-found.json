@@ -1,0 +1,15 @@
+{
+  "seo": {
+    "title": "404 - Página não encontrada",
+    "description": "A página que você procura não existe ou foi movida. Volte ao início ou explore as seções da Igreja Batista El Ancla."
+  },
+  "kicker": "Erro 404",
+  "title": "Não encontramos esta página",
+  "description": "O link pode ter mudado ou talvez o endereço tenha sido digitado incorretamente. Volte ao início ou explore outras seções.",
+  "primary": "Voltar ao início",
+  "secondary": "Confissão de fé",
+  "helper": "Use o menu superior para continuar navegando.",
+  "badge": "Igreja Batista El Ancla",
+  "imageAlt": "Âncora El Ancla",
+  "tagline": "Seguimos firmes no porto."
+}

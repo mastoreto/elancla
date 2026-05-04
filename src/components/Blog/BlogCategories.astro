@@ -3,28 +3,28 @@ import type { BlogCategory } from 'src/data/blog';
 
 interface Props {
   categories: BlogCategory[];
+  copy: any;
 }
 
-const { categories } = Astro.props;
+const { categories, copy } = Astro.props;
 ---
 
 <section id="categorias" class="relative bg-white py-24 md:py-32">
   <div class="mx-auto max-w-[1600px] px-6 md:px-10">
     <div class="mb-14 flex items-baseline gap-6 md:mb-20">
-      <span class="section-counter">[ 02 - Categorías ]</span>
+      <span class="section-counter">{copy.counter}</span>
       <span class="h-px flex-1 bg-ink/15"></span>
     </div>
 
     <div class="mb-14 grid grid-cols-1 gap-10 md:mb-16 lg:grid-cols-12 lg:gap-16">
       <div class="reveal lg:col-span-6">
         <h2 class="font-display text-4xl leading-none text-ink md:text-5xl lg:text-6xl">
-          Siete áreas en las que <em class="italic text-primary">pensamos juntos.</em>
+          {copy.headlineBefore}<em class="italic text-primary">{copy.headlineEmphasis}</em>
         </h2>
       </div>
       <div class="reveal reveal-delay-2 flex items-end lg:col-span-5 lg:col-start-8">
         <p class="font-ui text-[15px] leading-relaxed text-ink/70 md:text-[16px]">
-          Organizamos el contenido por temas para que encuentres lo que buscas:
-          desde el púlpito del domingo hasta la mesa de la cocina.
+          {copy.body}
         </p>
       </div>
     </div>
@@ -76,7 +76,7 @@ const { categories } = Astro.props;
                   category.featured ? 'opacity-60' : 'text-ink/50',
                 ]}
               >
-                {category.featured ? 'Total' : 'Artículos'}
+                {category.featured ? copy.total : copy.articles}
               </span>
               <span class="font-display text-2xl">{category.count}</span>
             </div>

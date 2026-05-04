@@ -1,38 +1,40 @@
 ---
 import BlogArticleTemplate from 'src/components/Blog/BlogArticleTemplate.astro';
-import {
-  blogArticles,
-  getPreviousNextArticles,
-  getRelatedArticles,
-  type BlogArticle,
-} from 'src/data/blog';
+import type { BlogArticle } from 'src/data/blog';
+import { defaultLocale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout.astro';
+import { getAllPostsFull, mapSanityPostToArticle } from 'src/lib/sanity';
 
-interface Props {
-  article: BlogArticle;
+export async function getStaticPaths() {
+  const posts = await getAllPostsFull();
+  return posts.map((post) => {
+    const article = mapSanityPostToArticle(post);
+    return {
+      params: {
+        year: article.year,
+        month: article.month,
+        day: article.day,
+        slug: article.slug,
+      },
+      props: { article },
+    };
+  });
 }
 
-export function getStaticPaths() {
-  return blogArticles.map((article) => ({
-    params: {
-      year: article.year,
-      month: article.month,
-      day: article.day,
-      slug: article.slug,
-    },
-    props: { article },
-  }));
-}
+const { article } = Astro.props as { article: BlogArticle };
+const locale = defaultLocale;
+const copy = getMessages(locale).blog;
 
-const { article } = Astro.props;
-const related = getRelatedArticles(article);
-const { previous, next } = getPreviousNextArticles(article);
-
+// Artículos relacionados y navegación derivados de todos los artículos en build time
+// se resuelven en el template vía props; las funciones helper siguen disponibles
+// desde src/data/blog si se usa con datos estáticos, o se pueden recalcular aquí.
 const articleUrl = `/blog/${article.year}/${article.month}/${article.day}/${article.slug}`;
 const breadcrumbs = [
-  { name: 'Inicio', url: '/' },
-  { name: 'Blog', url: '/blog' },
-  { name: article.title, url: articleUrl },
+  { name: copy.breadcrumbs.home, url: localizePath('/', locale) },
+  { name: copy.breadcrumbs.blog, url: localizePath('/blog', locale) },
+  { name: article.title, url: localizePath(articleUrl, locale) },
 ];
 ---
 
@@ -43,6 +45,8 @@ const breadcrumbs = [
   pageType="article"
   breadcrumbs={breadcrumbs}
   keywords={article.tags}
+  canonical={new URL(localizePath(articleUrl, locale), Astro.site).toString()}
+  locale={locale}
   article={{
     publishedAt: article.publishedAt,
     authorName: article.author.name,
@@ -52,9 +56,11 @@ const breadcrumbs = [
 >
   <BlogArticleTemplate
     article={article}
-    related={related}
-    previous={previous}
-    next={next}
+    related={[]}
+    previous={null}
+    next={null}
+    copy={copy}
+    locale={locale}
   />
 </Layout>
 

@@ -1,0 +1,98 @@
+{
+  "seo": {
+    "title": "Blog",
+    "description": "Reflexões, estudos bíblicos, sermões e crônicas da vida da Igreja Batista El Ancla em Montevidéu.",
+    "keywords": ["blog cristão", "estudos bíblicos", "reflexões cristãs", "sermões", "Igreja Batista El Ancla"]
+  },
+  "breadcrumbs": { "home": "Início", "blog": "Blog" },
+  "hero": {
+    "edition": "Edição · MMXXVI",
+    "eyebrow": "Diário da igreja",
+    "issue": "N. 042 · ABRIL 2026",
+    "titleLines": ["Palavras", "para ancorar", "a fé na", "semana."],
+    "emphasis": "ancorar",
+    "body": "Reflexões, estudos bíblicos e crônicas da vida da igreja. O que pregamos no domingo, o que conversamos em casa e o que aprendemos no caminho.",
+    "primaryCta": "Últimos artigos",
+    "secondaryCta": "Assinar",
+    "stats": [
+      { "label": "01 · Publicados", "description": "Artigos online" },
+      { "label": "02 · Categorias", "description": "Áreas temáticas" },
+      { "label": "03 · Frequência", "value": "Semanal", "description": "Toda terça" },
+      { "label": "Agora", "value": "Série Hebreus", "description": "5 entregas em curso" }
+    ],
+    "scroll": "Ler"
+  },
+  "featured": { "counter": "[ 01 - Leitura destacada ]", "tag": "Escolha do editor", "featured": "Destaque", "reading": "Leitura", "by": "Por", "read": "Ler" },
+  "categories": {
+    "counter": "[ 02 - Categorias ]",
+    "headlineBefore": "Sete áreas em que ",
+    "headlineEmphasis": "pensamos juntos.",
+    "body": "Organizamos o conteúdo por temas para que você encontre o que procura: do púlpito de domingo à mesa da cozinha.",
+    "total": "Total",
+    "articles": "Artigos"
+  },
+  "articles": {
+    "counter": "[ 03 - Todos os artigos ]",
+    "headlineBefore": "O mais recente do ",
+    "headlineEmphasis": "diário",
+    "headlineAfter": ".",
+    "all": "Todos",
+    "searchLabel": "Buscar artigos",
+    "searchPlaceholder": "Buscar...",
+    "showing": "Mostrando",
+    "of": "de",
+    "loadMore": "Carregar mais"
+  },
+  "series": {
+    "counter": "[ 04 - Série em curso ]",
+    "badge": "5 entregas",
+    "eyebrow": "Hebreus · estudo expositivo",
+    "headlineBefore": "Uma ",
+    "headlineEmphasis": "esperança melhor.",
+    "body": "Percorremos a carta aos Hebreus em cinco entregas dominicais. Cada artigo acompanha o sermão com notas, citações e perguntas para refletir em família.",
+    "current": "Agora",
+    "published": "Publicado",
+    "upcoming": "Próximo"
+  },
+  "explore": {
+    "counter": "[ 05 - Mais lido & explorar ]",
+    "popular": "Mais lido este mês",
+    "month": "→ ABR 2026",
+    "tags": "Etiquetas",
+    "topics": "→ TOPICS",
+    "author": "Autor do mês",
+    "authorArticles": "artigos",
+    "seeAuthor": "Ver todos os seus artigos",
+    "archive": "Arquivo",
+    "index": "→ ÍNDICE",
+    "fullArchive": "Ver arquivo completo →"
+  },
+  "newsletter": {
+    "counter": "[ 06 - Newsletter ]",
+    "eyebrow": "Toda terça · 7 min",
+    "headlineEmphasis": "Carta semanal",
+    "headlineRest": "no e-mail, sem ruído.",
+    "description": "Uma seleção breve de leituras, perguntas e recursos para acompanhar a semana com o evangelho no centro.",
+    "compactHeadlineBefore": "Gostou? ",
+    "compactHeadlineEmphasis": "Receba toda terça.",
+    "compactBody": "Novos artigos como \"{title}\" direto no seu e-mail.",
+    "name": "Nome",
+    "namePlaceholder": "Seu nome",
+    "email": "E-mail",
+    "emailPlaceholder": "voce@email.com",
+    "readers": "+300 leitores da comunidade",
+    "submit": "Assinar"
+  },
+  "article": {
+    "previous": "Anterior",
+    "next": "Próximo",
+    "back": "Voltar",
+    "allArticles": "Todos os artigos",
+    "nextDelivery": "Receber a próxima entrega",
+    "weeklyNewsletter": "Newsletter semanal",
+    "related": "[ Relacionados ]",
+    "backToBlog": "Voltar ao blog",
+    "sermons": "Sermões",
+    "seeAuthor": "Ver todos os seus artigos"
+  }
+}

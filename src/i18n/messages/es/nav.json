@@ -1,0 +1,39 @@
+{
+  "brandLabel": "Iglesia Bautista",
+  "brandName": "El Ancla",
+  "links": [
+    { "label": "Inicio", "href": "/#inicio", "section": "inicio" },
+    { "label": "Nosotros", "href": "/#nosotros", "section": "nosotros" },
+    { "label": "Actividades", "href": "/#actividades", "section": "actividades" },
+    { "label": "Sermones", "href": "/#sermones", "section": "sermones" },
+    { "label": "Ministerios", "href": "/#ministerios", "section": "ministerios" }
+  ],
+  "resources": {
+    "label": "Recursos",
+    "items": [
+      {
+        "label": "Confesión de fe",
+        "href": "/confesion-de-fe",
+        "description": "IX pilares doctrinales"
+      },
+      {
+        "label": "Blog",
+        "href": "/blog",
+        "description": "Reflexiones y estudios"
+      }
+    ]
+  },
+  "live": "Dom · 11:15",
+  "cta": "Visítanos",
+  "menuOpen": "Abrir menú",
+  "menuClose": "Cerrar menú",
+  "language": {
+    "label": "Idioma",
+    "current": "Idioma actual"
+  },
+  "theme": {
+    "label": "Cambiar tema",
+    "lightLabel": "Activar modo claro",
+    "darkLabel": "Activar modo oscuro"
+  }
+}

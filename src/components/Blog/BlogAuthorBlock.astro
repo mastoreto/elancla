@@ -1,11 +1,15 @@
 ---
 import type { BlogAuthor } from 'src/data/blog';
+import type { Locale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
 
 interface Props {
   author: BlogAuthor;
+  copy: any;
+  locale: Locale;
 }
 
-const { author } = Astro.props;
+const { author, copy, locale } = Astro.props;
 ---
 
 <section class="blog-author-block relative py-20 md:py-28">
@@ -33,19 +37,19 @@ const { author } = Astro.props;
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
           <a
-            href="/blog"
+            href={localizePath('/blog', locale)}
             class="cta-btn btn-primary inline-flex items-center gap-2 rounded-full bg-paper px-5 py-3 font-ui text-[12px] font-semibold uppercase tracking-wide text-ink"
           >
-            Ver todos sus artículos
+            {copy.seeAuthor}
             <svg class="cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
               <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
             </svg>
           </a>
           <a
-            href="/#sermones"
+            href={localizePath('/#sermones', locale)}
             class="inline-flex items-center gap-2 rounded-full border border-paper/25 px-5 py-3 font-ui text-[12px] font-semibold uppercase tracking-wide"
           >
-            Sermones
+            {copy.sermons}
           </a>
         </div>
       </div>

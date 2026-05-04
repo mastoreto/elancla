@@ -1,0 +1,108 @@
+{
+  "seo": {
+    "title": "Blog",
+    "description": "Reflexiones, estudios bíblicos, sermones y crónicas de la vida de Iglesia Bautista El Ancla en Montevideo.",
+    "keywords": ["blog cristiano", "estudios bíblicos", "reflexiones cristianas", "sermones", "Iglesia Bautista El Ancla"]
+  },
+  "breadcrumbs": {
+    "home": "Inicio",
+    "blog": "Blog"
+  },
+  "hero": {
+    "edition": "Edición · MMXXVI",
+    "eyebrow": "Diario de la iglesia",
+    "issue": "N. 042 · ABRIL 2026",
+    "titleLines": ["Palabras", "para anclar", "la fe en la", "semana."],
+    "emphasis": "anclar",
+    "body": "Reflexiones, estudios bíblicos y crónicas de la vida de la iglesia. Lo que predicamos el domingo, lo que conversamos en casa, y lo que aprendemos en el camino.",
+    "primaryCta": "Últimos artículos",
+    "secondaryCta": "Suscribirme",
+    "stats": [
+      { "label": "01 · Publicados", "description": "Artículos en línea" },
+      { "label": "02 · Categorías", "description": "Áreas temáticas" },
+      { "label": "03 · Frecuencia", "value": "Semanal", "description": "Cada martes" },
+      { "label": "Ahora", "value": "Serie Hebreos", "description": "5 entregas en curso" }
+    ],
+    "scroll": "Leer"
+  },
+  "featured": {
+    "counter": "[ 01 - Lectura destacada ]",
+    "tag": "Editor pick",
+    "featured": "Destacado",
+    "reading": "Lectura",
+    "by": "Por",
+    "read": "Leer"
+  },
+  "categories": {
+    "counter": "[ 02 - Categorías ]",
+    "headlineBefore": "Siete áreas en las que ",
+    "headlineEmphasis": "pensamos juntos.",
+    "body": "Organizamos el contenido por temas para que encuentres lo que buscas: desde el púlpito del domingo hasta la mesa de la cocina.",
+    "total": "Total",
+    "articles": "Artículos"
+  },
+  "articles": {
+    "counter": "[ 03 - Todos los artículos ]",
+    "headlineBefore": "Lo último del ",
+    "headlineEmphasis": "diario",
+    "headlineAfter": ".",
+    "all": "Todos",
+    "searchLabel": "Buscar artículos",
+    "searchPlaceholder": "Buscar...",
+    "showing": "Mostrando",
+    "of": "de",
+    "loadMore": "Cargar más"
+  },
+  "series": {
+    "counter": "[ 04 - Serie en curso ]",
+    "badge": "5 entregas",
+    "eyebrow": "Hebreos · estudio expositivo",
+    "headlineBefore": "Una ",
+    "headlineEmphasis": "esperanza mejor.",
+    "body": "Atravesamos la carta a los Hebreos en cinco entregas dominicales. Cada artículo acompaña al sermón con notas, citas y preguntas para reflexionar en familia.",
+    "current": "Ahora",
+    "published": "Publicado",
+    "upcoming": "Próximo"
+  },
+  "explore": {
+    "counter": "[ 05 - Más leído & explorar ]",
+    "popular": "Más leído este mes",
+    "month": "→ ABR 2026",
+    "tags": "Etiquetas",
+    "topics": "→ TOPICS",
+    "author": "Autor del mes",
+    "authorArticles": "artículos",
+    "seeAuthor": "Ver todos sus artículos",
+    "archive": "Archivo",
+    "index": "→ ÍNDICE",
+    "fullArchive": "Ver archivo completo →"
+  },
+  "newsletter": {
+    "counter": "[ 06 - Newsletter ]",
+    "eyebrow": "Cada martes · 7 min",
+    "headlineEmphasis": "Carta semanal",
+    "headlineRest": "al correo, sin ruido.",
+    "description": "Una selección breve de lecturas, preguntas y recursos para acompañar la semana con el evangelio en el centro.",
+    "compactHeadlineBefore": "¿Te gustó? ",
+    "compactHeadlineEmphasis": "Recibilos cada martes.",
+    "compactBody": "Nuevos artículos como \"{title}\" directo en tu correo.",
+    "name": "Nombre",
+    "namePlaceholder": "Tu nombre",
+    "email": "Correo",
+    "emailPlaceholder": "tu@correo.com",
+    "readers": "+300 lectores de la comunidad",
+    "submit": "Suscribirme"
+  },
+  "article": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "back": "Volver",
+    "allArticles": "Todos los artículos",
+    "nextDelivery": "Recibir la próxima entrega",
+    "weeklyNewsletter": "Newsletter semanal",
+    "related": "[ Relacionados ]",
+    "backToBlog": "Volver al blog",
+    "sermons": "Sermones",
+    "seeAuthor": "Ver todos sus artículos"
+  }
+}

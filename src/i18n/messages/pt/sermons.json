@@ -1,0 +1,15 @@
+{
+  "counter": "[ 03 — Sermões ]",
+  "headline": { "before": "Preguem ", "emphasis": "a Palavra." },
+  "previous": "Anterior",
+  "next": "Próximo",
+  "items": [
+    { "date": "14 abr 2026", "serie": "Hebreus", "pastor": "Pr. Juan Olivera", "ref": "Hb. 11:1-6", "episode": "E12", "tint": "#ff2e34" },
+    { "date": "07 abr 2026", "serie": "Hebreus", "pastor": "Pr. Juan Olivera", "ref": "Hb. 10:19-25", "episode": "E11", "tint": "#141414" },
+    { "date": "31 mar 2026", "serie": "Semana Santa", "pastor": "Pr. Convidado", "ref": "João 19", "episode": "E01", "tint": "#947a62" },
+    { "date": "24 mar 2026", "serie": "Hebreus", "pastor": "Pr. Juan Olivera", "ref": "Hb. 9:11-22", "episode": "E10", "tint": "#ff2e34" },
+    { "date": "17 mar 2026", "serie": "Salmos vivos", "pastor": "Diácono F. Rivera", "ref": "Salmo 23", "episode": "E04", "tint": "#141414" },
+    { "date": "10 mar 2026", "serie": "Hebreus", "pastor": "Pr. Juan Olivera", "ref": "Hb. 8:1-13", "episode": "E09", "tint": "#947a62" },
+    { "date": "03 mar 2026", "serie": "Cartas breves", "pastor": "Pr. Convidado", "ref": "3 João", "episode": "E02", "tint": "#ff2e34" }
+  ]
+}

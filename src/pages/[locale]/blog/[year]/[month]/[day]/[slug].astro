@@ -1,0 +1,69 @@
+---
+import BlogArticleTemplate from 'src/components/Blog/BlogArticleTemplate.astro';
+import type { BlogArticle } from 'src/data/blog';
+import { nonDefaultLocales, type Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+import Layout from 'src/layouts/Layout.astro';
+import { getAllPostsFull, mapSanityPostToArticle } from 'src/lib/sanity';
+
+export async function getStaticPaths() {
+  const posts = await getAllPostsFull();
+  return nonDefaultLocales.flatMap((locale) =>
+    posts.map((post) => {
+      const article = mapSanityPostToArticle(post);
+      return {
+        params: {
+          locale,
+          year: article.year,
+          month: article.month,
+          day: article.day,
+          slug: article.slug,
+        },
+        props: { article, locale },
+      };
+    })
+  );
+}
+
+const { article, locale } = Astro.props as { article: BlogArticle; locale: Locale };
+const copy = getMessages(locale).blog;
+const articleUrl = `/blog/${article.year}/${article.month}/${article.day}/${article.slug}`;
+const breadcrumbs = [
+  { name: copy.breadcrumbs.home, url: localizePath('/', locale) },
+  { name: copy.breadcrumbs.blog, url: localizePath('/blog', locale) },
+  { name: article.title, url: localizePath(articleUrl, locale) },
+];
+---
+
+<Layout
+  title={article.seoTitle ?? article.title}
+  description={article.description}
+  isBlog={true}
+  pageType="article"
+  breadcrumbs={breadcrumbs}
+  keywords={article.tags}
+  canonical={new URL(localizePath(articleUrl, locale), Astro.site).toString()}
+  locale={locale}
+  article={{
+    publishedAt: article.publishedAt,
+    authorName: article.author.name,
+    section: article.category,
+    tags: article.tags,
+  }}
+>
+  <BlogArticleTemplate
+    article={article}
+    related={[]}
+    previous={null}
+    next={null}
+    copy={copy}
+    locale={locale}
+  />
+</Layout>
+
+<script>
+  import { initBlog } from 'src/scripts/blog';
+
+  initBlog();
+</script>

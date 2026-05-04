@@ -1,43 +1,53 @@
 ---
 import BlogPageTemplate from 'src/components/Blog/BlogPageTemplate.astro';
-import {
-  blogArchive,
-  blogArticles,
-  blogCategories,
-  blogMarqueeItems,
-  blogPopularItems,
-  blogSeries,
-  blogTags,
-  featuredArticle,
-} from 'src/data/blog';
+import { defaultLocale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout.astro';
+import {
+  buildBlogPageData,
+  getAllCategories,
+  getAllPostCards,
+  getAllSeriesWithPosts,
+} from 'src/lib/sanity';
+
+const [posts, categories, allSeries] = await Promise.all([
+  getAllPostCards(),
+  getAllCategories(),
+  getAllSeriesWithPosts(),
+]);
+
+const { articles, featured, marqueeItems, series, popular, tags, archive, categories: blogCategories } =
+  buildBlogPageData(posts, categories, allSeries);
+if (!featured) {
+  throw new Error('Blog requires at least one featured article.');
+}
+const locale = defaultLocale;
+const copy = getMessages(locale).blog;
 ---
 
 <Layout
-  title="Blog"
-  description="Reflexiones, estudios bíblicos, sermones y crónicas de la vida de Iglesia Bautista El Ancla en Montevideo."
+  title={copy.seo.title}
+  description={copy.seo.description}
   isBlog={true}
-  keywords={[
-    'blog cristiano',
-    'estudios bíblicos',
-    'reflexiones cristianas',
-    'sermones',
-    'Iglesia Bautista El Ancla',
-  ]}
+  keywords={copy.seo.keywords}
   breadcrumbs={[
-    { name: 'Inicio', url: '/' },
-    { name: 'Blog', url: '/blog' },
+    { name: copy.breadcrumbs.home, url: localizePath('/', locale) },
+    { name: copy.breadcrumbs.blog, url: localizePath('/blog', locale) },
   ]}
+  locale={locale}
 >
   <BlogPageTemplate
-    articles={blogArticles}
+    articles={articles}
     categories={blogCategories}
-    featured={featuredArticle}
-    marqueeItems={blogMarqueeItems}
-    series={blogSeries}
-    popular={blogPopularItems}
-    tags={blogTags}
-    archive={blogArchive}
+    featured={featured}
+    marqueeItems={marqueeItems}
+    series={series}
+    popular={popular}
+    tags={tags}
+    archive={archive}
+    copy={copy}
+    locale={locale}
   />
 </Layout>
 
