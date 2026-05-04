@@ -1,0 +1,21 @@
+{
+  "counter": "[ 04 — Ministerios ]",
+  "headline": {
+    "before": "Diez maneras de servir ",
+    "emphasis": "juntos."
+  },
+  "lead": "Cada ministerio es una invitación: un lugar para crecer, usar tus dones, y servir a otros en nombre de Cristo. Encuentra el tuyo.",
+  "items": [
+    { "key": "predicacion", "name": "Predicación", "description": "La Palabra, expuesta fielmente", "href": "/ministerios/predicacion" },
+    { "key": "ensenanza", "name": "Enseñanza", "description": "Crecer en entendimiento", "href": "/ministerios/ensenanza" },
+    { "key": "misiones", "name": "Misiones", "description": "Al fin del mundo", "href": "/ministerios/misiones" },
+    { "key": "alabanza", "name": "Alabanza", "description": "Cantar con entendimiento", "href": "/ministerios/alabanza" },
+    { "key": "oracion", "name": "Oración", "description": "Clamar juntos", "href": "/#visitanos" },
+    { "key": "espacio-mujer", "name": "Espacio Mujer", "description": "Mujeres en la Palabra", "href": "https://emujer.elancla.uy/" },
+    { "key": "hombres", "name": "Hombres", "description": "Discipulado entre varones", "href": "/ministerios/hombres" },
+    { "key": "jovenes", "name": "Jóvenes", "description": "Una generación para Cristo", "href": "/ministerios/jovenes" },
+    { "key": "adolescentes", "name": "Adolescentes", "description": "Raíces en la adolescencia", "href": "/ministerios/adolescentes" },
+    { "key": "servicio", "name": "Servicio", "description": "Manos que cuidan", "href": "/ministerios/servicio" },
+    { "key": "multimedia", "name": "Multimedia", "description": "Contar la historia", "href": "/ministerios/multimedia" }
+  ]
+}

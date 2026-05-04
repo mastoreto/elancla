@@ -1,0 +1,206 @@
+{
+  "seo": {
+    "title": "Confissão de fé",
+    "description": "Confissão de fé da Igreja Batista El Ancla: artigos doutrinários e os cinco solas da Reforma que orientam nossa vida e ensino.",
+    "keywords": ["confissão de fé", "doutrina batista", "cinco solas", "reforma protestante", "Igreja Batista El Ancla"]
+  },
+  "breadcrumbs": [
+    { "name": "Início", "url": "/" },
+    { "name": "Confissão de fé", "url": "/confesion-de-fe" }
+  ],
+  "hero": {
+    "sealText": "CREMOS · CONFESSAMOS · PROCLAMAMOS · CREMOS · CONFESSAMOS · PROCLAMAMOS ·",
+    "breadcrumbHome": "El Ancla",
+    "breadcrumbCurrent": "Confissão de fé",
+    "meta": "IX · Pilares doutrinários",
+    "counter": "[ 00 — Fundamentos ]",
+    "titleLines": ["Cremos que", "a doutrina", "importa."],
+    "emphasis": "doutrina",
+    "body": "Estes são os pilares essenciais do que cremos, ensinamos e vivemos como comunidade de fé. Nove doutrinas, enraizadas na Escritura, sustentam e definem nossa vida em comum.",
+    "primaryCta": "Ler confissão",
+    "expandAll": "Expandir todas",
+    "collapseAll": "Fechar todas",
+    "scroll": "Role"
+  },
+  "solas": ["Sola Scriptura", "Solus Christus", "Sola Gratia", "Sola Fide", "Soli Deo Gloria"],
+  "quote": {
+    "textBefore": "Toda a Escritura é inspirada por Deus e útil para ensinar, para",
+    "emphasis": "repreender",
+    "textAfter": "para corrigir e instruir em justiça.",
+    "reference": "2 Timóteo 3:16"
+  },
+  "doctrineList": {
+    "counter": "[ 01 — Nove doutrinas ]",
+    "hint": "Clique para expandir",
+    "index": "Índice",
+    "resources": "Recursos",
+    "resourceLinks": ["Baixar PDF", "Estudos bíblicos", "Falar com o pastor"],
+    "featured": "Centro",
+    "expand": "Expandir",
+    "references": "Referências",
+    "doctrineOf": "Doutrina {number} de {total}"
+  },
+  "christus": {
+    "counter": "[ 02 — No centro ]",
+    "eyebrow": "Cristocentrismo",
+    "headlineBefore": "Toda a nossa fé se sustenta em uma só ",
+    "headlineEmphasis": "Pessoa.",
+    "body": "Jesus Cristo é o eterno Filho de Deus, nascido de Maria, que viveu sem pecado, morreu na cruz por seu povo, ressuscitou ao terceiro dia e voltará em glória. Ele é o centro absoluto da Escritura, da história e da nossa confissão.",
+    "cta": "Ler a doutrina completa",
+    "reference": "1 Timóteo 2:5",
+    "sideLabel": "Christus",
+    "verse": "Porque há um só Deus e um só mediador entre Deus e os homens, Cristo Jesus, homem."
+  },
+  "cta": {
+    "headlineBefore": "Se quiser conversar sobre o que ",
+    "headlineEmphasis": "cremos,",
+    "headlineAfter": " estamos por perto.",
+    "body": "Nenhum resumo substitui uma conversa. Se tiver perguntas sobre alguma destas doutrinas, escreva para nós ou aproxime-se em um domingo.",
+    "primary": "Visite-nos em um domingo",
+    "secondary": "Ouvir sermões"
+  },
+  "doctrines": [
+    {
+      "id": "dios",
+      "number": "01",
+      "title": "Deus",
+      "subtitle": "Criador, soberano, eterno",
+      "tag": "Trindade",
+      "summary": "Cremos em um só Deus verdadeiro, Criador e soberano do universo, que fez todas as coisas do nada e as sustenta por seu poder.",
+      "verse": "Ouve, Israel, o Senhor nosso Deus é o único Senhor.",
+      "verseRef": "Deuteronômio 6:4",
+      "sections": [
+        { "h": "Natureza", "body": "<p>Este Deus único existe eternamente em três Pessoas: Pai, Filho e Espírito Santo, iguais em essência, poder e glória, mas distintos em suas funções.</p>" },
+        { "h": "Relação entre as pessoas", "body": "<p>Os três compartilham a mesma natureza divina e agem em perfeita unidade.</p>" }
+      ],
+      "refs": ["Deut 6:4", "Gen 1:1-2", "Sal 104:24", "Sal 33:6", "Heb 1:3", "Mt 3:16-17", "Mt 28:19", "2 Co 13:14", "1 Co 8:4-6", "Jn 10:30"]
+    },
+    {
+      "id": "jesucristo",
+      "number": "02",
+      "title": "Jesus Cristo",
+      "subtitle": "O único mediador",
+      "tag": "Cristocentrismo",
+      "featured": true,
+      "summary": "Jesus Cristo é o eterno Filho de Deus, consubstancial com o Pai e o Espírito Santo. Sua morte e ressurreição são a base da nossa salvação.",
+      "verse": "Porque há um só Deus e um só mediador entre Deus e os homens, Cristo Jesus, homem.",
+      "verseRef": "1 Timóteo 2:5",
+      "sections": [
+        { "h": "Identidade", "body": "<p>Jesus Cristo é o eterno Filho de Deus, consubstancial com o Pai e o Espírito Santo.</p>" },
+        { "h": "Vida", "body": "<p>Nascido da virgem Maria por obra do Espírito Santo, viveu uma vida humana perfeita e sem pecado.</p>" },
+        { "h": "Morte", "body": "<p>Entregou sua vida na cruz como sacrifício perfeito e suficiente para a expiação dos pecados de seu povo.</p>" },
+        { "h": "Ressurreição", "body": "<p>Ressuscitou corporalmente ao terceiro dia, demonstrando sua vitória sobre o pecado e a morte.</p>" },
+        { "h": "Ascensão e retorno", "body": "<p>Subiu ao céu, sentou-se à direita do Pai e voltará em glória como Rei e Senhor dos senhores.</p>" }
+      ],
+      "refs": ["Jn 1:1,14", "Col 2:9", "Mt 1:18-23", "Lc 1:35", "1 Pe 2:22-24", "2 Co 5:21", "Heb 4:15", "1 Pe 3:18", "Col 2:13-14", "Is 53:4-6", "1 Co 15:3-4", "Mt 28:5-7", "Ro 4:25", "Mr 16:19", "Hch 1:9-11", "Ap 1:7", "Tit 2:13"]
+    },
+    {
+      "id": "espiritu",
+      "number": "03",
+      "title": "O Espírito Santo",
+      "subtitle": "Consolador, mestre e selo",
+      "tag": "Trindade",
+      "summary": "A terceira Pessoa da Trindade, plenamente Deus, que convence do pecado, regenera, habita no crente e guia a toda verdade.",
+      "verse": "Mas o Consolador, o Espírito Santo, a quem o Pai enviará em meu nome, esse vos ensinará todas as coisas.",
+      "verseRef": "João 14:26",
+      "sections": [
+        { "h": "Identidade", "body": "<p>O Espírito Santo é a terceira Pessoa da Trindade, plenamente Deus, com os mesmos atributos divinos que o Pai e o Filho.</p>" },
+        { "h": "Obra", "body": "<ul><li>Convence o mundo do pecado, da justiça e do juízo.</li><li>Regenera e dá nova vida ao crente.</li><li>Habita permanentemente em cada cristão desde a conversão.</li><li>Ensina e guia a toda verdade.</li><li>Concede dons espirituais para a edificação da Igreja.</li></ul>" },
+        { "h": "Vida cristã", "body": "<p>O crente deve viver sob o controle do Espírito, produzindo fruto espiritual.</p>" }
+      ],
+      "refs": ["Hch 5:3-4", "Jn 16:8-11", "Jn 3:5-8", "Tit 3:5", "Ef 1:13-14", "Jn 14:26", "Jn 16:13", "1 Co 12:4-11", "Gá 5:16-25"]
+    },
+    {
+      "id": "biblia",
+      "number": "04",
+      "title": "A Bíblia",
+      "subtitle": "Palavra inspirada e infalível",
+      "tag": "Sola Scriptura",
+      "summary": "A Palavra de Deus inspirada, inerrante e infalível. É nossa autoridade final e suficiente para a fé e a prática.",
+      "verse": "Toda a Escritura é inspirada por Deus e útil para ensinar, repreender, corrigir e instruir em justiça.",
+      "verseRef": "2 Timóteo 3:16",
+      "sections": [
+        { "h": "Natureza", "body": "<p>A Bíblia, composta pelo Antigo e Novo Testamento, é a Palavra de Deus inspirada, inerrante em seus escritos originais e infalível em tudo o que afirma.</p>" },
+        { "h": "Autoridade", "body": "<p>É a revelação final e suficiente de Deus para guiar a fé e a prática, e não pode ser acrescentada nem retirada.</p>" }
+      ],
+      "refs": ["2 Ti 3:16", "2 Pe 1:20-21", "Sal 19:7-11", "Mt 4:4", "Ap 22:18-19"]
+    },
+    {
+      "id": "iglesia",
+      "number": "05",
+      "title": "A Igreja",
+      "subtitle": "Corpo de Cristo, família da fé",
+      "tag": "Eclesiologia",
+      "summary": "O corpo de Cristo, composto por todos os verdadeiros crentes, expresso localmente para adorar, servir e proclamar.",
+      "verse": "E pôs todas as coisas debaixo dos seus pés e o constituiu como cabeça sobre todas as coisas para a igreja.",
+      "verseRef": "Efésios 1:22",
+      "sections": [
+        { "h": "Identidade", "body": "<p>A Igreja é o corpo de Cristo, composta por todos os verdadeiros crentes (<b>igreja universal</b>) e expressa localmente em congregações que se reúnem para adorar, ensinar, servir e cumprir a missão de Cristo (<b>igreja local</b>).</p>" },
+        { "h": "Propósito e função", "body": "<ol><li>Glorificar a Deus.</li><li>Edificar o crente.</li><li>Proclamar o evangelho.</li></ol>" },
+        { "h": "Dinâmica interna", "body": "<ul><li><b>Relação:</b> Cada crente deve cultivar um vínculo profundo e ativo com sua igreja local.</li><li><b>Dependência:</b> Os membros do corpo dependem uns dos outros para cumprir a missão.</li><li><b>Serviço:</b> Os dons espirituais devem ser exercidos para edificação mútua.</li><li><b>Trabalho:</b> A vida cristã implica participação intencional e ativa na obra da Igreja.</li></ul>" }
+      ],
+      "refs": ["Ef 1:22-23", "Hch 2:42", "Ef 3:21", "1 Pe 2:9", "Ef 4:11-13", "Mt 28:19-20", "Heb 10:24-25", "Ro 12:4-5", "1 Pe 4:10", "1 Co 15:58"]
+    },
+    {
+      "id": "hombre",
+      "number": "06",
+      "title": "O Homem",
+      "subtitle": "Imagem de Deus, caído pelo pecado",
+      "tag": "Antropologia",
+      "summary": "Criado à imagem de Deus, mas caído e sob condenação, espiritualmente morto e necessitado de redenção.",
+      "verse": "Criou Deus o homem à sua imagem; à imagem de Deus o criou; homem e mulher os criou.",
+      "verseRef": "Gênesis 1:27",
+      "sections": [
+        { "h": "Origem", "body": "<p>Criado à imagem e semelhança de Deus para refletir sua glória.</p>" },
+        { "h": "Condição atual", "body": "<p>Pelo pecado de Adão, toda a humanidade está sob condenação, corrompida em todas as áreas do seu ser (<b>depravação total</b>).</p><ul><li>Inimiga de Deus.</li><li>Não quer nem pode agradar a Deus.</li><li>Morta espiritualmente e escrava do pecado.</li></ul>" }
+      ],
+      "refs": ["Gen 1:26-27", "Ro 5:10", "Col 1:21", "Ro 8:7-8", "Jer 17:9", "Gen 6:5", "Ef 2:1-3", "Jn 8:34"]
+    },
+    {
+      "id": "salvacion",
+      "number": "07",
+      "title": "A Salvação",
+      "subtitle": "Pela graça, mediante a fé",
+      "tag": "Soteriologia",
+      "summary": "É pela graça, mediante a fé em Cristo, não por obras. Um dom gratuito de Deus que inclui eleição, justificação e santificação.",
+      "verse": "Pois vocês são salvos pela graça, por meio da fé; e isto não vem de vocês, é dom de Deus.",
+      "verseRef": "Efésios 2:8",
+      "sections": [
+        { "h": "Definição", "body": "<p>Obra soberana de Deus que resgata o pecador pela graça, mediante a fé em Jesus Cristo.</p>" },
+        { "h": "Aspectos", "body": "<ul><li>Eleição</li><li>Justificação</li><li>Regeneração</li><li>Santificação</li><li>Glorificação</li></ul>" },
+        { "h": "Segurança", "body": "<p>O crente é guardado pelo poder de Deus até o fim.</p>" }
+      ],
+      "refs": ["Ef 2:8-9", "Tit 3:5", "Ef 1:4-5", "Ro 3:24-26", "Jn 3:5-8", "1 Ts 4:3", "Ro 8:30", "Jn 10:28", "Flp 1:6"]
+    },
+    {
+      "id": "ordenanzas",
+      "number": "08",
+      "title": "Ordenanças",
+      "subtitle": "Batismo e Ceia do Senhor",
+      "tag": "Sacramentos",
+      "summary": "Praticamos o batismo por imersão e a Ceia do Senhor como atos de obediência, símbolo e memória.",
+      "verse": "Portanto, vão e façam discípulos de todas as nações, batizando-os em nome do Pai, do Filho e do Espírito Santo.",
+      "verseRef": "Mateus 28:19",
+      "sections": [
+        { "h": "a) Batismo por imersão", "body": "<p>Símbolo da união com Cristo em sua morte, sepultamento e ressurreição.</p>" },
+        { "h": "b) Ceia do Senhor", "body": "<p>Memorial da obra de Cristo e proclamação do seu retorno.</p>" }
+      ],
+      "refs": ["Mt 3:13-16", "Hch 8:36-38", "Ro 6:4", "1 Co 11:23-26"]
+    },
+    {
+      "id": "escatologia",
+      "number": "09",
+      "title": "Escatologia",
+      "subtitle": "A esperança do retorno",
+      "tag": "Últimos tempos",
+      "summary": "Cristo voltará pessoal, visível e gloriosamente para consumar a história e estabelecer novos céus e nova terra.",
+      "verse": "Eis que venho em breve! A minha recompensa está comigo, e eu retribuirei a cada um de acordo com o que fez.",
+      "verseRef": "Apocalipse 22:12",
+      "sections": [
+        { "h": "Retorno glorioso", "body": "<p>Cristo voltará pessoal, visível e gloriosamente para consumar a história e estabelecer novos céus e nova terra.</p>" },
+        { "h": "Para a Igreja, esta esperança é", "body": "<ul><li>Uma esperança viva.</li><li>Motivo de consolo.</li><li>Estímulo para santidade e serviço.</li></ul>" }
+      ],
+      "refs": ["Hch 1:9-11", "Mt 24:30", "Ap 22:12", "Tit 2:13", "1 Pe 1:13", "1 Ts 4:18", "1 Jn 3:2-3"]
+    }
+  ]
+}

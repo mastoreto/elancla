@@ -1,0 +1,15 @@
+{
+  "counter": "[ 03 — Sermons ]",
+  "headline": { "before": "Preach ", "emphasis": "the Word." },
+  "previous": "Previous",
+  "next": "Next",
+  "items": [
+    { "date": "Apr 14 2026", "serie": "Hebrews", "pastor": "Pr. Juan Olivera", "ref": "Heb. 11:1-6", "episode": "E12", "tint": "#ff2e34" },
+    { "date": "Apr 07 2026", "serie": "Hebrews", "pastor": "Pr. Juan Olivera", "ref": "Heb. 10:19-25", "episode": "E11", "tint": "#141414" },
+    { "date": "Mar 31 2026", "serie": "Holy Week", "pastor": "Guest pastor", "ref": "John 19", "episode": "E01", "tint": "#947a62" },
+    { "date": "Mar 24 2026", "serie": "Hebrews", "pastor": "Pr. Juan Olivera", "ref": "Heb. 9:11-22", "episode": "E10", "tint": "#ff2e34" },
+    { "date": "Mar 17 2026", "serie": "Living Psalms", "pastor": "Deacon F. Rivera", "ref": "Psalm 23", "episode": "E04", "tint": "#141414" },
+    { "date": "Mar 10 2026", "serie": "Hebrews", "pastor": "Pr. Juan Olivera", "ref": "Heb. 8:1-13", "episode": "E09", "tint": "#947a62" },
+    { "date": "Mar 03 2026", "serie": "Short Letters", "pastor": "Guest pastor", "ref": "3 John", "episode": "E02", "tint": "#ff2e34" }
+  ]
+}

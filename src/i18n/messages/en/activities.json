@@ -1,0 +1,12 @@
+{
+  "counter": "[ 02 — Activities ]",
+  "headline": { "before": "Faith ", "emphasis": "in action", "after": ", every week." },
+  "lead": "A living church is an active church that builds up and serves its community. Through works of love and concrete gatherings, faith becomes real steps.",
+  "calendarCta": "See full calendar",
+  "items": [
+    { "num": "01", "title": "Worship service", "tag": "In person · Online", "day": "Sundays", "time": "11:15 AM" },
+    { "num": "02", "title": "Bible school", "tag": "Adults · Kids", "day": "Sundays", "time": "10:00 AM" },
+    { "num": "03", "title": "Prayer meeting", "tag": "1st and 3rd Wednesday", "day": "Wednesdays", "time": "7:00 PM" },
+    { "num": "04", "title": "Growth groups", "tag": "In homes", "day": "Various days", "time": "Ask us" }
+  ]
+}
