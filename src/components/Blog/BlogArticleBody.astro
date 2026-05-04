@@ -1,11 +1,14 @@
 ---
 import type { BlogArticle, BlogArticleBodyBlock } from 'src/data/blog';
+import type { Locale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
 
 interface Props {
   article: BlogArticle;
+  locale: Locale;
 }
 
-const { article } = Astro.props;
+const { article, locale } = Astro.props;
 
 const figureRatio = (block: Extract<BlogArticleBodyBlock, { type: 'figure' }>) => {
   if (block.aspect === 'wide') return 'blog-ratio-wide';
@@ -153,7 +156,7 @@ const figureRatio = (block: Extract<BlogArticleBodyBlock, { type: 'figure' }>) =
             <div class="flex flex-wrap gap-2">
               {block.tags.map((tag) => (
                 <a
-                  href="/blog"
+                  href={localizePath('/blog', locale)}
                   class="content-chip no-style rounded-full border border-ink/15 px-3 py-1.5 transition-colors hover:bg-ink hover:text-paper"
                 >
                   {tag}

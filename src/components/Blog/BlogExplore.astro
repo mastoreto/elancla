@@ -5,36 +5,40 @@ import type {
   BlogPopularItem,
 } from 'src/data/blog';
 import { getBlogArticlePath } from 'src/data/blog';
+import type { Locale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
 
 interface Props {
   popular: BlogPopularItem[];
   tags: string[];
   archive: BlogArchiveItem[];
   author: BlogAuthor;
+  copy: any;
+  locale: Locale;
 }
 
-const { popular, tags, archive, author } = Astro.props;
+const { popular, tags, archive, author, copy, locale } = Astro.props;
 ---
 
 <section class="relative bg-white py-24 md:py-32">
   <div class="mx-auto max-w-[1600px] px-6 md:px-10">
     <div class="mb-14 flex items-baseline gap-6 md:mb-16">
-      <span class="section-counter">[ 05 - Más leído & explorar ]</span>
+      <span class="section-counter">{copy.counter}</span>
       <span class="h-px flex-1 bg-ink/15"></span>
     </div>
 
     <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
       <div class="reveal lg:col-span-7">
         <div class="mb-8 flex items-baseline gap-3">
-          <h3 class="font-display text-2xl md:text-3xl">Más leído este mes</h3>
-          <span class="font-mono text-[11px] text-ink/40">→ ABR 2026</span>
+          <h3 class="font-display text-2xl md:text-3xl">{copy.popular}</h3>
+          <span class="font-mono text-[11px] text-ink/40">{copy.month}</span>
         </div>
         <ol class="divide-y divide-ink/10 border-y border-ink/10">
           {
             popular.map((item, index) => (
               <li class="group">
                 <a
-                  href={getBlogArticlePath(item.article)}
+                  href={localizePath(getBlogArticlePath(item.article), locale)}
                   class="grid grid-cols-[48px_1fr_auto] items-center gap-5 py-5 md:grid-cols-[60px_1fr_auto] md:gap-6 md:py-6"
                 >
                   <span class="font-display text-3xl italic text-ink/30 transition-colors group-hover:text-primary md:text-4xl">
@@ -59,14 +63,14 @@ const { popular, tags, archive, author } = Astro.props;
       <aside class="flex flex-col gap-12 lg:col-span-5">
         <div class="reveal">
           <div class="mb-6 flex items-baseline gap-3">
-            <h3 class="font-display text-2xl md:text-3xl">Etiquetas</h3>
-            <span class="font-mono text-[11px] text-ink/40">→ TOPICS</span>
+            <h3 class="font-display text-2xl md:text-3xl">{copy.tags}</h3>
+            <span class="font-mono text-[11px] text-ink/40">{copy.topics}</span>
           </div>
           <div class="flex flex-wrap gap-2">
             {
               tags.map((tag) => (
                 <a
-                  href="/blog"
+                  href={localizePath('/blog', locale)}
                   class="content-chip rounded-full border border-ink/15 px-3 py-1.5 transition-colors hover:bg-ink hover:text-paper"
                 >
                   {tag}
@@ -82,7 +86,7 @@ const { popular, tags, archive, author } = Astro.props;
           <div class="corner bl"></div>
           <div class="corner br"></div>
           <div class="mb-3 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/50">
-            Autor del mes
+            {copy.author}
           </div>
           <div class="flex items-center gap-5">
             <div class="content-placeholder-img flex h-20 w-20 items-center justify-center">
@@ -91,7 +95,7 @@ const { popular, tags, archive, author } = Astro.props;
             <div class="flex-1">
               <div class="font-display text-2xl leading-tight md:text-[1.7rem]">{author.name}</div>
               <div class="mt-1 font-ui text-[12px] text-ink/60">
-                {author.role} · {author.articleCount} artículos
+                {author.role} · {author.articleCount} {copy.authorArticles}
               </div>
             </div>
           </div>
@@ -99,10 +103,10 @@ const { popular, tags, archive, author } = Astro.props;
             {author.bio}
           </p>
           <a
-            href="/blog"
+            href={localizePath('/blog', locale)}
             class="arrow-link mt-5 inline-flex items-center gap-2 font-ui text-[12px] font-semibold uppercase tracking-wide"
           >
-            <span class="ulink">Ver todos sus artículos</span>
+            <span class="ulink">{copy.seeAuthor}</span>
             <svg class="arrow-ico" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
               <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
             </svg>
@@ -111,20 +115,20 @@ const { popular, tags, archive, author } = Astro.props;
 
         <div class="reveal reveal-delay-3">
           <div class="mb-6 flex items-baseline gap-3">
-            <h3 class="font-display text-2xl md:text-3xl">Archivo</h3>
-            <span class="font-mono text-[11px] text-ink/40">→ ÍNDICE</span>
+            <h3 class="font-display text-2xl md:text-3xl">{copy.archive}</h3>
+            <span class="font-mono text-[11px] text-ink/40">{copy.index}</span>
           </div>
           <ul class="divide-y divide-ink/10 border-y border-ink/10 font-ui text-[14px]">
             {
               archive.map((item) => (
                 <li class="flex items-center justify-between py-3">
-                  <a href="/blog" class="ulink">{item.label}</a>
+                  <a href={localizePath('/blog', locale)} class="ulink">{item.label}</a>
                   <span class="font-mono text-[11px] text-ink/40">{item.count}</span>
                 </li>
               ))
             }
             <li class="flex items-center justify-between py-3">
-              <a href="/blog" class="ulink">Ver archivo completo →</a>
+              <a href={localizePath('/blog', locale)} class="ulink">{copy.fullArchive}</a>
               <span class="font-mono text-[11px] text-ink/40">142</span>
             </li>
           </ul>

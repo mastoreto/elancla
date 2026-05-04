@@ -1,6 +1,9 @@
 ---
 import cn from '../utils/cn.ts';
 import MobileMenu from './MobileMenu.astro';
+import type { Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { getLocaleSwitcherLinks, localizePath } from 'src/i18n/utils';
 
 interface ResourceItem {
   label: string;
@@ -8,9 +11,18 @@ interface ResourceItem {
   description?: string;
 }
 
-const recursos: ResourceItem[] = [
-  { label: 'Confesión de fe', href: '/confesion-de-fe', description: 'IX pilares doctrinales' },
-];
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getMessages(locale).nav;
+const localeLinks = getLocaleSwitcherLinks(Astro.url.pathname, locale);
+const currentLocale = localeLinks.find((item) => item.current) ?? localeLinks[0];
+const recursos: ResourceItem[] = copy.resources.items.map((item) => ({
+  ...item,
+  href: localizePath(item.href, locale),
+}));
 
 const styles = {
   header: cn(
@@ -33,6 +45,15 @@ const styles = {
   actions: cn('flex items-center gap-3'),
   liveChip: cn('hidden md:flex items-center gap-2 text-[11px] font-ui font-medium text-ink/60 uppercase tracking-wider'),
   liveDot: cn('w-1.5 h-1.5 rounded-full bg-primary live-dot'),
+  iconBtn: cn(
+    'hidden sm:inline-flex h-9 w-9 items-center justify-center rounded-full',
+    'border border-ink/10 bg-ink/5 text-ink transition-colors hover:bg-ink/10'
+  ),
+  languageSummary: cn(
+    'hidden sm:inline-flex h-9 items-center gap-1.5 rounded-full',
+    'border border-ink/10 bg-ink/5 px-3 font-ui text-[11px] font-semibold uppercase tracking-wide',
+    'text-ink cursor-pointer select-none transition-colors hover:bg-ink/10'
+  ),
   ctaBtn: cn(
     'cta-btn btn-primary hidden lg:inline-flex items-center gap-2',
     'rounded-full bg-ink text-paper',
@@ -51,39 +72,32 @@ const styles = {
   <div class={styles.wrapper}>
     <nav
       class={styles.nav}
-      style="background: rgba(250,248,245,0.72)"
       id="nav"
     >
-      <a href="/#inicio" class={styles.logoLink}>
+      <a href={localizePath('/#inicio', locale)} class={styles.logoLink}>
         <img
           src="/images/anclarojo.png"
           alt=""
           class={styles.logoImg}
         />
         <div class="leading-none">
-          <div class={styles.logoLabel}>IGLESIA BAUTISTA</div>
-          <div class={styles.logoName}>El Ancla</div>
+          <div class={styles.logoLabel}>{copy.brandLabel}</div>
+          <div class={styles.logoName}>{copy.brandName}</div>
         </div>
       </a>
 
       <ul class={styles.navList}>
-        <li><a href="/#inicio" class="nav-item ulink" data-section="inicio">Inicio</a></li>
-        <li>
-          <a
-            href="/#nosotros"
-            class="nav-item ulink"
-            data-section="nosotros"
-          >
-            Nosotros
-          </a>
-        </li>
-        <li><a href="/#actividades" class="nav-item ulink" data-section="actividades">Actividades</a></li>
-        <li><a href="/#sermones" class="nav-item ulink" data-section="sermones">Sermones</a></li>
-        <li><a href="/#ministerios" class="nav-item ulink" data-section="ministerios">Ministerios</a></li>
+        {copy.links.map((item) => (
+          <li>
+            <a href={localizePath(item.href, locale)} class="nav-item ulink" data-section={item.section}>
+              {item.label}
+            </a>
+          </li>
+        ))}
         <li class="relative group/recursos">
           <button type="button" class="nav-item ulink cursor-pointer select-none">
             <span class="inline-flex items-center gap-1.5 leading-none">
-              Recursos
+              {copy.resources.label}
               <svg class="w-2.5 h-2.5 translate-y-px opacity-50 transition-transform duration-300 group-hover/recursos:rotate-180 flex-shrink-0" viewBox="0 0 10 6" fill="none">
                 <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
@@ -107,14 +121,54 @@ const styles = {
       <div class={styles.actions}>
         <span class={styles.liveChip}>
           <span class={styles.liveDot}></span>
-          Dom · 11:15
+          {copy.live}
         </span>
+
+        <details class="locale-switcher relative">
+          <summary class={styles.languageSummary} aria-label={copy.language.label}>
+            <span aria-hidden="true">{currentLocale.flag}</span>
+            <span>{currentLocale.label}</span>
+          </summary>
+          <div class="absolute right-0 top-full z-50 mt-3 min-w-[10rem] rounded-2xl border border-ink/10 bg-paper/95 p-2 shadow-[0_8px_30px_-8px_rgba(20,20,20,0.18)] backdrop-blur-xl">
+            {localeLinks.map((item) => (
+              <a
+                href={item.href}
+                class="flex items-center justify-between gap-3 rounded-xl px-3 py-2 font-ui text-[12px] text-ink/80 transition-colors hover:bg-ink/5"
+                aria-current={item.current ? 'page' : undefined}
+              >
+                <span class="inline-flex items-center gap-2">
+                  <span aria-hidden="true">{item.flag}</span>
+                  <span>{item.nativeName}</span>
+                </span>
+                <span class="font-semibold">{item.label}</span>
+              </a>
+            ))}
+          </div>
+        </details>
+
+        <button
+          type="button"
+          class={styles.iconBtn}
+          data-theme-toggle
+          data-label-light={copy.theme.lightLabel}
+          data-label-dark={copy.theme.darkLabel}
+          aria-label={copy.theme.label}
+          aria-pressed="false"
+        >
+          <svg data-theme-icon="moon" width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M21 14.6A8.5 8.5 0 0 1 9.4 3a7 7 0 1 0 11.6 11.6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <svg data-theme-icon="sun" style="display:none" width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"></circle>
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+          </svg>
+        </button>
 
         <!-- Hamburguesa visible solo en mobile -->
         <button
           id="menuToggle"
           class={styles.hamburger}
-          aria-label="Abrir menú"
+          aria-label={copy.menuOpen}
           aria-expanded="false"
           aria-controls="mobileMenu"
         >
@@ -124,8 +178,8 @@ const styles = {
         </button>
 
         <!-- CTA oculto en mobile, visible en desktop -->
-        <a href="/#visitanos" class={styles.ctaBtn}>
-          Visítanos
+        <a href={localizePath('/#visitanos', locale)} class={styles.ctaBtn}>
+          {copy.cta}
           <svg class="cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
             <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
@@ -135,4 +189,4 @@ const styles = {
   </div>
 </header>
 
-<MobileMenu recursos={recursos} />
+<MobileMenu recursos={recursos} locale={locale} localeLinks={localeLinks} />

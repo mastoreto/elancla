@@ -1,7 +1,7 @@
 ---
 import BlogArticleTemplate from 'src/components/Blog/BlogArticleTemplate.astro';
 import type { BlogArticle } from 'src/data/blog';
-import { defaultLocale } from 'src/i18n/config';
+import { nonDefaultLocales, type Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout.astro';
@@ -9,27 +9,25 @@ import { getAllPostsFull, mapSanityPostToArticle } from 'src/lib/sanity';
 
 export async function getStaticPaths() {
   const posts = await getAllPostsFull();
-  return posts.map((post) => {
-    const article = mapSanityPostToArticle(post);
-    return {
-      params: {
-        year: article.year,
-        month: article.month,
-        day: article.day,
-        slug: article.slug,
-      },
-      props: { article },
-    };
-  });
+  return nonDefaultLocales.flatMap((locale) =>
+    posts.map((post) => {
+      const article = mapSanityPostToArticle(post);
+      return {
+        params: {
+          locale,
+          year: article.year,
+          month: article.month,
+          day: article.day,
+          slug: article.slug,
+        },
+        props: { article, locale },
+      };
+    })
+  );
 }
 
-const { article } = Astro.props as { article: BlogArticle };
-const locale = defaultLocale;
+const { article, locale } = Astro.props as { article: BlogArticle; locale: Locale };
 const copy = getMessages(locale).blog;
-
-// Artículos relacionados y navegación derivados de todos los artículos en build time
-// se resuelven en el template vía props; las funciones helper siguen disponibles
-// desde src/data/blog si se usa con datos estáticos, o se pueden recalcular aquí.
 const articleUrl = `/blog/${article.year}/${article.month}/${article.day}/${article.slug}`;
 const breadcrumbs = [
   { name: copy.breadcrumbs.home, url: localizePath('/', locale) },

@@ -4,9 +4,13 @@ import type { Doctrine } from 'src/data/doctrines';
 interface Props {
   doctrine: Doctrine;
   total: string;
+  copy: any;
 }
 
-const { doctrine: d, total } = Astro.props;
+const { doctrine: d, total, copy } = Astro.props;
+const doctrineCountLabel = copy.doctrineOf
+  .replace('{number}', d.number)
+  .replace('{total}', total);
 ---
 
 <article id={`doctrine-${d.id}`} class="doctrine-row" data-id={d.id}>
@@ -18,7 +22,7 @@ const { doctrine: d, total } = Astro.props;
       <h3 class="row-title font-display text-[clamp(1.7rem,3vw,2.7rem)] leading-[1.05] tracking-tight">{d.title}</h3>
       {d.featured && (
         <span class="ml-3 inline-flex items-center gap-1.5 text-[10px] tracking-[0.22em] uppercase text-primary font-semibold">
-          <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>Centro
+          <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>{copy.featured}
         </span>
       )}
       <div class="w-full mt-1.5 font-ui text-[12.5px] text-ink/50">{d.subtitle}</div>
@@ -27,7 +31,7 @@ const { doctrine: d, total } = Astro.props;
       <span class="inline-block font-ui text-[10.5px] tracking-[0.22em] uppercase text-ink/55 border border-ink/15 rounded-full px-3 py-1.5">{d.tag}</span>
     </div>
     <div class="col-span-1 flex justify-end">
-      <button type="button" class="row-plus w-11 h-11 rounded-full border border-ink/15 flex items-center justify-center" aria-label="Expandir">
+      <button type="button" class="row-plus w-11 h-11 rounded-full border border-ink/15 flex items-center justify-center" aria-label={copy.expand}>
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
           <path d="M6 1V11M1 6H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
         </svg>
@@ -56,7 +60,7 @@ const { doctrine: d, total } = Astro.props;
 
       <!-- References sidebar -->
       <aside class="col-span-12 md:col-span-3 md:col-start-9 mt-6 md:mt-0">
-        <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-4">Referencias</div>
+        <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-4">{copy.references}</div>
         <div class="flex flex-wrap gap-2 mb-8">
           {d.refs.map((ref) => (
             <span class="ref-chip">{ref}</span>
@@ -64,7 +68,7 @@ const { doctrine: d, total } = Astro.props;
         </div>
         <div class="pt-6 border-t border-ink/10">
           <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-2">
-            Doctrina {d.number} de {total}
+            {doctrineCountLabel}
           </div>
           <div class="font-display text-lg italic text-ink/80">{d.tag}</div>
         </div>

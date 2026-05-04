@@ -14,6 +14,7 @@ import BlogHero from './BlogHero.astro';
 import BlogMarquee from './BlogMarquee.astro';
 import BlogNewsletter from './BlogNewsletter.astro';
 import BlogSeries from './BlogSeries.astro';
+import type { Locale } from 'src/i18n/config';
 
 interface Props {
   articles: BlogArticle[];
@@ -24,6 +25,8 @@ interface Props {
   popular: BlogPopularItem[];
   tags: string[];
   archive: BlogArchiveItem[];
+  copy: any;
+  locale: Locale;
 }
 
 const {
@@ -35,21 +38,25 @@ const {
   popular,
   tags,
   archive,
+  copy,
+  locale,
 } = Astro.props;
 ---
 
 <article class="blog-page">
-  <BlogHero totalArticles={142} categoryCount={categories.length - 1} />
+  <BlogHero totalArticles={142} categoryCount={categories.length - 1} copy={copy.hero} locale={locale} />
   <BlogMarquee items={marqueeItems} />
-  <BlogFeatured article={featured} />
-  <BlogCategories categories={categories} />
-  <BlogArticleGrid articles={articles} categories={categories} />
-  <BlogSeries series={series} />
+  <BlogFeatured article={featured} copy={copy.featured} locale={locale} />
+  <BlogCategories categories={categories} copy={copy.categories} />
+  <BlogArticleGrid articles={articles} categories={categories} copy={copy.articles} locale={locale} />
+  <BlogSeries series={series} copy={copy.series} locale={locale} />
   <BlogExplore
     popular={popular}
     tags={tags}
     archive={archive}
     author={featured.author}
+    copy={copy.explore}
+    locale={locale}
   />
-  <BlogNewsletter />
+  <BlogNewsletter copy={copy.newsletter} />
 </article>

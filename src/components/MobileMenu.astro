@@ -1,15 +1,31 @@
 ---
+import type { Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+
 interface ResourceItem {
   label: string;
   href: string;
   description?: string;
 }
 
-interface Props {
-  recursos: ResourceItem[];
+interface LocaleLink {
+  code: Locale;
+  label: string;
+  nativeName: string;
+  flag: string;
+  href: string;
+  current: boolean;
 }
 
-const { recursos } = Astro.props;
+interface Props {
+  recursos: ResourceItem[];
+  locale: Locale;
+  localeLinks: LocaleLink[];
+}
+
+const { recursos, locale, localeLinks } = Astro.props;
+const copy = getMessages(locale).nav;
 ---
 
 <div
@@ -17,7 +33,7 @@ const { recursos } = Astro.props;
   class="mobile-menu fixed inset-0 z-[60] lg:hidden overflow-y-auto"
   aria-modal="true"
   role="dialog"
-  aria-label="Menú de navegación"
+  aria-label={copy.menuOpen}
   aria-hidden="true"
 >
   <div class="absolute inset-0 bg-paper/97 backdrop-blur-2xl" />
@@ -25,14 +41,14 @@ const { recursos } = Astro.props;
   <div class="relative flex flex-col min-h-full px-6">
     <!-- Top bar con logo repetido + botón cerrar -->
     <div class="flex items-center justify-between py-5 border-b border-ink/10">
-      <a href="/#inicio" class="flex items-center gap-3 menu-close-trigger">
+      <a href={localizePath('/#inicio', locale)} class="flex items-center gap-3 menu-close-trigger">
         <img src="/images/anclarojo.png" alt="" class="w-7 h-7 object-contain" />
         <div class="leading-none">
           <div class="text-[6.8px] tracking-[0.22em] font-futura font-semibold text-ink/60 uppercase">
-            Iglesia Bautista
+            {copy.brandLabel}
           </div>
           <div class="font-display text-[17px] tracking-tight font-semibold leading-none uppercase">
-            El Ancla
+            {copy.brandName}
           </div>
         </div>
       </a>
@@ -40,7 +56,7 @@ const { recursos } = Astro.props;
       <button
         id="mobileMenuClose"
         class="flex items-center justify-center w-9 h-9 rounded-full border border-ink/10 bg-ink/5 text-ink transition-colors hover:bg-ink/10"
-        aria-label="Cerrar menú"
+        aria-label={copy.menuClose}
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
           <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
@@ -51,31 +67,13 @@ const { recursos } = Astro.props;
     <!-- Links de navegación -->
     <nav class="flex-1 py-2">
       <ul class="flex flex-col">
-        <li class="border-b border-ink/8">
-          <a href="/#inicio" class="mobile-nav-link menu-close-trigger font-ui font-medium text-ink/80">
-            Inicio
-          </a>
-        </li>
-        <li class="border-b border-ink/8">
-          <a href="/#nosotros" class="mobile-nav-link menu-close-trigger font-ui font-medium text-ink/80">
-            Nosotros
-          </a>
-        </li>
-        <li class="border-b border-ink/8">
-          <a href="/#actividades" class="mobile-nav-link menu-close-trigger font-ui font-medium text-ink/80">
-            Actividades
-          </a>
-        </li>
-        <li class="border-b border-ink/8">
-          <a href="/#sermones" class="mobile-nav-link menu-close-trigger font-ui font-medium text-ink/80">
-            Sermones
-          </a>
-        </li>
-        <li class="border-b border-ink/8">
-          <a href="/#ministerios" class="mobile-nav-link menu-close-trigger font-ui font-medium text-ink/80">
-            Ministerios
-          </a>
-        </li>
+        {copy.links.map((item) => (
+          <li class="border-b border-ink/8">
+            <a href={localizePath(item.href, locale)} class="mobile-nav-link menu-close-trigger font-ui font-medium text-ink/80">
+              {item.label}
+            </a>
+          </li>
+        ))}
 
         <!-- Acordeón Recursos -->
         <li class="border-b border-ink/8">
@@ -84,7 +82,7 @@ const { recursos } = Astro.props;
             class="mobile-nav-link w-full flex items-center justify-between text-left font-ui font-medium text-ink/80"
             aria-expanded="false"
           >
-            <span>Recursos</span>
+            <span>{copy.resources.label}</span>
             <svg
               id="resourcesChevron"
               class="w-3.5 h-3.5 transition-transform duration-200 text-ink/40 flex-shrink-0"
@@ -118,11 +116,51 @@ const { recursos } = Astro.props;
 
     <!-- Pie con CTA -->
     <div class="py-8">
+      <div class="mb-4 grid grid-cols-[1fr_auto] gap-3">
+        <div class="rounded-2xl border border-ink/10 p-2">
+          <div class="px-2 pb-2 font-ui text-[10px] font-semibold uppercase tracking-[0.22em] text-ink/50">
+            {copy.language.label}
+          </div>
+          <div class="flex flex-wrap gap-2">
+            {localeLinks.map((item) => (
+              <a
+                href={item.href}
+                class:list={[
+                  'menu-close-trigger inline-flex items-center gap-1.5 rounded-full border px-3 py-2 font-ui text-[11px] font-semibold uppercase tracking-wide',
+                  item.current ? 'border-primary bg-primary text-white' : 'border-ink/10 bg-ink/5 text-ink',
+                ]}
+                aria-current={item.current ? 'page' : undefined}
+              >
+                <span aria-hidden="true">{item.flag}</span>
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+        <button
+          type="button"
+          class="flex h-full min-h-[4.25rem] w-16 items-center justify-center rounded-2xl border border-ink/10 bg-ink/5 text-ink transition-colors hover:bg-ink/10"
+          data-theme-toggle
+          data-label-light={copy.theme.lightLabel}
+          data-label-dark={copy.theme.darkLabel}
+          aria-label={copy.theme.label}
+          aria-pressed="false"
+        >
+          <svg data-theme-icon="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M21 14.6A8.5 8.5 0 0 1 9.4 3a7 7 0 1 0 11.6 11.6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <svg data-theme-icon="sun" style="display:none" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"></circle>
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+          </svg>
+        </button>
+      </div>
+
       <a
-        href="/#visitanos"
+        href={localizePath('/#visitanos', locale)}
         class="menu-close-trigger cta-btn btn-primary inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink text-paper px-5 py-3.5 font-ui text-[13px] font-semibold tracking-wide uppercase"
       >
-        Visítanos
+        {copy.cta}
         <svg class="cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
           <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
         </svg>
@@ -130,7 +168,7 @@ const { recursos } = Astro.props;
 
       <div class="mt-5 flex items-center gap-2 text-[11px] font-ui font-medium text-ink/50 uppercase tracking-wider">
         <span class="w-1.5 h-1.5 rounded-full bg-primary live-dot"></span>
-        Domingos · 11:15
+        {copy.live}
       </div>
     </div>
   </div>

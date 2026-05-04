@@ -7,20 +7,23 @@ import BlogArticleNav from './BlogArticleNav.astro';
 import BlogAuthorBlock from './BlogAuthorBlock.astro';
 import BlogNewsletter from './BlogNewsletter.astro';
 import BlogRelated from './BlogRelated.astro';
+import type { Locale } from 'src/i18n/config';
 
 interface Props {
   article: BlogArticle;
   related: BlogArticle[];
   previous: BlogArticle | null;
   next: BlogArticle | null;
+  copy: any;
+  locale: Locale;
 }
 
-const { article, related, previous, next } = Astro.props;
+const { article, related, previous, next, copy, locale } = Astro.props;
 const toc = getArticleToc(article);
 ---
 
 <article class="blog-page">
-  <BlogArticleHero article={article} />
+  <BlogArticleHero article={article} locale={locale} />
 
   <section class="relative">
     <div class="mx-auto max-w-[1600px] px-6 md:px-10">
@@ -97,14 +100,14 @@ const toc = getArticleToc(article);
         </aside>
 
         <div class="order-1 lg:order-2 lg:col-span-9">
-          <BlogArticleBody article={article} />
+          <BlogArticleBody article={article} locale={locale} />
         </div>
       </div>
     </div>
   </section>
 
-  <BlogAuthorBlock author={article.author} />
-  <BlogArticleNav previous={previous} next={next} />
-  <BlogRelated articles={related} />
-  <BlogNewsletter compact article={article} />
+  <BlogAuthorBlock author={article.author} copy={copy.article} locale={locale} />
+  <BlogArticleNav previous={previous} next={next} copy={copy.article} locale={locale} />
+  <BlogRelated articles={related} copy={copy.article} locale={locale} />
+  <BlogNewsletter compact article={article} copy={copy.newsletter} />
 </article>

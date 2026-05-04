@@ -14,6 +14,13 @@ export default defineConfig({
   site: SITE_URL,
   output: 'static',
   trailingSlash: 'never',
+  i18n: {
+    defaultLocale: 'es',
+    locales: ['es', 'pt', 'en'],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
   integrations: [
     sitemap({
       changefreq: 'weekly',
@@ -21,7 +28,11 @@ export default defineConfig({
       lastmod: new Date(),
       i18n: {
         defaultLocale: 'es',
-        locales: { es: 'es-UY' },
+        locales: {
+          es: 'es-UY',
+          pt: 'pt-BR',
+          en: 'en-US',
+        },
       },
       filter: (page) => {
         // Excluir alias con caracteres no normalizados (ej. ñ → %C3%B1).

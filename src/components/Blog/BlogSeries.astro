@@ -1,35 +1,37 @@
 ---
 import type { BlogSeriesItem } from 'src/data/blog';
+import type { Locale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
 
 interface Props {
   series: BlogSeriesItem[];
+  copy: any;
+  locale: Locale;
 }
 
-const { series } = Astro.props;
+const { series, copy, locale } = Astro.props;
 ---
 
 <section class="invert-block relative py-24 md:py-32">
   <div class="mx-auto max-w-[1600px] px-6 md:px-10">
     <div class="mb-14 flex items-baseline gap-6 md:mb-16">
-      <span class="section-counter text-paper/50">[ 04 - Serie en curso ]</span>
+      <span class="section-counter text-paper/50">{copy.counter}</span>
       <span class="h-px flex-1 bg-paper/15"></span>
-      <span class="content-chip text-primary">5 entregas</span>
+      <span class="content-chip text-primary">{copy.badge}</span>
     </div>
 
     <div class="mb-12 grid grid-cols-1 gap-10 md:mb-16 lg:grid-cols-12 lg:gap-16">
       <div class="reveal lg:col-span-7">
         <div class="mb-4 font-mono text-[11px] uppercase tracking-[0.2em] opacity-60">
-          Hebreos · estudio expositivo
+          {copy.eyebrow}
         </div>
         <h2 class="font-display text-4xl leading-none md:text-5xl lg:text-6xl">
-          Una <em class="italic text-primary">esperanza mejor.</em>
+          {copy.headlineBefore}<em class="italic text-primary">{copy.headlineEmphasis}</em>
         </h2>
       </div>
       <div class="reveal reveal-delay-2 flex items-end lg:col-span-5">
         <p class="font-ui text-[15px] leading-relaxed opacity-75 md:text-[16px]">
-          Atravesamos la carta a los Hebreos en cinco entregas dominicales.
-          Cada artículo acompaña al sermón con notas, citas y preguntas para
-          reflexionar en familia.
+          {copy.body}
         </p>
       </div>
     </div>
@@ -38,7 +40,7 @@ const { series } = Astro.props;
       {
         series.map((item) => (
           <a
-            href={item.href}
+            href={localizePath(item.href, locale)}
             class="blog-serie-row group grid items-center gap-5 border-b border-paper/15 px-1 py-7 transition-colors hover:bg-white/[0.03] md:py-8"
           >
             <div
@@ -67,11 +69,11 @@ const { series } = Astro.props;
                 item.status === 'current' ? (
                   <span class="content-chip inline-flex items-center gap-2 rounded-full border border-primary px-2.5 py-1 text-primary">
                     <span class="live-dot h-1.5 w-1.5 rounded-full bg-primary"></span>
-                    Ahora
+                    {copy.current}
                   </span>
                 ) : (
                   <span class="content-chip rounded-full border border-white/20 px-2.5 py-1 opacity-50">
-                    {item.status === 'published' ? 'Publicado' : 'Próximo'}
+                    {item.status === 'published' ? copy.published : copy.upcoming}
                   </span>
                 )
               }

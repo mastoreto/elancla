@@ -1,6 +1,6 @@
 ---
 import BlogPageTemplate from 'src/components/Blog/BlogPageTemplate.astro';
-import { defaultLocale } from 'src/i18n/config';
+import { nonDefaultLocales, type Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout.astro';
@@ -11,6 +11,11 @@ import {
   getAllSeriesWithPosts,
 } from 'src/lib/sanity';
 
+export function getStaticPaths() {
+  return nonDefaultLocales.map((locale) => ({ params: { locale }, props: { locale } }));
+}
+
+const { locale } = Astro.props as { locale: Locale };
 const [posts, categories, allSeries] = await Promise.all([
   getAllPostCards(),
   getAllCategories(),
@@ -22,7 +27,6 @@ const { articles, featured, marqueeItems, series, popular, tags, archive, catego
 if (!featured) {
   throw new Error('Blog requires at least one featured article.');
 }
-const locale = defaultLocale;
 const copy = getMessages(locale).blog;
 ---
 
@@ -35,6 +39,7 @@ const copy = getMessages(locale).blog;
     { name: copy.breadcrumbs.home, url: localizePath('/', locale) },
     { name: copy.breadcrumbs.blog, url: localizePath('/blog', locale) },
   ]}
+  canonical={new URL(localizePath('/blog', locale), Astro.site).toString()}
   locale={locale}
 >
   <BlogPageTemplate

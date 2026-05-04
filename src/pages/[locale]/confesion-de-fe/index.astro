@@ -1,7 +1,7 @@
 ---
 import Layout from 'src/layouts/Layout.astro';
 import { getDoctrines, getSolas } from 'src/data/doctrines';
-import { defaultLocale } from 'src/i18n/config';
+import { nonDefaultLocales, type Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
 import ConfesionHero from 'src/components/ConfesionDeFe/ConfesionHero.astro';
@@ -12,7 +12,11 @@ import ConfesionChristus from 'src/components/ConfesionDeFe/ConfesionChristus.as
 import ConfesionCTA from 'src/components/ConfesionDeFe/ConfesionCTA.astro';
 import 'src/styles/ConfesionDeFe.css';
 
-const locale = defaultLocale;
+export function getStaticPaths() {
+  return nonDefaultLocales.map((locale) => ({ params: { locale }, props: { locale } }));
+}
+
+const { locale } = Astro.props as { locale: Locale };
 const copy = getMessages(locale).confession;
 const doctrines = getDoctrines(locale);
 const solas = getSolas(locale);
@@ -24,6 +28,7 @@ const total = String(doctrines.length).padStart(2, '0');
   description={copy.seo.description}
   keywords={copy.seo.keywords}
   breadcrumbs={copy.breadcrumbs.map((item) => ({ ...item, url: localizePath(item.url, locale) }))}
+  canonical={new URL(localizePath('/confesion-de-fe', locale), Astro.site).toString()}
   locale={locale}
 >
   <ConfesionHero copy={copy.hero} locale={locale} />

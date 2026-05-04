@@ -1,13 +1,18 @@
 ---
 import cn from '../utils/cn.ts';
 
+interface Props {
+  words: string[];
+}
+
+const { words } = Astro.props;
+
 const styles = {
   section: cn('border-y border-ink/10 py-6 overflow-hidden bg-paper'),
   track: cn('marquee whitespace-nowrap font-display italic text-3xl md:text-5xl text-ink/70'),
   separator: cn('px-8 text-primary'),
 };
 
-const words = ['Gracia', 'Palabra', 'Comunidad', 'Misión', 'Oración', 'Familia'];
 ---
 
 <!-- MARQUEE -->

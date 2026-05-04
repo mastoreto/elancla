@@ -1,5 +1,14 @@
 ---
 import cn from '../utils/cn.ts';
+import type { Locale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
+
+interface Props {
+  copy: any;
+  locale: Locale;
+}
+
+const { copy, locale } = Astro.props;
 
 const styles = {
   section: cn('relative py-24 md:py-36'),
@@ -49,18 +58,13 @@ const styles = {
   sigName: cn('font-display text-lg'),
 };
 
-const pillars = [
-  { num: 'I.',   title: 'Centrados en Cristo', desc: 'La cruz es el centro de todo lo que hacemos.' },
-  { num: 'II.',  title: 'Fieles a la Palabra',  desc: 'La Escritura es nuestra autoridad y guía.' },
-  { num: 'III.', title: 'Familia de la fe',      desc: 'Crecer juntos en amor y servicio.' },
-];
 ---
 
 <!-- ABOUT -->
 <section id="nosotros" class={styles.section}>
   <div class={styles.container}>
     <div class={styles.sectionHeader}>
-      <span class="section-counter">[ 01 — Nosotros ]</span>
+      <span class="section-counter">{copy.counter}</span>
       <span class={styles.headerLine}></span>
     </div>
 
@@ -68,24 +72,21 @@ const pillars = [
       <!-- columna izquierda -->
       <div class={styles.colLeft}>
         <h2 class={styles.headline}>
-          Gracias por querer <em class="italic text-primary">conocernos.</em>
+          {copy.headline.before}<em class="italic text-primary">{copy.headline.emphasis}</em>
         </h2>
         <p class={styles.lead}>
-          Conocer una iglesia es un gran desafío en estos tiempos. Esperamos
-          que con la información que encuentres aquí, puedas tener un mayor
-          panorama de quiénes somos y lo que creemos. Eres bienvenido a
-          visitarnos cuando quieras.
+          {copy.lead}
         </p>
 
         <div class={styles.ctaRow}>
-          <a href="/nosotros#historia" class={styles.ctaPrimary}>
-            Nuestra historia
+          <a href={localizePath('/nosotros#historia', locale)} class={styles.ctaPrimary}>
+            {copy.primaryCta}
             <svg class="cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
               <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
             </svg>
           </a>
-          <a href="/nosotros#valores" class={styles.ctaSecondary}>
-            Lo que creemos
+          <a href={localizePath('/nosotros#valores', locale)} class={styles.ctaSecondary}>
+            {copy.secondaryCta}
             <svg class="arrow-ico" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
               <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
             </svg>
@@ -94,7 +95,7 @@ const pillars = [
 
         <!-- pilares -->
         <div class={styles.pillarsGrid}>
-          {pillars.map((p, i) => (
+          {copy.pillars.map((p: any, i: number) => (
             <div class={i === 0 ? styles.pillarOne : i === 1 ? styles.pillarTwo : styles.pillarThree}>
               <div class={styles.pillarNum}>{p.num}</div>
               <div class={styles.pillarTitle}>{p.title}</div>
@@ -105,18 +106,12 @@ const pillars = [
 
         <!-- stats -->
         <div class={styles.statsRow}>
-          <div class="reveal">
-            <div class={styles.statNumber} data-count="29">29</div>
-            <div class={styles.statLabel}>Años en Montevideo</div>
-          </div>
-          <div class="reveal reveal-delay-1">
-            <div class={styles.statNumber} data-count="10">10</div>
-            <div class={styles.statLabel}>Ministerios activos</div>
-          </div>
-          <div class="reveal reveal-delay-2">
-            <div class={styles.statNumber}>∞</div>
-            <div class={styles.statLabel}>Gracia abundante</div>
-          </div>
+          {copy.stats.map((stat: any, index: number) => (
+            <div class={cn('reveal', index > 0 ? `reveal-delay-${index}` : '')}>
+              <div class={styles.statNumber} data-count={stat.value === '∞' ? undefined : stat.value}>{stat.value}</div>
+              <div class={styles.statLabel}>{stat.label}</div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -130,12 +125,12 @@ const pillars = [
           <div class={styles.imageInner}>
             <img
               src="/images/homebanner.jpeg"
-              alt="Nuestra casa"
+              alt={copy.imageAlt}
               class={styles.image}
             />
             <div class={styles.imageOverlay}>
-              <div class={styles.overlayLabel}>Av. Luis A. de Herrera 3101</div>
-              <div class={styles.overlayTitle}>Nuestra casa</div>
+              <div class={styles.overlayLabel}>{copy.imageLabel}</div>
+              <div class={styles.overlayTitle}>{copy.imageTitle}</div>
             </div>
           </div>
         </div>
@@ -144,8 +139,8 @@ const pillars = [
         <div class={styles.signature}>
           <div class={styles.avatar}>JO</div>
           <div>
-            <div class={styles.sigLabel}>Pastoreada por</div>
-            <div class={styles.sigName}>Pr. Juan Olivera</div>
+            <div class={styles.sigLabel}>{copy.pastorLabel}</div>
+            <div class={styles.sigName}>{copy.pastorName}</div>
           </div>
         </div>
       </div>

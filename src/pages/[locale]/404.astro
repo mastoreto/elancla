@@ -1,0 +1,93 @@
+---
+import Layout from 'src/layouts/Layout.astro';
+import Decorators from 'src/components/Decorators.astro';
+import cn from 'src/utils/cn';
+import { nonDefaultLocales, type Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+
+export function getStaticPaths() {
+  return nonDefaultLocales.map((locale) => ({ params: { locale }, props: { locale } }));
+}
+
+const { locale } = Astro.props as { locale: Locale };
+const copy = getMessages(locale).notFound;
+
+const classes = {
+  section: cn(
+    'relative w-screen min-h-screen',
+    'bg-secondary-100',
+    'pt-[9rem] pb-16',
+    'flex items-center',
+    'overflow-hidden'
+  ),
+  content: cn(
+    'relative z-10',
+    'mx-auto w-full max-w-6xl',
+    'px-6 md:px-10',
+    'grid gap-12 lg:grid-cols-[1.1fr_0.9fr]',
+    'items-center'
+  ),
+  card: cn(
+    'bg-white/85 backdrop-blur-md',
+    'rounded-3xl',
+    'shadow-card',
+    'border border-white/70',
+    'p-8 md:p-10'
+  ),
+  kicker: cn('font-futura text-xs md:text-sm', 'tracking-[0.4em] uppercase', 'text-primary-600'),
+  title: cn('font-barastika', 'text-5xl md:text-6xl', 'text-secondary-900', 'mt-4'),
+  description: cn('font-montserrat', 'text-lg md:text-xl', 'text-secondary-700', 'mt-4'),
+  actions: cn('mt-8 flex flex-col sm:flex-row gap-4'),
+  primaryAction: cn('bg-primary-500 text-white', 'font-montserrat font-bold', 'px-6 py-3', 'rounded-md text-center', 'shadow-md shadow-primary-500/30'),
+  secondaryAction: cn('border border-primary-500', 'text-primary-600', 'font-montserrat font-bold', 'px-6 py-3', 'rounded-md text-center', 'bg-white'),
+  helper: cn('mt-6', 'flex items-center gap-3', 'text-secondary-700', 'font-montserrat text-sm md:text-base'),
+  art: cn('relative flex flex-col', 'items-center justify-center', 'text-center'),
+  badge: cn('font-futura-bold text-xs md:text-sm', 'tracking-widest uppercase', 'text-primary-700', 'bg-primary-500/10', 'px-4 py-2 rounded-full'),
+  number: cn('font-barastika', 'text-[8rem] sm:text-[10rem] md:text-[12rem]', 'leading-none', 'text-primary-500'),
+  anchor: cn('w-20 h-auto -mt-4 drop-shadow-md'),
+  tagline: cn('font-boston-angel', 'text-xl md:text-2xl', 'text-secondary-800', 'mt-2'),
+  glowPrimary: cn('pointer-events-none', 'absolute -top-24 -right-16', 'h-60 w-60 md:h-72 md:w-72', 'rounded-full bg-primary-500/10 blur-3xl'),
+  glowSecondary: cn('pointer-events-none', 'absolute -bottom-20 -left-16', 'h-64 w-64 md:h-72 md:w-72', 'rounded-full bg-secondary-200/70 blur-3xl'),
+  decoratorTop: cn('absolute', '-top-28 -right-24', 'w-[45%] h-[45%]', 'opacity-70'),
+  decoratorBottom: cn('absolute', '-bottom-32 -left-20', 'w-[45%] h-[45%]', 'opacity-70'),
+};
+---
+
+<Layout
+  title={copy.seo.title}
+  description={copy.seo.description}
+  noindex={true}
+  canonical={new URL(localizePath('/404', locale), Astro.site).toString()}
+  locale={locale}
+>
+  <section class={classes.section}>
+    <Decorators type="top" customClass={classes.decoratorTop} />
+    <Decorators type="bottom" customClass={classes.decoratorBottom} />
+    <div class={classes.glowPrimary} aria-hidden="true"></div>
+    <div class={classes.glowSecondary} aria-hidden="true"></div>
+
+    <div class={classes.content}>
+      <div class={classes.card}>
+        <p class={classes.kicker}>{copy.kicker}</p>
+        <h1 class={classes.title}>{copy.title}</h1>
+        <p class={classes.description}>{copy.description}</p>
+        <div class={classes.actions}>
+          <a href={localizePath('/', locale)} class={classes.primaryAction}>{copy.primary}</a>
+          <a href={localizePath('/confesion-de-fe', locale)} class={classes.secondaryAction}>{copy.secondary}</a>
+        </div>
+        <div class={classes.helper}>
+          <span class="material-symbols-outlined text-primary-600">travel_explore</span>
+          <span>{copy.helper}</span>
+        </div>
+      </div>
+
+      <div class={classes.art}>
+        <span class={classes.badge}>{copy.badge}</span>
+        <div class={classes.number}>404</div>
+        <img src="/images/anclarojo.png" alt={copy.imageAlt} width="96" height="150" class={classes.anchor} />
+        <p class={classes.tagline}>{copy.tagline}</p>
+      </div>
+    </div>
+  </section>
+</Layout>

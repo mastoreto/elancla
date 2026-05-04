@@ -38,7 +38,9 @@ function updateExpandLabel() {
   if (!expandLabel) return;
   const all = document.querySelectorAll('.doctrine-row');
   const open = document.querySelectorAll('.doctrine-row.open');
-  expandLabel.textContent = open.length === all.length ? 'Cerrar todas' : 'Expandir todas';
+  const collapsedLabel = expandLabel.dataset.collapsedLabel ?? 'Expandir todas';
+  const expandedLabel = expandLabel.dataset.expandedLabel ?? 'Cerrar todas';
+  expandLabel.textContent = open.length === all.length ? expandedLabel : collapsedLabel;
 }
 
 expandBtn?.addEventListener('click', () => {
@@ -69,10 +71,10 @@ function onScroll() {
 
   if (nav) {
     if (window.scrollY > 40) {
-      nav.style.background = 'rgba(250,248,245,0.92)';
-      nav.style.boxShadow = '0 8px 30px -10px rgba(20,20,20,0.08)';
+      nav.style.background = 'color-mix(in srgb, var(--color-paper) 92%, transparent)';
+      nav.style.boxShadow = '0 8px 30px -10px rgba(0,0,0,0.18)';
     } else {
-      nav.style.background = 'rgba(250,248,245,0.72)';
+      nav.style.background = 'color-mix(in srgb, var(--color-paper) 72%, transparent)';
       nav.style.boxShadow = 'none';
     }
   }
