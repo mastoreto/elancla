@@ -1,0 +1,94 @@
+{
+  "hero": {
+    "eyebrow": "Hebreus 6:16",
+    "title": "Uma igreja ancorada no evangelho.",
+    "text": "Somos uma família no coração de Montevidéu. A graça de Deus nos sustenta, a Palavra nos guia e caminhamos juntos na fé.",
+    "cta": "Planeje sua visita",
+    "tag": "Em obra…",
+    "sunday": "Domingo",
+    "where": "Onde",
+    "photoAlt": "A comunidade da igreja reunida sob as árvores"
+  },
+  "god": {
+    "eyebrow": "Um Deus pessoal",
+    "lines": [
+      "Deus @crown não ficou distante.",
+      "Aproximou-se em Jesus Cristo, @cross",
+      "para caminhar ao nosso lado @flame",
+      "*e se tornou a âncora firme da nossa fé."
+    ],
+    "refs": "João 1:14 · Hebreus 6:19",
+    "cta": "Conheça o evangelho"
+  },
+  "doctrines": {
+    "title": "EM O QUE CREMOS",
+    "intro": "Nove verdades que sustentam nossa fé e dão forma ao nosso dia a dia.",
+    "quote": "«Estejam sempre preparados para responder a todo aquele que lhes pedir a razão da esperança que há em vocês.»",
+    "cite": "1 Pedro 3:15",
+    "closing": "Temos esta esperança como âncora firme e segura da alma.",
+    "cta": "Saiba mais",
+    "mark": "FÉ QUE SE VIVE",
+    "listLabel": "As nove doutrinas",
+    "goTo": "Ir para a doutrina"
+  },
+  "together": {
+    "eyebrow": "Crescemos caminhando juntos",
+    "title": "Muitas formas de servir, um corpo que cresce.",
+    "text": "Entendemos o serviço como um caminho de crescimento: em cada ministério nos edificamos como um só corpo.",
+    "tiles": {
+      "preaching": "Pregação",
+      "teaching": "Ensino",
+      "worship": "Louvor",
+      "prayer": "Oração",
+      "youth": "Jovens",
+      "teens": "Adolescentes",
+      "missions": "Missões",
+      "men": "Homens",
+      "women": "Espaço Mulher",
+      "media": "Multimídia"
+    },
+    "photos": {
+      "youth": "Jovens da igreja ao ar livre",
+      "women": "Mulheres reunidas no salão da igreja",
+      "kids": "Crianças da igreja sentadas na grama"
+    }
+  },
+  "sunday": {
+    "eyebrow": "Seu primeiro domingo",
+    "title": "Assim é um domingo conosco.",
+    "photoAlt": "Uma reunião no salão da igreja",
+    "rows": [
+      {
+        "time": "10:00",
+        "title": "Escola bíblica",
+        "text": "Para adultos e crianças. Você pode participar ou chegar direto ao culto."
+      },
+      {
+        "time": "11:15",
+        "title": "Culto de celebração",
+        "text": "Cantamos, oramos e abrimos a Bíblia juntos. Também ao vivo pelo YouTube."
+      },
+      {
+        "time": "13:00",
+        "title": "Fim do culto",
+        "text": "Se quiser, fique para conversar. Ninguém vai apressar você."
+      }
+    ],
+    "how": "Como chegar",
+    "write": "Escreva-nos"
+  },
+  "closing": {
+    "eyebrow": "A obra continua",
+    "title": "Esperamos você neste domingo.",
+    "text": "Uma igreja ancorada no evangelho. Escola bíblica às 10:00 e culto às 11:15.",
+    "follow": "Acompanhe-nos durante a semana",
+    "mapLabel": "Mapa da região: Av. Herrera esquina Juan Arrieta, Montevidéu",
+    "mapNote": "Mapa do Google Maps",
+    "where": "Montevidéu · Domingos 10:00 e 11:15",
+    "how": "Como chegar",
+    "since": "· Igreja Batista · Montevidéu, desde 1997"
+  },
+  "a11y": {
+    "scrollProgress": "Progresso da página"
+  }
+}

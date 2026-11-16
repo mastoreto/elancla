@@ -1,0 +1,16 @@
+{
+  "maintenance": {
+    "icon": "construction",
+    "kicker": "Volvemos pronto",
+    "title": "Estamos en mantenimiento",
+    "description": "Estamos realizando algunas mejoras en el sitio. Volveremos a estar en línea en breve. Gracias por tu paciencia.",
+    "note": "Mientras tanto, podés escribirnos a"
+  },
+  "closed": {
+    "icon": "event_busy",
+    "kicker": "Hasta pronto",
+    "title": "Sitio temporalmente cerrado",
+    "description": "Por ahora el sitio no está disponible. Volvé a visitarnos más adelante.",
+    "note": "Para cualquier consulta, escribinos a"
+  }
+}

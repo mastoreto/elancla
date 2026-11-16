@@ -1,49 +1,53 @@
-# build output
-dist/
+# Dependencies
+node_modules
+.pnp
+.pnp.js
 
-# generated types
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+.next/
+out/
+build
+dist/
 .astro/
 
-# dependencies
-node_modules/
-refactor-code/
+# Turbo
+.turbo
 
-# logs
+# Testing
+coverage
+
+# Vercel
+.vercel
+
+# Logs
+*-debug.log*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 
-# environment variables
-.env
-.env.production
-
-# macOS-specific files
+# OS / editor
 .DS_Store
+*.pem
+.idea
+.vscode/*
+!.vscode/extensions.json
 
-# ── GSD baseline (auto-generated) ──
-.gsd
-.gsd-id
-.mcp.json
-.bg-shell/
-Thumbs.db
-*.swp
-*.swo
-*~
-.idea/
-.vscode/
-*.code-workspace
-.env.*
-!.env.example
-.next/
-build/
-__pycache__/
-*.pyc
-.venv/
-venv/
-target/
-vendor/
-*.log
-coverage/
-.cache/
-tmp/
+# Prisma
+packages/db/prisma/*.db
+
+# Windows/WSL download markers
+*:Zone.Identifier
+
+# Local tooling
+.codegraph/
+.codex
+
+# Browser test artifacts
+.playwright-mcp/

@@ -1,0 +1,66 @@
+/* ============================================================
+   ThemeTransition.css — cortina suave al cambiar de tema
+   El nuevo tema se revela de arriba hacia abajo con un borde
+   difuminado (máscara de gradiente), no con un corte duro.
+   ============================================================ */
+
+/* Solo durante el cambio de tema: colapsamos los grupos nombrados
+   (header / contenido) dentro de `root` para que la cortina cubra
+   toda la página como una sola capa. */
+html[data-theme-transition="curtain"] #siteHeader,
+html[data-theme-transition="curtain"] main {
+  view-transition-name: none;
+}
+
+/* El tema anterior queda quieto debajo; la cortina del nuevo tema
+   cae sobre él. */
+html[data-theme-transition="curtain"]::view-transition-old(root) {
+  animation: none;
+  z-index: 1;
+}
+
+html[data-theme-transition="curtain"]::view-transition-new(root) {
+  z-index: 2;
+  /* La banda de difuminado ocupa ~1 viewport de alto: caída
+     muy suave y progresiva, sin límite visible. */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 33.34%,
+    rgba(0, 0, 0, 0) 66.66%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 33.34%,
+    rgba(0, 0, 0, 0) 66.66%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  -webkit-mask-size: 100% 300%;
+  mask-size: 100% 300%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 50% 100%;
+  mask-position: 50% 100%;
+  animation: themeCurtainFall 900ms var(--motion-ease-emphasized) both;
+}
+
+@keyframes themeCurtainFall {
+  from {
+    -webkit-mask-position: 50% 100%;
+    mask-position: 50% 100%;
+  }
+  to {
+    -webkit-mask-position: 50% 0%;
+    mask-position: 50% 0%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme-transition="curtain"]::view-transition-new(root) {
+    animation: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}

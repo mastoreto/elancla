@@ -1,0 +1,94 @@
+{
+  "hero": {
+    "eyebrow": "Hebrews 6:16",
+    "title": "A church anchored in the gospel.",
+    "text": "We are a family in the heart of Montevideo. God's grace holds us, His Word guides us, and we walk in faith together.",
+    "cta": "Plan your visit",
+    "tag": "Under construction…",
+    "sunday": "Sunday",
+    "where": "Where",
+    "photoAlt": "The church community gathered under the trees"
+  },
+  "god": {
+    "eyebrow": "A personal God",
+    "lines": [
+      "God @crown did not stay far away.",
+      "He came near in Jesus Christ, @cross",
+      "to walk beside us @flame",
+      "*and became the steady anchor of our faith."
+    ],
+    "refs": "John 1:14 · Hebrews 6:19",
+    "cta": "Discover the gospel"
+  },
+  "doctrines": {
+    "title": "WHAT WE BELIEVE",
+    "intro": "Nine truths that hold our faith and shape how we live each day.",
+    "quote": "“Always be prepared to give an answer to everyone who asks you to give the reason for the hope that you have.”",
+    "cite": "1 Peter 3:15",
+    "closing": "We have this hope as an anchor for the soul, firm and secure.",
+    "cta": "Learn more",
+    "mark": "FAITH LIVED OUT",
+    "listLabel": "The nine doctrines",
+    "goTo": "Go to doctrine"
+  },
+  "together": {
+    "eyebrow": "We grow walking together",
+    "title": "Many ways to serve, one body that grows.",
+    "text": "We see service as a path of growth: in every ministry we build each other up as one body.",
+    "tiles": {
+      "preaching": "Preaching",
+      "teaching": "Teaching",
+      "worship": "Worship",
+      "prayer": "Prayer",
+      "youth": "Youth",
+      "teens": "Teens",
+      "missions": "Missions",
+      "men": "Men",
+      "women": "Women's space",
+      "media": "Media"
+    },
+    "photos": {
+      "youth": "Church youth outdoors",
+      "women": "Women gathered in the church hall",
+      "kids": "Church children sitting on the grass"
+    }
+  },
+  "sunday": {
+    "eyebrow": "Your first Sunday",
+    "title": "This is a Sunday with us.",
+    "photoAlt": "A gathering in the church hall",
+    "rows": [
+      {
+        "time": "10:00",
+        "title": "Bible school",
+        "text": "For adults and children. Join in or come straight to the service."
+      },
+      {
+        "time": "11:15",
+        "title": "Celebration service",
+        "text": "We sing, pray and open the Bible together. Also live on YouTube."
+      },
+      {
+        "time": "13:00",
+        "title": "Service ends",
+        "text": "If you like, stay and chat. Nobody will rush you."
+      }
+    ],
+    "how": "Get directions",
+    "write": "Write to us"
+  },
+  "closing": {
+    "eyebrow": "The work goes on",
+    "title": "We're waiting for you this Sunday.",
+    "text": "A church anchored in the gospel. Bible school at 10:00 and service at 11:15.",
+    "follow": "Follow us during the week",
+    "mapLabel": "Area map: Av. Herrera at Juan Arrieta, Montevideo",
+    "mapNote": "Google Maps",
+    "where": "Montevideo · Sundays 10:00 and 11:15",
+    "how": "Get directions",
+    "since": "· Baptist Church · Montevideo, since 1997"
+  },
+  "a11y": {
+    "scrollProgress": "Page progress"
+  }
+}

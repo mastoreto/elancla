@@ -1,0 +1,16 @@
+{
+  "maintenance": {
+    "icon": "construction",
+    "kicker": "Voltamos logo",
+    "title": "Estamos em manutenção",
+    "description": "Estamos fazendo algumas melhorias no site. Voltaremos a ficar online em breve. Obrigado pela paciência.",
+    "note": "Enquanto isso, você pode nos escrever para"
+  },
+  "closed": {
+    "icon": "event_busy",
+    "kicker": "Até breve",
+    "title": "Site temporariamente fechado",
+    "description": "No momento o site não está disponível. Volte a nos visitar mais tarde.",
+    "note": "Para qualquer dúvida, escreva para"
+  }
+}

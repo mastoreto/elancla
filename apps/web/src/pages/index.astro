@@ -1,0 +1,8 @@
+---
+import LandingPage from 'src/components/LandingPage.astro';
+import { getLocaleFromUrl } from 'src/i18n/utils';
+
+const locale = getLocaleFromUrl(Astro.url);
+---
+
+<LandingPage locale={locale} />

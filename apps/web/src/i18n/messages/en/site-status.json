@@ -1,0 +1,16 @@
+{
+  "maintenance": {
+    "icon": "construction",
+    "kicker": "Back soon",
+    "title": "We're under maintenance",
+    "description": "We're making some improvements to the site. We'll be back online shortly. Thanks for your patience.",
+    "note": "In the meantime, you can reach us at"
+  },
+  "closed": {
+    "icon": "event_busy",
+    "kicker": "See you soon",
+    "title": "Site temporarily closed",
+    "description": "The site isn't available right now. Please check back later.",
+    "note": "For any inquiries, email us at"
+  }
+}

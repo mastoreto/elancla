@@ -1,0 +1,39 @@
+# syntax=docker/dockerfile:1
+# Sitio público "el ancla" (apps/web, Astro estático) servido con nginx.
+# Build con Bun desde el monorepo → dist/ → imagen nginx.
+
+# ─── Base ────────────────────────────────────────────────────────────────────
+FROM oven/bun:1.2.4-debian AS base
+WORKDIR /app
+
+# ─── deps: dependencias del workspace (capa cacheable) ───────────────────────
+FROM base AS deps
+COPY package.json bun.lock turbo.json ./
+COPY apps/admin/package.json apps/admin/
+COPY apps/web/package.json apps/web/
+COPY packages/auth/package.json packages/auth/
+COPY packages/db/package.json packages/db/
+COPY packages/content/package.json packages/content/
+COPY packages/env/package.json packages/env/
+COPY packages/utils/package.json packages/utils/
+COPY packages/biome-config/package.json packages/biome-config/
+COPY packages/typescript-config/package.json packages/typescript-config/
+RUN bun install --frozen-lockfile
+
+# ─── builder: compila el sitio estático ──────────────────────────────────────
+FROM base AS builder
+# Para hornear la config real desde la BD, pasá un DATABASE_URL accesible en build.
+# Vacío → getSiteConfig() cae a los valores de fallback (el build estático igual OK).
+ARG DATABASE_URL=""
+ENV DATABASE_URL=$DATABASE_URL
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+# Cliente Prisma (permite la lectura build-time de config si hay DATABASE_URL).
+RUN bun run --filter @ancla/db db:generate
+RUN bun run --filter web build
+
+# ─── runner: nginx sirviendo dist/ ───────────────────────────────────────────
+FROM nginx:1.27-alpine AS runner
+COPY apps/web/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
+EXPOSE 80

@@ -1,24 +1,24 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "include": [
-    ".astro/types.d.ts",
-    "**/*",
-    "./node_modules/swiper/types",
-    "./node_modules/@types"
-  ],
   "compilerOptions": {
-    "baseUrl": ".",
-    "plugins": [
-      {
-        "name": "@astrojs/ts-plugin"
-      }
-    ],
-    "typeRoots": ["./node_modules/@types", "./node_modules/swiper/types"],
-    "allowSyntheticDefaultImports": true,
+    "target": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
     "resolveJsonModule": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
-    "allowImportingTsExtensions": true
-  },
-  "exclude": ["dist", "studio"]
+    "isolatedModules": true,
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@ancla/utils": ["packages/utils/src"],
+      "@ancla/content": ["packages/content/src"],
+      "@ancla/db": ["packages/db/src"],
+      "@ancla/env": ["packages/env/src"]
+    },
+    "types": ["node"]
+  }
 }

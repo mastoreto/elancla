@@ -1,0 +1,76 @@
+---
+import AnchorMark from 'src/components/AnchorMark.astro';
+import { ANCHOR_PATH } from 'src/data/anchorPath';
+import type { Messages } from 'src/i18n/messages';
+
+interface Props {
+  copy: Messages['landing']['closing'];
+  street: string;
+  mapsUrl: string;
+  social: { youtube?: string; instagram?: string; facebook?: string };
+}
+const { copy, street, mapsUrl, social } = Astro.props;
+const icons = {
+  youtube: '<rect x="2.5" y="5" width="19" height="14" rx="4"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor"/>',
+  instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor"/>',
+  facebook: '<path d="M14 8h2.5V4.5H14a4 4 0 0 0-4 4V11H7.5v3.5H10V21h3.5v-6.5H16l.5-3.5h-3V8.8c0-.5.3-.8.8-.8z"/>',
+} as const;
+const names = { youtube: 'YouTube', instagram: 'Instagram', facebook: 'Facebook' } as const;
+const links = (Object.keys(icons) as (keyof typeof icons)[]).filter((k) => social[k]);
+---
+
+<section id="visitanos" class="ln-section ln-end" data-ln="closing">
+  <div class="ln-end__main">
+    <div class="ln-end__left">
+      <div class="ln-end__kicker" data-end-in>
+        <AnchorMark id="end" color="#fff" strokeWidth={40} fillFrom="empty" class="" />
+        <span>{copy.eyebrow}</span>
+      </div>
+      <h2 class="ln-h ln-end__title" data-end-in>{copy.title}</h2>
+      <p class="ln-end__text" data-end-in>{copy.text}</p>
+      <div class="ln-end__social" data-end-in>
+        <span>{copy.follow}</span>
+        <div class="ln-end__soc-list">
+          {links.map((k) => (
+            <a href={social[k]} class="ln-soc" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={icons[k]} />
+              <span>{names[k]}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="ln-end__card" data-end-card>
+      <div class="ln-end__map">
+        <svg viewBox="0 0 580 396" role="img" aria-label={copy.mapLabel}>
+          <rect width="580" height="396" fill="#eeebe6" />
+          <rect x="390" y="230" width="150" height="120" rx="14" fill="#dfe5d6" />
+          <rect x="40" y="40" width="120" height="70" rx="10" fill="#e5e1da" />
+          <rect x="180" y="40" width="90" height="70" rx="10" fill="#e5e1da" />
+          <rect x="40" y="300" width="160" height="70" rx="10" fill="#e5e1da" />
+          <path d="M0 125 H580 M0 340 H580 M130 0 V396 M470 0 V396" stroke="#fff" stroke-width="10" />
+          <path d="M-20 318 L600 116" stroke="#fff" stroke-width="26" stroke-linecap="round" />
+          <path d="M312 0 L272 396" stroke="#fff" stroke-width="16" />
+          <text x="70" y="282" transform="rotate(-18 70 282)" font-family="Futura No2 D OT Medium, sans-serif" font-size="13" fill="#8a857d" letter-spacing="1.5">AV. HERRERA</text>
+          <text x="300" y="370" transform="rotate(-84 300 370)" font-family="Futura No2 D OT Medium, sans-serif" font-size="12" fill="#8a857d" letter-spacing="1.5">JUAN ARRIETA</text>
+          <circle class="ln-halo" cx="289" cy="214" r="14" fill="#a8141b" />
+          <g class="ln-pin" data-end-pin>
+            <path d="M289 214 C271 190 261 176 261 162 A28 28 0 1 1 317 162 C317 176 307 190 289 214 Z" fill="#a8141b" />
+            <path d={ANCHOR_PATH} transform="translate(276,178) scale(0.013,-0.013)" fill="#fff" />
+          </g>
+        </svg>
+        <span class="ln-end__map-note">{copy.mapNote}</span>
+      </div>
+      <div class="ln-end__addr">
+        <div><b>{street}</b><span>{copy.where}</span></div>
+        <a href={mapsUrl} class="ln-btn" target="_blank" rel="noopener">{copy.how}<span class="ln-btn__dot" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="ln-end__foot">
+    <span class="brand"><AnchorMark id="end-foot" color="#ff2e34" outline={false} /><b>El Ancla</b><span style="color:#b9b0a3">{copy.since}</span></span>
+    <span>{street}</span>
+  </footer>
+</section>

@@ -1,0 +1,44 @@
+---
+import Layout from 'src/layouts/Layout.astro';
+import Closing from 'src/sections/landing/Closing.astro';
+import Doctrines from 'src/sections/landing/Doctrines.astro';
+import God from 'src/sections/landing/God.astro';
+import Hero from 'src/sections/landing/Hero.astro';
+import Sunday from 'src/sections/landing/Sunday.astro';
+import Together from 'src/sections/landing/Together.astro';
+import type { Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { getSiteConfig } from '@ancla/content';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getMessages(locale);
+const site = Astro.locals.site ?? (await getSiteConfig());
+const street = site.address.street;
+const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${site.geo.latitude},${site.geo.longitude}`;
+---
+
+<Layout
+  title={copy.home.seo.title}
+  description={copy.home.seo.description}
+  keywords={copy.home.seo.keywords}
+  locale={locale}
+  footer={false}
+>
+  <div class="ln">
+    <Hero copy={copy.landing.hero} locale={locale} street={street} />
+    <God copy={copy.landing.god} locale={locale} />
+    <Doctrines copy={copy.landing.doctrines} locale={locale} />
+    <Together copy={copy.landing.together} locale={locale} />
+    <Sunday copy={copy.landing.sunday} street={street} mapsUrl={mapsUrl} email={site.contactEmail} />
+    <Closing copy={copy.landing.closing} street={street} mapsUrl={mapsUrl} social={site.social} />
+  </div>
+</Layout>
+
+<script>
+  import { initLanding } from 'src/scripts/landing';
+  initLanding();
+</script>

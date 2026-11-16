@@ -1,0 +1,91 @@
+---
+import { localizePath } from 'src/i18n/utils';
+import type { Locale } from 'src/i18n/config';
+import type { Messages } from 'src/i18n/messages';
+
+interface Props {
+  copy: Messages['landing']['together'];
+  locale: Locale;
+}
+const { copy, locale } = Astro.props;
+// Each tile opens its ministry page; prayer has none (points to the visit info) and Espacio Mujer lives on its own site.
+const ministryHref: Record<string, string> = {
+  preaching: '/ministerios/predicacion',
+  teaching: '/ministerios/enseñanza',
+  worship: '/ministerios/alabanza',
+  prayer: '/#visitanos',
+  youth: '/ministerios/jovenes',
+  teens: '/ministerios/adolescentes',
+  missions: '/ministerios/misiones',
+  men: '/ministerios/hombres',
+  media: '/ministerios/multimedia',
+};
+const EXTERNAL_WOMEN = 'https://emujer.elancla.uy/';
+type Tile =
+  | { kind: 'link'; key: keyof Props['copy']['tiles']; w: number; om: number; ot: number; tone?: 'dark' | 'red' }
+  | {
+      kind: 'photo';
+      key: keyof Props['copy']['photos'];
+      src: string;
+      w: number;
+      om: number;
+      ot: number;
+      crop: string;
+      pos: string;
+      wide?: boolean;
+    };
+// Desktop rows and widths follow design H (widths are flex ratios). `om` / `ot` = order in the
+// mobile (2 columns) and tablet (3 columns) grids of the responsive designs.
+const rows: Tile[][] = [
+  [
+    { kind: 'link', key: 'preaching', w: 260, om: 1, ot: 1 },
+    { kind: 'photo', key: 'youth', src: '/images/comunidad.jpg', w: 300, om: 3, ot: 5, crop: 'width:240%;left:-110%;top:-150%', pos: '55% 70%' },
+    { kind: 'link', key: 'teaching', w: 220, om: 2, ot: 2 },
+    { kind: 'link', key: 'worship', w: 240, om: 4, ot: 3 },
+    { kind: 'link', key: 'prayer', w: 228, om: 5, ot: 4 },
+  ],
+  [
+    { kind: 'photo', key: 'women', src: '/images/salon.jpg', w: 292, om: 8, ot: 9, crop: 'width:260%;left:-60%;top:-210%', pos: '50% 40%' },
+    { kind: 'link', key: 'youth', w: 300, om: 6, ot: 6, tone: 'dark' },
+    { kind: 'link', key: 'teens', w: 360, om: 7, ot: 7 },
+    { kind: 'link', key: 'missions', w: 308, om: 9, ot: 8 },
+  ],
+  [
+    { kind: 'link', key: 'men', w: 240, om: 10, ot: 10 },
+    { kind: 'link', key: 'women', w: 300, om: 11, ot: 11, tone: 'red' },
+    { kind: 'photo', key: 'kids', src: '/images/comunidad.jpg', w: 360, om: 13, ot: 13, crop: 'width:200%;left:-50%;top:-200%', pos: '50% 72%', wide: true },
+    { kind: 'link', key: 'media', w: 360, om: 12, ot: 12 },
+  ],
+];
+const orderOf = (r: number, c: number) => (r === 2 ? 0 : r === 1 ? 4 : 8) + c;
+---
+
+<section id="juntos" class="ln-section ln-tog" data-ln="together">
+  <div class="ln-tog__head" data-tog-head>
+    <div>
+      <span class="ln-eyebrow">{copy.eyebrow}</span>
+      <h2 class="ln-h ln-tog__title">{copy.title}</h2>
+    </div>
+    <p class="ln-tog__lead">{copy.text}</p>
+  </div>
+
+  <div class="ln-tog__rows">
+    {rows.map((row, r) => (
+      <div class="ln-tog__row">
+        {row.map((t, c) => t.kind === 'link' ? (
+          <a
+            href={t.key === 'women' ? EXTERNAL_WOMEN : localizePath(ministryHref[t.key], locale)}
+            target={t.key === 'women' ? '_blank' : undefined}
+            rel={t.key === 'women' ? 'noopener' : undefined}
+            class:list={['ln-tile', { 'ln-tile--dark': t.tone === 'dark', 'ln-tile--red': t.tone === 'red' }]} style={`--grow:${t.w};--om:${t.om};--ot:${t.ot}`} data-tile={orderOf(r, c)}>
+            {copy.tiles[t.key]}<span class="ln-tile__ar" aria-hidden="true">→</span>
+          </a>
+        ) : (
+          <div class:list={['ln-tile', 'ln-tile--photo', { 'ln-tile--wide': t.wide }]} style={`--grow:${t.w};--om:${t.om};--ot:${t.ot};--pos:${t.pos}`} data-tile={orderOf(r, c)}>
+            <img src={t.src} alt={copy.photos[t.key]} style={t.crop} loading="lazy" decoding="async" />
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+</section>
