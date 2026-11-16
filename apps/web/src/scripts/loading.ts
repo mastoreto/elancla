@@ -1,4 +1,4 @@
-import { gsap } from './scroll/lenis';
+import { gsap, ScrollTrigger } from './scroll/lenis';
 
 const STORAGE_KEY = 'elancla:loader-seen';
 const CREAM = '#f4efe6';
@@ -9,7 +9,7 @@ type WindowWithLoader = typeof window & { __elanclaLoader?: boolean };
 
 /**
  * Anchor intro: the anchor is drawn and forged on a dark ground, the ground fades while the page is
- * released, and the anchor turns red and flies to the nav logo. Plays on the first visit (full) and on
+ * released, and the anchor turns red; as the visitor scrolls it flies to the nav logo. Plays on the first visit (full) and on
  * every page change (short: covers the old page, waits for the new one, then reveals it).
  */
 export function initLoadingOverlay(): void {
@@ -39,9 +39,12 @@ export function initLoadingOverlay(): void {
       // Storage can be disabled; the full intro would simply replay on the next visit.
     }
   };
-  const idle = () => {
+  const idleGround = () => {
     root.classList.remove('site-loader-pending', 'site-loader-lock');
     ground?.classList.remove('is-active');
+  };
+  const idle = () => {
+    idleGround();
     anchor?.classList.remove('is-active');
   };
 
@@ -49,9 +52,50 @@ export function initLoadingOverlay(): void {
     idle();
     return;
   }
-  const els = { ground, anchor, cap, outline, clip };
+  const hint = document.querySelector<HTMLElement>('[data-ldr-hint]');
+  const els = { ground, anchor, cap, outline, clip, hint: hint ?? ground };
   const navLogo = () => document.querySelector<HTMLElement>('[data-nav-anchor]');
   const release = () => root.classList.remove('site-loader-lock', 'site-loader-pending');
+
+  let flight: gsap.core.Tween | undefined;
+  const killFlight = () => {
+    flight?.scrollTrigger?.kill();
+    flight?.kill();
+    flight = undefined;
+    root.classList.remove('ldr-floating');
+    gsap.set(els.hint, { opacity: 0 });
+  };
+
+  /** The red anchor floats over the page and flies to the nav logo as the visitor scrolls. */
+  const armFlight = (logo: HTMLElement | null) => {
+    killFlight();
+    const target = logo?.getBoundingClientRect();
+    const from = els.anchor.getBoundingClientRect();
+    if (!logo || !target || target.width === 0) {
+      gsap.to(els.anchor, { opacity: 0, duration: 0.6 });
+      return;
+    }
+    root.classList.add('ldr-floating'); // hides the hero's own anchor: this one takes its place
+    gsap.to(els.hint, { opacity: 1, duration: 0.8, delay: 0.6 });
+    flight = gsap.to(els.anchor, {
+      x: target.left - from.left,
+      y: target.top - from.top,
+      scale: target.width / from.width,
+      ease: 'none',
+      scrollTrigger: {
+        start: 0,
+        end: () => window.innerHeight * 0.55,
+        scrub: 0.6,
+        onUpdate: (self) => {
+          const arrived = self.progress >= 0.999;
+          gsap.set(els.anchor, { opacity: arrived ? 0 : 1 });
+          gsap.set(logo, { opacity: arrived ? 1 : 0 });
+          if (self.progress > 0.02) gsap.to(els.hint, { opacity: 0, duration: 0.3, overwrite: true });
+        },
+      },
+    });
+    ScrollTrigger.refresh();
+  };
 
   /** Ground fades out, the page is released, the anchor turns red and flies to the nav logo. */
   const reveal = (tl: gsap.core.Timeline, at: number) => {
@@ -60,25 +104,7 @@ export function initLoadingOverlay(): void {
       .call(release, [], at)
       .to(els.ground, { opacity: 0, duration: 0.9, ease: 'power2.inOut' }, at)
       .to(els.anchor, { color: RED, duration: 0.9, ease: 'power2.inOut' }, at)
-      .add(() => {
-        const target = logo?.getBoundingClientRect();
-        const from = els.anchor.getBoundingClientRect();
-        if (!target || target.width === 0) {
-          gsap.to(els.anchor, { opacity: 0, duration: 0.6 });
-          return;
-        }
-        gsap.to(els.anchor, {
-          x: target.left - from.left,
-          y: target.top - from.top,
-          scale: target.width / from.width,
-          duration: 1.3,
-          ease: 'power3.inOut',
-          onComplete: () => {
-            gsap.set(els.anchor, { opacity: 0 });
-            if (logo) gsap.set(logo, { opacity: 1 });
-          },
-        });
-      }, at + 0.9)
+      .add(() => armFlight(logo), at + 0.9)
       .set({}, {}, at + 2.2);
   };
 
@@ -99,7 +125,7 @@ export function initLoadingOverlay(): void {
     if (logo) gsap.set(logo, { opacity: 0 });
     const tl = gsap.timeline({
       onComplete: () => {
-        idle();
+        idleGround();
         remember();
       },
     });
@@ -119,7 +145,7 @@ export function initLoadingOverlay(): void {
     if (!routeRunning || !coverDone || !pageReady) return;
     routeRunning = false;
     window.clearTimeout(routeTimeout);
-    const tl = gsap.timeline({ onComplete: idle });
+    const tl = gsap.timeline({ onComplete: idleGround });
     reveal(tl, 0);
   };
 
@@ -128,6 +154,7 @@ export function initLoadingOverlay(): void {
     routeRunning = true;
     coverDone = false;
     pageReady = false;
+    killFlight();
     resetStage(0);
     gsap
       .timeline({
