@@ -19,8 +19,9 @@ const copy = getMessages(locale).footer;
 
 const styles = {
   footer: cn(
-    'relative text-white py-20 overflow-hidden',
-    variant === 'dark' ? 'bg-[#151515] -mt-6 rounded-t-[40px] z-10' : 'bg-primary'
+    'relative text-white overflow-hidden',
+    // Dark: overlaps the red closing by its corner radius so the corners show red, not the page.
+    variant === 'dark' ? 'bg-[#151515] -mt-10 rounded-t-[40px] z-10 pt-24 pb-20' : 'bg-primary py-20'
   ),
   watermark: cn(
     'absolute bottom-[-4vw] left-0 right-0 pointer-events-none select-none'
