@@ -44,7 +44,7 @@ const styles = {
   ),
   logoLink: cn('flex shrink-0 items-center gap-3'),
   logoImg: cn('w-7 h-7 object-contain'),
-  logoLabel: cn('text-[6.8px] tracking-[0.22em] font-futura font-semibold text-ink/60'),
+  logoLabel: cn('w-full text-[6.8px] tracking-[0.22em] font-futura font-normal uppercase text-ink/60 [text-align-last:justify]'),
   logoName: cn('font-display text-[17px] tracking-tight font-futura-bold font-semibold leading-none uppercase whitespace-nowrap'),
   navList: cn('hidden lg:flex items-center gap-5 xl:gap-9 whitespace-nowrap font-ui text-[13px] font-medium text-ink/80'),
   actions: cn('flex items-center gap-2 xl:gap-3'),
@@ -85,7 +85,7 @@ const styles = {
         <span data-nav-anchor class="inline-flex">
           <AnchorMark id="nav" color="#a8141b" strokeWidth={60} class="h-8 w-[25px] flex-none" />
         </span>
-        <div class="leading-none">
+        <div class="inline-flex flex-col leading-none">
           <div class={styles.logoLabel}>{copy.brandLabel}</div>
           <div class={styles.logoName}>{copy.brandName}</div>
         </div>
