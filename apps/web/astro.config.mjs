@@ -11,6 +11,8 @@ import react from '@astrojs/react';
 
 import node from '@astrojs/node';
 
+import vercel from '@astrojs/vercel';
+
 import { config as loadEnv } from 'dotenv';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -28,7 +30,9 @@ export default defineConfig({
   // SSR: el estado del sitio (online/maintenance/closed) se lee por request
   // desde la BD, así el cambio del admin se refleja al instante sin rebuild.
   output: 'server',
-  adapter: node({ mode: 'standalone' }),
+  // Vercel sets VERCEL=1 at build time and needs its own adapter (Build Output API);
+  // everywhere else (Docker, local) we keep the standalone Node server.
+  adapter: process.env.VERCEL ? vercel() : node({ mode: 'standalone' }),
   trailingSlash: 'never',
   i18n: {
     defaultLocale: 'es',
