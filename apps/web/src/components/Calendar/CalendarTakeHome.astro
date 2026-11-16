@@ -8,6 +8,8 @@ interface Props {
 }
 const { copy } = Astro.props;
 const { print, download } = copy.take;
+// Printable views are in Spanish and shared by every locale.
+const PRINT_BASE = '/calendario-anual/imprimir';
 ---
 
 <section class="cal-wrap cal-section" id="llevalo">
@@ -42,7 +44,8 @@ const { print, download } = copy.take;
           </div>
           <b>{download.pdf.title}</b>
           <p>{download.pdf.body}</p>
-          <a href="#" class="ln-btn" style="background:var(--ln-ink)">{download.pdf.cta}</a>
+          <a href={`${PRINT_BASE}/a3?descargar`} class="ln-btn" style="background:var(--ln-ink)" target="_blank" rel="noopener">{download.pdf.ctaA3}</a>
+          <a href={`${PRINT_BASE}/a4?descargar`} class="ln-btn" style="background:var(--ln-ink)" target="_blank" rel="noopener">{download.pdf.ctaA4}</a>
         </div>
         <div class="cal-dl__item">
           <div class="cal-dl__thumb cal-dl__thumb--screen" aria-hidden="true">
@@ -51,7 +54,7 @@ const { print, download } = copy.take;
           </div>
           <b>{download.digital.title}</b>
           <p>{download.digital.body}</p>
-          <a href="#" class="ln-btn ln-btn--ghost">{download.digital.cta}</a>
+          <a href={`${PRINT_BASE}/digital?descargar`} class="ln-btn ln-btn--ghost" target="_blank" rel="noopener">{download.digital.cta}</a>
         </div>
       </div>
     </div>

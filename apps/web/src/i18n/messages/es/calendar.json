@@ -2,9 +2,17 @@
   "seo": {
     "title": "Calendario anual 2027",
     "description": "Todas las actividades de Iglesia Bautista El Ancla: lo que se repite cada semana y los eventos de cada mes. Agrégalos a tu calendario o pide el calendario impreso.",
-    "keywords": ["calendario iglesia", "actividades iglesia Montevideo", "eventos El Ancla"]
+    "keywords": [
+      "calendario iglesia",
+      "actividades iglesia Montevideo",
+      "eventos El Ancla"
+    ]
   },
-  "breadcrumbs": { "home": "El Ancla", "resources": "Recursos", "current": "Calendario anual" },
+  "breadcrumbs": {
+    "home": "El Ancla",
+    "resources": "Recursos",
+    "current": "Calendario anual"
+  },
   "hero": {
     "eyebrow": "Calendario anual 2027",
     "titleBefore": "Todo el año, para ",
@@ -57,13 +65,14 @@
       "title": "Imprímelo tú o compártelo.",
       "pdf": {
         "title": "Para imprimir",
-        "body": "PDF en A3 y A4, con todo el año en una sola hoja.",
-        "cta": "Descargar PDF"
+        "body": "A3: todo el año en una sola hoja. A4: una página por mes.",
+        "ctaA3": "Descargar PDF · A3",
+        "ctaA4": "Descargar PDF · A4"
       },
       "digital": {
         "title": "Digital",
         "body": "Presentación simple en pantalla 16:9, para proyectar o compartir.",
-        "cta": "Descargar",
+        "cta": "Descargar PDF · 16:9",
         "cover": "Calendario"
       }
     }

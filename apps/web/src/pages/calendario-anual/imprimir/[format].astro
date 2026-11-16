@@ -1,0 +1,21 @@
+---
+import PrintA3 from 'src/components/Calendar/Print/PrintA3.astro';
+import PrintA4 from 'src/components/Calendar/Print/PrintA4.astro';
+import PrintDigital from 'src/components/Calendar/Print/PrintDigital.astro';
+import PrintLayout from 'src/components/Calendar/Print/PrintLayout.astro';
+import { CALENDAR_YEAR } from 'src/data/calendar';
+
+const formats = {
+  a3: { title: 'A3 · una sola hoja', size: 'A3 landscape', hint: 'Elige «Guardar como PDF», papel A3, márgenes ninguno y escala 100%.', Component: PrintA3 },
+  a4: { title: 'A4 · una página por mes', size: 'A4 portrait', hint: 'Elige «Guardar como PDF», papel A4, márgenes ninguno y escala 100%.', Component: PrintA4 },
+  digital: { title: 'Digital 16:9', size: '1280px 720px', hint: 'Elige «Guardar como PDF», márgenes ninguno; cada lámina es una página.', Component: PrintDigital },
+} as const;
+
+const format = formats[Astro.params.format as keyof typeof formats];
+if (!format) return Astro.rewrite('/404');
+const { Component } = format;
+---
+
+<PrintLayout title={`Calendario ${CALENDAR_YEAR} · ${format.title} | El Ancla`} hint={format.hint} pageSize={format.size}>
+  <Component />
+</PrintLayout>

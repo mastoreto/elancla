@@ -1,0 +1,65 @@
+---
+import AnchorMark from 'src/components/AnchorMark.astro';
+import { CALENDAR_YEAR, events, eventsOfMonth, weeklySorted } from 'src/data/calendar';
+import PrintMonthGrid from './PrintMonthGrid.astro';
+import { MONTHS_ES, dayOf, weekdayLong } from './printFormat';
+
+const weekly = weeklySorted();
+const halves = [
+  { title: 'Enero a junio', months: [0, 1, 2, 3, 4, 5] },
+  { title: 'Julio a diciembre', months: [6, 7, 8, 9, 10, 11] },
+];
+---
+
+<section class="cp-sheet cp-slide cp-slide--dark">
+  <span class="cp-slide__mark" aria-hidden="true"><AnchorMark id="cp-sl" outline={false} color="#ff2e34" /></span>
+  <span class="cp-eyebrow cp-eyebrow--live">Iglesia Bautista El Ancla · Montevideo</span>
+  <b class="cp-serif cp-slide__cover">Calendario<br />{CALENDAR_YEAR}</b>
+  <span class="cp-slide__sub">Todo el año, para caminar juntos.</span>
+</section>
+
+<section class="cp-sheet cp-slide">
+  <span class="cp-eyebrow">Todas las semanas</span>
+  <b class="cp-serif cp-slide__h">Actividades recurrentes</b>
+  <div class="cp-slide__week">
+    {Array.from({ length: 7 }, (_, day) => (
+      <div class="cp-slide__day">
+        <b class="cp-serif cp-slide__dname">{weekdayLong(day)}</b>
+        {weekly.filter((a) => a.day === day).map((a) => (
+          <div class="cp-slide__slot"><b class="cp-serif">{a.time}</b><div>{a.title}</div></div>
+        ))}
+      </div>
+    ))}
+  </div>
+  <span class="cp-slide__note">Horarios del domingo reales; el resto, de ejemplo.</span>
+</section>
+
+<section class="cp-sheet cp-slide">
+  <span class="cp-eyebrow">Calendario {CALENDAR_YEAR}</span>
+  <b class="cp-serif cp-slide__h">El año de un vistazo</b>
+  <div class="cp-slide__year">
+    {MONTHS_ES.map((name, month) => (
+      <div class="cp-slide__mini">
+        <b class="cp-serif">{name}</b>
+        <PrintMonthGrid year={CALENDAR_YEAR} month={month} eventDays={eventsOfMonth(events, month).map(dayOf)} size="slide" />
+      </div>
+    ))}
+  </div>
+</section>
+
+{halves.map((half) => (
+  <section class="cp-sheet cp-slide">
+    <span class="cp-eyebrow">Calendario {CALENDAR_YEAR}</span>
+    <b class="cp-serif cp-slide__h">{half.title}</b>
+    <div class="cp-slide__months">
+      {half.months.map((month) => (
+        <div class="cp-slide__mcard">
+          <b class="cp-serif">{MONTHS_ES[month]}</b>
+          {eventsOfMonth(events, month).map((e) => (
+            <div class="cp-slide__ev"><b>{dayOf(e)}</b><span>{e.title}</span></div>
+          ))}
+        </div>
+      ))}
+    </div>
+  </section>
+))}

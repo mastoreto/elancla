@@ -1,0 +1,42 @@
+---
+// Bare document for the printable calendars: no site chrome, plus a screen-only toolbar to save as PDF.
+import 'src/styles/global.css';
+import 'src/styles/CalendarPrint.css';
+
+interface Props {
+  title: string;
+  hint: string;
+  /** CSS `@page size` value; emitted only for the requested format. */
+  pageSize: string;
+}
+const { title, hint, pageSize } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es-UY">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title}</title>
+    <style set:html={`@page { size: ${pageSize}; margin: 0; }`}></style>
+  </head>
+  <body class="cp-body">
+    <div class="cp-bar">
+      <a href="/calendario-anual" class="cp-bar__back">← Volver al calendario</a>
+      <span class="cp-bar__hint">{hint}</span>
+      <button type="button" class="cp-bar__btn" data-cp-print>Guardar como PDF</button>
+    </div>
+    <div class="ln cp-pages">
+      <slot />
+    </div>
+    <script>
+      const run = () => window.print();
+      document.querySelector('[data-cp-print]')?.addEventListener('click', run);
+      // Links from the site add ?descargar so the save dialog opens as soon as fonts are ready.
+      if (new URLSearchParams(location.search).has('descargar')) {
+        document.fonts.ready.then(() => setTimeout(run, 400));
+      }
+    </script>
+  </body>
+</html>

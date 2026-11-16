@@ -2,9 +2,17 @@
   "seo": {
     "title": "2027 yearly calendar",
     "description": "Everything happening at Iglesia Bautista El Ancla: what repeats every week and the events of each month. Add them to your calendar or ask for the printed calendar.",
-    "keywords": ["church calendar", "church activities Montevideo", "El Ancla events"]
+    "keywords": [
+      "church calendar",
+      "church activities Montevideo",
+      "El Ancla events"
+    ]
   },
-  "breadcrumbs": { "home": "El Ancla", "resources": "Resources", "current": "Yearly calendar" },
+  "breadcrumbs": {
+    "home": "El Ancla",
+    "resources": "Resources",
+    "current": "Yearly calendar"
+  },
   "hero": {
     "eyebrow": "2027 yearly calendar",
     "titleBefore": "All year long, to ",
@@ -57,13 +65,14 @@
       "title": "Print it yourself or share it.",
       "pdf": {
         "title": "To print",
-        "body": "PDF in A3 and A4, with the whole year on a single sheet.",
-        "cta": "Download PDF"
+        "body": "A3: the whole year on one sheet. A4: one page per month.",
+        "ctaA3": "Download PDF · A3",
+        "ctaA4": "Download PDF · A4"
       },
       "digital": {
         "title": "Digital",
         "body": "A simple 16:9 screen presentation, to project or share.",
-        "cta": "Download",
+        "cta": "Download PDF · 16:9",
         "cover": "Calendar"
       }
     }

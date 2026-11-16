@@ -123,3 +123,21 @@ export function googleCalendarUrl(event: CalendarEvent, place: string): string {
   });
   return `https://calendar.google.com/calendar/render?${params}`;
 }
+
+/** Month layout for a Monday-first grid: blank cells before day 1 and number of days. */
+export function monthLayout(year: number, month: number): { lead: number; days: number } {
+  const lead = (new Date(Date.UTC(year, month, 1)).getUTCDay() + 6) % 7;
+  const days = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+  return { lead, days };
+}
+
+export function eventsOfMonth(list: CalendarEvent[], month: number): CalendarEvent[] {
+  return list
+    .filter((event) => Number(event.date.slice(5, 7)) - 1 === month)
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+/** Weekly activities ordered by weekday then time. */
+export function weeklySorted(): WeeklyActivity[] {
+  return [...weeklyActivities].sort((a, b) => a.day - b.day || a.time.localeCompare(b.time));
+}
