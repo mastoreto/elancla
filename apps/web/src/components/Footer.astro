@@ -1,17 +1,27 @@
 ---
 import cn from '../utils/cn.ts';
 import type { Locale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
 import { getMessages } from 'src/i18n/messages';
 
 interface Props {
   locale: Locale;
+  /** `dark` sits under the red closing of the landing instead of being red itself. */
+  variant?: 'red' | 'dark';
+  social?: { youtube?: string; instagram?: string; facebook?: string };
 }
 
-const { locale } = Astro.props;
+const { locale, variant = 'red', social = {} } = Astro.props;
+// Link targets, in the same order as the labels in footer.json.
+const churchHrefs = ['/ministerios/sobre-nosotros', '/ministerios/sobre-nosotros', '/#doctrinas', '/confesion-de-fe'];
+const socialHrefs = [social.youtube, social.instagram, social.facebook];
 const copy = getMessages(locale).footer;
 
 const styles = {
-  footer: cn('relative bg-primary text-white py-20 overflow-hidden'),
+  footer: cn(
+    'relative text-white py-20 overflow-hidden',
+    variant === 'dark' ? 'bg-[#151515] -mt-6 rounded-t-[40px] z-10' : 'bg-primary'
+  ),
   watermark: cn(
     'absolute bottom-[-4vw] left-0 right-0 pointer-events-none select-none'
   ),
@@ -69,8 +79,8 @@ const year = new Date().getFullYear();
       <div class={styles.colLinks}>
         <div class={styles.colLabel}>{copy.churchLabel}</div>
         <ul class={styles.linkList}>
-          {copy.churchLinks.map((l) => (
-            <li><a href="#" class="ulink">{l}</a></li>
+          {copy.churchLinks.map((l, i) => (
+            <li><a href={localizePath(churchHrefs[i] ?? '/', locale)} class="ulink">{l}</a></li>
           ))}
         </ul>
       </div>
@@ -80,7 +90,7 @@ const year = new Date().getFullYear();
         <div class={styles.colLabel}>{copy.ministryLabel}</div>
         <ul class={styles.minisGrid}>
           {copy.ministryLinks.map((l) => (
-            <li><a href="#" class="ulink">{l}</a></li>
+            <li><a href={localizePath('/#juntos', locale)} class="ulink">{l}</a></li>
           ))}
         </ul>
       </div>
@@ -89,8 +99,8 @@ const year = new Date().getFullYear();
       <div class={styles.colSocial}>
         <div class={styles.colLabel}>{copy.socialLabel}</div>
         <ul class={styles.linkList}>
-          {copy.socialLinks.map((l) => (
-            <li><a href="#" class="ulink">{l}</a></li>
+          {copy.socialLinks.map((l, i) => (
+            <li><a href={socialHrefs[i] ?? '#'} class="ulink" target="_blank" rel="noopener">{l}</a></li>
           ))}
         </ul>
       </div>

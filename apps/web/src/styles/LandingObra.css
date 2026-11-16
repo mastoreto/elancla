@@ -299,10 +299,6 @@
 .ln-pin { transform-box: fill-box; transform-origin: 50% 100%; }
 .ln-halo { transform-box: fill-box; transform-origin: 50% 50%; opacity: 0; animation: ln-halo 2.6s 2.2s ease-out infinite; }
 @keyframes ln-halo { 0% { opacity: 0.5; transform: scale(0.6); } 100% { opacity: 0; transform: scale(2.4); } }
-.ln-end__foot { height: 72px; background: var(--ln-ink); color: #b9b0a3; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0 clamp(1.25rem, 6.7vw, 6rem); font-size: 0.875rem; flex-wrap: wrap; }
-.ln-end__foot b { font-family: var(--ln-sans-b); font-size: 1rem; color: #f4efe6; }
-.ln-end__foot .brand { display: flex; align-items: center; gap: 10px; color: #f4efe6; }
-.ln-end__foot svg { width: 16px; height: auto; color: var(--ln-red-live); }
 
 .ln-doc__head { display: flex; flex-direction: column; gap: 1.4rem; }
 
@@ -393,7 +389,6 @@
   .ln-end__text { font-size: 1.25rem; }
   .ln-end__card { border-radius: 32px; margin-top: 0.5rem; }
   .ln-end__addr { padding: 22px 28px; flex-wrap: nowrap; }
-  .ln-end__foot { height: auto; flex-direction: column; align-items: flex-start; gap: 6px; padding: 22px 44px; }
 }
 
 @media (max-width: 639px) {
@@ -449,7 +444,6 @@
   .ln-end__title { font-size: 3.125rem; line-height: 0.96; }
   .ln-end__text { font-size: 1.125rem; }
   .ln-end__addr { flex-direction: column; align-items: flex-start; gap: 18px; padding: 22px; }
-  .ln-end__foot { padding: 22px 24px; }
 }
 
 /* Reduced motion / no JS: everything visible, doctrines as a plain list. */
@@ -465,5 +459,3 @@
 .ln.is-static .ln-doc__list strong { font-family: var(--ln-brand); font-weight: 900; color: var(--ln-red-live); }
 .ln.is-static .ln-doc__foot { margin-top: 2rem; }
 .ln.is-static .ln-row__d { opacity: 1; }
-.ln-end__foot .brand { flex-wrap: wrap; }
-.ln-end__foot .brand b { white-space: nowrap; }
