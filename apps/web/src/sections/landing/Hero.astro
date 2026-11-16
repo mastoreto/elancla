@@ -11,23 +11,67 @@ interface Props {
 }
 const { copy, locale, street } = Astro.props;
 const [line1, ...rest] = street.split(', ');
+
+// Drifting columns (design "B3"): every column scrolls forever, alternating up/down.
+// `n` is the photo (public/images/hero/hero<n>-md.webp), `h` its height in px at full scale,
+// `pos` the object-position that keeps the subject in frame.
+type Tile = { n: number; h: number; pos: string };
+const columns: { tiles: Tile[]; dir: 'up' | 'down'; secs: number; offset: number }[] = [
+  { dir: 'up', secs: 80, offset: -60, tiles: [
+    { n: 10, h: 340, pos: '50% 55%' }, { n: 5, h: 280, pos: '50% 50%' }, { n: 8, h: 360, pos: '50% 55%' },
+    { n: 3, h: 300, pos: '50% 25%' }, { n: 6, h: 320, pos: '40% 50%' },
+  ] },
+  { dir: 'down', secs: 95, offset: -260, tiles: [
+    { n: 2, h: 300, pos: '50% 30%' }, { n: 7, h: 360, pos: '50% 60%' }, { n: 4, h: 280, pos: '50% 40%' },
+    { n: 1, h: 340, pos: '50% 70%' }, { n: 10, h: 300, pos: '50% 40%' },
+  ] },
+  { dir: 'up', secs: 70, offset: -120, tiles: [
+    { n: 8, h: 360, pos: '50% 55%' }, { n: 6, h: 300, pos: '40% 50%' }, { n: 5, h: 320, pos: '50% 45%' },
+    { n: 3, h: 280, pos: '50% 30%' }, { n: 2, h: 340, pos: '50% 35%' },
+  ] },
+  { dir: 'down', secs: 88, offset: -340, tiles: [
+    { n: 4, h: 280, pos: '50% 40%' }, { n: 1, h: 340, pos: '50% 70%' }, { n: 7, h: 300, pos: '50% 60%' },
+    { n: 10, h: 360, pos: '50% 55%' }, { n: 6, h: 300, pos: '40% 50%' },
+  ] },
+];
 ---
 
 <section id="inicio" class="ln-section ln-hero" data-ln="hero">
   <div class="ln-hero__text">
+    <span class="ln-hero__eyebrow" data-hero-in>{copy.eyebrow}</span>
     <h1 class="ln-h ln-hero__title" data-hero-in>{copy.title}</h1>
     <p class="ln-hero__lead" data-hero-in>{copy.text}</p>
     <a href={localizePath('/#domingo', locale)} class="ln-btn" style="align-self:flex-start" data-hero-in>
       {copy.cta}<span class="ln-btn__dot" aria-hidden="true">→</span>
     </a>
-    <div class="ln-hero__facts">
-      <div class="ln-fact"><small>{copy.sunday}</small><strong>11:15</strong></div>
-      <div class="ln-fact"><small>{copy.where}</small><span>{line1}{rest.length > 0 && <><br />{rest.join(', ')}</>}</span></div>
-    </div>
   </div>
 
-  <div class="ln-hero__photo" data-hero-photo>
-    <img src="/images/comunidad.jpg" alt={copy.photoAlt} class="ln-photo" width="1800" height="1196" fetchpriority="high" decoding="async" />
+  <div class="ln-hero__photo" data-hero-photo aria-hidden="true">
+    <div class="ln-hero__cols">
+      {columns.map((col) => (
+        <div class="ln-hero__col" style={`margin-top: calc(${col.offset}px * var(--k))`}>
+          <div class={`ln-hero__track ln-hero__track--${col.dir}`} style={`--t: ${col.secs}s`}>
+            {[0, 1].map((copyIndex) => (
+              <div class="ln-hero__set">
+                {col.tiles.map((tile) => (
+                  <div class="ln-hero__tile" style={`--h: ${tile.h}px`}>
+                    <img
+                      src={`/images/hero/hero${tile.n}-md.webp`}
+                      alt=""
+                      class="ln-photo"
+                      style={`object-position: ${tile.pos}`}
+                      loading={copyIndex === 0 ? 'eager' : 'lazy'}
+                      decoding="async"
+                      draggable="false"
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
     <div class="ln-hero__photo-fade"></div>
   </div>
 
@@ -35,4 +79,8 @@ const [line1, ...rest] = street.split(', ');
     <AnchorMark id="hero" color="#a8141b" strokeWidth={28} fillFrom="empty" />
   </div>
 
+  <div class="ln-hero__facts">
+    <div class="ln-fact"><small>{copy.sunday}</small><strong>11:15</strong></div>
+    <div class="ln-fact"><small>{copy.where}</small><span>{line1}{rest.length > 0 && <><br />{rest.join(', ')}</>}</span></div>
+  </div>
 </section>

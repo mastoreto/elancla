@@ -8,20 +8,20 @@ export function initHero(root: HTMLElement, isDesktop: boolean): void {
   const ins = hero.querySelectorAll('[data-hero-in]');
   const facts = hero.querySelectorAll('.ln-fact');
   const photo = q<HTMLElement>('[data-hero-photo]');
-  const photoImg = q<HTMLElement>('[data-hero-photo] img');
   const anchorBox = q<HTMLElement>('[data-hero-anchor]');
   const anchorSvg = q<SVGElement>('[data-hero-anchor] svg');
   const outline = q<SVGPathElement>('[data-hero-anchor] [data-anchor-outline]');
   const clip = q<SVGRectElement>('[data-hero-anchor] [data-anchor-clip]');
   const text = q<HTMLElement>('.ln-hero__text');
+  const factsBox = q<HTMLElement>('.ln-hero__facts');
   if (
     !photo ||
-    !photoImg ||
     !anchorBox ||
     !anchorSvg ||
     !outline ||
     !clip ||
-    !text
+    !text ||
+    !factsBox
   )
     return;
 
@@ -76,14 +76,17 @@ export function initHero(root: HTMLElement, isDesktop: boolean): void {
     end: 'bottom top',
     scrub: true,
   };
-  gsap.to(photoImg, { yPercent: -10, ease: 'none', scrollTrigger: scrub });
-  // Very slow Ken Burns: the single photo stays alive without crossfading faces.
-  gsap.to(photoImg, { scale: 1.06, duration: 24, ease: 'sine.inOut', yoyo: true, repeat: -1 });
-
+  // The columns drift on their own (CSS); only the foreground leaves on scroll.
   if (!isDesktop) return; // stacked layout: the anchor sits inside the photo and nothing drifts away
   gsap.to(anchorBox, { y: -140, ease: 'none', scrollTrigger: scrub });
   gsap.to(text, {
     y: -60,
+    opacity: 0,
+    ease: 'none',
+    scrollTrigger: { ...scrub, end: 'bottom 35%' },
+  });
+  gsap.to(factsBox, {
+    y: -40,
     opacity: 0,
     ease: 'none',
     scrollTrigger: { ...scrub, end: 'bottom 35%' },
