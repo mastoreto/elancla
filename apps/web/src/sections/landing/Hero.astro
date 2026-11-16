@@ -15,12 +15,15 @@ const [line1, ...rest] = street.split(', ');
 
 <section id="inicio" class="ln-section ln-hero" data-ln="hero">
   <div class="ln-hero__text">
-    <span class="ln-hero__eyebrow" data-hero-in>{copy.eyebrow}</span>
     <h1 class="ln-h ln-hero__title" data-hero-in>{copy.title}</h1>
     <p class="ln-hero__lead" data-hero-in>{copy.text}</p>
     <a href={localizePath('/#domingo', locale)} class="ln-btn" style="align-self:flex-start" data-hero-in>
       {copy.cta}<span class="ln-btn__dot" aria-hidden="true">→</span>
     </a>
+    <div class="ln-hero__facts">
+      <div class="ln-fact"><small>{copy.sunday}</small><strong>11:15</strong></div>
+      <div class="ln-fact"><small>{copy.where}</small><span>{line1}{rest.length > 0 && <><br />{rest.join(', ')}</>}</span></div>
+    </div>
   </div>
 
   <div class="ln-hero__photo" data-hero-photo>
@@ -32,8 +35,4 @@ const [line1, ...rest] = street.split(', ');
     <AnchorMark id="hero" color="#a8141b" strokeWidth={28} fillFrom="empty" />
   </div>
 
-  <div class="ln-hero__facts">
-    <div class="ln-fact"><small>{copy.sunday}</small><strong>11:15</strong></div>
-    <div class="ln-fact"><small>{copy.where}</small><span>{line1}{rest.length > 0 && <><br />{rest.join(', ')}</>}</span></div>
-  </div>
 </section>

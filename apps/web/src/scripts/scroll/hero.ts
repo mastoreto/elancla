@@ -14,7 +14,6 @@ export function initHero(root: HTMLElement, isDesktop: boolean): void {
   const outline = q<SVGPathElement>('[data-hero-anchor] [data-anchor-outline]');
   const clip = q<SVGRectElement>('[data-hero-anchor] [data-anchor-clip]');
   const text = q<HTMLElement>('.ln-hero__text');
-  const factsBox = q<HTMLElement>('.ln-hero__facts');
   if (
     !photo ||
     !photoImg ||
@@ -22,8 +21,7 @@ export function initHero(root: HTMLElement, isDesktop: boolean): void {
     !anchorSvg ||
     !outline ||
     !clip ||
-    !text ||
-    !factsBox
+    !text
   )
     return;
 
@@ -79,16 +77,13 @@ export function initHero(root: HTMLElement, isDesktop: boolean): void {
     scrub: true,
   };
   gsap.to(photoImg, { yPercent: -10, ease: 'none', scrollTrigger: scrub });
+  // Very slow Ken Burns: the single photo stays alive without crossfading faces.
+  gsap.to(photoImg, { scale: 1.06, duration: 24, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+
   if (!isDesktop) return; // stacked layout: the anchor sits inside the photo and nothing drifts away
   gsap.to(anchorBox, { y: -140, ease: 'none', scrollTrigger: scrub });
   gsap.to(text, {
     y: -60,
-    opacity: 0,
-    ease: 'none',
-    scrollTrigger: { ...scrub, end: 'bottom 35%' },
-  });
-  gsap.to(factsBox, {
-    y: -40,
     opacity: 0,
     ease: 'none',
     scrollTrigger: { ...scrub, end: 'bottom 35%' },
