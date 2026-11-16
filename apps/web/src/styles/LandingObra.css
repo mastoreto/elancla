@@ -89,7 +89,7 @@
 /* ───────── 1 · Hero ───────── */
 .ln-hero {
   background: var(--ln-mist);
-  min-height: 100svh;
+  min-height: calc(100svh + 24px); /* the next section overlaps by 24px; keep the hero full-screen */
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
   gap: 0;
