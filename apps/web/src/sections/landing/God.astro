@@ -1,0 +1,45 @@
+---
+import { doctrineIcons } from 'src/data/doctrineIcons';
+import { localizePath } from 'src/i18n/utils';
+import type { Locale } from 'src/i18n/config';
+import type { Messages } from 'src/i18n/messages';
+
+interface Props {
+  copy: Messages['landing']['god'];
+  locale: Locale;
+}
+const { copy, locale } = Astro.props;
+const iconIndex: Record<string, number> = { crown: 0, cross: 1, flame: 2 };
+// "*" prefix marks the accent (red) line; "@name" is a pictogram pill.
+const lines = copy.lines.map((raw) => ({
+  accent: raw.startsWith('*'),
+  tokens: raw.replace(/^\*/, '').split(' '),
+}));
+---
+
+<section id="dios" class="ln-section ln-god" data-ln="god">
+  <span class="ln-eyebrow" data-god-eyebrow>{copy.eyebrow}</span>
+  <p class="ln-god__text">
+    {lines.map((line) => (
+      <span class:list={['ln-god__line', { 'ln-god__line--accent': line.accent }]}>
+        {line.tokens.map((token, i) => (
+          token.startsWith('@') ? (
+            <>
+              <span class="ln-god__pic" data-god-pic aria-hidden="true">
+                <svg viewBox="0 0 120 120">
+                  {doctrineIcons[iconIndex[token.slice(1)]].map((s) => <path d={s.d} />)}
+                </svg>
+              </span>{i < line.tokens.length - 1 ? ' ' : ''}
+            </>
+          ) : (
+            <><span class="ln-god__w" data-god-w>{token}</span>{i < line.tokens.length - 1 ? ' ' : ''}</>
+          )
+        ))}
+      </span>
+    ))}
+  </p>
+  <div class="ln-god__foot" data-god-foot>
+    <span>{copy.refs}</span>
+    <a href={localizePath('/confesion-de-fe', locale)} class="ln-btn ln-btn--ghost">{copy.cta}</a>
+  </div>
+</section>

@@ -44,6 +44,8 @@ interface Props {
   breadcrumbs?: SEOBreadcrumb[];
   article?: SEOArticleMeta;
   locale?: Locale;
+  /** Render the shared footer (the landing has its own closing strip). */
+  footer?: boolean;
 }
 
 const {
@@ -58,6 +60,7 @@ const {
   breadcrumbs,
   article,
   locale: localeProp,
+  footer = true,
 } = Astro.props;
 
 const locale = localeProp ?? getLocaleFromUrl(Astro.url);
@@ -320,7 +323,7 @@ if (pageType === 'article' && article) {
           <main class="max-w-full flex flex-col relative overflow-x-hidden">
             <slot />
           </main>
-          <Footer locale={locale} />
+          {footer && <Footer locale={locale} />}
         </>
       ) : (
         <SiteStatusScreen status={site.status} locale={locale} contactEmail={site.contactEmail} />

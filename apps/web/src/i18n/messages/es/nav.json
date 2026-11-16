@@ -2,11 +2,26 @@
   "brandLabel": "Iglesia Bautista",
   "brandName": "El Ancla",
   "links": [
-    { "label": "Inicio", "href": "/#inicio", "section": "inicio" },
-    { "label": "Nosotros", "href": "/#nosotros", "section": "nosotros" },
-    { "label": "Actividades", "href": "/#actividades", "section": "actividades" },
-    { "label": "Sermones", "href": "/#sermones", "section": "sermones" },
-    { "label": "Ministerios", "href": "/#ministerios", "section": "ministerios" }
+    {
+      "label": "Qué creemos",
+      "href": "/#doctrinas",
+      "section": "doctrinas"
+    },
+    {
+      "label": "Quiénes somos",
+      "href": "/#juntos",
+      "section": "juntos"
+    },
+    {
+      "label": "Tu primer domingo",
+      "href": "/#domingo",
+      "section": "domingo"
+    },
+    {
+      "label": "Ministerios",
+      "href": "/ministerios",
+      "section": "ministerios"
+    }
   ],
   "resources": {
     "label": "Recursos",

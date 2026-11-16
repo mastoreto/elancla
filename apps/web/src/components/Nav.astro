@@ -1,5 +1,6 @@
 ---
 import cn from '../utils/cn.ts';
+import AnchorMark from './AnchorMark.astro';
 import MobileMenu from './MobileMenu.astro';
 import type { Locale } from 'src/i18n/config';
 import type { SiteStatus } from '@ancla/content';
@@ -81,11 +82,9 @@ const styles = {
       id="nav"
     >
       <a href={localizePath('/#inicio', locale)} class={styles.logoLink}>
-        <img
-          src="/images/anclarojo.png"
-          alt=""
-          class={styles.logoImg}
-        />
+        <span data-nav-anchor class="inline-flex">
+          <AnchorMark id="nav" color="#a8141b" strokeWidth={60} class="h-8 w-[25px] flex-none" />
+        </span>
         <div class="leading-none">
           <div class={styles.logoLabel}>{copy.brandLabel}</div>
           <div class={styles.logoName}>{copy.brandName}</div>

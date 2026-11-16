@@ -1,0 +1,64 @@
+---
+import { localizePath } from 'src/i18n/utils';
+import type { Locale } from 'src/i18n/config';
+import type { Messages } from 'src/i18n/messages';
+
+interface Props {
+  copy: Messages['landing']['together'];
+  locale: Locale;
+}
+const { copy, locale } = Astro.props;
+const href = localizePath('/ministerios', locale);
+type Tile =
+  | { kind: 'link'; key: keyof Props['copy']['tiles']; w: number; tone?: 'dark' | 'red' }
+  | { kind: 'photo'; key: keyof Props['copy']['photos']; src: string; w: number; crop: string };
+// Rows and widths follow the design (widths are flex ratios). `order` = placement order, bottom row first.
+const rows: Tile[][] = [
+  [
+    { kind: 'link', key: 'preaching', w: 260 },
+    { kind: 'photo', key: 'youth', src: '/images/comunidad.jpg', w: 300, crop: 'width:240%;left:-110%;top:-150%' },
+    { kind: 'link', key: 'teaching', w: 220 },
+    { kind: 'link', key: 'worship', w: 240 },
+    { kind: 'link', key: 'prayer', w: 228 },
+  ],
+  [
+    { kind: 'photo', key: 'women', src: '/images/salon.jpg', w: 292, crop: 'width:260%;left:-60%;top:-210%' },
+    { kind: 'link', key: 'youth', w: 300, tone: 'dark' },
+    { kind: 'link', key: 'teens', w: 360 },
+    { kind: 'link', key: 'missions', w: 308 },
+  ],
+  [
+    { kind: 'link', key: 'men', w: 240 },
+    { kind: 'link', key: 'women', w: 300, tone: 'red' },
+    { kind: 'photo', key: 'kids', src: '/images/comunidad.jpg', w: 360, crop: 'width:200%;left:-50%;top:-200%' },
+    { kind: 'link', key: 'media', w: 360 },
+  ],
+];
+const orderOf = (r: number, c: number) => (r === 2 ? 0 : r === 1 ? 4 : 8) + c;
+---
+
+<section id="juntos" class="ln-section ln-tog" data-ln="together">
+  <div class="ln-tog__head" data-tog-head>
+    <div>
+      <span class="ln-eyebrow">{copy.eyebrow}</span>
+      <h2 class="ln-h ln-tog__title">{copy.title}</h2>
+    </div>
+    <p class="ln-tog__lead">{copy.text}</p>
+  </div>
+
+  <div class="ln-tog__rows">
+    {rows.map((row, r) => (
+      <div class="ln-tog__row">
+        {row.map((t, c) => t.kind === 'link' ? (
+          <a href={href} class:list={['ln-tile', { 'ln-tile--dark': t.tone === 'dark', 'ln-tile--red': t.tone === 'red' }]} style={`--grow:${t.w}`} data-tile={orderOf(r, c)}>
+            {copy.tiles[t.key]}<span class="ln-tile__ar" aria-hidden="true">→</span>
+          </a>
+        ) : (
+          <div class="ln-tile ln-tile--photo" style={`--grow:${t.w}`} data-tile={orderOf(r, c)}>
+            <img src={t.src} alt={copy.photos[t.key]} style={t.crop} loading="lazy" decoding="async" />
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+</section>

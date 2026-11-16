@@ -1,109 +1,96 @@
-export function initLanding(): void {
-  const routeState = window as typeof window & {
-    __elanclaRouteController?: AbortController;
-  };
-  routeState.__elanclaRouteController?.abort();
-  const controller = new AbortController();
-  routeState.__elanclaRouteController = controller;
+import { initClosing } from './scroll/closing';
+import { initDoctrines } from './scroll/doctrines';
+import { initGod } from './scroll/god';
+import { initHero } from './scroll/hero';
+import { getLenis, gsap, ScrollTrigger, startLenis } from './scroll/lenis';
+import { initActiveNav, initNavAnchor } from './scroll/nav-anchor';
+import { initSunday } from './scroll/sunday';
+import { initTogether } from './scroll/together';
 
-  initScrollReveal();
-  initNumberTicker();
-  initActiveNav(controller.signal);
-  initSmoothScroll(controller.signal);
-}
+type LandingWindow = typeof window & {
+  __lnCleanup?: () => void;
+  __lnBound?: boolean;
+};
+const SECTION_IDS = [
+  'inicio',
+  'dios',
+  'doctrinas',
+  'juntos',
+  'domingo',
+  'visitanos',
+];
 
-function initScrollReveal(): void {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in');
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.12, rootMargin: '0px 0px -10% 0px' }
+function mount(): void {
+  const w = window as LandingWindow;
+  const root = document.querySelector<HTMLElement>('.ln');
+  if (!root || root.dataset.lnMounted === 'true') return;
+  w.__lnCleanup?.();
+  root.dataset.lnMounted = 'true';
+
+  // Without motion we keep the page static: no Lenis, no pins, doctrines shown as a list.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    root.classList.add('is-static');
+    root.querySelectorAll('[data-anchor-clip]').forEach((r) => {
+      r.setAttribute('y', '0');
+    });
+    w.__lnCleanup = undefined;
+    return;
+  }
+
+  const stopLenis = startLenis();
+  const mm = gsap.matchMedia();
+  mm.add(
+    { desktop: '(min-width: 1024px)', mobile: '(max-width: 1023.98px)' },
+    (ctx) => {
+      const isDesktop = Boolean(ctx.conditions?.desktop);
+      initHero(root);
+      initGod(root, isDesktop);
+      initDoctrines(root, isDesktop);
+      initTogether(root);
+      initSunday(root, isDesktop);
+      initClosing(root);
+      initNavAnchor();
+      initActiveNav(SECTION_IDS);
+    }
   );
-  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-}
 
-function initNumberTicker(): void {
-  const duration = 1400;
-  document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
-    const final = parseInt(el.dataset.count ?? '0', 10);
-    let started = false;
-
-    const run = () => {
-      if (started) return;
-      started = true;
-      const start = performance.now();
-      const tick = (now: number) => {
-        const p = Math.min(1, (now - start) / duration);
-        const eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = Math.round(eased * final).toString();
-        if (p < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    };
-
-    new IntersectionObserver(
-      (entries) => entries.forEach((e) => { if (e.isIntersecting) run(); }),
-      { threshold: 0.6 }
-    ).observe(el);
-  });
-}
-
-function initActiveNav(signal: AbortSignal): void {
-  const navLinks = document.querySelectorAll<HTMLElement>('.nav-item');
-  const sectionIds = ['inicio', 'nosotros', 'actividades', 'sermones', 'ministerios'];
-  const nav = document.getElementById('nav');
-  const progress = document.getElementById('readprog');
-
-  const onScroll = () => {
-    const y = window.scrollY + window.innerHeight * 0.35;
-
-    // active section dot
-    let active = 'inicio';
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el && el.offsetTop <= y) active = id;
-    });
-    navLinks.forEach((l) => {
-      l.dataset.active = l.dataset.section === active ? 'true' : 'false';
-    });
-
-    // read progress bar
-    if (progress) {
-      const max = document.body.scrollHeight - window.innerHeight;
-      progress.style.width = `${(window.scrollY / max) * 100}%`;
-    }
-
-    // nav background opacity on scroll
-    if (nav) {
-      if (window.scrollY > 40) {
-        nav.style.background = 'color-mix(in srgb, var(--color-paper) 92%, transparent)';
-        nav.style.boxShadow = '0 8px 30px -10px rgba(0,0,0,0.18)';
-      } else {
-        nav.style.background = 'color-mix(in srgb, var(--color-paper) 72%, transparent)';
-        nav.style.boxShadow = 'none';
-      }
-    }
+  // In-page links (nav, CTAs) glide through Lenis so pinned sections stay in sync.
+  const onClick = (e: MouseEvent) => {
+    const a = (e.target as Element | null)?.closest<HTMLAnchorElement>(
+      'a[href*="#"]'
+    );
+    if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey) return;
+    const url = new URL(a.href, window.location.href);
+    if (
+      url.pathname.replace(/\/$/, '') !==
+        window.location.pathname.replace(/\/$/, '') ||
+      !url.hash
+    )
+      return;
+    const target = document.querySelector<HTMLElement>(url.hash);
+    const lenis = getLenis();
+    if (!target || !lenis) return;
+    e.preventDefault();
+    lenis.scrollTo(target, { offset: 0, duration: 1.4 });
   };
+  document.addEventListener('click', onClick);
 
-  window.addEventListener('scroll', onScroll, { passive: true, signal });
-  onScroll();
+  w.__lnCleanup = () => {
+    document.removeEventListener('click', onClick);
+    mm.revert();
+    for (const t of ScrollTrigger.getAll()) t.kill();
+    stopLenis();
+    w.__lnCleanup = undefined;
+  };
 }
 
-function initSmoothScroll(signal: AbortSignal): void {
-  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
-    a.addEventListener('click', (e) => {
-      const href = a.getAttribute('href');
-      if (!href || href.length <= 1) return;
-      const target = document.querySelector(href);
-      if (target) {
-        e.preventDefault();
-        window.scrollTo({ top: (target as HTMLElement).offsetTop - 70, behavior: 'smooth' });
-      }
-    }, { signal });
-  });
+export function initLanding(): void {
+  const w = window as LandingWindow;
+  if (!w.__lnBound) {
+    w.__lnBound = true;
+    // ClientRouter swaps the DOM without reloading: tear down before, set up after.
+    document.addEventListener('astro:before-swap', () => w.__lnCleanup?.());
+    document.addEventListener('astro:page-load', mount);
+  }
+  mount();
 }

@@ -1,0 +1,94 @@
+{
+  "hero": {
+    "eyebrow": "Hebreos 6:16",
+    "title": "Una iglesia con ancla en el evangelio.",
+    "text": "Somos una familia en el corazón de Montevideo. Nos sostiene la gracia de Dios, nos guía su Palabra y caminamos juntos en la fe.",
+    "cta": "Planifica tu visita",
+    "tag": "En obra…",
+    "sunday": "Domingo",
+    "where": "Dónde",
+    "photoAlt": "La comunidad de la iglesia reunida bajo los árboles"
+  },
+  "god": {
+    "eyebrow": "Un Dios personal",
+    "lines": [
+      "Dios @crown no se quedó lejos.",
+      "Se acercó en Jesucristo, @cross",
+      "para caminar a nuestro lado @flame",
+      "*y se volvió el ancla firme de nuestra fe."
+    ],
+    "refs": "Juan 1:14 · Hebreos 6:19",
+    "cta": "Conoce el evangelio"
+  },
+  "doctrines": {
+    "title": "QUÉ CREEMOS",
+    "intro": "Nueve verdades que sostienen nuestra fe y le dan forma a cómo vivimos cada día.",
+    "quote": "«Estad siempre preparados para presentar defensa ante todo el que os demande razón de la esperanza que hay en vosotros.»",
+    "cite": "1 Pedro 3:15",
+    "closing": "Tenemos esta esperanza como firme y segura ancla del alma.",
+    "cta": "Saber más",
+    "mark": "FE QUE SE VIVE",
+    "listLabel": "Las nueve doctrinas",
+    "goTo": "Ir a la doctrina"
+  },
+  "together": {
+    "eyebrow": "Crecemos caminando juntos",
+    "title": "Muchas formas de servir, un cuerpo que crece.",
+    "text": "Entendemos el servicio como un camino de crecimiento: en cada ministerio nos edificamos unos a otros como un solo cuerpo.",
+    "tiles": {
+      "preaching": "Predicación",
+      "teaching": "Enseñanza",
+      "worship": "Alabanza",
+      "prayer": "Oración",
+      "youth": "Jóvenes",
+      "teens": "Adolescentes",
+      "missions": "Misiones",
+      "men": "Hombres",
+      "women": "Espacio Mujer",
+      "media": "Multimedia"
+    },
+    "photos": {
+      "youth": "Jóvenes de la iglesia al aire libre",
+      "women": "Mujeres reunidas en el salón de la iglesia",
+      "kids": "Niños de la iglesia sentados en el pasto"
+    }
+  },
+  "sunday": {
+    "eyebrow": "Tu primer domingo",
+    "title": "Así es un domingo con nosotros.",
+    "photoAlt": "Una reunión en el salón de la iglesia",
+    "rows": [
+      {
+        "time": "10:00",
+        "title": "Escuela bíblica",
+        "text": "Para adultos y niños. Puedes sumarte o llegar directo al culto."
+      },
+      {
+        "time": "11:15",
+        "title": "Culto de celebración",
+        "text": "Cantamos, oramos y abrimos la Biblia juntos. También en vivo por YouTube."
+      },
+      {
+        "time": "13:00",
+        "title": "Termina el culto",
+        "text": "Si quieres, quédate a conversar. Nadie te va a apurar."
+      }
+    ],
+    "how": "Cómo llegar",
+    "write": "Escríbenos"
+  },
+  "closing": {
+    "eyebrow": "La obra sigue",
+    "title": "Te esperamos este domingo.",
+    "text": "Una iglesia con ancla en el evangelio. Escuela bíblica a las 10:00 y culto a las 11:15.",
+    "follow": "Síguenos durante la semana",
+    "mapLabel": "Mapa de la zona: Av. Herrera esquina Juan Arrieta, Montevideo",
+    "mapNote": "Mapa de Google Maps",
+    "where": "Montevideo · Domingos 10:00 y 11:15",
+    "how": "Cómo llegar",
+    "since": "· Iglesia Bautista · Montevideo, desde 1997"
+  },
+  "a11y": {
+    "scrollProgress": "Progreso de la página"
+  }
+}

@@ -6,6 +6,7 @@ import esContact from './messages/es/contact.json';
 import esContentPages from './messages/es/content-pages.json';
 import esFooter from './messages/es/footer.json';
 import esHome from './messages/es/home.json';
+import esLanding from './messages/es/landing.json';
 import esMinistries from './messages/es/ministries.json';
 import esNav from './messages/es/nav.json';
 import esNotFound from './messages/es/not-found.json';
@@ -20,6 +21,7 @@ import ptContact from './messages/pt/contact.json';
 import ptContentPages from './messages/pt/content-pages.json';
 import ptFooter from './messages/pt/footer.json';
 import ptHome from './messages/pt/home.json';
+import ptLanding from './messages/pt/landing.json';
 import ptMinistries from './messages/pt/ministries.json';
 import ptNav from './messages/pt/nav.json';
 import ptNotFound from './messages/pt/not-found.json';
@@ -34,6 +36,7 @@ import enContact from './messages/en/contact.json';
 import enContentPages from './messages/en/content-pages.json';
 import enFooter from './messages/en/footer.json';
 import enHome from './messages/en/home.json';
+import enLanding from './messages/en/landing.json';
 import enMinistries from './messages/en/ministries.json';
 import enNav from './messages/en/nav.json';
 import enNotFound from './messages/en/not-found.json';
@@ -52,6 +55,7 @@ export const messages = {
     contentPages: esContentPages,
     footer: esFooter,
     home: esHome,
+    landing: esLanding,
     ministries: esMinistries,
     nav: esNav,
     notFound: esNotFound,
@@ -67,6 +71,7 @@ export const messages = {
     contentPages: ptContentPages,
     footer: ptFooter,
     home: ptHome,
+    landing: ptLanding,
     ministries: ptMinistries,
     nav: ptNav,
     notFound: ptNotFound,
@@ -82,6 +87,7 @@ export const messages = {
     contentPages: enContentPages,
     footer: enFooter,
     home: enHome,
+    landing: enLanding,
     ministries: enMinistries,
     nav: enNav,
     notFound: enNotFound,
