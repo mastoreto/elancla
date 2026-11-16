@@ -1,79 +1,61 @@
 ---
+import { doctrineIcons } from 'src/data/doctrineIcons';
 import type { Doctrine } from 'src/data/doctrines';
+import type { Messages } from 'src/i18n/messages';
 
 interface Props {
   doctrine: Doctrine;
-  total: string;
-  copy: any;
+  index: number;
+  copy: Messages['confession']['doctrineList'];
 }
 
-const { doctrine: d, total, copy } = Astro.props;
-const doctrineCountLabel = copy.doctrineOf
-  .replace('{number}', d.number)
-  .replace('{total}', total);
+const { doctrine: d, index, copy } = Astro.props;
+const panelId = `doctrine-panel-${d.id}`;
 ---
 
-<article id={`doctrine-${d.id}`} class="doctrine-row" data-id={d.id}>
+<article id={`doctrine-${d.id}`} class="cf-card" data-id={d.id}>
+  <button type="button" class="cf-card__head" aria-expanded="false" aria-controls={panelId}>
+    <span class="cf-card__num">{d.number}</span>
+    <span class="cf-card__icon">
+      <svg viewBox="0 0 120 120" fill="currentColor" stroke="currentColor" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+        {doctrineIcons[index].map((s) => s.circle
+          ? <circle cx={s.circle[0]} cy={s.circle[1]} r={s.circle[2]} />
+          : <path d={s.d} fill={s.cut ? 'var(--ln-warm)' : undefined} stroke={s.cut ? 'none' : undefined} />)}
+      </svg>
+    </span>
+    <span class="cf-card__title">
+      <b>{d.title}</b>
+      <span>{d.subtitle}</span>
+    </span>
+    <span class="cf-card__tag">{d.tag}</span>
+    <span class="cf-card__plus" aria-hidden="true"></span>
+    <span class="sr-only">{copy.expand}</span>
+  </button>
 
-  <!-- Clickable header -->
-  <div class="row-summary grid grid-cols-12 gap-4 py-8 md:py-10 items-center cursor-pointer">
-    <div class="col-span-1 font-mono text-[12px] text-ink/40">{d.number}</div>
-    <div class="col-span-10 md:col-span-7 flex items-baseline flex-wrap">
-      <h3 class="row-title font-display text-[clamp(1.7rem,3vw,2.7rem)] leading-[1.05] tracking-tight">{d.title}</h3>
-      {d.featured && (
-        <span class="ml-3 inline-flex items-center gap-1.5 text-[10px] tracking-[0.22em] uppercase text-primary font-semibold">
-          <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>{copy.featured}
-        </span>
-      )}
-      <div class="w-full mt-1.5 font-ui text-[12.5px] text-ink/50">{d.subtitle}</div>
-    </div>
-    <div class="hidden md:block col-span-3">
-      <span class="inline-block font-ui text-[10.5px] tracking-[0.22em] uppercase text-ink/55 border border-ink/15 rounded-full px-3 py-1.5">{d.tag}</span>
-    </div>
-    <div class="col-span-1 flex justify-end">
-      <button type="button" class="row-plus w-11 h-11 rounded-full border border-ink/15 flex items-center justify-center" aria-label={copy.expand}>
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path d="M6 1V11M1 6H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-        </svg>
-      </button>
-    </div>
-  </div>
+  <p class="cf-card__lead">{d.summary}</p>
 
-  <!-- Expandable content -->
-  <div class="row-content">
-    <div class="grid grid-cols-12 gap-4 pb-12">
-      <div class="col-span-12 md:col-span-7 md:col-start-2">
-        <p class="font-ui text-[15.5px] leading-relaxed text-ink/70 max-w-2xl">{d.summary}</p>
-        <div class="verse-callout mt-6">
-          <p>"{d.verse}"</p>
-          <span class="ref">{d.verseRef}</span>
-        </div>
-        <div class="detail-body mt-8 max-w-2xl">
-          {d.sections.map((section) => (
-            <>
-              <h4>{section.h}</h4>
-              <Fragment set:html={section.body} />
-            </>
-          ))}
-        </div>
+  <div id={panelId} class="cf-card__panel" role="region" aria-label={d.title}>
+    <div class="cf-card__inner">
+      <p class="cf-card__summary">{d.summary}</p>
+
+      <blockquote class="cf-card__verse">
+        <p>«{d.verse}»</p>
+        <cite class="cf-cap">{d.verseRef}</cite>
+      </blockquote>
+
+      <div class="cf-card__sections">
+        {d.sections.map((section) => (
+          <div class="cf-card__section">
+            <span class="cf-cap">{section.h}</span>
+            <div class="cf-body" set:html={section.body} />
+          </div>
+        ))}
       </div>
 
-      <!-- References sidebar -->
-      <aside class="col-span-12 md:col-span-3 md:col-start-9 mt-6 md:mt-0">
-        <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-4">{copy.references}</div>
-        <div class="flex flex-wrap gap-2 mb-8">
-          {d.refs.map((ref) => (
-            <span class="ref-chip">{ref}</span>
-          ))}
-        </div>
-        <div class="pt-6 border-t border-ink/10">
-          <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-2">
-            {doctrineCountLabel}
-          </div>
-          <div class="font-display text-lg italic text-ink/80">{d.tag}</div>
-        </div>
-      </aside>
+      <div class="cf-card__refs">
+        <span class="cf-cap">{copy.references}</span>
+        {d.refs.map((ref) => <span class="cf-chip">{ref}</span>)}
+      </div>
     </div>
   </div>
-
 </article>
