@@ -58,7 +58,10 @@ export function initLoadingOverlay(): void {
   const release = () => root.classList.remove('site-loader-lock', 'site-loader-pending');
 
   let flight: gsap.core.Tween | undefined;
+  let settle: gsap.core.Tween | undefined;
   const killFlight = () => {
+    settle?.kill();
+    settle = undefined;
     flight?.scrollTrigger?.kill();
     flight?.kill();
     flight = undefined;
@@ -76,25 +79,42 @@ export function initLoadingOverlay(): void {
       return;
     }
     root.classList.add('ldr-floating'); // hides the hero's own anchor: this one takes its place
-    gsap.to(els.hint, { opacity: 1, duration: 0.8, delay: 0.6 });
-    flight = gsap.to(els.anchor, {
-      x: target.left - from.left,
-      y: target.top - from.top,
-      scale: target.width / from.width,
-      ease: 'none',
-      scrollTrigger: {
-        start: 0,
-        end: () => window.innerHeight * 0.55,
-        scrub: 0.6,
-        onUpdate: (self) => {
-          const arrived = self.progress >= 0.999;
-          gsap.set(els.anchor, { opacity: arrived ? 0 : 1 });
-          gsap.set(logo, { opacity: arrived ? 1 : 0 });
-          if (self.progress > 0.02) gsap.to(els.hint, { opacity: 0, duration: 0.3, overwrite: true });
+    const startFlight = () => {
+      gsap.to(els.hint, { opacity: 1, duration: 0.8, delay: 0.3 });
+      flight = gsap.to(els.anchor, {
+        x: target.left - from.left,
+        y: target.top - from.top,
+        scale: target.width / from.width,
+        ease: 'none',
+        scrollTrigger: {
+          start: 0,
+          end: () => window.innerHeight * 0.55,
+          scrub: 0.6,
+          onUpdate: (self) => {
+            const arrived = self.progress >= 0.999;
+            gsap.set(els.anchor, { opacity: arrived ? 0 : 1 });
+            gsap.set(logo, { opacity: arrived ? 1 : 0 });
+            if (self.progress > 0.02) gsap.to(els.hint, { opacity: 0, duration: 0.3, overwrite: true });
+          },
         },
-      },
-    });
-    ScrollTrigger.refresh();
+      });
+      ScrollTrigger.refresh();
+    };
+    // The anchor first settles where the hero's own anchor sits, then travels to the nav on scroll.
+    const heroSvg = document.querySelector<SVGElement>('.ln-hero__anchor svg');
+    const spot = heroSvg?.getBoundingClientRect();
+    if (spot && spot.width > 0) {
+      settle = gsap.to(els.anchor, {
+        x: spot.left - from.left,
+        y: spot.top - from.top,
+        scale: spot.width / from.width,
+        duration: 1.1,
+        ease: 'power3.inOut',
+        onComplete: startFlight,
+      });
+    } else {
+      startFlight();
+    }
   };
 
   /** Ground fades out, the page is released, the anchor turns red and flies to the nav logo. */
