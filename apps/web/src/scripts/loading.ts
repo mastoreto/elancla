@@ -55,6 +55,8 @@ export function initLoadingOverlay(): void {
   const hint = document.querySelector<HTMLElement>('[data-ldr-hint]');
   const els = { ground, anchor, cap, outline, clip, hint: hint ?? ground };
   const navLogo = () => document.querySelector<HTMLElement>('[data-nav-anchor]');
+  // Only the home has a hero anchor for the intro anchor to replace and carry to the header.
+  const isHome = () => !!document.querySelector('.ln-hero__anchor svg');
   const release = () => root.classList.remove('site-loader-lock', 'site-loader-pending');
 
   let flight: gsap.core.Tween | undefined;
@@ -74,8 +76,14 @@ export function initLoadingOverlay(): void {
     killFlight();
     const target = logo?.getBoundingClientRect();
     const from = els.anchor.getBoundingClientRect();
-    if (!logo || !target || target.width === 0) {
-      gsap.to(els.anchor, { opacity: 0, duration: 0.6 });
+    if (!isHome() || !logo || !target || target.width === 0) {
+      // Any other page: no floating anchor, the header's own anchor stays in place.
+      if (logo) gsap.set(logo, { clearProps: 'opacity' });
+      gsap.to(els.anchor, {
+        opacity: 0,
+        duration: 0.6,
+        onComplete: () => els.anchor.classList.remove('is-active'),
+      });
       return;
     }
     root.classList.add('ldr-floating'); // hides the hero's own anchor: this one takes its place
@@ -122,7 +130,7 @@ export function initLoadingOverlay(): void {
   /** Ground fades out, the page is released, the anchor turns red and flies to the nav logo. */
   const reveal = (tl: gsap.core.Timeline, at: number) => {
     const logo = navLogo();
-    tl.call(() => logo && gsap.set(logo, { opacity: 0 }), [], at)
+    tl.call(() => logo && isHome() && gsap.set(logo, { opacity: 0 }), [], at)
       .call(release, [], at)
       .to(els.ground, { opacity: 0, duration: 0.9, ease: 'power2.inOut' }, at)
       .to(els.anchor, { color: RED, duration: 0.9, ease: 'power2.inOut' }, at)
@@ -144,7 +152,7 @@ export function initLoadingOverlay(): void {
   const playFirstVisit = () => {
     resetStage(1);
     const logo = navLogo();
-    if (logo) gsap.set(logo, { opacity: 0 });
+    if (logo && isHome()) gsap.set(logo, { opacity: 0 });
     const tl = gsap.timeline({
       onComplete: () => {
         idleGround();
@@ -205,7 +213,7 @@ export function initLoadingOverlay(): void {
   /** Later visits skip the intro, but the home anchor still travels to the nav logo on scroll. */
   const playSeenVisit = () => {
     idle();
-    if (!document.querySelector('.ln-hero__anchor svg')) return; // only the home has an anchor to carry
+    if (!isHome()) return; // only the home has an anchor to carry
     const run = () => {
       els.anchor.classList.add('is-active');
       gsap.set(els.outline, { strokeDashoffset: 0 });

@@ -1,0 +1,49 @@
+---
+import { events, groupEventsByMonth } from 'src/data/calendar';
+import type { Locale } from 'src/i18n/config';
+import { getHtmlLang } from 'src/i18n/utils';
+import type { Messages } from 'src/i18n/messages';
+import CalendarEventRow from './CalendarEventRow.astro';
+import CalendarFilters from './CalendarFilters.astro';
+import CalendarSectionHead from './CalendarSectionHead.astro';
+
+interface Props {
+  copy: Messages['calendar'];
+  locale: Locale;
+}
+const { copy, locale } = Astro.props;
+
+const lang = getHtmlLang(locale);
+const monthFormat = new Intl.DateTimeFormat(lang, { month: 'long', timeZone: 'UTC' });
+const weekdayFormat = new Intl.DateTimeFormat(lang, { weekday: 'short', timeZone: 'UTC' });
+const groups = groupEventsByMonth(events).map(({ month, events: list }) => ({
+  month,
+  name: monthFormat.format(new Date(Date.UTC(2027, month, 1))),
+  count: list.length === 1 ? copy.months.countOne : copy.months.countMany.replace('{n}', String(list.length)),
+  rows: list.map((event) => ({
+    event,
+    weekday: weekdayFormat.format(new Date(`${event.date}T00:00:00Z`)).replace('.', ''),
+  })),
+}));
+---
+
+<section class="cal-wrap cal-section" id="eventos" data-cal>
+  <CalendarSectionHead eyebrow={copy.months.eyebrow} title={copy.months.title} emphasis={copy.months.emphasis} />
+  <CalendarFilters copy={copy} locale={locale} />
+  <p class="cal-notice"><b>{copy.months.noticeLabel}</b><span>{copy.months.notice}</span></p>
+  <div class="cal-months">
+    {groups.map((group) => (
+      <section class="cal-month" data-month={group.month}>
+        <header class="cal-month__head">
+          <h3 class="cal-month__name">{group.name}</h3>
+          <span class="cal-month__count">{group.count}</span>
+        </header>
+        <div class="cal-month__list">
+          {group.rows.map(({ event, weekday }) => (
+            <CalendarEventRow event={event} weekday={weekday} copy={copy} />
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</section>
