@@ -1,0 +1,38 @@
+---
+import { MINISTRY_COLORS, PLACE_TBC, googleCalendarUrl, type CalendarEvent } from 'src/data/calendar';
+import type { Messages } from 'src/i18n/messages';
+import CalendarDate from './CalendarDate.astro';
+
+interface Props {
+  event: CalendarEvent;
+  weekday: string;
+  copy: Messages['calendar'];
+}
+const { event, weekday, copy } = Astro.props;
+const place = event.place === PLACE_TBC ? copy.months.tbc : event.place;
+const suffix = copy.months.timeSuffix ? ` ${copy.months.timeSuffix}` : '';
+---
+
+<article class="cal-row" data-ministry={event.ministry}>
+  <div class="cal-row__date"><CalendarDate day={Number(event.date.slice(8))} label={weekday} /></div>
+  <b class="cal-row__title">{event.title}</b>
+  <div class="cal-row__meta">
+    <span class="cal-row__ministry">
+      <span class="cal-dot" style={`--c:${MINISTRY_COLORS[event.ministry]}`}></span>{copy.ministries[event.ministry]}
+    </span>
+    <span class="cal-row__when">{event.time}{suffix} · {place}</span>
+  </div>
+  <a
+    class="cal-add"
+    href={googleCalendarUrl(event, place)}
+    target="_blank"
+    rel="noopener"
+    aria-label={`${copy.months.add}: ${event.title}`}
+    title={copy.months.add}
+  >
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="3.5" y="5" width="17" height="15" rx="3"></rect>
+      <path d="M8 3v4M16 3v4M3.5 10h17M12 13v4M10 15h4"></path>
+    </svg>
+  </a>
+</article>

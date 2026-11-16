@@ -1,0 +1,89 @@
+{
+  "seo": {
+    "title": "2027 yearly calendar",
+    "description": "Everything happening at Iglesia Bautista El Ancla: what repeats every week and the events of each month. Add them to your calendar or ask for the printed calendar.",
+    "keywords": ["church calendar", "church activities Montevideo", "El Ancla events"]
+  },
+  "breadcrumbs": { "home": "El Ancla", "resources": "Resources", "current": "Yearly calendar" },
+  "hero": {
+    "eyebrow": "2027 yearly calendar",
+    "titleBefore": "All year long, to ",
+    "titleEmphasis": "walk together.",
+    "body": "First what repeats every week, then the events of each month. Add them to your calendar or take the printed church calendar with you.",
+    "orderCta": "Request printed calendar",
+    "downloadCta": "Download",
+    "nextLabel": "Next activity · sample"
+  },
+  "weekly": {
+    "eyebrow": "Every week",
+    "title": "Recurring ",
+    "emphasis": "activities.",
+    "body": "They repeat every week, all year. Sunday times are real; the rest are samples.",
+    "empty": "No fixed activities",
+    "example": "Sample"
+  },
+  "months": {
+    "eyebrow": "Specific dates",
+    "title": "Events ",
+    "emphasis": "month by month.",
+    "monthFilterLabel": "Filter by month",
+    "ministryFilterLabel": "Filter by ministry",
+    "allYear": "All year",
+    "allMinistries": "All",
+    "notice": "These dates are samples. They will be replaced with the church's real list.",
+    "noticeLabel": "Sample",
+    "countOne": "1 activity · sample",
+    "countMany": "{n} activities · sample",
+    "add": "Add to my calendar",
+    "tbc": "To be confirmed",
+    "timeSuffix": ""
+  },
+  "take": {
+    "title": "Take it with you, ",
+    "emphasis": "on paper or digital.",
+    "print": {
+      "eyebrow": "On paper",
+      "title": "Request your printed calendar.",
+      "body": "Leave your details and we will message you on WhatsApp when it is ready for pickup.",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "whatsapp": "WhatsApp",
+      "whatsappPlaceholder": "+598 ...",
+      "quantity": "Quantity",
+      "submit": "Request calendar"
+    },
+    "download": {
+      "eyebrow": "Download",
+      "title": "Print it yourself or share it.",
+      "pdf": {
+        "title": "To print",
+        "body": "PDF in A3 and A4, with the whole year on a single sheet.",
+        "cta": "Download PDF"
+      },
+      "digital": {
+        "title": "Digital",
+        "body": "A simple 16:9 screen presentation, to project or share.",
+        "cta": "Download",
+        "cover": "Calendar"
+      }
+    }
+  },
+  "subscribe": {
+    "eyebrow": "Always up to date",
+    "title": "Subscribe and the dates reach your phone.",
+    "google": "Google Calendar",
+    "ics": "Apple / Outlook (.ics)"
+  },
+  "ministries": {
+    "preaching": "Preaching",
+    "men": "Men",
+    "teaching": "Teaching",
+    "youth": "Youth",
+    "missions": "Missions",
+    "teens": "Teens",
+    "worship": "Worship",
+    "media": "Media",
+    "prayer": "Prayer",
+    "women": "Women's space"
+  }
+}

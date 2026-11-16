@@ -1,0 +1,43 @@
+---
+import { MINISTRY_COLORS, weeklyActivities } from 'src/data/calendar';
+import type { Locale } from 'src/i18n/config';
+import { getHtmlLang } from 'src/i18n/utils';
+import type { Messages } from 'src/i18n/messages';
+import CalendarSectionHead from './CalendarSectionHead.astro';
+
+interface Props {
+  copy: Messages['calendar'];
+  locale: Locale;
+}
+const { copy, locale } = Astro.props;
+
+// 2027-01-04 is a Monday: index 0..6 maps Monday..Sunday.
+const weekdayFormat = new Intl.DateTimeFormat(getHtmlLang(locale), { weekday: 'long', timeZone: 'UTC' });
+const days = Array.from({ length: 7 }, (_, i) => ({
+  name: weekdayFormat.format(new Date(Date.UTC(2027, 0, 4 + i))),
+  slots: weeklyActivities.filter((a) => a.day === i),
+}));
+---
+
+<section class="cal-wrap cal-section" id="semana">
+  <CalendarSectionHead eyebrow={copy.weekly.eyebrow} title={copy.weekly.title} emphasis={copy.weekly.emphasis} body={copy.weekly.body} />
+  <div class="cal-week">
+    {days.map((day, i) => (
+      <div class:list={['cal-day', i === 6 && 'cal-day--sunday']}>
+        <b class="cal-day__name">{day.name}</b>
+        {day.slots.length === 0 && <span class="cal-day__empty">{copy.weekly.empty}</span>}
+        {day.slots.map((slot) => (
+          <div class:list={['cal-slot', i === 6 && 'cal-slot--dark']}>
+            <b class="cal-slot__time">{slot.time}</b>
+            <b class="cal-slot__title">{slot.title}</b>
+            <span class="cal-slot__tag">
+              <span class="cal-dot" style={`--c:${MINISTRY_COLORS[slot.ministry]}`}></span>
+              {copy.ministries[slot.ministry]}
+            </span>
+            {slot.isExample && <span class="cal-slot__example">{copy.weekly.example}</span>}
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+</section>

@@ -1,0 +1,89 @@
+{
+  "seo": {
+    "title": "Calendario anual 2027",
+    "description": "Todas las actividades de Iglesia Bautista El Ancla: lo que se repite cada semana y los eventos de cada mes. Agrégalos a tu calendario o pide el calendario impreso.",
+    "keywords": ["calendario iglesia", "actividades iglesia Montevideo", "eventos El Ancla"]
+  },
+  "breadcrumbs": { "home": "El Ancla", "resources": "Recursos", "current": "Calendario anual" },
+  "hero": {
+    "eyebrow": "Calendario anual 2027",
+    "titleBefore": "Todo el año, para ",
+    "titleEmphasis": "caminar juntos.",
+    "body": "Primero lo que se repite cada semana, después los eventos de cada mes. Agrégalos a tu calendario o llévate el calendario de la iglesia impreso.",
+    "orderCta": "Pedir calendario impreso",
+    "downloadCta": "Descargar",
+    "nextLabel": "Próxima actividad · ejemplo"
+  },
+  "weekly": {
+    "eyebrow": "Todas las semanas",
+    "title": "Actividades ",
+    "emphasis": "recurrentes.",
+    "body": "Se repiten cada semana, todo el año. Los horarios del domingo son los reales; el resto son de ejemplo.",
+    "empty": "Sin actividades fijas",
+    "example": "Ejemplo"
+  },
+  "months": {
+    "eyebrow": "Fechas puntuales",
+    "title": "Eventos ",
+    "emphasis": "mes a mes.",
+    "monthFilterLabel": "Filtrar por mes",
+    "ministryFilterLabel": "Filtrar por ministerio",
+    "allYear": "Todo el año",
+    "allMinistries": "Todos",
+    "notice": "Estas fechas son de muestra. Se reemplazan con el listado real de la iglesia.",
+    "noticeLabel": "Ejemplo",
+    "countOne": "1 actividad · ejemplo",
+    "countMany": "{n} actividades · ejemplo",
+    "add": "Agregar a mi calendario",
+    "tbc": "Por confirmar",
+    "timeSuffix": "h"
+  },
+  "take": {
+    "title": "Llévalo contigo, ",
+    "emphasis": "en físico o en digital.",
+    "print": {
+      "eyebrow": "En físico",
+      "title": "Pide tu calendario impreso.",
+      "body": "Déjanos tus datos y te escribimos por WhatsApp cuando esté listo para retirar.",
+      "name": "Nombre",
+      "namePlaceholder": "Tu nombre",
+      "whatsapp": "WhatsApp",
+      "whatsappPlaceholder": "+598 ...",
+      "quantity": "Cantidad",
+      "submit": "Solicitar calendario"
+    },
+    "download": {
+      "eyebrow": "Descárgalo",
+      "title": "Imprímelo tú o compártelo.",
+      "pdf": {
+        "title": "Para imprimir",
+        "body": "PDF en A3 y A4, con todo el año en una sola hoja.",
+        "cta": "Descargar PDF"
+      },
+      "digital": {
+        "title": "Digital",
+        "body": "Presentación simple en pantalla 16:9, para proyectar o compartir.",
+        "cta": "Descargar",
+        "cover": "Calendario"
+      }
+    }
+  },
+  "subscribe": {
+    "eyebrow": "Siempre al día",
+    "title": "Suscríbete y las fechas llegan a tu teléfono.",
+    "google": "Google Calendar",
+    "ics": "Apple / Outlook (.ics)"
+  },
+  "ministries": {
+    "preaching": "Predicación",
+    "men": "Hombres",
+    "teaching": "Enseñanza",
+    "youth": "Jóvenes",
+    "missions": "Misiones",
+    "teens": "Adolescentes",
+    "worship": "Alabanza",
+    "media": "Multimedia",
+    "prayer": "Oración",
+    "women": "Espacio Mujer"
+  }
+}

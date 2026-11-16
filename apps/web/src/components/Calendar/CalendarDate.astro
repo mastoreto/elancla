@@ -1,0 +1,13 @@
+---
+// Big day number with weekday (and optionally month) underneath. Used by the hero card and every event row.
+interface Props {
+  day: number;
+  label: string;
+}
+const { day, label } = Astro.props;
+---
+
+<div class="cal-date">
+  <b class="cal-date__num">{day}</b>
+  <span class="cal-date__txt">{label}</span>
+</div>

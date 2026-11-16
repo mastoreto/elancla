@@ -35,6 +35,11 @@
         "label": "Blog",
         "href": "/blog",
         "description": "Reflexões e estudos"
+      },
+      {
+        "label": "Calendário anual",
+        "href": "/calendario-anual",
+        "description": "Atividades e eventos"
       }
     ]
   },
