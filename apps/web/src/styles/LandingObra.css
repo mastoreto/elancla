@@ -338,7 +338,7 @@
   .ln-doc__head { gap: 1.125rem; max-width: 32.5rem; }
   .ln-doc__title { font-size: 3.5rem; }
   .ln-doc__intro { font-size: 1.125rem; }
-  .ln-doc__stage { position: relative; left: auto; right: auto; top: auto; height: var(--stage-h); margin: 0 -2.5rem; order: 2; }
+  .ln-doc__stage { position: relative; left: auto; right: auto; top: auto; height: var(--stage-h); margin: 0; order: 2; }
   .ln-doc__quote { order: 3; padding-top: 1.5rem; }
   .ln-doc__quote p { font-size: 1.75rem; line-height: 1.22; }
   .ln-doc__foot { order: 4; position: relative; left: auto; right: auto; bottom: auto; flex-direction: column; align-items: flex-start; gap: 1.5rem; padding-top: 1.75rem; }
@@ -402,14 +402,13 @@
   .ln-god__foot { gap: 1.125rem; }
 
   .ln-doc {
-    --orbit-r: 118px; --dot: 52px;
-    --stage-h: 408px; --cy: 152px; --ring: 176px; --big: 104px; --anc-w: 84px; --cap-top: 310px; --cap-h: 104px;
+    --orbit-r: 132px; --dot: 48px;
+    --stage-h: 446px; --cy: 170px; --ring: 192px; --big: 104px; --anc-w: 84px; --cap-top: 348px; --cap-h: 104px;
     gap: 1.75rem; padding: 4.5rem 1.5rem 3rem;
   }
   .ln-doc__head { gap: 1.125rem; }
   .ln-doc__title { font-size: 2.5rem; }
   .ln-doc__intro { font-size: 1rem; }
-  .ln-doc__stage { margin: 0 -1.25rem; }
   .ln-doc__quote p { font-size: 1.375rem; }
   .ln-doc__foot { gap: 1.375rem; padding-top: 1.75rem; }
   .ln-doc__foot p { font-size: 1.75rem; }
