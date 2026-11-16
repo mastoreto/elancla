@@ -20,6 +20,32 @@ const SECTION_IDS = [
   'visitanos',
 ];
 
+/** Each section rests on the previous one like a laid stone: it rises 24px and settles as it enters. */
+function seatSections(root: HTMLElement, isDesktop: boolean): void {
+  // Pinned sections (God, Doctrines, Sunday on desktop) are skipped: a transform would shift their pin.
+  const names = isDesktop
+    ? ['together', 'closing']
+    : ['together', 'sunday', 'closing'];
+  for (const name of names) {
+    const sec = root.querySelector<HTMLElement>(`[data-ln="${name}"]`);
+    if (!sec) continue;
+    gsap.fromTo(
+      sec,
+      { y: 24 },
+      {
+        y: 0,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: sec,
+          start: 'top bottom',
+          end: 'top 70%',
+          scrub: true,
+        },
+      }
+    );
+  }
+}
+
 function mount(): void {
   const w = window as LandingWindow;
   const root = document.querySelector<HTMLElement>('.ln');
@@ -49,6 +75,7 @@ function mount(): void {
       initTogether(root, isDesktop);
       initSunday(root, isDesktop);
       initClosing(root);
+      seatSections(root, isDesktop);
       initNavAnchor();
       initActiveNav(SECTION_IDS);
     }

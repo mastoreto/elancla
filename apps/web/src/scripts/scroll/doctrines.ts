@@ -89,7 +89,7 @@ export function initDoctrines(root: HTMLElement, isDesktop: boolean): void {
   const st = ScrollTrigger.create({
     trigger: isDesktop || !stage ? sec : stage,
     start: isDesktop ? 'top top' : 'center center',
-    end: isDesktop ? '+=900%' : '+=700%',
+    end: isDesktop ? '+=560%' : '+=480%', // ~55vh of scroll per doctrine
     pin: true,
     pinSpacing: true, // the stacked layout's parent is flex, where GSAP would otherwise skip the spacing
     scrub: 0.5,
