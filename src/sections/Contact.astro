@@ -1,6 +1,12 @@
 ---
 import cn from '../utils/cn.ts';
 
+interface Props {
+  copy: any;
+}
+
+const { copy } = Astro.props;
+
 const styles = {
   section: cn('relative py-24 md:py-36'),
   container: cn('mx-auto max-w-[1600px] px-6 md:px-10'),
@@ -45,7 +51,7 @@ const socials = [
 <section id="visitanos" class={styles.section}>
   <div class={styles.container}>
     <div class={styles.sectionHeader}>
-      <span class="section-counter">[ 05 — Visítanos ]</span>
+      <span class="section-counter">{copy.counter}</span>
       <span class={styles.headerLine}></span>
     </div>
 
@@ -53,25 +59,24 @@ const socials = [
       <!-- info -->
       <div class={styles.colLeft}>
         <h2 class={styles.headline}>
-          Te esperamos <em class="italic text-primary">el domingo.</em>
+          {copy.headline.before}<em class="italic text-primary">{copy.headline.emphasis}</em>
         </h2>
         <p class={styles.lead}>
-          Si necesitas más información puedes contactarnos por nuestras
-          redes sociales. Nos encanta recibir visitas.
+          {copy.lead}
         </p>
 
         <div class={styles.infoStack}>
           <div>
-            <div class={styles.infoLabel}>Dirección</div>
-            <div class={styles.infoValue}>Av. Dr. Luis A. de Herrera 3101</div>
-            <div class={styles.infoSub}>Esq. Juan Arrieta · Montevideo, Uruguay</div>
+            <div class={styles.infoLabel}>{copy.addressLabel}</div>
+            <div class={styles.infoValue}>{copy.address}</div>
+            <div class={styles.infoSub}>{copy.addressMeta}</div>
           </div>
           <div>
-            <div class={styles.infoLabel}>Horarios</div>
-            <div class={styles.infoValue}>Dom 10:00 · 11:15 — Mié 19:00</div>
+            <div class={styles.infoLabel}>{copy.scheduleLabel}</div>
+            <div class={styles.infoValue}>{copy.schedule}</div>
           </div>
           <div>
-            <div class={styles.infoLabel}>Redes</div>
+            <div class={styles.infoLabel}>{copy.socialLabel}</div>
             <div class={styles.socialList}>
               {socials.map((s) => (
                 <a href={s.href} class={styles.socialLink}>
@@ -95,6 +100,7 @@ const socials = [
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3273.3336069700877!2d-56.1614292!3d-34.872968199999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x959f80619e924ca9%3A0xb604f8c13a196671!2sIglesia%20Bautista%20El%20Ancla!5e0!3m2!1ses-419!2suy!4v1740605934485!5m2!1ses-419!2suy"
             class={styles.map}
             style="border:0"
+            title={copy.mapTitle}
             allowfullscreen
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"

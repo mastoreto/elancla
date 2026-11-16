@@ -1,0 +1,39 @@
+---
+import Layout from 'src/layouts/Layout.astro';
+import AboutUs from 'src/sections/AboutUs.astro';
+import Activities from 'src/sections/Activities.astro';
+import Contact from 'src/sections/Contact.astro';
+import Home from 'src/sections/Home.astro';
+import Marquee from 'src/sections/Marquee.astro';
+import Ministries from 'src/sections/Ministries.astro';
+import Sermons from 'src/sections/Sermons.astro';
+import { nonDefaultLocales, type Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+
+export function getStaticPaths() {
+  return nonDefaultLocales.map((locale) => ({ params: { locale }, props: { locale } }));
+}
+
+const { locale } = Astro.props as { locale: Locale };
+const copy = getMessages(locale);
+---
+
+<Layout
+  title={copy.home.seo.title}
+  description={copy.home.seo.description}
+  keywords={copy.home.seo.keywords}
+  locale={locale}
+>
+  <Home copy={copy.home.hero} locale={locale} />
+  <Marquee words={copy.home.marquee.words} />
+  <AboutUs copy={copy.aboutUs} locale={locale} />
+  <Activities copy={copy.activities} />
+  <Sermons copy={copy.sermons} />
+  <Ministries copy={copy.ministries} locale={locale} />
+  <Contact copy={copy.contact} />
+</Layout>
+
+<script>
+  import { initLanding } from 'src/scripts/landing';
+  initLanding();
+</script>

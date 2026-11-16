@@ -1,6 +1,9 @@
 ---
 import Layout from 'src/layouts/Layout.astro';
-import { doctrines, solas } from 'src/data/doctrines';
+import { getDoctrines, getSolas } from 'src/data/doctrines';
+import { defaultLocale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
 import ConfesionHero from 'src/components/ConfesionDeFe/ConfesionHero.astro';
 import ConfesionMarquee from 'src/components/ConfesionDeFe/ConfesionMarquee.astro';
 import ConfesionQuote from 'src/components/ConfesionDeFe/ConfesionQuote.astro';
@@ -9,30 +12,26 @@ import ConfesionChristus from 'src/components/ConfesionDeFe/ConfesionChristus.as
 import ConfesionCTA from 'src/components/ConfesionDeFe/ConfesionCTA.astro';
 import 'src/styles/ConfesionDeFe.css';
 
+const locale = defaultLocale;
+const copy = getMessages(locale).confession;
+const doctrines = getDoctrines(locale);
+const solas = getSolas(locale);
 const total = String(doctrines.length).padStart(2, '0');
 ---
 
 <Layout
-  title="Confesión de fe"
-  description="Confesión de fe de Iglesia Bautista El Ancla: doce artículos doctrinales y los cinco solas de la Reforma que guían nuestra vida y enseñanza."
-  keywords={[
-    'confesión de fe',
-    'doctrina bautista',
-    'cinco solas',
-    'reforma protestante',
-    'Iglesia Bautista El Ancla',
-  ]}
-  breadcrumbs={[
-    { name: 'Inicio', url: '/' },
-    { name: 'Confesión de fe', url: '/confesion-de-fe' },
-  ]}
+  title={copy.seo.title}
+  description={copy.seo.description}
+  keywords={copy.seo.keywords}
+  breadcrumbs={copy.breadcrumbs.map((item) => ({ ...item, url: localizePath(item.url, locale) }))}
+  locale={locale}
 >
-  <ConfesionHero />
+  <ConfesionHero copy={copy.hero} locale={locale} />
   <ConfesionMarquee solas={solas} />
-  <ConfesionQuote />
-  <DoctrineList doctrines={doctrines} total={total} />
-  <ConfesionChristus />
-  <ConfesionCTA />
+  <ConfesionQuote copy={copy.quote} />
+  <DoctrineList doctrines={doctrines} total={total} copy={copy.doctrineList} />
+  <ConfesionChristus copy={copy.christus} />
+  <ConfesionCTA copy={copy.cta} locale={locale} />
 </Layout>
 
 <script>

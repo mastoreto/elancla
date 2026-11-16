@@ -1,5 +1,6 @@
 ---
 import Layout from 'src/layouts/Layout.astro';
+import { defaultLocale } from 'src/i18n/config';
 ---
 
 <Layout
@@ -11,6 +12,7 @@ import Layout from 'src/layouts/Layout.astro';
     { name: 'Ministerios', url: '/#ministerios' },
     { name: 'Sobre Nosotros', url: '/ministerios/sobre-nosotros' },
   ]}
+  locale={defaultLocale}
 >
   Sobre nosotros
 </Layout>

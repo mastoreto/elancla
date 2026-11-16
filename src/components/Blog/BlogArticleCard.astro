@@ -1,14 +1,17 @@
 ---
 import type { BlogArticle } from 'src/data/blog';
 import { getBlogArticlePath } from 'src/data/blog';
+import type { Locale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
 
 interface Props {
   article: BlogArticle;
   wide?: boolean;
+  locale?: Locale;
 }
 
-const { article, wide = false } = Astro.props;
-const href = getBlogArticlePath(article);
+const { article, wide = false, locale } = Astro.props;
+const href = locale ? localizePath(getBlogArticlePath(article), locale) : getBlogArticlePath(article);
 const glyph =
   article.coverGlyph.length <= 3
     ? article.coverGlyph

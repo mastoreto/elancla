@@ -1,0 +1,48 @@
+---
+import ContentPageTemplate from 'src/components/ContentPage/ContentPageTemplate.astro';
+import {
+  getLocalizedContentPageStaticPaths,
+  type ContentPage,
+} from 'src/data/contentPages';
+import type { Locale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
+import Layout from 'src/layouts/Layout.astro';
+
+interface Props {
+  page: ContentPage;
+  isAlias?: boolean;
+  locale: Locale;
+}
+
+export function getStaticPaths() {
+  return getLocalizedContentPageStaticPaths('root');
+}
+
+const { page, isAlias = false, locale } = Astro.props;
+
+const canonicalPath = `/${page.slug}`;
+const canonical = new URL(localizePath(canonicalPath, locale), Astro.site).toString();
+const breadcrumbs = page.hero.breadcrumbs.map((item) => ({
+  name: item.label,
+  url: item.href ?? localizePath(canonicalPath, locale),
+}));
+---
+
+<Layout
+  title={page.seoTitle ?? page.title}
+  description={page.description}
+  breadcrumbs={breadcrumbs}
+  image={page.featuredImage?.src}
+  imageAlt={page.featuredImage?.alt}
+  canonical={canonical}
+  noindex={isAlias}
+  locale={locale}
+>
+  <ContentPageTemplate page={page} />
+</Layout>
+
+<script>
+  import { initContentPage } from 'src/scripts/contentPage';
+
+  initContentPage();
+</script>

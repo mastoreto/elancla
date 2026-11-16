@@ -1,0 +1,28 @@
+{
+  "brandLabel": "Baptist Church",
+  "brandName": "El Ancla",
+  "links": [
+    { "label": "Home", "href": "/#inicio", "section": "inicio" },
+    { "label": "About", "href": "/#nosotros", "section": "nosotros" },
+    { "label": "Activities", "href": "/#actividades", "section": "actividades" },
+    { "label": "Sermons", "href": "/#sermones", "section": "sermones" },
+    { "label": "Ministries", "href": "/#ministerios", "section": "ministerios" }
+  ],
+  "resources": {
+    "label": "Resources",
+    "items": [
+      { "label": "Statement of faith", "href": "/confesion-de-fe", "description": "IX doctrinal pillars" },
+      { "label": "Blog", "href": "/blog", "description": "Reflections and studies" }
+    ]
+  },
+  "live": "Sun · 11:15",
+  "cta": "Visit us",
+  "menuOpen": "Open menu",
+  "menuClose": "Close menu",
+  "language": { "label": "Language", "current": "Current language" },
+  "theme": {
+    "label": "Change theme",
+    "lightLabel": "Use light mode",
+    "darkLabel": "Use dark mode"
+  }
+}

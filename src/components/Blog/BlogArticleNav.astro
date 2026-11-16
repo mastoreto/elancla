@@ -1,13 +1,17 @@
 ---
 import type { BlogArticle } from 'src/data/blog';
 import { getBlogArticlePath } from 'src/data/blog';
+import type { Locale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
 
 interface Props {
   previous: BlogArticle | null;
   next: BlogArticle | null;
+  copy: any;
+  locale: Locale;
 }
 
-const { previous, next } = Astro.props;
+const { previous, next, copy, locale } = Astro.props;
 ---
 
 <section class="relative border-b border-ink/10 bg-paper py-16 md:py-20">
@@ -16,14 +20,14 @@ const { previous, next } = Astro.props;
       {
         previous ? (
           <a
-            href={getBlogArticlePath(previous)}
+            href={localizePath(getBlogArticlePath(previous), locale)}
             class="group flex flex-col gap-4 bg-paper p-8 transition-colors hover:bg-white md:p-10"
           >
             <div class="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/50">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                 <path d="M10 6H2M2 6L6 2M2 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
               </svg>
-              Anterior · {previous.issue}
+              {copy.previous} · {previous.issue}
             </div>
             <div class="font-display text-2xl leading-tight transition-colors group-hover:text-primary md:text-[1.75rem]">
               {previous.title}
@@ -34,14 +38,14 @@ const { previous, next } = Astro.props;
           </a>
         ) : (
           <a
-            href="/blog"
+            href={localizePath('/blog', locale)}
             class="group flex flex-col gap-4 bg-paper p-8 transition-colors hover:bg-white md:p-10"
           >
             <div class="font-mono text-[11px] uppercase tracking-[0.2em] text-ink/50">
-              Volver
+              {copy.back}
             </div>
             <div class="font-display text-2xl leading-tight transition-colors group-hover:text-primary md:text-[1.75rem]">
-              Todos los artículos
+              {copy.allArticles}
             </div>
             <div class="font-ui text-[12px] text-ink/55">Blog · El Ancla</div>
           </a>
@@ -51,11 +55,11 @@ const { previous, next } = Astro.props;
       {
         next ? (
           <a
-            href={getBlogArticlePath(next)}
+            href={localizePath(getBlogArticlePath(next), locale)}
             class="group flex flex-col items-end gap-4 bg-paper p-8 text-right transition-colors hover:bg-white md:p-10"
           >
             <div class="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/50">
-              Siguiente · {next.issue}
+              {copy.next} · {next.issue}
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                 <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
               </svg>
@@ -69,16 +73,16 @@ const { previous, next } = Astro.props;
           </a>
         ) : (
           <a
-            href="/blog#newsletter"
+            href={localizePath('/blog#newsletter', locale)}
             class="group flex flex-col items-end gap-4 bg-paper p-8 text-right transition-colors hover:bg-white md:p-10"
           >
             <div class="font-mono text-[11px] uppercase tracking-[0.2em] text-ink/50">
-              Próximo
+              {copy.next}
             </div>
             <div class="font-display text-2xl leading-tight transition-colors group-hover:text-primary md:text-[1.75rem]">
-              Recibir la próxima entrega
+              {copy.nextDelivery}
             </div>
-            <div class="font-ui text-[12px] text-ink/55">Newsletter semanal</div>
+            <div class="font-ui text-[12px] text-ink/55">{copy.weeklyNewsletter}</div>
           </a>
         )
       }

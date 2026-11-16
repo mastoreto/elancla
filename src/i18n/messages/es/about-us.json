@@ -1,0 +1,25 @@
+{
+  "counter": "[ 01 — Nosotros ]",
+  "headline": {
+    "before": "Gracias por querer ",
+    "emphasis": "conocernos."
+  },
+  "lead": "Conocer una iglesia es un gran desafío en estos tiempos. Esperamos que con la información que encuentres aquí, puedas tener un mayor panorama de quiénes somos y lo que creemos. Eres bienvenido a visitarnos cuando quieras.",
+  "primaryCta": "Nuestra historia",
+  "secondaryCta": "Lo que creemos",
+  "pillars": [
+    { "num": "I.", "title": "Centrados en Cristo", "desc": "La cruz es el centro de todo lo que hacemos." },
+    { "num": "II.", "title": "Fieles a la Palabra", "desc": "La Escritura es nuestra autoridad y guía." },
+    { "num": "III.", "title": "Familia de la fe", "desc": "Crecer juntos en amor y servicio." }
+  ],
+  "stats": [
+    { "value": "29", "label": "Años en Montevideo" },
+    { "value": "10", "label": "Ministerios activos" },
+    { "value": "∞", "label": "Gracia abundante" }
+  ],
+  "imageAlt": "Nuestra casa",
+  "imageLabel": "Av. Luis A. de Herrera 3101",
+  "imageTitle": "Nuestra casa",
+  "pastorLabel": "Pastoreada por",
+  "pastorName": "Pr. Juan Olivera"
+}

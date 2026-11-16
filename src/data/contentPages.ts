@@ -1,3 +1,6 @@
+import { defaultLocale, nonDefaultLocales, type Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
 import ministriesData from 'src/utils/ministriesData.json';
 
 export type ContentPageRouteGroup = 'root' | 'ministerios';
@@ -176,301 +179,46 @@ export interface ContentPage {
   cta?: ContentCta;
 }
 
-const nosotrosPage: ContentPage = {
-  routeGroup: 'root',
-  slug: 'nosotros',
-  title: 'Nosotros',
-  seoTitle: 'Nosotros | Iglesia Bautista El Ancla',
-  description:
-    'Conocé quiénes somos, en qué creemos y cómo vivimos la fe como Iglesia Bautista El Ancla en Montevideo.',
-  hero: {
-    breadcrumbs: [
-      { label: 'El Ancla', href: '/' },
-      { label: 'Nosotros' },
-    ],
-    chip: 'Iglesia',
-    meta: ['Sec. 01 / Nosotros', 'Montevideo · UY'],
-    titleLines: [
-      { text: 'Una iglesia con' },
-      { emphasis: 'ancla', after: ' en el' },
-      { text: 'evangelio.' },
-    ],
-    standfirst:
-      'Conocer una iglesia es un gran desafío en estos tiempos. Esperamos que con la información que encuentres aquí, puedas tener un mayor panorama de quiénes somos, en qué creemos y cómo vivimos la fe en Montevideo desde 1997.',
-    stats: [
-      { value: '29', label: 'Años' },
-      { value: '10', label: 'Ministerios' },
-      { value: '∞', label: 'Gracia' },
-    ],
-  },
-  featuredImage: {
-    src: '/images/homebanner.jpeg',
-    alt: 'Casa de la Iglesia Bautista El Ancla en Montevideo',
-    label: '[ FIG.01 ]',
-    caption: 'Casa de la iglesia · Av. Dr. Luis A. de Herrera 3101 esq. Juan Arrieta.',
-    badge: 'Av. L. A. de Herrera 3101',
-    meta: '— Montevideo · UY',
-    aspect: 'wide',
-  },
-  shortcuts: [
-    { label: 'Confesión de fe', href: '/confesion-de-fe' },
-    { label: 'Ministerios', href: '/#ministerios' },
-    { label: 'Cómo visitarnos', href: '/#visitanos' },
-    { label: 'Blog', href: '/blog' },
-  ],
-  sections: [
-    {
-      id: 'identidad',
-      eyebrow: '01 — Identidad',
-      tocLabel: 'Quiénes somos',
-      title: { before: 'Gracias por querer ', emphasis: 'conocernos.' },
-      blocks: [
-        {
-          type: 'prose',
-          paragraphs: [
-            'Somos una <strong>comunidad cristiana bautista</strong> en el corazón de Montevideo. Nos reunimos hace casi tres décadas alrededor de la Palabra, los sacramentos y la oración. No somos una iglesia perfecta —ni queremos serlo— pero sí una iglesia honesta, que intenta vivir el evangelio en lo cotidiano.',
-            'Nuestro nombre viene de <strong>Hebreos 6:19</strong>: «tenemos esta esperanza como firme y segura ancla del alma». Esa imagen resume bien lo que somos: un grupo de personas comunes agarradas a algo que nos sostiene cuando las circunstancias se mueven.',
-          ],
-        },
-        {
-          type: 'verse',
-          reference: 'Hebreos 6 · 19',
-          text: 'La cual tenemos como segura y firme ancla del alma, y que penetra hasta dentro del velo.',
-        },
-      ],
-    },
-    {
-      id: 'valores',
-      eyebrow: '02 — Confesión',
-      tocLabel: 'Lo que creemos',
-      title: { before: 'Tres convicciones que nos ', emphasis: 'ordenan.' },
-      description:
-        'Una iglesia no se define solo por lo que dice creer, sino por lo que organiza su vida. Estas son las tres convicciones que ordenan, en la práctica, casi todo lo que hacemos.',
-      blocks: [
-        {
-          type: 'values',
-          values: [
-            {
-              number: 'I.',
-              title: 'Centrados en Cristo',
-              description:
-                'La cruz y la resurrección no son temas entre otros: son el centro de nuestra predicación, nuestro canto y nuestra pastoral.',
-            },
-            {
-              number: 'II.',
-              title: 'Fieles a la Palabra',
-              description:
-                'Las Escrituras son nuestra autoridad final en doctrina y en práctica. Por eso predicamos textos enteros, no solo versículos sueltos.',
-            },
-            {
-              number: 'III.',
-              title: 'Familia de la fe',
-              description:
-                'Crecemos juntos, en hospitalidad, servicio y oración. La fe se aprende caminando con otros, no a solas.',
-            },
-          ],
-          note: {
-            label: 'Nota · Confesión',
-            html: 'Si querés leer en detalle qué creemos, redactamos una <a href="/confesion-de-fe">Confesión de Fe</a> organizada en doce artículos. Es la versión larga y cuidadosa de lo que aquí resumimos en tres palabras.',
-          },
-        },
-      ],
-    },
-    {
-      id: 'historia',
-      eyebrow: '03 — Camino',
-      tocLabel: 'Nuestra historia',
-      title: { before: 'Casi tres décadas ', emphasis: 'en la misma esquina.' },
-      description:
-        'La historia de El Ancla cabe en una avenida y unas pocas familias que decidieron quedarse. Estos son los hitos que dieron forma a lo que somos hoy.',
-      blocks: [
-        {
-          type: 'timeline',
-          items: [
-            {
-              year: '1997',
-              title: 'Fundación',
-              description: 'Un puñado de familias en una casa prestada del Cordón.',
-            },
-            {
-              year: '2003',
-              title: 'Mudanza a Herrera',
-              description: 'El templo actual abre sus puertas en Av. de Herrera 3101.',
-            },
-            {
-              year: '2007',
-              title: 'Pastorado actual',
-              description: 'Pr. Juan Olivera asume el pastorado principal de la congregación.',
-            },
-            {
-              year: '2015',
-              title: 'Diez ministerios',
-              description: 'Se consolidan los ministerios de jóvenes, mujeres, niños y misiones.',
-            },
-            {
-              year: 'Hoy',
-              title: '2026 · 29 años',
-              description: 'Una comunidad estable, intergeneracional y abierta a la ciudad.',
-              isCurrent: true,
-            },
-          ],
-        },
-        {
-          type: 'pullquote',
-          quote:
-            'Una iglesia local no se mide por lo que sucede una mañana de domingo, sino por lo que sostiene mil lunes seguidos.',
-          cite: '— Pr. Juan Olivera, sermón aniversario 2024',
-        },
-        {
-          type: 'figure',
-          figure: {
-            src: '/images/aboutus.jpg',
-            alt: 'Congregación de la Iglesia Bautista El Ancla al cierre del culto dominical',
-            label: '[ FIG.02 ]',
-            caption: 'La congregación al cierre del culto dominical · 2024.',
-            aspect: 'landscape',
-          },
-        },
-      ],
-    },
-    {
-      id: 'equipo',
-      eyebrow: '04 — Equipo',
-      tocLabel: 'Equipo pastoral',
-      title: { before: 'Quienes pastorean ', emphasis: 'la casa.' },
-      description:
-        'El liderazgo de la iglesia está formado por un equipo plural, que comparte la enseñanza, la oración y el cuidado pastoral de la congregación.',
-      blocks: [
-        {
-          type: 'team',
-          people: [
-            {
-              initials: 'JO',
-              role: 'Pastor principal',
-              name: 'Pr. Juan Olivera',
-              bio: 'En el pastorado desde 2007. Lleva la predicación dominical y la serie expositiva de Hebreos.',
-            },
-            {
-              initials: 'MR',
-              role: 'Pastor asociado',
-              name: 'Pr. Martín Recalde',
-              bio: 'Coordina la enseñanza, los grupos de crecimiento y el discipulado a nuevos creyentes.',
-              tint: '#e6e2d6',
-            },
-            {
-              initials: 'SP',
-              role: 'Anciano',
-              name: 'Sebastián Pérez',
-              bio: 'Acompaña la pastoral de hombres y supervisa el ministerio de misiones locales.',
-              tint: '#ece6da',
-            },
-            {
-              initials: 'CV',
-              role: 'Diaconisa',
-              name: 'Carolina Vidal',
-              bio: 'Lidera Espacio Mujer y la red de hospitalidad y cuidado de la congregación.',
-              tint: '#efe9dc',
-            },
-            {
-              initials: 'DA',
-              role: 'Diácono',
-              name: 'Diego Acosta',
-              bio: 'Coordina los aspectos de logística, finanzas y servicio dominical de la iglesia.',
-              tint: '#e9e4d6',
-            },
-            {
-              initials: 'LN',
-              role: 'Líder de jóvenes',
-              name: 'Lucía Núñez',
-              bio: 'Acompaña al ministerio de adolescentes y jóvenes y la formación bíblica de menores de 25.',
-              tint: '#ece5d4',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'enlaces',
-      eyebrow: '05 — Para seguir',
-      tocLabel: 'Para seguir',
-      title: { before: 'Si querés ', emphasis: 'seguir conociéndonos.' },
-      description:
-        'Algunos enlaces internos y recursos para profundizar en lo que somos, lo que creemos y lo que hacemos durante la semana.',
-      blocks: [
-        {
-          type: 'linkGrid',
-          links: [
-            {
-              href: '/confesion-de-fe',
-              sourceLabel: 'elancla.uy / confesion',
-              title: 'Confesión de Fe — doce artículos',
-              description:
-                'El detalle largo de nuestras convicciones doctrinales sobre Dios, la Escritura, el evangelio y la iglesia.',
-              meta: 'Leer · 12 artículos',
-              glyph: 'C',
-            },
-            {
-              href: '/#ministerios',
-              sourceLabel: 'elancla.uy / ministerios',
-              title: 'Diez ministerios donde servir',
-              description:
-                'Cada ministerio es una invitación: un lugar para crecer, usar tus dones y servir a otros en nombre de Cristo.',
-              meta: 'Ver listado completo',
-              glyph: 'M',
-              tint: '#e6e2d4',
-            },
-            {
-              href: '/blog',
-              sourceLabel: 'elancla.uy / blog',
-              title: 'Blog · reflexiones y notas pastorales',
-              description:
-                'Una bitácora semanal con sermones, lecturas guiadas y notas breves sobre la vida en la iglesia.',
-              meta: 'Cada martes · 7 min',
-              glyph: 'B',
-              tint: '#ece5d2',
-            },
-            {
-              href: 'https://youtube.com/@iglesiaelanclauy',
-              sourceLabel: 'youtube · @iglesiaelanclauy',
-              title: 'Sermones en video',
-              description:
-                'El archivo completo de sermones dominicales y eventos especiales, transmitidos en vivo cada domingo.',
-              meta: 'Abrir canal',
-              glyph: 'Y',
-              external: true,
-              tint: '#efe7d4',
-            },
-          ],
-        },
-      ],
-    },
-  ],
+interface MinistryTemplate {
+  summaries: Record<string, string>;
+  fallbackSummary: string;
+  breadcrumbs: {
+    home: string;
+    ministries: string;
+  };
+  chip: string;
+  metaLocation: string;
+  titleSuffixBefore: string;
+  titleSuffixEmphasis: string;
+  standfirst: string;
+  figureLabel: string;
+  figureMeta: string;
+  shortcuts: {
+    all: string;
+    visit: string;
+    confession: string;
+  };
+  sections: {
+    identityEyebrow: string;
+    identityToc: string;
+    identityTitleBefore: string;
+    identityDescription: string;
+    paragraphs: string[];
+    values: ContentValue[];
+    nextEyebrow: string;
+    nextToc: string;
+    nextTitleBefore: string;
+    nextTitleEmphasis: string;
+    links: ContentLink[];
+  };
   cta: {
-    eyebrow: '[ Próximo paso ]',
-    title: { before: 'Lo mejor es ', emphasis: 'venir.' },
-    body: 'Conocer una iglesia se hace caminando hasta ella un domingo a la mañana. Te esperamos a las 11:15 hs en Av. Dr. Luis A. de Herrera 3101. Sin códigos, sin requisitos.',
-    primary: {
-      label: 'Cómo llegar',
-      href: '/#visitanos',
-    },
-    secondary: {
-      label: 'Ver horarios de la semana',
-      href: '/#actividades',
-    },
-  },
-};
-
-const ministryDescriptions: Record<string, string> = {
-  predicacion: 'La Palabra, expuesta fielmente',
-  servicio: 'Manos que cuidan',
-  ensenanza: 'Crecer en entendimiento',
-  misiones: 'Al fin del mundo',
-  adolescentes: 'Raíces en la adolescencia',
-  jovenes: 'Una generación para Cristo',
-  hombres: 'Discipulado entre varones',
-  multimedia: 'Contar la historia',
-  alabanza: 'Cantar con entendimiento',
-};
+    eyebrow: string;
+    titleBefore: string;
+    body: string;
+    primary: string;
+    secondary: string;
+  };
+}
 
 function normalizeSlug(value: string): string {
   return value
@@ -483,149 +231,248 @@ function slugFromMinistryUrl(url: string): string {
   return url.replace(/^\/ministerios\//, '').replace(/^\/|\/$/g, '');
 }
 
-function buildMinistryPages(): ContentPage[] {
+function interpolate(value: string, replacements: Record<string, string>) {
+  return Object.entries(replacements).reduce(
+    (text, [key, replacement]) => text.replaceAll(`{${key}}`, replacement),
+    value
+  );
+}
+
+function localizeHtmlLinks(html: string, locale: Locale) {
+  return html.replace(/href="(\/[^"]*)"/g, (_, href: string) => {
+    return `href="${localizePath(href, locale)}"`;
+  });
+}
+
+function localizeHref(href: string, locale: Locale) {
+  return /^(https?:|mailto:|tel:)/i.test(href) ? href : localizePath(href, locale);
+}
+
+function localizeCta(cta: ContentCta, locale: Locale): ContentCta {
+  return {
+    ...cta,
+    primary: {
+      ...cta.primary,
+      href: localizeHref(cta.primary.href, locale),
+    },
+    secondary: cta.secondary
+      ? {
+          ...cta.secondary,
+          href: localizeHref(cta.secondary.href, locale),
+        }
+      : undefined,
+  };
+}
+
+function localizeBlock(block: ContentBlock, locale: Locale): ContentBlock {
+  if (block.type === 'values') {
+    return {
+      ...block,
+      note: block.note
+        ? {
+            ...block.note,
+            html: localizeHtmlLinks(block.note.html, locale),
+          }
+        : undefined,
+    };
+  }
+
+  if (block.type === 'linkGrid') {
+    return {
+      ...block,
+      links: block.links.map((link) => ({
+        ...link,
+        href: localizeHref(link.href, locale),
+      })),
+    };
+  }
+
+  if (block.type === 'cta') {
+    return {
+      ...block,
+      cta: localizeCta(block.cta, locale),
+    };
+  }
+
+  return block;
+}
+
+function localizeContentPage(page: ContentPage, locale: Locale): ContentPage {
+  return {
+    ...page,
+    hero: {
+      ...page.hero,
+      breadcrumbs: page.hero.breadcrumbs.map((breadcrumb) => ({
+        ...breadcrumb,
+        href: breadcrumb.href ? localizeHref(breadcrumb.href, locale) : undefined,
+      })),
+    },
+    shortcuts: page.shortcuts?.map((shortcut) => ({
+      ...shortcut,
+      href: localizeHref(shortcut.href, locale),
+    })),
+    sections: page.sections.map((section) => ({
+      ...section,
+      blocks: section.blocks.map((block) => localizeBlock(block, locale)),
+    })),
+    cta: page.cta ? localizeCta(page.cta, locale) : undefined,
+  };
+}
+
+function getMinistryCopy(locale: Locale, slug: string) {
+  const ministry = getMessages(locale).ministries.items.find((item) => {
+    if (!item.href.startsWith('/ministerios/')) return false;
+    return normalizeSlug(slugFromMinistryUrl(item.href)) === slug;
+  });
+
+  return ministry;
+}
+
+function buildMinistryPages(locale: Locale): ContentPage[] {
+  const template = getMessages(locale).contentPages.ministryTemplate as MinistryTemplate;
+
   return ministriesData
     .filter((ministry) => ministry.url.startsWith('/ministerios/'))
     .map((ministry, index) => {
       const rawSlug = slugFromMinistryUrl(ministry.url);
       const slug = normalizeSlug(rawSlug);
-      const summary = ministryDescriptions[slug] ?? 'Un espacio para crecer y servir juntos';
+      const copy = getMinistryCopy(locale, slug);
+      const name = copy?.name ?? ministry.name;
+      const summary = template.summaries[slug] ?? copy?.description ?? template.fallbackSummary;
       const sectionNumber = String(index + 1).padStart(2, '0');
 
-      return {
+      const page: ContentPage = {
         routeGroup: 'ministerios',
         slug,
         aliases: rawSlug !== slug ? [rawSlug] : undefined,
-        title: ministry.name,
-        seoTitle: `${ministry.name} | Ministerios | El Ancla`,
-        description: `${ministry.name}: ${summary.toLowerCase()} en Iglesia Bautista El Ancla.`,
+        title: name,
+        seoTitle: `${name} | ${template.breadcrumbs.ministries} | El Ancla`,
+        description: `${name}: ${summary.toLowerCase()} en Iglesia Bautista El Ancla.`,
         hero: {
           breadcrumbs: [
-            { label: 'El Ancla', href: '/' },
-            { label: 'Ministerios', href: '/#ministerios' },
-            { label: ministry.name },
+            { label: template.breadcrumbs.home, href: '/' },
+            { label: template.breadcrumbs.ministries, href: '/#ministerios' },
+            { label: name },
           ],
-          chip: 'Ministerio',
-          meta: [`Sec. ${sectionNumber} / ${ministry.name}`, 'Montevideo · UY'],
+          chip: template.chip,
+          meta: [`Sec. ${sectionNumber} / ${name}`, template.metaLocation],
           titleLines: [
-            { text: ministry.name },
-            { before: 'en ', emphasis: 'El Ancla.' },
+            { text: name },
+            {
+              before: template.titleSuffixBefore,
+              emphasis: template.titleSuffixEmphasis,
+            },
           ],
-          standfirst:
-            'Cada ministerio es una invitación: un lugar para crecer, usar tus dones y servir a otros en nombre de Cristo.',
+          standfirst: template.standfirst,
         },
         featuredImage: {
           src: '/images/homebanner.jpeg',
-          alt: `Ministerio ${ministry.name} de Iglesia Bautista El Ancla`,
-          label: '[ MINISTERIO ]',
-          caption: `${ministry.name} · ${summary}.`,
+          alt: `${name} · Iglesia Bautista El Ancla`,
+          label: template.figureLabel,
+          caption: `${name} · ${summary}.`,
           badge: summary,
-          meta: '— Montevideo · UY',
+          meta: template.figureMeta,
           aspect: 'wide',
         },
         shortcuts: [
-          { label: 'Todos los ministerios', href: '/#ministerios' },
-          { label: 'Cómo visitarnos', href: '/#visitanos' },
-          { label: 'Confesión de fe', href: '/confesion-de-fe' },
+          { label: template.shortcuts.all, href: '/#ministerios' },
+          { label: template.shortcuts.visit, href: '/#visitanos' },
+          { label: template.shortcuts.confession, href: '/confesion-de-fe' },
         ],
         sections: [
           {
             id: 'identidad',
-            eyebrow: '01 — Ministerio',
-            tocLabel: 'Sobre el ministerio',
-            title: { before: `${ministry.name}: `, emphasis: summary.toLowerCase() },
-            description:
-              'Esta página usa el template editorial compartido para que cada ministerio pueda crecer con contenido propio sin duplicar estructura.',
+            eyebrow: template.sections.identityEyebrow,
+            tocLabel: template.sections.identityToc,
+            title: {
+              before: interpolate(template.sections.identityTitleBefore, { name }),
+              emphasis: summary.toLowerCase(),
+            },
+            description: template.sections.identityDescription,
             blocks: [
               {
                 type: 'prose',
-                paragraphs: [
-                  `El ministerio de <strong>${ministry.name}</strong> existe para acompañar a la iglesia en una forma concreta de servicio. Hoy dejamos una base simple y ordenada para publicar su propósito, actividades, responsables y próximos pasos.`,
-                  'La intención es que cada página de ministerio pueda evolucionar desde datos tipados: se agrega contenido al registro y el template se encarga del diseño, el índice, las imágenes, los enlaces y la experiencia móvil.',
-                ],
+                paragraphs: template.sections.paragraphs.map((paragraph) =>
+                  interpolate(paragraph, { name, summary })
+                ),
               },
               {
                 type: 'values',
-                values: [
-                  {
-                    number: 'I.',
-                    title: 'Crecer',
-                    description: 'Formar personas arraigadas en Cristo y en la Palabra.',
-                  },
-                  {
-                    number: 'II.',
-                    title: 'Servir',
-                    description: 'Usar dones concretos para cuidar y edificar a la iglesia.',
-                  },
-                  {
-                    number: 'III.',
-                    title: 'Acompañar',
-                    description: 'Caminar con otros con hospitalidad, oración y perseverancia.',
-                  },
-                ],
+                values: template.sections.values,
               },
             ],
           },
           {
             id: 'siguiente-paso',
-            eyebrow: '02 — Próximo paso',
-            tocLabel: 'Para conectar',
-            title: { before: 'Un lugar para ', emphasis: 'servir juntos.' },
+            eyebrow: template.sections.nextEyebrow,
+            tocLabel: template.sections.nextToc,
+            title: {
+              before: template.sections.nextTitleBefore,
+              emphasis: template.sections.nextTitleEmphasis,
+            },
             blocks: [
               {
                 type: 'linkGrid',
-                links: [
-                  {
-                    href: '/#ministerios',
-                    sourceLabel: 'elancla.uy / ministerios',
-                    title: 'Volver al listado de ministerios',
-                    description: 'Explorá los demás espacios de servicio y crecimiento de la iglesia.',
-                    meta: 'Ver ministerios',
-                    glyph: 'M',
-                  },
-                  {
-                    href: '/#visitanos',
-                    sourceLabel: 'elancla.uy / visitanos',
-                    title: 'Conocernos un domingo',
-                    description: 'La mejor forma de conectar con un ministerio es venir y conversar después del culto.',
-                    meta: 'Domingos · 11:15',
-                    glyph: 'V',
-                    tint: '#e6e2d4',
-                  },
-                ],
+                links: template.sections.links,
               },
             ],
           },
         ],
         cta: {
-          eyebrow: '[ Conectar ]',
-          title: { before: 'Sumate a ', emphasis: `${ministry.name}.` },
-          body: 'Si querés conocer más sobre este ministerio, visitanos un domingo o escribinos desde los canales de contacto de la iglesia.',
+          eyebrow: template.cta.eyebrow,
+          title: {
+            before: template.cta.titleBefore,
+            emphasis: `${name}.`,
+          },
+          body: template.cta.body,
           primary: {
-            label: 'Cómo llegar',
+            label: template.cta.primary,
             href: '/#visitanos',
           },
           secondary: {
-            label: 'Ver ministerios',
+            label: template.cta.secondary,
             href: '/#ministerios',
           },
         },
-      } satisfies ContentPage;
+      };
+
+      return localizeContentPage(page, locale);
     });
 }
 
-export const contentPages = [nosotrosPage, ...buildMinistryPages()] satisfies ContentPage[];
-
-export function getContentPagesByRouteGroup(routeGroup: ContentPageRouteGroup): ContentPage[] {
-  return contentPages.filter((page) => page.routeGroup === routeGroup);
+export function getContentPages(locale: Locale = defaultLocale): ContentPage[] {
+  const nosotros = getMessages(locale).contentPages.nosotros as ContentPage;
+  return [localizeContentPage(nosotros, locale), ...buildMinistryPages(locale)];
 }
 
-export function getContentPageStaticPaths(routeGroup: ContentPageRouteGroup) {
-  return getContentPagesByRouteGroup(routeGroup).flatMap((page) => {
+export function getContentPagesByRouteGroup(
+  routeGroup: ContentPageRouteGroup,
+  locale: Locale = defaultLocale
+): ContentPage[] {
+  return getContentPages(locale).filter((page) => page.routeGroup === routeGroup);
+}
+
+export function getContentPageStaticPaths(
+  routeGroup: ContentPageRouteGroup,
+  locale: Locale = defaultLocale
+) {
+  return getContentPagesByRouteGroup(routeGroup, locale).flatMap((page) => {
     const slugs = [page.slug, ...(page.aliases ?? [])];
     return slugs.map((slug) => ({
       params: { slug },
-      props: { page, isAlias: slug !== page.slug },
+      props: { page, isAlias: slug !== page.slug, locale },
     }));
   });
+}
+
+export function getLocalizedContentPageStaticPaths(routeGroup: ContentPageRouteGroup) {
+  return nonDefaultLocales.flatMap((locale) =>
+    getContentPageStaticPaths(routeGroup, locale).map((path) => ({
+      ...path,
+      params: {
+        ...path.params,
+        locale,
+      },
+    }))
+  );
 }

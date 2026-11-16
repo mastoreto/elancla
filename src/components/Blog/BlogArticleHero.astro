@@ -1,11 +1,14 @@
 ---
 import type { BlogArticle } from 'src/data/blog';
+import type { Locale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
 
 interface Props {
   article: BlogArticle;
+  locale: Locale;
 }
 
-const { article } = Astro.props;
+const { article, locale } = Astro.props;
 const [firstTitlePart, ...restTitleParts] = article.title.split(': ');
 const titleLines =
   article.slug === 'el-ancla-del-alma-una-esperanza-que-no-averguenza'
@@ -23,9 +26,9 @@ const titleLines =
       class="mb-10 flex items-center gap-3 font-ui text-[11px] uppercase tracking-[0.2em] text-ink/60"
     >
       <span class="h-px w-8 bg-ink/40"></span>
-      <a href="/" class="ulink">El Ancla</a>
+      <a href={localizePath('/', locale)} class="ulink">El Ancla</a>
       <span class="opacity-50">/</span>
-      <a href="/blog" class="ulink">Blog</a>
+      <a href={localizePath('/blog', locale)} class="ulink">Blog</a>
       <span class="opacity-50">/</span>
       <span>{article.category}</span>
     </div>

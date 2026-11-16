@@ -1,0 +1,18 @@
+{
+  "counter": "[ 04 — Ministries ]",
+  "headline": { "before": "Ten ways to serve ", "emphasis": "together." },
+  "lead": "Every ministry is an invitation: a place to grow, use your gifts, and serve others in the name of Christ. Find yours.",
+  "items": [
+    { "key": "predicacion", "name": "Preaching", "description": "The Word faithfully taught", "href": "/ministerios/predicacion" },
+    { "key": "ensenanza", "name": "Teaching", "description": "Growing in understanding", "href": "/ministerios/ensenanza" },
+    { "key": "misiones", "name": "Missions", "description": "To the ends of the earth", "href": "/ministerios/misiones" },
+    { "key": "alabanza", "name": "Worship", "description": "Singing with understanding", "href": "/ministerios/alabanza" },
+    { "key": "oracion", "name": "Prayer", "description": "Crying out together", "href": "/#visitanos" },
+    { "key": "espacio-mujer", "name": "Women's Space", "description": "Women in the Word", "href": "https://emujer.elancla.uy/" },
+    { "key": "hombres", "name": "Men", "description": "Discipleship among men", "href": "/ministerios/hombres" },
+    { "key": "jovenes", "name": "Youth", "description": "A generation for Christ", "href": "/ministerios/jovenes" },
+    { "key": "adolescentes", "name": "Teens", "description": "Roots in adolescence", "href": "/ministerios/adolescentes" },
+    { "key": "servicio", "name": "Service", "description": "Hands that care", "href": "/ministerios/servicio" },
+    { "key": "multimedia", "name": "Multimedia", "description": "Telling the story", "href": "/ministerios/multimedia" }
+  ]
+}

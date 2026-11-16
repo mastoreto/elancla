@@ -5,6 +5,15 @@ import Nav from '../components/Nav.astro';
 import '../styles/global.css';
 import { SEO } from 'astro-seo';
 import { ClientRouter } from 'astro:transitions';
+import type { Locale } from 'src/i18n/config';
+import {
+  getHtmlLang,
+  getLanguageAlternates,
+  getLocaleFromUrl,
+  getLocaleSeo,
+  localizePath,
+  stripLocaleFromPath,
+} from 'src/i18n/utils';
 import {
   SITE,
   absoluteUrl,
@@ -29,6 +38,7 @@ interface Props {
   keywords?: string[];
   breadcrumbs?: SEOBreadcrumb[];
   article?: SEOArticleMeta;
+  locale?: Locale;
 }
 
 const {
@@ -42,9 +52,15 @@ const {
   keywords,
   breadcrumbs,
   article,
+  locale: localeProp,
 } = Astro.props;
 
-const pageUrl = canonical ?? new URL(Astro.url.pathname, SITE.url).toString();
+const locale = localeProp ?? getLocaleFromUrl(Astro.url);
+const localeSeo = getLocaleSeo(locale);
+const canonicalPath = stripLocaleFromPath(Astro.url.pathname);
+const localizedPath = localizePath(canonicalPath, locale);
+const pageUrl = canonical ?? new URL(localizedPath, SITE.url).toString();
+const alternatesPath = canonical ? new URL(canonical).pathname : Astro.url.pathname;
 const ogImage = absoluteUrl(image);
 
 // Evitar duplicar la marca si el título ya la incluye.
@@ -56,7 +72,7 @@ const fullTitle =
 
 const jsonLd: Record<string, unknown>[] = [
   buildOrganizationLd(),
-  buildWebsiteLd(),
+  buildWebsiteLd(localeSeo.htmlLang),
 ];
 
 const breadcrumbLd = buildBreadcrumbsLd(breadcrumbs ?? []);
@@ -74,20 +90,21 @@ if (pageType === 'article' && article) {
       authorName: article.authorName,
       section: article.section,
       tags: article.tags,
+      language: localeSeo.htmlLang,
     })
   );
 }
 ---
 
 <!doctype html>
-<html lang={SITE.lang}>
+<html lang={getHtmlLang(locale)}>
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content={SITE.themeColor} />
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="format-detection" content="telephone=no" />
 
     <!-- Iconos -->
@@ -96,17 +113,30 @@ if (pageType === 'article' && article) {
     <link rel="apple-touch-icon" href="/images/anclarojo.png" />
     <link rel="mask-icon" href="/favicon.svg" color={SITE.themeColor} />
 
+    <script is:inline>
+      (() => {
+        const storageKey = 'elancla:theme';
+        try {
+          const preference = localStorage.getItem(storageKey) || 'system';
+          const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const resolved = preference === 'dark' || (preference !== 'light' && systemDark) ? 'dark' : 'light';
+          document.documentElement.classList.toggle('dark', resolved === 'dark');
+          document.documentElement.dataset.theme = resolved;
+          document.documentElement.dataset.themePreference = preference;
+        } catch {
+          document.documentElement.dataset.theme = 'light';
+          document.documentElement.dataset.themePreference = 'system';
+        }
+      })();
+    </script>
+
     <SEO
       title={fullTitle}
       description={description}
       canonical={pageUrl}
       noindex={noindex}
       nofollow={noindex}
-      languageAlternates={[
-        { hrefLang: 'es', href: pageUrl },
-        { hrefLang: 'es-UY', href: pageUrl },
-        { hrefLang: 'x-default', href: pageUrl },
-      ]}
+      languageAlternates={getLanguageAlternates(alternatesPath, SITE.url)}
       openGraph={{
         basic: {
           title: fullTitle,
@@ -122,7 +152,7 @@ if (pageType === 'article' && article) {
         },
         optional: {
           siteName: SITE.name,
-          locale: SITE.locale,
+          locale: localeSeo.ogLocale,
           description,
         },
         ...(pageType === 'article' && article
@@ -157,7 +187,7 @@ if (pageType === 'article' && article) {
           { name: 'apple-mobile-web-app-title', content: SITE.shortName },
           { name: 'apple-mobile-web-app-capable', content: 'yes' },
           { name: 'mobile-web-app-capable', content: 'yes' },
-          { httpEquiv: 'content-language', content: SITE.lang },
+          { httpEquiv: 'content-language', content: localeSeo.htmlLang },
           { name: 'geo.region', content: 'UY-MO' },
           { name: 'geo.placename', content: 'Montevideo' },
           {
@@ -204,6 +234,54 @@ if (pageType === 'article' && article) {
     </script>
     <ClientRouter fallback="animate" />
 
+    <script is:inline>
+      (() => {
+        const storageKey = 'elancla:theme';
+        const systemQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const getPreference = () => localStorage.getItem(storageKey) || 'system';
+        const resolveTheme = (preference) =>
+          preference === 'dark' || (preference !== 'light' && systemQuery.matches) ? 'dark' : 'light';
+
+        const applyTheme = (preference = getPreference()) => {
+          const resolved = resolveTheme(preference);
+          document.documentElement.classList.toggle('dark', resolved === 'dark');
+          document.documentElement.dataset.theme = resolved;
+          document.documentElement.dataset.themePreference = preference;
+          document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+            const isDark = resolved === 'dark';
+            button.setAttribute('aria-pressed', String(isDark));
+            button.setAttribute(
+              'aria-label',
+              isDark ? button.dataset.labelLight || 'Use light mode' : button.dataset.labelDark || 'Use dark mode'
+            );
+            button.querySelectorAll('[data-theme-icon]').forEach((icon) => {
+              icon.style.display = icon.getAttribute('data-theme-icon') === (isDark ? 'sun' : 'moon') ? '' : 'none';
+            });
+          });
+        };
+
+        const bindThemeControls = () => {
+          document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+            if (button.dataset.themeBound === 'true') return;
+            button.dataset.themeBound = 'true';
+            button.addEventListener('click', () => {
+              const nextPreference = resolveTheme(getPreference()) === 'dark' ? 'light' : 'dark';
+              localStorage.setItem(storageKey, nextPreference);
+              applyTheme(nextPreference);
+            });
+          });
+          applyTheme();
+        };
+
+        systemQuery.addEventListener?.('change', () => {
+          if (getPreference() === 'system') applyTheme('system');
+        });
+        document.addEventListener('DOMContentLoaded', bindThemeControls);
+        document.addEventListener('astro:page-load', bindThemeControls);
+        bindThemeControls();
+      })();
+    </script>
+
     <!-- Fuentes consolidadas en una sola petición con display=swap -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -216,11 +294,11 @@ if (pageType === 'article' && article) {
   <body class="overflow-x-hidden selection:bg-primary selection:text-white">
     <LoadingOverlay />
     <div id="readprog"></div>
-    <Nav />
+    <Nav locale={locale} />
     <main class="max-w-full flex flex-col relative overflow-x-hidden">
       <slot />
     </main>
-    <Footer />
+    <Footer locale={locale} />
   </body>
 </html>
 <style is:global>

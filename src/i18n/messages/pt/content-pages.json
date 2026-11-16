@@ -1,0 +1,192 @@
+{
+  "nosotros": {
+    "routeGroup": "root",
+    "slug": "nosotros",
+    "title": "Sobre nós",
+    "seoTitle": "Sobre nós | Igreja Batista El Ancla",
+    "description": "Conheça quem somos, em que cremos e como vivemos a fé como Igreja Batista El Ancla em Montevidéu.",
+    "hero": {
+      "breadcrumbs": [
+        { "label": "El Ancla", "href": "/" },
+        { "label": "Sobre nós" }
+      ],
+      "chip": "Igreja",
+      "meta": ["Sec. 01 / Sobre nós", "Montevidéu · UY"],
+      "titleLines": [
+        { "text": "Uma igreja com" },
+        { "emphasis": "âncora", "after": " no" },
+        { "text": "evangelho." }
+      ],
+      "standfirst": "Conhecer uma igreja é um grande desafio nestes tempos. Esperamos que as informações aqui ajudem você a entender quem somos, em que cremos e como vivemos a fé em Montevidéu desde 1997.",
+      "stats": [
+        { "value": "29", "label": "Anos" },
+        { "value": "10", "label": "Ministérios" },
+        { "value": "∞", "label": "Graça" }
+      ]
+    },
+    "featuredImage": {
+      "src": "/images/homebanner.jpeg",
+      "alt": "Casa da Igreja Batista El Ancla em Montevidéu",
+      "label": "[ FIG.01 ]",
+      "caption": "Casa da igreja · Av. Dr. Luis A. de Herrera 3101 esq. Juan Arrieta.",
+      "badge": "Av. L. A. de Herrera 3101",
+      "meta": "— Montevidéu · UY",
+      "aspect": "wide"
+    },
+    "shortcuts": [
+      { "label": "Confissão de fé", "href": "/confesion-de-fe" },
+      { "label": "Ministérios", "href": "/#ministerios" },
+      { "label": "Como nos visitar", "href": "/#visitanos" },
+      { "label": "Blog", "href": "/blog" }
+    ],
+    "sections": [
+      {
+        "id": "identidad",
+        "eyebrow": "01 — Identidade",
+        "tocLabel": "Quem somos",
+        "title": { "before": "Obrigado por querer ", "emphasis": "nos conhecer." },
+        "blocks": [
+          {
+            "type": "prose",
+            "paragraphs": [
+              "Somos uma <strong>comunidade cristã batista</strong> no coração de Montevidéu. Reunimo-nos há quase três décadas ao redor da Palavra, dos sacramentos e da oração. Não somos uma igreja perfeita — nem queremos ser — mas uma igreja honesta, que procura viver o evangelho no cotidiano.",
+              "Nosso nome vem de <strong>Hebreus 6:19</strong>: «temos esta esperança como âncora da alma, firme e segura». Essa imagem resume bem quem somos: pessoas comuns agarradas àquilo que nos sustenta quando as circunstâncias se movem."
+            ]
+          },
+          { "type": "verse", "reference": "Hebreus 6 · 19", "text": "Temos esta esperança como âncora da alma, firme e segura, a qual adentra o santuário interior." }
+        ]
+      },
+      {
+        "id": "valores",
+        "eyebrow": "02 — Confissão",
+        "tocLabel": "O que cremos",
+        "title": { "before": "Três convicções que nos ", "emphasis": "ordenam." },
+        "description": "Uma igreja não se define apenas pelo que diz crer, mas pelo que organiza sua vida. Estas são as três convicções que, na prática, orientam quase tudo o que fazemos.",
+        "blocks": [
+          {
+            "type": "values",
+            "values": [
+              { "number": "I.", "title": "Centrados em Cristo", "description": "A cruz e a ressurreição não são temas entre outros: são o centro da nossa pregação, do nosso canto e do nosso cuidado pastoral." },
+              { "number": "II.", "title": "Fiéis à Palavra", "description": "As Escrituras são nossa autoridade final em doutrina e prática. Por isso pregamos textos inteiros, não apenas versículos soltos." },
+              { "number": "III.", "title": "Família da fé", "description": "Crescemos juntos em hospitalidade, serviço e oração. A fé se aprende caminhando com outros, não sozinhos." }
+            ],
+            "note": { "label": "Nota · Confissão", "html": "Se quiser ler em detalhe o que cremos, escrevemos uma <a href=\"/confesion-de-fe\">Confissão de Fé</a> organizada em doze artigos. É a versão longa e cuidadosa do que resumimos aqui em três palavras." }
+          }
+        ]
+      },
+      {
+        "id": "historia",
+        "eyebrow": "03 — Caminho",
+        "tocLabel": "Nossa história",
+        "title": { "before": "Quase três décadas ", "emphasis": "na mesma esquina." },
+        "description": "A história de El Ancla cabe em uma avenida e em algumas famílias que decidiram permanecer. Estes são os marcos que deram forma ao que somos hoje.",
+        "blocks": [
+          {
+            "type": "timeline",
+            "items": [
+              { "year": "1997", "title": "Fundação", "description": "Um pequeno grupo de famílias em uma casa emprestada no Cordón." },
+              { "year": "2003", "title": "Mudança para Herrera", "description": "O templo atual abre suas portas na Av. de Herrera 3101." },
+              { "year": "2007", "title": "Pastorado atual", "description": "Pr. Juan Olivera assume o pastorado principal da congregação." },
+              { "year": "2015", "title": "Dez ministérios", "description": "Consolidam-se os ministérios de jovens, mulheres, crianças e missões." },
+              { "year": "Hoje", "title": "2026 · 29 anos", "description": "Uma comunidade estável, intergeracional e aberta à cidade.", "isCurrent": true }
+            ]
+          },
+          { "type": "pullquote", "quote": "Uma igreja local não se mede pelo que acontece em uma manhã de domingo, mas pelo que sustenta mil segundas-feiras seguidas.", "cite": "— Pr. Juan Olivera, sermão de aniversário 2024" },
+          { "type": "figure", "figure": { "src": "/images/aboutus.jpg", "alt": "Congregação da Igreja Batista El Ancla ao final do culto dominical", "label": "[ FIG.02 ]", "caption": "A congregação ao final do culto dominical · 2024.", "aspect": "landscape" } }
+        ]
+      },
+      {
+        "id": "equipo",
+        "eyebrow": "04 — Equipe",
+        "tocLabel": "Equipe pastoral",
+        "title": { "before": "Quem pastoreia ", "emphasis": "a casa." },
+        "description": "A liderança da igreja é formada por uma equipe plural, que compartilha o ensino, a oração e o cuidado pastoral da congregação.",
+        "blocks": [
+          {
+            "type": "team",
+            "people": [
+              { "initials": "JO", "role": "Pastor principal", "name": "Pr. Juan Olivera", "bio": "No pastorado desde 2007. Conduz a pregação dominical e a série expositiva de Hebreus." },
+              { "initials": "MR", "role": "Pastor associado", "name": "Pr. Martín Recalde", "bio": "Coordena o ensino, os grupos de crescimento e o discipulado de novos crentes.", "tint": "#e6e2d6" },
+              { "initials": "SP", "role": "Presbítero", "name": "Sebastián Pérez", "bio": "Acompanha a pastoral de homens e supervisiona missões locais.", "tint": "#ece6da" },
+              { "initials": "CV", "role": "Diaconisa", "name": "Carolina Vidal", "bio": "Lidera Espaço Mulher e a rede de hospitalidade e cuidado da congregação.", "tint": "#efe9dc" },
+              { "initials": "DA", "role": "Diácono", "name": "Diego Acosta", "bio": "Coordena logística, finanças e serviço dominical da igreja.", "tint": "#e9e4d6" },
+              { "initials": "LN", "role": "Líder de jovens", "name": "Lucía Núñez", "bio": "Acompanha adolescentes e jovens na formação bíblica de menores de 25 anos.", "tint": "#ece5d4" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "enlaces",
+        "eyebrow": "05 — Para seguir",
+        "tocLabel": "Para seguir",
+        "title": { "before": "Se quiser ", "emphasis": "continuar nos conhecendo." },
+        "description": "Alguns links internos e recursos para aprofundar quem somos, o que cremos e o que fazemos durante a semana.",
+        "blocks": [
+          {
+            "type": "linkGrid",
+            "links": [
+              { "href": "/confesion-de-fe", "sourceLabel": "elancla.uy / confissao", "title": "Confissão de Fé — doze artigos", "description": "O detalhe mais amplo das nossas convicções doutrinárias sobre Deus, a Escritura, o evangelho e a igreja.", "meta": "Ler · 12 artigos", "glyph": "C" },
+              { "href": "/#ministerios", "sourceLabel": "elancla.uy / ministerios", "title": "Dez ministérios onde servir", "description": "Cada ministério é um convite: um lugar para crescer, usar seus dons e servir outros em nome de Cristo.", "meta": "Ver lista completa", "glyph": "M", "tint": "#e6e2d4" },
+              { "href": "/blog", "sourceLabel": "elancla.uy / blog", "title": "Blog · reflexões e notas pastorais", "description": "Uma bitácora semanal com sermões, leituras guiadas e notas breves sobre a vida da igreja.", "meta": "Toda terça · 7 min", "glyph": "B", "tint": "#ece5d2" },
+              { "href": "https://youtube.com/@iglesiaelanclauy", "sourceLabel": "youtube · @iglesiaelanclauy", "title": "Sermões em vídeo", "description": "O arquivo completo de sermões dominicais e eventos especiais, transmitidos ao vivo todos os domingos.", "meta": "Abrir canal", "glyph": "Y", "external": true, "tint": "#efe7d4" }
+            ]
+          }
+        ]
+      }
+    ],
+    "cta": {
+      "eyebrow": "[ Próximo passo ]",
+      "title": { "before": "O melhor é ", "emphasis": "vir." },
+      "body": "Conhecer uma igreja acontece caminhando até ela em um domingo de manhã. Esperamos você às 11h15 na Av. Dr. Luis A. de Herrera 3101. Sem códigos, sem requisitos.",
+      "primary": { "label": "Como chegar", "href": "/#visitanos" },
+      "secondary": { "label": "Ver horários da semana", "href": "/#actividades" }
+    }
+  },
+  "ministryTemplate": {
+    "summaries": {
+      "predicacion": "A Palavra exposta fielmente",
+      "servicio": "Mãos que cuidam",
+      "ensenanza": "Crescer em entendimento",
+      "misiones": "Até os confins da terra",
+      "adolescentes": "Raízes na adolescência",
+      "jovenes": "Uma geração para Cristo",
+      "hombres": "Discipulado entre homens",
+      "multimedia": "Contar a história",
+      "alabanza": "Cantar com entendimento"
+    },
+    "fallbackSummary": "Um espaço para crescer e servir juntos",
+    "breadcrumbs": { "home": "El Ancla", "ministries": "Ministérios" },
+    "chip": "Ministério",
+    "metaLocation": "Montevidéu · UY",
+    "titleSuffixBefore": "em ",
+    "titleSuffixEmphasis": "El Ancla.",
+    "standfirst": "Cada ministério é um convite: um lugar para crescer, usar seus dons e servir outros em nome de Cristo.",
+    "figureLabel": "[ MINISTÉRIO ]",
+    "figureMeta": "— Montevidéu · UY",
+    "shortcuts": { "all": "Todos os ministérios", "visit": "Como nos visitar", "confession": "Confissão de fé" },
+    "sections": {
+      "identityEyebrow": "01 — Ministério",
+      "identityToc": "Sobre o ministério",
+      "identityTitleBefore": "{name}: ",
+      "identityDescription": "Esta página usa o template editorial compartilhado para que cada ministério possa crescer com conteúdo próprio sem duplicar estrutura.",
+      "paragraphs": [
+        "O ministério de <strong>{name}</strong> existe para acompanhar a igreja em uma forma concreta de serviço. Hoje deixamos uma base simples e ordenada para publicar seu propósito, atividades, responsáveis e próximos passos.",
+        "A intenção é que cada página de ministério possa evoluir a partir de dados tipados: o conteúdo é adicionado ao registro e o template cuida do design, índice, imagens, links e experiência móvel."
+      ],
+      "values": [
+        { "number": "I.", "title": "Crescer", "description": "Formar pessoas enraizadas em Cristo e na Palavra." },
+        { "number": "II.", "title": "Servir", "description": "Usar dons concretos para cuidar e edificar a igreja." },
+        { "number": "III.", "title": "Acompanhar", "description": "Caminhar com outros com hospitalidade, oração e perseverança." }
+      ],
+      "nextEyebrow": "02 — Próximo passo",
+      "nextToc": "Para conectar",
+      "nextTitleBefore": "Um lugar para ",
+      "nextTitleEmphasis": "servir juntos.",
+      "links": [
+        { "href": "/#ministerios", "sourceLabel": "elancla.uy / ministerios", "title": "Voltar à lista de ministérios", "description": "Explore os outros espaços de serviço e crescimento da igreja.", "meta": "Ver ministérios", "glyph": "M" },
+        { "href": "/#visitanos", "sourceLabel": "elancla.uy / visitenos", "title": "Conhecer-nos em um domingo", "description": "A melhor forma de conectar com um ministério é vir e conversar depois do culto.", "meta": "Domingos · 11:15", "glyph": "V", "tint": "#e6e2d4" }
+      ]
+    },
+    "cta": { "eyebrow": "[ Conectar ]", "titleBefore": "Junte-se a ", "body": "Se quiser conhecer mais sobre este ministério, visite-nos em um domingo ou escreva pelos canais de contato da igreja.", "primary": "Como chegar", "secondary": "Ver ministérios" }
+  }
+}

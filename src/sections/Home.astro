@@ -1,5 +1,16 @@
 ---
 import cn from '../utils/cn.ts';
+import type { Locale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
+
+interface Props {
+  copy: any;
+  locale: Locale;
+}
+
+const { copy, locale } = Astro.props;
+const emphasizedLine = copy.titleLines[1] ?? '';
+const [lineBeforeEmphasis = '', lineAfterEmphasis = ''] = emphasizedLine.split(copy.emphasis);
 
 const styles = {
   section: cn('relative min-h-screen pt-32 pb-16 overflow-hidden grain'),
@@ -71,38 +82,38 @@ const styles = {
     <div class={styles.labelRow}>
       <div class={styles.labelLeft}>
         <span class={styles.labelLine}></span>
-        <span>Montevideo · Uruguay</span>
+        <span>{copy.location}</span>
       </div>
-      <div class={styles.labelRight}>Fundada · MCMXCVII</div>
+      <div class={styles.labelRight}>{copy.founded}</div>
     </div>
 
     <!-- título hero -->
     <div class={styles.heroLeft}>
       <h1 class={styles.heroTitle}>
-        <span class="hero-line"><span>Una iglesia</span></span>
-        <span class="hero-line"><span>con <em>ancla</em> en</span></span>
-        <span class="hero-line"><span>el evangelio.</span></span>
+        <span class="hero-line"><span>{copy.titleLines[0]}</span></span>
+        <span class="hero-line">
+          <span>{lineBeforeEmphasis}<em>{copy.emphasis}</em>{lineAfterEmphasis}</span>
+        </span>
+        <span class="hero-line"><span>{copy.titleLines[2]}</span></span>
       </h1>
 
       <div class={styles.metaRow}>
         <div class={styles.metaLeft}>
           <div class={styles.metaDivider}></div>
           <p class={styles.metaText}>
-            Somos una comunidad cristiana bautista en el corazón de
-            Montevideo. Creemos en la gracia, la Palabra y la familia de
-            la fe.
+            {copy.body}
           </p>
         </div>
 
         <div class={styles.ctaRow}>
-          <a href="#nosotros" class={styles.ctaPrimary}>
-            Conocer más
+          <a href={localizePath('/#nosotros', locale)} class={styles.ctaPrimary}>
+            {copy.primaryCta}
             <svg class="cta-arrow" width="14" height="14" viewBox="0 0 12 12" fill="none">
               <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
           </a>
-          <a href="#sermones" class={styles.ctaSecondary}>
-            Últimos sermones
+          <a href={localizePath('/#sermones', locale)} class={styles.ctaSecondary}>
+            {copy.secondaryCta}
             <svg class="arrow-ico" width="14" height="14" viewBox="0 0 12 12" fill="none">
               <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
@@ -113,26 +124,18 @@ const styles = {
 
     <!-- grid de horarios -->
     <div class={styles.scheduleGrid}>
-      <div class={styles.scheduleCell}>
-        <div class={styles.cellLabel}>01 · Domingos</div>
-        <div class={styles.cellTime}>11:15</div>
-        <div class={styles.cellDesc}>Culto de celebración</div>
-      </div>
-      <div class={cn(styles.scheduleCell, 'reveal-delay-1')}>
-        <div class={styles.cellLabel}>02 · Domingos</div>
-        <div class={styles.cellTime}>10:00</div>
-        <div class={styles.cellDesc}>Escuela bíblica</div>
-      </div>
-      <div class={cn(styles.scheduleCell, 'reveal-delay-2')}>
-        <div class={styles.cellLabel}>03 · Miércoles</div>
-        <div class={styles.cellTime}>19:00</div>
-        <div class={styles.cellDesc}>Reunión de oración</div>
-      </div>
+      {copy.schedule.slice(0, 3).map((item: any, index: number) => (
+        <div class={cn(styles.scheduleCell, index > 0 ? `reveal-delay-${index}` : '')}>
+          <div class={styles.cellLabel}>{item.label}</div>
+          <div class={styles.cellTime}>{item.time}</div>
+          <div class={styles.cellDesc}>{item.description}</div>
+        </div>
+      ))}
       <div class={styles.scheduleCellHighlight}>
-        <div class={styles.cellLabelLight}>En vivo</div>
-        <div class={styles.cellTime}>YouTube</div>
+        <div class={styles.cellLabelLight}>{copy.schedule[3].label}</div>
+        <div class={styles.cellTime}>{copy.schedule[3].time}</div>
         <div class={styles.cellDescLight}>
-          Transmisión dominical
+          {copy.schedule[3].description}
           <svg class="transition-transform group-hover:translate-x-1" width="12" height="12" viewBox="0 0 12 12" fill="none">
             <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
@@ -142,7 +145,7 @@ const styles = {
 
     <!-- scroll cue -->
     <div class={styles.scrollCue}>
-      <span class={styles.scrollLabel}>Descubre</span>
+      <span class={styles.scrollLabel}>{copy.scroll}</span>
       <span class={styles.scrollTrack}>
         <span class="block w-px h-full bg-ink scroll-bar"></span>
       </span>

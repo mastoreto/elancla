@@ -54,10 +54,10 @@ function initReadProgress(signal: AbortSignal): void {
 
     if (nav) {
       if (window.scrollY > 40) {
-        nav.style.background = 'rgba(250,248,245,0.92)';
-        nav.style.boxShadow = '0 8px 30px -10px rgba(20,20,20,0.08)';
+        nav.style.background = 'color-mix(in srgb, var(--color-paper) 92%, transparent)';
+        nav.style.boxShadow = '0 8px 30px -10px rgba(0,0,0,0.18)';
       } else {
-        nav.style.background = 'rgba(250,248,245,0.72)';
+        nav.style.background = 'color-mix(in srgb, var(--color-paper) 72%, transparent)';
         nav.style.boxShadow = 'none';
       }
     }

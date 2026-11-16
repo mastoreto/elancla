@@ -2,6 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 import Decorators from '../components/Decorators.astro';
 import cn from '../utils/cn';
+import { defaultLocale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+
+const locale = defaultLocale;
+const copy = getMessages(locale).notFound;
 
 const classes = {
   section: cn(
@@ -117,9 +123,10 @@ const classes = {
 ---
 
 <Layout
-  title="404 - Página no encontrada"
-  description="La página que buscás no existe o fue movida. Volvé al inicio o explorá las secciones de Iglesia Bautista El Ancla."
+  title={copy.seo.title}
+  description={copy.seo.description}
   noindex={true}
+  locale={locale}
 >
   <section class={classes.section}>
     <Decorators type="top" customClass={classes.decoratorTop} />
@@ -129,37 +136,36 @@ const classes = {
 
     <div class={classes.content}>
       <div class={classes.card}>
-        <p class={classes.kicker}>Error 404</p>
-        <h1 class={classes.title}>No encontramos esta página</h1>
+        <p class={classes.kicker}>{copy.kicker}</p>
+        <h1 class={classes.title}>{copy.title}</h1>
         <p class={classes.description}>
-          El enlace puede haber cambiado o quizás escribiste una dirección
-          incorrecta. Volvé al inicio o explorá otras secciones.
+          {copy.description}
         </p>
         <div class={classes.actions}>
-          <a href="/" class={classes.primaryAction}>Volver al inicio</a>
-          <a href="/confesion-de-fe" class={classes.secondaryAction}
-            >Confesión de fe</a
+          <a href={localizePath('/', locale)} class={classes.primaryAction}>{copy.primary}</a>
+          <a href={localizePath('/confesion-de-fe', locale)} class={classes.secondaryAction}
+            >{copy.secondary}</a
           >
         </div>
         <div class={classes.helper}>
           <span class="material-symbols-outlined text-primary-600">
             travel_explore
           </span>
-          <span>Usá el menú superior para seguir navegando.</span>
+          <span>{copy.helper}</span>
         </div>
       </div>
 
       <div class={classes.art}>
-        <span class={classes.badge}>Iglesia Bautista El Ancla</span>
+        <span class={classes.badge}>{copy.badge}</span>
         <div class={classes.number}>404</div>
         <img
           src="/images/anclarojo.png"
-          alt="Ancla El Ancla"
+          alt={copy.imageAlt}
           width="96"
           height="150"
           class={classes.anchor}
         />
-        <p class={classes.tagline}>Seguimos firmes en el puerto.</p>
+        <p class={classes.tagline}>{copy.tagline}</p>
       </div>
     </div>
   </section>

@@ -1,5 +1,14 @@
 ---
 import cn from '../utils/cn.ts';
+import type { Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getMessages(locale).footer;
 
 const styles = {
   footer: cn('relative bg-primary text-white py-20 overflow-hidden'),
@@ -31,18 +40,6 @@ const styles = {
 };
 
 const year = new Date().getFullYear();
-
-const iglesiaLinks = ['Misión y valores', 'Historia', '¿Qué creemos?', 'Confesión de fe'];
-const ministerioLinks = [
-  'Predicación', 'Hombres', 'Enseñanza', 'Jóvenes',
-  'Misiones', 'Adolescentes', 'Alabanza', 'Multimedia',
-  'Oración', 'Espacio Mujer',
-];
-const redesLinks = [
-  'YouTube · @iglesiaelanclauy',
-  'Instagram · @iglesiaelancla',
-  'Facebook · @iglesiabautistaelancla',
-];
 ---
 
 <!-- FOOTER -->
@@ -58,21 +55,21 @@ const redesLinks = [
         <div class={styles.brandRow}>
           <img src="/images/anclablanco.png" alt="" class="w-10 h-10 object-contain" />
           <div>
-            <div class={styles.brandLabel}>IGLESIA BAUTISTA</div>
-            <div class={styles.brandName}>El Ancla</div>
+            <div class={styles.brandLabel}>{copy.brandLabel}</div>
+            <div class={styles.brandName}>{copy.brandName}</div>
           </div>
         </div>
         <p class={styles.brandTagline}>
-          Tenemos esta esperanza como firme y segura ancla del alma.
-          <span class="opacity-60">— Heb. 6:19</span>
+          {copy.tagline}
+          <span class="opacity-60">{copy.verse}</span>
         </p>
       </div>
 
       <!-- iglesia -->
       <div class={styles.colLinks}>
-        <div class={styles.colLabel}>Iglesia</div>
+        <div class={styles.colLabel}>{copy.churchLabel}</div>
         <ul class={styles.linkList}>
-          {iglesiaLinks.map((l) => (
+          {copy.churchLinks.map((l) => (
             <li><a href="#" class="ulink">{l}</a></li>
           ))}
         </ul>
@@ -80,9 +77,9 @@ const redesLinks = [
 
       <!-- ministerios -->
       <div class={styles.colMinis}>
-        <div class={styles.colLabel}>Ministerios</div>
+        <div class={styles.colLabel}>{copy.ministryLabel}</div>
         <ul class={styles.minisGrid}>
-          {ministerioLinks.map((l) => (
+          {copy.ministryLinks.map((l) => (
             <li><a href="#" class="ulink">{l}</a></li>
           ))}
         </ul>
@@ -90,9 +87,9 @@ const redesLinks = [
 
       <!-- redes -->
       <div class={styles.colSocial}>
-        <div class={styles.colLabel}>Redes</div>
+        <div class={styles.colLabel}>{copy.socialLabel}</div>
         <ul class={styles.linkList}>
-          {redesLinks.map((l) => (
+          {copy.socialLinks.map((l) => (
             <li><a href="#" class="ulink">{l}</a></li>
           ))}
         </ul>
@@ -100,8 +97,8 @@ const redesLinks = [
     </div>
 
     <div class={styles.bottom}>
-      <div>Av. Luis A. de Herrera 3101, esq. Juan Arrieta — Montevideo, Uruguay</div>
-      <div>© <span id="year">{year}</span> Iglesia Bautista El Ancla. Todos los derechos reservados.</div>
+      <div>{copy.address}</div>
+      <div>© <span id="year">{year}</span> {copy.copyright}</div>
     </div>
   </div>
 </footer>

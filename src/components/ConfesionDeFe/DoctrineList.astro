@@ -6,18 +6,19 @@ import DoctrineRow from './DoctrineRow.astro';
 interface Props {
   doctrines: Doctrine[];
   total: string;
+  copy: any;
 }
 
-const { doctrines, total } = Astro.props;
+const { doctrines, total, copy } = Astro.props;
 const container = cn('mx-auto max-w-[1600px] px-6 md:px-10');
 ---
 
 <section id="doctrinas" class="relative py-20 md:py-28 bg-surface border-t border-ink/10">
   <div class={container}>
     <div class="flex items-baseline gap-6 mb-14 md:mb-20">
-      <span class="section-counter">[ 01 — Nueve doctrinas ]</span>
+      <span class="section-counter">{copy.counter}</span>
       <span class="flex-1 h-px bg-ink/15"></span>
-      <span class="section-counter hidden md:inline">Haz clic para expandir</span>
+      <span class="section-counter hidden md:inline">{copy.hint}</span>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
@@ -25,7 +26,7 @@ const container = cn('mx-auto max-w-[1600px] px-6 md:px-10');
       <!-- Sticky sidebar index -->
       <aside class="lg:col-span-3">
         <div class="lg:sticky lg:top-32">
-          <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-6">Índice</div>
+          <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-6">{copy.index}</div>
           <ul id="doctIndex" class="flex flex-col gap-3 font-ui text-[14px] text-ink/60">
             {doctrines.map((d) => (
               <li>
@@ -38,10 +39,10 @@ const container = cn('mx-auto max-w-[1600px] px-6 md:px-10');
           </ul>
 
           <div class="mt-12 pt-8 border-t border-ink/10">
-            <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-3">Recursos</div>
-            <a href="#" class="block font-ui text-[13px] text-ink/60 ulink mb-2 w-fit">Descargar PDF</a>
-            <a href="#" class="block font-ui text-[13px] text-ink/60 ulink mb-2 w-fit">Estudios bíblicos</a>
-            <a href="#" class="block font-ui text-[13px] text-ink/60 ulink w-fit">Contactar al pastor</a>
+            <div class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50 mb-3">{copy.resources}</div>
+            {copy.resourceLinks.map((label: string, index: number) => (
+              <a href="#" class:list={['block font-ui text-[13px] text-ink/60 ulink w-fit', index < copy.resourceLinks.length - 1 && 'mb-2']}>{label}</a>
+            ))}
           </div>
         </div>
       </aside>
@@ -49,7 +50,7 @@ const container = cn('mx-auto max-w-[1600px] px-6 md:px-10');
       <!-- Accordion rows -->
       <div class="lg:col-span-9">
         {doctrines.map((d) => (
-          <DoctrineRow doctrine={d} total={total} />
+          <DoctrineRow doctrine={d} total={total} copy={copy} />
         ))}
       </div>
 

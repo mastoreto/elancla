@@ -7,28 +7,26 @@ import Home from '../sections/Home.astro';
 import Marquee from '../sections/Marquee.astro';
 import Ministries from '../sections/Ministries.astro';
 import Sermons from '../sections/Sermons.astro';
+import { getMessages } from 'src/i18n/messages';
+import { getLocaleFromUrl } from 'src/i18n/utils';
+
+const locale = getLocaleFromUrl(Astro.url);
+const copy = getMessages(locale);
 ---
 
 <Layout
-  title="Iglesia Bautista El Ancla"
-  description="Iglesia Bautista El Ancla en Montevideo, Uruguay. Comunidad cristiana centrada en el evangelio. Cultos los domingos a las 11:15 hs en Av. Luis A. de Herrera 3101."
-  keywords={[
-    'Iglesia Bautista El Ancla',
-    'Iglesia Bautista Montevideo',
-    'iglesia evangélica Uruguay',
-    'iglesia cristiana Montevideo',
-    'culto dominical Montevideo',
-    'Av. Herrera 3101',
-    'Hebreos 6:19',
-  ]}
+  title={copy.home.seo.title}
+  description={copy.home.seo.description}
+  keywords={copy.home.seo.keywords}
+  locale={locale}
 >
-  <Home />
-  <Marquee />
-  <AboutUs />
-  <Activities />
-  <Sermons />
-  <Ministries />
-  <Contact />
+  <Home copy={copy.home.hero} locale={locale} />
+  <Marquee words={copy.home.marquee.words} />
+  <AboutUs copy={copy.aboutUs} locale={locale} />
+  <Activities copy={copy.activities} />
+  <Sermons copy={copy.sermons} />
+  <Ministries copy={copy.ministries} locale={locale} />
+  <Contact copy={copy.contact} />
 </Layout>
 
 <script>
