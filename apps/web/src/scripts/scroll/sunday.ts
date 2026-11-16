@@ -28,15 +28,16 @@ export function initSunday(root: HTMLElement, isDesktop: boolean): void {
     )
     .to(ins, { opacity: 1, y: 0, duration: 0.8, stagger: 0.12 }, 0.1);
 
+  let current = -1;
+  const mark = (i: number) => {
+    if (i === current) return;
+    current = i;
+    rows.forEach((r, k) => {
+      r.classList.toggle('is-active', k === i);
+    });
+  };
+
   if (isDesktop) {
-    let current = -1;
-    const mark = (i: number) => {
-      if (i === current) return;
-      current = i;
-      rows.forEach((r, k) => {
-        r.classList.toggle('is-active', k === i);
-      });
-    };
     ScrollTrigger.create({
       trigger: sec,
       start: 'top top',
@@ -53,13 +54,27 @@ export function initSunday(root: HTMLElement, isDesktop: boolean): void {
         ),
     });
   } else {
-    for (const row of rows) {
-      ScrollTrigger.create({
-        trigger: row,
-        start: 'top 65%',
-        end: 'bottom 45%',
-        toggleClass: { targets: row, className: 'is-active' },
+    // Stacked layout: highlight the row closest to the reading line.
+    const pick = () => {
+      const line = window.innerHeight * 0.55;
+      let best = 0;
+      let bestDist = Number.POSITIVE_INFINITY;
+      rows.forEach((row, k) => {
+        const r = row.getBoundingClientRect();
+        const dist = Math.abs(r.top + r.height / 2 - line);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = k;
+        }
       });
-    }
+      mark(best);
+    };
+    ScrollTrigger.create({
+      trigger: sec,
+      start: 'top bottom',
+      end: 'bottom top',
+      onUpdate: pick,
+      onRefresh: pick,
+    });
   }
 }

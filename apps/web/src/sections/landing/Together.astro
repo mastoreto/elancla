@@ -8,7 +8,19 @@ interface Props {
   locale: Locale;
 }
 const { copy, locale } = Astro.props;
-const href = localizePath('/ministerios', locale);
+// Each tile opens its ministry page; prayer has none (points to the visit info) and Espacio Mujer lives on its own site.
+const ministryHref: Record<string, string> = {
+  preaching: '/ministerios/predicacion',
+  teaching: '/ministerios/enseñanza',
+  worship: '/ministerios/alabanza',
+  prayer: '/#visitanos',
+  youth: '/ministerios/jovenes',
+  teens: '/ministerios/adolescentes',
+  missions: '/ministerios/misiones',
+  men: '/ministerios/hombres',
+  media: '/ministerios/multimedia',
+};
+const EXTERNAL_WOMEN = 'https://emujer.elancla.uy/';
 type Tile =
   | { kind: 'link'; key: keyof Props['copy']['tiles']; w: number; tone?: 'dark' | 'red' }
   | { kind: 'photo'; key: keyof Props['copy']['photos']; src: string; w: number; crop: string };
@@ -50,7 +62,11 @@ const orderOf = (r: number, c: number) => (r === 2 ? 0 : r === 1 ? 4 : 8) + c;
     {rows.map((row, r) => (
       <div class="ln-tog__row">
         {row.map((t, c) => t.kind === 'link' ? (
-          <a href={href} class:list={['ln-tile', { 'ln-tile--dark': t.tone === 'dark', 'ln-tile--red': t.tone === 'red' }]} style={`--grow:${t.w}`} data-tile={orderOf(r, c)}>
+          <a
+            href={t.key === 'women' ? EXTERNAL_WOMEN : localizePath(ministryHref[t.key], locale)}
+            target={t.key === 'women' ? '_blank' : undefined}
+            rel={t.key === 'women' ? 'noopener' : undefined}
+            class:list={['ln-tile', { 'ln-tile--dark': t.tone === 'dark', 'ln-tile--red': t.tone === 'red' }]} style={`--grow:${t.w}`} data-tile={orderOf(r, c)}>
             {copy.tiles[t.key]}<span class="ln-tile__ar" aria-hidden="true">→</span>
           </a>
         ) : (

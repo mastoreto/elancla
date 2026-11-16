@@ -46,7 +46,7 @@ function mount(): void {
       initHero(root);
       initGod(root, isDesktop);
       initDoctrines(root, isDesktop);
-      initTogether(root);
+      initTogether(root, isDesktop);
       initSunday(root, isDesktop);
       initClosing(root);
       initNavAnchor();

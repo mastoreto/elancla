@@ -338,3 +338,5 @@
 .ln.is-static .ln-doc__foot { margin-top: 2rem; }
 .ln.is-static .ln-row__d { opacity: 1; }
 .ln.is-static .ln-hero__tag { display: none; }
+.ln-end__foot .brand { flex-wrap: wrap; }
+.ln-end__foot .brand b { white-space: nowrap; }

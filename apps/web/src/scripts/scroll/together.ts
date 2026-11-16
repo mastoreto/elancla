@@ -1,7 +1,7 @@
 import { gsap } from './lenis';
 
 /** Ministries wall: tiles are laid like stones, bottom row first. */
-export function initTogether(root: HTMLElement): void {
+export function initTogether(root: HTMLElement, isDesktop: boolean): void {
   const sec = root.querySelector<HTMLElement>('[data-ln="together"]');
   const rows = sec?.querySelector<HTMLElement>('.ln-tog__rows');
   const head = sec?.querySelector<HTMLElement>('[data-tog-head]');
@@ -25,6 +25,28 @@ export function initTogether(root: HTMLElement): void {
       },
     }
   );
+  if (!isDesktop) {
+    // Stacked layout: reading order, each tile enters on its own.
+    for (const tile of sec.querySelectorAll<HTMLElement>('[data-tile]')) {
+      gsap.fromTo(
+        tile,
+        { opacity: 0, y: 32 },
+        {
+          opacity: 1,
+          y: 0,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: tile,
+            start: 'top 95%',
+            end: 'top 72%',
+            scrub: 0.5,
+          },
+        }
+      );
+    }
+    return;
+  }
+
   gsap.fromTo(
     tiles,
     { opacity: 0, y: 40 },

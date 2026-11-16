@@ -351,7 +351,7 @@ function buildMinistryPages(locale: Locale): ContentPage[] {
         hero: {
           breadcrumbs: [
             { label: template.breadcrumbs.home, href: '/' },
-            { label: template.breadcrumbs.ministries, href: '/#ministerios' },
+            { label: template.breadcrumbs.ministries, href: '/#juntos' },
             { label: name },
           ],
           chip: template.chip,
@@ -375,7 +375,7 @@ function buildMinistryPages(locale: Locale): ContentPage[] {
           aspect: 'wide',
         },
         shortcuts: [
-          { label: template.shortcuts.all, href: '/#ministerios' },
+          { label: template.shortcuts.all, href: '/#juntos' },
           { label: template.shortcuts.visit, href: '/#visitanos' },
           { label: template.shortcuts.confession, href: '/confesion-de-fe' },
         ],
@@ -431,7 +431,7 @@ function buildMinistryPages(locale: Locale): ContentPage[] {
           },
           secondary: {
             label: template.cta.secondary,
-            href: '/#ministerios',
+            href: '/#juntos',
           },
         },
       };

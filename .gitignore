@@ -48,3 +48,6 @@ packages/db/prisma/*.db
 # Local tooling
 .codegraph/
 .codex
+
+# Browser test artifacts
+.playwright-mcp/

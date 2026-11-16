@@ -35,7 +35,7 @@
     },
     "shortcuts": [
       { "label": "Confesión de fe", "href": "/confesion-de-fe" },
-      { "label": "Ministerios", "href": "/#ministerios" },
+      { "label": "Ministerios", "href": "/#juntos" },
       { "label": "Cómo visitarnos", "href": "/#visitanos" },
       { "label": "Blog", "href": "/blog" }
     ],
@@ -146,7 +146,7 @@
             "type": "linkGrid",
             "links": [
               { "href": "/confesion-de-fe", "sourceLabel": "elancla.uy / confesion", "title": "Confesión de Fe — doce artículos", "description": "El detalle largo de nuestras convicciones doctrinales sobre Dios, la Escritura, el evangelio y la iglesia.", "meta": "Leer · 12 artículos", "glyph": "C" },
-              { "href": "/#ministerios", "sourceLabel": "elancla.uy / ministerios", "title": "Diez ministerios donde servir", "description": "Cada ministerio es una invitación: un lugar para crecer, usar tus dones y servir a otros en nombre de Cristo.", "meta": "Ver listado completo", "glyph": "M", "tint": "#e6e2d4" },
+              { "href": "/#juntos", "sourceLabel": "elancla.uy / ministerios", "title": "Diez ministerios donde servir", "description": "Cada ministerio es una invitación: un lugar para crecer, usar tus dones y servir a otros en nombre de Cristo.", "meta": "Ver listado completo", "glyph": "M", "tint": "#e6e2d4" },
               { "href": "/blog", "sourceLabel": "elancla.uy / blog", "title": "Blog · reflexiones y notas pastorales", "description": "Una bitácora semanal con sermones, lecturas guiadas y notas breves sobre la vida en la iglesia.", "meta": "Cada martes · 7 min", "glyph": "B", "tint": "#ece5d2" },
               { "href": "https://youtube.com/@iglesiaelanclauy", "sourceLabel": "youtube · @iglesiaelanclauy", "title": "Sermones en video", "description": "El archivo completo de sermones dominicales y eventos especiales, transmitidos en vivo cada domingo.", "meta": "Abrir canal", "glyph": "Y", "external": true, "tint": "#efe7d4" }
             ]
@@ -159,7 +159,7 @@
       "title": { "before": "Lo mejor es ", "emphasis": "venir." },
       "body": "Conocer una iglesia se hace caminando hasta ella un domingo a la mañana. Te esperamos a las 11:15 hs en Av. Dr. Luis A. de Herrera 3101. Sin códigos, sin requisitos.",
       "primary": { "label": "Cómo llegar", "href": "/#visitanos" },
-      "secondary": { "label": "Ver horarios de la semana", "href": "/#actividades" }
+      "secondary": { "label": "Ver horarios de la semana", "href": "/#domingo" }
     }
   },
   "ministryTemplate": {
@@ -210,7 +210,7 @@
       "nextTitleBefore": "Un lugar para ",
       "nextTitleEmphasis": "servir juntos.",
       "links": [
-        { "href": "/#ministerios", "sourceLabel": "elancla.uy / ministerios", "title": "Volver al listado de ministerios", "description": "Explorá los demás espacios de servicio y crecimiento de la iglesia.", "meta": "Ver ministerios", "glyph": "M" },
+        { "href": "/#juntos", "sourceLabel": "elancla.uy / ministerios", "title": "Volver al listado de ministerios", "description": "Explorá los demás espacios de servicio y crecimiento de la iglesia.", "meta": "Ver ministerios", "glyph": "M" },
         { "href": "/#visitanos", "sourceLabel": "elancla.uy / visitanos", "title": "Conocernos un domingo", "description": "La mejor forma de conectar con un ministerio es venir y conversar después del culto.", "meta": "Domingos · 11:15", "glyph": "V", "tint": "#e6e2d4" }
       ]
     },

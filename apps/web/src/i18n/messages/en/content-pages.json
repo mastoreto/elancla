@@ -35,7 +35,7 @@
     },
     "shortcuts": [
       { "label": "Statement of faith", "href": "/confesion-de-fe" },
-      { "label": "Ministries", "href": "/#ministerios" },
+      { "label": "Ministries", "href": "/#juntos" },
       { "label": "How to visit", "href": "/#visitanos" },
       { "label": "Blog", "href": "/blog" }
     ],
@@ -139,7 +139,7 @@
             "type": "linkGrid",
             "links": [
               { "href": "/confesion-de-fe", "sourceLabel": "elancla.uy / confession", "title": "Statement of Faith — twelve articles", "description": "The longer detail of our doctrinal convictions about God, Scripture, the gospel, and the church.", "meta": "Read · 12 articles", "glyph": "C" },
-              { "href": "/#ministerios", "sourceLabel": "elancla.uy / ministries", "title": "Ten ministries where you can serve", "description": "Every ministry is an invitation: a place to grow, use your gifts, and serve others in the name of Christ.", "meta": "See full list", "glyph": "M", "tint": "#e6e2d4" },
+              { "href": "/#juntos", "sourceLabel": "elancla.uy / ministries", "title": "Ten ministries where you can serve", "description": "Every ministry is an invitation: a place to grow, use your gifts, and serve others in the name of Christ.", "meta": "See full list", "glyph": "M", "tint": "#e6e2d4" },
               { "href": "/blog", "sourceLabel": "elancla.uy / blog", "title": "Blog · reflections and pastoral notes", "description": "A weekly journal with sermons, guided readings, and brief notes about church life.", "meta": "Every Tuesday · 7 min", "glyph": "B", "tint": "#ece5d2" },
               { "href": "https://youtube.com/@iglesiaelanclauy", "sourceLabel": "youtube · @iglesiaelanclauy", "title": "Sermons on video", "description": "The full archive of Sunday sermons and special events, streamed live every Sunday.", "meta": "Open channel", "glyph": "Y", "external": true, "tint": "#efe7d4" }
             ]
@@ -152,7 +152,7 @@
       "title": { "before": "The best thing is to ", "emphasis": "come." },
       "body": "Getting to know a church happens by walking into it on a Sunday morning. We are waiting for you at 11:15 AM at Av. Dr. Luis A. de Herrera 3101. No codes, no requirements.",
       "primary": { "label": "How to get there", "href": "/#visitanos" },
-      "secondary": { "label": "See weekly times", "href": "/#actividades" }
+      "secondary": { "label": "See weekly times", "href": "/#domingo" }
     }
   },
   "ministryTemplate": {
@@ -196,7 +196,7 @@
       "nextTitleBefore": "A place to ",
       "nextTitleEmphasis": "serve together.",
       "links": [
-        { "href": "/#ministerios", "sourceLabel": "elancla.uy / ministries", "title": "Return to the ministry list", "description": "Explore the other spaces for service and growth in the church.", "meta": "See ministries", "glyph": "M" },
+        { "href": "/#juntos", "sourceLabel": "elancla.uy / ministries", "title": "Return to the ministry list", "description": "Explore the other spaces for service and growth in the church.", "meta": "See ministries", "glyph": "M" },
         { "href": "/#visitanos", "sourceLabel": "elancla.uy / visit", "title": "Meet us on a Sunday", "description": "The best way to connect with a ministry is to come and talk after worship.", "meta": "Sundays · 11:15", "glyph": "V", "tint": "#e6e2d4" }
       ]
     },
