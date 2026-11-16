@@ -320,7 +320,7 @@ if (pageType === 'article' && article) {
     {
       site.status === 'online' ? (
         <>
-          <main class="max-w-full flex flex-col relative overflow-x-hidden">
+          <main class="max-w-full flex flex-col relative overflow-clip">
             <slot />
           </main>
           {footer && <Footer locale={locale} />}
