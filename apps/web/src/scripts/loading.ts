@@ -70,7 +70,7 @@ export function initLoadingOverlay(): void {
   };
 
   /** The red anchor floats over the page and flies to the nav logo as the visitor scrolls. */
-  const armFlight = (logo: HTMLElement | null) => {
+  const armFlight = (logo: HTMLElement | null, instant = false) => {
     killFlight();
     const target = logo?.getBoundingClientRect();
     const from = els.anchor.getBoundingClientRect();
@@ -79,8 +79,14 @@ export function initLoadingOverlay(): void {
       return;
     }
     root.classList.add('ldr-floating'); // hides the hero's own anchor: this one takes its place
+    const sync = (progress: number) => {
+      const arrived = progress >= 0.999;
+      gsap.set(els.anchor, { opacity: arrived ? 0 : 1 });
+      gsap.set(logo, { opacity: arrived ? 1 : 0 });
+      if (progress > 0.02) gsap.to(els.hint, { opacity: 0, duration: 0.3, overwrite: true });
+    };
     const startFlight = () => {
-      gsap.to(els.hint, { opacity: 1, duration: 0.8, delay: 0.3 });
+      if (!instant) gsap.to(els.hint, { opacity: 1, duration: 0.8, delay: 0.3 });
       flight = gsap.to(els.anchor, {
         x: target.left - from.left,
         y: target.top - from.top,
@@ -90,15 +96,11 @@ export function initLoadingOverlay(): void {
           start: 0,
           end: () => window.innerHeight * 0.55,
           scrub: 0.6,
-          onUpdate: (self) => {
-            const arrived = self.progress >= 0.999;
-            gsap.set(els.anchor, { opacity: arrived ? 0 : 1 });
-            gsap.set(logo, { opacity: arrived ? 1 : 0 });
-            if (self.progress > 0.02) gsap.to(els.hint, { opacity: 0, duration: 0.3, overwrite: true });
-          },
+          onUpdate: (self) => sync(self.progress),
         },
       });
       ScrollTrigger.refresh();
+      sync(flight.scrollTrigger?.progress ?? 0); // honours a restored scroll position
     };
     // The anchor first settles where the hero's own anchor sits, then travels to the nav on scroll.
     const heroSvg = document.querySelector<SVGElement>('.ln-hero__anchor svg');
@@ -108,7 +110,7 @@ export function initLoadingOverlay(): void {
         x: spot.left - from.left,
         y: spot.top - from.top,
         scale: spot.width / from.width,
-        duration: 1.1,
+        duration: instant ? 0 : 1.1,
         ease: 'power3.inOut',
         onComplete: startFlight,
       });
@@ -200,6 +202,21 @@ export function initLoadingOverlay(): void {
     playReveal();
   });
 
-  if (seen) idle();
+  /** Later visits skip the intro, but the home anchor still travels to the nav logo on scroll. */
+  const playSeenVisit = () => {
+    idle();
+    if (!document.querySelector('.ln-hero__anchor svg')) return; // only the home has an anchor to carry
+    const run = () => {
+      els.anchor.classList.add('is-active');
+      gsap.set(els.outline, { strokeDashoffset: 0 });
+      gsap.set(els.clip, { attr: { y: 0 } });
+      gsap.set(els.anchor, { x: 0, y: 0, scale: 1, opacity: 1, color: RED, transformOrigin: '0 0' });
+      armFlight(navLogo(), true);
+    };
+    if (document.readyState === 'complete') requestAnimationFrame(run);
+    else window.addEventListener('load', () => requestAnimationFrame(run), { once: true });
+  };
+
+  if (seen) playSeenVisit();
   else playFirstVisit();
 }
