@@ -93,13 +93,13 @@
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
   gap: 0;
-  padding: clamp(6.5rem, 12vh, 8rem) var(--ln-pad) 2.5rem;
+  padding: clamp(6.5rem, 12vh, 8rem) var(--ln-pad) 9.5rem;
   align-items: center;
   position: relative;
 }
 .ln-hero__text { position: relative; z-index: 4; display: flex; flex-direction: column; gap: 1.5rem; max-width: 31rem; }
 .ln-hero__eyebrow { font-family: var(--ln-sans-b); font-size: 0.8125rem; letter-spacing: 0.16em; text-transform: uppercase; color: #4a4a48; }
-.ln-hero__title { font-size: clamp(2.6rem, 5.7vw, 5.125rem); line-height: 0.95; letter-spacing: -0.025em; }
+.ln-hero__title { font-size: clamp(2.6rem, min(5.7vw, 8.6vh), 5.125rem); line-height: 0.95; letter-spacing: -0.025em; }
 .ln-hero__lead { margin: 0; font-size: clamp(1.0625rem, 1.3vw, 1.1875rem); line-height: 1.55; color: var(--ln-ink-soft); max-width: 25rem; }
 .ln-hero__photo {
   position: absolute; z-index: 1;
@@ -110,7 +110,7 @@
 .ln-hero__photo img { height: 112%; object-position: 60% 68%; }
 .ln-hero__anchor {
   position: absolute; z-index: 3;
-  left: 32%; top: 26%; width: clamp(150px, 20.8vw, 300px);
+  left: 44%; top: 26%; width: clamp(150px, min(18vw, 34vh), 300px);
   filter: drop-shadow(0 22px 36px rgba(21, 21, 21, 0.25));
 }
 .ln-hero__anchor svg { width: 100%; height: auto; display: block; }
@@ -158,8 +158,8 @@
 .ln-doc {
   background: var(--ln-warm); color: #f4efe6;
   min-height: 100svh; position: relative;
-  --orbit-r: clamp(120px, 13.2vw, 190px);
-  --dot: clamp(40px, 3.6vw, 52px);
+  --orbit-r: clamp(104px, min(13.2vw, 21.1vh), 190px);
+  --dot: clamp(36px, min(3.6vw, 5.8vh), 52px);
 }
 .ln-doc__side { position: absolute; left: var(--ln-pad); top: clamp(5.5rem, 15vh, 9.5rem); width: min(270px, 22vw); display: flex; flex-direction: column; gap: 1.4rem; }
 .ln-doc__title { margin: 0; font-family: var(--ln-brand); font-weight: 900; font-size: clamp(1.9rem, 3.05vw, 2.75rem); line-height: 0.95; }
@@ -167,7 +167,7 @@
 .ln-doc__quote { margin: 0; padding-top: 1.4rem; border-top: 1px solid var(--ln-warm-line); display: flex; flex-direction: column; gap: 12px; }
 .ln-doc__quote p { margin: 0; font-family: var(--ln-serif); font-size: 1.5rem; line-height: 1.2; }
 .ln-doc__quote cite { font-style: normal; font-family: var(--ln-sans-b); font-size: 0.8125rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ln-red-live); }
-.ln-doc__stage { position: absolute; left: 24vw; right: 12.5vw; top: max(8.5rem, 15vh); height: min(540px, 58vh); }
+.ln-doc__stage { position: absolute; left: 24vw; right: 12.5vw; top: max(9rem, 15vh); height: min(540px, 60vh); }
 .ln-doc__ring {
   position: absolute; left: 50%; top: 50%; width: calc(var(--orbit-r) * 1.58); height: calc(var(--orbit-r) * 1.58);
   margin: calc(var(--orbit-r) * -1.21) 0 0 calc(var(--orbit-r) * -0.79);
@@ -196,15 +196,30 @@
 .ln-doc__big g[data-ic] { opacity: 0; }
 .ln-doc__intro-anchor { position: absolute; left: 50%; top: 50%; width: calc(var(--orbit-r) * 0.84); margin: calc(var(--orbit-r) * -0.95) 0 0 calc(var(--orbit-r) * -0.42); filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.55)); }
 .ln-doc__intro-anchor svg { width: 100%; height: auto; display: block; }
-.ln-doc__caption { position: absolute; left: 0; right: 0; bottom: 0; height: 120px; }
+.ln-doc__caption { position: absolute; left: 0; right: 0; bottom: 0; height: clamp(90px, 13.3vh, 120px); }
 .ln-doc__cap { position: absolute; inset: 0 0 auto 0; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; opacity: 0; }
 .ln-doc__cap strong { font-family: var(--ln-brand); font-weight: 900; font-size: clamp(1.5rem, 3.6vw, 3.25rem); line-height: 1; color: var(--ln-red-live); }
 .ln-doc__cap span { font-family: var(--ln-serif); font-size: clamp(1.0625rem, 1.95vw, 1.75rem); line-height: 1.1; }
 .ln-doc__seal { position: absolute; right: 4.8vw; top: 130px; width: 64px; display: flex; flex-direction: column; align-items: center; gap: 18px; color: var(--ln-warm-line); }
 .ln-doc__seal svg { width: 44px; height: auto; }
-.ln-doc__seal span { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--ln-brand); font-weight: 900; font-size: 4rem; line-height: 1; }
+.ln-doc__seal span { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--ln-brand); font-weight: 900; font-size: clamp(2rem, 5.4vh, 4rem); line-height: 1; }
 .ln-doc__foot { position: absolute; left: var(--ln-pad); right: var(--ln-pad); bottom: clamp(1.5rem, 8vh, 4.5rem); display: flex; align-items: center; justify-content: space-between; gap: 2.5rem; border-top: 1px solid var(--ln-warm-line); padding-top: 2rem; }
 .ln-doc__foot p { margin: 0; max-width: 47rem; font-family: var(--ln-serif); font-size: clamp(1.25rem, 2.6vw, 2.375rem); line-height: 1.15; }
+/* Short desktop viewports: tighten the pinned doctrines layout so nothing collides. */
+@media (min-width: 1024px) and (max-height: 820px) {
+  .ln-doc__side { top: 6rem; gap: 1rem; }
+  .ln-doc__intro { font-size: 0.9375rem; }
+  .ln-doc__quote { padding-top: 1rem; gap: 8px; }
+  .ln-doc__quote p { font-size: 1.2rem; }
+  .ln-doc__foot { bottom: 1.25rem; padding-top: 1.1rem; }
+  .ln-doc__foot p { font-size: clamp(1.15rem, 2.2vw, 1.6rem); }
+  .ln-doc__seal { top: 110px; }
+  .ln .ln-sun { padding-top: 5.5rem; padding-bottom: 1rem; }
+  .ln .ln-sun__body { gap: 0.9rem; padding: 8px 32px 8px 0; }
+  .ln .ln-sun__title { font-size: clamp(1.9rem, 3.2vw, 2.75rem); }
+  .ln .ln-row { padding: 12px 20px; }
+  .ln .ln-row__d { font-size: 0.9375rem; line-height: 1.4; }
+}
 .ln-doc__list { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 
 /* ───────── 4 · Together ───────── */
@@ -425,7 +440,7 @@
   .ln-tile--photo { grid-column: span 2; padding: 0; }
   .ln-tile--wide { height: 92px; grid-column: span 2; }
 
-  .ln-sun { padding: 1rem 0.75rem 1.5rem; }
+  .ln .ln-sun { padding: 1rem 0.75rem 1.5rem; }
   .ln-sun__card { border-radius: 32px; padding: 16px; gap: 1.75rem; }
   .ln-sun__photo { height: 230px; }
   .ln-sun__body { padding: 0 0.25rem 0.25rem; gap: 1.375rem; }
