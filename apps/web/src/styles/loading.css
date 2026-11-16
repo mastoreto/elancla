@@ -67,14 +67,6 @@ html.site-loader-pending body {
   color: #4a4a48;
 }
 
-/* Every page but the home: light ground and a small red anchor, no flight and no scroll hint. */
-.site-loader[data-mode="page"],
-html.site-loader-page .site-loader { background: #f6f5f2; }
-.ldr-anchor[data-mode="page"],
-html.site-loader-page .ldr-anchor { --ldr-w: 72px; color: #a8141b; filter: none; }
-.site-loader[data-mode="page"] .ldr-cap,
-html.site-loader-page .ldr-cap { display: none; }
-
 /* The floating anchor takes the place of the hero's own anchor while it is on screen. */
 html.ldr-floating .ln-hero__anchor svg { visibility: hidden; }
 

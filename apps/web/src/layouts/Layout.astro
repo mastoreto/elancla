@@ -236,10 +236,6 @@ if (pageType === 'article' && article) {
           document.documentElement.classList.add(
             hasSeenLoader ? 'site-loader-skip-initial' : 'site-loader-pending'
           );
-          // Only the home plays the full intro; any other page starts with the short light loader.
-          if (!hasSeenLoader && !/^\/(pt|en)?\/?$/.test(location.pathname)) {
-            document.documentElement.classList.add('site-loader-page');
-          }
         } catch {
           document.documentElement.classList.add('site-loader-pending');
         }
