@@ -43,6 +43,7 @@ export function initSunday(root: HTMLElement, isDesktop: boolean): void {
       start: 'top top',
       end: '+=110%',
       pin: true,
+      toggleClass: { targets: sec, className: 'is-pinned' },
       anticipatePin: 1,
       onUpdate: (self) =>
         mark(

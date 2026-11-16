@@ -23,7 +23,8 @@ const {
 
 ---
 
-<svg viewBox="0 0 200 254" class={className} aria-hidden="true" focusable="false">
+<!-- overflow visible: the outline stroke reaches past the viewBox and must not be cut flat at the top -->
+<svg viewBox="0 0 200 254" class={className} aria-hidden="true" focusable="false" style="overflow: visible">
   <defs>
     <clipPath id={`${id}-clip`}>
       <rect data-anchor-clip x="0" y={fillFrom === 'full' ? 0 : 254} width="200" height="254" />

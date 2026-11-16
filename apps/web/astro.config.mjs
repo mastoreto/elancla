@@ -105,11 +105,6 @@ export default defineConfig({
     },
     optimizeDeps: {
       exclude: ['@prisma/client'],
-      esbuildOptions: {
-        supported: {
-          bigint: true,
-        },
-      },
     },
   },
   // Astro 6.0 optimizations

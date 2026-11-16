@@ -8,22 +8,18 @@ export function initHero(root: HTMLElement, isDesktop: boolean): void {
   const ins = hero.querySelectorAll('[data-hero-in]');
   const facts = hero.querySelectorAll('.ln-fact');
   const photo = q<HTMLElement>('[data-hero-photo]');
-  const photoImg = q<HTMLElement>('[data-hero-photo] img');
   const anchorBox = q<HTMLElement>('[data-hero-anchor]');
   const anchorSvg = q<SVGElement>('[data-hero-anchor] svg');
   const outline = q<SVGPathElement>('[data-hero-anchor] [data-anchor-outline]');
   const clip = q<SVGRectElement>('[data-hero-anchor] [data-anchor-clip]');
-  const tag = q<HTMLElement>('[data-hero-tag]');
   const text = q<HTMLElement>('.ln-hero__text');
   const factsBox = q<HTMLElement>('.ln-hero__facts');
   if (
     !photo ||
-    !photoImg ||
     !anchorBox ||
     !anchorSvg ||
     !outline ||
     !clip ||
-    !tag ||
     !text ||
     !factsBox
   )
@@ -34,7 +30,6 @@ export function initHero(root: HTMLElement, isDesktop: boolean): void {
   gsap.set(photo, { opacity: 0, y: 22 });
   gsap.set(outline, { strokeDashoffset: 1 });
   gsap.set(clip, { attr: { y: 254 } });
-  gsap.set(tag, { opacity: 0, y: 8 });
 
   const intro = gsap.timeline({ paused: true });
   intro
@@ -61,9 +56,8 @@ export function initHero(root: HTMLElement, isDesktop: boolean): void {
       { strokeDashoffset: 0, duration: 2.6, ease: 'power2.inOut' },
       0.5
     )
-    .to(clip, { attr: { y: 0 }, duration: 2.4, ease: 'power2.inOut' }, 2.6)
-    .to(tag, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.8)
-    .to(tag, { opacity: 0, duration: 0.7 }, 4.4);
+    .to(clip, { attr: { y: 0 }, duration: 2.4, ease: 'power2.inOut' }, 2.6);
+
   whenUnlocked(() => intro.play());
 
   // ponytail: gentle float only starts after the forge, like the design (loops forever).
@@ -82,7 +76,7 @@ export function initHero(root: HTMLElement, isDesktop: boolean): void {
     end: 'bottom top',
     scrub: true,
   };
-  gsap.to(photoImg, { yPercent: -10, ease: 'none', scrollTrigger: scrub });
+  // The columns drift on their own (CSS); only the foreground leaves on scroll.
   if (!isDesktop) return; // stacked layout: the anchor sits inside the photo and nothing drifts away
   gsap.to(anchorBox, { y: -140, ease: 'none', scrollTrigger: scrub });
   gsap.to(text, {

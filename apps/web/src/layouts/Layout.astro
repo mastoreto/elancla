@@ -44,8 +44,8 @@ interface Props {
   breadcrumbs?: SEOBreadcrumb[];
   article?: SEOArticleMeta;
   locale?: Locale;
-  /** Render the shared footer (the landing has its own closing strip). */
-  footer?: boolean;
+  /** Render the shared footer; `dark` is the landing variant (it follows the red closing). */
+  footer?: boolean | 'dark';
 }
 
 const {
@@ -323,7 +323,7 @@ if (pageType === 'article' && article) {
           <main class="max-w-full flex flex-col relative overflow-clip">
             <slot />
           </main>
-          {footer && <Footer locale={locale} />}
+          {footer && <Footer locale={locale} variant={footer === 'dark' ? 'dark' : 'red'} social={site.social} />}
         </>
       ) : (
         <SiteStatusScreen status={site.status} locale={locale} contactEmail={site.contactEmail} />
