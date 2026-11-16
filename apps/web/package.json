@@ -21,6 +21,7 @@
     "@astrojs/react": "7.1.9",
     "@astrojs/sitemap": "3.7.5",
     "@astrojs/ts-plugin": "1.11.0",
+    "@astrojs/vercel": "11.0.22",
     "@iconify-json/fa6-brands": "^1.2.5",
     "@iconify-json/fa6-solid": "^1.2.3",
     "@iconify-json/mdi": "^1.2.3",
