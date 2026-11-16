@@ -4,21 +4,17 @@ interface Props {
 }
 
 const { solas } = Astro.props;
+// Two identical groups: the track slides by exactly one group (-50%) for a seamless loop.
+const group = [...solas, ...solas, ...solas];
 ---
 
-<section class="border-y border-ink/10 py-5 overflow-hidden bg-paper">
-  <div class="marquee whitespace-nowrap font-display italic text-2xl md:text-4xl text-ink/70">
-    {solas.map((s) => (
-      <>
-        <span class="px-6">{s}</span>
-        <span class="px-6 text-primary">✦</span>
-      </>
-    ))}
-    {solas.map((s) => (
-      <>
-        <span class="px-6">{s}</span>
-        <span class="px-6 text-primary">✦</span>
-      </>
-    ))}
+<div class="cf-marquee">
+  <div class="cf-marquee__track">
+    <ul class="cf-marquee__group">
+      {group.map((s) => <li class="cf-marquee__item">{s}</li>)}
+    </ul>
+    <ul class="cf-marquee__group" aria-hidden="true">
+      {group.map((s) => <li class="cf-marquee__item">{s}</li>)}
+    </ul>
   </div>
-</section>
+</div>
