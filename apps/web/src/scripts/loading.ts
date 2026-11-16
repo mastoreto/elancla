@@ -7,8 +7,12 @@ const ROUTE_TIMEOUT_MS = 6000;
 
 type WindowWithLoader = typeof window & { __elanclaLoader?: boolean };
 
+/** `home` plays the full intro and the anchor flight; every other page gets a short, flight-free loader. */
+type Mode = 'home' | 'page';
+const modeFor = (pathname: string): Mode => (/^\/(pt|en)?\/?$/.test(pathname) ? 'home' : 'page');
+
 /**
- * Anchor intro: the anchor is drawn and forged on a dark ground, the ground fades while the page is
+ * Two loaders. Home: the anchor is drawn and forged on a dark ground, the ground fades while the page is
  * released, and the anchor turns red; as the visitor scrolls it flies to the nav logo. Plays on the first visit (full) and on
  * every page change (short: covers the old page, waits for the new one, then reveals it).
  */
@@ -40,7 +44,7 @@ export function initLoadingOverlay(): void {
     }
   };
   const idleGround = () => {
-    root.classList.remove('site-loader-pending', 'site-loader-lock');
+    root.classList.remove('site-loader-pending', 'site-loader-lock', 'site-loader-page');
     ground?.classList.remove('is-active');
   };
   const idle = () => {
@@ -57,7 +61,11 @@ export function initLoadingOverlay(): void {
   const navLogo = () => document.querySelector<HTMLElement>('[data-nav-anchor]');
   // Only the home has a hero anchor for the intro anchor to replace and carry to the header.
   const isHome = () => !!document.querySelector('.ln-hero__anchor svg');
-  const release = () => root.classList.remove('site-loader-lock', 'site-loader-pending');
+  const release = () => root.classList.remove('site-loader-lock', 'site-loader-pending', 'site-loader-page');
+  const setMode = (mode: Mode) => {
+    els.ground.dataset.mode = mode;
+    els.anchor.dataset.mode = mode;
+  };
 
   let flight: gsap.core.Tween | undefined;
   let settle: gsap.core.Tween | undefined;
@@ -127,7 +135,7 @@ export function initLoadingOverlay(): void {
     }
   };
 
-  /** Ground fades out, the page is released, the anchor turns red and flies to the nav logo. */
+  /** Home: ground fades out, the page is released, the anchor turns red and flies to the nav logo. */
   const reveal = (tl: gsap.core.Timeline, at: number) => {
     const logo = navLogo();
     tl.call(() => logo && isHome() && gsap.set(logo, { opacity: 0 }), [], at)
@@ -138,7 +146,23 @@ export function initLoadingOverlay(): void {
       .set({}, {}, at + 2.2);
   };
 
-  const resetStage = (groundOpacity: number) => {
+  /** Other pages: no flight. Ground and small anchor fade out over the loaded page; the header logo stays put. */
+  const revealPage = (tl: gsap.core.Timeline, at: number) => {
+    tl.call(
+      () => {
+        const logo = navLogo();
+        if (logo) gsap.set(logo, { clearProps: 'opacity' });
+        release();
+      },
+      [],
+      at
+    )
+      .to([els.ground, els.anchor], { opacity: 0, duration: 0.4, ease: 'power2.inOut' }, at)
+      .call(idle, [], at + 0.4);
+  };
+
+  const resetStage = (groundOpacity: number, mode: Mode) => {
+    setMode(mode);
     els.ground.classList.add('is-active');
     els.anchor.classList.add('is-active');
     root.classList.add('site-loader-lock'); // hold the hero + Lenis until the ground fades
@@ -146,11 +170,38 @@ export function initLoadingOverlay(): void {
     gsap.set(els.outline, { strokeDashoffset: 1 });
     gsap.set(els.clip, { attr: { y: 254 } });
     gsap.set(els.cap, { opacity: 0, y: 8 });
-    gsap.set(els.anchor, { x: 0, y: 0, scale: 1, opacity: 1, color: CREAM, transformOrigin: '0 0' });
+    gsap.set(els.anchor, {
+      x: 0,
+      y: 0,
+      scale: 1,
+      opacity: mode === 'home' ? 1 : 0,
+      color: mode === 'home' ? CREAM : RED,
+      transformOrigin: '0 0',
+    });
   };
 
+  /** Short loader of the non-home pages: the small anchor is drawn and filled on a light ground. */
+  const drawPageAnchor = (tl: gsap.core.Timeline, draw: number, fill: number) =>
+    tl
+      .to(els.ground, { opacity: 1, duration: 0.2, ease: 'power2.out' }, 0)
+      .to(els.anchor, { opacity: 1, duration: 0.2 }, 0)
+      .to(els.outline, { strokeDashoffset: 0, duration: draw, ease: 'power2.inOut' }, 0.05)
+      .to(els.clip, { attr: { y: 0 }, duration: fill, ease: 'power2.inOut' }, 0.05 + draw * 0.55);
+
   const playFirstVisit = () => {
-    resetStage(1);
+    if (modeFor(location.pathname) === 'page') {
+      resetStage(1, 'page');
+      const tl = gsap.timeline({
+        onComplete: () => {
+          idle();
+          remember();
+        },
+      });
+      drawPageAnchor(tl, 0.6, 0.45);
+      revealPage(tl, 1.1);
+      return;
+    }
+    resetStage(1, 'home');
     const logo = navLogo();
     if (logo && isHome()) gsap.set(logo, { opacity: 0 });
     const tl = gsap.timeline({
@@ -167,6 +218,7 @@ export function initLoadingOverlay(): void {
   };
 
   let routeRunning = false;
+  let routeMode: Mode = 'home';
   let coverDone = false;
   let pageReady = false;
   let routeTimeout: number | undefined;
@@ -176,27 +228,33 @@ export function initLoadingOverlay(): void {
     routeRunning = false;
     window.clearTimeout(routeTimeout);
     const tl = gsap.timeline({ onComplete: idleGround });
-    reveal(tl, 0);
+    if (routeMode === 'home') reveal(tl, 0);
+    else revealPage(tl, 0);
   };
 
-  const playRouteCover = () => {
+  /** The loader that covers the old page depends on where the visitor is going. */
+  const playRouteCover = (event: Event) => {
     if (routeRunning) return;
     routeRunning = true;
     coverDone = false;
     pageReady = false;
+    routeMode = modeFor((event as Event & { to?: URL }).to?.pathname ?? location.pathname);
     killFlight();
-    resetStage(0);
-    gsap
-      .timeline({
-        onComplete: () => {
-          coverDone = true;
-          playReveal();
-        },
-      })
-      .to(els.ground, { opacity: 1, duration: 0.35, ease: 'power2.out' }, 0)
-      .to(els.outline, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, 0.15)
-      .to(els.clip, { attr: { y: 0 }, duration: 0.6, ease: 'power2.inOut' }, 0.5)
-      .to(els.cap, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0.3);
+    resetStage(0, routeMode);
+    const tl = gsap.timeline({
+      onComplete: () => {
+        coverDone = true;
+        playReveal();
+      },
+    });
+    if (routeMode === 'home') {
+      tl.to(els.ground, { opacity: 1, duration: 0.35, ease: 'power2.out' }, 0)
+        .to(els.outline, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, 0.15)
+        .to(els.clip, { attr: { y: 0 }, duration: 0.6, ease: 'power2.inOut' }, 0.5)
+        .to(els.cap, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0.3);
+    } else {
+      drawPageAnchor(tl, 0.45, 0.35);
+    }
     // Never leave the page covered if the navigation stalls or fails.
     routeTimeout = window.setTimeout(() => {
       pageReady = true;
