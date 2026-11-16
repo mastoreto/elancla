@@ -21,6 +21,7 @@ export function initGod(root: HTMLElement, isDesktop: boolean): void {
       start: 'top top',
       end: isDesktop ? '+=170%' : '+=140%', // ~1.7 screens: the statement reads in one deliberate gesture
       pin: true,
+      toggleClass: { targets: sec, className: 'is-pinned' },
       scrub: 0.6,
       anticipatePin: 1,
     },

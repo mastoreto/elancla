@@ -1,6 +1,10 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
+  "futureFlags": {
+    "affectedUsingTaskInputs": true,
+    "watchUsingTaskInputs": true
+  },
   "globalDependencies": ["**/.env.production", "**/.env.development", "**/.env.local"],
   "tasks": {
     "build": {

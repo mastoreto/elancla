@@ -2,6 +2,7 @@
 import cn from '../utils/cn.ts';
 import AnchorMark from './AnchorMark.astro';
 import MobileMenu from './MobileMenu.astro';
+import LogoText from './LogoText.astro';
 import type { Locale } from 'src/i18n/config';
 import type { SiteStatus } from '@ancla/content';
 import { getMessages } from 'src/i18n/messages';
@@ -34,7 +35,7 @@ const styles = {
     'fixed top-0 left-0 right-0 z-50 pointer-events-none'
   ),
   wrapper: cn(
-    'mx-auto max-w-[1600px] px-6 md:px-10 pt-6'
+    'mx-auto max-w-[1600px] px-6 md:px-10 lg:px-6 xl:px-10 pt-6'
   ),
   nav: cn(
     'pointer-events-auto flex items-center justify-between',
@@ -42,13 +43,11 @@ const styles = {
     'bg-paper/80 backdrop-blur-xl',
     'px-5 md:px-6 py-3 transition-all duration-500'
   ),
-  logoLink: cn('flex items-center gap-3'),
+  logoLink: cn('flex shrink-0 items-center gap-3'),
   logoImg: cn('w-7 h-7 object-contain'),
-  logoLabel: cn('text-[6.8px] tracking-[0.22em] font-futura font-semibold text-ink/60'),
-  logoName: cn('font-display text-[17px] tracking-tight font-futura-bold font-semibold leading-none uppercase'),
-  navList: cn('hidden lg:flex items-center gap-9 font-ui text-[13px] font-medium text-ink/80'),
-  actions: cn('flex items-center gap-3'),
-  liveChip: cn('hidden md:flex items-center gap-2 text-[11px] font-ui font-medium text-ink/60 uppercase tracking-wider'),
+  navList: cn('hidden lg:flex items-center gap-5 xl:gap-9 whitespace-nowrap font-ui text-[13px] font-medium text-ink/80'),
+  actions: cn('flex items-center gap-2 xl:gap-3'),
+  liveChip: cn('hidden xl:flex items-center gap-2 text-[11px] font-ui font-medium text-ink/60 uppercase tracking-wider'),
   liveDot: cn('w-1.5 h-1.5 rounded-full bg-primary live-dot'),
   iconBtn: cn(
     isOnline ? 'hidden sm:inline-flex' : 'inline-flex',
@@ -85,10 +84,7 @@ const styles = {
         <span data-nav-anchor class="inline-flex">
           <AnchorMark id="nav" color="#a8141b" strokeWidth={60} class="h-8 w-[25px] flex-none" />
         </span>
-        <div class="leading-none">
-          <div class={styles.logoLabel}>{copy.brandLabel}</div>
-          <div class={styles.logoName}>{copy.brandName}</div>
-        </div>
+        <LogoText label={copy.brandLabel} name={copy.brandName} class="text-[17px]" />
       </a>
 
       {isOnline && (
