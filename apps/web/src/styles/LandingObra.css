@@ -114,12 +114,6 @@
   filter: drop-shadow(0 22px 36px rgba(21, 21, 21, 0.25));
 }
 .ln-hero__anchor svg { width: 100%; height: auto; display: block; }
-.ln-hero__tag {
-  position: absolute; left: 70%; top: 10%;
-  background: #fff; border-radius: 999px; padding: 8px 14px;
-  font-family: var(--ln-sans-b); font-size: 0.875rem; white-space: nowrap;
-  box-shadow: 0 10px 24px -16px rgba(21, 21, 21, 0.5);
-}
 .ln-hero__facts { position: absolute; z-index: 4; left: var(--ln-pad); bottom: 3rem; display: flex; gap: 10px; }
 .ln-fact {
   background: #fff; border-radius: 24px; padding: 14px 20px;
@@ -336,7 +330,6 @@
     width: 200px; margin: 0 0 3rem 3rem; z-index: 3;
     filter: drop-shadow(0 22px 36px rgba(21, 21, 21, 0.35));
   }
-  .ln-hero__tag { display: block; left: 95%; top: 10px; color: var(--ln-ink); }
   .ln-hero__facts { grid-area: facts; position: relative; left: auto; bottom: auto; flex-wrap: wrap; }
 
   /* 2 · God */
@@ -412,7 +405,6 @@
   .ln-hero__lead { font-size: 1.0625rem; }
   .ln-hero__photo { height: 330px; border-radius: 32px; }
   .ln-hero__anchor { width: 130px; margin: 0 0 1.5rem 1.5rem; }
-  .ln-hero__tag { left: 92%; }
 
   .ln-god { padding: 5.5rem 1.5rem; gap: 2rem; }
   .ln-god__text { font-size: 2.5rem; }
@@ -473,6 +465,5 @@
 .ln.is-static .ln-doc__list strong { font-family: var(--ln-brand); font-weight: 900; color: var(--ln-red-live); }
 .ln.is-static .ln-doc__foot { margin-top: 2rem; }
 .ln.is-static .ln-row__d { opacity: 1; }
-.ln.is-static .ln-hero__tag { display: none; }
 .ln-end__foot .brand { flex-wrap: wrap; }
 .ln-end__foot .brand b { white-space: nowrap; }
