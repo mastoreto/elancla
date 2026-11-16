@@ -1,12 +1,12 @@
 ---
 import AnchorMark from './AnchorMark.astro';
+import LogoText from './LogoText.astro';
 ---
 
 <!-- First-visit intro: the anchor is drawn and forged on a dark ground, then flies to the nav logo. -->
 <div class="site-loader" role="status" aria-label="Cargando el sitio" data-site-loader transition:persist>
   <div class="ldr-cap" data-ldr-cap>
-    <span>IGLESIA BAUTISTA</span>
-    <b>EL ANCLA</b>
+    <LogoText label="Iglesia Bautista" name="El Ancla" class="text-[26px]" />
   </div>
 </div>
 <div class="ldr-anchor" aria-hidden="true" data-ldr-anchor transition:persist>
