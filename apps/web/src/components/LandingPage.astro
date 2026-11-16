@@ -18,7 +18,10 @@ const { locale } = Astro.props;
 const copy = getMessages(locale);
 const site = Astro.locals.site ?? (await getSiteConfig());
 const street = site.address.street;
-const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${site.geo.latitude},${site.geo.longitude}`;
+const coords = `${site.geo.latitude},${site.geo.longitude}`;
+// Directions open Google Maps with the church as destination, ready to start the trip.
+const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${coords}`;
+const embedUrl = `https://www.google.com/maps?ll=${coords}&z=17&output=embed`;
 ---
 
 <Layout
@@ -34,7 +37,7 @@ const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${site.geo.lati
     <Doctrines copy={copy.landing.doctrines} locale={locale} />
     <Together copy={copy.landing.together} locale={locale} />
     <Sunday copy={copy.landing.sunday} street={street} mapsUrl={mapsUrl} email={site.contactEmail} />
-    <Closing copy={copy.landing.closing} street={street} mapsUrl={mapsUrl} social={site.social} />
+    <Closing copy={copy.landing.closing} street={street} mapsUrl={mapsUrl} embedUrl={embedUrl} social={site.social} />
   </div>
 </Layout>
 

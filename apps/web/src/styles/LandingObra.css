@@ -295,8 +295,8 @@
 .ln-soc svg { width: 22px; height: 22px; }
 .ln-end__card { background: #fff; color: var(--ln-ink); border-radius: 40px; overflow: hidden; display: flex; flex-direction: column; }
 .ln-end__map { position: relative; aspect-ratio: 580 / 396; }
-.ln-end__map svg { display: block; width: 100%; height: 100%; }
-.ln-end__map-note { position: absolute; left: 16px; top: 16px; background: #fff; border-radius: 999px; padding: 7px 12px; font-family: var(--ln-sans-b); font-size: 0.75rem; color: #4a4a48; box-shadow: 0 6px 16px -10px rgba(21, 21, 21, 0.5); }
+.ln-end__frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+.ln-end__pin-svg { position: absolute; left: 50%; top: 50%; width: 84px; height: 100px; transform: translate(-50%, -84%); pointer-events: none; overflow: visible; }
 .ln-end__addr { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 24px 24px 24px 28px; flex-wrap: wrap; }
 .ln-end__addr b { display: block; font-family: var(--ln-sans-b); font-size: 1.1875rem; line-height: 1.3; }
 .ln-end__addr span { font-size: 0.9375rem; color: #4a4a48; }
