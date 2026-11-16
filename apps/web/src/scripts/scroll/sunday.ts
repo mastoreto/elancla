@@ -41,7 +41,7 @@ export function initSunday(root: HTMLElement, isDesktop: boolean): void {
     ScrollTrigger.create({
       trigger: sec,
       start: 'top top',
-      end: '+=180%',
+      end: '+=110%',
       pin: true,
       anticipatePin: 1,
       onUpdate: (self) =>

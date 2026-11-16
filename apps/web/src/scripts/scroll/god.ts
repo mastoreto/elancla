@@ -19,7 +19,7 @@ export function initGod(root: HTMLElement, isDesktop: boolean): void {
     scrollTrigger: {
       trigger: sec,
       start: 'top top',
-      end: isDesktop ? '+=250%' : '+=200%',
+      end: isDesktop ? '+=170%' : '+=140%', // ~1.7 screens: the statement reads in one deliberate gesture
       pin: true,
       scrub: 0.6,
       anticipatePin: 1,
