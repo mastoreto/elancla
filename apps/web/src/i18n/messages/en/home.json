@@ -1,0 +1,24 @@
+{
+  "seo": {
+    "title": "El Ancla Baptist Church",
+    "description": "El Ancla Baptist Church in Montevideo, Uruguay. A gospel-centered Christian community. Sunday services at 11:15 AM at Av. Luis A. de Herrera 3101.",
+    "keywords": ["El Ancla Baptist Church", "Baptist church Montevideo", "evangelical church Uruguay", "Christian church Montevideo", "Sunday service Montevideo", "Av. Herrera 3101", "Hebrews 6:19"]
+  },
+  "hero": {
+    "location": "Montevideo · Uruguay",
+    "founded": "Founded · MCMXCVII",
+    "titleLines": ["A church", "anchored in", "the gospel."],
+    "emphasis": "anchored",
+    "body": "We are a Baptist Christian community in the heart of Montevideo. We believe in grace, the Word, and the family of faith.",
+    "primaryCta": "Learn more",
+    "secondaryCta": "Latest sermons",
+    "scroll": "Discover",
+    "schedule": [
+      { "label": "01 · Sundays", "time": "11:15", "description": "Worship service" },
+      { "label": "02 · Sundays", "time": "10:00", "description": "Bible school" },
+      { "label": "03 · Wednesdays", "time": "19:00", "description": "Prayer meeting" },
+      { "label": "Live", "time": "YouTube", "description": "Sunday stream" }
+    ]
+  },
+  "marquee": { "words": ["Grace", "Word", "Community", "Mission", "Prayer", "Family"] }
+}

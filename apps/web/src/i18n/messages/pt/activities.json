@@ -1,0 +1,12 @@
+{
+  "counter": "[ 02 — Atividades ]",
+  "headline": { "before": "A fé ", "emphasis": "em ação", "after": ", toda semana." },
+  "lead": "Uma igreja viva é uma igreja ativa, que se edifica e serve sua comunidade. Por meio de obras de amor e encontros concretos, traduzimos a fé em passos reais.",
+  "calendarCta": "Ver calendário completo",
+  "items": [
+    { "num": "01", "title": "Culto de celebração", "tag": "Presencial · Online", "day": "Domingos", "time": "11:15 h" },
+    { "num": "02", "title": "Escola bíblica", "tag": "Adultos · Crianças", "day": "Domingos", "time": "10:00 h" },
+    { "num": "03", "title": "Reunião de oração", "tag": "1ª e 3ª quarta", "day": "Quartas", "time": "19:00 h" },
+    { "num": "04", "title": "Grupos de crescimento", "tag": "Em casas", "day": "Vários dias", "time": "Consultar" }
+  ]
+}

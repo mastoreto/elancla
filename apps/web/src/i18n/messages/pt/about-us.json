@@ -1,0 +1,22 @@
+{
+  "counter": "[ 01 — Sobre nós ]",
+  "headline": { "before": "Obrigado por querer ", "emphasis": "nos conhecer." },
+  "lead": "Conhecer uma igreja é um grande desafio nestes tempos. Esperamos que as informações aqui ajudem você a ter uma visão mais clara de quem somos e do que cremos. Você é bem-vindo para nos visitar quando quiser.",
+  "primaryCta": "Nossa história",
+  "secondaryCta": "O que cremos",
+  "pillars": [
+    { "num": "I.", "title": "Centrados em Cristo", "desc": "A cruz está no centro de tudo o que fazemos." },
+    { "num": "II.", "title": "Fiéis à Palavra", "desc": "A Escritura é nossa autoridade e guia." },
+    { "num": "III.", "title": "Família da fé", "desc": "Crescer juntos em amor e serviço." }
+  ],
+  "stats": [
+    { "value": "29", "label": "Anos em Montevidéu" },
+    { "value": "10", "label": "Ministérios ativos" },
+    { "value": "∞", "label": "Graça abundante" }
+  ],
+  "imageAlt": "Nossa casa",
+  "imageLabel": "Av. Luis A. de Herrera 3101",
+  "imageTitle": "Nossa casa",
+  "pastorLabel": "Pastoreada por",
+  "pastorName": "Pr. Juan Olivera"
+}

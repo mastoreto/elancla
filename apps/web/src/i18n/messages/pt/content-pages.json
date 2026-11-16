@@ -1,0 +1,205 @@
+{
+  "nosotros": {
+    "routeGroup": "root",
+    "slug": "nosotros",
+    "title": "Sobre nós",
+    "seoTitle": "Sobre nós | Igreja Batista El Ancla",
+    "description": "Conheça quem somos, em que cremos e como vivemos a fé como Igreja Batista El Ancla em Montevidéu.",
+    "hero": {
+      "breadcrumbs": [
+        { "label": "El Ancla", "href": "/" },
+        { "label": "Sobre nós" }
+      ],
+      "chip": "Igreja",
+      "meta": ["Sec. 01 / Sobre nós", "Montevidéu · UY"],
+      "titleLines": [
+        { "text": "Uma igreja com" },
+        { "emphasis": "âncora", "after": " no" },
+        { "text": "evangelho." }
+      ],
+      "standfirst": "Conhecer uma igreja é um grande desafio nestes tempos. Esperamos que as informações aqui ajudem você a entender quem somos, em que cremos e como vivemos a fé em Montevidéu desde 1997.",
+      "stats": [
+        { "value": "29", "label": "Anos" },
+        { "value": "10", "label": "Ministérios" },
+        { "value": "∞", "label": "Graça" }
+      ]
+    },
+    "featuredImage": {
+      "src": "/images/homebanner.jpeg",
+      "alt": "Casa da Igreja Batista El Ancla em Montevidéu",
+      "label": "[ FIG.01 ]",
+      "caption": "Casa da igreja · Av. Dr. Luis A. de Herrera 3101 esq. Juan Arrieta.",
+      "badge": "Av. L. A. de Herrera 3101",
+      "meta": "— Montevidéu · UY",
+      "aspect": "wide"
+    },
+    "shortcuts": [
+      { "label": "Confissão de fé", "href": "/confesion-de-fe" },
+      { "label": "Ministérios", "href": "/#ministerios" },
+      { "label": "Como nos visitar", "href": "/#visitanos" },
+      { "label": "Blog", "href": "/blog" }
+    ],
+    "sections": [
+      {
+        "id": "identidad",
+        "eyebrow": "01 — Identidade",
+        "tocLabel": "Quem somos",
+        "title": { "before": "Obrigado por querer ", "emphasis": "nos conhecer." },
+        "blocks": [
+          {
+            "type": "prose",
+            "paragraphs": [
+              "Somos uma <strong>comunidade cristã batista</strong> no coração de Montevidéu. Reunimo-nos há quase três décadas ao redor da Palavra, dos sacramentos e da oração. Não somos uma igreja perfeita — nem queremos ser — mas uma igreja honesta, que procura viver o evangelho no cotidiano.",
+              "Nosso nome vem de <strong>Hebreus 6:19</strong>: «temos esta esperança como âncora da alma, firme e segura». Essa imagem resume bem quem somos: pessoas comuns agarradas àquilo que nos sustenta quando as circunstâncias se movem."
+            ]
+          },
+          { "type": "verse", "reference": "Hebreus 6 · 19", "text": "Temos esta esperança como âncora da alma, firme e segura, a qual adentra o santuário interior." }
+        ]
+      },
+      {
+        "id": "valores",
+        "eyebrow": "02 — Confissão",
+        "tocLabel": "O que cremos",
+        "title": { "before": "Três convicções que nos ", "emphasis": "ordenam." },
+        "description": "Uma igreja não se define apenas pelo que diz crer, mas pelo que organiza sua vida. Estas são as três convicções que, na prática, orientam quase tudo o que fazemos.",
+        "blocks": [
+          {
+            "type": "values",
+            "values": [
+              { "number": "I.", "title": "Centrados em Cristo", "description": "A cruz e a ressurreição não são temas entre outros: são o centro da nossa pregação, do nosso canto e do nosso cuidado pastoral." },
+              { "number": "II.", "title": "Fiéis à Palavra", "description": "As Escrituras são nossa autoridade final em doutrina e prática. Por isso pregamos textos inteiros, não apenas versículos soltos." },
+              { "number": "III.", "title": "Família da fé", "description": "Crescemos juntos em hospitalidade, serviço e oração. A fé se aprende caminhando com outros, não sozinhos." }
+            ],
+            "note": { "label": "Nota · Confissão", "html": "Se quiser ler em detalhe o que cremos, escrevemos uma <a href=\"/confesion-de-fe\">Confissão de Fé</a> organizada em doze artigos. É a versão longa e cuidadosa do que resumimos aqui em três palavras." }
+          }
+        ]
+      },
+      {
+        "id": "historia",
+        "eyebrow": "03 — Caminho",
+        "tocLabel": "Nossa história",
+        "title": { "before": "Da Misión Distrito Este ", "emphasis": "a El Ancla." },
+        "description": "Primeira etapa da nossa história: o caminho que vai da missão que deu origem à congregação até a propriedade da La Blanqueada e o nome que, com o tempo, passaria a nos identificar.",
+        "blocks": [
+          {
+            "type": "timeline",
+            "items": [
+              { "year": "1945", "title": "Iglesia Bautista Distrito Este", "description": "Em 23 de dezembro a congregação adota esse nome e se consolida como igreja independente." },
+              { "year": "1946", "title": "Juan Antonio Louise", "description": "Assume o pastorado; nos anos seguintes sucedem-se diversos pastorados breves." },
+              { "year": "1969", "title": "Chega Donato Ferranty", "description": "Cerca de vinte anos à frente da congregação: estabilidade e continuidade." },
+              { "year": "1984", "title": "Nasce a Misión El Ancla", "description": "A nova missão começa a funcionar na propriedade do bairro La Blanqueada." },
+              { "year": "1989", "title": "Falece o Pr. Ferranty", "description": "Encerra-se uma etapa decisiva para a consolidação e o crescimento da igreja." },
+              { "year": "1990", "title": "Ernesto Dianessi", "description": "Continuidade do trabalho, com ênfase no JEBU e no acompanhamento dos jovens." },
+              { "year": "1991", "title": "61 membros", "description": "Além de um Clube Bíblico com cerca de 30 participantes e um discipulado com outras 10 pessoas." }
+            ]
+          },
+          {
+            "type": "prose",
+            "paragraphs": [
+              "A história da Igreja Batista El Ancla tem suas raízes na <strong>Misión Distrito Este</strong>, que começou como uma extensão da Primeira Igreja Batista, sob a responsabilidade do pastor <strong>Juan Ramón Gómez</strong>. Em <strong>23 de dezembro de 1945</strong> a congregação adotou o nome de <strong>Iglesia Bautista Distrito Este</strong> e se consolidou como igreja independente. Em 1946 assumiu o pastorado <strong>Juan Antonio Louise</strong> e, nos anos seguintes, diferentes pastores estiveram à frente da congregação, geralmente por períodos breves.",
+              "Isso mudou com a chegada de <strong>Donato Ferranty</strong> em 1969, lembrado como uma figura significativa na história da igreja. Diferente dos pastorados anteriores, permaneceu à frente da congregação por aproximadamente vinte anos, oferecendo uma etapa de estabilidade e continuidade. Durante esse período a membresia manteve-se entre <strong>55 e 83 membros</strong>, além das pessoas que participavam regularmente das atividades da igreja sem fazer parte de sua membresia formal.",
+              "Seu ministério caracterizou-se por um forte compromisso com o serviço, o estudo da Bíblia e a formação cristã. Também promoveu a preparação acadêmica e teológica, incentivando aqueles que tinham a possibilidade de continuar seus estudos no seminário. Esse ênfase na formação contribuiu especialmente para a aproximação de muitos jovens e estudantes, favorecendo o desenvolvimento de uma comunidade ativa e comprometida com a vida da igreja.",
+              "Como parte do desejo de estender o trabalho da igreja a outros lugares, durante o pastorado de Ferranty foi adquirida uma propriedade no bairro <strong>La Blanqueada</strong>, onde por volta de 1984 começou a funcionar uma nova missão. Ela recebeu o nome de <strong>«Misión El Ancla»</strong>, inspirado em uma grande âncora que se encontrava na propriedade no momento de sua aquisição. Ao novo espaço também foi transferido o jardim de infância que pertencia à Iglesia Bautista Distrito Este, uma vez que as instalações da Juan Ramón Gómez tornavam-se cada vez mais reduzidas para as diversas atividades que ali se desenvolviam.",
+              "Os primeiros anos da propriedade também fazem parte da memória oral da congregação, por meio de diversos relatos de pastores e líderes sobre experiências incomuns ocorridas no lugar. Com o passar do tempo, esses testemunhos foram relacionados a histórias sobre o uso que a propriedade teria tido anteriormente, e integram as memórias transmitidas por quem participou daqueles primeiros anos da Misión El Ancla.",
+              "Em <strong>1989 faleceu o pastor Donato Ferranty</strong>, encerrando uma etapa de grande importância para a consolidação e o crescimento da igreja. No ano seguinte assumiu o pastorado <strong>Ernesto Dianessi</strong>, que deu continuidade ao trabalho desenvolvido nas décadas anteriores. Seu ministério destacou-se especialmente pelo serviço vinculado ao <strong>JEBU</strong>, pelo acompanhamento dos jovens e por seu compromisso com a vida familiar e comunitária. Durante seu pastorado continuaram a fortalecer-se tanto a Iglesia Bautista Distrito Este como a obra desenvolvida na Misión El Ancla.",
+              "Em <strong>1991</strong> a igreja contava com <strong>61 membros</strong>, além do trabalho da Misión El Ancla, um Clube Bíblico com cerca de 30 participantes e um programa de discipulado integrado por outras 10 pessoas. Para o contexto das igrejas batistas da época, esses números refletiam uma comunidade ativa e um importante desenvolvimento de suas diferentes áreas de trabalho.",
+              "Dessa maneira, o trabalho iniciado como Misión Distrito Este e fortalecido ao longo de décadas foi dando lugar a uma nova etapa na história da comunidade, estreitamente vinculada àquela propriedade da La Blanqueada e ao nome que, com o tempo, passaria a identificá-la: <strong>El Ancla</strong>."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "equipo",
+        "eyebrow": "04 — Equipe",
+        "tocLabel": "Equipe pastoral",
+        "title": { "before": "Quem pastoreia ", "emphasis": "a casa." },
+        "description": "A liderança da igreja é formada por uma equipe plural, que compartilha o ensino, a oração e o cuidado pastoral da congregação.",
+        "blocks": [
+          {
+            "type": "team",
+            "people": [
+              { "initials": "JO", "role": "Pastor principal", "name": "Pr. Juan Olivera", "bio": "No pastorado desde 2007. Conduz a pregação dominical e a série expositiva de Hebreus." },
+              { "initials": "MR", "role": "Pastor associado", "name": "Pr. Martín Recalde", "bio": "Coordena o ensino, os grupos de crescimento e o discipulado de novos crentes.", "tint": "#e6e2d6" },
+              { "initials": "SP", "role": "Presbítero", "name": "Sebastián Pérez", "bio": "Acompanha a pastoral de homens e supervisiona missões locais.", "tint": "#ece6da" },
+              { "initials": "CV", "role": "Diaconisa", "name": "Carolina Vidal", "bio": "Lidera Espaço Mulher e a rede de hospitalidade e cuidado da congregação.", "tint": "#efe9dc" },
+              { "initials": "DA", "role": "Diácono", "name": "Diego Acosta", "bio": "Coordena logística, finanças e serviço dominical da igreja.", "tint": "#e9e4d6" },
+              { "initials": "LN", "role": "Líder de jovens", "name": "Lucía Núñez", "bio": "Acompanha adolescentes e jovens na formação bíblica de menores de 25 anos.", "tint": "#ece5d4" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "enlaces",
+        "eyebrow": "05 — Para seguir",
+        "tocLabel": "Para seguir",
+        "title": { "before": "Se quiser ", "emphasis": "continuar nos conhecendo." },
+        "description": "Alguns links internos e recursos para aprofundar quem somos, o que cremos e o que fazemos durante a semana.",
+        "blocks": [
+          {
+            "type": "linkGrid",
+            "links": [
+              { "href": "/confesion-de-fe", "sourceLabel": "elancla.uy / confissao", "title": "Confissão de Fé — doze artigos", "description": "O detalhe mais amplo das nossas convicções doutrinárias sobre Deus, a Escritura, o evangelho e a igreja.", "meta": "Ler · 12 artigos", "glyph": "C" },
+              { "href": "/#ministerios", "sourceLabel": "elancla.uy / ministerios", "title": "Dez ministérios onde servir", "description": "Cada ministério é um convite: um lugar para crescer, usar seus dons e servir outros em nome de Cristo.", "meta": "Ver lista completa", "glyph": "M", "tint": "#e6e2d4" },
+              { "href": "/blog", "sourceLabel": "elancla.uy / blog", "title": "Blog · reflexões e notas pastorais", "description": "Uma bitácora semanal com sermões, leituras guiadas e notas breves sobre a vida da igreja.", "meta": "Toda terça · 7 min", "glyph": "B", "tint": "#ece5d2" },
+              { "href": "https://youtube.com/@iglesiaelanclauy", "sourceLabel": "youtube · @iglesiaelanclauy", "title": "Sermões em vídeo", "description": "O arquivo completo de sermões dominicais e eventos especiais, transmitidos ao vivo todos os domingos.", "meta": "Abrir canal", "glyph": "Y", "external": true, "tint": "#efe7d4" }
+            ]
+          }
+        ]
+      }
+    ],
+    "cta": {
+      "eyebrow": "[ Próximo passo ]",
+      "title": { "before": "O melhor é ", "emphasis": "vir." },
+      "body": "Conhecer uma igreja acontece caminhando até ela em um domingo de manhã. Esperamos você às 11h15 na Av. Dr. Luis A. de Herrera 3101. Sem códigos, sem requisitos.",
+      "primary": { "label": "Como chegar", "href": "/#visitanos" },
+      "secondary": { "label": "Ver horários da semana", "href": "/#actividades" }
+    }
+  },
+  "ministryTemplate": {
+    "summaries": {
+      "predicacion": "A Palavra exposta fielmente",
+      "servicio": "Mãos que cuidam",
+      "ensenanza": "Crescer em entendimento",
+      "misiones": "Até os confins da terra",
+      "adolescentes": "Raízes na adolescência",
+      "jovenes": "Uma geração para Cristo",
+      "hombres": "Discipulado entre homens",
+      "multimedia": "Contar a história",
+      "alabanza": "Cantar com entendimento"
+    },
+    "fallbackSummary": "Um espaço para crescer e servir juntos",
+    "breadcrumbs": { "home": "El Ancla", "ministries": "Ministérios" },
+    "chip": "Ministério",
+    "metaLocation": "Montevidéu · UY",
+    "titleSuffixBefore": "em ",
+    "titleSuffixEmphasis": "El Ancla.",
+    "standfirst": "Cada ministério é um convite: um lugar para crescer, usar seus dons e servir outros em nome de Cristo.",
+    "figureLabel": "[ MINISTÉRIO ]",
+    "figureMeta": "— Montevidéu · UY",
+    "shortcuts": { "all": "Todos os ministérios", "visit": "Como nos visitar", "confession": "Confissão de fé" },
+    "sections": {
+      "identityEyebrow": "01 — Ministério",
+      "identityToc": "Sobre o ministério",
+      "identityTitleBefore": "{name}: ",
+      "identityDescription": "Esta página usa o template editorial compartilhado para que cada ministério possa crescer com conteúdo próprio sem duplicar estrutura.",
+      "paragraphs": [
+        "O ministério de <strong>{name}</strong> existe para acompanhar a igreja em uma forma concreta de serviço. Hoje deixamos uma base simples e ordenada para publicar seu propósito, atividades, responsáveis e próximos passos.",
+        "A intenção é que cada página de ministério possa evoluir a partir de dados tipados: o conteúdo é adicionado ao registro e o template cuida do design, índice, imagens, links e experiência móvel."
+      ],
+      "values": [
+        { "number": "I.", "title": "Crescer", "description": "Formar pessoas enraizadas em Cristo e na Palavra." },
+        { "number": "II.", "title": "Servir", "description": "Usar dons concretos para cuidar e edificar a igreja." },
+        { "number": "III.", "title": "Acompanhar", "description": "Caminhar com outros com hospitalidade, oração e perseverança." }
+      ],
+      "nextEyebrow": "02 — Próximo passo",
+      "nextToc": "Para conectar",
+      "nextTitleBefore": "Um lugar para ",
+      "nextTitleEmphasis": "servir juntos.",
+      "links": [
+        { "href": "/#ministerios", "sourceLabel": "elancla.uy / ministerios", "title": "Voltar à lista de ministérios", "description": "Explore os outros espaços de serviço e crescimento da igreja.", "meta": "Ver ministérios", "glyph": "M" },
+        { "href": "/#visitanos", "sourceLabel": "elancla.uy / visitenos", "title": "Conhecer-nos em um domingo", "description": "A melhor forma de conectar com um ministério é vir e conversar depois do culto.", "meta": "Domingos · 11:15", "glyph": "V", "tint": "#e6e2d4" }
+      ]
+    },
+    "cta": { "eyebrow": "[ Conectar ]", "titleBefore": "Junte-se a ", "body": "Se quiser conhecer mais sobre este ministério, visite-nos em um domingo ou escreva pelos canais de contato da igreja.", "primary": "Como chegar", "secondary": "Ver ministérios" }
+  }
+}

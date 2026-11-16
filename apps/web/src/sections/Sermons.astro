@@ -1,0 +1,109 @@
+---
+import cn from '../utils/cn.ts';
+
+interface Props {
+  copy: any;
+}
+
+const { copy } = Astro.props;
+
+const styles = {
+  section: cn('relative py-24 md:py-36 overflow-hidden'),
+  container: cn('mx-auto max-w-[1600px] px-6 md:px-10'),
+  sectionHeader: cn('flex items-baseline gap-6 mb-10 md:mb-16'),
+  headerLine: cn('flex-1 h-px bg-ink/15'),
+  topRow: cn('flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12'),
+  headline: cn('font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-tight'),
+  navBtns: cn('flex items-center gap-2'),
+  navBtn: cn(
+    'w-12 h-12 rounded-full border border-ink/15',
+    'flex items-center justify-center',
+    'hover:bg-ink hover:text-paper transition-all duration-500'
+  ),
+  track: cn(
+    'sermon-track flex gap-5 overflow-x-auto snap-x-container scroll-smooth pb-4',
+    '-mx-6 px-6 md:-mx-10 md:px-10'
+  ),
+  card: cn('sermon-card snap-start shrink-0 w-[88%] sm:w-[46%] md:w-[32%] lg:w-[24%] group'),
+  cardThumb: cn('relative overflow-hidden ratio-4-5 bg-ink/5'),
+  cardMeta: cn('mt-4 flex items-start justify-between gap-4'),
+  cardTitle: cn('font-display text-xl leading-tight'),
+  cardSub: cn('font-ui text-[12px] text-ink/50 mt-1'),
+};
+
+---
+
+<!-- SERMONES -->
+<section id="sermones" class={styles.section}>
+  <div class={styles.container}>
+    <div class={styles.sectionHeader}>
+      <span class="section-counter">{copy.counter}</span>
+      <span class={styles.headerLine}></span>
+    </div>
+
+    <div class={styles.topRow}>
+      <h2 class={styles.headline}>
+        {copy.headline.before}<em class="italic text-primary">{copy.headline.emphasis}</em>
+      </h2>
+      <div class={styles.navBtns}>
+        <button id="sermPrev" class={styles.navBtn} aria-label={copy.previous}>
+          <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+            <path d="M10 6H2M2 6L6 2M2 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button id="sermNext" class={styles.navBtn} aria-label={copy.next}>
+          <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+            <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="sermTrack" class={styles.track}>
+      {copy.items.map((s: any) => (
+        <a href="#" class={styles.card}>
+          <div class={styles.cardThumb}>
+            <div
+              class="absolute inset-0 duotone"
+              style={`background: linear-gradient(135deg, ${s.tint}33, ${s.tint}99), url('/images/homebanner.jpeg') center/cover`}
+            ></div>
+            <div class="thumb-img absolute inset-0"></div>
+            <div class="absolute top-4 left-4 right-4 flex items-start justify-between text-white">
+              <div class="font-ui text-[10px] tracking-[0.22em] uppercase font-semibold opacity-90">
+                {s.episode} · {s.serie}
+              </div>
+              <div class="font-ui text-[10px] tracking-[0.18em] uppercase opacity-80">{s.date}</div>
+            </div>
+            <div class="play-btn absolute bottom-4 right-4 w-12 h-12 rounded-full bg-white/95 text-ink flex items-center justify-center">
+              <svg width="12" height="12" viewBox="0 0 10 12" fill="currentColor">
+                <path d="M0 0L10 6L0 12V0Z"/>
+              </svg>
+            </div>
+          </div>
+          <div class={styles.cardMeta}>
+            <div>
+              <div class={styles.cardTitle}>{s.serie}</div>
+              <div class={styles.cardSub}>{s.pastor} · {s.ref}</div>
+            </div>
+            <svg
+              class="shrink-0 mt-1 opacity-40 group-hover:opacity-100 group-hover:text-primary transition"
+              width="14" height="14" viewBox="0 0 12 12" fill="none"
+            >
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  const track = document.getElementById('sermTrack') as HTMLElement;
+  document.getElementById('sermPrev')?.addEventListener('click', () => {
+    track.scrollBy({ left: -track.clientWidth * 0.7, behavior: 'smooth' });
+  });
+  document.getElementById('sermNext')?.addEventListener('click', () => {
+    track.scrollBy({ left: track.clientWidth * 0.7, behavior: 'smooth' });
+  });
+</script>

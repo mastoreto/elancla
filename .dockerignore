@@ -1,0 +1,26 @@
+# Dependencias y artefactos de build (se regeneran dentro de la imagen)
+**/node_modules
+**/.next
+**/dist
+**/.turbo
+
+# Entorno y secretos
+.env
+.env.*
+!.env.example
+
+# Control de versiones y editores
+.git
+.gitignore
+**/.DS_Store
+.vscode
+.idea
+
+# Backups del monorepo
+_premonorepo_git_backup
+
+# Logs
+**/*.log
+
+# Artefactos de WSL/Windows
+**/*:Zone.Identifier

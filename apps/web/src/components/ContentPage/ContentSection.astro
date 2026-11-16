@@ -1,0 +1,52 @@
+---
+import type { ContentSection as ContentSectionData } from 'src/data/contentPages';
+import InlineText from './InlineText.astro';
+import ProseBlock from './blocks/ProseBlock.astro';
+import VerseBlock from './blocks/VerseBlock.astro';
+import ValuesBlock from './blocks/ValuesBlock.astro';
+import TimelineBlock from './blocks/TimelineBlock.astro';
+import PullquoteBlock from './blocks/PullquoteBlock.astro';
+import ContentFigure from './ContentFigure.astro';
+import TeamBlock from './blocks/TeamBlock.astro';
+import LinkGridBlock from './blocks/LinkGridBlock.astro';
+import ContentCTA from './ContentCTA.astro';
+
+interface Props {
+  section: ContentSectionData;
+}
+
+const { section } = Astro.props;
+---
+
+<section id={section.id} class="reveal scroll-mt-32">
+  <div class="flex items-baseline gap-4 mb-8">
+    <span class="content-dot-idx">{section.eyebrow}</span>
+    <span class="flex-1 h-px bg-ink/15"></span>
+  </div>
+  <h2 class="font-display text-[clamp(2rem,5vw,3.6rem)] leading-[0.98] tracking-tight font-normal">
+    <InlineText value={section.title} />
+  </h2>
+  {
+    section.description && (
+      <p class="mt-6 max-w-2xl font-ui text-[16px] leading-relaxed text-ink/70">
+        {section.description}
+      </p>
+    )
+  }
+
+  {
+    section.blocks.map((block) => (
+      <>
+        {block.type === 'prose' && <ProseBlock block={block} />}
+        {block.type === 'verse' && <VerseBlock block={block} />}
+        {block.type === 'values' && <ValuesBlock block={block} />}
+        {block.type === 'timeline' && <TimelineBlock block={block} />}
+        {block.type === 'pullquote' && <PullquoteBlock block={block} />}
+        {block.type === 'figure' && <ContentFigure figure={block.figure} />}
+        {block.type === 'team' && <TeamBlock block={block} />}
+        {block.type === 'linkGrid' && <LinkGridBlock block={block} />}
+        {block.type === 'cta' && <ContentCTA cta={block.cta} />}
+      </>
+    ))
+  }
+</section>

@@ -1,0 +1,104 @@
+---
+import cn from '../utils/cn.ts';
+import type { Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getMessages(locale).footer;
+
+const styles = {
+  footer: cn('relative bg-primary text-white py-20 overflow-hidden'),
+  watermark: cn(
+    'absolute bottom-[-4vw] left-0 right-0 pointer-events-none select-none'
+  ),
+  watermarkText: cn(
+    'font-display italic font-light text-[28vw] leading-[0.8]',
+    'text-white/10 tracking-tighter text-center'
+  ),
+  container: cn('relative mx-auto max-w-[1600px] px-6 md:px-10'),
+  topGrid: cn('grid grid-cols-1 md:grid-cols-12 gap-10 pb-14'),
+  colBrand: cn('md:col-span-4'),
+  brandRow: cn('flex items-center gap-3'),
+  brandLabel: cn('font-ui text-[10px] tracking-[0.22em] font-semibold opacity-80'),
+  brandName: cn('font-display text-2xl'),
+  brandTagline: cn('mt-6 font-ui text-[14px] leading-relaxed opacity-85 max-w-xs'),
+  colLinks: cn('md:col-span-2'),
+  colMinis: cn('md:col-span-3'),
+  colSocial: cn('md:col-span-3'),
+  colLabel: cn('font-ui text-[10px] tracking-[0.25em] uppercase opacity-70 mb-4'),
+  linkList: cn('space-y-2 font-ui text-[13.5px]'),
+  minisGrid: cn('grid grid-cols-2 gap-y-2 font-ui text-[13.5px]'),
+  bottom: cn(
+    'border-t border-white/20 pt-6',
+    'flex flex-col md:flex-row md:items-center md:justify-between gap-3',
+    'font-ui text-[12px] opacity-85'
+  ),
+};
+
+const year = new Date().getFullYear();
+---
+
+<!-- FOOTER -->
+<footer class={styles.footer}>
+  <div class={styles.watermark}>
+    <div class={styles.watermarkText}>El Ancla</div>
+  </div>
+
+  <div class={styles.container}>
+    <div class={styles.topGrid}>
+      <!-- brand -->
+      <div class={styles.colBrand}>
+        <div class={styles.brandRow}>
+          <img src="/images/anclablanco.png" alt="" class="w-10 h-10 object-contain" />
+          <div>
+            <div class={styles.brandLabel}>{copy.brandLabel}</div>
+            <div class={styles.brandName}>{copy.brandName}</div>
+          </div>
+        </div>
+        <p class={styles.brandTagline}>
+          {copy.tagline}
+          <span class="opacity-60">{copy.verse}</span>
+        </p>
+      </div>
+
+      <!-- iglesia -->
+      <div class={styles.colLinks}>
+        <div class={styles.colLabel}>{copy.churchLabel}</div>
+        <ul class={styles.linkList}>
+          {copy.churchLinks.map((l) => (
+            <li><a href="#" class="ulink">{l}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- ministerios -->
+      <div class={styles.colMinis}>
+        <div class={styles.colLabel}>{copy.ministryLabel}</div>
+        <ul class={styles.minisGrid}>
+          {copy.ministryLinks.map((l) => (
+            <li><a href="#" class="ulink">{l}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- redes -->
+      <div class={styles.colSocial}>
+        <div class={styles.colLabel}>{copy.socialLabel}</div>
+        <ul class={styles.linkList}>
+          {copy.socialLinks.map((l) => (
+            <li><a href="#" class="ulink">{l}</a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div class={styles.bottom}>
+      <div>{copy.address}</div>
+      <div>© <span id="year">{year}</span> {copy.copyright}</div>
+    </div>
+  </div>
+</footer>

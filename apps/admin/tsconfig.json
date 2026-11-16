@@ -1,0 +1,22 @@
+{
+  "extends": "../../packages/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@ancla/utils": ["../../packages/utils/src"],
+      "@ancla/content": ["../../packages/content/src"],
+      "@ancla/db": ["../../packages/db/src"],
+      "@ancla/auth": ["../../packages/auth/src/server.ts"],
+      "@ancla/auth/client": ["../../packages/auth/src/client.ts"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
+}

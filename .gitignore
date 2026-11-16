@@ -1,0 +1,50 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+.next/
+out/
+build
+dist/
+.astro/
+
+# Turbo
+.turbo
+
+# Testing
+coverage
+
+# Vercel
+.vercel
+
+# Logs
+*-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS / editor
+.DS_Store
+*.pem
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# Prisma
+packages/db/prisma/*.db
+
+# Windows/WSL download markers
+*:Zone.Identifier
+
+# Local tooling
+.codegraph/
+.codex

@@ -1,0 +1,32 @@
+---
+import type { ContentValuesBlock } from 'src/data/contentPages';
+
+interface Props {
+  block: ContentValuesBlock;
+}
+
+const { block } = Astro.props;
+---
+
+<div class="mt-10">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    {
+      block.values.map((value) => (
+        <div class="content-value-cell">
+          <div class="num mb-3">{value.number}</div>
+          <h3 class="font-display text-2xl mb-3 font-medium">{value.title}</h3>
+          <p class="font-ui text-[14px] leading-relaxed text-ink/70">{value.description}</p>
+        </div>
+      ))
+    }
+  </div>
+
+  {
+    block.note && (
+      <div class="content-aside-note mt-10">
+        <span class="ribbon">{block.note.label}</span>
+        <p class="font-ui text-[15px] leading-relaxed text-ink/80" set:html={block.note.html} />
+      </div>
+    )
+  }
+</div>

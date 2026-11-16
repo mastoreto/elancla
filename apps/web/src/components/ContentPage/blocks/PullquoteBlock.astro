@@ -1,0 +1,14 @@
+---
+import type { ContentPullquoteBlock } from 'src/data/contentPages';
+
+interface Props {
+  block: ContentPullquoteBlock;
+}
+
+const { block } = Astro.props;
+---
+
+<blockquote class="content-pullquote mt-16">
+  {block.quote}
+  {block.cite && <cite>{block.cite}</cite>}
+</blockquote>

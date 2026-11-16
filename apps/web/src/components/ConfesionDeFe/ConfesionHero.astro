@@ -1,0 +1,98 @@
+---
+import cn from 'src/utils/cn';
+import type { Locale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
+
+interface Props {
+  copy: any;
+  locale: Locale;
+}
+
+const { copy, locale } = Astro.props;
+const container = cn('mx-auto max-w-[1600px] px-6 md:px-10');
+---
+
+<section class="relative min-h-[92vh] pt-32 pb-20 overflow-hidden grain">
+  <div class="absolute inset-0 grid-bg opacity-60"></div>
+
+  <!-- Decorative spinning seal (desktop only) -->
+  <div class="hidden lg:block absolute top-[22%] right-[-6%] w-[42vw] h-[42vw] max-w-[680px] max-h-[680px] pointer-events-none opacity-90">
+    <div class="relative w-full h-full">
+      <svg aria-hidden="true" class="absolute inset-0 w-full h-full seal-rot" viewBox="0 0 300 300">
+        <defs>
+          <path id="circlePath" d="M 150,150 m -130,0 a 130,130 0 1,1 260,0 a 130,130 0 1,1 -260,0" />
+        </defs>
+        <text font-family="Inter, sans-serif" font-size="10.5" font-weight="600" letter-spacing="5" fill="currentColor" opacity="0.35">
+          <textPath href="#circlePath">{copy.sealText}</textPath>
+        </text>
+      </svg>
+      <svg aria-hidden="true" class="absolute inset-0 w-full h-full" viewBox="0 0 300 300">
+        <circle cx="150" cy="150" r="90" fill="none" stroke="#141414" stroke-width="0.5" opacity="0.15" />
+        <circle cx="150" cy="150" r="54" fill="none" stroke="#141414" stroke-width="0.5" opacity="0.18" />
+      </svg>
+      <div class="absolute inset-0 flex items-center justify-center anchor-wrap text-primary">
+        <svg
+          aria-hidden="true"
+          class="w-[22%] h-auto object-contain"
+          viewBox="0 0 198 254"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <g transform="translate(0,254) scale(0.1,-0.1)" fill="currentColor" stroke="none">
+            <path d="M915 2510 c-9 -10 -19 -41 -22 -67 -6 -67 -32 -320 -39 -369 l-5 -41 -85 -7 c-204 -17 -554 -85 -626 -122 -38 -20 -36 -48 7 -91 34 -34 38 -35 88 -29 29 3 75 10 102 16 64 12 484 35 491 27 4 -3 2 -82 -5 -174 -20 -302 -33 -733 -29 -976 2 -130 2 -237 1 -237 0 0 -37 64 -80 142 -169 303 -346 565 -438 646 -25 22 -71 52 -101 66 -62 30 -150 53 -160 43 -11 -10 33 -121 101 -258 246 -490 595 -913 871 -1052 l51 -26 20 22 c36 40 137 198 285 447 254 427 409 645 559 784 l71 66 -38 17 c-27 12 -66 18 -124 18 -75 0 -93 -4 -151 -31 -168 -80 -335 -308 -489 -671 -32 -74 -60 -136 -62 -139 -6 -5 -10 31 -38 336 -27 303 -40 551 -40 783 l0 199 143 -6 c215 -10 402 -25 504 -41 103 -17 132 -11 159 30 12 19 15 40 12 81 -5 64 -29 101 -79 126 -54 27 -262 41 -510 36 l-219 -5 6 66 c3 36 10 93 15 126 5 33 9 97 9 143 0 79 -2 85 -29 113 -36 36 -97 41 -126 9z" />
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class={container + ' relative'}>
+    <!-- Breadcrumb -->
+    <div class="flex items-center justify-between mb-10 md:mb-16">
+      <div class="flex items-center gap-3 font-ui text-[11px] tracking-[0.2em] uppercase text-ink/60">
+        <a href={localizePath('/', locale)} class="ulink">{copy.breadcrumbHome}</a>
+        <span class="opacity-50">/</span>
+        <span>{copy.breadcrumbCurrent}</span>
+      </div>
+      <div class="hidden md:block font-ui text-[11px] tracking-[0.2em] uppercase text-ink/60">{copy.meta}</div>
+    </div>
+
+    <div class="max-w-[68rem]">
+      <div class="section-counter mb-8 line-grow origin-left inline-block">{copy.counter}</div>
+      <h1 class="font-display text-[18vw] md:text-[13vw] lg:text-[11vw] leading-[0.88] tracking-[-0.04em] font-light">
+        <span class="hero-line"><span>{copy.titleLines[0]}</span></span>
+        <span class="hero-line"><span><em class="italic font-normal text-primary">{copy.emphasis}</em></span></span>
+        <span class="hero-line"><span>{copy.titleLines[2]}</span></span>
+      </h1>
+
+      <div class="mt-12 md:mt-16 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+        <div class="max-w-xl">
+          <div class="h-px bg-ink/30 line-grow origin-left w-24 mb-5"></div>
+          <p class="font-ui text-[15px] md:text-[17px] leading-relaxed text-ink/75">
+            {copy.body}
+          </p>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="#doctrinas" class="cta-btn btn-primary inline-flex items-center gap-3 rounded-full bg-primary text-white px-7 py-4 font-ui text-[13px] font-semibold tracking-wide uppercase">
+            {copy.primaryCta}
+            <svg class="cta-arrow" width="14" height="14" viewBox="0 0 12 12" fill="none">
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </a>
+          <button id="expandAll" class="hidden md:inline-flex items-center gap-2 font-ui text-[13px] font-semibold tracking-wide uppercase ulink">
+            <span id="expandAllLabel" data-collapsed-label={copy.expandAll} data-expanded-label={copy.collapseAll}>{copy.expandAll}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2">
+      <span class="font-ui text-[10px] tracking-[0.25em] uppercase text-ink/50">{copy.scroll}</span>
+      <span class="block w-px h-10 bg-ink/20 relative overflow-hidden">
+        <span class="block w-px h-full bg-ink scroll-bar"></span>
+      </span>
+    </div>
+  </div>
+</section>

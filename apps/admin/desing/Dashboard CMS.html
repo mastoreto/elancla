@@ -1,0 +1,1510 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>El Ancla — Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Libre+Franklin:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --color-primary: #ff2e34;
+        --color-primary-50: #ffeff0;
+        --color-primary-100: #ffdcdf;
+        --color-primary-500: #ff1f33;
+        --color-primary-700: #db0013;
+        --color-primary-dark: #d91a23;
+
+        --color-canvas: #faf8f5;
+        --color-canvas-muted: #f3f1ec;
+        --color-surface: #ffffff;
+        --color-surface-muted: #f8f7f4;
+        --color-surface-strong: #1f1f1f;
+
+        --color-ink: #1f1f1f;
+        --color-ink-soft: #53443b;
+        --color-ink-muted: #7c6452;
+        --color-ink-inverse: #faf8f5;
+
+        --color-border: rgba(83, 68, 59, 0.16);
+        --color-border-strong: rgba(83, 68, 59, 0.28);
+        --color-border-inverse: rgba(255, 255, 255, 0.12);
+
+        --font-display: "Fraunces", serif;
+        --font-sans: "Libre Franklin", sans-serif;
+        --font-ui: "Inter", sans-serif;
+        --font-mono: "JetBrains Mono", monospace;
+
+        --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        --shadow-elevated: 0 18px 50px -24px rgba(31, 31, 31, 0.28);
+
+        --aside-w: 264px;
+        --aside-w-collapsed: 76px;
+        --header-h: 72px;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      html, body { height: 100%; }
+      body {
+        font-family: var(--font-ui);
+        background: var(--color-canvas);
+        color: var(--color-ink);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow: hidden;  /* shell handles its own scroll */
+      }
+      .font-display { font-family: var(--font-display); font-variation-settings: "opsz" 144; }
+      .font-mono { font-family: var(--font-mono); }
+      a { color: inherit; text-decoration: none; }
+      button { cursor: pointer; font: inherit; color: inherit; background: none; border: none; padding: 0; }
+
+      /* —————————————————— APP SHELL —————————————————— */
+      .app {
+        display: grid;
+        grid-template-columns: var(--aside-w) 1fr;
+        grid-template-rows: var(--header-h) 1fr;
+        grid-template-areas:
+          "aside header"
+          "aside main";
+        height: 100vh;
+        transition: grid-template-columns 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .app.collapsed {
+        grid-template-columns: var(--aside-w-collapsed) 1fr;
+      }
+
+      /* —————————————————— ASIDE —————————————————— */
+      .aside {
+        grid-area: aside;
+        background: var(--color-surface-strong);
+        color: var(--color-ink-inverse);
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid var(--color-border-inverse);
+        position: relative;
+        overflow: hidden;
+      }
+      .aside-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--color-border-inverse);
+        height: var(--header-h);
+        flex-shrink: 0;
+      }
+      .aside-brand-mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: var(--color-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .aside-brand-mark svg { width: 20px; height: 24px; }
+      .aside-brand-text {
+        line-height: 1;
+        overflow: hidden;
+      }
+      .aside-brand-text .kicker {
+        font-size: 9px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(250, 248, 245, 0.55);
+        font-weight: 600;
+        margin-bottom: 5px;
+        white-space: nowrap;
+      }
+      .aside-brand-text .name {
+        font-family: var(--font-display);
+        font-variation-settings: "opsz" 144;
+        font-size: 19px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+      }
+
+      .aside-collapse {
+        position: absolute;
+        right: 14px;
+        top: 22px;
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: rgba(250, 248, 245, 0.06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(250, 248, 245, 0.7);
+        transition: background 0.25s ease, color 0.25s ease;
+        z-index: 2;
+      }
+      .aside-collapse:hover { background: var(--color-primary); color: white; }
+      .aside-collapse svg { transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+      .app.collapsed .aside-collapse svg { transform: rotate(180deg); }
+
+      .aside-search {
+        padding: 16px 18px;
+        flex-shrink: 0;
+      }
+      .aside-search-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 12px;
+        background: rgba(250, 248, 245, 0.05);
+        border: 1px solid rgba(250, 248, 245, 0.08);
+        border-radius: 10px;
+        transition: border-color 0.25s ease, background 0.25s ease;
+      }
+      .aside-search-box:focus-within {
+        border-color: var(--color-primary);
+        background: rgba(250, 248, 245, 0.08);
+      }
+      .aside-search-box svg { color: rgba(250, 248, 245, 0.55); flex-shrink: 0; }
+      .aside-search-box input {
+        flex: 1;
+        min-width: 0;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--color-ink-inverse);
+        font-size: 13px;
+        font-family: var(--font-ui);
+      }
+      .aside-search-box input::placeholder { color: rgba(250, 248, 245, 0.4); }
+      .aside-search-box .kbd {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        padding: 2px 6px;
+        border: 1px solid rgba(250, 248, 245, 0.15);
+        border-radius: 4px;
+        color: rgba(250, 248, 245, 0.5);
+      }
+
+      .aside-nav {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px 12px 24px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(250, 248, 245, 0.15) transparent;
+      }
+      .aside-nav::-webkit-scrollbar { width: 4px; }
+      .aside-nav::-webkit-scrollbar-thumb {
+        background: rgba(250, 248, 245, 0.15);
+        border-radius: 2px;
+      }
+      .aside-section {
+        padding: 14px 10px 8px;
+        font-family: var(--font-mono);
+        font-size: 9.5px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(250, 248, 245, 0.4);
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        color: rgba(250, 248, 245, 0.75);
+        font-size: 13.5px;
+        font-weight: 500;
+        transition: background 0.2s ease, color 0.2s ease;
+        position: relative;
+        white-space: nowrap;
+      }
+      .nav-item:hover { background: rgba(250, 248, 245, 0.05); color: var(--color-ink-inverse); }
+      .nav-item.active {
+        background: var(--color-primary);
+        color: white;
+      }
+      .nav-item.active::before {
+        content: "";
+        position: absolute;
+        left: -12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 22px;
+        background: var(--color-primary);
+        border-radius: 0 3px 3px 0;
+      }
+      .nav-icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .nav-label { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+      .nav-badge {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        padding: 1px 7px;
+        border-radius: 999px;
+        background: rgba(250, 248, 245, 0.1);
+        color: rgba(250, 248, 245, 0.85);
+      }
+      .nav-item.active .nav-badge { background: rgba(255, 255, 255, 0.25); color: white; }
+      .nav-badge.accent {
+        background: var(--color-primary-100);
+        color: var(--color-primary-700);
+      }
+
+      /* Collapsed mode hides text */
+      .app.collapsed .aside-brand-text,
+      .app.collapsed .aside-section,
+      .app.collapsed .nav-label,
+      .app.collapsed .nav-badge,
+      .app.collapsed .aside-search-box input,
+      .app.collapsed .aside-search-box .kbd,
+      .app.collapsed .aside-footer-text,
+      .app.collapsed .aside-collapse {
+        opacity: 0;
+        pointer-events: none;
+        width: 0;
+        overflow: hidden;
+      }
+      .app.collapsed .aside-brand-text,
+      .app.collapsed .aside-footer-text {
+        margin: 0;
+        flex: 0 0 0;
+      }
+      .app.collapsed .aside-brand { padding: 18px 0; justify-content: center; gap: 0; }
+      .app.collapsed .aside-search { padding: 16px 0; display: flex; justify-content: center; }
+      .app.collapsed .aside-search-box {
+        width: 44px;
+        padding: 11px;
+        justify-content: center;
+        gap: 0;
+      }
+      .app.collapsed .aside-nav { padding: 8px 8px 24px; }
+      .app.collapsed .aside-section { padding: 14px 0 4px; height: 16px; }
+      .app.collapsed .nav-item {
+        justify-content: center;
+        padding: 12px 0;
+        gap: 0;
+      }
+      .app.collapsed .nav-item.active::before { left: 0; }
+      .app.collapsed .aside-footer {
+        justify-content: center;
+        padding: 14px 0;
+        gap: 0;
+      }
+
+      .aside-footer {
+        flex-shrink: 0;
+        padding: 14px 18px;
+        border-top: 1px solid var(--color-border-inverse);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 11px;
+        color: rgba(250, 248, 245, 0.5);
+      }
+      .aside-footer-text {
+        flex: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        line-height: 1.3;
+      }
+      .aside-footer-text strong { color: var(--color-ink-inverse); font-weight: 600; }
+      .aside-footer-pulse {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #4ade80;
+        flex-shrink: 0;
+        position: relative;
+      }
+      .aside-footer-pulse::after {
+        content: "";
+        position: absolute;
+        inset: -3px;
+        border-radius: 50%;
+        background: rgba(74, 222, 128, 0.4);
+        animation: pulse 1.8s ease-out infinite;
+      }
+      @keyframes pulse {
+        0% { transform: scale(0.6); opacity: 1; }
+        100% { transform: scale(2.4); opacity: 0; }
+      }
+
+      /* —————————————————— HEADER —————————————————— */
+      .header {
+        grid-area: header;
+        background: var(--color-surface);
+        border-bottom: 1px solid var(--color-border);
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        gap: 20px;
+        z-index: 5;
+      }
+      .header-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        min-width: 0;
+      }
+      .crumb {
+        font-size: 12px;
+        color: var(--color-ink-muted);
+        white-space: nowrap;
+      }
+      .crumb-sep { color: var(--color-border-strong); }
+      .crumb.current {
+        font-family: var(--font-display);
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--color-ink);
+        letter-spacing: -0.01em;
+      }
+      .header-quick-info {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--color-ink-muted);
+        padding: 6px 12px;
+        border: 1px solid var(--color-border);
+        border-radius: 999px;
+      }
+      @media (min-width: 1100px) { .header-quick-info { display: inline-flex; } }
+      .header-quick-info .live-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--color-primary);
+        position: relative;
+      }
+      .header-quick-info .live-dot::after {
+        content: "";
+        position: absolute;
+        inset: -3px;
+        border-radius: 50%;
+        background: rgba(255, 46, 52, 0.35);
+        animation: pulse 1.8s ease-out infinite;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .icon-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-ink-soft);
+        transition: background 0.2s ease, color 0.2s ease;
+        position: relative;
+      }
+      .icon-btn:hover { background: var(--color-canvas-muted); color: var(--color-ink); }
+      .icon-btn .ind {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--color-primary);
+        border: 2px solid var(--color-surface);
+      }
+
+      .header-divider {
+        width: 1px;
+        height: 28px;
+        background: var(--color-border);
+        margin: 0 6px;
+      }
+
+      .header-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px 8px 14px;
+        border-radius: 999px;
+        background: var(--color-ink);
+        color: var(--color-ink-inverse);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        transition: background 0.25s ease, transform 0.25s ease;
+      }
+      .header-cta:hover { background: var(--color-primary); transform: translateY(-1px); }
+
+      .user-chip {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 5px 12px 5px 5px;
+        border-radius: 999px;
+        background: var(--color-canvas-muted);
+        transition: background 0.25s ease;
+      }
+      .user-chip:hover { background: var(--color-canvas); box-shadow: var(--shadow-soft); }
+      .user-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--color-primary), #b70010);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-style: italic;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .user-meta {
+        line-height: 1.15;
+        text-align: left;
+      }
+      .user-meta .name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--color-ink);
+      }
+      .user-meta .role {
+        font-size: 10.5px;
+        color: var(--color-ink-muted);
+      }
+      .user-chip svg.chev { color: var(--color-ink-muted); }
+      @media (max-width: 760px) {
+        .user-meta { display: none; }
+        .user-chip { padding: 5px; }
+      }
+
+      /* —————————————————— MAIN —————————————————— */
+      .main {
+        grid-area: main;
+        overflow-y: auto;
+        background: var(--color-canvas);
+        scroll-behavior: smooth;
+      }
+      .main::-webkit-scrollbar { width: 10px; }
+      .main::-webkit-scrollbar-thumb {
+        background: var(--color-border);
+        border-radius: 999px;
+        border: 3px solid var(--color-canvas);
+      }
+      .main::-webkit-scrollbar-thumb:hover { background: var(--color-border-strong); }
+
+      .main-inner {
+        padding: 28px clamp(20px, 3vw, 36px) 80px;
+        max-width: 1480px;
+        margin: 0 auto;
+      }
+
+      /* —— Page header —— */
+      .page-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 28px;
+        padding-bottom: 22px;
+        border-bottom: 1px solid var(--color-border);
+      }
+      .page-kicker {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--color-ink-muted);
+        margin-bottom: 10px;
+      }
+      .page-title {
+        font-family: var(--font-display);
+        font-variation-settings: "opsz" 144;
+        font-weight: 400;
+        font-size: clamp(28px, 3.4vw, 44px);
+        line-height: 1;
+        letter-spacing: -0.025em;
+        margin: 0;
+      }
+      .page-title em { font-style: italic; color: var(--color-primary); font-weight: 400; }
+      .page-sub {
+        margin-top: 10px;
+        font-size: 14px;
+        color: var(--color-ink-soft);
+        max-width: 540px;
+      }
+      .page-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border: 1px solid var(--color-border);
+        border-radius: 999px;
+        background: var(--color-surface);
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--color-ink-soft);
+        transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+      }
+      .btn-secondary:hover { border-color: var(--color-ink); color: var(--color-ink); }
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: 999px;
+        background: var(--color-primary);
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        transition: background 0.25s ease, transform 0.25s ease;
+      }
+      .btn-primary:hover { background: var(--color-primary-dark); transform: translateY(-1px); }
+
+      /* —— Stats row —— */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1px;
+        background: var(--color-border);
+        border: 1px solid var(--color-border);
+        border-radius: 18px;
+        overflow: hidden;
+        margin-bottom: 28px;
+      }
+      .stat {
+        background: var(--color-surface);
+        padding: 22px 24px;
+        position: relative;
+      }
+      .stat.accent {
+        background: var(--color-surface-strong);
+        color: var(--color-ink-inverse);
+      }
+      .stat .label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--color-ink-muted);
+      }
+      .stat.accent .label { color: rgba(250, 248, 245, 0.6); }
+      .stat .value {
+        font-family: var(--font-display);
+        font-variation-settings: "opsz" 144;
+        font-weight: 400;
+        font-size: 38px;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        margin-top: 16px;
+        font-variant-numeric: tabular-nums;
+      }
+      .stat .delta {
+        margin-top: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11.5px;
+        font-weight: 600;
+      }
+      .stat .delta.up { color: #16a34a; }
+      .stat .delta.down { color: var(--color-primary); }
+      .stat.accent .delta { color: var(--color-primary-100); }
+      .stat .spark {
+        position: absolute;
+        right: 16px;
+        bottom: 14px;
+        width: 80px;
+        height: 28px;
+        opacity: 0.85;
+      }
+
+      /* —— Two-column grid —— */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        gap: 24px;
+        margin-bottom: 28px;
+      }
+      @media (max-width: 1024px) { .grid-2 { grid-template-columns: 1fr; } }
+
+      .card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 18px;
+        padding: 22px 24px;
+      }
+      .card-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--color-border);
+      }
+      .card-title {
+        font-family: var(--font-display);
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: -0.01em;
+      }
+      .card-sub {
+        font-size: 12px;
+        color: var(--color-ink-muted);
+        margin-top: 4px;
+      }
+      .card-link {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--color-ink-soft);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.25s ease;
+      }
+      .card-link:hover { color: var(--color-primary); }
+
+      /* —— Content table (Sermones / posts) —— */
+      .content-row {
+        display: grid;
+        grid-template-columns: 56px 1fr 120px 100px 110px 32px;
+        gap: 14px;
+        align-items: center;
+        padding: 12px 6px;
+        border-bottom: 1px solid var(--color-border);
+        transition: background 0.2s ease;
+      }
+      .content-row:last-child { border-bottom: none; }
+      .content-row:hover { background: var(--color-surface-muted); }
+      .content-row .num {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--color-ink-muted);
+      }
+      .content-row .info { min-width: 0; }
+      .content-row .info .title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--color-ink);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 3px;
+      }
+      .content-row .info .meta {
+        font-size: 11.5px;
+        color: var(--color-ink-muted);
+      }
+      .content-row .author {
+        font-size: 12.5px;
+        color: var(--color-ink-soft);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .content-row .date {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--color-ink-muted);
+      }
+      .pill {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        padding: 4px 10px;
+        border-radius: 999px;
+        display: inline-block;
+        white-space: nowrap;
+      }
+      .pill.published { background: #d1fae5; color: #065f46; }
+      .pill.draft { background: var(--color-canvas-muted); color: var(--color-ink-muted); }
+      .pill.scheduled { background: var(--color-primary-100); color: var(--color-primary-700); }
+      .row-action {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        color: var(--color-ink-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s ease, color 0.2s ease;
+      }
+      .row-action:hover { background: var(--color-canvas-muted); color: var(--color-ink); }
+
+      @media (max-width: 720px) {
+        .content-row { grid-template-columns: 30px 1fr 90px 32px; }
+        .content-row .author, .content-row .date { display: none; }
+      }
+
+      /* —— Side: upcoming events / activity feed —— */
+      .event {
+        display: grid;
+        grid-template-columns: 50px 1fr;
+        gap: 14px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--color-border);
+      }
+      .event:last-child { border-bottom: none; }
+      .event-date {
+        font-family: var(--font-mono);
+        text-align: center;
+        padding-top: 2px;
+      }
+      .event-date .day {
+        font-family: var(--font-display);
+        font-size: 22px;
+        line-height: 1;
+        font-weight: 500;
+        color: var(--color-ink);
+      }
+      .event-date .mon {
+        font-size: 9.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--color-ink-muted);
+        margin-top: 3px;
+      }
+      .event-info .title {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--color-ink);
+        margin-bottom: 4px;
+      }
+      .event-info .meta {
+        font-size: 11.5px;
+        color: var(--color-ink-muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* —— Activity feed —— */
+      .feed-item {
+        display: flex;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--color-border);
+        font-size: 13px;
+      }
+      .feed-item:last-child { border-bottom: none; }
+      .feed-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--color-canvas-muted);
+        color: var(--color-ink-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-size: 12px;
+        font-style: italic;
+        flex-shrink: 0;
+      }
+      .feed-avatar.accent { background: var(--color-primary); color: white; }
+      .feed-text { flex: 1; min-width: 0; line-height: 1.45; color: var(--color-ink-soft); }
+      .feed-text strong { color: var(--color-ink); font-weight: 600; }
+      .feed-text .when {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        color: var(--color-ink-muted);
+        margin-top: 3px;
+        letter-spacing: 0.04em;
+      }
+
+      /* —— Quick actions —— */
+      .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+      }
+      .quick-action {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 18px;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 14px;
+        text-align: left;
+        transition: border-color 0.25s ease, transform 0.25s ease;
+      }
+      .quick-action:hover {
+        border-color: var(--color-ink);
+        transform: translateY(-2px);
+      }
+      .quick-action .qa-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: var(--color-primary-50);
+        color: var(--color-primary-700);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .quick-action .qa-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--color-ink);
+      }
+      .quick-action .qa-sub {
+        font-size: 12px;
+        color: var(--color-ink-muted);
+      }
+
+      /* —— Mobile drawer —— */
+      .mobile-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(31, 31, 31, 0.4);
+        backdrop-filter: blur(2px);
+        z-index: 9;
+      }
+      @media (max-width: 880px) {
+        .app {
+          grid-template-columns: 1fr;
+          grid-template-areas: "header" "main";
+        }
+        .aside {
+          position: fixed;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: var(--aside-w);
+          z-index: 10;
+          transform: translateX(-100%);
+          transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .app.mobile-open .aside { transform: translateX(0); }
+        .app.mobile-open .mobile-overlay { display: block; }
+        .aside-collapse { display: none; }
+      }
+
+      .menu-btn {
+        display: none;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-ink-soft);
+        transition: background 0.2s ease;
+      }
+      .menu-btn:hover { background: var(--color-canvas-muted); }
+      @media (max-width: 880px) { .menu-btn { display: flex; } }
+    </style>
+  </head>
+  <body>
+    <div class="app" id="app">
+      <!-- ———————————— ASIDE ———————————— -->
+      <aside class="aside">
+        <div class="aside-brand">
+          <div class="aside-brand-mark">
+            <!-- Mini logo: cross + curve -->
+            <svg viewBox="0 0 20 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 2v8" />
+              <path d="M6 5h8" />
+              <path d="M5 10c0 5 5 8 5 8s5-3 5-8" />
+              <path d="M6 12h8" />
+            </svg>
+          </div>
+          <div class="aside-brand-text">
+            <div class="kicker">Iglesia Bautista</div>
+            <div class="name">El Ancla · CMS</div>
+          </div>
+        </div>
+
+        <button class="aside-collapse" id="asideCollapse" type="button" aria-label="Plegar menú">
+          <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+            <path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <div class="aside-search">
+          <label class="aside-search-box">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="M21 21l-4.3-4.3"/>
+            </svg>
+            <input type="text" placeholder="Buscar…" />
+            <span class="kbd">⌘K</span>
+          </label>
+        </div>
+
+        <nav class="aside-nav">
+          <div class="aside-section">General</div>
+          <a href="#" class="nav-item active">
+            <span class="nav-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="9" rx="1.5"/>
+                <rect x="14" y="3" width="7" height="5" rx="1.5"/>
+                <rect x="14" y="12" width="7" height="9" rx="1.5"/>
+                <rect x="3" y="16" width="7" height="5" rx="1.5"/>
+              </svg>
+            </span>
+            <span class="nav-label">Resumen</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="nav-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14z"/>
+                <path d="M4 19.5V21h16"/>
+              </svg>
+            </span>
+            <span class="nav-label">Sermones</span>
+            <span class="nav-badge">128</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="nav-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 4h14a1 1 0 0 1 1 1v14l-4-3-4 3-4-3-4 3V5a1 1 0 0 1 1-1z"/>
+              </svg>
+            </span>
+            <span class="nav-label">Blog</span>
+            <span class="nav-badge">42</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="nav-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="16" rx="2"/>
+                <path d="M3 9h18M8 3v4M16 3v4"/>
+              </svg>
+            </span>
+            <span class="nav-label">Actividades</span>
+            <span class="nav-badge accent">3</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="nav-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="8" r="3"/>
+                <path d="M3 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/>
+                <circle cx="17" cy="9" r="2.5"/>
+                <path d="M15 21c0-2.5 1.8-4.5 4-4.5"/>
+              </svg>
+            </span>
+            <span class="nav-label">Ministerios</span>
+            <span class="nav-badge">10</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="nav-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </span>
+            <span class="nav-label">Miembros</span>
+          </a>
+
+          <div class="aside-section">Recursos</div>
+          <a href="#" class="nav-item">
+            <span class="nav-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <path d="M21 15l-5-5L5 21"/>
+              </svg>
+            </span>
+            <span class="nav-label">Biblioteca</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="nav-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4H6.5A2.5 2.5 0 0 0 4 6.5z"/>
+                <path d="M9 8h6"/>
+              </svg>
+            </span>
+            <span class="nav-label">Confesión de fe</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="nav-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3v18h18"/>
+                <path d="M7 14l4-4 4 4 5-6"/>
+              </svg>
+            </span>
+            <span class="nav-label">Analíticas</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="nav-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+              </svg>
+            </span>
+            <span class="nav-label">Configuración</span>
+          </a>
+        </nav>
+
+        <div class="aside-footer">
+          <span class="aside-footer-pulse"></span>
+          <div class="aside-footer-text">
+            <strong>Sistema activo</strong><br/>
+            <span style="opacity:0.7">v2.4.1 · todos los servicios OK</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ———————————— HEADER ———————————— -->
+      <header class="header">
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18M3 12h18M3 18h18"/>
+          </svg>
+        </button>
+
+        <div class="header-breadcrumb">
+          <span class="crumb">Panel</span>
+          <span class="crumb-sep">/</span>
+          <span class="crumb current">Resumen</span>
+        </div>
+
+        <div class="header-quick-info">
+          <span class="live-dot"></span>
+          <span>Próx. culto · Dom 11:15</span>
+        </div>
+
+        <div class="header-actions">
+          <button class="icon-btn" type="button" aria-label="Notificaciones">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <span class="ind"></span>
+          </button>
+          <button class="icon-btn" type="button" aria-label="Mensajes">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </button>
+          <button class="icon-btn" type="button" aria-label="Ayuda">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/>
+            </svg>
+          </button>
+
+          <div class="header-divider"></div>
+
+          <a href="#" class="header-cta">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            Crear nuevo
+          </a>
+
+          <button class="user-chip" type="button">
+            <span class="user-avatar">JO</span>
+            <div class="user-meta">
+              <div class="name">Pr. Juan Olivera</div>
+              <div class="role">Admin · Pastor</div>
+            </div>
+            <svg class="chev" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- ———————————— MAIN ———————————— -->
+      <main class="main">
+        <div class="main-inner">
+          <!-- Page head -->
+          <div class="page-head">
+            <div>
+              <div class="page-kicker">[ 01 — Panel ]</div>
+              <h1 class="page-title">Buenos días, <em>Juan.</em></h1>
+              <p class="page-sub">
+                Esto es lo que está pasando hoy en El Ancla. Tienes 3 publicaciones programadas y 2 actividades por confirmar.
+              </p>
+            </div>
+            <div class="page-actions">
+              <button class="btn-secondary" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <path d="M7 10l5 5 5-5"/>
+                  <path d="M12 15V3"/>
+                </svg>
+                Exportar
+              </button>
+              <button class="btn-primary" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Nuevo sermón
+              </button>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats">
+            <div class="stat">
+              <div class="label">Visitas · 7 días</div>
+              <div class="value">12,847</div>
+              <div class="delta up">▲ 18.4% vs. semana anterior</div>
+              <svg class="spark" viewBox="0 0 80 28" fill="none" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 22 L12 18 L22 20 L32 14 L42 16 L52 10 L62 12 L72 4 L78 6"/>
+              </svg>
+            </div>
+            <div class="stat">
+              <div class="label">Sermones</div>
+              <div class="value">128</div>
+              <div class="delta up">▲ 4 esta semana</div>
+              <svg class="spark" viewBox="0 0 80 28" fill="none" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 20 L14 18 L26 16 L38 17 L50 12 L62 14 L74 8 L78 10"/>
+              </svg>
+            </div>
+            <div class="stat">
+              <div class="label">Comunidad</div>
+              <div class="value">486</div>
+              <div class="delta up">▲ 12 nuevos miembros</div>
+              <svg class="spark" viewBox="0 0 80 28" fill="none" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 24 L14 22 L26 18 L38 20 L50 14 L62 12 L74 8 L78 6"/>
+              </svg>
+            </div>
+            <div class="stat accent">
+              <div class="label">En vivo · YouTube</div>
+              <div class="value">1,204</div>
+              <div class="delta">● Transmitiendo ahora</div>
+              <svg class="spark" viewBox="0 0 80 28" fill="none" stroke="#ffbfc5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 18 L12 14 L22 20 L32 12 L42 16 L52 8 L62 14 L72 6 L78 10"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Two columns -->
+          <div class="grid-2">
+            <!-- Recent content -->
+            <section class="card">
+              <div class="card-head">
+                <div>
+                  <div class="card-title">Contenido reciente</div>
+                  <div class="card-sub">Últimas publicaciones del CMS</div>
+                </div>
+                <a href="#" class="card-link">
+                  Ver todo
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 6h8M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
+              </div>
+
+              <div>
+                <div class="content-row">
+                  <div class="num">01</div>
+                  <div class="info">
+                    <div class="title">Tenemos esta esperanza · Heb 6:19</div>
+                    <div class="meta">Sermón · 42 min</div>
+                  </div>
+                  <div class="author">Pr. Juan Olivera</div>
+                  <div class="date">28 ABR 2026</div>
+                  <span class="pill published">Publicado</span>
+                  <button class="row-action" type="button" aria-label="Más acciones">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+                  </button>
+                </div>
+                <div class="content-row">
+                  <div class="num">02</div>
+                  <div class="info">
+                    <div class="title">Tres pilares de la familia de la fe</div>
+                    <div class="meta">Blog · 6 min lectura</div>
+                  </div>
+                  <div class="author">Mariana Pérez</div>
+                  <div class="date">26 ABR 2026</div>
+                  <span class="pill published">Publicado</span>
+                  <button class="row-action" type="button" aria-label="Más acciones">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+                  </button>
+                </div>
+                <div class="content-row">
+                  <div class="num">03</div>
+                  <div class="info">
+                    <div class="title">Desafío de Verano 2026 · inscripciones</div>
+                    <div class="meta">Actividad · 7 días</div>
+                  </div>
+                  <div class="author">Equipo Jóvenes</div>
+                  <div class="date">02 MAY 2026</div>
+                  <span class="pill scheduled">Programado</span>
+                  <button class="row-action" type="button" aria-label="Más acciones">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+                  </button>
+                </div>
+                <div class="content-row">
+                  <div class="num">04</div>
+                  <div class="info">
+                    <div class="title">Reseña: "El peso de la gloria"</div>
+                    <div class="meta">Reseña de libro</div>
+                  </div>
+                  <div class="author">Diego Suárez</div>
+                  <div class="date">22 ABR 2026</div>
+                  <span class="pill draft">Borrador</span>
+                  <button class="row-action" type="button" aria-label="Más acciones">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+                  </button>
+                </div>
+                <div class="content-row">
+                  <div class="num">05</div>
+                  <div class="info">
+                    <div class="title">Centrados en Cristo · serie completa</div>
+                    <div class="meta">Sermón · 38 min</div>
+                  </div>
+                  <div class="author">Pr. Juan Olivera</div>
+                  <div class="date">21 ABR 2026</div>
+                  <span class="pill published">Publicado</span>
+                  <button class="row-action" type="button" aria-label="Más acciones">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+                  </button>
+                </div>
+                <div class="content-row">
+                  <div class="num">06</div>
+                  <div class="info">
+                    <div class="title">Reunión de oración · 1° miércoles</div>
+                    <div class="meta">Actividad recurrente</div>
+                  </div>
+                  <div class="author">Equipo Pastoral</div>
+                  <div class="date">07 MAY 2026</div>
+                  <span class="pill scheduled">Programado</span>
+                  <button class="row-action" type="button" aria-label="Más acciones">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+                  </button>
+                </div>
+                <div class="content-row">
+                  <div class="num">07</div>
+                  <div class="info">
+                    <div class="title">Nueva serie: "Anclados en la Palabra"</div>
+                    <div class="meta">Sermón · 4 partes</div>
+                  </div>
+                  <div class="author">Pr. Juan Olivera</div>
+                  <div class="date">14 ABR 2026</div>
+                  <span class="pill published">Publicado</span>
+                  <button class="row-action" type="button" aria-label="Más acciones">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+                  </button>
+                </div>
+                <div class="content-row">
+                  <div class="num">08</div>
+                  <div class="info">
+                    <div class="title">Boletín semanal · 18 abril</div>
+                    <div class="meta">Comunicación</div>
+                  </div>
+                  <div class="author">María González</div>
+                  <div class="date">18 ABR 2026</div>
+                  <span class="pill draft">Borrador</span>
+                  <button class="row-action" type="button" aria-label="Más acciones">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Side column -->
+            <div style="display: flex; flex-direction: column; gap: 24px;">
+              <!-- Próximas actividades -->
+              <section class="card">
+                <div class="card-head">
+                  <div>
+                    <div class="card-title">Próximas actividades</div>
+                    <div class="card-sub">Calendario de la semana</div>
+                  </div>
+                  <a href="#" class="card-link">+ Nueva</a>
+                </div>
+
+                <div class="event">
+                  <div class="event-date"><div class="day">03</div><div class="mon">May</div></div>
+                  <div class="event-info">
+                    <div class="title">Culto de celebración</div>
+                    <div class="meta">11:15 hs · Templo principal · ~180 personas</div>
+                  </div>
+                </div>
+                <div class="event">
+                  <div class="event-date"><div class="day">06</div><div class="mon">May</div></div>
+                  <div class="event-info">
+                    <div class="title">Reunión de oración</div>
+                    <div class="meta">19:00 hs · Salón pequeño</div>
+                  </div>
+                </div>
+                <div class="event">
+                  <div class="event-date"><div class="day">10</div><div class="mon">May</div></div>
+                  <div class="event-info">
+                    <div class="title">Espacio Mujer · taller</div>
+                    <div class="meta">15:00 hs · Confirmar invitadas</div>
+                  </div>
+                </div>
+                <div class="event">
+                  <div class="event-date"><div class="day">17</div><div class="mon">May</div></div>
+                  <div class="event-info">
+                    <div class="title">Bautismos de otoño</div>
+                    <div class="meta">11:15 hs · 6 candidatos</div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Activity feed -->
+              <section class="card">
+                <div class="card-head">
+                  <div>
+                    <div class="card-title">Actividad reciente</div>
+                    <div class="card-sub">Equipo y sistema</div>
+                  </div>
+                </div>
+                <div class="feed-item">
+                  <span class="feed-avatar accent">JO</span>
+                  <div class="feed-text">
+                    <strong>Juan Olivera</strong> publicó el sermón <strong>"Tenemos esta esperanza"</strong>.
+                    <span class="when">Hace 28 min</span>
+                  </div>
+                </div>
+                <div class="feed-item">
+                  <span class="feed-avatar">MP</span>
+                  <div class="feed-text">
+                    <strong>Mariana Pérez</strong> editó la página de <strong>Confesión de fe</strong>.
+                    <span class="when">Hace 2 h</span>
+                  </div>
+                </div>
+                <div class="feed-item">
+                  <span class="feed-avatar">DS</span>
+                  <div class="feed-text">
+                    <strong>Diego Suárez</strong> guardó un borrador de reseña.
+                    <span class="when">Hace 4 h</span>
+                  </div>
+                </div>
+                <div class="feed-item">
+                  <span class="feed-avatar">∞</span>
+                  <div class="feed-text">
+                    Sistema · backup completado correctamente.
+                    <span class="when">Hoy 03:00</span>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <!-- Quick actions -->
+          <section class="card" style="margin-bottom: 28px;">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Accesos rápidos</div>
+                <div class="card-sub">Lo que más usás del CMS</div>
+              </div>
+            </div>
+            <div class="quick-actions">
+              <button class="quick-action" type="button">
+                <span class="qa-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <path d="M14 2v6h6M12 18v-6M9 15h6"/>
+                  </svg>
+                </span>
+                <div class="qa-title">Nuevo sermón</div>
+                <div class="qa-sub">Subir audio, video y notas</div>
+              </button>
+              <button class="quick-action" type="button">
+                <span class="qa-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                </span>
+                <div class="qa-title">Editar inicio</div>
+                <div class="qa-sub">Hero, marquee y secciones</div>
+              </button>
+              <button class="quick-action" type="button">
+                <span class="qa-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="5" width="18" height="16" rx="2"/>
+                    <path d="M3 9h18M8 3v4M16 3v4"/>
+                  </svg>
+                </span>
+                <div class="qa-title">Programar actividad</div>
+                <div class="qa-sub">Eventos y reuniones</div>
+              </button>
+              <button class="quick-action" type="button">
+                <span class="qa-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+                  </svg>
+                </span>
+                <div class="qa-title">Notificar comunidad</div>
+                <div class="qa-sub">Email · WhatsApp · push</div>
+              </button>
+            </div>
+          </section>
+
+          <!-- Filler para demostrar el scroll del contenido manteniendo aside y header fijos -->
+          <section class="card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Notas del equipo</div>
+                <div class="card-sub">Recordatorios pastorales</div>
+              </div>
+              <a href="#" class="card-link">Ver todas</a>
+            </div>
+            <ul style="display:flex; flex-direction:column; gap:14px; margin:0; padding:0; list-style:none;">
+              <li style="padding:14px 16px; border:1px solid var(--color-border); border-radius:12px; background:var(--color-surface-muted);">
+                <div style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--color-ink-muted); margin-bottom:6px;">RECORDATORIO · ALTA</div>
+                <div style="font-size:14px; color:var(--color-ink);">Confirmar invitados de la próxima conferencia anual antes del 15 de mayo.</div>
+              </li>
+              <li style="padding:14px 16px; border:1px solid var(--color-border); border-radius:12px;">
+                <div style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--color-ink-muted); margin-bottom:6px;">SEGUIMIENTO</div>
+                <div style="font-size:14px; color:var(--color-ink);">Familias nuevas que asistieron en abril (4) — agendar visita pastoral.</div>
+              </li>
+              <li style="padding:14px 16px; border:1px solid var(--color-border); border-radius:12px;">
+                <div style="font-family:var(--font-mono); font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--color-ink-muted); margin-bottom:6px;">CONTENIDO</div>
+                <div style="font-size:14px; color:var(--color-ink);">Pendiente: subir transcripciones de los últimos 3 sermones al blog.</div>
+              </li>
+            </ul>
+          </section>
+        </div>
+      </main>
+
+      <div class="mobile-overlay" id="mobileOverlay"></div>
+    </div>
+
+    <script>
+      const app = document.getElementById('app');
+      const collapseBtn = document.getElementById('asideCollapse');
+      const menuBtn = document.getElementById('menuBtn');
+      const overlay = document.getElementById('mobileOverlay');
+
+      collapseBtn.addEventListener('click', () => app.classList.toggle('collapsed'));
+      menuBtn.addEventListener('click', () => app.classList.toggle('mobile-open'));
+      overlay.addEventListener('click', () => app.classList.remove('mobile-open'));
+
+      // Sidebar nav active state
+      document.querySelectorAll('.aside-nav .nav-item').forEach(item => {
+        item.addEventListener('click', e => {
+          e.preventDefault();
+          document.querySelectorAll('.aside-nav .nav-item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+        });
+      });
+    </script>
+  </body>
+</html>

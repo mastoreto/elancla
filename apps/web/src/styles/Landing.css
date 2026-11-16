@@ -1,0 +1,379 @@
+/* ============================================================
+   Landing.css — CSS custom del rediseño El Ancla
+   Importado desde global.css
+   ============================================================ */
+
+/* — Variables de diseño — */
+:root {
+  --paper: #faf8f5;
+  --ink: #141414;
+  --primary: #ff2e34;
+  --grid: rgba(20, 20, 20, 0.06);
+}
+
+/* — Tipografía display — */
+.hero-title {
+  font-family: "Fraunces", serif;
+  font-variation-settings: "opsz" 144;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 0.88;
+}
+.hero-title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--primary);
+}
+
+/* ————— KEYFRAMES ————— */
+@keyframes slideUp {
+  from { opacity: 0; transform: translate3d(0, 32px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes slideRight {
+  from { opacity: 0; transform: translate3d(-24px, 0, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes lineGrow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes drawCircle {
+  from { stroke-dashoffset: 628; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes heroRise {
+  to { transform: translate3d(0, 0, 0); }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes scrollBar {
+  0%      { transform: scaleY(0); transform-origin: top; }
+  50%     { transform: scaleY(1); transform-origin: top; }
+  50.01%  { transform: scaleY(1); transform-origin: bottom; }
+  100%    { transform: scaleY(0); transform-origin: bottom; }
+}
+@keyframes pulseRing {
+  0%   { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* ————— REVEAL (scroll-in) ————— */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+
+/* ————— HERO staggered entrance ————— */
+.hero-line {
+  overflow: hidden;
+  display: block;
+}
+.hero-line > span {
+  display: inline-block;
+  transform: translate3d(0, 110%, 0);
+  animation: heroRise 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.hero-line:nth-child(1) > span { animation-delay: 0.1s; }
+.hero-line:nth-child(2) > span { animation-delay: 0.22s; }
+.hero-line:nth-child(3) > span { animation-delay: 0.34s; }
+
+/* ————— DIVIDER line grow ————— */
+.line-grow {
+  transform-origin: left;
+  animation: lineGrow 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+}
+
+/* ————— NUMBER ticker ————— */
+.ticker {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ————— CARD hover ————— */
+.card-hover {
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 30px 60px -20px rgba(20, 20, 20, 0.12),
+    0 10px 20px -8px rgba(20, 20, 20, 0.06);
+}
+
+/* ————— PAPER grain overlay ————— */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.035 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode: multiply;
+}
+
+/* ————— MARQUEE ————— */
+.marquee {
+  display: flex;
+  animation: marquee 38s linear infinite;
+}
+
+/* ————— UNDERLINE link ————— */
+.ulink {
+  position: relative;
+  display: inline-block;
+}
+.ulink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ulink:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ————— CTA arrow ————— */
+.cta-arrow {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cta-btn:hover .cta-arrow {
+  transform: translate(4px, -4px);
+}
+
+/* ————— PRIMARY button fill-up ————— */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #0a0a0a;
+  transform: translateY(101%);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: -1;
+}
+.btn-primary:hover::before {
+  transform: translateY(0);
+}
+
+/* ————— NAV dot indicator ————— */
+.nav-item {
+  position: relative;
+}
+.nav-item[data-active="true"]::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: fadeIn 0.4s ease;
+}
+
+/* ————— IMAGE duotone ————— */
+.duotone {
+  filter: grayscale(1) contrast(1.05) brightness(0.95);
+  transition: filter 0.8s ease;
+}
+.duotone:hover {
+  filter: grayscale(0) contrast(1.02);
+}
+
+/* ————— GRID background ————— */
+.grid-bg {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+/* ————— ANCHOR float ————— */
+.anchor-wrap {
+  animation: floatSoft 4s ease-in-out infinite;
+}
+
+/* ————— SCROLL indicator ————— */
+.scroll-bar {
+  animation: scrollBar 2.4s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+}
+
+/* ————— CORNER marks ————— */
+.corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--ink);
+}
+.corner.tl { top: -1px; left: -1px;   border-right: 0; border-bottom: 0; }
+.corner.tr { top: -1px; right: -1px;  border-left: 0;  border-bottom: 0; }
+.corner.bl { bottom: -1px; left: -1px;  border-right: 0; border-top: 0; }
+.corner.br { bottom: -1px; right: -1px; border-left: 0;  border-top: 0; }
+
+/* ————— MINISTRY cell ————— */
+.mini-cell {
+  transition: background-color 0.4s ease;
+}
+.mini-cell .mini-arrow {
+  opacity: 0;
+  transform: translateX(-6px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.mini-cell:hover .mini-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+.mini-cell:hover .mini-num {
+  color: var(--primary);
+}
+
+/* ————— SECTION counter ————— */
+.section-counter {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(20, 20, 20, 0.5);
+}
+
+/* ————— ASPECT RATIO helpers ————— */
+.ratio-4-5  { aspect-ratio: 4 / 5; }
+.ratio-3-4  { aspect-ratio: 3 / 4; }
+.ratio-16-9 { aspect-ratio: 16 / 9; }
+
+/* ————— SERMON track ————— */
+.sermon-track {
+  scrollbar-width: none;
+}
+.sermon-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* ————— SERMON card ————— */
+.play-btn {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sermon-card:hover .play-btn {
+  transform: scale(1.08);
+}
+.sermon-card:hover .thumb-img {
+  transform: scale(1.04);
+}
+.thumb-img {
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ————— ABOUT image animated frame ————— */
+.frame-img {
+  transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+  clip-path: inset(100% 0 0 0);
+}
+.reveal.in .frame-img {
+  clip-path: inset(0 0 0 0);
+}
+
+/* ————— ACCORDION ————— */
+details[open] .chev {
+  transform: rotate(45deg);
+}
+.chev {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ————— INVERTED dark block ————— */
+.invert-block {
+  background: #141414;
+  color: #f5f3ee;
+}
+.invert-block .text-ink {
+  color: #f5f3ee;
+}
+
+/* ————— SNAP horizontal ————— */
+.snap-x-container {
+  scroll-snap-type: x mandatory;
+}
+.snap-x-container > * {
+  scroll-snap-align: start;
+}
+
+/* ————— LIVE dot pulse ————— */
+.live-dot {
+  position: relative;
+}
+.live-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: rgba(255, 46, 52, 0.35);
+  animation: pulseRing 1.8s ease-out infinite;
+}
+
+/* ————— PARALLAX image ————— */
+.parallax-img {
+  will-change: transform;
+}
+
+/* ————— ARROW link ————— */
+.arrow-link:hover .arrow-ico {
+  transform: translateX(6px);
+}
+.arrow-ico {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ————— READ PROGRESS bar ————— */
+#readprog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--primary);
+  width: 0;
+  z-index: 60;
+  transition: width 0.12s linear;
+}
+
+/* ————— NAV chip ————— */
+.nav-chip {
+  transition: background 0.3s ease;
+}

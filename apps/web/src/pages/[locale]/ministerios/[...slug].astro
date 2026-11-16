@@ -1,0 +1,38 @@
+---
+import ContentPageTemplate from 'src/components/ContentPage/ContentPageTemplate.astro';
+import { getContentPageBySlug } from 'src/data/contentPages';
+import { defaultLocale, isLocale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
+import Layout from 'src/layouts/Layout.astro';
+
+const { locale: localeParam, slug } = Astro.params;
+if (!isLocale(localeParam) || localeParam === defaultLocale) {
+  return Astro.rewrite('/404');
+}
+const locale = localeParam;
+const result = slug ? getContentPageBySlug('ministerios', slug, locale) : null;
+if (!result) {
+  return Astro.rewrite('/404');
+}
+const { page, isAlias } = result;
+
+const canonicalPath = `/ministerios/${page.slug}`;
+const canonical = new URL(localizePath(canonicalPath, locale), Astro.site).toString();
+const breadcrumbs = page.hero.breadcrumbs.map((item) => ({
+  name: item.label,
+  url: item.href ?? localizePath(canonicalPath, locale),
+}));
+---
+
+<Layout
+  title={page.seoTitle ?? page.title}
+  description={page.description}
+  breadcrumbs={breadcrumbs}
+  image={page.featuredImage?.src}
+  imageAlt={page.featuredImage?.alt}
+  canonical={canonical}
+  noindex={isAlias}
+  locale={locale}
+>
+  <ContentPageTemplate page={page} />
+</Layout>

@@ -1,0 +1,22 @@
+---
+import type { ContentTimelineBlock } from 'src/data/contentPages';
+
+interface Props {
+  block: ContentTimelineBlock;
+}
+
+const { block } = Astro.props;
+---
+
+<div class="content-timeline-row mt-12 grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-10">
+  {
+    block.items.map((item) => (
+      <div>
+        <div class:list={['content-timeline-dot', item.isCurrent && 'now']}></div>
+        <div class="font-mono text-[11px] tracking-[0.18em] uppercase text-primary mt-5">{item.year}</div>
+        <div class="font-display text-lg leading-tight mt-2 font-medium">{item.title}</div>
+        <div class="font-ui text-[12.5px] text-ink/60 mt-1">{item.description}</div>
+      </div>
+    ))
+  }
+</div>

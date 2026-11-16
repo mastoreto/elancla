@@ -1,0 +1,30 @@
+{
+  "name": "ancla-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "check-types": "turbo run check-types",
+    "format": "biome format --write .",
+    "check": "biome check --write .",
+    "clean": "turbo run clean && rm -rf node_modules .turbo",
+    "db:generate": "turbo run db:generate",
+    "db:push": "turbo run db:push db:generate",
+    "db:migrate": "turbo run db:migrate",
+    "db:reset": "turbo run db:reset"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.8",
+    "turbo": "^2.5.5",
+    "typescript": "5.7.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "bun@1.2.4",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

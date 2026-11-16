@@ -1,0 +1,42 @@
+---
+import type { ContentLinkGridBlock } from 'src/data/contentPages';
+
+interface Props {
+  block: ContentLinkGridBlock;
+}
+
+const { block } = Astro.props;
+---
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10">
+  {
+    block.links.map((link) => (
+      <a
+        href={link.href}
+        class="content-url-card"
+        target={link.external ? '_blank' : undefined}
+        rel={link.external ? 'noopener noreferrer' : undefined}
+      >
+        <div class="thumb" style={link.tint ? `--url-card-tint: ${link.tint}` : undefined}>
+          <span>{link.glyph}</span>
+        </div>
+        <div class="body">
+          <div>
+            <div class="src">
+              <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+              {link.sourceLabel}
+            </div>
+            <div class="ttl">{link.title}</div>
+            <div class="desc">{link.description}</div>
+          </div>
+          <div class="flex items-center gap-2 mt-3 font-ui text-[11px] text-ink/50">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+            {link.meta}
+          </div>
+        </div>
+      </a>
+    ))
+  }
+</div>

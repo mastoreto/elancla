@@ -1,0 +1,89 @@
+---
+import cn from '../utils/cn.ts';
+
+interface Props {
+  copy: any;
+}
+
+const { copy } = Astro.props;
+
+const styles = {
+  section: cn('relative py-24 md:py-36 bg-white'),
+  container: cn('mx-auto max-w-[1600px] px-6 md:px-10'),
+  sectionHeader: cn('flex items-baseline gap-6 mb-14 md:mb-20'),
+  headerLine: cn('flex-1 h-px bg-ink/15'),
+  grid: cn('grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start'),
+  sticky: cn('lg:col-span-5 lg:sticky lg:top-32 reveal'),
+  headline: cn('font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-tight'),
+  lead: cn('mt-8 font-ui text-[16px] md:text-[17px] leading-relaxed text-ink/70 max-w-md'),
+  calLink: cn(
+    'mt-8 inline-flex items-center gap-3',
+    'font-ui text-[13px] font-semibold tracking-wide uppercase ulink arrow-link'
+  ),
+  list: cn('lg:col-span-7 flex flex-col gap-0 divide-y divide-ink/10 border-y border-ink/10'),
+  row: cn('group grid grid-cols-12 gap-4 py-8 md:py-10 items-center reveal'),
+  rowNum: cn('col-span-1 font-ui text-[12px] text-ink/40 font-mono'),
+  rowInfo: cn('col-span-5'),
+  rowTitle: cn('font-display text-2xl md:text-3xl'),
+  rowTag: cn('font-ui text-[12px] text-ink/50 mt-1 tracking-wide uppercase'),
+  rowTime: cn('col-span-3 font-ui text-[13px] text-ink/70'),
+  rowTimeDay: cn('font-semibold text-ink'),
+  rowAction: cn('col-span-3 flex justify-end'),
+  rowBtn: cn(
+    'w-12 h-12 rounded-full border border-ink/15',
+    'flex items-center justify-center',
+    'group-hover:bg-primary group-hover:border-primary group-hover:text-white',
+    'transition-all duration-500'
+  ),
+};
+
+const arrowSvg = `<svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+---
+
+<!-- ACTIVITIES -->
+<section id="actividades" class={styles.section}>
+  <div class={styles.container}>
+    <div class={styles.sectionHeader}>
+      <span class="section-counter">{copy.counter}</span>
+      <span class={styles.headerLine}></span>
+    </div>
+
+    <div class={styles.grid}>
+      <!-- sticky intro -->
+      <div class={styles.sticky}>
+        <h2 class={styles.headline}>
+          {copy.headline.before}<em class="italic text-primary">{copy.headline.emphasis}</em>{copy.headline.after}
+        </h2>
+        <p class={styles.lead}>
+          {copy.lead}
+        </p>
+        <a href="#" class={styles.calLink}>
+          {copy.calendarCta}
+          <svg class="arrow-ico" width="14" height="14" viewBox="0 0 12 12" fill="none">
+            <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- lista de actividades -->
+      <div class={styles.list}>
+        {copy.items.map((a: any, i: number) => (
+          <div class={`${styles.row}${i > 0 ? ` reveal-delay-${i}` : ''}`}>
+            <div class={styles.rowNum}>{a.num}</div>
+            <div class={styles.rowInfo}>
+              <div class={styles.rowTitle}>{a.title}</div>
+              <div class={styles.rowTag}>{a.tag}</div>
+            </div>
+            <div class={styles.rowTime}>
+              <div class={styles.rowTimeDay}>{a.day}</div>
+              <div>{a.time}</div>
+            </div>
+            <div class={styles.rowAction}>
+              <div class={styles.rowBtn} set:html={arrowSvg}></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

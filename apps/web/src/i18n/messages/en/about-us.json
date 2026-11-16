@@ -1,0 +1,22 @@
+{
+  "counter": "[ 01 — About ]",
+  "headline": { "before": "Thank you for wanting to ", "emphasis": "know us." },
+  "lead": "Getting to know a church is a real challenge in these times. We hope the information here gives you a clearer picture of who we are and what we believe. You are welcome to visit whenever you like.",
+  "primaryCta": "Our story",
+  "secondaryCta": "What we believe",
+  "pillars": [
+    { "num": "I.", "title": "Centered on Christ", "desc": "The cross is at the center of everything we do." },
+    { "num": "II.", "title": "Faithful to the Word", "desc": "Scripture is our authority and guide." },
+    { "num": "III.", "title": "Family of faith", "desc": "Growing together in love and service." }
+  ],
+  "stats": [
+    { "value": "29", "label": "Years in Montevideo" },
+    { "value": "10", "label": "Active ministries" },
+    { "value": "∞", "label": "Abundant grace" }
+  ],
+  "imageAlt": "Our house",
+  "imageLabel": "Av. Luis A. de Herrera 3101",
+  "imageTitle": "Our house",
+  "pastorLabel": "Pastored by",
+  "pastorName": "Pr. Juan Olivera"
+}

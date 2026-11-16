@@ -1,0 +1,45 @@
+---
+import type { ContentFigureData } from 'src/data/contentPages';
+
+interface Props {
+  figure: ContentFigureData;
+}
+
+const { figure } = Astro.props;
+
+const aspectClass = {
+  wide: 'aspect-[16/8]',
+  landscape: 'aspect-[3/2]',
+  portrait: 'aspect-[4/5]',
+}[figure.aspect ?? 'landscape'];
+---
+
+<figure>
+  <div class="relative">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+    <div class={`${aspectClass} relative overflow-hidden`}>
+      <img src={figure.src} alt={figure.alt} class="w-full h-full object-cover duotone" />
+      {
+        figure.badge && (
+          <div class="absolute top-5 left-5 content-chip bg-white/85 text-ink px-3 py-1.5 rounded-full backdrop-blur-sm">
+            {figure.badge}
+          </div>
+        )
+      }
+      {
+        figure.meta && (
+          <div class="absolute bottom-5 right-5 font-mono text-[10px] tracking-widest uppercase text-white/80">
+            {figure.meta}
+          </div>
+        )
+      }
+    </div>
+  </div>
+  <figcaption class="content-figure-caption mt-3 flex items-baseline gap-4 font-ui text-[12px] text-ink/55">
+    <span class="content-figure-label text-primary">{figure.label}</span>
+    <span>{figure.caption}</span>
+  </figcaption>
+</figure>

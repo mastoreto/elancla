@@ -1,0 +1,98 @@
+{
+  "seo": {
+    "title": "Blog",
+    "description": "Reflections, Bible studies, sermons, and chronicles of life at El Ancla Baptist Church in Montevideo.",
+    "keywords": ["Christian blog", "Bible studies", "Christian reflections", "sermons", "El Ancla Baptist Church"]
+  },
+  "breadcrumbs": { "home": "Home", "blog": "Blog" },
+  "hero": {
+    "edition": "Edition · MMXXVI",
+    "eyebrow": "Church journal",
+    "issue": "N. 042 · APRIL 2026",
+    "titleLines": ["Words", "to anchor", "faith through", "the week."],
+    "emphasis": "anchor",
+    "body": "Reflections, Bible studies, and chronicles of church life. What we preach on Sunday, what we talk about at home, and what we learn along the way.",
+    "primaryCta": "Latest articles",
+    "secondaryCta": "Subscribe",
+    "stats": [
+      { "label": "01 · Published", "description": "Articles online" },
+      { "label": "02 · Categories", "description": "Topic areas" },
+      { "label": "03 · Frequency", "value": "Weekly", "description": "Every Tuesday" },
+      { "label": "Now", "value": "Hebrews Series", "description": "5 installments in progress" }
+    ],
+    "scroll": "Read"
+  },
+  "featured": { "counter": "[ 01 - Featured read ]", "tag": "Editor pick", "featured": "Featured", "reading": "Reading", "by": "By", "read": "Read" },
+  "categories": {
+    "counter": "[ 02 - Categories ]",
+    "headlineBefore": "Seven areas where we ",
+    "headlineEmphasis": "think together.",
+    "body": "We organize content by topic so you can find what you are looking for: from the Sunday pulpit to the kitchen table.",
+    "total": "Total",
+    "articles": "Articles"
+  },
+  "articles": {
+    "counter": "[ 03 - All articles ]",
+    "headlineBefore": "The latest from the ",
+    "headlineEmphasis": "journal",
+    "headlineAfter": ".",
+    "all": "All",
+    "searchLabel": "Search articles",
+    "searchPlaceholder": "Search...",
+    "showing": "Showing",
+    "of": "of",
+    "loadMore": "Load more"
+  },
+  "series": {
+    "counter": "[ 04 - Current series ]",
+    "badge": "5 installments",
+    "eyebrow": "Hebrews · expository study",
+    "headlineBefore": "A ",
+    "headlineEmphasis": "better hope.",
+    "body": "We are walking through Hebrews in five Sunday installments. Each article accompanies the sermon with notes, quotes, and questions for family reflection.",
+    "current": "Now",
+    "published": "Published",
+    "upcoming": "Upcoming"
+  },
+  "explore": {
+    "counter": "[ 05 - Most read & explore ]",
+    "popular": "Most read this month",
+    "month": "→ APR 2026",
+    "tags": "Tags",
+    "topics": "→ TOPICS",
+    "author": "Author of the month",
+    "authorArticles": "articles",
+    "seeAuthor": "See all their articles",
+    "archive": "Archive",
+    "index": "→ INDEX",
+    "fullArchive": "See full archive →"
+  },
+  "newsletter": {
+    "counter": "[ 06 - Newsletter ]",
+    "eyebrow": "Every Tuesday · 7 min",
+    "headlineEmphasis": "Weekly letter",
+    "headlineRest": "to your inbox, without noise.",
+    "description": "A brief selection of readings, questions, and resources to walk through the week with the gospel at the center.",
+    "compactHeadlineBefore": "Did it help? ",
+    "compactHeadlineEmphasis": "Receive them every Tuesday.",
+    "compactBody": "New articles like \"{title}\" straight to your inbox.",
+    "name": "Name",
+    "namePlaceholder": "Your name",
+    "email": "Email",
+    "emailPlaceholder": "you@email.com",
+    "readers": "+300 readers from the community",
+    "submit": "Subscribe"
+  },
+  "article": {
+    "previous": "Previous",
+    "next": "Next",
+    "back": "Back",
+    "allArticles": "All articles",
+    "nextDelivery": "Receive the next installment",
+    "weeklyNewsletter": "Weekly newsletter",
+    "related": "[ Related ]",
+    "backToBlog": "Back to blog",
+    "sermons": "Sermons",
+    "seeAuthor": "See all their articles"
+  }
+}

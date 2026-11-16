@@ -1,0 +1,21 @@
+---
+interface Props {
+  items: string[];
+}
+
+const { items } = Astro.props;
+const repeatedItems = [...items, ...items];
+---
+
+<section class="overflow-hidden border-y border-ink/10 bg-paper py-6">
+  <div class="marquee whitespace-nowrap font-display text-3xl italic text-ink/70 md:text-5xl">
+    {
+      repeatedItems.map((item) => (
+        <>
+          <span class="px-8">{item}</span>
+          <span class="px-8 text-primary">+</span>
+        </>
+      ))
+    }
+  </div>
+</section>

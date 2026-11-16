@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /404
+Disallow: /assets/
+
+# Permitir indexación de imágenes
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /assets/
+
+Sitemap: https://elancla.uy/sitemap-index.xml
