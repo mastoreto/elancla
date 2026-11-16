@@ -84,11 +84,14 @@ export function initDoctrines(root: HTMLElement, isDesktop: boolean): void {
     }
   };
 
+  // Desktop pins the whole section; stacked layouts pin only the stage so the quote scrolls after it.
+  const stage = sec.querySelector<HTMLElement>('[data-doc-stage]');
   const st = ScrollTrigger.create({
-    trigger: sec,
-    start: 'top top',
+    trigger: isDesktop || !stage ? sec : stage,
+    start: isDesktop ? 'top top' : 'center center',
     end: isDesktop ? '+=900%' : '+=700%',
     pin: true,
+    pinSpacing: true, // the stacked layout's parent is flex, where GSAP would otherwise skip the spacing
     scrub: 0.5,
     anticipatePin: 1,
     onUpdate: (self) => render(self.progress),

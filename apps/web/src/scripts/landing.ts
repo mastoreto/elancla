@@ -43,7 +43,7 @@ function mount(): void {
     { desktop: '(min-width: 1024px)', mobile: '(max-width: 1023.98px)' },
     (ctx) => {
       const isDesktop = Boolean(ctx.conditions?.desktop);
-      initHero(root);
+      initHero(root, isDesktop);
       initGod(root, isDesktop);
       initDoctrines(root, isDesktop);
       initTogether(root, isDesktop);

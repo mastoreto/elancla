@@ -1,7 +1,7 @@
 import { gsap, whenUnlocked } from './lenis';
 
 /** Hero: time-based entrance (outline draws, then the anchor is forged), scroll-based exit. */
-export function initHero(root: HTMLElement): void {
+export function initHero(root: HTMLElement, isDesktop: boolean): void {
   const hero = root.querySelector<HTMLElement>('[data-ln="hero"]');
   if (!hero) return;
   const q = <T extends Element>(s: string) => hero.querySelector<T>(s);
@@ -83,6 +83,7 @@ export function initHero(root: HTMLElement): void {
     scrub: true,
   };
   gsap.to(photoImg, { yPercent: -10, ease: 'none', scrollTrigger: scrub });
+  if (!isDesktop) return; // stacked layout: the anchor sits inside the photo and nothing drifts away
   gsap.to(anchorBox, { y: -140, ease: 'none', scrollTrigger: scrub });
   gsap.to(text, {
     y: -60,
