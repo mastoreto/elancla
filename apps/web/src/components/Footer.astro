@@ -14,7 +14,7 @@ interface Props {
 
 const { locale, variant = 'red', social = {} } = Astro.props;
 // Link targets, in the same order as the labels in footer.json.
-const churchHrefs = ['/ministerios/sobre-nosotros', '/ministerios/sobre-nosotros', '/#doctrinas', '/confesion-de-fe'];
+const churchHrefs = ['/nosotros#identidad', '/nosotros#historia', '/#doctrinas', '/confesion-de-fe', '/visitanos'];
 const socialHrefs = [social.youtube, social.instagram, social.facebook];
 const copy = getMessages(locale).footer;
 

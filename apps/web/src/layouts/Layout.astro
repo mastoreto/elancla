@@ -43,6 +43,8 @@ interface Props {
   keywords?: string[];
   breadcrumbs?: SEOBreadcrumb[];
   article?: SEOArticleMeta;
+  /** Extra JSON-LD blocks for this page (FAQ, Event, VideoObject...). */
+  jsonLd?: Record<string, unknown>[];
   locale?: Locale;
   /** Render the shared footer; `dark` is the landing variant (it follows the red closing). */
   footer?: boolean | 'dark';
@@ -59,6 +61,7 @@ const {
   keywords,
   breadcrumbs,
   article,
+  jsonLd: pageJsonLd = [],
   locale: localeProp,
   footer = true,
 } = Astro.props;
@@ -81,6 +84,7 @@ const fullTitle =
 const jsonLd: Record<string, unknown>[] = [
   buildOrganizationLd(site),
   buildWebsiteLd(site, localeSeo.htmlLang),
+  ...pageJsonLd,
 ];
 
 const breadcrumbLd = buildBreadcrumbsLd(breadcrumbs ?? []);
@@ -157,7 +161,7 @@ if (pageType === 'article' && article) {
           alt: imageAlt,
           width: 1200,
           height: 630,
-          type: 'image/jpeg',
+          type: ogImage.endsWith('.png') ? 'image/png' : 'image/jpeg',
         },
         optional: {
           siteName: site.name,
@@ -187,6 +191,12 @@ if (pageType === 'article' && article) {
       }}
       extend={{
         meta: [
+          ...(import.meta.env.PUBLIC_GSC_VERIFICATION
+            ? [{ name: 'google-site-verification', content: import.meta.env.PUBLIC_GSC_VERIFICATION }]
+            : []),
+          ...(import.meta.env.PUBLIC_BING_VERIFICATION
+            ? [{ name: 'msvalidate.01', content: import.meta.env.PUBLIC_BING_VERIFICATION }]
+            : []),
           ...(keywords?.length
             ? [{ name: 'keywords', content: keywords.join(', ') }]
             : []),
@@ -212,7 +222,7 @@ if (pageType === 'article' && article) {
           {
             rel: 'sitemap',
             type: 'application/xml',
-            href: '/sitemap-index.xml',
+            href: '/sitemap.xml',
           },
         ],
       }}
@@ -310,7 +320,7 @@ if (pageType === 'article' && article) {
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Libre+Franklin:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Noto+Sans:wght@400;500;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Libre+Franklin:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
     />
   </head>
   <body class="overflow-x-hidden selection:bg-primary selection:text-white">

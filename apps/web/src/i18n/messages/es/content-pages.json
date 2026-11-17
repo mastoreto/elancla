@@ -25,7 +25,7 @@
       ]
     },
     "featuredImage": {
-      "src": "/images/homebanner.jpeg",
+      "src": "/images/homebanner-web.jpg",
       "alt": "Casa de la Iglesia Bautista El Ancla en Montevideo",
       "label": "[ FIG.01 ]",
       "caption": "Casa de la iglesia · Av. Dr. Luis A. de Herrera 3101 esq. Juan Arrieta.",
@@ -192,11 +192,27 @@
       "visit": "Cómo visitarnos",
       "confession": "Confesión de fe"
     },
+    "ui": {
+      "toc": "En esta página",
+      "shortcuts": "Atajos",
+      "factsEyebrow": "02 — Datos prácticos",
+      "factsToc": "Datos prácticos",
+      "factsTitleBefore": "Cuándo, dónde y ",
+      "factsTitleEmphasis": "con quién.",
+      "facts": [
+      { "label": "Culto", "value": "Domingo · 11:15" },
+      { "label": "Lugar", "value": "Templo · Av. L. A. de Herrera 3101" },
+      { "label": "Cómo sumarte", "value": "Visítanos un domingo y conversemos después del culto." }
+      ],
+      "stats": [
+      { "value": "Dom 11:15", "label": "Culto" },
+      { "value": "Montevideo", "label": "Uruguay" }
+      ]
+    },
     "sections": {
       "identityEyebrow": "01 — Ministerio",
       "identityToc": "Sobre el ministerio",
       "identityTitleBefore": "{name}: ",
-      "identityDescription": "Esta página usa el template editorial compartido para que cada ministerio pueda crecer con contenido propio sin duplicar estructura.",
       "paragraphs": [
         "El ministerio de <strong>{name}</strong> existe para acompañar a la iglesia en una forma concreta de servicio. Hoy dejamos una base simple y ordenada para publicar su propósito, actividades, responsables y próximos pasos.",
         "La intención es que cada página de ministerio pueda evolucionar desde datos tipados: se agrega contenido al registro y el template se encarga del diseño, el índice, las imágenes, los enlaces y la experiencia móvil."
@@ -206,7 +222,7 @@
         { "number": "II.", "title": "Servir", "description": "Usar dones concretos para cuidar y edificar a la iglesia." },
         { "number": "III.", "title": "Acompañar", "description": "Caminar con otros con hospitalidad, oración y perseverancia." }
       ],
-      "nextEyebrow": "02 — Próximo paso",
+      "nextEyebrow": "03 — Próximo paso",
       "nextToc": "Para conectar",
       "nextTitleBefore": "Un lugar para ",
       "nextTitleEmphasis": "servir juntos.",

@@ -1,0 +1,100 @@
+{
+  "seo": {
+    "title": "Visit us in Montevideo: service times and directions",
+    "description": "Plan your first visit to El Ancla Baptist Church: Sunday service times, how to get here, what to expect and answers to the most common questions.",
+    "keywords": [
+      "Baptist church",
+      "visit a church",
+      "Sunday service times",
+      "directions El Ancla church",
+      "first time visiting a church"
+    ]
+  },
+  "breadcrumbs": {
+    "home": "El Ancla",
+    "current": "Visit us"
+  },
+  "hero": {
+    "eyebrow": "Your first Sunday",
+    "title": "Plan your visit.",
+    "body": "What you need to know before coming: when we start, where we are and what you will find. You don't need to sign up or let us know.",
+    "cta": "Get directions"
+  },
+  "when": {
+    "eyebrow": "Times",
+    "title": "On Sundays."
+  },
+  "where": {
+    "eyebrow": "Where we are",
+    "title": "Av. Luis A. de Herrera, at Juan Arrieta.",
+    "body": "Open the route in Google Maps from wherever you are.",
+    "cta": "Open in Google Maps",
+    "mapLabel": "Map of the area around the church"
+  },
+  "expect": {
+    "eyebrow": "What to expect",
+    "title": "A simple service centered on the Bible.",
+    "items": [
+      {
+        "title": "We sing",
+        "text": "We praise God together with songs everyone can follow."
+      },
+      {
+        "title": "We pray",
+        "text": "We give thanks and pray for the church and for those in need."
+      },
+      {
+        "title": "We open the Bible",
+        "text": "A message that explains a passage of Scripture and applies it to daily life."
+      },
+      {
+        "title": "We talk",
+        "text": "Afterwards you are welcome to stay and say hello. No one will rush you."
+      }
+    ]
+  },
+  "faq": {
+    "eyebrow": "Frequently asked questions",
+    "title": "Before you come.",
+    "items": [
+      {
+        "q": "What time are the services?",
+        "a": "Sundays at 11:15 AM. At 10:00 AM there is Bible school for adults and children."
+      },
+      {
+        "q": "Where is the church?",
+        "a": "At Av. Luis A. de Herrera 3101, at the corner of Juan Arrieta, Montevideo."
+      },
+      {
+        "q": "How long is the service?",
+        "a": "It ends around 1:00 PM. You are welcome to stay and chat afterwards."
+      },
+      {
+        "q": "Do I need to be a member or tell you I'm coming?",
+        "a": "No. Anyone can come, with no sign-up and no commitment."
+      },
+      {
+        "q": "What does El Ancla Baptist Church believe?",
+        "a": "We are a Baptist church centered on the gospel of Jesus Christ. Our doctrine is explained in the statement of faith."
+      },
+      {
+        "q": "Can I watch the service without coming?",
+        "a": "Yes. We stream live on YouTube and sermons stay available in the sermons section."
+      },
+      {
+        "q": "How can I contact the church?",
+        "a": "Write to contacto@elancla.uy or find us on YouTube, Instagram and Facebook."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Want to get to know us a little more?",
+    "about": "Our story",
+    "confession": "What we believe",
+    "sermons": "Listen to a sermon"
+  },
+  "schema": {
+    "eventName": "Sunday service at El Ancla Baptist Church",
+    "eventDescription": "Celebration service with singing, prayer and Bible teaching. Open to everyone."
+  }
+}

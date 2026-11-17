@@ -28,10 +28,32 @@ export function absoluteUrl(path: string | URL, site = SITE.url): string {
   return `${site}${trimmed}`;
 }
 
+const WEEKDAYS: Record<string, string> = {
+  Mo: 'Monday', Tu: 'Tuesday', We: 'Wednesday', Th: 'Thursday', Fr: 'Friday', Sa: 'Saturday', Su: 'Sunday',
+};
+
+/** Parses "Su 11:15-12:30" (SiteConfig.serviceTimes); falls back to the Sunday service. */
+function parseServiceTimes(summary: string) {
+  const match = summary.match(/^(Mo|Tu|We|Th|Fr|Sa|Su)\s+(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/);
+  return {
+    dayOfWeek: WEEKDAYS[match?.[1] ?? 'Su'],
+    opens: match?.[2] ?? '11:15',
+    closes: match?.[3] ?? '12:30',
+  };
+}
+
+export function mapLink(site: SiteConfig) {
+  return (
+    site.mapUrl ??
+    `https://www.google.com/maps/search/?api=1&query=${site.geo.latitude},${site.geo.longitude}`
+  );
+}
+
 export function buildOrganizationLd(site: SiteConfig = SITE) {
+  const service = parseServiceTimes(site.serviceTimes);
   return {
     '@context': 'https://schema.org',
-    '@type': ['Church', 'PlaceOfWorship', 'Organization'],
+    '@type': 'Church',
     '@id': `${site.url}#organization`,
     name: site.name,
     alternateName: site.shortName,
@@ -40,6 +62,9 @@ export function buildOrganizationLd(site: SiteConfig = SITE) {
     image: absoluteUrl(site.defaultImage, site.url),
     description: site.defaultDescription,
     foundingDate: site.founded,
+    email: site.contactEmail,
+    knowsLanguage: ['es', 'pt', 'en'],
+    hasMap: mapLink(site),
     address: {
       '@type': 'PostalAddress',
       streetAddress: site.address.street,
@@ -54,12 +79,7 @@ export function buildOrganizationLd(site: SiteConfig = SITE) {
       longitude: site.geo.longitude,
     },
     openingHoursSpecification: [
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: 'Sunday',
-        opens: '11:15',
-        closes: '12:30',
-      },
+      { '@type': 'OpeningHoursSpecification', ...service },
     ],
     sameAs: [
       site.social.youtube,
@@ -68,8 +88,69 @@ export function buildOrganizationLd(site: SiteConfig = SITE) {
     ].filter(Boolean),
     areaServed: {
       '@type': 'City',
-      name: 'Montevideo',
+      name: site.address.city,
     },
+  };
+}
+
+export interface FaqItem {
+  q: string;
+  a: string;
+}
+
+export function buildFaqLd(items: FaqItem[]) {
+  if (!items.length) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  };
+}
+
+/** Weekly Sunday service as a recurring Event (starts at the next Sunday occurrence is not needed: schedule is enough). */
+export function buildServiceEventLd(params: {
+  name: string;
+  description: string;
+  url: string;
+  site: SiteConfig;
+  language: string;
+}) {
+  const { site } = params;
+  const service = parseServiceTimes(site.serviceTimes);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: params.name,
+    description: params.description,
+    url: params.url,
+    inLanguage: params.language,
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    eventStatus: 'https://schema.org/EventScheduled',
+    isAccessibleForFree: true,
+    eventSchedule: {
+      '@type': 'Schedule',
+      repeatFrequency: 'P1W',
+      byDay: `https://schema.org/${service.dayOfWeek}`,
+      startTime: service.opens,
+      endTime: service.closes,
+      scheduleTimezone: 'America/Montevideo',
+    },
+    location: {
+      '@type': 'Place',
+      name: site.name,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: site.address.street,
+        addressLocality: site.address.city,
+        postalCode: site.address.postalCode,
+        addressCountry: site.address.country,
+      },
+    },
+    organizer: { '@id': `${site.url}#organization` },
   };
 }
 

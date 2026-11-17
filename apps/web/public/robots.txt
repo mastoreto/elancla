@@ -1,11 +1,8 @@
+# Everything is open: search engines, AI search and AI training crawlers (GPTBot, ClaudeBot,
+# Google-Extended, Applebot-Extended, CCBot...). The church wants to be known and quoted.
 User-agent: *
 Allow: /
 Disallow: /404
-Disallow: /assets/
+Disallow: /api/
 
-# Permitir indexación de imágenes
-User-agent: Googlebot-Image
-Allow: /images/
-Allow: /assets/
-
-Sitemap: https://elancla.uy/sitemap-index.xml
+Sitemap: https://elancla.uy/sitemap.xml

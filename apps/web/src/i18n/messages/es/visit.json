@@ -1,0 +1,100 @@
+{
+  "seo": {
+    "title": "Visítanos en Montevideo: horarios y cómo llegar",
+    "description": "Planifica tu primera visita a Iglesia Bautista El Ancla: horarios del domingo, cómo llegar, qué esperar y respuestas a las preguntas más comunes.",
+    "keywords": [
+      "iglesia bautista",
+      "visitar iglesia",
+      "horario de culto domingo",
+      "cómo llegar iglesia El Ancla",
+      "primera visita a una iglesia"
+    ]
+  },
+  "breadcrumbs": {
+    "home": "El Ancla",
+    "current": "Visítanos"
+  },
+  "hero": {
+    "eyebrow": "Tu primer domingo",
+    "title": "Planifica tu visita.",
+    "body": "Lo que necesitas saber antes de venir: a qué hora empezamos, dónde estamos y qué te vas a encontrar. No hace falta avisar ni inscribirse.",
+    "cta": "Cómo llegar"
+  },
+  "when": {
+    "eyebrow": "Horarios",
+    "title": "Los domingos."
+  },
+  "where": {
+    "eyebrow": "Dónde estamos",
+    "title": "Av. Luis A. de Herrera, esquina Juan Arrieta.",
+    "body": "Abre la ruta en Google Maps desde donde estés.",
+    "cta": "Abrir en Google Maps",
+    "mapLabel": "Mapa de la zona de la iglesia"
+  },
+  "expect": {
+    "eyebrow": "Qué esperar",
+    "title": "Un culto sencillo, centrado en la Biblia.",
+    "items": [
+      {
+        "title": "Cantamos",
+        "text": "Alabamos a Dios juntos, con canciones que todos pueden seguir."
+      },
+      {
+        "title": "Oramos",
+        "text": "Damos gracias, pedimos por la iglesia y por quienes lo necesitan."
+      },
+      {
+        "title": "Abrimos la Biblia",
+        "text": "Un mensaje que explica un texto de la Escritura y lo aplica a la vida diaria."
+      },
+      {
+        "title": "Conversamos",
+        "text": "Al terminar puedes quedarte a saludar. Nadie te va a apurar."
+      }
+    ]
+  },
+  "faq": {
+    "eyebrow": "Preguntas frecuentes",
+    "title": "Antes de venir.",
+    "items": [
+      {
+        "q": "¿A qué hora son los cultos?",
+        "a": "Los domingos a las 11:15. A las 10:00 hay escuela bíblica para adultos y niños."
+      },
+      {
+        "q": "¿Dónde queda la iglesia?",
+        "a": "En Av. Luis A. de Herrera 3101, esquina Juan Arrieta, Montevideo."
+      },
+      {
+        "q": "¿Cuánto dura el culto?",
+        "a": "Termina cerca de las 13:00. Si quieres, puedes quedarte a conversar después."
+      },
+      {
+        "q": "¿Tengo que ser miembro o avisar que voy?",
+        "a": "No. Cualquier persona puede venir, sin inscripción y sin compromiso."
+      },
+      {
+        "q": "¿Qué cree la Iglesia Bautista El Ancla?",
+        "a": "Somos una iglesia bautista centrada en el evangelio de Jesucristo. Nuestra doctrina está explicada en la confesión de fe."
+      },
+      {
+        "q": "¿Puedo ver el culto sin ir?",
+        "a": "Sí. Transmitimos en vivo por YouTube y las prédicas quedan disponibles en la sección de sermones."
+      },
+      {
+        "q": "¿Cómo me comunico con la iglesia?",
+        "a": "Escribiendo a contacto@elancla.uy o por nuestras redes en YouTube, Instagram y Facebook."
+      }
+    ]
+  },
+  "cta": {
+    "title": "¿Quieres conocernos un poco más?",
+    "about": "Nuestra historia",
+    "confession": "Qué creemos",
+    "sermons": "Escuchar una prédica"
+  },
+  "schema": {
+    "eventName": "Culto dominical en Iglesia Bautista El Ancla",
+    "eventDescription": "Culto de celebración con canto, oración y enseñanza de la Biblia. Abierto a todos."
+  }
+}

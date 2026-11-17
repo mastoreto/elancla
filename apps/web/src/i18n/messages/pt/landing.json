@@ -1,6 +1,6 @@
 {
   "hero": {
-    "eyebrow": "Hebreus 6:16",
+    "eyebrow": "Igreja Batista · Hebreus 6:19",
     "title": "Uma igreja ancorada no evangelho.",
     "text": "Somos uma família no coração de Montevidéu. A graça de Deus nos sustenta, a Palavra nos guia e caminhamos juntos na fé.",
     "cta": "Planeje sua visita",
@@ -34,6 +34,7 @@
     "eyebrow": "Crescemos caminhando juntos",
     "title": "Muitas formas de servir, um corpo que cresce.",
     "text": "Entendemos o serviço como um caminho de crescimento: em cada ministério nos edificamos como um só corpo.",
+    "aboutLink": "Conheça nossa história",
     "tiles": {
       "preaching": "Pregação",
       "teaching": "Ensino",

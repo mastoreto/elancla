@@ -5,6 +5,7 @@
   },
   "kicker": "Error 404",
   "title": "We could not find this page",
+  "titleEmphasis": "page",
   "description": "The link may have changed, or the address may have been typed incorrectly. Go back home or explore other sections.",
   "primary": "Back home",
   "secondary": "Statement of faith",

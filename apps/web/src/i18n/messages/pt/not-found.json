@@ -5,6 +5,7 @@
   },
   "kicker": "Erro 404",
   "title": "Não encontramos esta página",
+  "titleEmphasis": "página",
   "description": "O link pode ter mudado ou talvez o endereço tenha sido digitado incorretamente. Volte ao início ou explore outras seções.",
   "primary": "Voltar ao início",
   "secondary": "Confissão de fé",

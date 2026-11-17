@@ -25,7 +25,7 @@
       ]
     },
     "featuredImage": {
-      "src": "/images/homebanner.jpeg",
+      "src": "/images/homebanner-web.jpg",
       "alt": "Casa da Igreja Batista El Ancla em Montevidéu",
       "label": "[ FIG.01 ]",
       "caption": "Casa da igreja · Av. Dr. Luis A. de Herrera 3101 esq. Juan Arrieta.",
@@ -178,11 +178,27 @@
     "figureLabel": "[ MINISTÉRIO ]",
     "figureMeta": "— Montevidéu · UY",
     "shortcuts": { "all": "Todos os ministérios", "visit": "Como nos visitar", "confession": "Confissão de fé" },
+    "ui": {
+      "toc": "Nesta página",
+      "shortcuts": "Atalhos",
+      "factsEyebrow": "02 — Informações práticas",
+      "factsToc": "Informações práticas",
+      "factsTitleBefore": "Quando, onde e ",
+      "factsTitleEmphasis": "com quem.",
+      "facts": [
+      { "label": "Culto", "value": "Domingo · 11:15" },
+      { "label": "Local", "value": "Templo · Av. L. A. de Herrera 3101" },
+      { "label": "Como participar", "value": "Visite-nos em um domingo e conversemos depois do culto." }
+      ],
+      "stats": [
+      { "value": "Dom 11:15", "label": "Culto" },
+      { "value": "Montevidéu", "label": "Uruguai" }
+      ]
+    },
     "sections": {
       "identityEyebrow": "01 — Ministério",
       "identityToc": "Sobre o ministério",
       "identityTitleBefore": "{name}: ",
-      "identityDescription": "Esta página usa o template editorial compartilhado para que cada ministério possa crescer com conteúdo próprio sem duplicar estrutura.",
       "paragraphs": [
         "O ministério de <strong>{name}</strong> existe para acompanhar a igreja em uma forma concreta de serviço. Hoje deixamos uma base simples e ordenada para publicar seu propósito, atividades, responsáveis e próximos passos.",
         "A intenção é que cada página de ministério possa evoluir a partir de dados tipados: o conteúdo é adicionado ao registro e o template cuida do design, índice, imagens, links e experiência móvel."
@@ -192,7 +208,7 @@
         { "number": "II.", "title": "Servir", "description": "Usar dons concretos para cuidar e edificar a igreja." },
         { "number": "III.", "title": "Acompanhar", "description": "Caminhar com outros com hospitalidade, oração e perseverança." }
       ],
-      "nextEyebrow": "02 — Próximo passo",
+      "nextEyebrow": "03 — Próximo passo",
       "nextToc": "Para conectar",
       "nextTitleBefore": "Um lugar para ",
       "nextTitleEmphasis": "servir juntos.",

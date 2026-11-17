@@ -1,6 +1,6 @@
 {
   "hero": {
-    "eyebrow": "Hebreos 6:16",
+    "eyebrow": "Iglesia Bautista · Hebreos 6:19",
     "title": "Una iglesia con ancla en el evangelio.",
     "text": "Somos una familia en el corazón de Montevideo. Nos sostiene la gracia de Dios, nos guía su Palabra y caminamos juntos en la fe.",
     "cta": "Planifica tu visita",
@@ -34,6 +34,7 @@
     "eyebrow": "Crecemos caminando juntos",
     "title": "Muchas formas de servir, un cuerpo que crece.",
     "text": "Entendemos el servicio como un camino de crecimiento: en cada ministerio nos edificamos unos a otros como un solo cuerpo.",
+    "aboutLink": "Conoce nuestra historia",
     "tiles": {
       "preaching": "Predicación",
       "teaching": "Enseñanza",

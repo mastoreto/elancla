@@ -39,6 +39,8 @@ export interface SiteConfig {
   contactEmail: string;
   founded: string;
   serviceTimes: string;
+  /** Google Business / Maps profile URL; when absent the schema uses a coordinates link. */
+  mapUrl?: string;
   status: SiteStatus;
   social: SiteSocial;
 }
@@ -65,7 +67,7 @@ export const SITE_FALLBACK: SiteConfig = {
   titleTemplate: "%s | Iglesia Bautista El Ancla",
   defaultDescription:
     "Iglesia Bautista El Ancla en Montevideo: una comunidad cristiana centrada en el evangelio. Reflexiones, ministerios y vida en comunidad. Domingos 11:15 hs.",
-  defaultImage: "/images/homebanner.jpeg",
+  defaultImage: "/images/og-default.jpg",
   themeColor: "#ff2e34",
   twitter: "@iglesiaelancla",
   address: {
@@ -78,7 +80,7 @@ export const SITE_FALLBACK: SiteConfig = {
   geo: { latitude: -34.872968, longitude: -56.161429 },
   contactEmail: "contacto@elancla.uy",
   founded: "1997",
-  serviceTimes: "Su 11:15-12:30",
+  serviceTimes: "Su 11:15-13:00",
   status: "online",
   social: {
     youtube: "https://youtube.com/@iglesiaelanclauy",

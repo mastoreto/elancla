@@ -1,6 +1,5 @@
 /** biome-ignore-all assist/source/organizeImports: <false positive> */
 import { defineConfig } from 'astro/config';
-import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
@@ -42,42 +41,6 @@ export default defineConfig({
     },
   },
   integrations: [
-    sitemap({
-      changefreq: 'weekly',
-      priority: 0.7,
-      lastmod: new Date(),
-      i18n: {
-        defaultLocale: 'es',
-        locales: {
-          es: 'es-UY',
-          pt: 'pt-BR',
-          en: 'en-US',
-        },
-      },
-      filter: (page) => {
-        // Excluir alias con caracteres no normalizados (ej. ñ → %C3%B1).
-        if (/%[0-9A-F]{2}/i.test(page)) return false;
-        // Excluir páginas marcadas noindex.
-        if (page.endsWith('/ministerios/sobre-nosotros')) return false;
-        return true;
-      },
-      serialize(item) {
-        if (item.url === `${SITE_URL}/`) {
-          item.priority = 1.0;
-          item.changefreq = 'weekly';
-        } else if (item.url.includes('/blog/')) {
-          item.priority = 0.8;
-          item.changefreq = 'monthly';
-        } else if (item.url.includes('/ministerios/')) {
-          item.priority = 0.7;
-          item.changefreq = 'monthly';
-        } else if (item.url.includes('/confesion-de-fe')) {
-          item.priority = 0.8;
-          item.changefreq = 'yearly';
-        }
-        return item;
-      },
-    }),
     icon(),
     react({
       // Configuración para compatibilidad con React 19

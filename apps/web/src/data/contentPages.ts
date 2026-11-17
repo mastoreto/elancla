@@ -145,7 +145,13 @@ export interface ContentCtaBlock {
   cta: ContentCta;
 }
 
+export interface ContentFactsBlock {
+  type: 'facts';
+  facts: { label: string; value: string }[];
+}
+
 export type ContentBlock =
+  | ContentFactsBlock
   | ContentProseBlock
   | ContentVerseBlock
   | ContentValuesBlock
@@ -175,8 +181,10 @@ export interface ContentPage {
   hero: ContentHero;
   featuredImage?: ContentFigureData;
   shortcuts?: ContentShortcut[];
-  /** Heading of the sticky in-page index (only the About page renders it). */
+  /** Heading of the sticky in-page index. */
   tocTitle?: string;
+  /** Label of the shortcuts box under the index. */
+  shortcutsTitle?: string;
   sections: ContentSection[];
   cta?: ContentCta;
 }
@@ -200,11 +208,20 @@ interface MinistryTemplate {
     visit: string;
     confession: string;
   };
+  ui: {
+    toc: string;
+    shortcuts: string;
+    factsEyebrow: string;
+    factsToc: string;
+    factsTitleBefore: string;
+    factsTitleEmphasis: string;
+    facts: { label: string; value: string }[];
+    stats: ContentHeroStat[];
+  };
   sections: {
     identityEyebrow: string;
     identityToc: string;
     identityTitleBefore: string;
-    identityDescription: string;
     paragraphs: string[];
     values: ContentValue[];
     nextEyebrow: string;
@@ -366,9 +383,12 @@ function buildMinistryPages(locale: Locale): ContentPage[] {
             },
           ],
           standfirst: template.standfirst,
+          stats: template.ui.stats,
         },
+        tocTitle: template.ui.toc,
+        shortcutsTitle: template.ui.shortcuts,
         featuredImage: {
-          src: '/images/homebanner.jpeg',
+          src: '/images/homebanner-web.jpg',
           alt: `${name} · Iglesia Bautista El Ancla`,
           label: template.figureLabel,
           caption: `${name} · ${summary}.`,
@@ -390,7 +410,6 @@ function buildMinistryPages(locale: Locale): ContentPage[] {
               before: interpolate(template.sections.identityTitleBefore, { name }),
               emphasis: summary.toLowerCase(),
             },
-            description: template.sections.identityDescription,
             blocks: [
               {
                 type: 'prose',
@@ -403,6 +422,13 @@ function buildMinistryPages(locale: Locale): ContentPage[] {
                 values: template.sections.values,
               },
             ],
+          },
+          {
+            id: 'datos',
+            eyebrow: template.ui.factsEyebrow,
+            tocLabel: template.ui.factsToc,
+            title: { before: template.ui.factsTitleBefore, emphasis: template.ui.factsTitleEmphasis },
+            blocks: [{ type: 'facts', facts: template.ui.facts }],
           },
           {
             id: 'siguiente-paso',

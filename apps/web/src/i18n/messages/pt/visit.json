@@ -1,0 +1,100 @@
+{
+  "seo": {
+    "title": "Visite-nos em Montevidéu: horários e como chegar",
+    "description": "Planeje sua primeira visita à Igreja Batista El Ancla: horários de domingo, como chegar, o que esperar e respostas às perguntas mais comuns.",
+    "keywords": [
+      "igreja batista",
+      "visitar igreja",
+      "horário de culto domingo",
+      "como chegar igreja El Ancla",
+      "primeira visita a uma igreja"
+    ]
+  },
+  "breadcrumbs": {
+    "home": "El Ancla",
+    "current": "Visite-nos"
+  },
+  "hero": {
+    "eyebrow": "Seu primeiro domingo",
+    "title": "Planeje sua visita.",
+    "body": "O que você precisa saber antes de vir: a que horas começamos, onde estamos e o que vai encontrar. Não é preciso avisar nem se inscrever.",
+    "cta": "Como chegar"
+  },
+  "when": {
+    "eyebrow": "Horários",
+    "title": "Aos domingos."
+  },
+  "where": {
+    "eyebrow": "Onde estamos",
+    "title": "Av. Luis A. de Herrera, esquina Juan Arrieta.",
+    "body": "Abra a rota no Google Maps de onde você estiver.",
+    "cta": "Abrir no Google Maps",
+    "mapLabel": "Mapa da região da igreja"
+  },
+  "expect": {
+    "eyebrow": "O que esperar",
+    "title": "Um culto simples, centrado na Bíblia.",
+    "items": [
+      {
+        "title": "Cantamos",
+        "text": "Louvamos a Deus juntos, com canções que todos podem acompanhar."
+      },
+      {
+        "title": "Oramos",
+        "text": "Agradecemos, pedimos pela igreja e por quem precisa."
+      },
+      {
+        "title": "Abrimos a Bíblia",
+        "text": "Uma mensagem que explica um texto da Escritura e o aplica à vida diária."
+      },
+      {
+        "title": "Conversamos",
+        "text": "Ao terminar você pode ficar para cumprimentar. Ninguém vai apressá-lo."
+      }
+    ]
+  },
+  "faq": {
+    "eyebrow": "Perguntas frequentes",
+    "title": "Antes de vir.",
+    "items": [
+      {
+        "q": "A que horas são os cultos?",
+        "a": "Aos domingos às 11:15. Às 10:00 há escola bíblica para adultos e crianças."
+      },
+      {
+        "q": "Onde fica a igreja?",
+        "a": "Na Av. Luis A. de Herrera 3101, esquina Juan Arrieta, Montevidéu."
+      },
+      {
+        "q": "Quanto tempo dura o culto?",
+        "a": "Termina por volta das 13:00. Se quiser, pode ficar para conversar depois."
+      },
+      {
+        "q": "Preciso ser membro ou avisar que vou?",
+        "a": "Não. Qualquer pessoa pode vir, sem inscrição e sem compromisso."
+      },
+      {
+        "q": "Em que a Igreja Batista El Ancla acredita?",
+        "a": "Somos uma igreja batista centrada no evangelho de Jesus Cristo. Nossa doutrina está explicada na confissão de fé."
+      },
+      {
+        "q": "Posso assistir ao culto sem ir?",
+        "a": "Sim. Transmitimos ao vivo pelo YouTube e as pregações ficam disponíveis na seção de sermões."
+      },
+      {
+        "q": "Como entro em contato com a igreja?",
+        "a": "Escrevendo para contacto@elancla.uy ou pelas nossas redes no YouTube, Instagram e Facebook."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Quer nos conhecer um pouco mais?",
+    "about": "Nossa história",
+    "confession": "Em que cremos",
+    "sermons": "Ouvir uma pregação"
+  },
+  "schema": {
+    "eventName": "Culto dominical na Igreja Batista El Ancla",
+    "eventDescription": "Culto de celebração com canto, oração e ensino da Bíblia. Aberto a todos."
+  }
+}
