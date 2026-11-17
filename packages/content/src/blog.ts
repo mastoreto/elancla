@@ -456,6 +456,476 @@ const seedBody = (
   },
 ];
 
+// Guías pilar (respuestas directas a preguntas frecuentes sobre la fe). Redactadas a partir de la confesión de fe;
+// requieren revisión pastoral antes de publicarse en producción.
+const guideArticles: BlogArticle[] = [
+  {
+    slug: "que-es-la-fe-cristiana",
+    year: "2026",
+    month: "11",
+    day: "17",
+    issue: "N. 043",
+    title: "¿Qué es la fe cristiana?",
+    seoTitle: "¿Qué es la fe cristiana? Una guía sencilla",
+    description:
+      "Qué significa tener fe según la Biblia: confiar en Jesucristo, recibir la salvación por gracia y vivir a partir de esa confianza.",
+    excerpt:
+      "La fe cristiana no es un sentimiento ni un esfuerzo por ganarnos a Dios: es confiar en lo que él hizo por nosotros en Jesucristo.",
+    category: "Estudio",
+    filter: "estudio",
+    publishedAt: "2026-11-17",
+    displayDate: "17 · NOV · 2026",
+    compactDate: "17 · NOV",
+    readTime: "2 min",
+    wordCount: "435 palabras",
+    author: authors.editorial,
+    coverGlyph: "FE",
+    coverLabel: "[ guía ]",
+    coverCaption: "Guía · Qué es la fe",
+    tint: "#efebe3",
+    accent: "rgba(255, 46, 52, 0.2)",
+    tags: ["Fe", "Salvación", "Guía", "Biblia"],
+    relatedSlugs: ["quien-es-dios-segun-la-biblia", "que-creen-los-bautistas"],
+    body: [
+      {
+        type: "paragraph",
+        html: "La fe cristiana es confiar en Dios y en lo que él hizo por nosotros en Jesucristo. No es un sentimiento ni un esfuerzo por ganarnos su favor: es recibir como regalo el perdón y la vida nueva que Dios promete, y vivir a partir de esa confianza.",
+        dropCap: true,
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "que-no-es",
+        eyebrow: "01 - Aclarando",
+        text: "Lo que la fe no es",
+      },
+      {
+        type: "paragraph",
+        html: 'Se suele hablar de fe como si fuera creer sin pruebas, tener una sensación positiva o "pensar que todo va a salir bien". La Biblia habla de otra cosa. La fe cristiana tiene un objeto concreto: una Persona, Jesucristo, y lo que ella hizo en la cruz y en la resurrección. No se sostiene en la intensidad de lo que sentimos, sino en la fidelidad de aquel en quien confiamos.',
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "que-dice-la-biblia",
+        eyebrow: "02 - Texto",
+        text: "Qué dice la Biblia",
+      },
+      {
+        type: "verse",
+        reference: "Hebreos 11 · 1",
+        text: "Es, pues, la fe la certeza de lo que se espera, la convicción de lo que no se ve.",
+      },
+      {
+        type: "paragraph",
+        html: "El texto habla de certeza y de convicción, no de duda disfrazada. Quien tiene fe no ve todo con claridad, pero sabe en quién descansa. Por eso la fe no es lo contrario del pensamiento: se apoya en lo que Dios dijo en su Palabra.",
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "por-gracia",
+        eyebrow: "03 - Salvación",
+        text: "Por gracia, por medio de la fe",
+      },
+      {
+        type: "verse",
+        reference: "Efesios 2 · 8-9",
+        text: "Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios; no por obras, para que nadie se gloríe.",
+      },
+      {
+        type: "paragraph",
+        html: "Aquí está el corazón del mensaje. La salvación no se gana con buenas obras ni con una vida ordenada; es un regalo de Dios. La fe es la mano abierta que lo recibe. Por eso, en la confesión de fe de esta iglesia, la salvación se describe como un regalo gratuito que incluye elección, justificación y santificación.",
+      },
+      {
+        type: "pullquote",
+        quote:
+          "La fe no es la causa de la salvación: es la mano vacía que recibe el regalo.",
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "como-se-vive",
+        eyebrow: "04 - Vida",
+        text: "Cómo se vive la fe",
+      },
+      {
+        type: "paragraph",
+        html: "La fe verdadera no se queda en una idea. Cambia la manera de vivir, no para ganar el amor de Dios sino porque ya fue recibido:",
+      },
+      {
+        type: "list",
+        items: [
+          "<strong>Se ora.</strong> Hablamos con Dios porque confiamos en que nos escucha.",
+          "<strong>Se lee la Biblia.</strong> Ahí Dios nos dice quién es y qué hizo.",
+          "<strong>Se camina en comunidad.</strong> La fe no se vive sola; la iglesia existe para sostenernos.",
+          "<strong>Se obedece.</strong> Con errores y con perdón, pero con ganas de agradar a Dios.",
+        ],
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "si-quieres-empezar",
+        eyebrow: "05 - Un paso",
+        text: "Si quieres empezar a conocerlo",
+      },
+      {
+        type: "paragraph",
+        html: 'No hace falta tener todo claro. Puedes empezar leyendo el Evangelio de Juan, hablando con alguien de confianza o visitándonos un domingo. En <a href="/visitanos">la página de visita</a> están los horarios y cómo llegar, y en la <a href="/confesion-de-fe">confesión de fe</a> explicamos con calma lo que creemos.',
+      },
+      { type: "tags", tags: ["Fe", "Salvación", "Guía", "Biblia"] },
+    ],
+  },
+  {
+    slug: "quien-es-dios-segun-la-biblia",
+    year: "2026",
+    month: "11",
+    day: "17",
+    issue: "N. 044",
+    title: "¿Quién es Dios según la Biblia?",
+    seoTitle: "¿Quién es Dios según la Biblia? Una guía sencilla",
+    description:
+      "Quién es Dios según la Biblia: el único Dios verdadero, Creador y soberano, que existe como Padre, Hijo y Espíritu Santo y se dio a conocer en Jesucristo.",
+    excerpt:
+      "La Biblia presenta a un solo Dios, Creador de todo, que existe como Padre, Hijo y Espíritu Santo y se dio a conocer plenamente en Jesús.",
+    category: "Estudio",
+    filter: "estudio",
+    publishedAt: "2026-11-17",
+    displayDate: "17 · NOV · 2026",
+    compactDate: "17 · NOV",
+    readTime: "2 min",
+    wordCount: "397 palabras",
+    author: authors.editorial,
+    coverGlyph: "DIOS",
+    coverLabel: "[ guía ]",
+    coverCaption: "Guía · Quién es Dios",
+    tint: "#efebe3",
+    accent: "rgba(255, 46, 52, 0.2)",
+    tags: ["Dios", "Trinidad", "Guía", "Biblia"],
+    relatedSlugs: ["que-es-la-fe-cristiana", "que-creen-los-bautistas"],
+    body: [
+      {
+        type: "paragraph",
+        html: "Según la Biblia, Dios es el único Dios verdadero, Creador y soberano del universo. Existe eternamente como Padre, Hijo y Espíritu Santo, tres Personas iguales en esencia, poder y gloria, y se ha dado a conocer en la Escritura y, de manera plena, en Jesucristo.",
+        dropCap: true,
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "uno",
+        eyebrow: "01 - Unidad",
+        text: "Un solo Dios",
+      },
+      {
+        type: "verse",
+        reference: "Deuteronomio 6 · 4",
+        text: "Oye, Israel: Jehová nuestro Dios, Jehová uno es.",
+      },
+      {
+        type: "paragraph",
+        html: "Desde las primeras páginas hasta las últimas, la Biblia afirma que hay un solo Dios. No es una fuerza ni una idea: es una Persona que habla, actúa y se relaciona con lo que creó.",
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "creador",
+        eyebrow: "02 - Creador",
+        text: "Creador y sostenedor de todo",
+      },
+      {
+        type: "verse",
+        reference: "Salmo 19 · 1",
+        text: "Los cielos cuentan la gloria de Dios, y el firmamento anuncia la obra de sus manos.",
+      },
+      {
+        type: "paragraph",
+        html: "La Biblia enseña que Dios hizo todas las cosas de la nada y que las sostiene por su poder. Nada de lo que existe lo sorprendió ni escapa de su cuidado. Por eso decimos que es soberano: gobierna la historia y a la vez se interesa por cada persona.",
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "tres-personas",
+        eyebrow: "03 - Trinidad",
+        text: "Padre, Hijo y Espíritu Santo",
+      },
+      {
+        type: "verse",
+        reference: "2 Corintios 13 · 14",
+        text: "La gracia del Señor Jesucristo, el amor de Dios, y la comunión del Espíritu Santo sean con todos vosotros.",
+      },
+      {
+        type: "paragraph",
+        html: 'Los cristianos creemos en un solo Dios que existe en tres Personas: el Padre, el Hijo y el Espíritu Santo. Comparten la misma naturaleza divina y actúan en perfecta unidad, aunque tienen funciones distintas. Es un misterio que no podemos agotar con la razón, pero la Biblia lo afirma con claridad, por ejemplo en el mandato de bautizar "en el nombre del Padre, y del Hijo, y del Espíritu Santo".',
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "en-jesus",
+        eyebrow: "04 - Revelación",
+        text: "Dios se dio a conocer en Jesús",
+      },
+      {
+        type: "verse",
+        reference: "1 Timoteo 2 · 5",
+        text: "Porque hay un solo Dios, y un solo mediador entre Dios y los hombres, Jesucristo hombre.",
+      },
+      {
+        type: "paragraph",
+        html: "Dios no se quedó lejos. El Hijo eterno se hizo hombre, vivió sin pecado, murió en la cruz por su pueblo y resucitó al tercer día. Si quieres saber cómo es Dios, mira a Jesús: ahí están su justicia, su verdad y su misericordia juntas.",
+      },
+      {
+        type: "pullquote",
+        quote: "Si quieres saber cómo es Dios, mira a Jesús.",
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "que-cambia",
+        eyebrow: "05 - Vida",
+        text: "Qué cambia saber quién es Dios",
+      },
+      {
+        type: "list",
+        items: [
+          "<strong>Podemos confiar.</strong> Un Dios soberano y bueno no pierde el control de nuestra vida.",
+          "<strong>Podemos hablarle.</strong> Por medio de Jesús tenemos acceso al Padre.",
+          "<strong>Podemos adorarlo.</strong> Todo lo que existe fue hecho para su gloria.",
+        ],
+      },
+      {
+        type: "paragraph",
+        html: 'Si quieres seguir leyendo, la doctrina completa sobre Dios está en nuestra <a href="/confesion-de-fe">confesión de fe</a>, y cada domingo puedes escucharla enseñar en <a href="/visitanos">nuestro culto</a>.',
+      },
+      { type: "tags", tags: ["Dios", "Trinidad", "Guía", "Biblia"] },
+    ],
+  },
+  {
+    slug: "que-creen-los-bautistas",
+    year: "2026",
+    month: "11",
+    day: "17",
+    issue: "N. 045",
+    title: "¿Qué creen los bautistas?",
+    seoTitle: "¿Qué creen los bautistas? Doctrina bautista explicada",
+    description:
+      "Qué creen los bautistas: la Biblia como autoridad, la salvación por gracia, la iglesia como cuerpo de Cristo y las dos ordenanzas, bautismo y Cena del Señor.",
+    excerpt:
+      "Una explicación breve de lo que creemos en Iglesia Bautista El Ancla: la Biblia, la gracia, la iglesia y las ordenanzas.",
+    category: "Estudio",
+    filter: "estudio",
+    publishedAt: "2026-11-17",
+    displayDate: "17 · NOV · 2026",
+    compactDate: "17 · NOV",
+    readTime: "2 min",
+    wordCount: "316 palabras",
+    author: authors.editorial,
+    coverGlyph: "BAU",
+    coverLabel: "[ guía ]",
+    coverCaption: "Guía · Doctrina bautista",
+    tint: "#efebe3",
+    accent: "rgba(255, 46, 52, 0.2)",
+    tags: ["Bautistas", "Doctrina", "Confesión de fe", "Guía"],
+    relatedSlugs: ["que-es-la-fe-cristiana", "quien-es-dios-segun-la-biblia"],
+    body: [
+      {
+        type: "paragraph",
+        html: "Los bautistas creen que la Biblia es la autoridad final para la fe y la vida, que la salvación es un regalo de Dios por gracia mediante la fe en Jesucristo, y que la iglesia es el cuerpo de Cristo, expresado en cada comunidad local. Practican el bautismo por inmersión y la Cena del Señor.",
+        dropCap: true,
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "biblia",
+        eyebrow: "01 - Autoridad",
+        text: "La Biblia como autoridad final",
+      },
+      {
+        type: "verse",
+        reference: "2 Timoteo 3 · 16",
+        text: "Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir, para instruir en justicia.",
+      },
+      {
+        type: "paragraph",
+        html: "Creemos que la Biblia es la Palabra de Dios, inspirada y suficiente para la fe y la práctica. Por eso en cada culto se abre y se explica un texto, y por eso las demás cosas que creemos buscan apoyarse en ella.",
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "salvacion",
+        eyebrow: "02 - Gracia",
+        text: "La salvación es por gracia",
+      },
+      {
+        type: "paragraph",
+        html: 'Somos salvos por gracia, a través de la fe en Jesucristo, y no por obras. Es un regalo gratuito de Dios. Si quieres ver el texto detrás de esta convicción, lo explicamos en <a href="/blog/2026/11/17/que-es-la-fe-cristiana">¿Qué es la fe cristiana?</a>',
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "iglesia",
+        eyebrow: "03 - Iglesia",
+        text: "La iglesia",
+      },
+      {
+        type: "paragraph",
+        html: "La iglesia es el cuerpo de Cristo, formado por todos los creyentes verdaderos. Se expresa localmente en comunidades que se reúnen para adorar, servir y proclamar el evangelio.",
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "ordenanzas",
+        eyebrow: "04 - Ordenanzas",
+        text: "Bautismo y Cena del Señor",
+      },
+      {
+        type: "verse",
+        reference: "Mateo 28 · 19",
+        text: "Por tanto, id, y haced discípulos a todas las naciones, bautizándolos en el nombre del Padre, y del Hijo, y del Espíritu Santo.",
+      },
+      {
+        type: "paragraph",
+        html: "Practicamos dos ordenanzas: el bautismo por inmersión y la Cena del Señor. No son un medio para ser salvos, sino actos de obediencia, símbolo y memoria de lo que Cristo hizo.",
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "nueve",
+        eyebrow: "05 - Resumen",
+        text: "Las nueve doctrinas de El Ancla",
+      },
+      {
+        type: "paragraph",
+        html: 'En nuestra <a href="/confesion-de-fe">confesión de fe</a> reunimos lo que creemos en nueve doctrinas:',
+      },
+      {
+        type: "list",
+        items: [
+          "Dios",
+          "Jesucristo",
+          "El Espíritu Santo",
+          "La Biblia",
+          "La Iglesia",
+          "El hombre",
+          "La salvación",
+          "Las ordenanzas",
+          "La escatología: el regreso de Cristo",
+        ],
+      },
+      {
+        type: "paragraph",
+        html: "Cada una incluye su texto bíblico y sus referencias, para que puedas comprobar por ti mismo si lo que decimos está en la Escritura.",
+      },
+      {
+        type: "tags",
+        tags: ["Bautistas", "Doctrina", "Confesión de fe", "Guía"],
+      },
+    ],
+  },
+  {
+    slug: "que-es-una-iglesia",
+    year: "2026",
+    month: "11",
+    day: "17",
+    issue: "N. 046",
+    title: "¿Qué es una iglesia y por qué importa?",
+    seoTitle: "¿Qué es una iglesia y por qué importa? Guía sencilla",
+    description:
+      "Qué es una iglesia según la Biblia: el cuerpo de Cristo, un pueblo que se reúne para adorar, aprender, servirse y compartir el evangelio.",
+    excerpt:
+      "La iglesia no es un edificio. Es el pueblo de Dios que se reúne para adorar, aprender de la Biblia y servirse unos a otros.",
+    category: "Iglesia",
+    filter: "iglesia",
+    publishedAt: "2026-11-17",
+    displayDate: "17 · NOV · 2026",
+    compactDate: "17 · NOV",
+    readTime: "2 min",
+    wordCount: "306 palabras",
+    author: authors.editorial,
+    coverGlyph: "IG",
+    coverLabel: "[ guía ]",
+    coverCaption: "Guía · Qué es una iglesia",
+    tint: "#efebe3",
+    accent: "rgba(255, 46, 52, 0.2)",
+    tags: ["Iglesia", "Comunidad", "Guía", "Biblia"],
+    relatedSlugs: ["que-creen-los-bautistas", "que-es-la-fe-cristiana"],
+    body: [
+      {
+        type: "paragraph",
+        html: "Según la Biblia, la iglesia es el cuerpo de Cristo: todas las personas que confían en Jesús. Se expresa en comunidades locales que se reúnen para adorar a Dios, aprender de la Biblia, servirse unos a otros y compartir el evangelio. No es un edificio, sino un pueblo.",
+        dropCap: true,
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "no-edificio",
+        eyebrow: "01 - Aclarando",
+        text: "No es un edificio",
+      },
+      {
+        type: "paragraph",
+        html: 'Cuando decimos "la iglesia" solemos pensar en un lugar. En el Nuevo Testamento la palabra se refiere a personas: los que pertenecen a Cristo. Un edificio sirve para reunirse, pero lo que hace a la iglesia es la gente que lo llena.',
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "que-hace",
+        eyebrow: "02 - Vida juntos",
+        text: "Qué hace una iglesia",
+      },
+      {
+        type: "verse",
+        reference: "Hechos 2 · 42",
+        text: "Y perseveraban en la doctrina de los apóstoles, en la comunión unos con otros, en el partimiento del pan y en las oraciones.",
+      },
+      {
+        type: "list",
+        items: [
+          "<strong>Enseña la Biblia.</strong> Escuchar y entender la Escritura es el centro de la reunión.",
+          "<strong>Ora y adora.</strong> Cantamos, damos gracias y pedimos por los demás.",
+          "<strong>Celebra las ordenanzas.</strong> El bautismo y la Cena del Señor.",
+          "<strong>Se sirve.</strong> Cada persona aporta lo que Dios le dio, en distintos ministerios.",
+          "<strong>Comparte el evangelio.</strong> La buena noticia de Jesús es para todos.",
+        ],
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "por-que-importa",
+        eyebrow: "03 - Importancia",
+        text: "Por qué importa",
+      },
+      {
+        type: "paragraph",
+        html: "La fe cristiana se vive en comunidad. Necesitamos a otros para aprender, para que nos corrijan con amor, para ser consolados y para servir. Quien camina solo se cansa más rápido; la iglesia existe para sostenernos mientras caminamos.",
+      },
+      {
+        type: "pullquote",
+        quote:
+          "La iglesia no es un lugar al que vamos: es un pueblo al que pertenecemos.",
+      },
+      {
+        type: "heading",
+        level: 2,
+        id: "como-elegir",
+        eyebrow: "04 - Si buscas una",
+        text: "Cómo elegir una iglesia",
+      },
+      {
+        type: "list",
+        items: [
+          "Que enseñe la Biblia y explique con claridad el evangelio.",
+          "Que sea transparente en lo que cree, con una confesión de fe pública.",
+          "Que te reciba sin presión y sin exigirte nada para sentarte a escuchar.",
+          "Que tenga una vida comunitaria real durante la semana.",
+        ],
+      },
+      {
+        type: "paragraph",
+        html: 'Así intentamos ser en El Ancla. Si quieres conocernos, <a href="/visitanos">aquí está cómo visitarnos</a>, y puedes leer <a href="/nosotros">nuestra historia</a> antes de venir.',
+      },
+      { type: "tags", tags: ["Iglesia", "Comunidad", "Guía", "Biblia"] },
+    ],
+  },
+];
+
 export const blogArticles: BlogArticle[] = [
   {
     slug: 'el-ancla-del-alma-una-esperanza-que-no-averguenza',
@@ -788,6 +1258,7 @@ export const blogArticles: BlogArticle[] = [
       ['Iglesia', 'Bautismos', 'Testimonios']
     ),
   },
+  ...guideArticles,
 ];
 
 export const blogCategories: BlogCategory[] = [
@@ -968,6 +1439,10 @@ export const getBlogArticleBySlug = (params: {
       article.day === params.day &&
       article.slug === params.slug
   );
+
+/** Placeholder articles (seedBody) carry an editorial note; they must not be indexed yet. */
+export const isSeedArticle = (article: BlogArticle) =>
+  article.body.some((block) => block.type === 'note');
 
 export const getArticleToc = (article: BlogArticle) =>
   article.body

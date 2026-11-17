@@ -66,7 +66,10 @@ const orderOf = (r: number, c: number) => (r === 2 ? 0 : r === 1 ? 4 : 8) + c;
       <span class="ln-eyebrow">{copy.eyebrow}</span>
       <h2 class="ln-h ln-tog__title">{copy.title}</h2>
     </div>
-    <p class="ln-tog__lead">{copy.text}</p>
+    <div class="ln-tog__side">
+      <p class="ln-tog__lead">{copy.text}</p>
+      <a href={localizePath('/nosotros', locale)} class="ln-tog__more">{copy.aboutLink}<span aria-hidden="true"> →</span></a>
+    </div>
   </div>
 
   <div class="ln-tog__rows">

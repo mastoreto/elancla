@@ -368,7 +368,7 @@ function buildMinistryPages(locale: Locale): ContentPage[] {
           standfirst: template.standfirst,
         },
         featuredImage: {
-          src: '/images/homebanner.jpeg',
+          src: '/images/homebanner-web.jpg',
           alt: `${name} · Iglesia Bautista El Ancla`,
           label: template.figureLabel,
           caption: `${name} · ${summary}.`,

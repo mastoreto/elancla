@@ -1,6 +1,6 @@
 {
   "hero": {
-    "eyebrow": "Hebrews 6:16",
+    "eyebrow": "Baptist Church · Hebrews 6:19",
     "title": "A church anchored in the gospel.",
     "text": "We are a family in the heart of Montevideo. God's grace holds us, His Word guides us, and we walk in faith together.",
     "cta": "Plan your visit",
@@ -34,6 +34,7 @@
     "eyebrow": "We grow walking together",
     "title": "Many ways to serve, one body that grows.",
     "text": "We see service as a path of growth: in every ministry we build each other up as one body.",
+    "aboutLink": "Read our story",
     "tiles": {
       "preaching": "Preaching",
       "teaching": "Teaching",

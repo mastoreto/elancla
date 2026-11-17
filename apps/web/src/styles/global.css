@@ -73,8 +73,6 @@
   --font-montserrat: "Montserrat", sans-serif;
   --font-fraunces: "Fraunces", serif;
   --font-libre-franklin: "Libre Franklin", sans-serif;
-  --font-newsreader: "Newsreader", serif;
-  --font-noto-sans: "Noto Sans", sans-serif;
   --font-barastika: "Barastika", sans-serif;
   --font-futura-bold: "FuturaNo2D", "Futura No2 D OT Bold", sans-serif;
   --font-futura: "Futura No2 D OT Medium", sans-serif;
@@ -89,7 +87,7 @@
   --font-script: var(--font-boston-angel);
   --font-script-strong: var(--font-boston-angel-bold);
 
-  --background-image-home-banner: url('/images/homebanner.jpeg');
+  --background-image-home-banner: url('/images/homebanner-web.jpg');
   --background-image-aboutus: url('/images/aboutus.jpg');
 
   --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);

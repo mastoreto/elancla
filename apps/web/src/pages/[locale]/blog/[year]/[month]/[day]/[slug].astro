@@ -6,7 +6,7 @@ import { getMessages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
 import { getBlogNeighbours } from 'src/data/blogNeighbours';
 import Layout from 'src/layouts/Layout.astro';
-import { getAllPostsFull } from '@ancla/content';
+import { getAllPostsFull, isSeedArticle } from '@ancla/content';
 
 const { locale: localeParam, year, month, day, slug } = Astro.params;
 if (!isLocale(localeParam) || localeParam === defaultLocale) {
@@ -35,6 +35,7 @@ const breadcrumbs = [
   description={article.description}
   isBlog={true}
   pageType="article"
+  noindex={isSeedArticle(article)}
   breadcrumbs={breadcrumbs}
   keywords={article.tags}
   canonical={new URL(localizePath(articleUrl, locale), Astro.site).toString()}
