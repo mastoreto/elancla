@@ -22,7 +22,7 @@ const [posts, categories, allSeries] = await Promise.all([
   getAllSeriesWithPosts(),
 ]);
 
-const { articles, featured, marqueeItems, series, popular, tags, archive, categories: blogCategories } =
+const { articles, featured, marqueeItems, series, categories: blogCategories } =
   buildBlogPageData(posts, categories, allSeries);
 const copy = getMessages(locale).blog;
 ---
@@ -45,9 +45,6 @@ const copy = getMessages(locale).blog;
     featured={featured}
     marqueeItems={marqueeItems}
     series={series}
-    popular={popular}
-    tags={tags}
-    archive={archive}
     copy={copy}
     locale={locale}
   />

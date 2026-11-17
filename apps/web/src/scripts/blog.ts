@@ -9,11 +9,9 @@ export function initBlog(): void {
   initScrollReveal();
   initReadProgress(controller.signal);
   initFilters(controller.signal);
-  initCategoryJumps(controller.signal);
   initNewsletterForms(controller.signal);
   initTocActiveState();
   initTocSmoothScroll(controller.signal);
-  initCopyButtons(controller.signal);
   initReactions(controller.signal);
 }
 
@@ -67,35 +65,30 @@ function initReadProgress(signal: AbortSignal): void {
   update();
 }
 
+const PAGE_SIZE = 9;
+
 function initFilters(signal: AbortSignal): void {
   const buttons = Array.from(
     document.querySelectorAll<HTMLButtonElement>('[data-blog-filter-button]')
   );
-  const input = document.getElementById(
-    'blogSearchInput'
-  ) as HTMLInputElement | null;
   const cards = Array.from(
-    document.querySelectorAll<HTMLElement>('[data-blog-article-card]')
+    document.querySelectorAll<HTMLElement>('#blogArticleGrid [data-blog-article-card]')
   );
+  const more = document.querySelector<HTMLElement>('[data-blog-more]');
+  const moreButton = document.querySelector<HTMLButtonElement>('[data-blog-more-button]');
 
-  if (buttons.length === 0 || cards.length === 0) return;
+  if (cards.length === 0) return;
 
-  const getActiveFilter = () =>
-    buttons.find((button) => button.dataset.on === 'true')?.dataset.filter ??
-    'todos';
+  let visible = PAGE_SIZE;
 
   const apply = () => {
-    const activeFilter = getActiveFilter();
-    const query = input?.value.toLowerCase().trim() ?? '';
+    const active = buttons.find((button) => button.dataset.on === 'true')?.dataset.filter ?? 'todos';
+    const matching = cards.filter((card) => active === 'todos' || card.dataset.blogFilter === active);
 
     cards.forEach((card) => {
-      const matchesFilter =
-        activeFilter === 'todos' || card.dataset.blogFilter === activeFilter;
-      const matchesSearch =
-        query.length === 0 || card.textContent?.toLowerCase().includes(query);
-
-      card.style.display = matchesFilter && matchesSearch ? '' : 'none';
+      card.hidden = matching.indexOf(card) < 0 || matching.indexOf(card) >= visible;
     });
+    if (more) more.hidden = matching.length <= visible;
   };
 
   buttons.forEach((button) => {
@@ -105,37 +98,23 @@ function initFilters(signal: AbortSignal): void {
         buttons.forEach((candidate) => {
           candidate.dataset.on = candidate === button ? 'true' : 'false';
         });
+        visible = PAGE_SIZE;
         apply();
       },
       { signal }
     );
   });
 
-  input?.addEventListener('input', apply, { signal });
+  moreButton?.addEventListener(
+    'click',
+    () => {
+      visible += PAGE_SIZE;
+      apply();
+    },
+    { signal }
+  );
+
   apply();
-}
-
-function initCategoryJumps(signal: AbortSignal): void {
-  const buttons = Array.from(
-    document.querySelectorAll<HTMLAnchorElement>('[data-category-jump]')
-  );
-  const filterButtons = Array.from(
-    document.querySelectorAll<HTMLButtonElement>('[data-blog-filter-button]')
-  );
-
-  buttons.forEach((button) => {
-    button.addEventListener(
-      'click',
-      () => {
-        const filter = button.dataset.categoryJump;
-        const target = filterButtons.find(
-          (candidate) => candidate.dataset.filter === filter
-        );
-        target?.click();
-      },
-      { signal }
-    );
-  });
 }
 
 function initNewsletterForms(signal: AbortSignal): void {
@@ -152,7 +131,7 @@ function initNewsletterForms(signal: AbortSignal): void {
           if (!label) return;
 
           const original = label.textContent ?? 'Suscribirme';
-          label.textContent = 'Gracias';
+          label.textContent = form.dataset.thanks ?? 'OK';
           window.setTimeout(() => {
             label.textContent = original;
           }, 2400);
@@ -164,7 +143,7 @@ function initNewsletterForms(signal: AbortSignal): void {
 
 function initTocActiveState(): void {
   const tocLinks = Array.from(
-    document.querySelectorAll<HTMLAnchorElement>('.content-toc-link')
+    document.querySelectorAll<HTMLAnchorElement>('.bl-toc-link')
   );
   const targets = tocLinks
     .map((link) => {
@@ -201,7 +180,7 @@ function initTocActiveState(): void {
 
 function initTocSmoothScroll(signal: AbortSignal): void {
   document
-    .querySelectorAll<HTMLAnchorElement>('.content-toc-link[href^="#"]')
+    .querySelectorAll<HTMLAnchorElement>('.bl-toc-link[href^="#"]')
     .forEach((link) => {
       link.addEventListener(
         'click',
@@ -224,73 +203,6 @@ function initTocSmoothScroll(signal: AbortSignal): void {
     });
 }
 
-function initCopyButtons(signal: AbortSignal): void {
-  document.querySelectorAll<HTMLButtonElement>('[data-copy-link]').forEach(
-    (button) => {
-      button.addEventListener(
-        'click',
-        async () => {
-          const label = button.querySelector<HTMLElement>('[data-copy-label]');
-          const original = label?.textContent ?? button.textContent ?? 'Copiar';
-          const copied = await copyText(window.location.href);
-
-          if (copied) {
-            if (label) label.textContent = 'Copiado';
-            else button.textContent = 'Copiado';
-          } else {
-            if (label) label.textContent = 'Copiar enlace';
-          }
-
-          window.setTimeout(() => {
-            if (label) label.textContent = original;
-          }, 1800);
-        },
-        { signal }
-      );
-    }
-  );
-}
-
-async function copyText(text: string): Promise<boolean> {
-  try {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(text);
-      return true;
-    }
-  } catch {
-    // Some browsers expose Clipboard API but reject it without an explicit permission grant.
-  }
-
-  const textarea = document.createElement('textarea');
-  textarea.value = text;
-  textarea.setAttribute('readonly', '');
-  textarea.style.left = '-9999px';
-  textarea.style.position = 'fixed';
-  textarea.style.top = '0';
-  document.body.appendChild(textarea);
-  textarea.focus();
-  textarea.select();
-  textarea.setSelectionRange(0, textarea.value.length);
-
-  const onCopy = (event: ClipboardEvent) => {
-    event.clipboardData?.setData('text/plain', text);
-    event.preventDefault();
-  };
-
-  try {
-    const legacyDocument = document as unknown as {
-      execCommand(commandId: string): boolean;
-    };
-    document.addEventListener('copy', onCopy, { once: true });
-    return legacyDocument.execCommand('copy');
-  } catch {
-    return false;
-  } finally {
-    document.removeEventListener('copy', onCopy);
-    textarea.remove();
-  }
-}
-
 function initReactions(signal: AbortSignal): void {
   document.querySelectorAll<HTMLButtonElement>('[data-blog-reaction]').forEach(
     (button) => {
@@ -298,7 +210,7 @@ function initReactions(signal: AbortSignal): void {
         'click',
         () => {
           const isActive = button.dataset.active === 'true';
-          const count = button.querySelector<HTMLElement>('.blog-react-count');
+          const count = button.querySelector<HTMLElement>('.bl-react-count');
           const current = Number.parseInt(count?.textContent ?? '0', 10);
 
           button.dataset.active = isActive ? 'false' : 'true';

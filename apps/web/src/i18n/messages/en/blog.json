@@ -2,50 +2,62 @@
   "seo": {
     "title": "Blog",
     "description": "Reflections, Bible studies, sermons, and chronicles of life at El Ancla Baptist Church in Montevideo.",
-    "keywords": ["Christian blog", "Bible studies", "Christian reflections", "sermons", "El Ancla Baptist Church"]
+    "keywords": [
+      "Christian blog",
+      "Bible studies",
+      "Christian reflections",
+      "sermons",
+      "El Ancla Baptist Church"
+    ]
   },
-  "breadcrumbs": { "home": "Home", "blog": "Blog" },
+  "breadcrumbs": {
+    "home": "Home",
+    "blog": "Blog"
+  },
   "hero": {
-    "edition": "Edition · MMXXVI",
-    "eyebrow": "Church journal",
-    "issue": "N. 042 · APRIL 2026",
-    "titleLines": ["Words", "to anchor", "faith through", "the week."],
+    "eyebrow": "Church journal · MMXXVI Edition",
+    "titleBefore": "Words to ",
     "emphasis": "anchor",
+    "titleAfter": " faith through the week.",
     "body": "Reflections, Bible studies, and chronicles of church life. What we preach on Sunday, what we talk about at home, and what we learn along the way.",
     "primaryCta": "Latest articles",
     "secondaryCta": "Subscribe",
-    "stats": [
-      { "label": "01 · Published", "description": "Articles online" },
-      { "label": "02 · Categories", "description": "Topic areas" },
-      { "label": "03 · Frequency", "value": "Weekly", "description": "Every Tuesday" },
-      { "label": "Now", "value": "Hebrews Series", "description": "5 installments in progress" }
-    ],
-    "scroll": "Read"
+    "facts": {
+      "frequency": {
+        "label": "Frequency",
+        "value": "Weekly",
+        "description": "Every Tuesday"
+      },
+      "now": {
+        "label": "Now",
+        "value": "Hebrews Series",
+        "description": "5 installments in progress"
+      },
+      "categories": {
+        "label": "Categories",
+        "value": "Seven areas"
+      }
+    }
   },
-  "featured": { "counter": "[ 01 - Featured read ]", "tag": "Editor pick", "featured": "Featured", "reading": "Reading", "by": "By", "read": "Read" },
+  "featured": {
+    "counter": "[ 01 — Featured read ]",
+    "featured": "Featured",
+    "by": "By",
+    "read": "Read"
+  },
   "categories": {
-    "counter": "[ 02 - Categories ]",
+    "counter": "[ 02 — Categories ]",
     "headlineBefore": "Seven areas where we ",
     "headlineEmphasis": "think together.",
     "body": "We organize content by topic so you can find what you are looking for: from the Sunday pulpit to the kitchen table.",
-    "total": "Total",
-    "articles": "Articles"
+    "all": "All"
   },
   "articles": {
-    "counter": "[ 03 - All articles ]",
-    "headlineBefore": "The latest from the ",
-    "headlineEmphasis": "journal",
-    "headlineAfter": ".",
-    "all": "All",
-    "searchLabel": "Search articles",
-    "searchPlaceholder": "Search...",
-    "showing": "Showing",
-    "of": "of",
+    "by": "By",
     "loadMore": "Load more"
   },
   "series": {
-    "counter": "[ 04 - Current series ]",
-    "badge": "5 installments",
+    "counter": "[ 04 — Ongoing series ]",
     "eyebrow": "Hebrews · expository study",
     "headlineBefore": "A ",
     "headlineEmphasis": "better hope.",
@@ -54,34 +66,17 @@
     "published": "Published",
     "upcoming": "Upcoming"
   },
-  "explore": {
-    "counter": "[ 05 - Most read & explore ]",
-    "popular": "Most read this month",
-    "month": "→ APR 2026",
-    "tags": "Tags",
-    "topics": "→ TOPICS",
-    "author": "Author of the month",
-    "authorArticles": "articles",
-    "seeAuthor": "See all their articles",
-    "archive": "Archive",
-    "index": "→ INDEX",
-    "fullArchive": "See full archive →"
-  },
   "newsletter": {
-    "counter": "[ 06 - Newsletter ]",
     "eyebrow": "Every Tuesday · 7 min",
-    "headlineEmphasis": "Weekly letter",
-    "headlineRest": "to your inbox, without noise.",
-    "description": "A brief selection of readings, questions, and resources to walk through the week with the gospel at the center.",
-    "compactHeadlineBefore": "Did it help? ",
-    "compactHeadlineEmphasis": "Receive them every Tuesday.",
-    "compactBody": "New articles like \"{title}\" straight to your inbox.",
-    "name": "Name",
+    "title": "A weekly letter to your inbox, no noise.",
+    "description": "A short selection of readings, questions and resources to accompany the week with the gospel at the center.",
     "namePlaceholder": "Your name",
-    "email": "Email",
     "emailPlaceholder": "you@email.com",
-    "readers": "+300 readers from the community",
-    "submit": "Subscribe"
+    "readers": "+300 readers in the community",
+    "submit": "Subscribe",
+    "thanks": "Thank you",
+    "name": "Name",
+    "email": "Email"
   },
   "article": {
     "previous": "Previous",
@@ -92,7 +87,8 @@
     "weeklyNewsletter": "Weekly newsletter",
     "related": "[ Related ]",
     "backToBlog": "Back to blog",
-    "sermons": "Sermons",
-    "seeAuthor": "See all their articles"
+    "toc": "In this article",
+    "words": "words",
+    "reading": "Reading"
   }
 }
