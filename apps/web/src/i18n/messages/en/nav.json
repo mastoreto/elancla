@@ -32,6 +32,11 @@
         "description": "IX doctrinal pillars"
       },
       {
+        "label": "Sermons",
+        "href": "/sermones",
+        "description": "Sermons on video"
+      },
+      {
         "label": "Blog",
         "href": "/blog",
         "description": "Reflections and studies"
@@ -55,5 +60,15 @@
     "label": "Change theme",
     "lightLabel": "Use light mode",
     "darkLabel": "Use dark mode"
+  },
+  "liveStream": {
+    "chip": "Live now",
+    "barText": "We are live: Sunday service",
+    "barCta": "Watch now →",
+    "popupTitle": "We are live on YouTube",
+    "popupBody": "The service is streaming right now. Watch it here or open it on YouTube.",
+    "popupHere": "Watch here",
+    "popupYoutube": "Go to YouTube",
+    "popupClose": "Close notice"
   }
 }

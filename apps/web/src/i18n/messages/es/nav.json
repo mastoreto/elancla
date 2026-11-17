@@ -32,6 +32,11 @@
         "description": "IX pilares doctrinales"
       },
       {
+        "label": "Sermones",
+        "href": "/sermones",
+        "description": "Prédicas en video"
+      },
+      {
         "label": "Blog",
         "href": "/blog",
         "description": "Reflexiones y estudios"
@@ -55,5 +60,15 @@
     "label": "Cambiar tema",
     "lightLabel": "Activar modo claro",
     "darkLabel": "Activar modo oscuro"
+  },
+  "liveStream": {
+    "chip": "En vivo ahora",
+    "barText": "Estamos en vivo: culto dominical",
+    "barCta": "Mirar ahora →",
+    "popupTitle": "Estamos en vivo por YouTube",
+    "popupBody": "El culto está transmitiéndose ahora. Míralo acá mismo o ábrelo en YouTube.",
+    "popupHere": "Ver aquí",
+    "popupYoutube": "Ir a YouTube",
+    "popupClose": "Cerrar aviso"
   }
 }

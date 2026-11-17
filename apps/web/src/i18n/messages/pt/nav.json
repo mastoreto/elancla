@@ -32,6 +32,11 @@
         "description": "IX pilares doutrinários"
       },
       {
+        "label": "Sermões",
+        "href": "/sermones",
+        "description": "Pregações em vídeo"
+      },
+      {
         "label": "Blog",
         "href": "/blog",
         "description": "Reflexões e estudos"
@@ -55,5 +60,15 @@
     "label": "Alterar tema",
     "lightLabel": "Ativar modo claro",
     "darkLabel": "Ativar modo escuro"
+  },
+  "liveStream": {
+    "chip": "Ao vivo agora",
+    "barText": "Estamos ao vivo: culto dominical",
+    "barCta": "Assistir agora →",
+    "popupTitle": "Estamos ao vivo no YouTube",
+    "popupBody": "O culto está sendo transmitido agora. Assista aqui mesmo ou abra no YouTube.",
+    "popupHere": "Ver aqui",
+    "popupYoutube": "Ir ao YouTube",
+    "popupClose": "Fechar aviso"
   }
 }

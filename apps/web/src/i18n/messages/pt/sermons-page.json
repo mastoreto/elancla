@@ -1,0 +1,73 @@
+{
+  "seo": {
+    "title": "Sermões",
+    "description": "Assista ao culto ao vivo e ouça todas as pregações da Igreja Batista El Ancla, organizadas por série.",
+    "keywords": [
+      "sermões",
+      "pregações",
+      "culto ao vivo",
+      "igreja batista Montevidéu"
+    ]
+  },
+  "breadcrumbs": {
+    "home": "El Ancla",
+    "resources": "Recursos",
+    "current": "Sermões"
+  },
+  "hero": {
+    "live": {
+      "badge": "Ao vivo agora",
+      "titleBefore": "Estamos ao ",
+      "titleEmphasis": "vivo.",
+      "titleAfter": "",
+      "body": "Culto dominical. Você pode nos acompanhar de onde estiver, sem cadastro e sem instalar nada.",
+      "primaryCta": "Assistir no YouTube",
+      "secondaryCta": "Sermões anteriores"
+    },
+    "idle": {
+      "eyebrow": "Sermões · Igreja Batista El Ancla",
+      "titleBefore": "A Palavra, ",
+      "titleEmphasis": "quando",
+      "titleAfter": " você precisar.",
+      "body": "Todas as pregações de domingo, organizadas por série. Ouça em casa, no caminho ou quando a semana pedir para ouvir o evangelho de novo.",
+      "primaryCta": "Ver sermões",
+      "secondaryCta": "Inscrever-me no YouTube"
+    }
+  },
+  "player": {
+    "liveChip": "Ao vivo",
+    "latestChip": "Último sermão",
+    "playingChip": "Reproduzindo",
+    "liveMeta": "Transmissão ao vivo",
+    "nextService": "Próximo culto ao vivo: domingo 11:15",
+    "iframeTitle": "Player do YouTube",
+    "emptyTitle": "Em breve os sermões estarão aqui",
+    "emptyBody": "Estamos conectando o canal do YouTube."
+  },
+  "list": {
+    "eyebrow": "[ 01 — Sermões ]",
+    "title": "Tudo o que foi pregado, ",
+    "emphasis": "em um só lugar.",
+    "searchLabel": "Buscar sermão",
+    "searchPlaceholder": "Buscar por título",
+    "all": "Todos",
+    "empty": "Ainda não há sermões para mostrar.",
+    "noResults": "Não encontramos sermões com esse nome. Tente outro título.",
+    "more": "Carregar mais",
+    "watch": "Assistir no YouTube"
+  },
+  "series": {
+    "eyebrow": "[ 02 — Séries ]",
+    "title": "Um livro, ",
+    "emphasis": "do começo ao fim.",
+    "body": "Pregamos a Bíblia em ordem. Cada série é uma playlist do YouTube e se atualiza sozinha quando um novo sermão é publicado.",
+    "count": "{n} sermões",
+    "countOne": "1 sermão"
+  },
+  "cta": {
+    "eyebrow": "Todo domingo · 11:15",
+    "title": "Acompanhe-nos ao vivo de casa.",
+    "body": "Inscreva-se no YouTube e ative o sininho: avisamos quando o culto começar.",
+    "subscribe": "Inscrever-me no YouTube"
+  }
+}

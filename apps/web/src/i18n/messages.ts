@@ -12,6 +12,7 @@ import esMinistries from './messages/es/ministries.json';
 import esNav from './messages/es/nav.json';
 import esNotFound from './messages/es/not-found.json';
 import esSermons from './messages/es/sermons.json';
+import esSermonsPage from './messages/es/sermons-page.json';
 import esSiteStatus from './messages/es/site-status.json';
 
 import ptAboutUs from './messages/pt/about-us.json';
@@ -28,6 +29,7 @@ import ptMinistries from './messages/pt/ministries.json';
 import ptNav from './messages/pt/nav.json';
 import ptNotFound from './messages/pt/not-found.json';
 import ptSermons from './messages/pt/sermons.json';
+import ptSermonsPage from './messages/pt/sermons-page.json';
 import ptSiteStatus from './messages/pt/site-status.json';
 
 import enAboutUs from './messages/en/about-us.json';
@@ -44,6 +46,7 @@ import enMinistries from './messages/en/ministries.json';
 import enNav from './messages/en/nav.json';
 import enNotFound from './messages/en/not-found.json';
 import enSermons from './messages/en/sermons.json';
+import enSermonsPage from './messages/en/sermons-page.json';
 import enSiteStatus from './messages/en/site-status.json';
 
 import { defaultLocale, type Locale } from './config';
@@ -64,6 +67,7 @@ export const messages = {
     nav: esNav,
     notFound: esNotFound,
     sermons: esSermons,
+    sermonsPage: esSermonsPage,
     siteStatus: esSiteStatus,
   },
   pt: {
@@ -81,6 +85,7 @@ export const messages = {
     nav: ptNav,
     notFound: ptNotFound,
     sermons: ptSermons,
+    sermonsPage: ptSermonsPage,
     siteStatus: ptSiteStatus,
   },
   en: {
@@ -98,6 +103,7 @@ export const messages = {
     nav: enNav,
     notFound: enNotFound,
     sermons: enSermons,
+    sermonsPage: enSermonsPage,
     siteStatus: enSiteStatus,
   },
 } as const;
