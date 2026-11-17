@@ -1,4 +1,5 @@
 ---
+import AboutPage from 'src/components/About/AboutPage.astro';
 import ContentPageTemplate from 'src/components/ContentPage/ContentPageTemplate.astro';
 import { getContentPageBySlug } from 'src/data/contentPages';
 import { defaultLocale, isLocale } from 'src/i18n/config';
@@ -34,5 +35,5 @@ const breadcrumbs = page.hero.breadcrumbs.map((item) => ({
   noindex={isAlias}
   locale={locale}
 >
-  <ContentPageTemplate page={page} />
+  {page.slug === 'nosotros' ? <AboutPage page={page} /> : <ContentPageTemplate page={page} />}
 </Layout>
