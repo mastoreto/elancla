@@ -1,0 +1,73 @@
+{
+  "seo": {
+    "title": "Sermons",
+    "description": "Watch the service live and listen to every sermon from Iglesia Bautista El Ancla, organized by series.",
+    "keywords": [
+      "sermons",
+      "preaching",
+      "live service",
+      "Baptist church Montevideo"
+    ]
+  },
+  "breadcrumbs": {
+    "home": "El Ancla",
+    "resources": "Resources",
+    "current": "Sermons"
+  },
+  "hero": {
+    "live": {
+      "badge": "Live now",
+      "titleBefore": "We are ",
+      "titleEmphasis": "live.",
+      "titleAfter": "",
+      "body": "Sunday service. Join us from wherever you are, no sign-up and nothing to install.",
+      "primaryCta": "Watch on YouTube",
+      "secondaryCta": "Past sermons"
+    },
+    "idle": {
+      "eyebrow": "Sermons · Iglesia Bautista El Ancla",
+      "titleBefore": "The Word, ",
+      "titleEmphasis": "whenever",
+      "titleAfter": " you need it.",
+      "body": "Every Sunday sermon, organized by series. Listen at home, on the road, or when a week calls for hearing the gospel again.",
+      "primaryCta": "Browse sermons",
+      "secondaryCta": "Subscribe on YouTube"
+    }
+  },
+  "player": {
+    "liveChip": "Live",
+    "latestChip": "Latest sermon",
+    "playingChip": "Now playing",
+    "liveMeta": "Live broadcast",
+    "nextService": "Next live service: Sunday 11:15",
+    "iframeTitle": "YouTube player",
+    "emptyTitle": "Sermons will be here soon",
+    "emptyBody": "We are connecting the YouTube channel."
+  },
+  "list": {
+    "eyebrow": "[ 01 — Sermons ]",
+    "title": "Everything that has been preached, ",
+    "emphasis": "in one place.",
+    "searchLabel": "Search sermons",
+    "searchPlaceholder": "Search by title",
+    "all": "All",
+    "empty": "There are no sermons to show yet.",
+    "noResults": "No sermons match that title. Try another one.",
+    "more": "Load more",
+    "watch": "Watch on YouTube"
+  },
+  "series": {
+    "eyebrow": "[ 02 — Series ]",
+    "title": "One book, ",
+    "emphasis": "start to finish.",
+    "body": "We preach the Bible in order. Each series is a YouTube playlist and updates itself whenever a new sermon is uploaded.",
+    "count": "{n} sermons",
+    "countOne": "1 sermon"
+  },
+  "cta": {
+    "eyebrow": "Every Sunday · 11:15",
+    "title": "Join us live from home.",
+    "body": "Subscribe on YouTube and turn on the bell: we will let you know when the service starts.",
+    "subscribe": "Subscribe on YouTube"
+  }
+}

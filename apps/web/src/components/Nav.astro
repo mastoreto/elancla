@@ -76,6 +76,13 @@ const styles = {
 
 <!-- NAV -->
 <header class={styles.header} id="siteHeader">
+  {isOnline && (
+    <a href={localizePath('/sermones#vivo', locale)} class="live-bar" data-live-bar hidden>
+      <span class="live-bar__dot" aria-hidden="true"></span>
+      <span>{copy.liveStream.barText}</span>
+      <u>{copy.liveStream.barCta}</u>
+    </a>
+  )}
   <div class={styles.wrapper}>
     <nav
       class={styles.nav}
@@ -125,8 +132,14 @@ const styles = {
       <div class={styles.actions}>
         {isOnline && (
         <span class={styles.liveChip}>
-          <span class={styles.liveDot}></span>
-          {copy.live}
+          <span data-live-off class="inline-flex items-center gap-2">
+            <span class={styles.liveDot}></span>
+            {copy.live}
+          </span>
+          <a href={localizePath('/sermones#vivo', locale)} data-live-on hidden class="inline-flex items-center gap-2 text-primary">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary live-dot"></span>
+            {copy.liveStream.chip}
+          </a>
         </span>
         )}
 
@@ -199,4 +212,31 @@ const styles = {
   </div>
 </header>
 
+{isOnline && (
+  <dialog class="live-dialog" data-live-dialog aria-labelledby="live-dialog-title">
+    <a href={localizePath('/sermones#vivo', locale)} class="live-dialog__media" data-live-dialog-close tabindex="-1" aria-hidden="true">
+      <img data-live-dialog-thumb alt="" width="640" height="360" />
+      <span class="live-dialog__play"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M8 5.5v13l11-6.5z" fill="currentColor"></path></svg></span>
+    </a>
+    <span class="live-dialog__badge"><i class="live-bar__dot" aria-hidden="true"></i>{copy.liveStream.chip}</span>
+    <button type="button" class="live-dialog__x" data-live-dialog-close aria-label={copy.liveStream.popupClose}>×</button>
+    <div class="live-dialog__content">
+      <AnchorMark id="live-dialog-anchor" outline={false} class="live-dialog__anchor" />
+      <h2 id="live-dialog-title" class="live-dialog__title">{copy.liveStream.popupTitle}</h2>
+      <p class="live-dialog__body">{copy.liveStream.popupBody}</p>
+      <div class="live-dialog__actions">
+        <a href={localizePath('/sermones#vivo', locale)} class="live-dialog__btn" data-live-dialog-close autofocus>{copy.liveStream.popupHere}</a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" class="live-dialog__btn live-dialog__btn--ghost" data-live-dialog-close data-live-dialog-youtube>{copy.liveStream.popupYoutube} ↗</a>
+      </div>
+    </div>
+  </dialog>
+)}
+
 {isOnline && <MobileMenu recursos={recursos} locale={locale} localeLinks={localeLinks} />}
+
+{isOnline && (
+  <script>
+    import { initLive } from 'src/scripts/live';
+    document.addEventListener('astro:page-load', initLive);
+  </script>
+)}
