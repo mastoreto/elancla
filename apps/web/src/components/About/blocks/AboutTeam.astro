@@ -1,0 +1,22 @@
+---
+import type { ContentTeamBlock } from 'src/data/contentPages';
+
+interface Props {
+  block: ContentTeamBlock;
+}
+
+const { block } = Astro.props;
+---
+
+<div class="ab-grid ab-grid--2">
+  {
+    block.people.map((person, i) => (
+      <article class="ab-card ab-person">
+        <span class:list={['ab-person__avatar', i === 0 && 'is-lead']} aria-hidden="true">{person.initials}</span>
+        <span class="ab-person__role">{person.role}</span>
+        <b class="ab-card__title">{person.name}</b>
+        <span class="ab-card__text">{person.bio}</span>
+      </article>
+    ))
+  }
+</div>

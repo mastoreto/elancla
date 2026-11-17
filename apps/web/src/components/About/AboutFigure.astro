@@ -1,0 +1,19 @@
+---
+import type { ContentFigureData } from 'src/data/contentPages';
+
+interface Props {
+  figure: ContentFigureData;
+}
+
+const { figure } = Astro.props;
+const place = [figure.badge, figure.meta].filter(Boolean).join(' ');
+---
+
+<section class="ab-figure">
+  <figure>
+    <img src={figure.src} alt={figure.alt} class="ln-photo" loading="eager" />
+    <span class="ab-pill ab-pill--tl">{figure.label}</span>
+    {place && <span class="ab-pill ab-pill--bl">{place}</span>}
+    <figcaption class="sr-only">{figure.caption}</figcaption>
+  </figure>
+</section>

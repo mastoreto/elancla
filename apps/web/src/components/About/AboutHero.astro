@@ -1,0 +1,54 @@
+---
+import InlineText from 'src/components/ContentPage/InlineText.astro';
+import type { ContentHero } from 'src/data/contentPages';
+
+interface Props {
+  hero: ContentHero;
+}
+
+const { hero } = Astro.props;
+const eyebrow = [hero.chip, ...hero.meta].filter(Boolean).join(' · ');
+const current = hero.breadcrumbs[hero.breadcrumbs.length - 1];
+// Stat tiles alternate white / red / mist.
+const tones = ['white', 'red', 'mist'];
+---
+
+<section class="ab-hero">
+  <nav class="ab-crumb" aria-label={current.label}>
+    {
+      hero.breadcrumbs.map((crumb, i) => (
+        <>
+          {crumb.href ? (
+            <a href={crumb.href} class="ulink">{crumb.label}</a>
+          ) : (
+            <span class="ab-crumb__now" aria-current="page">{crumb.label}</span>
+          )}
+          {i < hero.breadcrumbs.length - 1 && <span aria-hidden="true">/</span>}
+        </>
+      ))
+    }
+  </nav>
+
+  <div class="ab-hero__row">
+    <div class="ab-hero__text">
+      <span class="ln-eyebrow ab-rise">{eyebrow}</span>
+      <h1 class="ln-h ab-hero__title ab-rise" style="--d: 0.15s">
+        {hero.titleLines.map((line) => <><InlineText value={line} emphasisClass="ab-accent" />{' '}</>)}
+      </h1>
+    </div>
+    <p class="ab-hero__lead ab-rise" style="--d: 0.3s">{hero.standfirst}</p>
+  </div>
+
+  {
+    hero.stats?.length && (
+      <div class="ab-stats ab-rise" style="--d: 0.45s">
+        {hero.stats.map((stat, i) => (
+          <div class={`ab-stat ab-stat--${tones[i % tones.length]}`}>
+            <b>{stat.value}</b>
+            <span>{stat.label}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+</section>

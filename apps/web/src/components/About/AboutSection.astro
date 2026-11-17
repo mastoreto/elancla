@@ -1,0 +1,40 @@
+---
+import InlineText from 'src/components/ContentPage/InlineText.astro';
+import type { ContentSection } from 'src/data/contentPages';
+import AboutLinkGrid from './blocks/AboutLinkGrid.astro';
+import AboutProse from './blocks/AboutProse.astro';
+import AboutTeam from './blocks/AboutTeam.astro';
+import AboutTimeline from './blocks/AboutTimeline.astro';
+import AboutValues from './blocks/AboutValues.astro';
+import AboutVerse from './blocks/AboutVerse.astro';
+
+interface Props {
+  section: ContentSection;
+}
+
+const { section } = Astro.props;
+// The design shows the history as a timeline only; the long narrative stays in the data but is not rendered.
+const blocks = section.blocks.filter(
+  (b) => !(b.type === 'prose' && section.blocks.some((o) => o.type === 'timeline'))
+);
+---
+
+<section id={section.id} class="ab-section">
+  <header class="ab-head">
+    <span class="ln-eyebrow">{section.eyebrow}</span>
+    <h2 class="ln-h ab-h2"><InlineText value={section.title} emphasisClass="ab-accent" /></h2>
+    {section.description && <p class="ab-lead">{section.description}</p>}
+  </header>
+  {
+    blocks.map((block) => (
+      <>
+        {block.type === 'prose' && <AboutProse block={block} />}
+        {block.type === 'verse' && <AboutVerse block={block} sectionId={section.id} />}
+        {block.type === 'values' && <AboutValues block={block} />}
+        {block.type === 'timeline' && <AboutTimeline block={block} />}
+        {block.type === 'team' && <AboutTeam block={block} />}
+        {block.type === 'linkGrid' && <AboutLinkGrid block={block} />}
+      </>
+    ))
+  }
+</section>

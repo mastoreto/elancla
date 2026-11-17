@@ -39,6 +39,7 @@
       { "label": "How to visit", "href": "/#visitanos" },
       { "label": "Blog", "href": "/blog" }
     ],
+    "tocTitle": "On this page",
     "sections": [
       {
         "id": "identidad",

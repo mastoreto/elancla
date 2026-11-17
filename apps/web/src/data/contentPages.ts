@@ -175,6 +175,8 @@ export interface ContentPage {
   hero: ContentHero;
   featuredImage?: ContentFigureData;
   shortcuts?: ContentShortcut[];
+  /** Heading of the sticky in-page index (only the About page renders it). */
+  tocTitle?: string;
   sections: ContentSection[];
   cta?: ContentCta;
 }
