@@ -4,6 +4,7 @@ import type { BlogArticle } from 'src/data/blog';
 import { defaultLocale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
+import { getBlogNeighbours } from 'src/data/blogNeighbours';
 import Layout from 'src/layouts/Layout.astro';
 import { getAllPostsFull } from '@ancla/content';
 
@@ -17,6 +18,7 @@ if (!article) {
   return Astro.rewrite('/404');
 }
 const copy = getMessages(locale).blog;
+const { related, previous, next } = getBlogNeighbours(posts as BlogArticle[], article);
 
 // Artículos relacionados y navegación derivados de todos los artículos en build time
 // se resuelven en el template vía props; las funciones helper siguen disponibles
@@ -47,9 +49,9 @@ const breadcrumbs = [
 >
   <BlogArticleTemplate
     article={article}
-    related={[]}
-    previous={null}
-    next={null}
+    related={related}
+    previous={previous}
+    next={next}
     copy={copy}
     locale={locale}
   />

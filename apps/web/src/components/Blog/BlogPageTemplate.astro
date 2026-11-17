@@ -1,20 +1,13 @@
 ---
-import type {
-  BlogArchiveItem,
-  BlogArticle,
-  BlogCategory,
-  BlogPopularItem,
-  BlogSeriesItem,
-} from 'src/data/blog';
+import type { BlogArticle, BlogCategory, BlogSeriesItem } from 'src/data/blog';
+import type { Locale } from 'src/i18n/config';
+import NewsletterCard from '../ui/NewsletterCard.astro';
 import BlogArticleGrid from './BlogArticleGrid.astro';
 import BlogCategories from './BlogCategories.astro';
-import BlogExplore from './BlogExplore.astro';
 import BlogFeatured from './BlogFeatured.astro';
 import BlogHero from './BlogHero.astro';
 import BlogMarquee from './BlogMarquee.astro';
-import BlogNewsletter from './BlogNewsletter.astro';
 import BlogSeries from './BlogSeries.astro';
-import type { Locale } from 'src/i18n/config';
 
 interface Props {
   articles: BlogArticle[];
@@ -22,41 +15,20 @@ interface Props {
   featured: BlogArticle | null;
   marqueeItems: string[];
   series: BlogSeriesItem[];
-  popular: BlogPopularItem[];
-  tags: string[];
-  archive: BlogArchiveItem[];
   copy: any;
   locale: Locale;
 }
 
-const {
-  articles,
-  categories,
-  featured,
-  marqueeItems,
-  series,
-  popular,
-  tags,
-  archive,
-  copy,
-  locale,
-} = Astro.props;
+const { articles, categories, featured, marqueeItems, series, copy, locale } = Astro.props;
 ---
 
-<article class="blog-page">
-  <BlogHero totalArticles={142} categoryCount={categories.length - 1} copy={copy.hero} locale={locale} />
+<div class="ln bl">
+  <BlogHero copy={copy.hero} />
   <BlogMarquee items={marqueeItems} />
   <BlogFeatured article={featured} copy={copy.featured} locale={locale} />
   <BlogCategories categories={categories} copy={copy.categories} />
-  <BlogArticleGrid articles={articles} categories={categories} copy={copy.articles} locale={locale} />
+  <BlogArticleGrid articles={articles} copy={copy.articles} locale={locale} />
   <BlogSeries series={series} copy={copy.series} locale={locale} />
-  <BlogExplore
-    popular={popular}
-    tags={tags}
-    archive={archive}
-    author={featured?.author ?? null}
-    copy={copy.explore}
-    locale={locale}
-  />
-  <BlogNewsletter copy={copy.newsletter} />
-</article>
+  <NewsletterCard id="newsletter" copy={copy.newsletter} />
+  <div class="bl-end"></div>
+</div>

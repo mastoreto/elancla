@@ -1,0 +1,46 @@
+---
+// Red subscribe card with the faint anchor. The form is handled by initBlog (`.bl-newsletter-form`).
+import AnchorMark from '../AnchorMark.astro';
+import Button from './Button.astro';
+
+interface Props {
+  copy: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    name: string;
+    email: string;
+    namePlaceholder: string;
+    emailPlaceholder: string;
+    readers: string;
+    submit: string;
+    thanks: string;
+  };
+  id?: string;
+}
+
+const { copy, id } = Astro.props;
+---
+
+<section id={id} class="bl-news">
+  <div class="bl-news__card">
+    <AnchorMark id="news-anchor" outline={false} class="bl-news__anchor" />
+    <div class="bl-news__text">
+      <span class="ln-eyebrow bl-news__eyebrow">{copy.eyebrow}</span>
+      <h2 class="ln-h bl-news__title">{copy.title}</h2>
+      <p>{copy.description}</p>
+    </div>
+    <form class="bl-newsletter-form bl-news__form" data-thanks={copy.thanks}>
+      <label class="bl-field">
+        <span class="sr-only">{copy.name}</span>
+        <input type="text" name="name" autocomplete="name" placeholder={copy.namePlaceholder} />
+      </label>
+      <label class="bl-field">
+        <span class="sr-only">{copy.email}</span>
+        <input type="email" name="email" autocomplete="email" required placeholder={copy.emailPlaceholder} />
+      </label>
+      <Button type="submit" variant="dark"><span data-newsletter-label>{copy.submit}</span></Button>
+      <small>{copy.readers}</small>
+    </form>
+  </div>
+</section>

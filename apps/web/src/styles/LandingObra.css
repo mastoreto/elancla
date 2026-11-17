@@ -84,6 +84,26 @@
 .ln-btn--ghost:hover { box-shadow: 0 14px 28px -14px rgba(21, 21, 21, 0.45); }
 .ln-btn--light { background: #f4efe6; color: var(--ln-ink); padding: 0 22px 0 26px; }
 .ln-btn--light:hover { box-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.6); }
+.ln-btn--dark { background: var(--ln-ink); padding: 0 26px; }
+.ln-btn--dark:hover { box-shadow: 0 14px 28px -14px rgba(21, 21, 21, 0.6); }
+
+/* Small label pill sitting on a photo or a card. */
+.ln-pill {
+  display: inline-flex; align-items: center; border-radius: 999px; padding: 7px 13px;
+  font-family: var(--ln-sans-b); font-size: 0.75rem; letter-spacing: 0.04em;
+  background: #fff; color: var(--ln-ink);
+}
+.ln-pill--red { background: var(--ln-red); color: #fff; }
+
+/* Filter / category chip (a button or a link). */
+.ln-chip {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border: 0; border-radius: 999px;
+  background: var(--ln-mist); color: var(--ln-ink); text-decoration: none; cursor: pointer;
+  font-family: var(--ln-sans-b); font-size: 0.9375rem;
+  transition: transform 0.5s var(--ln-ease), background-color 0.4s, color 0.4s;
+}
+.ln-chip:hover { transform: translateY(-2px); background: #fff; }
+.ln-chip[data-on="true"], .ln-chip.is-on { background: var(--ln-ink); color: #fff; }
 
 .ln-photo {
   filter: grayscale(1) sepia(0.14) contrast(1.06);
