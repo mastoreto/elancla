@@ -1,0 +1,45 @@
+---
+import Layout from 'src/layouts/Layout.astro';
+import { getDoctrines, getSolas } from 'src/data/doctrines';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+import type { Locale } from 'src/i18n/config';
+import ConfesionHero from './ConfesionHero.astro';
+import ConfesionMarquee from './ConfesionMarquee.astro';
+import ConfesionQuote from './ConfesionQuote.astro';
+import DoctrineList from './DoctrineList.astro';
+import ConfesionChristus from './ConfesionChristus.astro';
+import ConfesionCTA from './ConfesionCTA.astro';
+import 'src/styles/ConfesionDeFe.css';
+
+interface Props {
+  locale: Locale;
+  canonical?: string;
+}
+
+const { locale, canonical } = Astro.props;
+const copy = getMessages(locale).confession;
+const doctrines = getDoctrines(locale);
+---
+
+<Layout
+  title={copy.seo.title}
+  description={copy.seo.description}
+  keywords={copy.seo.keywords}
+  breadcrumbs={copy.breadcrumbs.map((item) => ({ ...item, url: localizePath(item.url, locale) }))}
+  canonical={canonical}
+  locale={locale}
+>
+  <div class="ln cf">
+    <ConfesionHero copy={copy.hero} locale={locale} />
+    <ConfesionMarquee solas={getSolas(locale)} />
+    <ConfesionQuote copy={copy.quote} />
+    <DoctrineList doctrines={doctrines} copy={copy.doctrineList} />
+    <ConfesionChristus copy={copy.christus} />
+    <ConfesionCTA copy={copy.cta} locale={locale} />
+  </div>
+</Layout>
+
+<script>
+  import 'src/scripts/confesion.ts';
+</script>

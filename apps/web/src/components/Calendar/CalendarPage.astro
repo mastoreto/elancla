@@ -1,0 +1,56 @@
+---
+import { CALENDAR_YEAR, events } from 'src/data/calendar';
+import type { Locale } from 'src/i18n/config';
+import { getHtmlLang, localizePath } from 'src/i18n/utils';
+import { getMessages } from 'src/i18n/messages';
+import Layout from 'src/layouts/Layout.astro';
+import CalendarHero from './CalendarHero.astro';
+import CalendarMonths from './CalendarMonths.astro';
+import CalendarSubscribe from './CalendarSubscribe.astro';
+import CalendarTakeHome from './CalendarTakeHome.astro';
+import CalendarWeekly from './CalendarWeekly.astro';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const copy = getMessages(locale).calendar;
+const lang = getHtmlLang(locale);
+
+const first = [...events].sort((a, b) => a.date.localeCompare(b.date))[0];
+const firstDate = new Date(`${first.date}T00:00:00Z`);
+const next = {
+  day: firstDate.getUTCDate(),
+  weekday: new Intl.DateTimeFormat(lang, { weekday: 'short', timeZone: 'UTC' }).format(firstDate).replace('.', ''),
+  month: new Intl.DateTimeFormat(lang, { month: 'short', timeZone: 'UTC' }).format(firstDate).replace('.', ''),
+  title: first.title,
+};
+
+const icsUrl = new URL('/calendario-anual.ics', Astro.site).toString();
+const googleHref = `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(icsUrl.replace(/^https?:/, 'webcal:'))}`;
+const path = localizePath('/calendario-anual', locale);
+---
+
+<Layout
+  title={copy.seo.title}
+  description={copy.seo.description}
+  keywords={copy.seo.keywords}
+  breadcrumbs={[
+    { name: copy.breadcrumbs.home, url: localizePath('/', locale) },
+    { name: copy.breadcrumbs.current, url: path },
+  ]}
+  locale={locale}
+>
+  <div class="ln cal" data-year={CALENDAR_YEAR}>
+    <CalendarHero copy={copy} locale={locale} next={next} />
+    <CalendarWeekly copy={copy} locale={locale} />
+    <CalendarMonths copy={copy} locale={locale} />
+    <CalendarTakeHome copy={copy} />
+    <CalendarSubscribe copy={copy} googleHref={googleHref} icsHref={icsUrl} />
+  </div>
+</Layout>
+
+<script>
+  import { initCalendar } from 'src/scripts/calendar';
+  document.addEventListener('astro:page-load', initCalendar);
+</script>

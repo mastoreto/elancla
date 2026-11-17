@@ -1,6 +1,7 @@
 import esAboutUs from './messages/es/about-us.json';
 import esActivities from './messages/es/activities.json';
 import esBlog from './messages/es/blog.json';
+import esCalendar from './messages/es/calendar.json';
 import esConfession from './messages/es/confession.json';
 import esContact from './messages/es/contact.json';
 import esContentPages from './messages/es/content-pages.json';
@@ -16,6 +17,7 @@ import esSiteStatus from './messages/es/site-status.json';
 import ptAboutUs from './messages/pt/about-us.json';
 import ptActivities from './messages/pt/activities.json';
 import ptBlog from './messages/pt/blog.json';
+import ptCalendar from './messages/pt/calendar.json';
 import ptConfession from './messages/pt/confession.json';
 import ptContact from './messages/pt/contact.json';
 import ptContentPages from './messages/pt/content-pages.json';
@@ -31,6 +33,7 @@ import ptSiteStatus from './messages/pt/site-status.json';
 import enAboutUs from './messages/en/about-us.json';
 import enActivities from './messages/en/activities.json';
 import enBlog from './messages/en/blog.json';
+import enCalendar from './messages/en/calendar.json';
 import enConfession from './messages/en/confession.json';
 import enContact from './messages/en/contact.json';
 import enContentPages from './messages/en/content-pages.json';
@@ -50,6 +53,7 @@ export const messages = {
     aboutUs: esAboutUs,
     activities: esActivities,
     blog: esBlog,
+    calendar: esCalendar,
     confession: esConfession,
     contact: esContact,
     contentPages: esContentPages,
@@ -66,6 +70,7 @@ export const messages = {
     aboutUs: ptAboutUs,
     activities: ptActivities,
     blog: ptBlog,
+    calendar: ptCalendar,
     confession: ptConfession,
     contact: ptContact,
     contentPages: ptContentPages,
@@ -82,6 +87,7 @@ export const messages = {
     aboutUs: enAboutUs,
     activities: enActivities,
     blog: enBlog,
+    calendar: enCalendar,
     confession: enConfession,
     contact: enContact,
     contentPages: enContentPages,

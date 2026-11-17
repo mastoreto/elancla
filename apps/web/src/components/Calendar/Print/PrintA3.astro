@@ -1,0 +1,44 @@
+---
+import AnchorMark from 'src/components/AnchorMark.astro';
+import { CALENDAR_YEAR, events, eventsOfMonth, weeklySorted } from 'src/data/calendar';
+import PrintMonthGrid from './PrintMonthGrid.astro';
+import { MONTHS_ES, dayOf, weekdayShortByIndex, capitalize } from './printFormat';
+
+const weekly = weeklySorted();
+---
+
+<section class="cp-sheet cp-a3">
+  <header class="cp-a3__head">
+    <div class="cp-a3__brand">
+      <AnchorMark id="cp-a3" outline={false} color="#a8141b" class="cp-a3__logo" />
+      <div class="cp-a3__title">
+        <span class="cp-eyebrow">Iglesia Bautista El Ancla · Montevideo</span>
+        <b class="cp-serif">Calendario {CALENDAR_YEAR}</b>
+      </div>
+    </div>
+    <div class="cp-a3__week">
+      <span class="cp-eyebrow cp-eyebrow--ink">Cada semana</span>
+      {weekly.map((a) => <span><b>{capitalize(weekdayShortByIndex(a.day))} {a.time}</b> {a.title}</span>)}
+    </div>
+  </header>
+
+  <div class="cp-a3__months">
+    {MONTHS_ES.map((name, month) => {
+      const list = eventsOfMonth(events, month);
+      return (
+        <div class="cp-a3__month">
+          <b class="cp-serif cp-a3__mname">{name}</b>
+          <PrintMonthGrid year={CALENDAR_YEAR} month={month} eventDays={list.map(dayOf)} />
+          <div class="cp-a3__events">
+            {list.map((e) => <div class="cp-a3__ev"><b>{dayOf(e)}</b><span>{e.title}</span></div>)}
+          </div>
+        </div>
+      );
+    })}
+  </div>
+
+  <footer class="cp-a3__foot">
+    <span>Círculos rojos: actividades de los ministerios. Fechas de ejemplo.</span>
+    <span>Para imprimir en A3 · escala 100%</span>
+  </footer>
+</section>

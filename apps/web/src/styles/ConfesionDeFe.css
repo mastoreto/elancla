@@ -1,218 +1,184 @@
-/* ── Seal rotation ── */
-@keyframes sealSpin {
-  to { transform: rotate(360deg); }
-}
-.seal-rot {
-  animation: sealSpin 28s linear infinite;
-  transform-origin: center;
+/* Confesión de fe. Prefix `cf-`. Tokens and buttons come from the landing (.ln / .ln-btn). */
+
+.cf {
+  --cf-pad: clamp(1.25rem, 3.9vw, 3.5rem);
+  background: var(--ln-paper);
+  padding-bottom: 6rem;
 }
 
-/* ── Decorative quote mark ── */
-.quote-mark {
-  font-family: "Fraunces", serif;
-  font-style: italic;
-  font-size: 12rem;
-  line-height: 0.7;
-  color: var(--color-primary);
-  opacity: 0.18;
-  user-select: none;
-}
-
-/* ── Sticky index ── */
-.idx-item {
-  position: relative;
-  padding-left: 44px;
-  transition: color 0.3s ease;
-}
-.idx-item::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 1px;
-  background: rgba(20, 20, 20, 0.2);
-  transition: background 0.3s ease, width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.idx-item:hover::before,
-.idx-item.active::before {
-  background: var(--color-primary);
-  width: 36px;
-}
-.idx-item.active {
-  color: var(--color-ink);
-  font-weight: 600;
-}
-.idx-item.active .idx-num {
-  color: var(--color-primary);
-}
-
-/* ── Doctrine accordion row ── */
-.doctrine-row {
-  position: relative;
-  border-top: 1px solid rgba(20, 20, 20, 0.12);
-  transition: background 0.5s ease;
-}
-.doctrine-row:hover {
-  background: rgba(20, 20, 20, 0.015);
-}
-.doctrine-row:hover .row-title {
-  color: var(--color-primary);
-}
-.doctrine-row:hover .row-plus,
-.doctrine-row.open .row-plus {
-  background: var(--color-primary);
-  color: #fff;
-  border-color: var(--color-primary);
-}
-.doctrine-row:hover .row-plus {
-  transform: rotate(90deg);
-}
-.doctrine-row.open .row-plus {
-  background: var(--color-ink);
-  border-color: var(--color-ink);
-  transform: rotate(45deg);
-}
-.row-plus {
-  transition:
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    background 0.35s ease,
-    color 0.35s ease,
-    border-color 0.35s ease;
-}
-.row-title {
-  transition: color 0.4s ease;
-}
-.row-content {
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition:
-    max-height 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.7s ease;
-}
-.doctrine-row.open .row-content {
-  max-height: 3000px;
-  opacity: 1;
-}
-
-/* ── Verse callout ── */
-.verse-callout {
-  border-left: 2px solid var(--color-primary);
-  padding: 12px 0 12px 20px;
-  margin: 16px 0 20px;
-}
-.verse-callout p {
-  font-family: "Fraunces", serif;
-  font-style: italic;
-  font-weight: 300;
-  font-size: 22px;
-  line-height: 1.4;
-  color: var(--color-ink);
-  margin: 0;
-}
-.verse-callout .ref {
-  font-family: "Inter", sans-serif;
-  font-size: 10.5px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(20, 20, 20, 0.55);
-  margin-top: 8px;
+.cf-accent { color: var(--ln-red); }
+.cf-cap {
   display: block;
-}
-
-/* ── Detail body typography ── */
-.detail-body p {
-  font-family: "Libre Franklin", sans-serif;
-  font-size: 16px;
-  line-height: 1.75;
-  color: rgba(20, 20, 20, 0.78);
-  margin-bottom: 12px;
-}
-.detail-body h4 {
-  font-family: "Inter", sans-serif;
-  font-size: 10.5px;
-  letter-spacing: 0.22em;
+  font-family: var(--ln-sans-b);
+  font-style: normal;
+  font-size: 0.8125rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-primary);
-  margin: 24px 0 10px;
-  font-weight: 700;
-}
-.detail-body ul,
-.detail-body ol {
-  padding-left: 1.1rem;
-  margin-bottom: 12px;
-}
-.detail-body li {
-  font-family: "Libre Franklin", sans-serif;
-  font-size: 15px;
-  line-height: 1.7;
-  color: rgba(20, 20, 20, 0.78);
-  margin-bottom: 6px;
-}
-.detail-body ul {
-  list-style: none;
-}
-.detail-body ul li {
-  position: relative;
-  padding-left: 18px;
-}
-.detail-body ul li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.85em;
-  width: 8px;
-  height: 1px;
-  background: var(--color-primary);
-}
-.detail-body ol {
-  list-style: none;
-  counter-reset: orditem;
-}
-.detail-body ol li {
-  position: relative;
-  padding-left: 30px;
-  counter-increment: orditem;
-}
-.detail-body ol li::before {
-  content: counter(orditem, decimal-leading-zero) ".";
-  position: absolute;
-  left: 0;
-  top: 0;
-  font-family: "JetBrains Mono", "Fira Mono", monospace;
-  font-size: 12px;
-  color: var(--color-primary);
-  font-weight: 600;
-  letter-spacing: 0.05em;
-}
-.detail-body b {
-  color: var(--color-ink);
-  font-weight: 600;
+  color: #4a4a48;
 }
 
-/* ── Reference chip ── */
-.ref-chip {
-  font-family: "Inter", sans-serif;
-  font-size: 11px;
-  padding: 4px 10px;
-  border: 1px solid rgba(20, 20, 20, 0.15);
-  border-radius: 999px;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  color: rgba(20, 20, 20, 0.65);
+/* Hero */
+.cf-hero { padding: clamp(7.5rem, 11vw, 9.5rem) var(--cf-pad) 0; display: flex; flex-direction: column; gap: 1.75rem; }
+.cf-crumb { display: flex; align-items: center; gap: 8px; font-family: var(--ln-sans-b); font-size: 0.875rem; color: #4a4a48; }
+.cf-crumb__now { color: var(--ln-red); }
+.cf-hero__row { display: flex; align-items: flex-end; justify-content: space-between; gap: 3.5rem; }
+.cf-hero__text { flex: 1; display: flex; flex-direction: column; gap: 1.6rem; }
+.cf-hero__title { font-size: clamp(3.25rem, 7.8vw, 7rem); line-height: 0.94; letter-spacing: -0.03em; }
+.cf-hero__lead { margin: 0; max-width: 37.5rem; font-size: clamp(1.0625rem, 1.3vw, 1.1875rem); line-height: 1.55; color: var(--ln-ink-soft); }
+.cf-hero__cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.cf-hero__cta button { cursor: pointer; font-family: var(--ln-sans-b); }
+.cf-rise { opacity: 0; transform: translateY(18px); animation: cf-rise 1.2s var(--d, 0s) var(--ln-ease) forwards; }
+@keyframes cf-rise { to { opacity: 1; transform: none; } }
+
+.cf-seal { position: relative; flex: none; width: clamp(11.875rem, 20.8vw, 18.75rem); aspect-ratio: 1; }
+.cf-seal__ring { width: 100%; height: 100%; font-family: var(--ln-sans-b); animation: cf-spin 36s linear infinite; }
+.cf-seal__anchor { position: absolute; inset: 0; margin: auto; width: 22%; height: auto; }
+@keyframes cf-spin { to { transform: rotate(360deg); } }
+
+/* Marquee of the five solas */
+.cf-marquee { margin-top: clamp(2.75rem, 5vw, 4.5rem); background: var(--ln-warm); color: #f4efe6; padding: clamp(1.1rem, 1.8vw, 1.6rem) 0; overflow: hidden; }
+.cf-marquee__track { display: flex; width: max-content; animation: cf-marquee 34s linear infinite; }
+.cf-marquee__group { display: flex; margin: 0; padding: 0; list-style: none; }
+.cf-marquee__item {
+  display: inline-flex; align-items: center; gap: 28px; padding-right: 28px; white-space: nowrap;
+  font-family: var(--ln-serif); font-style: italic; font-size: clamp(1.75rem, 2.8vw, 2.5rem);
 }
-.ref-chip:hover {
-  background: var(--color-ink);
-  color: var(--color-canvas);
-  border-color: var(--color-ink);
+.cf-marquee__item::after { content: "●"; color: var(--ln-red-live); font-size: 0.55em; }
+@keyframes cf-marquee { to { transform: translateX(-50%); } }
+
+/* Scripture quote */
+.cf-quote { padding: clamp(3.5rem, 6.7vw, 6rem) var(--cf-pad) 0; text-align: center; }
+.cf-quote blockquote { margin: 0 auto; max-width: 62.5rem; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+.cf-quote__text { margin: 0; font-family: var(--ln-serif); font-size: clamp(1.875rem, 4.2vw, 3.75rem); line-height: 1.08; letter-spacing: -0.02em; }
+
+/* Doctrines: accordion cards + sticky index */
+.cf-doc { padding: clamp(3.5rem, 6.7vw, 6rem) var(--cf-pad) 0; display: flex; gap: 3.5rem; scroll-margin-top: 6rem; }
+.cf-doc__main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1.75rem; }
+.cf-doc__head { display: flex; flex-direction: column; gap: 12px; }
+.cf-doc__hint { font-size: 0.9375rem; color: #4a4a48; }
+.cf-doc__list { display: flex; flex-direction: column; gap: 12px; }
+
+.cf-doc__aside { flex: 0 0 15.625rem; position: sticky; top: 7rem; align-self: flex-start; display: flex; flex-direction: column; gap: 1.6rem; }
+.cf-aside__group { display: flex; flex-direction: column; gap: 12px; }
+.cf-idx, .cf-res { width: fit-content; font-family: var(--ln-sans-b); font-size: 0.9375rem; color: #4a4a48; text-decoration: none; }
+.cf-idx { display: flex; gap: 12px; transition: color 0.3s; }
+.cf-idx.is-active { color: var(--ln-red); }
+.cf-res { color: var(--ln-ink); }
+
+.cf-card {
+  --pad-y: 1.625rem; --pad-x: 2rem;
+  scroll-margin-top: 7rem;
+  background: var(--ln-mist); color: var(--ln-ink);
+  border-radius: 2.25rem; padding: var(--pad-y) var(--pad-x);
+  display: flex; flex-direction: column;
+  transition: transform 0.5s var(--ln-ease), box-shadow 0.5s var(--ln-ease), background-color 0.4s;
+}
+.cf-card:not(.is-open):hover { background: #fff; transform: translateY(-4px); box-shadow: 0 22px 40px -26px rgba(21, 21, 21, 0.5); }
+.cf-card__head {
+  display: flex; align-items: center; gap: 1.5rem; width: 100%; padding: 0; border: 0; background: none;
+  color: inherit; font: inherit; text-align: left; cursor: pointer;
+}
+.cf-card__head:focus-visible { outline: 2px solid var(--ln-red); outline-offset: 6px; border-radius: 1rem; }
+.cf-card__num { font-family: var(--ln-serif); font-size: 2.25rem; line-height: 1; color: #8a8079; min-width: 2.4rem; }
+.cf-card__icon {
+  flex: none; width: 3.5rem; height: 3.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: var(--ln-warm); border: 1px solid var(--ln-warm-line); color: #f4efe6;
+}
+.cf-card__icon svg { width: 50%; height: 50%; }
+.cf-card__title { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.cf-card__title b { font-family: var(--ln-serif); font-weight: 700; font-size: 2.5rem; line-height: 1; }
+.cf-card__title span { font-size: 0.9375rem; color: #4a4a48; }
+.cf-card__tag { border: 1px solid rgba(21, 21, 21, 0.15); border-radius: 999px; padding: 6px 14px; font-family: var(--ln-sans-b); font-size: 0.75rem; white-space: nowrap; }
+.cf-card__plus { position: relative; flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: #fff; color: var(--ln-ink); transition: background-color 0.4s, color 0.4s; }
+.cf-card__plus::before, .cf-card__plus::after { content: ""; position: absolute; left: 50%; top: 50%; width: 14px; height: 2px; margin: -1px 0 0 -7px; background: currentColor; border-radius: 1px; transition: transform 0.5s var(--ln-ease); }
+.cf-card__plus::after { transform: rotate(90deg); }
+.cf-card__lead { margin: 0.75rem 0 0 9.625rem; max-width: 42.5rem; font-size: 1rem; line-height: 1.5; color: var(--ln-ink-soft); }
+
+.cf-card__panel { display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows 0.6s var(--ln-ease), visibility 0s 0.6s; }
+.cf-card__inner { min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 1.25rem; }
+.cf-card__summary { margin: 1.25rem 0 0; font-size: 1.1875rem; line-height: 1.55; color: #e7dfd2; }
+.cf-card__verse { margin: 0; background: var(--ln-red); border-radius: 1.5rem; padding: 1.375rem 1.625rem; display: flex; flex-direction: column; gap: 8px; color: #fff; }
+.cf-card__verse p { margin: 0; font-family: var(--ln-serif); font-size: 1.75rem; line-height: 1.15; }
+.cf-card__verse .cf-cap { color: #fbe3e4; }
+.cf-card__section { display: flex; flex-direction: column; gap: 4px; padding: 14px 0; border-top: 1px solid var(--ln-warm-line); }
+.cf-card__section .cf-cap { color: var(--ln-red-live); }
+.cf-card__refs { display: flex; flex-wrap: wrap; gap: 8px; }
+.cf-card__refs .cf-cap { width: 100%; color: #8a8079; }
+.cf-chip { border: 1px solid var(--ln-warm-line); border-radius: 999px; padding: 5px 12px; font-family: var(--ln-sans-b); font-size: 0.75rem; color: #cfc7ba; }
+
+/* Open card: dark, with the red accents of the brand */
+.cf-card.is-open { --pad-y: 2rem; background: var(--ln-warm); color: #f4efe6; }
+.cf-card.is-open .cf-card__num { color: var(--ln-red-live); }
+.cf-card.is-open .cf-card__icon { border-color: var(--ln-red-live); color: var(--ln-red-live); }
+.cf-card.is-open .cf-card__title span { color: #cfc7ba; }
+.cf-card.is-open .cf-card__tag { border-color: var(--ln-warm-line); }
+.cf-card.is-open .cf-card__plus { background: var(--ln-red-live); color: #fff; }
+.cf-card.is-open .cf-card__plus::after { transform: rotate(0); }
+.cf-card.is-open .cf-card__lead { display: none; }
+.cf-card.is-open .cf-card__panel { grid-template-rows: 1fr; visibility: visible; transition-delay: 0s; }
+
+/* Rich text coming from the content (paragraphs, lists) inside the open card */
+.cf-body { font-size: 1rem; line-height: 1.5; color: #e7dfd2; }
+.cf-body > * { margin: 0; }
+.cf-body > * + * { margin-top: 0.5rem; }
+.cf-body b { color: #fff; }
+.cf-body ul, .cf-body ol { padding-left: 1.1rem; }
+.cf-body li + li { margin-top: 0.25rem; }
+
+/* Christus: the red centre of the confession */
+.cf-christus { padding: clamp(3.5rem, 6.7vw, 6rem) var(--cf-pad) 0; }
+.cf-christus__card {
+  position: relative; overflow: hidden; background: var(--ln-red); color: #fff;
+  border-radius: clamp(2rem, 3.3vw, 3rem); padding: clamp(2rem, 5vw, 4.5rem) clamp(1.5rem, 5vw, 4.5rem);
+  display: flex; flex-direction: column; gap: 1.375rem;
+}
+.cf-christus__card > * { position: relative; }
+.cf-christus__card > .cf-christus__mark { position: absolute; }
+.cf-christus__mark {
+  right: 1.25rem; top: 1.25rem; font-family: var(--ln-brand); font-weight: 900; text-transform: uppercase; line-height: 1;
+  font-size: clamp(5.625rem, 13.9vw, 12.5rem); color: rgba(255, 255, 255, 0.08); pointer-events: none;
+}
+.cf-christus__eyebrow { font-family: var(--ln-sans-b); font-size: 0.8125rem; letter-spacing: 0.16em; text-transform: uppercase; color: #fbe3e4; }
+.cf-christus__title { max-width: 56rem; font-size: clamp(2.25rem, 5.3vw, 4.75rem); line-height: 0.98; letter-spacing: -0.03em; }
+.cf-christus__text { margin: 0; max-width: 40rem; font-size: clamp(1rem, 1.3vw, 1.1875rem); line-height: 1.55; }
+.cf-christus__verse { margin: 0; max-width: 40rem; padding-left: 1.25rem; border-left: 3px solid #fff; }
+.cf-christus__verse p { margin: 0 0 8px; font-family: var(--ln-serif); font-size: clamp(1.375rem, 2vw, 1.75rem); line-height: 1.2; }
+.cf-christus__verse .cf-cap { color: #fbe3e4; }
+.cf-btn--white { background: #fff; color: var(--ln-red); padding: 0 26px; }
+.cf-btn--white:hover { box-shadow: 0 14px 28px -14px rgba(21, 21, 21, 0.45); }
+
+/* Closing call */
+.cf-cta { padding: clamp(3.5rem, 6.7vw, 6rem) var(--cf-pad) 0; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1.4rem; }
+.cf-cta__title { max-width: 56rem; font-size: clamp(2.375rem, 5vw, 4.5rem); line-height: 1; letter-spacing: -0.03em; }
+.cf-cta__text { margin: 0; max-width: 35rem; font-size: clamp(1.0625rem, 1.3vw, 1.1875rem); line-height: 1.55; color: var(--ln-ink-soft); }
+.cf-cta__buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+
+@media (max-width: 1023px) {
+  .cf-doc__aside { display: none; }
 }
 
-/* ── Jesus block figure frame ── */
-.fig-frame {
-  aspect-ratio: 3 / 4;
-  background:
-    radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.15), transparent 60%),
-    linear-gradient(160deg, #1a1a1a 0%, #2a2a2a 100%);
+@media (max-width: 767px) {
+  .cf-hero__row { flex-direction: column; align-items: flex-start; gap: 1.75rem; }
+  .cf-hero__text { gap: 1.25rem; }
+  .cf-card__tag { display: none; }
+}
+
+@media (max-width: 639px) {
+  .cf { padding-bottom: 3.5rem; }
+  .cf-hero { gap: 1.375rem; }
+  .cf-card { --pad-y: 1.25rem; --pad-x: 1.25rem; border-radius: 1.75rem; }
+  .cf-card.is-open { --pad-y: 1.375rem; --pad-x: 1.375rem; }
+  .cf-card__head { gap: 0.875rem; }
+  .cf-card__num { font-size: 1.625rem; min-width: 1.7rem; }
+  .cf-card__icon { width: 2.5rem; height: 2.5rem; }
+  .cf-card__title b { font-size: 1.75rem; }
+  .cf-card__lead { display: none; }
+  .cf-card__summary { font-size: 1.0625rem; }
+  .cf-card__verse p { font-size: 1.375rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cf-rise { opacity: 1; transform: none; animation: none; }
+  .cf-seal__ring, .cf-marquee__track { animation: none; }
+  .cf-card, .cf-card__panel { transition: none; }
 }
