@@ -1,0 +1,184 @@
+---
+import type { ContentPage } from 'src/data/contentPages';
+import AnchorMark from 'src/components/AnchorMark.astro';
+import Pill from 'src/components/ui/Pill.astro';
+import InlineText from 'src/components/ContentPage/InlineText.astro';
+import 'src/styles/Ministry.css';
+
+interface Props {
+  page: ContentPage;
+}
+
+const { page } = Astro.props;
+const { hero, featuredImage, sections, cta } = page;
+const sectionsWithBlocks = sections.map((section) => ({
+  ...section,
+  prose: section.blocks.find((b) => b.type === 'prose'),
+  values: section.blocks.find((b) => b.type === 'values'),
+  facts: section.blocks.find((b) => b.type === 'facts'),
+  links: section.blocks.find((b) => b.type === 'linkGrid'),
+}));
+// Stat cards alternate white / red / mist, as in the design.
+const statTone = ['mn-stat--white', 'mn-stat--red', 'mn-stat--mist'];
+---
+
+<article class="ln mn">
+  <header class="mn-hero">
+    <nav class="mn-crumb" aria-label="breadcrumb">
+      {
+        hero.breadcrumbs.map((crumb, i) => (
+          <>
+            {crumb.href ? <a href={crumb.href} class="ulink">{crumb.label}</a> : <span class="mn-crumb__now" aria-current="page">{crumb.label}</span>}
+            {i < hero.breadcrumbs.length - 1 && <span aria-hidden="true">/</span>}
+          </>
+        ))
+      }
+    </nav>
+
+    <div class="mn-hero__row">
+      <div class="mn-hero__text">
+        <span class="ln-eyebrow mn-rise">
+          <span class="mn-chip">{hero.chip}</span>{hero.meta.join(' · ')}
+        </span>
+        <h1 class="ln-h mn-hero__title mn-rise" style="--d: 0.15s">
+          {hero.titleLines.map((line, i) => <>{i > 0 && ' '}<InlineText value={line} emphasisClass="mn-accent" /></>)}
+        </h1>
+      </div>
+      <p class="mn-hero__lead mn-rise" style="--d: 0.3s">{hero.standfirst}</p>
+    </div>
+
+    {
+      hero.stats?.length && (
+        <div class="mn-stats mn-rise" style="--d: 0.45s">
+          {hero.stats.map((stat, i) => (
+            <div class:list={['mn-stat', statTone[i % statTone.length]]}>
+              <b>{stat.value}</b>
+              <span>{stat.label}</span>
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </header>
+
+  {
+    featuredImage && (
+      <section class="mn-cover">
+        <div class="mn-cover__frame">
+          <img src={featuredImage.src} alt={featuredImage.alt} loading="eager" />
+          {featuredImage.label && <Pill class="mn-cover__pill mn-cover__pill--top">{featuredImage.label}</Pill>}
+          {featuredImage.badge && <Pill class="mn-cover__pill mn-cover__pill--bottom">{featuredImage.badge}</Pill>}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="mn-body">
+    <div class="mn-main">
+      {
+        sectionsWithBlocks.map((section) => (
+          <section id={section.id} class="mn-sec">
+            <div class="mn-sec__head">
+              <span class="ln-eyebrow">{section.eyebrow}</span>
+              <h2 class="ln-h mn-h2"><InlineText value={section.title} emphasisClass="mn-accent" /></h2>
+            </div>
+
+            {section.prose?.type === 'prose' && section.prose.paragraphs.map((p) => <p class="mn-prose" set:html={p} />)}
+
+            {
+              section.values?.type === 'values' && (
+                <div class="mn-values">
+                  {section.values.values.map((v) => (
+                    <div class="mn-card">
+                      <span class="mn-card__num">{v.number}</span>
+                      <b>{v.title}</b>
+                      <span>{v.description}</span>
+                    </div>
+                  ))}
+                </div>
+              )
+            }
+
+            {
+              section.facts?.type === 'facts' && (
+                <dl class="mn-facts">
+                  {section.facts.facts.map((f) => (
+                    <div>
+                      <dt>{f.label}</dt>
+                      <dd>{f.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )
+            }
+
+            {
+              section.links?.type === 'linkGrid' && (
+                <div class="mn-links">
+                  {section.links.links.map((link) => (
+                    <a href={link.href} class="mn-card mn-link" style={link.tint ? `--tint: ${link.tint}` : undefined}>
+                      <span class="mn-link__glyph" aria-hidden="true">{link.glyph}</span>
+                      <span class="mn-link__body">
+                        <small>{link.sourceLabel}</small>
+                        <b>{link.title}</b>
+                        <span>{link.description}</span>
+                        <em>{link.meta} →</em>
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              )
+            }
+          </section>
+        ))
+      }
+    </div>
+
+    <aside class="mn-aside">
+      <div class="mn-box mn-box--white">
+        <span class="mn-box__label">{page.tocTitle}</span>
+        <nav>
+          {
+            sections.map((section, i) => (
+              <a href={`#${section.id}`} class="content-toc-link mn-toc-link" data-target={section.id}>
+                <span>{String(i + 1).padStart(2, '0')}</span>{section.tocLabel}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+      {
+        page.shortcuts?.length && (
+          <div class="mn-box">
+            <span class="mn-box__label">{page.shortcutsTitle}</span>
+            {page.shortcuts.map((s) => <a href={s.href} class="ulink mn-shortcut">{s.label}</a>)}
+          </div>
+        )
+      }
+    </aside>
+  </section>
+
+  {
+    cta && (
+      <section class="mn-cta-wrap">
+        <div class="mn-cta">
+          <AnchorMark id="mn-cta" color="#fff" outline={false} class="mn-cta__anchor" />
+          <div class="mn-cta__text">
+            <span class="mn-cta__eyebrow">{cta.eyebrow}</span>
+            <h2 class="ln-h"><InlineText value={cta.title} emphasisClass="mn-plain" /></h2>
+            <p>{cta.body}</p>
+          </div>
+          <div class="mn-cta__buttons">
+            <a href={cta.primary.href} class="ln-btn ln-btn--dark">{cta.primary.label}</a>
+            {cta.secondary && <a href={cta.secondary.href} class="ln-btn ln-btn--outline-light">{cta.secondary.label}</a>}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</article>
+
+<script>
+  import { initContentPage } from 'src/scripts/contentPage';
+  initContentPage();
+</script>

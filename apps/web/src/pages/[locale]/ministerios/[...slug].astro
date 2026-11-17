@@ -1,5 +1,5 @@
 ---
-import ContentPageTemplate from 'src/components/ContentPage/ContentPageTemplate.astro';
+import MinistryTemplate from 'src/components/Ministry/MinistryTemplate.astro';
 import { getContentPageBySlug } from 'src/data/contentPages';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
@@ -34,5 +34,5 @@ const breadcrumbs = page.hero.breadcrumbs.map((item) => ({
   noindex={isAlias}
   locale={locale}
 >
-  <ContentPageTemplate page={page} />
+  <MinistryTemplate page={page} />
 </Layout>

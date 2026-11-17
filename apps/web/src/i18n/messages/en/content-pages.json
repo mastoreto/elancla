@@ -178,11 +178,27 @@
     "figureLabel": "[ MINISTRY ]",
     "figureMeta": "— Montevideo · UY",
     "shortcuts": { "all": "All ministries", "visit": "How to visit", "confession": "Statement of faith" },
+    "ui": {
+      "toc": "On this page",
+      "shortcuts": "Shortcuts",
+      "factsEyebrow": "02 — Practical info",
+      "factsToc": "Practical info",
+      "factsTitleBefore": "When, where and ",
+      "factsTitleEmphasis": "with whom.",
+      "facts": [
+      { "label": "Service", "value": "Sunday · 11:15" },
+      { "label": "Place", "value": "Sanctuary · Av. L. A. de Herrera 3101" },
+      { "label": "How to join", "value": "Visit us on a Sunday and let's talk after the service." }
+      ],
+      "stats": [
+      { "value": "Sun 11:15", "label": "Service" },
+      { "value": "Montevideo", "label": "Uruguay" }
+      ]
+    },
     "sections": {
       "identityEyebrow": "01 — Ministry",
       "identityToc": "About the ministry",
       "identityTitleBefore": "{name}: ",
-      "identityDescription": "This page uses the shared editorial template so each ministry can grow with its own content without duplicating structure.",
       "paragraphs": [
         "The <strong>{name}</strong> ministry exists to accompany the church through a concrete form of service. Today we leave a simple, ordered base for publishing its purpose, activities, leaders, and next steps.",
         "The intention is that every ministry page can evolve from typed data: content is added to the record and the template handles the design, index, images, links, and mobile experience."
@@ -192,7 +208,7 @@
         { "number": "II.", "title": "Serve", "description": "Use concrete gifts to care for and build up the church." },
         { "number": "III.", "title": "Walk with others", "description": "Walk with others in hospitality, prayer, and perseverance." }
       ],
-      "nextEyebrow": "02 — Next step",
+      "nextEyebrow": "03 — Next step",
       "nextToc": "Connect",
       "nextTitleBefore": "A place to ",
       "nextTitleEmphasis": "serve together.",
