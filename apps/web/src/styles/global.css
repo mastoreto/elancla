@@ -189,6 +189,10 @@
   --animate-rise: rise 1.2s var(--ease-obra) var(--d, 0s) forwards;
   --animate-marquee: marquee 34s linear infinite;
   --animate-seal-spin: spin 36s linear infinite;
+  /* 404 anchor: the outline draws itself, then the fill rises and the mark floats. */
+  --animate-anchor-draw: anchor-draw 2.4s 0.4s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  --animate-anchor-forge: anchor-forge 2s 2.2s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  --animate-float: float 7s 4s ease-in-out infinite;
   --animate-pulse-soft: pulse-soft 2.2s ease-in-out infinite;
   --animate-ring: ring 2.6s ease-out infinite;
   --animate-dialog-in: dialog-in 0.6s var(--ease-obra);
@@ -207,6 +211,16 @@
   }
   @keyframes marquee {
     to { transform: translateX(-50%); }
+  }
+  @keyframes anchor-draw {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes anchor-forge {
+    to { transform: scaleY(1); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
   }
   @keyframes pulse-soft {
     0%, 100% { opacity: 1; }

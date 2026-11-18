@@ -3,7 +3,7 @@ import type { ContentPage } from 'src/data/contentPages';
 import AnchorMark from 'src/components/AnchorMark.astro';
 import Pill from 'src/components/ui/Pill.astro';
 import InlineText from 'src/components/ContentPage/InlineText.astro';
-import 'src/styles/Ministry.css';
+import { RISE_IN } from 'src/utils/riseIn';
 
 interface Props {
   page: ContentPage;
@@ -19,41 +19,62 @@ const sectionsWithBlocks = sections.map((section) => ({
   links: section.blocks.find((b) => b.type === 'linkGrid'),
 }));
 // Stat cards alternate white / red / mist, as in the design.
-const statTone = ['mn-stat--white', 'mn-stat--red', 'mn-stat--mist'];
+const statTone = ['bg-obra-white', 'bg-obra-red text-white', 'bg-obra-mist'];
+const EMPHASIS = 'text-obra-red not-italic';
+const CARD =
+  'flex flex-col gap-3 rounded-[28px] bg-(--tint,var(--color-obra-mist)) text-inherit no-underline [transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s,background-color_0.4s] hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift';
+const CARD_TITLE = 'font-obra-serif text-[1.625rem] leading-[1.1] font-bold';
+const BOX = 'flex flex-col rounded-[28px] p-6';
+const BOX_LABEL = 'font-obra-sans-bold text-[0.75rem] tracking-[0.16em] text-obra-muted uppercase';
 ---
 
-<article class="ln mn">
-  <header class="mn-hero">
-    <nav class="mn-crumb" aria-label="breadcrumb">
+<article class="ln bg-obra-paper pb-24">
+  <header class="flex flex-col gap-9 px-gutter-sm pt-[clamp(7.5rem,11vw,9.5rem)]">
+    <nav
+      class="flex flex-wrap items-center gap-2 font-obra-sans-bold text-[0.875rem] text-obra-muted"
+      aria-label="breadcrumb"
+    >
       {
         hero.breadcrumbs.map((crumb, i) => (
           <>
-            {crumb.href ? <a href={crumb.href} class="ulink">{crumb.label}</a> : <span class="mn-crumb__now" aria-current="page">{crumb.label}</span>}
+            {crumb.href ? <a href={crumb.href} class="ulink">{crumb.label}</a> : <span class="text-obra-red" aria-current="page">{crumb.label}</span>}
             {i < hero.breadcrumbs.length - 1 && <span aria-hidden="true">/</span>}
           </>
         ))
       }
     </nav>
 
-    <div class="mn-hero__row">
-      <div class="mn-hero__text">
-        <span class="ln-eyebrow mn-rise">
-          <span class="mn-chip">{hero.chip}</span>{hero.meta.join(' · ')}
+    <div class="flex items-end gap-16 max-lg:flex-col max-lg:items-start max-lg:gap-6">
+      <div class="flex min-w-0 flex-1 flex-col gap-[1.4rem]">
+        <span class:list={['ln-eyebrow inline-flex flex-wrap items-center gap-2.5 tracking-[0.16em]', RISE_IN]}>
+          <span class="rounded-full bg-obra-red px-3 py-1.5 tracking-[0.08em] text-white">{hero.chip}</span>{hero.meta.join(' · ')}
         </span>
-        <h1 class="ln-h mn-hero__title mn-rise" style="--d: 0.15s">
-          {hero.titleLines.map((line, i) => <>{i > 0 && ' '}<InlineText value={line} emphasisClass="mn-accent" /></>)}
+        <h1
+          class:list={['ln-h text-[clamp(3.25rem,7.2vw,6.5rem)] wrap-anywhere', RISE_IN]}
+          style="--d: 0.15s"
+        >
+          {hero.titleLines.map((line, i) => <>{i > 0 && ' '}<InlineText value={line} emphasisClass={EMPHASIS} /></>)}
         </h1>
       </div>
-      <p class="mn-hero__lead mn-rise" style="--d: 0.3s">{hero.standfirst}</p>
+      <p
+        class:list={[
+          'm-0 flex-[0_0_min(26.25rem,100%)] text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft max-lg:w-full max-lg:basis-auto',
+          RISE_IN,
+        ]}
+        style="--d: 0.3s"
+      >{hero.standfirst}</p>
     </div>
 
     {
       hero.stats?.length && (
-        <div class="mn-stats mn-rise" style="--d: 0.45s">
+        <div
+          class:list={['grid grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] gap-2.5', RISE_IN]}
+          style="--d: 0.45s"
+        >
           {hero.stats.map((stat, i) => (
-            <div class:list={['mn-stat', statTone[i % statTone.length]]}>
-              <b>{stat.value}</b>
-              <span>{stat.label}</span>
+            <div class:list={['flex flex-col gap-1 rounded-[32px] p-6', statTone[i % statTone.length]]}>
+              <b class="font-obra-serif text-[clamp(2rem,3.6vw,3.25rem)] leading-none font-bold">{stat.value}</b>
+              <span class="font-obra-sans-bold text-[0.8125rem] tracking-[0.12em] uppercase opacity-80">{stat.label}</span>
             </div>
           ))}
         </div>
@@ -63,36 +84,41 @@ const statTone = ['mn-stat--white', 'mn-stat--red', 'mn-stat--mist'];
 
   {
     featuredImage && (
-      <section class="mn-cover">
-        <div class="mn-cover__frame">
-          <img src={featuredImage.src} alt={featuredImage.alt} loading="eager" />
-          {featuredImage.label && <Pill class="mn-cover__pill mn-cover__pill--top">{featuredImage.label}</Pill>}
-          {featuredImage.badge && <Pill class="mn-cover__pill mn-cover__pill--bottom">{featuredImage.badge}</Pill>}
+      <section class="px-gutter-sm pt-11">
+        <div class="relative h-[clamp(15rem,36vw,32.5rem)] overflow-hidden rounded-[clamp(28px,3.3vw,48px)] bg-obra-warm">
+          <img
+            src={featuredImage.src}
+            alt={featuredImage.alt}
+            class="size-full object-cover object-[50%_60%] [filter:grayscale(1)_sepia(0.14)_contrast(1.06)]"
+            loading="eager"
+          />
+          {featuredImage.label && <Pill class="absolute top-4.5 left-4.5">{featuredImage.label}</Pill>}
+          {featuredImage.badge && <Pill class="absolute bottom-4.5 left-4.5">{featuredImage.badge}</Pill>}
         </div>
       </section>
     )
   }
 
-  <section class="mn-body">
-    <div class="mn-main">
+  <section class="flex gap-14 px-gutter-sm pt-[clamp(3.5rem,6vw,5.5rem)] max-lg:flex-col">
+    <div class="flex min-w-0 flex-1 flex-col gap-[clamp(4rem,7vw,6.875rem)]">
       {
         sectionsWithBlocks.map((section) => (
-          <section id={section.id} class="mn-sec">
-            <div class="mn-sec__head">
+          <section id={section.id} class="flex scroll-mt-28 flex-col gap-7">
+            <div class="flex flex-col gap-3.5">
               <span class="ln-eyebrow">{section.eyebrow}</span>
-              <h2 class="ln-h mn-h2"><InlineText value={section.title} emphasisClass="mn-accent" /></h2>
+              <h2 class="ln-h text-[clamp(2rem,3.6vw,3.25rem)]"><InlineText value={section.title} emphasisClass={EMPHASIS} /></h2>
             </div>
 
-            {section.prose?.type === 'prose' && section.prose.paragraphs.map((p) => <p class="mn-prose" set:html={p} />)}
+            {section.prose?.type === 'prose' && section.prose.paragraphs.map((p) => <p class="m-0 text-[clamp(1.0625rem,1.4vw,1.25rem)] leading-[1.7]" set:html={p} />)}
 
             {
               section.values?.type === 'values' && (
-                <div class="mn-values">
+                <div class="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-3.5">
                   {section.values.values.map((v) => (
-                    <div class="mn-card">
-                      <span class="mn-card__num">{v.number}</span>
-                      <b>{v.title}</b>
-                      <span>{v.description}</span>
+                    <div class:list={[CARD, 'p-6.5']}>
+                      <span class="font-obra-serif text-[2.75rem] leading-none font-bold text-obra-red">{v.number}</span>
+                      <b class={CARD_TITLE}>{v.title}</b>
+                      <span class="text-[1rem] leading-[1.55] text-obra-ink-soft">{v.description}</span>
                     </div>
                   ))}
                 </div>
@@ -101,11 +127,11 @@ const statTone = ['mn-stat--white', 'mn-stat--red', 'mn-stat--mist'];
 
             {
               section.facts?.type === 'facts' && (
-                <dl class="mn-facts">
+                <dl class="m-0 grid grid-cols-[1fr_1fr] gap-x-10 max-[640px]:grid-cols-[1fr]">
                   {section.facts.facts.map((f) => (
-                    <div>
-                      <dt>{f.label}</dt>
-                      <dd>{f.value}</dd>
+                    <div class="flex flex-col gap-1 border-t border-obra-ink/14 py-4">
+                      <dt class="font-obra-sans-bold text-[0.75rem] tracking-[0.14em] text-obra-muted uppercase">{f.label}</dt>
+                      <dd class="m-0 font-obra-sans-bold text-[1.125rem] leading-[1.35]">{f.value}</dd>
                     </div>
                   ))}
                 </dl>
@@ -114,15 +140,24 @@ const statTone = ['mn-stat--white', 'mn-stat--red', 'mn-stat--mist'];
 
             {
               section.links?.type === 'linkGrid' && (
-                <div class="mn-links">
+                <div class="grid grid-cols-[repeat(auto-fit,minmax(19rem,1fr))] gap-3.5">
                   {section.links.links.map((link) => (
-                    <a href={link.href} class="mn-card mn-link" style={link.tint ? `--tint: ${link.tint}` : undefined}>
-                      <span class="mn-link__glyph" aria-hidden="true">{link.glyph}</span>
-                      <span class="mn-link__body">
-                        <small>{link.sourceLabel}</small>
-                        <b>{link.title}</b>
-                        <span>{link.description}</span>
-                        <em>{link.meta} →</em>
+                    <a
+                      href={link.href}
+                      class:list={[CARD, 'flex-row items-start gap-4.5 p-6']}
+                      style={link.tint ? `--tint: ${link.tint}` : undefined}
+                    >
+                      <span
+                        class="inline-flex size-14 flex-none items-center justify-center rounded-[18px] bg-obra-red font-obra-serif text-[1.625rem] font-bold text-white"
+                        aria-hidden="true"
+                      >
+                        {link.glyph}
+                      </span>
+                      <span class="flex flex-col gap-2 text-[1rem] leading-[1.55] text-obra-ink-soft">
+                        <small class="font-obra-sans-bold text-[0.6875rem] tracking-[0.14em] text-obra-muted uppercase">{link.sourceLabel}</small>
+                        <b class={CARD_TITLE}>{link.title}</b>
+                        <span class="text-[0.9375rem] leading-normal text-obra-ink-soft">{link.description}</span>
+                        <em class="font-obra-sans-bold text-[0.8125rem] text-obra-red not-italic">{link.meta} →</em>
                       </span>
                     </a>
                   ))}
@@ -134,14 +169,19 @@ const statTone = ['mn-stat--white', 'mn-stat--red', 'mn-stat--mist'];
       }
     </div>
 
-    <aside class="mn-aside">
-      <div class="mn-box mn-box--white">
-        <span class="mn-box__label">{page.tocTitle}</span>
-        <nav>
+    <aside class="sticky top-28 flex flex-[0_0_17.5rem] flex-col gap-5 self-start max-lg:hidden">
+      <div class:list={[BOX, 'gap-3.5 bg-obra-white']}>
+        <span class={BOX_LABEL}>{page.tocTitle}</span>
+        <nav class="flex flex-col gap-3.5">
           {
             sections.map((section, i) => (
-              <a href={`#${section.id}`} class="mn-toc-link relative" data-content-toc data-target={section.id}>
-                <span>{String(i + 1).padStart(2, '0')}</span>{section.tocLabel}
+              <a
+                href={`#${section.id}`}
+                class="relative m-0 flex gap-3 border-0 p-0 font-obra-sans-bold text-[0.9375rem] leading-[1.4] font-normal text-obra-ink [transition:color_0.3s] hover:text-obra-red [&.active]:text-obra-red"
+                data-content-toc
+                data-target={section.id}
+              >
+                <span class="text-obra-red">{String(i + 1).padStart(2, '0')}</span>{section.tocLabel}
               </a>
             ))
           }
@@ -149,9 +189,11 @@ const statTone = ['mn-stat--white', 'mn-stat--red', 'mn-stat--mist'];
       </div>
       {
         page.shortcuts?.length && (
-          <div class="mn-box">
-            <span class="mn-box__label">{page.shortcutsTitle}</span>
-            {page.shortcuts.map((s) => <a href={s.href} class="ulink mn-shortcut">{s.label}</a>)}
+          <div class:list={[BOX, 'gap-3 bg-obra-mist']}>
+            <span class={BOX_LABEL}>{page.shortcutsTitle}</span>
+            {page.shortcuts.map((s) => (
+              <a href={s.href} class="ulink w-fit font-obra-sans-bold text-[0.9375rem]">{s.label}</a>
+            ))}
           </div>
         )
       }
@@ -160,17 +202,27 @@ const statTone = ['mn-stat--white', 'mn-stat--red', 'mn-stat--mist'];
 
   {
     cta && (
-      <section class="mn-cta-wrap">
-        <div class="mn-cta">
-          <AnchorMark id="mn-cta" color="#fff" outline={false} class="mn-cta__anchor" />
-          <div class="mn-cta__text">
-            <span class="mn-cta__eyebrow">{cta.eyebrow}</span>
-            <h2 class="ln-h"><InlineText value={cta.title} emphasisClass="mn-plain" /></h2>
-            <p>{cta.body}</p>
+      <section class="px-gutter-sm pt-[clamp(3.5rem,6vw,5rem)]">
+        <div class="relative flex items-center gap-14 overflow-hidden rounded-[clamp(28px,3.3vw,48px)] bg-obra-red p-[clamp(2rem,4.4vw,4rem)] text-white max-lg:flex-col max-lg:items-start max-lg:gap-6">
+          <AnchorMark
+            id="mn-cta"
+            color="#fff"
+            outline={false}
+            class="pointer-events-none absolute right-8 -bottom-8 h-auto w-64 opacity-10"
+          />
+          <div class="relative flex flex-1 flex-col gap-3.5">
+            <span class="font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] text-obra-blush uppercase">{cta.eyebrow}</span>
+            <h2 class="ln-h text-[clamp(2.25rem,3.9vw,3.5rem)] leading-none">
+              <InlineText value={cta.title} emphasisClass="not-italic" />
+            </h2>
+            <p class="m-0 max-w-120 text-[1.125rem] leading-normal">{cta.body}</p>
           </div>
-          <div class="mn-cta__buttons">
-            <a href={cta.primary.href} class="ln-btn ln-btn--dark">{cta.primary.label}</a>
-            {cta.secondary && <a href={cta.secondary.href} class="ln-btn ln-btn--outline-light">{cta.secondary.label}</a>}
+          <div class="relative flex flex-[0_0_min(22.5rem,100%)] flex-col gap-3 max-lg:w-full max-lg:basis-auto">
+            <a href={cta.primary.href} class="ln-btn ln-btn--dark justify-center px-6.5">{cta.primary.label}</a>
+            {cta.secondary && <a
+                href={cta.secondary.href}
+                class="ln-btn justify-center border-[1.5px] border-white px-6.5 text-white"
+              >{cta.secondary.label}</a>}
           </div>
         </div>
       </section>
