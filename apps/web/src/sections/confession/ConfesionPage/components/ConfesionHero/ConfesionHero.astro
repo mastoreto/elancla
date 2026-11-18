@@ -1,0 +1,92 @@
+---
+import Button from 'src/components/ui/Button';
+import { ULINK } from 'src/styles/classes';
+import { RISE_IN } from 'src/utils/riseIn';
+import AnchorMark from 'src/components/AnchorMark';
+import { localizePath } from 'src/i18n/utils';
+import type { Locale } from 'src/i18n/config';
+import type { Messages } from 'src/i18n/messages';
+import cn from 'src/utils/cn';
+
+interface Props {
+  copy: Messages['confession']['hero'];
+  locale: Locale;
+}
+
+const { copy, locale } = Astro.props;
+// "We believe doctrine matters." with the emphasised word picked out in red.
+const [titleBefore, titleAfter = ''] = copy.titleLines.join(' ').split(copy.emphasis);
+
+const confesionHero = {
+  container: cn(
+    'flex flex-col gap-7 px-gutter-sm pt-[clamp(7.5rem,11vw,9.5rem)]',
+    'max-sm:gap-5.5',
+  ),
+  nav: cn('flex items-center gap-2 font-obra-sans-bold text-[0.875rem] text-obra-muted'),
+  homeLink: cn(ULINK),
+  current: cn('text-obra-red'),
+  body: cn(
+    'flex items-end justify-between gap-14',
+    'max-md:flex-col max-md:items-start max-md:gap-7',
+  ),
+  intro: cn('flex flex-1 flex-col gap-[1.6rem]', 'max-md:gap-5'),
+  counter: cn('ln-eyebrow', RISE_IN),
+  title: cn(
+    'ln-h text-[clamp(3.25rem,7.8vw,7rem)] leading-[0.94] tracking-[-0.03em]',
+    RISE_IN,
+  ),
+  emphasis: cn('text-obra-red'),
+  text: cn(
+    'm-0 max-w-150 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft',
+    RISE_IN,
+  ),
+  actions: cn('flex flex-wrap gap-3', RISE_IN),
+  expandAll: cn('cursor-pointer'),
+  seal: cn('relative aspect-square w-[clamp(11.875rem,20.8vw,18.75rem)] flex-none'),
+  sealIcon: cn('size-full animate-seal-spin font-obra-sans-bold', 'motion-reduce:animate-none'),
+  sealMark: cn('absolute inset-0 m-auto h-auto w-[22%]'),
+};
+---
+
+<section class={confesionHero.container}>
+  <nav class={confesionHero.nav} aria-label={copy.breadcrumbCurrent}>
+    <a href={localizePath('/', locale)} class={confesionHero.homeLink}>{copy.breadcrumbHome}</a>
+    <span aria-hidden="true">/</span>
+    <span class={confesionHero.current} aria-current="page">{copy.breadcrumbCurrent}</span>
+  </nav>
+
+  <div class={confesionHero.body}>
+    <div class={confesionHero.intro}>
+      <span class={confesionHero.counter}>{copy.counter} · {copy.meta}</span>
+      <h1
+        class={confesionHero.title}
+        style="--d: 0.15s"
+      >
+        {titleBefore}<span class={confesionHero.emphasis}>{copy.emphasis}</span>{titleAfter}
+      </h1>
+      <p
+        class={confesionHero.text}
+        style="--d: 0.3s"
+      >{copy.body}</p>
+      <div class={confesionHero.actions} style="--d: 0.45s">
+        <Button href="#doctrinas" arrow>{copy.primaryCta}</Button>
+        <Button variant="ghost" id="expandAll" class={confesionHero.expandAll}>
+          <span id="expandAllLabel" data-collapsed-label={copy.expandAll} data-expanded-label={copy.collapseAll}>{copy.expandAll}</span>
+        </Button>
+      </div>
+    </div>
+
+    <div class={confesionHero.seal} aria-hidden="true">
+      <svg
+        class={confesionHero.sealIcon}
+        viewBox="0 0 300 300"
+      >
+        <defs>
+          <path id="cf-seal-path" d="M150 150 m-118 0 a118 118 0 1 1 236 0 a118 118 0 1 1 -236 0" />
+        </defs>
+        <text font-size="19" fill="currentColor"><textPath href="#cf-seal-path" textLength="736" lengthAdjust="spacing">{copy.sealText}</textPath></text>
+      </svg>
+      <AnchorMark id="cf-seal" color="#a8141b" outline={false} class={confesionHero.sealMark} />
+    </div>
+  </div>
+</section>

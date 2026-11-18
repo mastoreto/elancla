@@ -1,0 +1,203 @@
+---
+import { localizePath } from 'src/i18n/utils';
+import { LandingSection } from 'src/sections/landing/components/LandingSection';
+import type { Locale } from 'src/i18n/config';
+import type { Messages } from 'src/i18n/messages';
+import cn from 'src/utils/cn';
+
+interface Props {
+  copy: Messages['landing']['together'];
+  locale: Locale;
+}
+const { copy, locale } = Astro.props;
+// Each tile opens its ministry page; prayer has none (points to the visit info) and Espacio Mujer lives on its own site.
+const ministryHref: Record<string, string> = {
+  preaching: '/ministerios/predicacion',
+  teaching: '/ministerios/enseñanza',
+  worship: '/ministerios/alabanza',
+  prayer: '/#visitanos',
+  youth: '/ministerios/jovenes',
+  teens: '/ministerios/adolescentes',
+  missions: '/ministerios/misiones',
+  men: '/ministerios/hombres',
+  media: '/ministerios/multimedia',
+  service: '/ministerios/servicio',
+  care: '/ministerios/espacio-cuidado',
+  kids: '/ministerios/espacio-ancladitos',
+};
+const EXTERNAL_WOMEN = 'https://emujer.elancla.uy/';
+type Tile =
+  | { kind: 'link'; key: keyof Props['copy']['tiles']; w: number; om: number; ot: number; tone?: 'dark' | 'red' }
+  | {
+      kind: 'photo';
+      key: keyof Props['copy']['photos'];
+      src: string;
+      w: number;
+      om: number;
+      ot: number;
+      crop: string;
+      pos: string;
+      wide?: boolean;
+    };
+// Desktop rows and widths follow design H (widths are flex ratios). `om` / `ot` = order in the
+// mobile (2 columns) and tablet (3 columns) grids of the responsive designs.
+const rows: Tile[][] = [
+  [
+    { kind: 'link', key: 'preaching', w: 260, om: 1, ot: 1 },
+    { kind: 'photo', key: 'youth', src: '/images/comunidad.jpg', w: 300, om: 3, ot: 5, crop: 'width:240%;left:-110%;top:-150%', pos: '55% 70%' },
+    { kind: 'link', key: 'teaching', w: 220, om: 2, ot: 2 },
+    { kind: 'link', key: 'worship', w: 240, om: 4, ot: 3 },
+    { kind: 'link', key: 'prayer', w: 228, om: 5, ot: 4 },
+  ],
+  [
+    { kind: 'photo', key: 'women', src: '/images/salon.jpg', w: 292, om: 8, ot: 9, crop: 'width:260%;left:-60%;top:-210%', pos: '50% 40%' },
+    { kind: 'link', key: 'youth', w: 300, om: 6, ot: 6, tone: 'dark' },
+    { kind: 'link', key: 'teens', w: 360, om: 7, ot: 7 },
+    { kind: 'link', key: 'missions', w: 308, om: 9, ot: 8 },
+  ],
+  [
+    { kind: 'link', key: 'men', w: 240, om: 10, ot: 10 },
+    { kind: 'link', key: 'women', w: 300, om: 11, ot: 11, tone: 'red' },
+    { kind: 'photo', key: 'kids', src: '/images/comunidad.jpg', w: 360, om: 13, ot: 13, crop: 'width:200%;left:-50%;top:-200%', pos: '50% 72%', wide: true },
+    { kind: 'link', key: 'media', w: 360, om: 12, ot: 12 },
+  ],
+  [
+    { kind: 'link', key: 'service', w: 300, om: 14, ot: 14 },
+    { kind: 'link', key: 'care', w: 340, om: 15, ot: 15, tone: 'dark' },
+    { kind: 'link', key: 'kids', w: 340, om: 16, ot: 16 },
+  ],
+];
+const orderOf = (r: number, c: number) => (r === 3 ? -4 : r === 2 ? 0 : r === 1 ? 4 : 8) + c;
+
+// Desktop rows flex by `--grow`; stacked layouts become a grid ordered by `--ot` / `--om`.
+const TILE_LAYOUT = [
+  'box-border flex h-[clamp(96px,8.9vw,128px)] min-w-0 flex-[var(--grow,1)_1_0] items-end justify-between rounded-[32px]',
+  'font-obra-sans-bold text-[clamp(1rem,1.4vw,1.25rem)] no-underline',
+  'max-lg:order-(--ot) max-lg:h-28 max-lg:flex-none max-lg:rounded-[32px] max-lg:text-[1.25rem]',
+  'max-sm:order-(--om) max-sm:h-23 max-sm:rounded-[26px] max-sm:text-[1.0625rem]',
+];
+const LINK_TILE = [
+  TILE_LAYOUT,
+  'group px-6 py-5',
+  '[transition:background-color_0.4s,box-shadow_0.5s,translate_0.5s_var(--ease-obra)]',
+  'hover:-translate-y-0.75 hover:shadow-[0_18px_32px_-20px_rgba(21,21,21,0.5)]',
+  'max-lg:px-5.5 max-lg:py-5 max-sm:px-4.5 max-sm:py-4',
+];
+const TILE_TONE = {
+  light: 'bg-obra-mist text-obra-ink hover:bg-obra-white',
+  dark: 'bg-obra-ink text-white hover:bg-inherit hover:brightness-112',
+  red: 'bg-obra-red text-white hover:bg-inherit hover:brightness-112',
+} as const;
+
+const togetherSection = {
+  container: cn(
+    'flex min-h-svh flex-col justify-center gap-11 bg-obra-paper px-gutter pt-30 pb-18',
+    'max-lg:min-h-auto max-lg:justify-start max-lg:px-10 max-lg:py-24',
+    'max-sm:gap-8 max-sm:px-5 max-sm:py-18',
+  ),
+  togHead: cn(
+    'flex items-end justify-between gap-12',
+    'max-lg:flex-col max-lg:items-start max-lg:gap-4',
+  ),
+  stack: cn('flex max-w-180 flex-col gap-3.5', 'max-lg:gap-4'),
+  eyebrow: cn('ln-eyebrow'),
+  title: cn(
+    'ln-h text-[clamp(2.1rem,4.45vw,4rem)]',
+    'max-lg:text-[3.375rem] max-lg:leading-none max-sm:text-[2.375rem]',
+  ),
+  togHeadStack: cn('flex max-w-180 flex-col items-start gap-3.5', 'max-lg:gap-4'),
+  text: cn(
+    'm-0 max-w-96 text-[1.0625rem] leading-[1.55] text-obra-ink-soft',
+    'max-lg:max-w-130 max-sm:text-[1rem]',
+  ),
+  aboutLink: cn(
+    'font-obra-sans-bold text-obra-red underline underline-offset-4',
+    'hover:decoration-2',
+  ),
+  rows: cn(
+    'flex flex-col gap-3',
+    'max-lg:grid max-lg:grid-cols-3 max-lg:gap-2.5 max-sm:grid-cols-2',
+  ),
+  row: cn('flex gap-3', 'max-lg:contents'),
+  tile: cn(LINK_TILE),
+  label: cn(
+    '-translate-x-1.5 opacity-0',
+    '[transition:opacity_0.4s,translate_0.5s_var(--ease-obra)] group-hover:translate-none',
+    'group-hover:opacity-100 group-focus-visible:translate-none',
+    'group-focus-visible:opacity-100',
+  ),
+  rowsTile: cn(TILE_LAYOUT, 'group relative overflow-hidden bg-obra-mist p-0', 'max-sm:col-span-2'),
+  rowsTileWide: cn('max-lg:col-span-3 max-lg:h-40 max-sm:col-span-2 max-sm:h-23'),
+  // The inline crop only applies to the desktop rows.
+  image: cn(
+    'absolute max-w-none transition-transform duration-1400 ease-obra',
+    '[filter:grayscale(1)_sepia(0.14)_contrast(1.06)] group-hover:scale-104',
+    'max-lg:static max-lg:top-auto! max-lg:left-auto! max-lg:h-full max-lg:w-full! max-lg:max-w-full',
+    'max-lg:object-cover max-lg:object-(--pos)',
+  ),
+};
+---
+
+<LandingSection
+  id="juntos"
+  data-ln="together"
+  class={togetherSection.container}
+>
+  <div class={togetherSection.togHead} data-tog-head>
+    <div class={togetherSection.stack}>
+      <span class={togetherSection.eyebrow}>{copy.eyebrow}</span>
+      <h2 class={togetherSection.title}>
+        {copy.title}
+      </h2>
+    </div>
+    <div class={togetherSection.togHeadStack}>
+      <p class={togetherSection.text}>
+        {copy.text}
+      </p>
+      <a
+        href={localizePath('/nosotros', locale)}
+        class={togetherSection.aboutLink}
+      >
+        {copy.aboutLink}<span aria-hidden="true"> →</span>
+      </a>
+    </div>
+  </div>
+
+  <div class={togetherSection.rows} data-tog-rows>
+    {rows.map((row, r) => (
+      <div class={togetherSection.row}>
+        {row.map((t, c) => t.kind === 'link' ? (
+          <a
+            href={t.key === 'women' ? EXTERNAL_WOMEN : localizePath(ministryHref[t.key], locale)}
+            target={t.key === 'women' ? '_blank' : undefined}
+            rel={t.key === 'women' ? 'noopener' : undefined}
+            class={cn(togetherSection.tile, TILE_TONE[t.tone ?? 'light'])}
+            style={`--grow:${t.w};--om:${t.om};--ot:${t.ot}`}
+            data-tile={orderOf(r, c)}
+          >
+            {copy.tiles[t.key]}
+            <span
+              class={togetherSection.label}
+              aria-hidden="true"
+            >→</span>
+          </a>
+        ) : (
+          <div
+            class={cn(togetherSection.rowsTile, t.wide && togetherSection.rowsTileWide)}
+            style={`--grow:${t.w};--om:${t.om};--ot:${t.ot};--pos:${t.pos}`}
+            data-tile={orderOf(r, c)}
+          >
+            <img
+              src={t.src}
+              alt={copy.photos[t.key]}
+              class={togetherSection.image}
+              style={t.crop}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+</LandingSection>

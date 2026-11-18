@@ -51,3 +51,12 @@ packages/db/prisma/*.db
 
 # Browser test artifacts
 .playwright-mcp/
+
+# Videos
+video/
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.avi
+*.m4v

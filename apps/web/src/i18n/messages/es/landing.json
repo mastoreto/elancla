@@ -45,7 +45,10 @@
       "missions": "Misiones",
       "men": "Hombres",
       "women": "Espacio Mujer",
-      "media": "Multimedia"
+      "media": "Multimedia",
+      "service": "Servicio",
+      "care": "Espacio Cuidado",
+      "kids": "Espacio Ancladitos"
     },
     "photos": {
       "youth": "Jóvenes de la iglesia al aire libre",
