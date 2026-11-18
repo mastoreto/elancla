@@ -117,7 +117,7 @@ components/<feature>/       # componentes compartidos por feature
 hooks/  lib/  types/        # globales
 ```
 
-Los componentes compartidos del dashboard viven en `components/dashboard/` (el antiguo `src/componentes/` ya no existe); `src/components/` (DataTable, RichTextEditor) está pendiente de migrar a `components/`.
+Los componentes compartidos del dashboard viven en `components/dashboard/` (el antiguo `src/componentes/` ya no existe); DataTable y RichTextEditor ya viven en `components/`.
 
 ### Archivos principales permitidos sueltos
 

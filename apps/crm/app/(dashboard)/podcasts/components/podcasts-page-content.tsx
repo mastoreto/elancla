@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useMemo } from "react";
 import { toast } from "sonner";
+import { type ColumnDef, DataTable, type FilterConfig } from "@/components/DataTable";
 import { DashboardMetricStrip, DashboardPageHeader } from "@/components/dashboard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn, parseLocalDate } from "@/lib/utils";
-import { type ColumnDef, DataTable, type FilterConfig } from "@/src/components/DataTable";
 import type { Podcast, PodcastHost, PodcastSeries } from "../types";
 import { PodcastStatusBadge } from "./podcast-status-badge";
 
