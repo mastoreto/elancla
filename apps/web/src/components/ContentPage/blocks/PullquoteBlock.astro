@@ -1,18 +1,30 @@
 ---
 import type { ContentPullquoteBlock } from 'src/data/contentPages';
+import cn from 'src/utils/cn';
 
 interface Props {
   block: ContentPullquoteBlock;
 }
 
 const { block } = Astro.props;
+
+const pullquoteBlock = {
+  container: cn(
+    'relative mt-16 text-(--ink) border-y border-charcoal/15 py-[1.5em] font-display',
+    'text-[clamp(1.7rem,3.2vw,2.4rem)] leading-[1.18] font-light tracking-[-0.01em] italic',
+  ),
+  cite: cn(
+    'mt-[1.2em] block font-ui text-[11px] font-semibold tracking-[0.2em] text-charcoal/55',
+    'uppercase not-italic',
+  ),
+};
 ---
 
-<blockquote class="relative mt-16 text-(--ink) border-y border-charcoal/15 py-[1.5em] font-display text-[clamp(1.7rem,3.2vw,2.4rem)] leading-[1.18] font-light tracking-[-0.01em] italic">
+<blockquote class={pullquoteBlock.container}>
   {block.quote}
   {
     block.cite && (
-      <cite class="mt-[1.2em] block font-ui text-[11px] font-semibold tracking-[0.2em] text-charcoal/55 uppercase not-italic">
+      <cite class={pullquoteBlock.cite}>
         {block.cite}
       </cite>
     )

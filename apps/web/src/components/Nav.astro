@@ -34,12 +34,19 @@ const recursos: ResourceItem[] = copy.resources.items.map((item) => ({
 // Red dot beside the nav link of the section in view (`data-active`, set by scroll/nav-anchor.ts).
 const NAV_ITEM_DOT =
   'data-[active=true]:before:absolute data-[active=true]:before:top-1/2 data-[active=true]:before:-left-3.5 data-[active=true]:before:size-1.5 data-[active=true]:before:[transform:translateY(-50%)] data-[active=true]:before:animate-[fade-in_0.4s_ease] data-[active=true]:before:rounded-full data-[active=true]:before:bg-(--primary)';
-const styles = {
+// Shared by the two live-dialog actions; each one adds its own fill.
+const LIVE_DIALOG_BUTTON = cn(
+  'inline-flex min-h-13 flex-auto items-center justify-center rounded-full px-6 text-[1rem] whitespace-nowrap no-underline',
+  '[transition:translate_0.5s_var(--ease-obra),scale_0.5s_var(--ease-obra),box-shadow_0.5s]',
+  'hover:-translate-y-0.5 hover:shadow-[0_14px_28px_-14px_rgba(168,20,27,0.55)] active:translate-none active:scale-98',
+);
+
+const nav = {
   header: cn(
     // Above all page content; only the loading overlay (z 9999) sits over it.
     'fixed top-0 left-0 right-0 z-[9000] pointer-events-none'
   ),
-  wrapper: cn(
+  shell: cn(
     'mx-auto max-w-[1600px] px-6 md:px-10 lg:px-6 xl:px-10 pt-6'
   ),
   nav: cn(
@@ -88,10 +95,10 @@ const styles = {
     'absolute top-2.5 right-2.5 z-2 size-11 cursor-pointer rounded-full border-0 bg-obra-paper/92',
     'text-[1.5rem] leading-none text-obra-ink [transition:background-color_0.3s] hover:bg-obra-white'
   ),
-  liveDialogButton: cn(
-    'inline-flex min-h-13 flex-auto items-center justify-center rounded-full px-6 text-[1rem] whitespace-nowrap no-underline',
-    '[transition:translate_0.5s_var(--ease-obra),scale_0.5s_var(--ease-obra),box-shadow_0.5s]',
-    'hover:-translate-y-0.5 hover:shadow-[0_14px_28px_-14px_rgba(168,20,27,0.55)] active:translate-none active:scale-98'
+  liveDialogHere: cn(LIVE_DIALOG_BUTTON, 'bg-obra-red text-white'),
+  liveDialogYoutube: cn(
+    LIVE_DIALOG_BUTTON,
+    'border-[1.5px] border-obra-ink bg-transparent text-obra-ink',
   ),
   iconBtn: cn(
     isOnline ? 'hidden sm:inline-flex' : 'inline-flex',
@@ -115,55 +122,105 @@ const styles = {
     'w-9 h-9 rounded-full border border-ink/10',
     'bg-ink/5 text-ink transition-colors hover:bg-ink/10'
   ),
+  barCta: cn('underline-offset-3'),
+  navAnchor: cn('inline-flex'),
+  anchorMark: cn('h-8 w-[25px] flex-none'),
+  logoText: cn('text-[17px]'),
+  navLink: cn(ULINK, NAV_ITEM_DOT),
+  resourcesItem: cn('relative group/recursos'),
+  resourcesToggle: cn(ULINK, NAV_ITEM_DOT, 'cursor-pointer select-none'),
+  resourcesLabel: cn('inline-flex items-center gap-1.5 leading-none'),
+  resourcesChevron: cn(
+    'w-2.5 h-2.5 translate-y-px opacity-50 transition-transform duration-300 flex-shrink-0',
+    'group-hover/recursos:rotate-180',
+  ),
+  resourcesDropdown: cn(
+    'recursos-dropdown absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0',
+    '-translate-y-1 pointer-events-none transition-all duration-200 ease-out',
+    'group-hover/recursos:opacity-100 group-hover/recursos:translate-y-0',
+    'group-hover/recursos:pointer-events-auto',
+  ),
+  resourcesPanel: cn(
+    'rounded-2xl border border-ink/10 bg-paper/95 backdrop-blur-xl',
+    'shadow-[0_8px_30px_-8px_rgba(20,20,20,0.15)] min-w-[220px] p-2',
+  ),
+  resourceLink: cn('flex flex-col gap-0.5 px-4 py-3 rounded-xl transition-colors', 'hover:bg-ink/5'),
+  resourceLabel: cn('font-ui text-[13px] font-medium text-ink/90'),
+  resourceDescription: cn('font-ui text-[11px] text-ink/45'),
+  liveOff: cn('inline-flex items-center gap-2', '[&[hidden]]:hidden!'),
+  liveOn: cn('inline-flex items-center gap-2 text-primary', '[&[hidden]]:hidden!'),
+  localeSwitcher: cn('locale-switcher relative'),
+  localeMenu: cn(
+    'absolute right-0 top-full z-50 mt-3 min-w-[10rem] rounded-2xl border border-ink/10',
+    'bg-paper/95 p-2 shadow-[0_8px_30px_-8px_rgba(20,20,20,0.18)] backdrop-blur-xl',
+  ),
+  localeLink: cn(
+    'flex items-center justify-between gap-3 rounded-xl px-3 py-2 font-ui text-[12px]',
+    'text-ink/80 transition-colors',
+    'hover:bg-ink/5',
+  ),
+  localeName: cn('inline-flex items-center gap-2'),
+  localeCode: cn('font-semibold'),
+  ctaBtnIcon: cn(CTA_ARROW),
+  liveDialogBody: cn('relative flex flex-col gap-3.5 overflow-hidden px-7 pt-7 pb-7.5'),
+  liveDialogAnchor: cn(
+    'pointer-events-none absolute -right-3.5 -bottom-5.5 h-auto w-30 text-obra-red opacity-7',
+  ),
+  popupTitle: cn(
+    'relative m-0 font-obra-serif text-[clamp(1.875rem,6vw,2.375rem)] leading-none font-bold',
+    'tracking-[-0.02em] text-balance',
+  ),
+  popupBody: cn('relative m-0 text-[1.0625rem] leading-normal text-obra-ink-soft'),
+  liveDialogActions: cn('relative mt-2 flex flex-wrap gap-3'),
 };
 ---
 
 <!-- NAV -->
-<header class={styles.header} id="siteHeader">
+<header class={nav.header} id="siteHeader">
   {isOnline && (
-    <a href={localizePath('/sermones#vivo', locale)} class={styles.liveBar} data-live-bar hidden>
-      <span class={styles.livePulse} aria-hidden="true"></span>
+    <a href={localizePath('/sermones#vivo', locale)} class={nav.liveBar} data-live-bar hidden>
+      <span class={nav.livePulse} aria-hidden="true"></span>
       <span>{copy.liveStream.barText}</span>
-      <u class="underline-offset-3">{copy.liveStream.barCta}</u>
+      <u class={nav.barCta}>{copy.liveStream.barCta}</u>
     </a>
   )}
-  <div class={styles.wrapper}>
+  <div class={nav.shell}>
     <nav
-      class={styles.nav}
+      class={nav.nav}
       id="nav"
     >
-      <a href={localizePath('/#inicio', locale)} class={styles.logoLink}>
-        <span data-nav-anchor class="inline-flex">
-          <AnchorMark id="nav" color="#a8141b" strokeWidth={60} class="h-8 w-[25px] flex-none" />
+      <a href={localizePath('/#inicio', locale)} class={nav.logoLink}>
+        <span data-nav-anchor class={nav.navAnchor}>
+          <AnchorMark id="nav" color="#a8141b" strokeWidth={60} class={nav.anchorMark} />
         </span>
-        <LogoText label={copy.brandLabel} name={copy.brandName} class="text-[17px]" />
+        <LogoText label={copy.brandLabel} name={copy.brandName} class={nav.logoText} />
       </a>
 
       {isOnline && (
-      <ul class={styles.navList}>
+      <ul class={nav.navList}>
         {copy.links.map((item) => (
           <li>
-            <a href={localizePath(item.href, locale)} class:list={[ULINK, NAV_ITEM_DOT]} data-nav-item data-section={item.section}>
+            <a href={localizePath(item.href, locale)} class={nav.navLink} data-nav-item data-section={item.section}>
               {item.label}
             </a>
           </li>
         ))}
-        <li class="relative group/recursos">
-          <button type="button" class:list={[ULINK, NAV_ITEM_DOT, 'cursor-pointer select-none']} data-nav-item>
-            <span class="inline-flex items-center gap-1.5 leading-none">
+        <li class={nav.resourcesItem}>
+          <button type="button" class={nav.resourcesToggle} data-nav-item>
+            <span class={nav.resourcesLabel}>
               {copy.resources.label}
-              <svg class="w-2.5 h-2.5 translate-y-px opacity-50 transition-transform duration-300 group-hover/recursos:rotate-180 flex-shrink-0" viewBox="0 0 10 6" fill="none">
+              <svg class={nav.resourcesChevron} viewBox="0 0 10 6" fill="none">
                 <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
           </button>
-          <div class="recursos-dropdown absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 -translate-y-1 pointer-events-none group-hover/recursos:opacity-100 group-hover/recursos:translate-y-0 group-hover/recursos:pointer-events-auto transition-all duration-200 ease-out">
-            <div class="rounded-2xl border border-ink/10 bg-paper/95 backdrop-blur-xl shadow-[0_8px_30px_-8px_rgba(20,20,20,0.15)] min-w-[220px] p-2">
+          <div class={nav.resourcesDropdown}>
+            <div class={nav.resourcesPanel}>
               {recursos.map((item) => (
-                <a href={item.href} class="flex flex-col gap-0.5 px-4 py-3 rounded-xl hover:bg-ink/5 transition-colors">
-                  <span class="font-ui text-[13px] font-medium text-ink/90">{item.label}</span>
+                <a href={item.href} class={nav.resourceLink}>
+                  <span class={nav.resourceLabel}>{item.label}</span>
                   {item.description && (
-                    <span class="font-ui text-[11px] text-ink/45">{item.description}</span>
+                    <span class={nav.resourceDescription}>{item.description}</span>
                   )}
                 </a>
               ))}
@@ -173,37 +230,37 @@ const styles = {
       </ul>
       )}
 
-      <div class={styles.actions}>
+      <div class={nav.actions}>
         {isOnline && (
-        <span class={styles.liveChip}>
-          <span data-live-off class="inline-flex items-center gap-2 [&[hidden]]:hidden!">
-            <span class={styles.liveDot}></span>
+        <span class={nav.liveChip}>
+          <span data-live-off class={nav.liveOff}>
+            <span class={nav.liveDot}></span>
             {copy.live}
           </span>
-          <a href={localizePath('/sermones#vivo', locale)} data-live-on hidden class="inline-flex items-center gap-2 text-primary [&[hidden]]:hidden!">
-            <span class={styles.liveDot}></span>
+          <a href={localizePath('/sermones#vivo', locale)} data-live-on hidden class={nav.liveOn}>
+            <span class={nav.liveDot}></span>
             {copy.liveStream.chip}
           </a>
         </span>
         )}
 
-        <details class="locale-switcher relative">
-          <summary class={styles.languageSummary} aria-label={copy.language.label}>
+        <details class={nav.localeSwitcher}>
+          <summary class={nav.languageSummary} aria-label={copy.language.label}>
             <span aria-hidden="true">{currentLocale.flag}</span>
             <span>{currentLocale.label}</span>
           </summary>
-          <div class="absolute right-0 top-full z-50 mt-3 min-w-[10rem] rounded-2xl border border-ink/10 bg-paper/95 p-2 shadow-[0_8px_30px_-8px_rgba(20,20,20,0.18)] backdrop-blur-xl">
+          <div class={nav.localeMenu}>
             {localeLinks.map((item) => (
               <a
                 href={item.href}
-                class="flex items-center justify-between gap-3 rounded-xl px-3 py-2 font-ui text-[12px] text-ink/80 transition-colors hover:bg-ink/5"
+                class={nav.localeLink}
                 aria-current={item.current ? 'page' : undefined}
               >
-                <span class="inline-flex items-center gap-2">
+                <span class={nav.localeName}>
                   <span aria-hidden="true">{item.flag}</span>
                   <span>{item.nativeName}</span>
                 </span>
-                <span class="font-semibold">{item.label}</span>
+                <span class={nav.localeCode}>{item.label}</span>
               </a>
             ))}
           </div>
@@ -211,7 +268,7 @@ const styles = {
 
         <button
           type="button"
-          class={styles.iconBtn}
+          class={nav.iconBtn}
           data-theme-toggle
           data-label-light={copy.theme.lightLabel}
           data-label-dark={copy.theme.darkLabel}
@@ -232,7 +289,7 @@ const styles = {
             <!-- Hamburguesa visible solo en mobile -->
             <button
               id="menuToggle"
-              class={styles.hamburger}
+              class={nav.hamburger}
               aria-label={copy.menuOpen}
               aria-expanded="false"
               aria-controls="mobileMenu"
@@ -243,9 +300,9 @@ const styles = {
             </button>
 
             <!-- CTA oculto en mobile, visible en desktop -->
-            <a href={localizePath('/#visitanos', locale)} class={styles.ctaBtn}>
+            <a href={localizePath('/#visitanos', locale)} class={nav.ctaBtn}>
               {copy.cta}
-              <svg class={CTA_ARROW} width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <svg class={nav.ctaBtnIcon} width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
             </a>
@@ -257,27 +314,27 @@ const styles = {
 </header>
 
 {isOnline && (
-  <dialog class={styles.liveDialog} data-live-dialog aria-labelledby="live-dialog-title">
-    <a href={localizePath('/sermones#vivo', locale)} class={styles.liveDialogMedia} data-live-dialog-close tabindex="-1" aria-hidden="true">
-      <img class={styles.liveDialogThumb} data-live-dialog-thumb alt="" width="640" height="360" />
-      <span class={styles.liveDialogPlay}><svg viewBox="0 0 24 24" width="26" height="26"><path d="M8 5.5v13l11-6.5z" fill="currentColor"></path></svg></span>
+  <dialog class={nav.liveDialog} data-live-dialog aria-labelledby="live-dialog-title">
+    <a href={localizePath('/sermones#vivo', locale)} class={nav.liveDialogMedia} data-live-dialog-close tabindex="-1" aria-hidden="true">
+      <img class={nav.liveDialogThumb} data-live-dialog-thumb alt="" width="640" height="360" />
+      <span class={nav.liveDialogPlay}><svg viewBox="0 0 24 24" width="26" height="26"><path d="M8 5.5v13l11-6.5z" fill="currentColor"></path></svg></span>
     </a>
-    <span class={styles.liveDialogBadge}><i class={styles.livePulse} aria-hidden="true"></i>{copy.liveStream.chip}</span>
-    <button type="button" class={styles.liveDialogClose} data-live-dialog-close aria-label={copy.liveStream.popupClose}>×</button>
-    <div class="relative flex flex-col gap-3.5 overflow-hidden px-7 pt-7 pb-7.5">
+    <span class={nav.liveDialogBadge}><i class={nav.livePulse} aria-hidden="true"></i>{copy.liveStream.chip}</span>
+    <button type="button" class={nav.liveDialogClose} data-live-dialog-close aria-label={copy.liveStream.popupClose}>×</button>
+    <div class={nav.liveDialogBody}>
       <AnchorMark
         id="live-dialog-anchor"
         outline={false}
-        class="pointer-events-none absolute -right-3.5 -bottom-5.5 h-auto w-30 text-obra-red opacity-7"
+        class={nav.liveDialogAnchor}
       />
       <h2
         id="live-dialog-title"
-        class="relative m-0 font-obra-serif text-[clamp(1.875rem,6vw,2.375rem)] leading-none font-bold tracking-[-0.02em] text-balance"
+        class={nav.popupTitle}
       >{copy.liveStream.popupTitle}</h2>
-      <p class="relative m-0 text-[1.0625rem] leading-normal text-obra-ink-soft">{copy.liveStream.popupBody}</p>
-      <div class="relative mt-2 flex flex-wrap gap-3">
-        <a href={localizePath('/sermones#vivo', locale)} class={cn(styles.liveDialogButton, 'bg-obra-red text-white')} data-live-dialog-close autofocus>{copy.liveStream.popupHere}</a>
-        <a href="https://www.youtube.com" target="_blank" rel="noopener" class={cn(styles.liveDialogButton, 'border-[1.5px] border-obra-ink bg-transparent text-obra-ink')} data-live-dialog-close data-live-dialog-youtube>{copy.liveStream.popupYoutube} ↗</a>
+      <p class={nav.popupBody}>{copy.liveStream.popupBody}</p>
+      <div class={nav.liveDialogActions}>
+        <a href={localizePath('/sermones#vivo', locale)} class={nav.liveDialogHere} data-live-dialog-close autofocus>{copy.liveStream.popupHere}</a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" class={nav.liveDialogYoutube} data-live-dialog-close data-live-dialog-youtube>{copy.liveStream.popupYoutube} ↗</a>
       </div>
     </div>
   </dialog>

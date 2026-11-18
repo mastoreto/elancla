@@ -19,7 +19,7 @@ const churchHrefs = ['/nosotros#identidad', '/nosotros#historia', '/#doctrinas',
 const socialHrefs = [social.youtube, social.instagram, social.facebook];
 const copy = getMessages(locale).footer;
 
-const styles = {
+const footer = {
   footer: cn(
     'relative text-white overflow-hidden',
     // Dark: overlaps the red closing by its corner radius so the corners show red, not the page.
@@ -48,63 +48,69 @@ const styles = {
     'flex flex-col md:flex-row md:items-center md:justify-between gap-3',
     'font-ui text-[12px] opacity-85'
   ),
+  image: cn('w-10 h-10 object-contain'),
+  logoText: cn('text-2xl'),
+  verse: cn('opacity-60'),
+  churchLink: cn(ULINK),
+  ministryLink: cn(ULINK),
+  socialLink: cn(ULINK),
 };
 
 const year = new Date().getFullYear();
 ---
 
 <!-- FOOTER -->
-<footer class={styles.footer}>
-  <div class={styles.watermark}>
-    <div class={styles.watermarkText}>El Ancla</div>
+<footer class={footer.footer}>
+  <div class={footer.watermark}>
+    <div class={footer.watermarkText}>El Ancla</div>
   </div>
 
-  <div class={styles.container}>
-    <div class={styles.topGrid}>
+  <div class={footer.container}>
+    <div class={footer.topGrid}>
       <!-- brand -->
-      <div class={styles.colBrand}>
-        <div class={styles.brandRow}>
-          <img src="/images/anclablanco.png" alt="" class="w-10 h-10 object-contain" />
-          <LogoText label={copy.brandLabel} name={copy.brandName} class="text-2xl" />
+      <div class={footer.colBrand}>
+        <div class={footer.brandRow}>
+          <img src="/images/anclablanco.png" alt="" class={footer.image} />
+          <LogoText label={copy.brandLabel} name={copy.brandName} class={footer.logoText} />
         </div>
-        <p class={styles.brandTagline}>
+        <p class={footer.brandTagline}>
           {copy.tagline}
-          <span class="opacity-60">{copy.verse}</span>
+          <span class={footer.verse}>{copy.verse}</span>
         </p>
       </div>
 
       <!-- iglesia -->
-      <div class={styles.colLinks}>
-        <div class={styles.colLabel}>{copy.churchLabel}</div>
-        <ul class={styles.linkList}>
+      <div class={footer.colLinks}>
+        <div class={footer.colLabel}>{copy.churchLabel}</div>
+        <ul class={footer.linkList}>
           {copy.churchLinks.map((l, i) => (
-            <li><a href={localizePath(churchHrefs[i] ?? '/', locale)} class:list={ULINK}>{l}</a></li>
+            <li><a href={localizePath(churchHrefs[i] ?? '/', locale)} class={footer.churchLink}>{l}</a></li>
           ))}
         </ul>
       </div>
 
       <!-- ministerios -->
-      <div class={styles.colMinis}>
-        <div class={styles.colLabel}>{copy.ministryLabel}</div>
-        <ul class={styles.minisGrid}>
+      <div class={footer.colMinis}>
+        <div class={footer.colLabel}>{copy.ministryLabel}</div>
+        <ul class={footer.minisGrid}>
           {copy.ministryLinks.map((l) => (
-            <li><a href={localizePath('/#juntos', locale)} class:list={ULINK}>{l}</a></li>
+            <li><a href={localizePath('/#juntos', locale)} class={footer.ministryLink}>{l}</a></li>
           ))}
         </ul>
       </div>
 
       <!-- redes -->
-      <div class={styles.colSocial}>
-        <div class={styles.colLabel}>{copy.socialLabel}</div>
-        <ul class={styles.linkList}>
+      <div class={footer.colSocial}>
+        <div class={footer.colLabel}>{copy.socialLabel}</div>
+        <ul class={footer.linkList}>
           {copy.socialLinks.map((l, i) => (
-            <li><a href={socialHrefs[i] ?? '#'} class:list={ULINK} target="_blank" rel="noopener">{l}</a></li>
+            <li><a href={socialHrefs[i] ?? '#'} class={footer.socialLink} target="_blank" rel="noopener">{l}</a></li>
           ))}
         </ul>
       </div>
     </div>
 
-    <div class={styles.bottom}>
+    <div class={footer.bottom}>
       <div>{copy.address}</div>
       <div>© <span id="year">{year}</span> {copy.copyright}</div>
     </div>

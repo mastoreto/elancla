@@ -2,6 +2,7 @@
 import type { Locale } from 'src/i18n/config';
 import type { SiteStatus } from '@ancla/content';
 import { getMessages } from 'src/i18n/messages';
+import cn from 'src/utils/cn';
 
 interface Props {
   status: Exclude<SiteStatus, 'online'>;
@@ -11,48 +12,71 @@ interface Props {
 
 const { status, locale, contactEmail } = Astro.props;
 const copy = getMessages(locale).siteStatus[status];
+
+const siteStatusScreen = {
+  container: cn(
+    'relative flex min-h-screen items-center justify-center overflow-hidden bg-paper px-6',
+    'pb-20 pt-32 text-ink',
+  ),
+  glowPrimary: cn(
+    'pointer-events-none absolute -right-24 -top-32 h-72 w-72 rounded-full bg-primary/10',
+    'blur-3xl',
+  ),
+  glowSecondary: cn(
+    'pointer-events-none absolute -bottom-32 -left-24 h-72 w-72 rounded-full bg-ink/5',
+    'blur-3xl',
+  ),
+  content: cn('relative z-10 mx-auto w-full max-w-xl text-center'),
+  icon: cn('material-symbols-outlined mb-6 inline-block text-5xl text-primary'),
+  kicker: cn('font-ui text-[11px] font-semibold uppercase tracking-[0.35em] text-primary'),
+  title: cn('mt-4 font-display text-4xl font-semibold tracking-tight text-ink', 'md:text-5xl'),
+  description: cn('mt-5 font-ui text-base leading-relaxed text-ink/60', 'md:text-lg'),
+  note: cn('mt-8 font-ui text-sm text-ink/50'),
+  contactEmail: cn('font-medium text-primary underline-offset-4', 'hover:underline'),
+  image: cn('mx-auto mt-12 h-10 w-auto opacity-80'),
+};
 ---
 
 <section
-  class="relative flex min-h-screen items-center justify-center overflow-hidden bg-paper px-6 pb-20 pt-32 text-ink"
+  class={siteStatusScreen.container}
 >
   <div
-    class="pointer-events-none absolute -right-24 -top-32 h-72 w-72 rounded-full bg-primary/10 blur-3xl"
+    class={siteStatusScreen.glowPrimary}
     aria-hidden="true"
   >
   </div>
   <div
-    class="pointer-events-none absolute -bottom-32 -left-24 h-72 w-72 rounded-full bg-ink/5 blur-3xl"
+    class={siteStatusScreen.glowSecondary}
     aria-hidden="true"
   >
   </div>
 
-  <div class="relative z-10 mx-auto w-full max-w-xl text-center">
-    <span class="material-symbols-outlined mb-6 inline-block text-5xl text-primary" aria-hidden="true">
+  <div class={siteStatusScreen.content}>
+    <span class={siteStatusScreen.icon} aria-hidden="true">
       {copy.icon}
     </span>
-    <p class="font-ui text-[11px] font-semibold uppercase tracking-[0.35em] text-primary">
+    <p class={siteStatusScreen.kicker}>
       {copy.kicker}
     </p>
-    <h1 class="mt-4 font-display text-4xl font-semibold tracking-tight text-ink md:text-5xl">
+    <h1 class={siteStatusScreen.title}>
       {copy.title}
     </h1>
-    <p class="mt-5 font-ui text-base leading-relaxed text-ink/60 md:text-lg">
+    <p class={siteStatusScreen.description}>
       {copy.description}
     </p>
     {
       contactEmail && (
-        <p class="mt-8 font-ui text-sm text-ink/50">
+        <p class={siteStatusScreen.note}>
           {copy.note}{' '}
           <a
             href={`mailto:${contactEmail}`}
-            class="font-medium text-primary underline-offset-4 hover:underline"
+            class={siteStatusScreen.contactEmail}
           >
             {contactEmail}
           </a>
         </p>
       )
     }
-    <img src="/images/anclarojo.png" alt="" class="mx-auto mt-12 h-10 w-auto opacity-80" />
+    <img src="/images/anclarojo.png" alt="" class={siteStatusScreen.image} />
   </div>
 </section>

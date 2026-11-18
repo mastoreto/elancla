@@ -2,6 +2,7 @@
 import Chip from 'src/components/ui/Chip';
 // Heading + category chips. The chips are the grid filters (wired by initBlog via data-blog-filter-button).
 import type { BlogCategory } from 'src/data/blog';
+import cn from 'src/utils/cn';
 
 interface Props {
   categories: BlogCategory[];
@@ -13,14 +14,23 @@ const filters = [
   { label: copy.all, value: 'todos' },
   ...categories.map((category) => ({ label: category.name.replace(' bíblico', ''), value: category.filter })),
 ];
+
+const blogCategories = {
+  container: cn('flex flex-col gap-5 pt-[clamp(3.5rem,7vw,5rem)] px-gutter'),
+  counter: cn('ln-eyebrow'),
+  headlineBefore: cn('ln-h text-[clamp(2.25rem,4.2vw,3.75rem)] leading-none'),
+  headlineEmphasis: cn('text-obra-red not-italic'),
+  text: cn('m-0 max-w-140 text-[1.0625rem] leading-[1.55] text-obra-ink-soft'),
+  filters: cn('flex flex-wrap gap-2.5'),
+};
 ---
 
-<section class="flex flex-col gap-5 pt-[clamp(3.5rem,7vw,5rem)] px-gutter">
-  <span class="ln-eyebrow">{copy.counter}</span>
-  <h2 class="ln-h text-[clamp(2.25rem,4.2vw,3.75rem)] leading-none">
-    {copy.headlineBefore}<em class="text-obra-red not-italic">{copy.headlineEmphasis}</em></h2>
-  <p class="m-0 max-w-140 text-[1.0625rem] leading-[1.55] text-obra-ink-soft">{copy.body}</p>
-  <div class="flex flex-wrap gap-2.5" role="group">
+<section class={blogCategories.container}>
+  <span class={blogCategories.counter}>{copy.counter}</span>
+  <h2 class={blogCategories.headlineBefore}>
+    {copy.headlineBefore}<em class={blogCategories.headlineEmphasis}>{copy.headlineEmphasis}</em></h2>
+  <p class={blogCategories.text}>{copy.body}</p>
+  <div class={blogCategories.filters} role="group">
     {
       filters.map((filter, index) => (
         <Chip data-blog-filter-button data-filter={filter.value} data-on={index === 0 ? 'true' : 'false'}>

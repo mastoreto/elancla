@@ -13,7 +13,7 @@ if (!isLocale(localeParam) || localeParam === defaultLocale) {
 const locale = localeParam;
 const copy = getMessages(locale).notFound;
 
-const classes = {
+const notFoundPage = {
   section: cn(
     'relative w-screen min-h-screen',
     'bg-secondary-100',
@@ -51,6 +51,7 @@ const classes = {
   glowSecondary: cn('pointer-events-none', 'absolute -bottom-20 -left-16', 'h-64 w-64 md:h-72 md:w-72', 'rounded-full bg-secondary-200/70 blur-3xl'),
   decoratorTop: cn('absolute', '-top-28 -right-24', 'w-[45%] h-[45%]', 'opacity-70'),
   decoratorBottom: cn('absolute', '-bottom-32 -left-20', 'w-[45%] h-[45%]', 'opacity-70'),
+  label: cn('material-symbols-outlined text-primary-600'),
 };
 ---
 
@@ -61,32 +62,32 @@ const classes = {
   canonical={new URL(localizePath('/404', locale), Astro.site).toString()}
   locale={locale}
 >
-  <section class={classes.section}>
-    <Decorators type="top" customClass={classes.decoratorTop} />
-    <Decorators type="bottom" customClass={classes.decoratorBottom} />
-    <div class={classes.glowPrimary} aria-hidden="true"></div>
-    <div class={classes.glowSecondary} aria-hidden="true"></div>
+  <section class={notFoundPage.section}>
+    <Decorators type="top" customClass={notFoundPage.decoratorTop} />
+    <Decorators type="bottom" customClass={notFoundPage.decoratorBottom} />
+    <div class={notFoundPage.glowPrimary} aria-hidden="true"></div>
+    <div class={notFoundPage.glowSecondary} aria-hidden="true"></div>
 
-    <div class={classes.content}>
-      <div class={classes.card}>
-        <p class={classes.kicker}>{copy.kicker}</p>
-        <h1 class={classes.title}>{copy.title}</h1>
-        <p class={classes.description}>{copy.description}</p>
-        <div class={classes.actions}>
-          <a href={localizePath('/', locale)} class={classes.primaryAction}>{copy.primary}</a>
-          <a href={localizePath('/confesion-de-fe', locale)} class={classes.secondaryAction}>{copy.secondary}</a>
+    <div class={notFoundPage.content}>
+      <div class={notFoundPage.card}>
+        <p class={notFoundPage.kicker}>{copy.kicker}</p>
+        <h1 class={notFoundPage.title}>{copy.title}</h1>
+        <p class={notFoundPage.description}>{copy.description}</p>
+        <div class={notFoundPage.actions}>
+          <a href={localizePath('/', locale)} class={notFoundPage.primaryAction}>{copy.primary}</a>
+          <a href={localizePath('/confesion-de-fe', locale)} class={notFoundPage.secondaryAction}>{copy.secondary}</a>
         </div>
-        <div class={classes.helper}>
-          <span class="material-symbols-outlined text-primary-600">travel_explore</span>
+        <div class={notFoundPage.helper}>
+          <span class={notFoundPage.label}>travel_explore</span>
           <span>{copy.helper}</span>
         </div>
       </div>
 
-      <div class={classes.art}>
-        <span class={classes.badge}>{copy.badge}</span>
-        <div class={classes.number}>404</div>
-        <img src="/images/anclarojo.png" alt={copy.imageAlt} width="96" height="150" class={classes.anchor} />
-        <p class={classes.tagline}>{copy.tagline}</p>
+      <div class={notFoundPage.art}>
+        <span class={notFoundPage.badge}>{copy.badge}</span>
+        <div class={notFoundPage.number}>404</div>
+        <img src="/images/anclarojo.png" alt={copy.imageAlt} width="96" height="150" class={notFoundPage.anchor} />
+        <p class={notFoundPage.tagline}>{copy.tagline}</p>
       </div>
     </div>
   </section>

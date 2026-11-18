@@ -7,6 +7,7 @@ import AboutTeam from './blocks/AboutTeam.astro';
 import AboutTimeline from './blocks/AboutTimeline.astro';
 import AboutValues from './blocks/AboutValues.astro';
 import AboutVerse from './blocks/AboutVerse.astro';
+import cn from 'src/utils/cn';
 
 interface Props {
   section: ContentSection;
@@ -17,15 +18,23 @@ const { section } = Astro.props;
 const blocks = section.blocks.filter(
   (b) => !(b.type === 'prose' && section.blocks.some((o) => o.type === 'timeline'))
 );
+
+const aboutSection = {
+  container: cn('flex scroll-mt-24 flex-col gap-7'),
+  header: cn('flex flex-col gap-3.5'),
+  eyebrow: cn('ln-eyebrow'),
+  heading: cn('ln-h text-[clamp(2.125rem,3.6vw,3.25rem)]'),
+  description: cn('m-0 max-w-160 text-[1.0625rem] leading-[1.55] text-obra-ink-soft'),
+};
 ---
 
-<section id={section.id} class="flex scroll-mt-24 flex-col gap-7">
-  <header class="flex flex-col gap-3.5">
-    <span class="ln-eyebrow">{section.eyebrow}</span>
-    <h2 class="ln-h text-[clamp(2.125rem,3.6vw,3.25rem)]">
+<section id={section.id} class={aboutSection.container}>
+  <header class={aboutSection.header}>
+    <span class={aboutSection.eyebrow}>{section.eyebrow}</span>
+    <h2 class={aboutSection.heading}>
       <InlineText value={section.title} emphasisClass="text-obra-red not-italic" />
     </h2>
-    {section.description && <p class="m-0 max-w-160 text-[1.0625rem] leading-[1.55] text-obra-ink-soft">{section.description}</p>}
+    {section.description && <p class={aboutSection.description}>{section.description}</p>}
   </header>
   {
     blocks.map((block) => (

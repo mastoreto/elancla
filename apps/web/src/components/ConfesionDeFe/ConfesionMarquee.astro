@@ -1,4 +1,5 @@
 ---
+import cn from 'src/utils/cn';
 interface Props {
   solas: string[];
 }
@@ -8,15 +9,27 @@ const { solas } = Astro.props;
 const group = [...solas, ...solas, ...solas];
 const ITEM =
   "inline-flex items-center gap-7 pr-7 font-obra-serif text-[clamp(1.75rem,2.8vw,2.5rem)] whitespace-nowrap italic after:text-[0.55em] after:text-obra-red-live after:content-['●']";
+
+const confesionMarquee = {
+  container: cn(
+    'mt-[clamp(2.75rem,5vw,4.5rem)] overflow-hidden bg-obra-warm',
+    'py-[clamp(1.1rem,1.8vw,1.6rem)] text-obra-cream',
+  ),
+  track: cn('flex w-max animate-marquee', 'motion-reduce:animate-none'),
+  group: cn('m-0 flex list-none p-0'),
+  item: cn(ITEM),
+  groupClone: cn('m-0 flex list-none p-0'),
+  itemClone: cn(ITEM),
+};
 ---
 
-<div class="mt-[clamp(2.75rem,5vw,4.5rem)] overflow-hidden bg-obra-warm py-[clamp(1.1rem,1.8vw,1.6rem)] text-obra-cream">
-  <div class="flex w-max animate-marquee motion-reduce:animate-none">
-    <ul class="m-0 flex list-none p-0">
-      {group.map((s) => <li class={ITEM}>{s}</li>)}
+<div class={confesionMarquee.container}>
+  <div class={confesionMarquee.track}>
+    <ul class={confesionMarquee.group}>
+      {group.map((s) => <li class={confesionMarquee.item}>{s}</li>)}
     </ul>
-    <ul class="m-0 flex list-none p-0" aria-hidden="true">
-      {group.map((s) => <li class={ITEM}>{s}</li>)}
+    <ul class={confesionMarquee.groupClone} aria-hidden="true">
+      {group.map((s) => <li class={confesionMarquee.itemClone}>{s}</li>)}
     </ul>
   </div>
 </div>

@@ -1,5 +1,6 @@
 ---
 import type { ContentInlineText } from 'src/data/contentPages';
+import cn from 'src/utils/cn';
 
 interface Props {
   value: ContentInlineText;
@@ -7,6 +8,10 @@ interface Props {
 }
 
 const { value, emphasisClass = 'italic text-primary font-normal' } = Astro.props;
+
+const inlineText = {
+  container: cn(emphasisClass),
+};
 ---
 
 {
@@ -15,7 +20,7 @@ const { value, emphasisClass = 'italic text-primary font-normal' } = Astro.props
   ) : (
     <>
       {value.before}
-      {value.emphasis && <em class={emphasisClass}>{value.emphasis}</em>}
+      {value.emphasis && <em class={inlineText.container}>{value.emphasis}</em>}
       {value.after}
     </>
   )

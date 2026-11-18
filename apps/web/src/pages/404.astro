@@ -6,29 +6,72 @@ import { defaultLocale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
 import { RISE_IN } from 'src/utils/riseIn';
+import cn from 'src/utils/cn';
 
 const locale = defaultLocale;
 const copy = getMessages(locale).notFound;
 // "We could not find this page" with the last word (the emphasis) picked out in red.
 const titleBefore = copy.title.slice(0, copy.title.lastIndexOf(copy.titleEmphasis));
+
+const notFoundPage = {
+  container: cn(
+    'ln flex min-h-svh items-center gap-[clamp(2.5rem,6.7vw,6rem)] bg-obra-paper px-gutter-sm',
+    'pt-[clamp(7.5rem,11vw,9.5rem)] pb-16',
+    'max-md:flex-col max-md:justify-center max-md:pt-26 max-md:text-left',
+  ),
+  wrapper: cn(
+    'w-[clamp(13.75rem,26vw,23.75rem)] flex-none animate-float',
+    'drop-shadow-[0_22px_36px_rgba(21,21,21,0.25)]',
+    'max-md:w-55 max-md:self-center',
+    'motion-reduce:animate-none',
+  ),
+  icon: cn('block h-auto w-full overflow-visible'),
+  shape: cn(
+    'origin-[50%_100%] animate-anchor-forge',
+    '[transform-box:fill-box] [transform:scaleY(0)]',
+    'motion-reduce:animate-none motion-reduce:transform-none',
+  ),
+  path: cn(
+    'animate-anchor-draw',
+    '[stroke-dasharray:1] [stroke-dashoffset:1]',
+    'motion-reduce:animate-none motion-reduce:[stroke-dashoffset:0]',
+  ),
+  stack: cn('flex min-w-0 flex-1 flex-col items-start gap-[1.6rem]', 'max-md:w-full max-md:gap-5'),
+  kicker: cn('ln-eyebrow', RISE_IN),
+  titleBefore: cn(
+    'ln-h text-[clamp(2.875rem,6.7vw,6rem)] leading-[0.95] tracking-[-0.03em]',
+    RISE_IN,
+  ),
+  titleEmphasis: cn('text-obra-red'),
+  description: cn(
+    'm-0 max-w-130 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft',
+    RISE_IN,
+  ),
+  row: cn('flex flex-wrap gap-3', RISE_IN),
+  tagline: cn(
+    'font-obra-serif text-[clamp(1.375rem,2vw,1.75rem)] font-bold text-obra-red',
+    RISE_IN,
+  ),
+  helper: cn('-mt-3 font-obra-sans-bold text-[0.875rem] text-obra-muted'),
+};
 ---
 
 <Layout title={copy.seo.title} description={copy.seo.description} noindex={true} locale={locale}>
   <section
-    class="ln flex min-h-svh items-center gap-[clamp(2.5rem,6.7vw,6rem)] bg-obra-paper px-gutter-sm pt-[clamp(7.5rem,11vw,9.5rem)] pb-16 max-md:flex-col max-md:justify-center max-md:pt-26 max-md:text-left"
+    class={notFoundPage.container}
   >
     <div
-      class="w-[clamp(13.75rem,26vw,23.75rem)] flex-none animate-float drop-shadow-[0_22px_36px_rgba(21,21,21,0.25)] motion-reduce:animate-none max-md:w-55 max-md:self-center"
+      class={notFoundPage.wrapper}
       aria-hidden="true"
     >
-      <svg viewBox="0 0 200 254" class="block h-auto w-full overflow-visible">
+      <svg viewBox="0 0 200 254" class={notFoundPage.icon}>
         <defs>
           <clipPath id="nf-forge"><rect
-            class="origin-[50%_100%] animate-anchor-forge [transform-box:fill-box] [transform:scaleY(0)] motion-reduce:animate-none motion-reduce:transform-none" x="0" y="0" width="200" height="254" /></clipPath>
+            class={notFoundPage.shape} x="0" y="0" width="200" height="254" /></clipPath>
         </defs>
         <g transform="translate(0,254) scale(0.10101,-0.10101)">
           <path
-            class="animate-anchor-draw [stroke-dasharray:1] [stroke-dashoffset:1] motion-reduce:animate-none motion-reduce:[stroke-dashoffset:0]"
+            class={notFoundPage.path}
             pathLength="1" d={ANCHOR_PATH} fill="none" stroke="#a8141b" stroke-width="28" stroke-linejoin="round" />
         </g>
         <g clip-path="url(#nf-forge)">
@@ -37,27 +80,27 @@ const titleBefore = copy.title.slice(0, copy.title.lastIndexOf(copy.titleEmphasi
       </svg>
     </div>
 
-    <div class="flex min-w-0 flex-1 flex-col items-start gap-[1.6rem] max-md:w-full max-md:gap-5">
-      <span class:list={['ln-eyebrow', RISE_IN]}>{copy.kicker} · {copy.badge}</span>
+    <div class={notFoundPage.stack}>
+      <span class={notFoundPage.kicker}>{copy.kicker} · {copy.badge}</span>
       <h1
-        class:list={['ln-h text-[clamp(2.875rem,6.7vw,6rem)] leading-[0.95] tracking-[-0.03em]', RISE_IN]}
+        class={notFoundPage.titleBefore}
         style="--d: 0.15s"
       >
-        {titleBefore}<span class="text-obra-red">{copy.titleEmphasis}.</span>
+        {titleBefore}<span class={notFoundPage.titleEmphasis}>{copy.titleEmphasis}.</span>
       </h1>
       <p
-        class:list={['m-0 max-w-130 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft', RISE_IN]}
+        class={notFoundPage.description}
         style="--d: 0.3s"
       >{copy.description}</p>
-      <div class:list={['flex flex-wrap gap-3', RISE_IN]} style="--d: 0.45s">
+      <div class={notFoundPage.row} style="--d: 0.45s">
         <Button href={localizePath('/', locale)} arrow>{copy.primary}</Button>
         <Button href={localizePath('/confesion-de-fe', locale)} variant="ghost">{copy.secondary}</Button>
       </div>
       <span
-        class:list={['font-obra-serif text-[clamp(1.375rem,2vw,1.75rem)] font-bold text-obra-red', RISE_IN]}
+        class={notFoundPage.tagline}
         style="--d: 0.6s"
       >{copy.tagline}</span>
-      <span class="-mt-3 font-obra-sans-bold text-[0.875rem] text-obra-muted">{copy.helper}</span>
+      <span class={notFoundPage.helper}>{copy.helper}</span>
     </div>
   </section>
 </Layout>

@@ -1,26 +1,42 @@
 ---
 import type { ContentTeamBlock } from 'src/data/contentPages';
+import cn from 'src/utils/cn';
 
 interface Props {
   block: ContentTeamBlock;
 }
 
 const { block } = Astro.props;
+
+const teamBlock = {
+  container: cn('grid grid-cols-1 gap-x-6 gap-y-12 mt-12', 'sm:grid-cols-2 lg:grid-cols-3'),
+  person: cn('group flex flex-col'),
+  personInner: cn(
+    'relative aspect-[4/5] flex w-full items-center justify-center',
+    '[background:repeating-linear-gradient(135deg,rgba(20,20,20,0.06)_0_1px,transparent_1px_14px),var(--tint,#efebe3)]',
+    '[filter:grayscale(1)_contrast(1.05)] [transition:filter_0.6s_ease]',
+    'group-hover:[filter:grayscale(0)_contrast(1.02)]',
+  ),
+  initials: cn('font-display text-[clamp(3rem,8vw,6rem)] font-light text-charcoal/18 italic'),
+  role: cn('mt-5 font-mono text-[10px] tracking-[0.22em] uppercase text-primary'),
+  personName: cn('font-display text-2xl mt-2 font-medium'),
+  bio: cn('font-ui text-[13.5px] text-ink/65 leading-relaxed mt-2'),
+};
 ---
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 mt-12">
+<div class={teamBlock.container}>
   {
     block.people.map((person) => (
-      <article class="group flex flex-col">
+      <article class={teamBlock.person}>
         <div
-          class="relative aspect-[4/5] flex w-full items-center justify-center [background:repeating-linear-gradient(135deg,rgba(20,20,20,0.06)_0_1px,transparent_1px_14px),var(--tint,#efebe3)] [filter:grayscale(1)_contrast(1.05)] [transition:filter_0.6s_ease] group-hover:[filter:grayscale(0)_contrast(1.02)]"
+          class={teamBlock.personInner}
           style={person.tint ? `--tint: ${person.tint}` : undefined}
         >
-          <span class="font-display text-[clamp(3rem,8vw,6rem)] font-light text-charcoal/18 italic">{person.initials}</span>
+          <span class={teamBlock.initials}>{person.initials}</span>
         </div>
-        <div class="mt-5 font-mono text-[10px] tracking-[0.22em] uppercase text-primary">{person.role}</div>
-        <h3 class="font-display text-2xl mt-2 font-medium">{person.name}</h3>
-        <p class="font-ui text-[13.5px] text-ink/65 leading-relaxed mt-2">{person.bio}</p>
+        <div class={teamBlock.role}>{person.role}</div>
+        <h3 class={teamBlock.personName}>{person.name}</h3>
+        <p class={teamBlock.bio}>{person.bio}</p>
       </article>
     ))
   }

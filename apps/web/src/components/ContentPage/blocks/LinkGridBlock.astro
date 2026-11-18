@@ -1,38 +1,64 @@
 ---
 import type { ContentLinkGridBlock } from 'src/data/contentPages';
+import cn from 'src/utils/cn';
 
 interface Props {
   block: ContentLinkGridBlock;
 }
 
 const { block } = Astro.props;
+
+const linkGridBlock = {
+  container: cn('grid grid-cols-1 gap-4 mt-10', 'md:grid-cols-2'),
+  card: cn(
+    'flex gap-0 border border-charcoal/10 bg-obra-white text-(--ink) no-underline',
+    '[transition:border-color_0.3s_ease,translate_0.4s_ease] hover:-translate-y-0.5',
+    'hover:border-(--ink)',
+    'max-[640px]:flex-col',
+  ),
+  glyphBox: cn(
+    'flex min-h-32.5 w-[36%] shrink-0 items-center justify-center',
+    '[background:repeating-linear-gradient(135deg,rgba(20,20,20,0.06)_0_1px,transparent_1px_14px),var(--tint,#efebe3)]',
+    'max-[640px]:min-h-24 max-[640px]:w-full',
+  ),
+  glyph: cn('font-display text-[1.875rem] font-light text-charcoal/30 italic'),
+  body: cn('flex min-w-0 flex-1 flex-col justify-between px-6.5 py-5.5'),
+  source: cn(
+    'mb-1.5 flex items-center gap-2 font-ui text-[10.5px] tracking-[0.18em] text-charcoal/50',
+    'uppercase',
+  ),
+  sourceDot: cn('w-1.5 h-1.5 rounded-full bg-primary'),
+  title: cn('font-display text-[1.25rem] leading-[1.18] tracking-[-0.01em]'),
+  description: cn('mt-1.5 line-clamp-2 font-ui text-[13px] leading-normal text-charcoal/60'),
+  meta: cn('flex items-center gap-2 mt-3 font-ui text-[11px] text-ink/50'),
+};
 ---
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10">
+<div class={linkGridBlock.container}>
   {
     block.links.map((link) => (
       <a
         href={link.href}
-        class="flex gap-0 border border-charcoal/10 bg-obra-white text-(--ink) no-underline [transition:border-color_0.3s_ease,translate_0.4s_ease] hover:-translate-y-0.5 hover:border-(--ink) max-[640px]:flex-col"
+        class={linkGridBlock.card}
         target={link.external ? '_blank' : undefined}
         rel={link.external ? 'noopener noreferrer' : undefined}
       >
         <div
-          class="flex min-h-32.5 w-[36%] shrink-0 items-center justify-center [background:repeating-linear-gradient(135deg,rgba(20,20,20,0.06)_0_1px,transparent_1px_14px),var(--tint,#efebe3)] max-[640px]:min-h-24 max-[640px]:w-full"
+          class={linkGridBlock.glyphBox}
           style={link.tint ? `--tint: ${link.tint}` : undefined}
         >
-          <span class="font-display text-[1.875rem] font-light text-charcoal/30 italic">{link.glyph}</span>
+          <span class={linkGridBlock.glyph}>{link.glyph}</span>
         </div>
-        <div class="flex min-w-0 flex-1 flex-col justify-between px-6.5 py-5.5">
+        <div class={linkGridBlock.body}>
           <div>
-            <div class="mb-1.5 flex items-center gap-2 font-ui text-[10.5px] tracking-[0.18em] text-charcoal/50 uppercase">
-              <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            <div class={linkGridBlock.source}>
+              <span class={linkGridBlock.sourceDot}></span>
               {link.sourceLabel}
             </div>
-            <div class="font-display text-[1.25rem] leading-[1.18] tracking-[-0.01em]">{link.title}</div>
-            <div class="mt-1.5 line-clamp-2 font-ui text-[13px] leading-normal text-charcoal/60">{link.description}</div>
+            <div class={linkGridBlock.title}>{link.title}</div>
+            <div class={linkGridBlock.description}>{link.description}</div>
           </div>
-          <div class="flex items-center gap-2 mt-3 font-ui text-[11px] text-ink/50">
+          <div class={linkGridBlock.meta}>
             <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
               <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
             </svg>

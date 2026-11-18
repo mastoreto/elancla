@@ -1,14 +1,27 @@
 ---
 import type { ContentVerseBlock } from 'src/data/contentPages';
+import cn from 'src/utils/cn';
 
 interface Props {
   block: ContentVerseBlock;
 }
 
 const { block } = Astro.props;
+
+const verseBlock = {
+  container: cn('relative mt-10 border-l-3 border-(--primary) bg-obra-white px-8 py-7'),
+  reference: cn(
+    'mb-3 block font-label-mono text-[11px] font-semibold tracking-[0.2em] text-(--primary)',
+    'uppercase',
+  ),
+  text: cn(
+    'font-display text-[clamp(1.15rem,1.5vw,1.4rem)] leading-[1.45] font-light text-(--ink)',
+    'italic',
+  ),
+};
 ---
 
-<blockquote class="relative mt-10 border-l-3 border-(--primary) bg-obra-white px-8 py-7">
-  <span class="mb-3 block font-label-mono text-[11px] font-semibold tracking-[0.2em] text-(--primary) uppercase">{block.reference}</span>
-  <p class="font-display text-[clamp(1.15rem,1.5vw,1.4rem)] leading-[1.45] font-light text-(--ink) italic">{block.text}</p>
+<blockquote class={verseBlock.container}>
+  <span class={verseBlock.reference}>{block.reference}</span>
+  <p class={verseBlock.text}>{block.text}</p>
 </blockquote>

@@ -2,6 +2,7 @@
 // Cover placeholder shared by cards, featured and article: tinted block + faint anchor.
 // Slot = pills shown top-left. (Swap for a real <img class={PHOTO}> once articles carry a photo.)
 import AnchorMark from '../AnchorMark.astro';
+import cn from 'src/utils/cn';
 
 type CoverSize = 'sm' | 'lg' | 'hero';
 
@@ -19,14 +20,21 @@ const SIZE: Record<CoverSize, { box: string; pills: string; ghost: string }> = {
 
 const { tint, size = 'sm', class: className } = Astro.props;
 const { box, pills, ghost } = SIZE[size];
+
+const blogCover = {
+  container: cn('relative flex items-end justify-end overflow-hidden bg-(--tint)', box, className),
+  category: cn('absolute flex gap-2', pills),
+  markBox: cn('block text-obra-red opacity-16', ghost),
+  mark: cn('block h-auto w-full'),
+};
 ---
 
 <div
-  class:list={['relative flex items-end justify-end overflow-hidden bg-(--tint)', box, className]}
+  class={blogCover.container}
   style={`--tint: ${tint}`}
 >
-  <span class:list={['absolute flex gap-2', pills]}><slot /></span>
-  <span class:list={['block text-obra-red opacity-16', ghost]}>
-    <AnchorMark id="blog-cover" outline={false} class="block h-auto w-full" />
+  <span class={blogCover.category}><slot /></span>
+  <span class={blogCover.markBox}>
+    <AnchorMark id="blog-cover" outline={false} class={blogCover.mark} />
   </span>
 </div>

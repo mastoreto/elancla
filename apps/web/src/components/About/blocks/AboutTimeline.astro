@@ -1,21 +1,37 @@
 ---
 import type { ContentTimelineBlock } from 'src/data/contentPages';
+import cn from 'src/utils/cn';
 
 interface Props {
   block: ContentTimelineBlock;
 }
 
 const { block } = Astro.props;
+
+const aboutTimeline = {
+  container: cn('m-0 list-none p-0'),
+  item: cn(
+    'grid grid-cols-[6.875rem_1fr] gap-4 border-t border-obra-ink/14 py-5',
+    'max-md:grid-cols-[4.5rem_1fr]',
+  ),
+  year: cn(
+    'font-obra-serif text-[2.5rem] leading-none font-bold text-obra-red',
+    'max-md:text-[1.75rem]',
+  ),
+  label: cn('flex flex-col gap-1.5'),
+  title: cn('font-obra-sans-bold text-[1.1875rem]'),
+  description: cn('text-[1rem] leading-normal text-obra-ink-soft'),
+};
 ---
 
-<ol class="m-0 list-none p-0">
+<ol class={aboutTimeline.container}>
   {
     block.items.map((item) => (
-      <li class="grid grid-cols-[6.875rem_1fr] gap-4 border-t border-obra-ink/14 py-5 max-md:grid-cols-[4.5rem_1fr]">
-        <span class="font-obra-serif text-[2.5rem] leading-none font-bold text-obra-red max-md:text-[1.75rem]">{item.year}</span>
-        <span class="flex flex-col gap-1.5">
-          <b class="font-obra-sans-bold text-[1.1875rem]">{item.title}</b>
-          <span class="text-[1rem] leading-normal text-obra-ink-soft">{item.description}</span>
+      <li class={aboutTimeline.item}>
+        <span class={aboutTimeline.year}>{item.year}</span>
+        <span class={aboutTimeline.label}>
+          <b class={aboutTimeline.title}>{item.title}</b>
+          <span class={aboutTimeline.description}>{item.description}</span>
         </span>
       </li>
     ))

@@ -44,9 +44,14 @@ const VARIANT: Record<Variant, string> = {
 const DOT = 'inline-flex size-9.5 items-center justify-center rounded-full bg-obra-white text-obra-red';
 
 const Tag = href ? 'a' : (as ?? 'button');
+
+const button = {
+  container: cn(BASE, VARIANT[variant], className),
+  arrow: cn(DOT, dotClass),
+};
 ---
 
-<Tag href={href} type={href || as ? undefined : type} class={cn(BASE, VARIANT[variant], className)} {...rest}>
+<Tag href={href} type={href || as ? undefined : type} class={button.container} {...rest}>
   <slot />
-  {arrow && <span class={cn(DOT, dotClass)} aria-hidden="true">→</span>}
+  {arrow && <span class={button.arrow} aria-hidden="true">→</span>}
 </Tag>

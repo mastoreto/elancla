@@ -1,6 +1,7 @@
 ---
 // Compact month grid (L M M J V S D). Event days get a red circle, Sundays are red.
 import { monthLayout } from 'src/data/calendar';
+import cn from 'src/utils/cn';
 
 interface Props {
   year: number;
@@ -27,12 +28,18 @@ const DAY_TONE = {
   sunday: 'text-obra-red',
   event: ['m-auto flex items-center justify-center rounded-full bg-obra-red font-bold text-white', EVENT_SIZE[size]],
 } as const;
+
+const printMonthGrid = {
+  container: cn('grid grid-cols-[repeat(7,1fr)]', GRID_GAP[size]),
+  letter: cn('text-center text-[11px] font-bold text-obra-stone'),
+  day: cn('text-center', DAY_SIZE[size]),
+};
 ---
 
-<div class:list={['grid grid-cols-[repeat(7,1fr)]', GRID_GAP[size]]}>
-  {['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((letter) => <span class="text-center text-[11px] font-bold text-obra-stone">{letter}</span>)}
+<div class={printMonthGrid.container}>
+  {['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((letter) => <span class={printMonthGrid.letter}>{letter}</span>)}
   {Array.from({ length: lead }, () => <span></span>)}
   {cells.map(({ day, tone }) => (
-    <span class:list={['text-center', DAY_SIZE[size], DAY_TONE[tone]]}>{day}</span>
+    <span class={cn(printMonthGrid.day, DAY_TONE[tone])}>{day}</span>
   ))}
 </div>

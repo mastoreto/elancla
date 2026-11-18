@@ -12,15 +12,27 @@ interface Props {
 }
 
 const { label, name, class: className } = Astro.props;
+
+const logoText = {
+  container: cn('inline-flex flex-col leading-none', className),
+  label: cn(
+    'w-full text-[0.4em] tracking-[0.22em] font-futura font-normal uppercase opacity-60',
+    '[text-align-last:justify]',
+  ),
+  name: cn(
+    'font-display tracking-tight font-futura-bold font-semibold leading-none uppercase',
+    'whitespace-nowrap',
+  ),
+};
 ---
 
-<div class={cn('inline-flex flex-col leading-none', className)}>
+<div class={logoText.container}>
   <div
-    class="w-full text-[0.4em] tracking-[0.22em] font-futura font-normal uppercase opacity-60 [text-align-last:justify]"
+    class={logoText.label}
   >
     {label}
   </div>
-  <div class="font-display tracking-tight font-futura-bold font-semibold leading-none uppercase whitespace-nowrap">
+  <div class={logoText.name}>
     {name}
   </div>
 </div>

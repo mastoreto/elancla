@@ -4,6 +4,7 @@ import type { Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
 import LogoText from './LogoText.astro';
+import cn from 'src/utils/cn';
 
 interface ResourceItem {
   label: string;
@@ -34,29 +35,90 @@ const PANEL =
   'pointer-events-none opacity-0 [transform:translateY(-6px)] [transition:opacity_0.25s_ease,transform_0.25s_ease] [&.is-open]:pointer-events-auto [&.is-open]:opacity-100 [&.is-open]:[transform:translateY(0)]';
 const NAV_LINK =
   'block w-full py-4.5 text-[1.0625rem] [transition:color_0.15s_ease] hover:text-primary focus-visible:text-primary focus-visible:[outline:none]';
+
+const mobileMenu = {
+  container: cn('fixed inset-0 z-[9001] overflow-y-auto', 'lg:hidden', PANEL),
+  backdrop: cn('absolute inset-0 bg-paper/97 backdrop-blur-2xl'),
+  panel: cn('relative flex flex-col min-h-full px-6'),
+  topBar: cn('flex items-center justify-between py-5 border-b border-ink/10'),
+  logoLink: cn('flex items-center gap-3 menu-close-trigger'),
+  logoImage: cn('w-7 h-7 object-contain'),
+  logoText: cn('text-[17px]'),
+  closeButton: cn(
+    'flex items-center justify-center w-9 h-9 rounded-full border border-ink/10 bg-ink/5',
+    'text-ink transition-colors',
+    'hover:bg-ink/10',
+  ),
+  nav: cn('flex-1 py-2'),
+  links: cn('flex flex-col'),
+  navItem: cn('border-b border-ink/8'),
+  navLink: cn(NAV_LINK, 'menu-close-trigger font-ui font-medium text-ink/80'),
+  resourcesItem: cn('border-b border-ink/8'),
+  resourcesToggle: cn(
+    NAV_LINK,
+    'items-center justify-between text-left font-ui font-medium text-ink/80',
+  ),
+  resourcesChevron: cn('w-3.5 h-3.5 transition-transform duration-200 text-ink/40 flex-shrink-0'),
+  resourcesList: cn(
+    'ml-1 flex flex-col overflow-hidden border-l-2 border-primary/30 pl-4',
+    '[transition:max-height_0.25s_ease]',
+  ),
+  resourceLink: cn('flex flex-col gap-0.5 py-3 menu-close-trigger'),
+  resourceLabel: cn('font-ui text-[14px] font-medium text-ink/80'),
+  resourceDescription: cn('font-ui text-[11px] text-ink/45'),
+  footer: cn('py-8'),
+  footerGrid: cn('mb-4 grid grid-cols-[1fr_auto] gap-3'),
+  localeGroup: cn('rounded-2xl border border-ink/10 p-2'),
+  languageLabel: cn(
+    'px-2 pb-2 font-ui text-[10px] font-semibold uppercase tracking-[0.22em] text-ink/50',
+  ),
+  localeList: cn('flex flex-wrap gap-2'),
+  localeLink: cn(
+    'menu-close-trigger inline-flex items-center gap-1.5 rounded-full border px-3 py-2',
+    'font-ui text-[11px] font-semibold uppercase tracking-wide',
+  ),
+  localeLinkCurrent: cn('border-primary bg-primary text-white'),
+  localeLinkIdle: cn('border-ink/10 bg-ink/5 text-ink'),
+  themeToggle: cn(
+    'flex h-full min-h-[4.25rem] w-16 items-center justify-center rounded-2xl border',
+    'border-ink/10 bg-ink/5 text-ink transition-colors',
+    'hover:bg-ink/10',
+  ),
+  cta: cn(
+    'menu-close-trigger inline-flex w-full items-center justify-center gap-2 rounded-full',
+    'bg-ink px-5 py-3.5 font-ui text-[13px] font-semibold tracking-wide text-paper uppercase',
+    CTA_FILL,
+  ),
+  ctaArrow: cn(CTA_ARROW),
+  liveStatus: cn(
+    'mt-5 flex items-center gap-2 text-[11px] font-ui font-medium text-ink/50 uppercase',
+    'tracking-wider',
+  ),
+  liveDot: cn('h-1.5 w-1.5 rounded-full bg-primary', LIVE_DOT),
+};
 ---
 
 <div
   id="mobileMenu"
-  class:list={['fixed inset-0 z-[9001] overflow-y-auto lg:hidden', PANEL]}
+  class={mobileMenu.container}
   aria-modal="true"
   role="dialog"
   aria-label={copy.menuOpen}
   aria-hidden="true"
 >
-  <div class="absolute inset-0 bg-paper/97 backdrop-blur-2xl" />
+  <div class={mobileMenu.backdrop} />
 
-  <div class="relative flex flex-col min-h-full px-6">
+  <div class={mobileMenu.panel}>
     <!-- Top bar con logo repetido + botón cerrar -->
-    <div class="flex items-center justify-between py-5 border-b border-ink/10">
-      <a href={localizePath('/#inicio', locale)} class="flex items-center gap-3 menu-close-trigger">
-        <img src="/images/anclarojo.png" alt="" class="w-7 h-7 object-contain" />
-        <LogoText label={copy.brandLabel} name={copy.brandName} class="text-[17px]" />
+    <div class={mobileMenu.topBar}>
+      <a href={localizePath('/#inicio', locale)} class={mobileMenu.logoLink}>
+        <img src="/images/anclarojo.png" alt="" class={mobileMenu.logoImage} />
+        <LogoText label={copy.brandLabel} name={copy.brandName} class={mobileMenu.logoText} />
       </a>
 
       <button
         id="mobileMenuClose"
-        class="flex items-center justify-center w-9 h-9 rounded-full border border-ink/10 bg-ink/5 text-ink transition-colors hover:bg-ink/10"
+        class={mobileMenu.closeButton}
         aria-label={copy.menuClose}
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -66,27 +128,27 @@ const NAV_LINK =
     </div>
 
     <!-- Links de navegación -->
-    <nav class="flex-1 py-2">
-      <ul class="flex flex-col">
+    <nav class={mobileMenu.nav}>
+      <ul class={mobileMenu.links}>
         {copy.links.map((item) => (
-          <li class="border-b border-ink/8">
-            <a href={localizePath(item.href, locale)} class:list={[NAV_LINK, 'menu-close-trigger font-ui font-medium text-ink/80']}>
+          <li class={mobileMenu.navItem}>
+            <a href={localizePath(item.href, locale)} class={mobileMenu.navLink}>
               {item.label}
             </a>
           </li>
         ))}
 
         <!-- Acordeón Recursos -->
-        <li class="border-b border-ink/8">
+        <li class={mobileMenu.resourcesItem}>
           <button
             id="resourcesToggle"
-            class:list={[NAV_LINK, 'items-center justify-between text-left font-ui font-medium text-ink/80']}
+            class={mobileMenu.resourcesToggle}
             aria-expanded="false"
           >
             <span>{copy.resources.label}</span>
             <svg
               id="resourcesChevron"
-              class="w-3.5 h-3.5 transition-transform duration-200 text-ink/40 flex-shrink-0"
+              class={mobileMenu.resourcesChevron}
               viewBox="0 0 10 6"
               fill="none"
               aria-hidden="true"
@@ -97,15 +159,15 @@ const NAV_LINK =
 
           <ul
             id="resourcesList"
-            class="ml-1 flex flex-col overflow-hidden border-l-2 border-primary/30 pl-4 [transition:max-height_0.25s_ease]"
+            class={mobileMenu.resourcesList}
             style="max-height: 0"
           >
             {recursos.map((item) => (
               <li>
-                <a href={item.href} class="flex flex-col gap-0.5 py-3 menu-close-trigger">
-                  <span class="font-ui text-[14px] font-medium text-ink/80">{item.label}</span>
+                <a href={item.href} class={mobileMenu.resourceLink}>
+                  <span class={mobileMenu.resourceLabel}>{item.label}</span>
                   {item.description && (
-                    <span class="font-ui text-[11px] text-ink/45">{item.description}</span>
+                    <span class={mobileMenu.resourceDescription}>{item.description}</span>
                   )}
                 </a>
               </li>
@@ -116,20 +178,17 @@ const NAV_LINK =
     </nav>
 
     <!-- Pie con CTA -->
-    <div class="py-8">
-      <div class="mb-4 grid grid-cols-[1fr_auto] gap-3">
-        <div class="rounded-2xl border border-ink/10 p-2">
-          <div class="px-2 pb-2 font-ui text-[10px] font-semibold uppercase tracking-[0.22em] text-ink/50">
+    <div class={mobileMenu.footer}>
+      <div class={mobileMenu.footerGrid}>
+        <div class={mobileMenu.localeGroup}>
+          <div class={mobileMenu.languageLabel}>
             {copy.language.label}
           </div>
-          <div class="flex flex-wrap gap-2">
+          <div class={mobileMenu.localeList}>
             {localeLinks.map((item) => (
               <a
                 href={item.href}
-                class:list={[
-                  'menu-close-trigger inline-flex items-center gap-1.5 rounded-full border px-3 py-2 font-ui text-[11px] font-semibold uppercase tracking-wide',
-                  item.current ? 'border-primary bg-primary text-white' : 'border-ink/10 bg-ink/5 text-ink',
-                ]}
+                class={cn(mobileMenu.localeLink, item.current ? mobileMenu.localeLinkCurrent : mobileMenu.localeLinkIdle)}
                 aria-current={item.current ? 'page' : undefined}
               >
                 <span aria-hidden="true">{item.flag}</span>
@@ -140,7 +199,7 @@ const NAV_LINK =
         </div>
         <button
           type="button"
-          class="flex h-full min-h-[4.25rem] w-16 items-center justify-center rounded-2xl border border-ink/10 bg-ink/5 text-ink transition-colors hover:bg-ink/10"
+          class={mobileMenu.themeToggle}
           data-theme-toggle
           data-label-light={copy.theme.lightLabel}
           data-label-dark={copy.theme.darkLabel}
@@ -159,16 +218,16 @@ const NAV_LINK =
 
       <a
         href={localizePath('/#visitanos', locale)}
-        class:list={['menu-close-trigger inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-3.5 font-ui text-[13px] font-semibold tracking-wide text-paper uppercase', CTA_FILL]}
+        class={mobileMenu.cta}
       >
         {copy.cta}
-        <svg class={CTA_ARROW} width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <svg class={mobileMenu.ctaArrow} width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
           <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
         </svg>
       </a>
 
-      <div class="mt-5 flex items-center gap-2 text-[11px] font-ui font-medium text-ink/50 uppercase tracking-wider">
-        <span class:list={['h-1.5 w-1.5 rounded-full bg-primary', LIVE_DOT]}></span>
+      <div class={mobileMenu.liveStatus}>
+        <span class={mobileMenu.liveDot}></span>
         {copy.live}
       </div>
     </div>

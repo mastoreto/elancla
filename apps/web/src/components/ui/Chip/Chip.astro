@@ -17,6 +17,10 @@ const CHIP = [
   'data-[on=true]:bg-obra-ink data-[on=true]:text-white',
 ];
 const Tag = href ? 'a' : 'button';
+
+const chip = {
+  container: cn(CHIP, className),
+};
 ---
 
-<Tag href={href} type={href ? undefined : 'button'} class={cn(CHIP, className)} {...rest}><slot /></Tag>
+<Tag href={href} type={href ? undefined : 'button'} class={chip.container} {...rest}><slot /></Tag>

@@ -1,5 +1,6 @@
 ---
 // Big day number with weekday (and optionally month) underneath. Used by the hero card and every event row.
+import cn from 'src/utils/cn';
 interface Props {
   day: number;
   label: string;
@@ -7,17 +8,27 @@ interface Props {
 }
 const { day, label, tone } = Astro.props;
 
+// Sizes carry the line-height (`size/leading`) so cn() keeps it when merging with the base.
 const NUMBER_TONE = {
-  hero: 'text-[4rem] text-obra-red-live',
-  row: 'text-[3.25rem] text-obra-red max-md:text-[2.5rem]',
+  hero: 'text-[4rem]/[0.9] text-obra-red-live',
+  row: 'text-[3.25rem]/[0.9] text-obra-red max-md:text-[2.5rem]/[0.9]',
 } as const;
 const LABEL_TONE = {
   hero: 'text-obra-dune',
   row: 'text-obra-muted',
 } as const;
+
+const calendarDate = {
+  container: cn('flex flex-col items-center'),
+  day: cn('font-obra-serif', NUMBER_TONE[tone]),
+  label: cn(
+    'mt-1 font-obra-sans-bold text-[0.75rem] tracking-[0.14em] uppercase',
+    LABEL_TONE[tone],
+  ),
+};
 ---
 
-<div class="flex flex-col items-center">
-  <b class:list={['font-obra-serif leading-[0.9]', NUMBER_TONE[tone]]}>{day}</b>
-  <span class:list={['mt-1 font-obra-sans-bold text-[0.75rem] tracking-[0.14em] uppercase', LABEL_TONE[tone]]}>{label}</span>
+<div class={calendarDate.container}>
+  <b class={calendarDate.day}>{day}</b>
+  <span class={calendarDate.label}>{label}</span>
 </div>

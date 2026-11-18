@@ -1,6 +1,7 @@
 ---
 import { ULINK } from 'src/styles/classes';
 import type { ContentSection, ContentShortcut } from 'src/data/contentPages';
+import cn from 'src/utils/cn';
 
 interface Props {
   sections: ContentSection[];
@@ -8,21 +9,42 @@ interface Props {
 }
 
 const { sections, shortcuts = [] } = Astro.props;
+
+const stickyToc = {
+  container: cn('order-2', 'lg:col-span-3 lg:order-1'),
+  panel: cn('lg:sticky lg:top-32'),
+  tocTitle: cn('font-mono text-[10px] tracking-[0.22em] uppercase text-ink/45 mb-4'),
+  tocNav: cn('flex flex-col'),
+  tocLink: cn(
+    'group relative block border-l border-charcoal/10 py-2 pl-4.5 font-ui text-[13px]',
+    'leading-[1.4] text-charcoal/55',
+    '[transition:color_0.3s_ease] hover:text-(--ink) [&.active]:border-l-(--primary)',
+    '[&.active]:font-semibold [&.active]:text-(--ink)',
+  ),
+  tocNumber: cn(
+    'mr-2 font-label-mono text-[10px] tracking-[0.16em] text-charcoal/40',
+    'group-[.active]:text-(--primary)',
+  ),
+  shortcutsGroup: cn('hidden mt-10 pt-8 border-t border-ink/10', 'lg:block'),
+  shortcutsTitle: cn('font-mono text-[10px] tracking-[0.22em] uppercase text-ink/45 mb-4'),
+  shortcuts: cn('flex flex-col gap-2'),
+  shortcutLink: cn(ULINK, 'w-fit font-ui text-[12.5px] text-ink/70'),
+};
 ---
 
-<aside class="lg:col-span-3 order-2 lg:order-1">
-  <div class="lg:sticky lg:top-32">
-    <div class="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/45 mb-4">[ Índice ]</div>
-    <nav id="toc" class="flex flex-col" aria-label="Índice de página">
+<aside class={stickyToc.container}>
+  <div class={stickyToc.panel}>
+    <div class={stickyToc.tocTitle}>[ Índice ]</div>
+    <nav id="toc" class={stickyToc.tocNav} aria-label="Índice de página">
       {
         sections.map((section, index) => (
           <a
             href={`#${section.id}`}
-            class="group relative block border-l border-charcoal/10 py-2 pl-4.5 font-ui text-[13px] leading-[1.4] text-charcoal/55 [transition:color_0.3s_ease] hover:text-(--ink) [&.active]:border-l-(--primary) [&.active]:font-semibold [&.active]:text-(--ink)"
+            class={stickyToc.tocLink}
             data-content-toc
             data-target={section.id}
           >
-            <span class="mr-2 font-label-mono text-[10px] tracking-[0.16em] text-charcoal/40 group-[.active]:text-(--primary)">{String(index + 1).padStart(2, '0')}</span>
+            <span class={stickyToc.tocNumber}>{String(index + 1).padStart(2, '0')}</span>
             {section.tocLabel}
           </a>
         ))
@@ -31,11 +53,11 @@ const { sections, shortcuts = [] } = Astro.props;
 
     {
       shortcuts.length > 0 && (
-        <div class="hidden lg:block mt-10 pt-8 border-t border-ink/10">
-          <div class="font-mono text-[10px] tracking-[0.22em] uppercase text-ink/45 mb-4">[ Atajos ]</div>
-          <div class="flex flex-col gap-2">
+        <div class={stickyToc.shortcutsGroup}>
+          <div class={stickyToc.shortcutsTitle}>[ Atajos ]</div>
+          <div class={stickyToc.shortcuts}>
             {shortcuts.map((shortcut) => (
-              <a href={shortcut.href} class:list={[ULINK, 'w-fit font-ui text-[12.5px] text-ink/70']}>
+              <a href={shortcut.href} class={stickyToc.shortcutLink}>
                 {shortcut.label}
               </a>
             ))}

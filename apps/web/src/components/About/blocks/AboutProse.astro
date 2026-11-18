@@ -1,13 +1,23 @@
 ---
 import type { ContentProseBlock } from 'src/data/contentPages';
+import cn from 'src/utils/cn';
 
 interface Props {
   block: ContentProseBlock;
 }
 
 const { block } = Astro.props;
+
+const aboutProse = {
+  container: cn(
+    'flex flex-col gap-7',
+    '[&_b]:font-obra-sans-bold [&_b]:font-bold [&_strong]:font-obra-sans-bold',
+    '[&_strong]:font-bold',
+  ),
+  paragraphText: cn('m-0 text-[clamp(1.125rem,1.4vw,1.25rem)] leading-[1.7]'),
+};
 ---
 
-<div class="flex flex-col gap-7 [&_b]:font-obra-sans-bold [&_b]:font-bold [&_strong]:font-obra-sans-bold [&_strong]:font-bold">
-  {block.paragraphs.map((p) => <p class="m-0 text-[clamp(1.125rem,1.4vw,1.25rem)] leading-[1.7]" set:html={p} />)}
+<div class={aboutProse.container}>
+  {block.paragraphs.map((p) => <p class={aboutProse.paragraphText} set:html={p} />)}
 </div>

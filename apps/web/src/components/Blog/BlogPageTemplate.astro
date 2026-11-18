@@ -8,6 +8,7 @@ import BlogFeatured from './BlogFeatured.astro';
 import BlogHero from './BlogHero.astro';
 import BlogMarquee from './BlogMarquee.astro';
 import BlogSeries from './BlogSeries.astro';
+import cn from 'src/utils/cn';
 
 interface Props {
   articles: BlogArticle[];
@@ -20,9 +21,14 @@ interface Props {
 }
 
 const { articles, categories, featured, marqueeItems, series, copy, locale } = Astro.props;
+
+const blogPageTemplate = {
+  container: cn('ln overflow-x-clip bg-obra-paper'),
+  wrapper: cn('h-[clamp(4rem,8vw,6rem)]'),
+};
 ---
 
-<div class="ln overflow-x-clip bg-obra-paper">
+<div class={blogPageTemplate.container}>
   <BlogHero copy={copy.hero} />
   <BlogMarquee items={marqueeItems} />
   <BlogFeatured article={featured} copy={copy.featured} locale={locale} />
@@ -30,5 +36,5 @@ const { articles, categories, featured, marqueeItems, series, copy, locale } = A
   <BlogArticleGrid articles={articles} copy={copy.articles} locale={locale} />
   <BlogSeries series={series} copy={copy.series} locale={locale} />
   <NewsletterCard id="newsletter" copy={copy.newsletter} />
-  <div class="h-[clamp(4rem,8vw,6rem)]"></div>
+  <div class={blogPageTemplate.wrapper}></div>
 </div>

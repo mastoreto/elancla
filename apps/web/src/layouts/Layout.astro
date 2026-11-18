@@ -26,6 +26,7 @@ import {
   type SEOBreadcrumb,
   type PageType,
 } from '../utils/seo';
+import cn from 'src/utils/cn';
 
 // Estado/config del sitio leídos en vivo por request (SSR). El middleware ya
 // lo dejó en locals; si no, lo pedimos aquí. Cae a SITE_FALLBACK si no hay BD.
@@ -107,6 +108,15 @@ if (pageType === 'article' && article) {
     })
   );
 }
+
+const layout = {
+  container: cn('flex flex-col overflow-x-hidden', 'selection:bg-primary selection:text-white'),
+  readprog: cn(
+    'fixed top-0 left-0 z-60 h-0.5 w-0 bg-(--primary)',
+    '[transition:width_0.12s_linear]',
+  ),
+  main: cn('max-w-full flex flex-col relative overflow-clip', 'in-[.has-live-bar]:pt-11'),
+};
 ---
 
 <!doctype html>
@@ -323,14 +333,14 @@ if (pageType === 'article' && article) {
       href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Libre+Franklin:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
     />
   </head>
-  <body class="flex flex-col overflow-x-hidden selection:bg-primary selection:text-white">
+  <body class={layout.container}>
     <LoadingOverlay />
-    <div id="readprog" class="fixed top-0 left-0 z-60 h-0.5 w-0 bg-(--primary) [transition:width_0.12s_linear]"></div>
+    <div id="readprog" class={layout.readprog}></div>
     <Nav locale={locale} status={site.status} />
     {
       site.status === 'online' ? (
         <>
-          <main class="max-w-full flex flex-col relative overflow-clip in-[.has-live-bar]:pt-11">
+          <main class={layout.main}>
             <slot />
           </main>
           {footer && <Footer locale={locale} variant={footer === 'dark' ? 'dark' : 'red'} social={site.social} />}

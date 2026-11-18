@@ -2,6 +2,7 @@
 // Red subscribe card with the faint anchor. The form is handled by initBlog (`[data-newsletter-form]`).
 import AnchorMark from '../AnchorMark.astro';
 import Button from './Button';
+import cn from 'src/utils/cn';
 
 interface Props {
   copy: {
@@ -22,29 +23,52 @@ interface Props {
 const { copy, id } = Astro.props;
 const FIELD =
   'min-h-13 w-full rounded-full border-0 bg-obra-white px-5.5 py-0 text-[0.9375rem] leading-[inherit] text-obra-ink placeholder:text-obra-placeholder focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-obra-ink';
+
+const newsletterCard = {
+  container: cn('px-gutter pt-[clamp(3.5rem,7vw,5rem)]'),
+  row: cn(
+    'relative flex items-center gap-14 overflow-hidden rounded-[48px] bg-obra-red',
+    'p-[clamp(2rem,5vw,4rem)] text-white',
+    'max-lg:flex-col max-lg:items-stretch max-lg:gap-7 max-lg:rounded-[32px]',
+  ),
+  newsAnchor: cn(
+    'pointer-events-none absolute -right-7.5 -bottom-10 h-auto w-65 text-white opacity-10',
+  ),
+  stack: cn('relative flex flex-1 flex-col gap-3.5'),
+  eyebrow: cn('ln-eyebrow text-obra-blush'),
+  title: cn('ln-h text-[clamp(2.25rem,3.9vw,3.5rem)] leading-none'),
+  description: cn('m-0 max-w-120 text-[1.125rem] leading-normal'),
+  newsletterForm: cn('relative flex flex-[0_0_min(460px,100%)] flex-col gap-3', 'max-lg:flex-none'),
+  name: cn('sr-only'),
+  input: cn(FIELD),
+  email: cn('sr-only'),
+  newsletterFormInput: cn(FIELD),
+  button: cn('justify-center'),
+  readers: cn('text-[0.8125rem] text-obra-blush'),
+};
 ---
 
-<section id={id} class="px-gutter pt-[clamp(3.5rem,7vw,5rem)]">
-  <div class="relative flex items-center gap-14 overflow-hidden rounded-[48px] bg-obra-red p-[clamp(2rem,5vw,4rem)] text-white max-lg:flex-col max-lg:items-stretch max-lg:gap-7 max-lg:rounded-[32px]">
+<section id={id} class={newsletterCard.container}>
+  <div class={newsletterCard.row}>
     <AnchorMark
       id="news-anchor"
       outline={false}
-      class="pointer-events-none absolute -right-7.5 -bottom-10 h-auto w-65 text-white opacity-10"
+      class={newsletterCard.newsAnchor}
     />
-    <div class="relative flex flex-1 flex-col gap-3.5">
-      <span class="ln-eyebrow text-obra-blush">{copy.eyebrow}</span>
-      <h2 class="ln-h text-[clamp(2.25rem,3.9vw,3.5rem)] leading-none">{copy.title}</h2>
-      <p class="m-0 max-w-120 text-[1.125rem] leading-normal">{copy.description}</p>
+    <div class={newsletterCard.stack}>
+      <span class={newsletterCard.eyebrow}>{copy.eyebrow}</span>
+      <h2 class={newsletterCard.title}>{copy.title}</h2>
+      <p class={newsletterCard.description}>{copy.description}</p>
     </div>
     <form
-      class="relative flex flex-[0_0_min(460px,100%)] flex-col gap-3 max-lg:flex-none"
+      class={newsletterCard.newsletterForm}
       data-newsletter-form
       data-thanks={copy.thanks}
     >
       <label>
-        <span class="sr-only">{copy.name}</span>
+        <span class={newsletterCard.name}>{copy.name}</span>
         <input
-          class={FIELD}
+          class={newsletterCard.input}
           type="text"
           name="name"
           autocomplete="name"
@@ -52,9 +76,9 @@ const FIELD =
         />
       </label>
       <label>
-        <span class="sr-only">{copy.email}</span>
+        <span class={newsletterCard.email}>{copy.email}</span>
         <input
-          class={FIELD}
+          class={newsletterCard.newsletterFormInput}
           type="email"
           name="email"
           autocomplete="email"
@@ -62,8 +86,8 @@ const FIELD =
           placeholder={copy.emailPlaceholder}
         />
       </label>
-      <Button type="submit" variant="dark" class="justify-center"><span data-newsletter-label>{copy.submit}</span></Button>
-      <small class="text-[0.8125rem] text-obra-blush">{copy.readers}</small>
+      <Button type="submit" variant="dark" class={newsletterCard.button}><span data-newsletter-label>{copy.submit}</span></Button>
+      <small class={newsletterCard.readers}>{copy.readers}</small>
     </form>
   </div>
 </section>

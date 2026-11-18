@@ -5,6 +5,7 @@ import { getHtmlLang } from 'src/i18n/utils';
 import type { Messages } from 'src/i18n/messages';
 import CalendarSectionHead from './CalendarSectionHead.astro';
 import { DOT, SECTION, SECTION_SPACING } from './styles';
+import cn from 'src/utils/cn';
 
 interface Props {
   copy: Messages['calendar'];
@@ -36,24 +37,47 @@ const SLOT_TIME_TONE = {
 } as const;
 const dotColor = (tone: 'weekday' | 'sunday', ministry: keyof typeof MINISTRY_COLORS): string =>
   tone === 'sunday' ? 'var(--color-obra-white)' : MINISTRY_COLORS[ministry];
+
+const calendarWeekly = {
+  container: cn(SECTION, SECTION_SPACING.default),
+  days: cn(
+    'grid grid-cols-[repeat(auto-fit,minmax(10.5rem,1fr))] gap-3.5',
+    'max-md:grid-cols-[1fr] max-md:gap-2.5 min-[1200px]:grid-cols-[repeat(7,1fr)]',
+  ),
+  day: cn(
+    'flex flex-col gap-2.5',
+    'max-md:gap-2 max-md:rounded-3xl max-md:bg-obra-mist max-md:p-4',
+  ),
+  dayName: cn(
+    'border-b-[1.5px] pb-2.5 font-obra-serif text-[1.5rem] capitalize',
+    'max-md:border-b-0 max-md:pb-0 max-md:text-[1.625rem]',
+  ),
+  empty: cn('px-0.5 py-1.5 text-[0.875rem] text-obra-pebble'),
+  slot: cn('flex flex-col gap-1 rounded-[18px] px-3.5 pt-3.5 pb-[13px]'),
+  time: cn('font-obra-serif text-[1.5rem] leading-none', 'max-md:text-[1.625rem]'),
+  slotTitle: cn('font-obra-sans-bold text-[0.9375rem] leading-[1.25]'),
+  slotLabel: cn('flex items-center gap-1.5 text-[0.8125rem]'),
+  slotLabelInner: cn(DOT),
+  example: cn('font-obra-sans-bold text-[0.625rem] tracking-[0.12em] text-obra-red uppercase'),
+};
 ---
 
-<section class:list={[SECTION, SECTION_SPACING.default]} id="semana">
+<section class={calendarWeekly.container} id="semana">
   <CalendarSectionHead eyebrow={copy.weekly.eyebrow} title={copy.weekly.title} emphasis={copy.weekly.emphasis} body={copy.weekly.body} />
-  <div class="grid grid-cols-[repeat(auto-fit,minmax(10.5rem,1fr))] gap-3.5 max-md:grid-cols-[1fr] max-md:gap-2.5 min-[1200px]:grid-cols-[repeat(7,1fr)]">
+  <div class={calendarWeekly.days}>
     {days.map((day) => (
-      <div class="flex flex-col gap-2.5 max-md:gap-2 max-md:rounded-3xl max-md:bg-obra-mist max-md:p-4">
-        <b class:list={['border-b-[1.5px] pb-2.5 font-obra-serif text-[1.5rem] capitalize max-md:border-b-0 max-md:pb-0 max-md:text-[1.625rem]', DAY_NAME_TONE[day.tone]]}>{day.name}</b>
-        {day.slots.length === 0 && <span class="px-0.5 py-1.5 text-[0.875rem] text-obra-pebble">{copy.weekly.empty}</span>}
+      <div class={calendarWeekly.day}>
+        <b class={cn(calendarWeekly.dayName, DAY_NAME_TONE[day.tone])}>{day.name}</b>
+        {day.slots.length === 0 && <span class={calendarWeekly.empty}>{copy.weekly.empty}</span>}
         {day.slots.map((slot) => (
-          <div class:list={['flex flex-col gap-1 rounded-[18px] px-3.5 pt-3.5 pb-[13px]', SLOT_TONE[day.tone]]}>
-            <b class:list={['font-obra-serif text-[1.5rem] leading-none max-md:text-[1.625rem]', SLOT_TIME_TONE[day.tone]]}>{slot.time}</b>
-            <b class="font-obra-sans-bold text-[0.9375rem] leading-[1.25]">{slot.title}</b>
-            <span class="flex items-center gap-1.5 text-[0.8125rem]">
-              <span class={DOT} style={`--c:${dotColor(day.tone, slot.ministry)}`}></span>
+          <div class={cn(calendarWeekly.slot, SLOT_TONE[day.tone])}>
+            <b class={cn(calendarWeekly.time, SLOT_TIME_TONE[day.tone])}>{slot.time}</b>
+            <b class={calendarWeekly.slotTitle}>{slot.title}</b>
+            <span class={calendarWeekly.slotLabel}>
+              <span class={calendarWeekly.slotLabelInner} style={`--c:${dotColor(day.tone, slot.ministry)}`}></span>
               {copy.ministries[slot.ministry]}
             </span>
-            {slot.isExample && <span class="font-obra-sans-bold text-[0.625rem] tracking-[0.12em] text-obra-red uppercase">{copy.weekly.example}</span>}
+            {slot.isExample && <span class={calendarWeekly.example}>{copy.weekly.example}</span>}
           </div>
         ))}
       </div>

@@ -1,6 +1,7 @@
 ---
 // Eyebrow + two-tone title (+ optional lead) shared by every calendar section.
 import { EMPHASIS, LEAD, TITLE } from './styles';
+import cn from 'src/utils/cn';
 
 interface Props {
   eyebrow?: string;
@@ -9,10 +10,18 @@ interface Props {
   body?: string;
 }
 const { eyebrow, title, emphasis, body } = Astro.props;
+
+const calendarSectionHead = {
+  container: cn('flex flex-col gap-2.5'),
+  eyebrow: cn('ln-eyebrow'),
+  title: cn(TITLE),
+  emphasis: cn(EMPHASIS),
+  text: cn(LEAD),
+};
 ---
 
-<div class="flex flex-col gap-2.5">
-  {eyebrow && <span class="ln-eyebrow">{eyebrow}</span>}
-  <h2 class={TITLE}>{title}<em class={EMPHASIS}>{emphasis}</em></h2>
-  {body && <p class={LEAD}>{body}</p>}
+<div class={calendarSectionHead.container}>
+  {eyebrow && <span class={calendarSectionHead.eyebrow}>{eyebrow}</span>}
+  <h2 class={calendarSectionHead.title}>{title}<em class={calendarSectionHead.emphasis}>{emphasis}</em></h2>
+  {body && <p class={calendarSectionHead.text}>{body}</p>}
 </div>

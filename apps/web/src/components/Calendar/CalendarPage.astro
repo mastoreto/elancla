@@ -9,6 +9,7 @@ import CalendarMonths from './CalendarMonths.astro';
 import CalendarSubscribe from './CalendarSubscribe.astro';
 import CalendarTakeHome from './CalendarTakeHome.astro';
 import CalendarWeekly from './CalendarWeekly.astro';
+import cn from 'src/utils/cn';
 
 interface Props {
   locale: Locale;
@@ -29,6 +30,10 @@ const next = {
 const icsUrl = new URL('/calendario-anual.ics', Astro.site).toString();
 const googleHref = `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(icsUrl.replace(/^https?:/, 'webcal:'))}`;
 const path = localizePath('/calendario-anual', locale);
+
+const calendarPage = {
+  container: cn('ln bg-obra-paper pb-24'),
+};
 ---
 
 <Layout
@@ -41,7 +46,7 @@ const path = localizePath('/calendario-anual', locale);
   ]}
   locale={locale}
 >
-  <div class="ln bg-obra-paper pb-24" data-year={CALENDAR_YEAR}>
+  <div class={calendarPage.container} data-year={CALENDAR_YEAR}>
     <CalendarHero copy={copy} locale={locale} next={next} />
     <CalendarWeekly copy={copy} locale={locale} />
     <CalendarMonths copy={copy} locale={locale} />

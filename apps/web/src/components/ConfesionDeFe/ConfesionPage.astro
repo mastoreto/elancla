@@ -10,6 +10,7 @@ import ConfesionQuote from './ConfesionQuote.astro';
 import DoctrineList from './DoctrineList.astro';
 import ConfesionChristus from './ConfesionChristus.astro';
 import ConfesionCTA from './ConfesionCTA.astro';
+import cn from 'src/utils/cn';
 
 interface Props {
   locale: Locale;
@@ -19,6 +20,10 @@ interface Props {
 const { locale, canonical } = Astro.props;
 const copy = getMessages(locale).confession;
 const doctrines = getDoctrines(locale);
+
+const confesionPage = {
+  container: cn('ln bg-obra-paper pb-24', 'max-sm:pb-14'),
+};
 ---
 
 <Layout
@@ -29,7 +34,7 @@ const doctrines = getDoctrines(locale);
   canonical={canonical}
   locale={locale}
 >
-  <div class="ln bg-obra-paper pb-24 max-sm:pb-14" data-confession>
+  <div class={confesionPage.container} data-confession>
     <ConfesionHero copy={copy.hero} locale={locale} />
     <ConfesionMarquee solas={getSolas(locale)} />
     <ConfesionQuote copy={copy.quote} />

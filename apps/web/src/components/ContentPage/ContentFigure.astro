@@ -1,5 +1,6 @@
 ---
 import type { ContentFigureData } from 'src/data/contentPages';
+import cn from 'src/utils/cn';
 
 interface Props {
   figure: ContentFigureData;
@@ -25,31 +26,53 @@ const CORNERS = Object.values(CORNER_POSITION);
 // Grayscale photo that regains its color on hover (stays muted in dark mode).
 const DUOTONE =
   '[filter:grayscale(1)_contrast(1.05)_brightness(0.95)] [transition:filter_0.8s_ease] hover:[filter:grayscale(0)_contrast(1.02)] dark:[filter:saturate(0.8)_contrast(1.05)_brightness(0.82)] dark:hover:[filter:saturate(0.8)_contrast(1.05)_brightness(0.82)]';
+
+const contentFigure = {
+  container: cn('relative'),
+  position: cn(CORNER),
+  wrapper: cn(aspectClass, 'relative overflow-hidden'),
+  image: cn('h-full w-full object-cover', DUOTONE),
+  badge: cn(
+    'absolute top-5 left-5 font-ui text-[10px] tracking-[0.18em] uppercase font-semibold',
+    'bg-white/85 text-ink px-3 py-1.5 rounded-full backdrop-blur-sm',
+  ),
+  meta: cn(
+    'absolute bottom-5 right-5 font-mono text-[10px] tracking-widest uppercase text-white/80',
+  ),
+  caption: cn(
+    'mt-3 flex items-baseline gap-4 font-ui text-[12px] text-ink/55',
+    'max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-1',
+  ),
+  figureLabel: cn(
+    'font-label-mono text-[10px] tracking-[0.22em] font-semibold whitespace-nowrap',
+    'text-primary',
+  ),
+};
 ---
 
 <figure>
-  <div class="relative">
-    {CORNERS.map((position) => <div class:list={[CORNER, position]}></div>)}
-    <div class:list={[aspectClass, 'relative overflow-hidden']}>
-      <img src={figure.src} alt={figure.alt} class:list={['h-full w-full object-cover', DUOTONE]} />
+  <div class={contentFigure.container}>
+    {CORNERS.map((position) => <div class={cn(contentFigure.position, position)}></div>)}
+    <div class={contentFigure.wrapper}>
+      <img src={figure.src} alt={figure.alt} class={contentFigure.image} />
       {
         figure.badge && (
-          <div class="absolute top-5 left-5 font-ui text-[10px] tracking-[0.18em] uppercase font-semibold bg-white/85 text-ink px-3 py-1.5 rounded-full backdrop-blur-sm">
+          <div class={contentFigure.badge}>
             {figure.badge}
           </div>
         )
       }
       {
         figure.meta && (
-          <div class="absolute bottom-5 right-5 font-mono text-[10px] tracking-widest uppercase text-white/80">
+          <div class={contentFigure.meta}>
             {figure.meta}
           </div>
         )
       }
     </div>
   </div>
-  <figcaption class="mt-3 flex items-baseline gap-4 font-ui text-[12px] text-ink/55 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-1">
-    <span class="font-label-mono text-[10px] tracking-[0.22em] font-semibold whitespace-nowrap text-primary">{figure.label}</span>
+  <figcaption class={contentFigure.caption}>
+    <span class={contentFigure.figureLabel}>{figure.label}</span>
     <span>{figure.caption}</span>
   </figcaption>
 </figure>

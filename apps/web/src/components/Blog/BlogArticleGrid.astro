@@ -3,6 +3,7 @@ import type { BlogArticle } from 'src/data/blog';
 import type { Locale } from 'src/i18n/config';
 import Button from 'src/components/ui/Button';
 import BlogArticleCard from './BlogArticleCard.astro';
+import cn from 'src/utils/cn';
 
 interface Props {
   articles: BlogArticle[];
@@ -11,13 +12,23 @@ interface Props {
 }
 
 const { articles, copy, locale } = Astro.props;
+
+const blogArticleGrid = {
+  container: cn('scroll-mt-24 px-gutter'),
+  articles: cn(
+    'grid grid-cols-[repeat(3,1fr)] gap-5 pt-12',
+    '[&_[hidden]]:hidden',
+    'max-lg:grid-cols-[repeat(2,1fr)] max-sm:grid-cols-[1fr]',
+  ),
+  blogMore: cn('mt-9 flex justify-center'),
+};
 ---
 
-<section id="articulos" class="scroll-mt-24 px-gutter">
-  <div id="blogArticleGrid" class="grid grid-cols-[repeat(3,1fr)] max-lg:grid-cols-[repeat(2,1fr)] max-sm:grid-cols-[1fr] gap-5 pt-12 [&_[hidden]]:hidden">
+<section id="articulos" class={blogArticleGrid.container}>
+  <div id="blogArticleGrid" class={blogArticleGrid.articles}>
     {articles.map((article) => <BlogArticleCard article={article} by={copy.by} locale={locale} />)}
   </div>
-  <div class="mt-9 flex justify-center" data-blog-more>
+  <div class={blogArticleGrid.blogMore} data-blog-more>
     <Button variant="ghost" data-blog-more-button>{copy.loadMore}</Button>
   </div>
 </section>

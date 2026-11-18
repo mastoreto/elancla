@@ -1,27 +1,43 @@
 ---
 import type { ContentLinkGridBlock } from 'src/data/contentPages';
+import cn from 'src/utils/cn';
 
 interface Props {
   block: ContentLinkGridBlock;
 }
 
 const { block } = Astro.props;
+
+const aboutLinkGrid = {
+  container: cn('grid grid-cols-[1fr] gap-3.5', 'md:grid-cols-[repeat(2,1fr)]'),
+  link: cn(
+    'flex min-h-47.5 flex-col justify-between gap-2.5 rounded-[28px] bg-obra-mist p-6',
+    'text-inherit no-underline',
+    '[transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s_var(--ease-obra),background-color_0.4s]',
+    'hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift',
+    'motion-reduce:transition-none',
+  ),
+  label: cn('flex flex-col gap-2.5'),
+  title: cn('font-obra-serif text-[1.5rem] leading-[1.1] font-bold'),
+  description: cn('text-[0.9375rem] leading-normal text-obra-ink-soft'),
+  meta: cn('font-obra-sans-bold text-[0.875rem] text-obra-red'),
+};
 ---
 
-<div class="grid grid-cols-[1fr] gap-3.5 md:grid-cols-[repeat(2,1fr)]">
+<div class={aboutLinkGrid.container}>
   {
     block.links.map((link) => (
       <a
         href={link.href}
-        class="flex min-h-47.5 flex-col justify-between gap-2.5 rounded-[28px] bg-obra-mist p-6 text-inherit no-underline [transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s_var(--ease-obra),background-color_0.4s] hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift motion-reduce:transition-none"
+        class={aboutLinkGrid.link}
         target={link.external ? '_blank' : undefined}
         rel={link.external ? 'noopener noreferrer' : undefined}
       >
-        <span class="flex flex-col gap-2.5">
-          <b class="font-obra-serif text-[1.5rem] leading-[1.1] font-bold">{link.title}</b>
-          <span class="text-[0.9375rem] leading-normal text-obra-ink-soft">{link.description}</span>
+        <span class={aboutLinkGrid.label}>
+          <b class={aboutLinkGrid.title}>{link.title}</b>
+          <span class={aboutLinkGrid.description}>{link.description}</span>
         </span>
-        <span class="font-obra-sans-bold text-[0.875rem] text-obra-red">{link.meta} →</span>
+        <span class={aboutLinkGrid.meta}>{link.meta} →</span>
       </a>
     ))
   }

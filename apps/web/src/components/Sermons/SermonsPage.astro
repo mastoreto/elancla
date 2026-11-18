@@ -16,6 +16,7 @@ import { getMessages } from 'src/i18n/messages';
 import Layout from 'src/layouts/Layout.astro';
 import { getSiteConfig } from '@ancla/content';
 import { RISE_IN } from 'src/utils/riseIn';
+import cn from 'src/utils/cn';
 
 interface Props {
   locale: Locale;
@@ -63,6 +64,151 @@ const chips = [
     on: serie.id === selected?.id,
   })),
 ];
+
+const sermonsPage = {
+  container: cn('ln overflow-x-clip bg-obra-paper', '[&_[hidden]]:hidden!'),
+  sermonsHero: cn(
+    'group/hero flex items-center gap-14 px-gutter pt-[clamp(7rem,12vh,8.5rem)]',
+    'max-lg:flex-col max-lg:items-stretch max-lg:gap-8',
+  ),
+  heroCopy: cn('min-w-0 flex-1'),
+  liveOnly: cn(HERO_BLOCK, LIVE_ONLY),
+  liveBadge: cn(
+    'inline-flex items-center gap-2.5 self-start rounded-full bg-obra-live px-4 py-2.25',
+    'font-obra-sans-bold text-[0.8125rem] tracking-[0.14em] text-white uppercase',
+    RISE_IN,
+  ),
+  liveBadgeDot: cn(DOT, 'size-2'),
+  liveTitle: cn(HERO_TITLE, RISE_IN),
+  liveTitleEmphasis: cn(RED_EM),
+  liveBody: cn(LEAD, RISE_IN),
+  liveActions: cn('flex flex-wrap gap-3', RISE_IN),
+  idleOnly: cn(HERO_BLOCK, IDLE_ONLY),
+  idleEyebrow: cn('ln-eyebrow', RISE_IN),
+  idleTitle: cn(HERO_TITLE, RISE_IN),
+  idleTitleEmphasis: cn(RED_EM),
+  idleBody: cn(LEAD, RISE_IN),
+  idleActions: cn('flex flex-wrap gap-3', RISE_IN),
+  sermonsPlayer: cn(
+    'flex flex-[0_0_min(640px,46%)] flex-col gap-5 rounded-[48px] bg-obra-mist p-5',
+    'max-lg:flex-none max-lg:rounded-[32px] max-lg:p-3',
+    RISE_IN,
+  ),
+  playerFrame: cn(
+    'relative aspect-video overflow-hidden rounded-[36px] bg-obra-warm',
+    'max-lg:rounded-[22px]',
+  ),
+  player: cn('absolute inset-0 size-full border-0'),
+  playerEmpty: cn(
+    'absolute inset-0 flex flex-col items-center justify-center gap-2 p-6 text-center',
+    'text-obra-cream',
+  ),
+  playerEmptyMark: cn('mb-2 h-auto w-12 text-obra-red-live opacity-60'),
+  emptyTitle: cn('font-obra-serif text-[1.5rem]'),
+  emptyBody: cn('text-[0.9375rem] text-obra-sand'),
+  playerLiveChip: cn(
+    SCREEN_CHIP,
+    'bg-obra-live tracking-[0.08em] text-white uppercase',
+    LIVE_ONLY,
+  ),
+  playerLiveDot: cn(DOT, 'size-1.75'),
+  latestChip: cn(SCREEN_CHIP, 'bg-obra-white tracking-[0.04em] text-obra-ink', IDLE_ONLY),
+  playerInfo: cn('flex flex-col gap-2.5 px-4 pb-3', 'max-sm:px-2 max-sm:pb-2'),
+  playerEyebrow: cn('font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-red uppercase'),
+  initialTitle: cn(
+    'font-obra-serif text-[clamp(1.625rem,2.4vw,2.125rem)] leading-[1.05] font-bold',
+    'wrap-anywhere',
+  ),
+  nextService: cn(
+    "inline-flex items-center gap-2.5 font-obra-sans-bold text-[0.875rem] before:size-2 before:rounded-full before:bg-obra-stone before:content-['']",
+    IDLE_ONLY,
+  ),
+  sermonsList: cn(SECTION),
+  listEyebrow: cn('ln-eyebrow'),
+  listTitle: cn('ln-h text-[clamp(2.25rem,4.2vw,3.75rem)] leading-none'),
+  listTitleEmphasis: cn(RED_EM),
+  listToolbar: cn(
+    'flex items-center justify-between gap-4',
+    'max-lg:flex-col max-lg:items-stretch',
+  ),
+  chips: cn('flex flex-wrap gap-2.5'),
+  fieldLabel: cn(
+    'flex min-h-13 flex-[0_0_340px] items-center gap-3 rounded-full bg-obra-white px-5.5',
+    'text-obra-muted',
+    'focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-obra-red',
+    'max-lg:flex-none',
+  ),
+  searchLabel: cn('sr-only'),
+  sermonsSearch: cn(
+    'min-w-0 flex-1 border-0 bg-transparent text-[0.9375rem] leading-[inherit] text-obra-ink',
+    'placeholder:text-obra-placeholder',
+    '[outline:0]',
+  ),
+  empty: cn('mx-0 my-6 text-[1.0625rem] text-obra-ink-soft'),
+  noResults: cn('mx-0 my-6 text-[1.0625rem] text-obra-ink-soft'),
+  sermons: cn('mt-3 grid grid-cols-3 gap-5', 'max-lg:grid-cols-2 max-sm:grid-cols-[1fr]'),
+  sermonCard: cn(
+    'group flex flex-col gap-4 rounded-[32px] bg-obra-mist px-4 pt-4 pb-6 text-inherit',
+    'no-underline',
+    '[transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s,background-color_0.4s]',
+    'hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift focus-visible:outline-2',
+    'focus-visible:outline-offset-3 focus-visible:outline-obra-red',
+  ),
+  sermonThumb: cn('relative aspect-video overflow-hidden rounded-[22px] bg-obra-linen'),
+  sermonThumbImage: cn(PHOTO),
+  sermonPlay: cn(
+    'absolute top-1/2 left-1/2 flex size-14 -translate-1/2 items-center justify-center',
+    'rounded-full bg-obra-white text-obra-red shadow-[0_12px_28px_-12px_rgba(21,21,21,0.6)]',
+    '[transition:scale_0.5s_var(--ease-obra)] group-hover:scale-108',
+  ),
+  duration: cn(
+    'absolute bottom-3.5 left-3.5 rounded-full bg-obra-ink/82 px-2.75 py-1.25',
+    'font-obra-sans-bold text-[0.75rem] text-white',
+  ),
+  sermonBody: cn('flex flex-col gap-2.5 px-2'),
+  sermonDate: cn(
+    'font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-muted uppercase',
+  ),
+  sermonTitle: cn(
+    'm-0 font-obra-serif text-[1.5625rem] leading-[1.1] font-bold wrap-anywhere',
+    'max-sm:text-[1.375rem]',
+  ),
+  watch: cn('font-obra-sans-bold text-[0.8125rem] text-obra-red'),
+  listMore: cn('mt-4 flex justify-center'),
+  seriesSection: cn(SECTION),
+  seriesPanel: cn(
+    'rounded-[48px] bg-obra-warm p-[clamp(2rem,5vw,4rem)] text-obra-cream',
+    'max-lg:rounded-[32px]',
+  ),
+  seriesHeader: cn('mb-10 flex gap-16', '*:min-w-0 *:flex-1', 'max-lg:flex-col max-lg:gap-5'),
+  seriesEyebrow: cn('ln-eyebrow text-obra-red-live'),
+  seriesTitle: cn('ln-h mt-4 text-[clamp(2.5rem,4.4vw,4rem)] leading-none'),
+  seriesTitleEmphasis: cn('text-obra-red-live not-italic'),
+  seriesBody: cn('m-0 text-[1.125rem] leading-[1.55] text-obra-sand'),
+  seriesGrid: cn('grid grid-cols-3 gap-4', 'max-lg:grid-cols-2 max-sm:grid-cols-[1fr]'),
+  seriesCard: cn(
+    'flex flex-col gap-3 rounded-[28px] border border-obra-warm-line bg-obra-warm-card p-6',
+    'text-obra-cream no-underline',
+    '[transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s] hover:-translate-y-0.5',
+    'hover:shadow-[0_14px_28px_-14px_rgba(0,0,0,0.6)]',
+  ),
+  seriesCount: cn('font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-sand uppercase'),
+  seriesCardTitle: cn('font-obra-serif text-[1.875rem] leading-[1.05] wrap-anywhere'),
+  ctaSection: cn(SECTION),
+  ctaPanel: cn(
+    'relative flex items-center gap-14 overflow-hidden rounded-[48px] bg-obra-red',
+    'p-[clamp(2rem,5vw,4rem)] text-white',
+    'max-lg:flex-col max-lg:items-stretch max-lg:gap-7 max-lg:rounded-[32px]',
+  ),
+  ctaMark: cn('pointer-events-none absolute -right-7.5 -bottom-10 h-auto w-65 text-white opacity-10'),
+  ctaCopy: cn('relative flex flex-1 flex-col gap-3.5'),
+  ctaEyebrow: cn('ln-eyebrow text-obra-blush'),
+  ctaTitle: cn('ln-h text-[clamp(2.25rem,3.9vw,3.5rem)] leading-none'),
+  ctaBody: cn('m-0 max-w-120 text-[1.125rem] leading-normal'),
+  ctaActions: cn('relative flex flex-[0_0_auto] flex-col'),
+  subscribe: cn('justify-center'),
+  bottomSpacer: cn('h-[clamp(4rem,8vw,6rem)]'),
+};
 ---
 
 <Layout
@@ -75,9 +221,9 @@ const chips = [
   ]}
   locale={locale}
 >
-  <div class="ln overflow-x-clip bg-obra-paper [&_[hidden]]:hidden!">
+  <div class={sermonsPage.container}>
     <section
-      class="group/hero flex items-center gap-14 px-gutter pt-[clamp(7rem,12vh,8.5rem)] max-lg:flex-col max-lg:items-stretch max-lg:gap-8"
+      class={sermonsPage.sermonsHero}
       data-sermons-hero
       data-live={live ? 'true' : 'false'}
       data-latest-id={latest?.id ?? ''}
@@ -87,26 +233,23 @@ const chips = [
       data-playing-chip={copy.player.playingChip}
       data-latest-chip={copy.player.latestChip}
     >
-      <div class="min-w-0 flex-1">
-        <div class:list={[HERO_BLOCK, LIVE_ONLY]} data-live-only>
+      <div class={sermonsPage.heroCopy}>
+        <div class={sermonsPage.liveOnly} data-live-only>
           <span
-            class:list={[
-              'inline-flex items-center gap-2.5 self-start rounded-full bg-obra-live px-4 py-2.25 font-obra-sans-bold text-[0.8125rem] tracking-[0.14em] text-white uppercase',
-              RISE_IN,
-            ]}
-          ><i class:list={[DOT, 'size-2']} aria-hidden="true"></i>{copy.hero.live.badge}</span>
-          <h1 class:list={[HERO_TITLE, RISE_IN]} style="--d: .15s">{copy.hero.live.titleBefore}<em class={RED_EM}>{copy.hero.live.titleEmphasis}</em></h1>
-          <p class:list={[LEAD, RISE_IN]} style="--d: .3s">{copy.hero.live.body}</p>
-          <div class:list={['flex flex-wrap gap-3', RISE_IN]} style="--d: .45s">
+            class={sermonsPage.liveBadge}
+          ><i class={sermonsPage.liveBadgeDot} aria-hidden="true"></i>{copy.hero.live.badge}</span>
+          <h1 class={sermonsPage.liveTitle} style="--d: .15s">{copy.hero.live.titleBefore}<em class={sermonsPage.liveTitleEmphasis}>{copy.hero.live.titleEmphasis}</em></h1>
+          <p class={sermonsPage.liveBody} style="--d: .3s">{copy.hero.live.body}</p>
+          <div class={sermonsPage.liveActions} style="--d: .45s">
             <Button href={live ? watchUrl(live.id) : site.social.youtube} arrow target="_blank" rel="noopener" data-live-link>{copy.hero.live.primaryCta}</Button>
             <Button href="#sermones" variant="ghost">{copy.hero.live.secondaryCta}</Button>
           </div>
         </div>
-        <div class:list={[HERO_BLOCK, IDLE_ONLY]} data-idle-only>
-          <span class:list={['ln-eyebrow', RISE_IN]}>{copy.hero.idle.eyebrow}</span>
-          <h1 class:list={[HERO_TITLE, RISE_IN]} style="--d: .15s">{copy.hero.idle.titleBefore}<em class={RED_EM}>{copy.hero.idle.titleEmphasis}</em>{copy.hero.idle.titleAfter}</h1>
-          <p class:list={[LEAD, RISE_IN]} style="--d: .3s">{copy.hero.idle.body}</p>
-          <div class:list={['flex flex-wrap gap-3', RISE_IN]} style="--d: .45s">
+        <div class={sermonsPage.idleOnly} data-idle-only>
+          <span class={sermonsPage.idleEyebrow}>{copy.hero.idle.eyebrow}</span>
+          <h1 class={sermonsPage.idleTitle} style="--d: .15s">{copy.hero.idle.titleBefore}<em class={sermonsPage.idleTitleEmphasis}>{copy.hero.idle.titleEmphasis}</em>{copy.hero.idle.titleAfter}</h1>
+          <p class={sermonsPage.idleBody} style="--d: .3s">{copy.hero.idle.body}</p>
+          <div class={sermonsPage.idleActions} style="--d: .45s">
             <Button href="#sermones" arrow>{copy.hero.idle.primaryCta}</Button>
             <Button href={subscribeUrl} variant="ghost" target="_blank" rel="noopener">{copy.hero.idle.secondaryCta}</Button>
           </div>
@@ -114,19 +257,16 @@ const chips = [
       </div>
 
       <div
-        class:list={[
-          'flex flex-[0_0_min(640px,46%)] flex-col gap-5 rounded-[48px] bg-obra-mist p-5 max-lg:flex-none max-lg:rounded-[32px] max-lg:p-3',
-          RISE_IN,
-        ]}
+        class={sermonsPage.sermonsPlayer}
         style="--d: .5s"
         id="vivo"
         data-sermons-player
       >
-        <div class="relative aspect-video overflow-hidden rounded-[36px] bg-obra-warm max-lg:rounded-[22px]" id="reproductor">
+        <div class={sermonsPage.playerFrame} id="reproductor">
           {
             initialId ? (
               <iframe
-                class="absolute inset-0 size-full border-0"
+                class={sermonsPage.player}
                 data-player
                 src={embedUrl(initialId)}
                 title={copy.player.iframeTitle}
@@ -136,33 +276,30 @@ const chips = [
                 allowfullscreen
               />
             ) : (
-              <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 p-6 text-center text-obra-cream">
-                <AnchorMark id="sm-empty" outline={false} class="mb-2 h-auto w-12 text-obra-red-live opacity-60" />
-                <b class="font-obra-serif text-[1.5rem]">{copy.player.emptyTitle}</b>
-                <span class="text-[0.9375rem] text-obra-sand">{copy.player.emptyBody}</span>
+              <div class={sermonsPage.playerEmpty}>
+                <AnchorMark id="sm-empty" outline={false} class={sermonsPage.playerEmptyMark} />
+                <b class={sermonsPage.emptyTitle}>{copy.player.emptyTitle}</b>
+                <span class={sermonsPage.emptyBody}>{copy.player.emptyBody}</span>
               </div>
             )
           }
           <span
-            class:list={[SCREEN_CHIP, 'bg-obra-live tracking-[0.08em] text-white uppercase', LIVE_ONLY]}
+            class={sermonsPage.playerLiveChip}
             data-live-only
-          ><i class:list={[DOT, 'size-1.75']} aria-hidden="true"></i>{copy.player.liveChip}</span>
+          ><i class={sermonsPage.playerLiveDot} aria-hidden="true"></i>{copy.player.liveChip}</span>
           <span
-            class:list={[SCREEN_CHIP, 'bg-obra-white tracking-[0.04em] text-obra-ink', IDLE_ONLY]}
+            class={sermonsPage.latestChip}
             data-idle-only
             data-player-chip
           >{copy.player.latestChip}</span>
         </div>
         {
           initialId && (
-            <div class="flex flex-col gap-2.5 px-4 pb-3 max-sm:px-2 max-sm:pb-2">
-              <span class="font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-red uppercase" data-player-eyebrow>{live || !latest ? copy.player.liveMeta : metaOf(latest)}</span>
-              <b class="font-obra-serif text-[clamp(1.625rem,2.4vw,2.125rem)] leading-[1.05] font-bold wrap-anywhere" data-player-title>{initialTitle}</b>
+            <div class={sermonsPage.playerInfo}>
+              <span class={sermonsPage.playerEyebrow} data-player-eyebrow>{live || !latest ? copy.player.liveMeta : metaOf(latest)}</span>
+              <b class={sermonsPage.initialTitle} data-player-title>{initialTitle}</b>
               <span
-                class:list={[
-                  "inline-flex items-center gap-2.5 font-obra-sans-bold text-[0.875rem] before:size-2 before:rounded-full before:bg-obra-stone before:content-['']",
-                  IDLE_ONLY,
-                ]}
+                class={sermonsPage.nextService}
                 data-idle-only
               >{copy.player.nextService}</span>
             </div>
@@ -171,24 +308,24 @@ const chips = [
       </div>
     </section>
 
-    <section id="sermones" class={SECTION} data-sermons-list data-page-size={PAGE_SIZE}>
-      <span class="ln-eyebrow">{copy.list.eyebrow}</span>
-      <h2 class="ln-h text-[clamp(2.25rem,4.2vw,3.75rem)] leading-none">{copy.list.title}<em class={RED_EM}>{copy.list.emphasis}</em></h2>
-      <div class="flex items-center justify-between gap-4 max-lg:flex-col max-lg:items-stretch">
+    <section id="sermones" class={sermonsPage.sermonsList} data-sermons-list data-page-size={PAGE_SIZE}>
+      <span class={sermonsPage.listEyebrow}>{copy.list.eyebrow}</span>
+      <h2 class={sermonsPage.listTitle}>{copy.list.title}<em class={sermonsPage.listTitleEmphasis}>{copy.list.emphasis}</em></h2>
+      <div class={sermonsPage.listToolbar}>
         {
           chips.length > 1 && (
-            <div class="flex flex-wrap gap-2.5">
+            <div class={sermonsPage.chips}>
               {chips.map((chip) => (
                 <Chip href={chip.href} data-on={chip.on} aria-current={chip.on ? 'page' : undefined}>{chip.label}</Chip>
               ))}
             </div>
           )
         }
-        <label class="flex min-h-13 flex-[0_0_340px] items-center gap-3 rounded-full bg-obra-white px-5.5 text-obra-muted focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-obra-red max-lg:flex-none">
+        <label class={sermonsPage.fieldLabel}>
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4 4"></path></svg>
-          <span class="sr-only">{copy.list.searchLabel}</span>
+          <span class={sermonsPage.searchLabel}>{copy.list.searchLabel}</span>
           <input
-            class="min-w-0 flex-1 border-0 bg-transparent text-[0.9375rem] leading-[inherit] text-obra-ink [outline:0] placeholder:text-obra-placeholder"
+            class={sermonsPage.sermonsSearch}
             type="search"
             placeholder={copy.list.searchPlaceholder}
             data-sermons-search
@@ -196,14 +333,14 @@ const chips = [
         </label>
       </div>
 
-      {sermons.length === 0 && <p class="mx-0 my-6 text-[1.0625rem] text-obra-ink-soft">{copy.list.empty}</p>}
-      <p class="mx-0 my-6 text-[1.0625rem] text-obra-ink-soft" data-sermons-empty hidden>{copy.list.noResults}</p>
-      <div class="mt-3 grid grid-cols-3 gap-5 max-lg:grid-cols-2 max-sm:grid-cols-[1fr]">
+      {sermons.length === 0 && <p class={sermonsPage.empty}>{copy.list.empty}</p>}
+      <p class={sermonsPage.noResults} data-sermons-empty hidden>{copy.list.noResults}</p>
+      <div class={sermonsPage.sermons}>
         {
           sermons.map((sermon, index) => (
             <a
               href={watchUrl(sermon.id)}
-              class="group flex flex-col gap-4 rounded-[32px] bg-obra-mist px-4 pt-4 pb-6 text-inherit no-underline [transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s,background-color_0.4s] hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-obra-red"
+              class={sermonsPage.sermonCard}
               target="_blank"
               rel="noopener"
               hidden={index >= PAGE_SIZE}
@@ -212,18 +349,18 @@ const chips = [
               data-title={sermon.title}
               data-meta={metaOf(sermon)}
             >
-              <div class="relative aspect-video overflow-hidden rounded-[22px] bg-obra-linen">
-                <img class={PHOTO} src={`https://i.ytimg.com/vi/${sermon.id}/mqdefault.jpg`} alt="" loading="lazy" width="320" height="180" />
+              <div class={sermonsPage.sermonThumb}>
+                <img class={sermonsPage.sermonThumbImage} src={`https://i.ytimg.com/vi/${sermon.id}/mqdefault.jpg`} alt="" loading="lazy" width="320" height="180" />
                 <span
-                  class="absolute top-1/2 left-1/2 flex size-14 -translate-1/2 items-center justify-center rounded-full bg-obra-white text-obra-red shadow-[0_12px_28px_-12px_rgba(21,21,21,0.6)] [transition:scale_0.5s_var(--ease-obra)] group-hover:scale-108"
+                  class={sermonsPage.sermonPlay}
                   aria-hidden="true"
                 ><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5.5v13l11-6.5z" fill="currentColor"></path></svg></span>
-                <span class="absolute bottom-3.5 left-3.5 rounded-full bg-obra-ink/82 px-2.75 py-1.25 font-obra-sans-bold text-[0.75rem] text-white">{sermon.duration}</span>
+                <span class={sermonsPage.duration}>{sermon.duration}</span>
               </div>
-              <div class="flex flex-col gap-2.5 px-2">
-                <span class="font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-muted uppercase">{dateFormat.format(new Date(sermon.publishedAt)).replace(/\./g, '')}</span>
-                <h3 class="m-0 font-obra-serif text-[1.5625rem] leading-[1.1] font-bold wrap-anywhere max-sm:text-[1.375rem]">{sermon.title}</h3>
-                <span class="font-obra-sans-bold text-[0.8125rem] text-obra-red">{copy.list.watch} ↗</span>
+              <div class={sermonsPage.sermonBody}>
+                <span class={sermonsPage.sermonDate}>{dateFormat.format(new Date(sermon.publishedAt)).replace(/\./g, '')}</span>
+                <h3 class={sermonsPage.sermonTitle}>{sermon.title}</h3>
+                <span class={sermonsPage.watch}>{copy.list.watch} ↗</span>
               </div>
             </a>
           ))
@@ -231,7 +368,7 @@ const chips = [
       </div>
       {
         sermons.length > PAGE_SIZE && (
-          <div class="mt-4 flex justify-center">
+          <div class={sermonsPage.listMore}>
             <Button variant="ghost" data-sermons-more>{copy.list.more}</Button>
           </div>
         )
@@ -240,24 +377,24 @@ const chips = [
 
     {
       series.length > 0 && (
-        <section class={SECTION}>
-          <div class="rounded-[48px] bg-obra-warm p-[clamp(2rem,5vw,4rem)] text-obra-cream max-lg:rounded-[32px]">
-            <div class="mb-10 flex gap-16 *:min-w-0 *:flex-1 max-lg:flex-col max-lg:gap-5">
+        <section class={sermonsPage.seriesSection}>
+          <div class={sermonsPage.seriesPanel}>
+            <div class={sermonsPage.seriesHeader}>
               <div>
-                <span class="ln-eyebrow text-obra-red-live">{copy.series.eyebrow}</span>
-                <h3 class="ln-h mt-4 text-[clamp(2.5rem,4.4vw,4rem)] leading-none">
-                  {copy.series.title}<em class="text-obra-red-live not-italic">{copy.series.emphasis}</em></h3>
+                <span class={sermonsPage.seriesEyebrow}>{copy.series.eyebrow}</span>
+                <h3 class={sermonsPage.seriesTitle}>
+                  {copy.series.title}<em class={sermonsPage.seriesTitleEmphasis}>{copy.series.emphasis}</em></h3>
               </div>
-              <p class="m-0 text-[1.125rem] leading-[1.55] text-obra-sand">{copy.series.body}</p>
+              <p class={sermonsPage.seriesBody}>{copy.series.body}</p>
             </div>
-            <div class="grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-[1fr]">
+            <div class={sermonsPage.seriesGrid}>
               {series.map((serie) => (
                 <a
                   href={`${path}?serie=${serie.id}#sermones`}
-                  class="flex flex-col gap-3 rounded-[28px] border border-obra-warm-line bg-obra-warm-card p-6 text-obra-cream no-underline [transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s] hover:-translate-y-0.5 hover:shadow-[0_14px_28px_-14px_rgba(0,0,0,0.6)]"
+                  class={sermonsPage.seriesCard}
                 >
-                  <small class="font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-sand uppercase">{serie.count === 1 ? copy.series.countOne : copy.series.count.replace('{n}', String(serie.count))}</small>
-                  <b class="font-obra-serif text-[1.875rem] leading-[1.05] wrap-anywhere">{serie.title}</b>
+                  <small class={sermonsPage.seriesCount}>{serie.count === 1 ? copy.series.countOne : copy.series.count.replace('{n}', String(serie.count))}</small>
+                  <b class={sermonsPage.seriesCardTitle}>{serie.title}</b>
                 </a>
               ))}
             </div>
@@ -266,24 +403,24 @@ const chips = [
       )
     }
 
-    <section class={SECTION}>
-      <div class="relative flex items-center gap-14 overflow-hidden rounded-[48px] bg-obra-red p-[clamp(2rem,5vw,4rem)] text-white max-lg:flex-col max-lg:items-stretch max-lg:gap-7 max-lg:rounded-[32px]">
+    <section class={sermonsPage.ctaSection}>
+      <div class={sermonsPage.ctaPanel}>
         <AnchorMark
           id="sm-cta"
           outline={false}
-          class="pointer-events-none absolute -right-7.5 -bottom-10 h-auto w-65 text-white opacity-10"
+          class={sermonsPage.ctaMark}
         />
-        <div class="relative flex flex-1 flex-col gap-3.5">
-          <span class="ln-eyebrow text-obra-blush">{copy.cta.eyebrow}</span>
-          <h3 class="ln-h text-[clamp(2.25rem,3.9vw,3.5rem)] leading-none">{copy.cta.title}</h3>
-          <p class="m-0 max-w-120 text-[1.125rem] leading-normal">{copy.cta.body}</p>
+        <div class={sermonsPage.ctaCopy}>
+          <span class={sermonsPage.ctaEyebrow}>{copy.cta.eyebrow}</span>
+          <h3 class={sermonsPage.ctaTitle}>{copy.cta.title}</h3>
+          <p class={sermonsPage.ctaBody}>{copy.cta.body}</p>
         </div>
-        <div class="relative flex flex-[0_0_auto] flex-col">
-          <Button href={subscribeUrl} variant="dark" class="justify-center" target="_blank" rel="noopener">{copy.cta.subscribe}</Button>
+        <div class={sermonsPage.ctaActions}>
+          <Button href={subscribeUrl} variant="dark" class={sermonsPage.subscribe} target="_blank" rel="noopener">{copy.cta.subscribe}</Button>
         </div>
       </div>
     </section>
-    <div class="h-[clamp(4rem,8vw,6rem)]"></div>
+    <div class={sermonsPage.bottomSpacer}></div>
   </div>
 </Layout>
 

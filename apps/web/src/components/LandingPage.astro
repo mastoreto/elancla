@@ -9,6 +9,7 @@ import Together from 'src/sections/landing/Together.astro';
 import type { Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { getSiteConfig } from '@ancla/content';
+import cn from 'src/utils/cn';
 
 interface Props {
   locale: Locale;
@@ -22,6 +23,10 @@ const coords = `${site.geo.latitude},${site.geo.longitude}`;
 // Directions open Google Maps with the church as destination, ready to start the trip.
 const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${coords}`;
 const embedUrl = `https://www.google.com/maps?ll=${coords}&z=17&output=embed`;
+
+const landingPage = {
+  container: cn('ln'),
+};
 ---
 
 <Layout
@@ -31,7 +36,7 @@ const embedUrl = `https://www.google.com/maps?ll=${coords}&z=17&output=embed`;
   locale={locale}
   footer="dark"
 >
-  <div class="ln">
+  <div class={landingPage.container}>
     <Hero copy={copy.landing.hero} locale={locale} street={street} />
     <God copy={copy.landing.god} locale={locale} />
     <Doctrines copy={copy.landing.doctrines} locale={locale} />

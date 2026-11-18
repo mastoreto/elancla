@@ -15,12 +15,17 @@ const TONE: Record<Tone, string> = {
   white: 'bg-obra-white text-obra-ink',
   red: 'bg-obra-red text-white',
 };
+
+const pill = {
+  container: cn(
+    'inline-flex items-center rounded-full px-3.25 py-1.75 font-obra-sans-bold text-[0.75rem]',
+    'tracking-[0.04em]',
+    TONE[tone],
+    className,
+  ),
+};
 ---
 
 <span
-  class={cn(
-    'inline-flex items-center rounded-full px-3.25 py-1.75 font-obra-sans-bold text-[0.75rem] tracking-[0.04em]',
-    TONE[tone],
-    className
-  )}
+  class={pill.container}
 ><slot /></span>
