@@ -12,7 +12,7 @@ import { getVotingModeratorPath } from "../voting-routes";
 import { VotingMetricCard } from "./voting-metric-card";
 import { VotingPageShell } from "./voting-page-shell";
 
-const styles = {
+const votingResultsPageContentVotingPage = {
   page: cn("space-y-6"),
   barList: cn("space-y-4"),
   barRow: cn("space-y-2 rounded-2xl border border-border/70 bg-card/70 p-4"),
@@ -32,7 +32,7 @@ export function VotingResultsPageContent({ votingId }: { votingId: string }) {
   return (
     <VotingPageShell voting={voting} activeView="results">
       {voting && outcome ? (
-        <div className={styles.page}>
+        <div className={votingResultsPageContentVotingPage.page}>
           {voting.status === "closed" ? (
             <>
               <div className="grid gap-4 md:grid-cols-3">
@@ -56,25 +56,30 @@ export function VotingResultsPageContent({ votingId }: { votingId: string }) {
                 />
               </div>
 
-              <Card className={styles.finalCard}>
+              <Card className={votingResultsPageContentVotingPage.finalCard}>
                 <CardHeader>
                   <CardTitle>Detalle por opción</CardTitle>
                 </CardHeader>
-                <CardContent className={styles.barList}>
+                <CardContent className={votingResultsPageContentVotingPage.barList}>
                   {voting.options.map((option) => {
                     const percentage =
                       outcome.totalVotes === 0 ? 0 : (option.votes / outcome.totalVotes) * 100;
 
                     return (
-                      <div key={option.id} className={styles.barRow}>
-                        <div className={styles.barHeader}>
-                          <span className={styles.barTitle}>{option.label}</span>
-                          <span className={styles.barValue}>
+                      <div key={option.id} className={votingResultsPageContentVotingPage.barRow}>
+                        <div className={votingResultsPageContentVotingPage.barHeader}>
+                          <span className={votingResultsPageContentVotingPage.barTitle}>
+                            {option.label}
+                          </span>
+                          <span className={votingResultsPageContentVotingPage.barValue}>
                             {option.votes} votos · {Math.round(percentage)}%
                           </span>
                         </div>
-                        <div className={styles.barTrack}>
-                          <div className={styles.barFill} style={{ width: `${percentage}%` }} />
+                        <div className={votingResultsPageContentVotingPage.barTrack}>
+                          <div
+                            className={votingResultsPageContentVotingPage.barFill}
+                            style={{ width: `${percentage}%` }}
+                          />
                         </div>
                       </div>
                     );
@@ -82,7 +87,7 @@ export function VotingResultsPageContent({ votingId }: { votingId: string }) {
                 </CardContent>
               </Card>
 
-              <Card className={styles.finalCard}>
+              <Card className={votingResultsPageContentVotingPage.finalCard}>
                 <CardHeader>
                   <CardTitle>Lectura final</CardTitle>
                 </CardHeader>

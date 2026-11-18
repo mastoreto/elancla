@@ -11,7 +11,7 @@ import { useVotingCollection } from "../use-voting-data";
 import { getVotingDetailPath, getVotingResultsPath } from "../voting-routes";
 import { VotingPageShell } from "./voting-page-shell";
 
-const styles = {
+const votingVotePageContentVotingPage = {
   page: cn("grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_360px]"),
   ballot: cn("border-border/70 bg-card shadow-sm"),
   options: cn("grid gap-4"),
@@ -42,8 +42,8 @@ export function VotingVotePageContent({ votingId }: { votingId: string }) {
   return (
     <VotingPageShell voting={voting} activeView="vote">
       {voting ? (
-        <div className={styles.page}>
-          <Card className={styles.ballot}>
+        <div className={votingVotePageContentVotingPage.page}>
+          <Card className={votingVotePageContentVotingPage.ballot}>
             <CardHeader>
               <CardTitle className="text-2xl">Pantalla de votación</CardTitle>
             </CardHeader>
@@ -94,21 +94,26 @@ export function VotingVotePageContent({ votingId }: { votingId: string }) {
                     </AlertDescription>
                   </Alert>
 
-                  <div className={styles.options}>
+                  <div className={votingVotePageContentVotingPage.options}>
                     {voting.options.map((option) => (
                       <button
                         type="button"
                         key={option.id}
                         className={cn(
-                          styles.optionButton,
-                          selectedOptionId === option.id && styles.optionButtonActive,
+                          votingVotePageContentVotingPage.optionButton,
+                          selectedOptionId === option.id &&
+                            votingVotePageContentVotingPage.optionButtonActive,
                         )}
                         onClick={() => setSelectedOptionId(option.id)}
                         disabled={!canVote}
                       >
                         <div>
-                          <p className={styles.optionTitle}>{option.label}</p>
-                          <p className={styles.optionHint}>Toca para seleccionar esta opción.</p>
+                          <p className={votingVotePageContentVotingPage.optionTitle}>
+                            {option.label}
+                          </p>
+                          <p className={votingVotePageContentVotingPage.optionHint}>
+                            Toca para seleccionar esta opción.
+                          </p>
                         </div>
                         <Vote className="size-5 text-muted-foreground" />
                       </button>
@@ -119,15 +124,15 @@ export function VotingVotePageContent({ votingId }: { votingId: string }) {
             </CardContent>
           </Card>
 
-          <div className={styles.sidePanel}>
-            <Card className={styles.actionCard}>
+          <div className={votingVotePageContentVotingPage.sidePanel}>
+            <Card className={votingVotePageContentVotingPage.actionCard}>
               <CardHeader>
                 <CardTitle>Confirmación</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {recordedOption ? (
                   <>
-                    <p className={styles.helper}>
+                    <p className={votingVotePageContentVotingPage.helper}>
                       Ya no se requieren más acciones para este miembro. Puedes volver al resumen o
                       revisar resultados cuando la sesión se cierre.
                     </p>
@@ -148,7 +153,7 @@ export function VotingVotePageContent({ votingId }: { votingId: string }) {
                   </>
                 ) : (
                   <>
-                    <p className={styles.helper}>
+                    <p className={votingVotePageContentVotingPage.helper}>
                       {selectedOption
                         ? `Confirmarás la opción "${selectedOption.label}".`
                         : "Primero selecciona una opción para habilitar la confirmación."}

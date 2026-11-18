@@ -13,7 +13,7 @@ import { getVotingModeratorPath, getVotingResultsPath, getVotingVotePath } from 
 import { VotingMetricCard } from "./voting-metric-card";
 import { VotingPageShell } from "./voting-page-shell";
 
-const styles = {
+const votingOverviewPageContentVotingPage = {
   content: cn("space-y-6"),
   grid: cn("grid gap-4 xl:grid-cols-[minmax(0,1.1fr)_360px]"),
   section: cn("space-y-4"),
@@ -35,9 +35,9 @@ export function VotingOverviewPageContent({ votingId }: { votingId: string }) {
   return (
     <VotingPageShell voting={voting} activeView="overview">
       {voting && outcome ? (
-        <div className={styles.content}>
+        <div className={votingOverviewPageContentVotingPage.content}>
           {voting.status === "draft" ? (
-            <Alert className={styles.alert}>
+            <Alert className={votingOverviewPageContentVotingPage.alert}>
               <AlertTriangle className="size-4" />
               <AlertTitle>Pendiente de apertura</AlertTitle>
               <AlertDescription>
@@ -68,12 +68,12 @@ export function VotingOverviewPageContent({ votingId }: { votingId: string }) {
             />
           </div>
 
-          <div className={styles.grid}>
-            <Card className={styles.actionCard}>
+          <div className={votingOverviewPageContentVotingPage.grid}>
+            <Card className={votingOverviewPageContentVotingPage.actionCard}>
               <CardHeader>
                 <CardTitle>Estado operativo</CardTitle>
               </CardHeader>
-              <CardContent className={styles.section}>
+              <CardContent className={votingOverviewPageContentVotingPage.section}>
                 <div>
                   <div className="flex items-center justify-between text-sm text-muted-foreground">
                     <span>Quorum alcanzado</span>
@@ -96,20 +96,24 @@ export function VotingOverviewPageContent({ votingId }: { votingId: string }) {
                   </p>
 
                   {voting.options.map((option) => (
-                    <div key={option.id} className={styles.optionRow}>
-                      <span className={styles.optionLabel}>{option.label}</span>
-                      <span className={styles.optionVotes}>{option.votes} votos</span>
+                    <div key={option.id} className={votingOverviewPageContentVotingPage.optionRow}>
+                      <span className={votingOverviewPageContentVotingPage.optionLabel}>
+                        {option.label}
+                      </span>
+                      <span className={votingOverviewPageContentVotingPage.optionVotes}>
+                        {option.votes} votos
+                      </span>
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
 
-            <Card className={styles.actionCard}>
+            <Card className={votingOverviewPageContentVotingPage.actionCard}>
               <CardHeader>
                 <CardTitle>Acciones rápidas</CardTitle>
               </CardHeader>
-              <CardContent className={styles.actionButtons}>
+              <CardContent className={votingOverviewPageContentVotingPage.actionButtons}>
                 <Button className="w-full justify-start" asChild={true}>
                   <Link href={getVotingModeratorPath(voting.id)}>
                     <ShieldCheck className="size-4" />
