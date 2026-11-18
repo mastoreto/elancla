@@ -11,6 +11,8 @@ export const assemblyReports: AssemblyReport[] = [
     validity: "Hoy 10:30 – 14:00",
     place: "Templo El Ancla",
     accesses: 64,
+    blocked: 7,
+    reportName: "Resumen general · noviembre 2026",
   },
   {
     id: "2",
@@ -21,6 +23,8 @@ export const assemblyReports: AssemblyReport[] = [
     validity: "24 nov 10:30 – 14:00",
     place: "Templo El Ancla",
     accesses: 0,
+    blocked: 0,
+    reportName: "Resumen general · noviembre 2026",
   },
   {
     id: "3",
@@ -31,6 +35,8 @@ export const assemblyReports: AssemblyReport[] = [
     validity: "8 dic 11:00 – 13:00",
     place: "Salón de actos",
     accesses: 0,
+    blocked: 0,
+    reportName: "Resumen general · noviembre 2026",
   },
   {
     id: "4",
@@ -41,6 +47,8 @@ export const assemblyReports: AssemblyReport[] = [
     validity: "12 oct 10:00 – 13:00",
     place: "Templo El Ancla",
     accesses: 88,
+    blocked: 2,
+    reportName: "Resumen general · noviembre 2026",
   },
   {
     id: "5",
@@ -51,5 +59,7 @@ export const assemblyReports: AssemblyReport[] = [
     validity: "15 sep 10:30 – 13:00",
     place: "Templo El Ancla",
     accesses: 57,
+    blocked: 0,
+    reportName: "Resumen general · noviembre 2026",
   },
 ];

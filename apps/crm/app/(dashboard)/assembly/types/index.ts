@@ -14,16 +14,22 @@ export interface AssemblyReport {
   validity: string;
   place: string;
   accesses: number;
+  /** Attempts rejected for being outside the allowed radius. */
+  blocked: number;
+  /** Name of the generated report published here. */
+  reportName: string;
 }
 
 export type PublicAccessState = "visible" | "not-yet" | "expired" | "revoked" | "invalid";
 
 export interface AssemblyPublishFormValues {
-  title: string;
-  assembly: string;
+  reportId: string;
+  accessCode: string;
   validFrom: string;
   validTo: string;
-  place: string;
-  sections: string[];
-  enableNow: boolean;
+  manualEnable: boolean;
+  autoRevoke: boolean;
+  address: string;
+  radius: string;
+  requireLocation: boolean;
 }

@@ -1,136 +1,122 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { DashboardPageHeader } from "@/components/dashboard";
-import { Button } from "@/components/ui/button";
+import { BoardButton } from "@/components/dashboard/board/board-button";
+import { BoardCard, BoardCardHeader } from "@/components/dashboard/board/board-card";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
-import type { ReportBuilderValues, ReportFilters } from "../types";
-import { ReportCreationSummary } from "./report-creation-summary";
-import { ReportDefinitionForm } from "./report-definition-form";
-import { ReportOutputOptions } from "./report-output-options";
-import { ReportScopeForm } from "./report-scope-form";
-import { ReportSectionShell } from "./report-section-shell";
+import { ALL } from "../data/report-scope-options";
+import { FORMAT_LABELS, generatedReports, reportTemplates } from "../data/report-seeds";
+import type { ReportFormat, ReportKind } from "../types";
+import {
+  canGenerateReport,
+  countIncludedBlocks,
+  describeReportPeriod,
+  isReportKind,
+  REPORT_BLOCK_COUNT,
+  type ReportBuilderBlocks,
+} from "../utils/report-builder";
+import { ReportOutputSection } from "./report-output-section";
+import { ReportScopeSection, type ReportScopeValues } from "./report-scope-section";
+import { ReportSummaryPanel } from "./report-summary-panel";
+import { ReportTemplatePicker } from "./report-template-picker";
 
-const reportCreatePageContentReportsPage = {
-  layout: cn("grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)]"),
-  sidebar: cn("space-y-6 xl:sticky xl:top-6 xl:self-start"),
+const SAMPLE_MOVEMENT_COUNT = 48;
+const PERIOD_FALLBACK = "Sin definir";
+
+const initialScope: ReportScopeValues = {
+  name: "",
+  range: undefined,
+  currency: ALL,
+  ministry: ALL,
+  project: ALL,
+  movementType: ALL,
+  responsible: "tesoreria",
+  minAmount: "",
+  maxAmount: "",
 };
 
-interface ReportCreatePageContentProps {
-  initialValues: ReportBuilderValues;
-  ministryOptions: string[];
-  projectOptions: string[];
-}
+const reportCreatePageContentReportsPage = {
+  page: cn("flex flex-col gap-5"),
+  header: cn("flex items-center gap-4"),
+  description: cn("flex-1 text-[14.5px] leading-normal text-[var(--tinta-suave)]"),
+  layout: cn("grid grid-cols-1 items-start gap-[18px] lg:grid-cols-[1.6fr_1fr]"),
+  column: cn("flex flex-col gap-[18px]"),
+  card: cn("p-6"),
+};
 
-function cloneFilters(filters: ReportFilters): ReportFilters {
-  return {
-    ...filters,
-    ministries: [...filters.ministries],
-    projects: [...filters.projects],
-  };
-}
-
-function cloneBuilderValues(values: ReportBuilderValues): ReportBuilderValues {
-  return {
-    ...values,
-    filters: cloneFilters(values.filters),
-  };
-}
-
-export function ReportCreatePageContent({
-  initialValues,
-  ministryOptions,
-  projectOptions,
-}: ReportCreatePageContentProps) {
-  const [values, setValues] = useState<ReportBuilderValues>(() =>
-    cloneBuilderValues(initialValues),
+export function ReportCreatePageContent() {
+  const router = useRouter();
+  const templateParam = useSearchParams().get("template");
+  const [kind, setKind] = useState<ReportKind>(
+    isReportKind(templateParam) ? templateParam : "SUMMARY",
   );
-  const [showDateRangeError, setShowDateRangeError] = useState(false);
+  const [scope, setScope] = useState<ReportScopeValues>(initialScope);
+  const [blocks, setBlocks] = useState<ReportBuilderBlocks>({
+    summary: true,
+    charts: true,
+    movements: true,
+  });
+  const [format, setFormat] = useState<ReportFormat>("PDF");
 
-  const handleValuesChange = (nextValues: ReportBuilderValues) => {
-    setValues(nextValues);
+  const template = reportTemplates.find((item) => item.kind === kind);
+  const title = scope.name.trim() || template?.name || "Nuevo informe";
+  const includedBlocks = countIncludedBlocks(blocks);
 
-    if (showDateRangeError && nextValues.filters.dateFrom && nextValues.filters.dateTo) {
-      setShowDateRangeError(false);
-    }
-  };
-
-  const handleFiltersChange = (filters: ReportFilters) => {
-    handleValuesChange({
-      ...values,
-      filters,
-    });
-  };
-
-  const handleReset = () => {
-    setValues(cloneBuilderValues(initialValues));
-    setShowDateRangeError(false);
-  };
-
-  const handleGenerateClick = () => {
-    if (!values.filters.dateFrom || !values.filters.dateTo) {
-      setShowDateRangeError(true);
-    }
+  const handleGenerate = () => {
+    // UI only: the first seeded report stands in for the generated one.
+    router.push(getChurchRoutePath("reports", generatedReports[0].id));
   };
 
   return (
-    <div className="space-y-8">
-      <DashboardPageHeader
-        actions={
-          <Button asChild={true} className="rounded-full" type="button" variant="outline">
-            <Link href={getChurchRoutePath("reports")}>
-              <ArrowLeft aria-hidden="true" />
-              Volver a informes
-            </Link>
-          </Button>
-        }
-        description="Define la estructura, el alcance y la salida del informe antes de generarlo."
-        emphasis="informe"
-        kicker="Gobierno"
-        title="Nuevo"
-      />
+    <div className={reportCreatePageContentReportsPage.page}>
+      <div className={reportCreatePageContentReportsPage.header}>
+        <p className={reportCreatePageContentReportsPage.description}>
+          Configura el alcance y elige qué incluir; lo generamos en segundos.
+        </p>
+        <BoardButton href={getChurchRoutePath("reports")} variant="ghost">
+          Cancelar
+        </BoardButton>
+      </div>
 
       <div className={reportCreatePageContentReportsPage.layout}>
-        <div className="space-y-6">
-          <ReportDefinitionForm values={values} onChange={handleValuesChange} />
-
-          <ReportScopeForm
-            filters={values.filters}
-            ministryOptions={ministryOptions}
-            projectOptions={projectOptions}
-            onFiltersChange={handleFiltersChange}
-            showDateRangeError={showDateRangeError}
-          />
-
-          <ReportOutputOptions values={values} onChange={handleValuesChange} />
+        <div className={reportCreatePageContentReportsPage.column}>
+          <BoardCard className={reportCreatePageContentReportsPage.card}>
+            <BoardCardHeader subtitle="Elige el tipo de informe" title="1 · Plantilla" />
+            <ReportTemplatePicker
+              onValueChange={setKind}
+              templates={reportTemplates}
+              value={kind}
+            />
+          </BoardCard>
+          <BoardCard className={reportCreatePageContentReportsPage.card}>
+            <BoardCardHeader subtitle="Qué movimientos incluir" title="2 · Alcance" />
+            <ReportScopeSection
+              onChange={(patch) => setScope((current) => ({ ...current, ...patch }))}
+              values={scope}
+            />
+          </BoardCard>
+          <BoardCard className={reportCreatePageContentReportsPage.card}>
+            <BoardCardHeader subtitle="Bloques y formato" title="3 · Salida" />
+            <ReportOutputSection
+              blocks={blocks}
+              format={format}
+              onBlocksChange={setBlocks}
+              onFormatChange={setFormat}
+            />
+          </BoardCard>
         </div>
 
-        <div className={reportCreatePageContentReportsPage.sidebar}>
-          <ReportCreationSummary values={values} showDateRangeError={showDateRangeError} />
-
-          <ReportSectionShell
-            title="Acciones"
-            description="Controles de UI preparados para integrarse después con la generación real."
-          >
-            <div className="flex flex-col gap-3">
-              <Button type="button" onClick={handleGenerateClick}>
-                Generar reporte
-              </Button>
-              <Button type="button" variant="secondary">
-                Guardar borrador
-              </Button>
-              <Button type="button" variant="outline" onClick={handleReset}>
-                Restablecer formulario
-              </Button>
-              <Button type="button" variant="ghost" asChild={true}>
-                <Link href={getChurchRoutePath("reports")}>Cancelar</Link>
-              </Button>
-            </div>
-          </ReportSectionShell>
-        </div>
+        <ReportSummaryPanel
+          blocksLabel={`${includedBlocks} de ${REPORT_BLOCK_COUNT}`}
+          canGenerate={canGenerateReport(title, blocks, format)}
+          formatLabel={FORMAT_LABELS[format]}
+          movementCount={SAMPLE_MOVEMENT_COUNT}
+          onGenerate={handleGenerate}
+          period={describeReportPeriod(scope.range, PERIOD_FALLBACK)}
+          title={title}
+        />
       </div>
     </div>
   );

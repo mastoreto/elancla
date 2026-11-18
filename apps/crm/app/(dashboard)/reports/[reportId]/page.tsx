@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { ReportDetailPageClient } from "../components/report-detail-page-client";
-import { reportDetailsById } from "../demo-data";
+import { ReportDetailContent } from "../components/report-detail-content";
+import { getReportDetail } from "../data/report-seeds";
 
 export default async function ReportDetailPage({
   params,
@@ -8,11 +8,11 @@ export default async function ReportDetailPage({
   params: Promise<{ reportId: string }>;
 }) {
   const { reportId } = await params;
-  const report = reportDetailsById[reportId];
+  const detail = getReportDetail(reportId);
 
-  if (!report) {
+  if (!detail) {
     notFound();
   }
 
-  return <ReportDetailPageClient report={report} />;
+  return <ReportDetailContent detail={detail} />;
 }

@@ -1,20 +1,18 @@
 import { z } from "zod";
 
-export const ASSEMBLY_REPORT_SECTIONS = [
-  "Resumen financiero",
-  "Ingresos y egresos",
-  "Presupuesto por ministerio",
-  "Proyectos en curso",
-] as const;
-
-export const assemblyPublishSchema = z.object({
-  title: z.string().trim().min(1, "Ponle un título al informe"),
-  assembly: z.string().trim().min(1, "Indica a qué asamblea pertenece"),
-  validFrom: z.string().min(1, "Indica cuándo se habilita"),
-  validTo: z.string().min(1, "Indica cuándo vence"),
-  place: z.string().trim().min(1, "Indica el lugar de la sesión"),
-  sections: z.array(z.string()).min(1, "Elige al menos una sección"),
-});
+export const assemblyPublishSchema = z
+  .object({
+    reportId: z.string().min(1, "Elige el informe a publicar"),
+    accessCode: z.string().trim().min(4, "El código necesita al menos 4 caracteres"),
+    validFrom: z.string().min(1, "Indica cuándo se habilita"),
+    validTo: z.string().min(1, "Indica cuándo vence"),
+    address: z.string().trim().min(1, "Indica la dirección del lugar"),
+    radius: z.string().min(1),
+  })
+  .refine((values) => !values.validFrom || !values.validTo || values.validTo > values.validFrom, {
+    message: "El cierre debe ser posterior a la apertura",
+    path: ["validTo"],
+  });
 
 export type AssemblyPublishErrors = Partial<
   Record<keyof z.infer<typeof assemblyPublishSchema>, string>
