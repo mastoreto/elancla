@@ -1,0 +1,11 @@
+---
+import CalendarPage from 'src/sections/calendar/CalendarPage';
+import { defaultLocale, isLocale } from 'src/i18n/config';
+
+const { locale } = Astro.params;
+if (!isLocale(locale) || locale === defaultLocale) {
+  return Astro.rewrite('/404');
+}
+---
+
+<CalendarPage locale={locale} />

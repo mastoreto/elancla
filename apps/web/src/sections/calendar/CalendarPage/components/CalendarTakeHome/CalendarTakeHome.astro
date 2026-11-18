@@ -1,0 +1,129 @@
+---
+import Button from 'src/components/ui/Button';
+import AnchorMark from 'src/components/AnchorMark';
+import type { Messages } from 'src/i18n/messages';
+import { CALENDAR_YEAR } from 'src/data/calendar';
+import { EMPHASIS, LEAD, SECTION, SECTION_SPACING, TITLE } from 'src/sections/calendar/CalendarPage/styles';
+import cn from 'src/utils/cn';
+
+interface Props {
+  copy: Messages['calendar'];
+}
+const { copy } = Astro.props;
+const { print, download } = copy.take;
+// Printable views are in Spanish and shared by every locale.
+const PRINT_BASE = '/calendario-anual/imprimir';
+
+const CARD = 'flex flex-col gap-4 rounded-[40px] p-[clamp(1.5rem,3vw,2.5rem)] max-md:rounded-[32px] max-md:p-6';
+const CARD_TONE = {
+  white: 'bg-obra-white',
+  mist: 'bg-obra-mist',
+} as const;
+const CARD_TITLE = 'm-0 font-obra-serif text-[clamp(1.75rem,3vw,2.75rem)] leading-none tracking-[-0.02em] max-md:text-[2rem]';
+const FIELD_LABEL = 'font-obra-sans-bold text-[0.8125rem] text-obra-muted';
+// `py-0` and `leading-[inherit]` undo the forms plugin padding and line-height.
+const FIELD_INPUT =
+  'min-h-12.5 rounded-2xl border-[1.5px] border-obra-flax bg-obra-white px-4.5 py-0 text-[1rem] leading-[inherit] text-obra-ink focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-obra-red';
+const DOWNLOAD = 'flex flex-col gap-3.5 rounded-[28px] bg-obra-paper p-5';
+const DOWNLOAD_TITLE = 'font-obra-serif text-[1.5rem]';
+const DOWNLOAD_BODY = 'm-0 text-[0.9375rem] leading-[1.45] text-obra-ink-soft';
+const DOWNLOAD_BUTTON = 'self-start px-6.5 text-center';
+// The PDF links keep the primary hover glow on an ink fill.
+const DOWNLOAD_BUTTON_INK = 'self-start bg-obra-ink px-6.5 text-center';
+const THUMB = 'h-32.5 overflow-hidden rounded-[14px]';
+
+const calendarTakeHome = {
+  container: cn(SECTION, SECTION_SPACING.default),
+  takeTitle: cn(TITLE),
+  takeTitleEmphasis: cn(EMPHASIS),
+  options: cn('grid gap-4', 'lg:grid-cols-[1fr_1fr]'),
+  printForm: cn(CARD, CARD_TONE.white),
+  printEyebrow: cn('ln-eyebrow'),
+  printTitle: cn(CARD_TITLE),
+  printBody: cn(LEAD),
+  nameField: cn('flex flex-col gap-1.5'),
+  nameLabel: cn(FIELD_LABEL),
+  calName: cn(FIELD_INPUT),
+  whatsappField: cn('flex flex-col gap-1.5'),
+  whatsappLabel: cn(FIELD_LABEL),
+  calWa: cn(FIELD_INPUT),
+  quantityField: cn('flex flex-col gap-1.5'),
+  quantityLabel: cn(FIELD_LABEL),
+  calQty: cn(FIELD_INPUT),
+  submit: cn('cursor-pointer self-start'),
+  downloads: cn(CARD, CARD_TONE.mist),
+  downloadEyebrow: cn('ln-eyebrow'),
+  downloadTitle: cn(CARD_TITLE),
+  downloadGrid: cn('grid gap-3.5', 'sm:grid-cols-[1fr_1fr]'),
+  pdfCard: cn(DOWNLOAD),
+  pdfPreview: cn(
+    THUMB,
+    'grid grid-cols-[repeat(6,1fr)] gap-1.25 bg-obra-cream p-3',
+    'shadow-[inset_0_0_0_1.5px_var(--color-obra-flax)]',
+  ),
+  pdfPreviewMonth: cn('rounded-sm bg-obra-white'),
+  pdfTitle: cn(DOWNLOAD_TITLE),
+  pdfBody: cn(DOWNLOAD_BODY),
+  ctaA3: cn(DOWNLOAD_BUTTON_INK),
+  ctaA4: cn(DOWNLOAD_BUTTON_INK),
+  digitalCard: cn(DOWNLOAD),
+  digitalPreview: cn(THUMB, 'flex items-center justify-between bg-obra-warm px-5.5 text-obra-cream'),
+  digitalCover: cn('ln-h text-[2.125rem] leading-[0.95]'),
+  digitalMark: cn('h-auto w-[46px] fill-obra-red-live'),
+  digitalTitle: cn(DOWNLOAD_TITLE),
+  digitalBody: cn(DOWNLOAD_BODY),
+  digitalCta: cn(DOWNLOAD_BUTTON),
+};
+---
+
+<section class={calendarTakeHome.container} id="llevalo">
+  <h2 class={calendarTakeHome.takeTitle}>{copy.take.title}<em class={calendarTakeHome.takeTitleEmphasis}>{copy.take.emphasis}</em></h2>
+  <div class={calendarTakeHome.options}>
+    <form class={calendarTakeHome.printForm} action="#" method="post">
+      <span class={calendarTakeHome.printEyebrow}>{print.eyebrow}</span>
+      <h3 class={calendarTakeHome.printTitle}>{print.title}</h3>
+      <p class={calendarTakeHome.printBody}>{print.body}</p>
+      <div class={calendarTakeHome.nameField}>
+        <label for="cal-name" class={calendarTakeHome.nameLabel}>{print.name}</label>
+        <input id="cal-name" name="name" type="text" autocomplete="name" placeholder={print.namePlaceholder} required class={calendarTakeHome.calName} />
+      </div>
+      <div class={calendarTakeHome.whatsappField}>
+        <label for="cal-wa" class={calendarTakeHome.whatsappLabel}>{print.whatsapp}</label>
+        <input id="cal-wa" name="whatsapp" type="tel" autocomplete="tel" placeholder={print.whatsappPlaceholder} required class={calendarTakeHome.calWa} />
+      </div>
+      <div class={calendarTakeHome.quantityField}>
+        <label for="cal-qty" class={calendarTakeHome.quantityLabel}>{print.quantity}</label>
+        <input id="cal-qty" name="quantity" type="number" min="1" max="20" value="1" required class={calendarTakeHome.calQty} />
+      </div>
+      <Button type="submit" arrow class={calendarTakeHome.submit}>{print.submit}</Button>
+    </form>
+
+    <div class={calendarTakeHome.downloads}>
+      <span class={calendarTakeHome.downloadEyebrow}>{download.eyebrow}</span>
+      <h3 class={calendarTakeHome.downloadTitle}>{download.title}</h3>
+      <div class={calendarTakeHome.downloadGrid}>
+        <div class={calendarTakeHome.pdfCard}>
+          <div
+            class={calendarTakeHome.pdfPreview}
+            aria-hidden="true"
+          >
+            {Array.from({ length: 12 }, () => <span class={calendarTakeHome.pdfPreviewMonth}></span>)}
+          </div>
+          <b class={calendarTakeHome.pdfTitle}>{download.pdf.title}</b>
+          <p class={calendarTakeHome.pdfBody}>{download.pdf.body}</p>
+          <Button href={`${PRINT_BASE}/a3?descargar`} class={calendarTakeHome.ctaA3} target="_blank" rel="noopener">{download.pdf.ctaA3}</Button>
+          <Button href={`${PRINT_BASE}/a4?descargar`} class={calendarTakeHome.ctaA4} target="_blank" rel="noopener">{download.pdf.ctaA4}</Button>
+        </div>
+        <div class={calendarTakeHome.digitalCard}>
+          <div class={calendarTakeHome.digitalPreview} aria-hidden="true">
+            <b class={calendarTakeHome.digitalCover}>{download.digital.cover}<br />{CALENDAR_YEAR}</b>
+            <AnchorMark id="cal-dl" outline={false} color="#ff2e34" class={calendarTakeHome.digitalMark} />
+          </div>
+          <b class={calendarTakeHome.digitalTitle}>{download.digital.title}</b>
+          <p class={calendarTakeHome.digitalBody}>{download.digital.body}</p>
+          <Button href={`${PRINT_BASE}/digital?descargar`} variant="ghost" class={calendarTakeHome.digitalCta} target="_blank" rel="noopener">{download.digital.cta}</Button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
