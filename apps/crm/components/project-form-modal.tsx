@@ -238,7 +238,7 @@ export function ProjectFormModal({ project, trigger, onSave }: ProjectFormModalP
                     mode="single"
                     selected={startDate}
                     onSelect={setStartDate}
-                    initialFocus={true}
+                    autoFocus={true}
                   />
                 </PopoverContent>
               </Popover>
@@ -264,7 +264,7 @@ export function ProjectFormModal({ project, trigger, onSave }: ProjectFormModalP
                     selected={endDate}
                     onSelect={setEndDate}
                     disabled={(date) => (startDate ? date < startDate : false)}
-                    initialFocus={true}
+                    autoFocus={true}
                   />
                 </PopoverContent>
               </Popover>

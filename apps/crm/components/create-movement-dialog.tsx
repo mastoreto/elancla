@@ -151,7 +151,7 @@ export function CreateMovementDialog({
                   mode="single"
                   selected={date}
                   onSelect={(d) => d && setDate(d)}
-                  initialFocus={true}
+                  autoFocus={true}
                 />
               </PopoverContent>
             </Popover>

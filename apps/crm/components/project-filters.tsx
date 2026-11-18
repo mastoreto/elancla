@@ -137,7 +137,7 @@ export function ProjectFiltersComponent({ filters, onFiltersChange }: ProjectFil
                     mode="single"
                     selected={filters.dateFrom}
                     onSelect={(date) => onFiltersChange({ ...filters, dateFrom: date })}
-                    initialFocus={true}
+                    autoFocus={true}
                   />
                 </div>
                 <div>

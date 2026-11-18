@@ -1,6 +1,6 @@
 "use client";
 
-import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import { RadioGroup as RadioGroupPrimitive } from "radix-ui";
 import { Save } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";

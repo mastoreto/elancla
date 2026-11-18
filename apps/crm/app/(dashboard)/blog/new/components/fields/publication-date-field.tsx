@@ -45,7 +45,7 @@ export function PublicationDateField({ control }: PublicationDateFieldProps) {
                 mode="single"
                 selected={field.value}
                 onSelect={field.onChange}
-                initialFocus={true}
+                autoFocus={true}
                 locale={es}
               />
             </PopoverContent>

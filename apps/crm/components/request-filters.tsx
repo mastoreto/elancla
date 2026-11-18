@@ -107,7 +107,7 @@ export function RequestFilters({
               selected={dateRange}
               onSelect={onDateRangeChange}
               numberOfMonths={2}
-              initialFocus={true}
+              autoFocus={true}
             />
             {dateRange && (
               <div className="p-3 border-t">

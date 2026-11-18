@@ -111,7 +111,7 @@ export function MovementsFilters({
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
-                      initialFocus={true}
+                      autoFocus={true}
                       mode="range"
                       defaultMonth={dateRange?.from}
                       selected={dateRange}

@@ -146,7 +146,7 @@ export function RequestFormModal({ onSubmit }: RequestFormModalProps) {
                   mode="single"
                   selected={date}
                   onSelect={(d) => d && setDate(d)}
-                  initialFocus={true}
+                  autoFocus={true}
                 />
               </PopoverContent>
             </Popover>

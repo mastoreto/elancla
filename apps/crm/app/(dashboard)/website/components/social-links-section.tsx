@@ -1,7 +1,8 @@
 "use client";
 
-import { Facebook, Globe, Instagram, Linkedin, Music2, Save, Twitter, Youtube } from "lucide-react";
+import { Globe, Music2, Save } from "lucide-react";
 import { useState, useTransition } from "react";
+import { FaFacebook, FaInstagram, FaLinkedin, FaXTwitter, FaYoutube } from "react-icons/fa6";
 import { toast } from "sonner";
 import { SettingsSectionShell } from "@/app/(dashboard)/settings/components/settings-section-shell";
 import { Button } from "@/components/ui/button";
@@ -21,28 +22,28 @@ const platforms = [
     key: "instagram",
     label: "Instagram",
     placeholder: "https://instagram.com/miiglesia",
-    icon: Instagram,
+    icon: FaInstagram,
     color: "text-pink-500",
   },
   {
     key: "youtube",
     label: "YouTube",
     placeholder: "https://youtube.com/@miiglesia",
-    icon: Youtube,
+    icon: FaYoutube,
     color: "text-red-500",
   },
   {
     key: "facebook",
     label: "Facebook",
     placeholder: "https://facebook.com/miiglesia",
-    icon: Facebook,
+    icon: FaFacebook,
     color: "text-blue-600",
   },
   {
     key: "twitter",
     label: "Twitter / X",
     placeholder: "https://x.com/miiglesia",
-    icon: Twitter,
+    icon: FaXTwitter,
     color: "text-foreground",
   },
   {
@@ -56,7 +57,7 @@ const platforms = [
     key: "linkedin",
     label: "LinkedIn",
     placeholder: "https://linkedin.com/company/miiglesia",
-    icon: Linkedin,
+    icon: FaLinkedin,
     color: "text-blue-700",
   },
 ] as const;
