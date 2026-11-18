@@ -1,4 +1,5 @@
 ---
+import { PHOTO } from 'src/styles/classes';
 import type { ContentFigureData } from 'src/data/contentPages';
 
 interface Props {
@@ -13,7 +14,7 @@ const PILL =
 
 <section class="px-gutter-sm pt-[clamp(1.75rem,3vw,2.75rem)]">
   <figure class="relative m-0 h-[clamp(14.375rem,36vw,32.5rem)] overflow-hidden rounded-[clamp(1.75rem,3.3vw,3rem)]">
-    <img src={figure.src} alt={figure.alt} class="ln-photo object-[50%_60%]" loading="eager" />
+    <img src={figure.src} alt={figure.alt} class:list={[PHOTO, 'object-[50%_60%]']} loading="eager" />
     <span class:list={[PILL, 'top-4.5']}>{figure.label}</span>
     {place && <span class:list={[PILL, 'bottom-4.5']}>{place}</span>}
     <figcaption class="sr-only">{figure.caption}</figcaption>

@@ -1,6 +1,5 @@
 @import "tailwindcss";
 /* Legacy plain CSS still being migrated: layered so Tailwind utilities can override it. */
-@import "./LandingObra.css" layer(components);
 @import "./loading.css" layer(components);
 @import "./PageTransitions.css" layer(components);
 @import "./ThemeTransition.css" layer(components);
@@ -264,6 +263,23 @@
   @keyframes halo {
     0% { opacity: 0.5; transform: scale(0.6); }
     100% { opacity: 0; transform: scale(2.4); }
+  }
+}
+
+/*
+ * "Obra" base classes, layered under the utilities so any utility on the same element wins:
+ * `.ln` is the root of every obra page, `.ln-eyebrow` the small red label above a title and
+ * `.ln-h` the serif display heading (sizes come from utilities).
+ */
+@layer components {
+  .ln {
+    @apply font-obra-sans text-obra-ink;
+  }
+  .ln-eyebrow {
+    @apply font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] text-obra-red uppercase;
+  }
+  .ln-h {
+    @apply m-0 font-obra-serif leading-[0.98] font-bold tracking-[-0.02em];
   }
 }
 

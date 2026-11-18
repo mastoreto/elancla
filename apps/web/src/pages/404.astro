@@ -1,4 +1,5 @@
 ---
+import Button from 'src/components/ui/Button';
 import Layout from '../layouts/Layout.astro';
 import { ANCHOR_PATH } from 'src/data/anchorPath';
 import { defaultLocale } from 'src/i18n/config';
@@ -49,10 +50,8 @@ const titleBefore = copy.title.slice(0, copy.title.lastIndexOf(copy.titleEmphasi
         style="--d: 0.3s"
       >{copy.description}</p>
       <div class:list={['flex flex-wrap gap-3', RISE_IN]} style="--d: 0.45s">
-        <a href={localizePath('/', locale)} class="ln-btn">
-          {copy.primary}<span class="ln-btn__dot" aria-hidden="true">→</span>
-        </a>
-        <a href={localizePath('/confesion-de-fe', locale)} class="ln-btn ln-btn--ghost">{copy.secondary}</a>
+        <Button href={localizePath('/', locale)} arrow>{copy.primary}</Button>
+        <Button href={localizePath('/confesion-de-fe', locale)} variant="ghost">{copy.secondary}</Button>
       </div>
       <span
         class:list={['font-obra-serif text-[clamp(1.375rem,2vw,1.75rem)] font-bold text-obra-red', RISE_IN]}

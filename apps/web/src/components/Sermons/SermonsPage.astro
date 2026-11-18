@@ -1,6 +1,8 @@
 ---
+import Chip from 'src/components/ui/Chip';
+import { PHOTO } from 'src/styles/classes';
 import AnchorMark from 'src/components/AnchorMark.astro';
-import Button from 'src/components/ui/Button.astro';
+import Button from 'src/components/ui/Button';
 import {
   embedUrl,
   getLiveStream,
@@ -177,7 +179,7 @@ const chips = [
           chips.length > 1 && (
             <div class="flex flex-wrap gap-2.5">
               {chips.map((chip) => (
-                <a href={chip.href} class="ln-chip" data-on={chip.on} aria-current={chip.on ? 'page' : undefined}>{chip.label}</a>
+                <Chip href={chip.href} data-on={chip.on} aria-current={chip.on ? 'page' : undefined}>{chip.label}</Chip>
               ))}
             </div>
           )
@@ -211,7 +213,7 @@ const chips = [
               data-meta={metaOf(sermon)}
             >
               <div class="relative aspect-video overflow-hidden rounded-[22px] bg-obra-linen">
-                <img class="ln-photo" src={`https://i.ytimg.com/vi/${sermon.id}/mqdefault.jpg`} alt="" loading="lazy" width="320" height="180" />
+                <img class={PHOTO} src={`https://i.ytimg.com/vi/${sermon.id}/mqdefault.jpg`} alt="" loading="lazy" width="320" height="180" />
                 <span
                   class="absolute top-1/2 left-1/2 flex size-14 -translate-1/2 items-center justify-center rounded-full bg-obra-white text-obra-red shadow-[0_12px_28px_-12px_rgba(21,21,21,0.6)] [transition:scale_0.5s_var(--ease-obra)] group-hover:scale-108"
                   aria-hidden="true"

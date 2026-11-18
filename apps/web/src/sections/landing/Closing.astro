@@ -1,4 +1,5 @@
 ---
+import Button from 'src/components/ui/Button';
 import AnchorMark from 'src/components/AnchorMark.astro';
 import { ANCHOR_PATH } from 'src/data/anchorPath';
 import { LandingSection } from 'src/sections/landing/components/LandingSection';
@@ -122,9 +123,7 @@ const KICKER_CLASS = 'font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] tex
           <b class="block font-obra-sans-bold text-[1.1875rem] leading-[1.3]">{street}</b>
           <span class="text-[0.9375rem] text-obra-muted">{copy.where}</span>
         </div>
-        <a href={mapsUrl} class="ln-btn" target="_blank" rel="noopener">
-          {copy.how}<span class="ln-btn__dot text-[0.9375rem] text-obra-muted" aria-hidden="true">→</span>
-        </a>
+        <Button href={mapsUrl} arrow dotClass="text-[0.9375rem] text-obra-muted" target="_blank" rel="noopener">{copy.how}</Button>
       </div>
     </div>
   </div>

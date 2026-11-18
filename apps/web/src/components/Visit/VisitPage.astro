@@ -1,4 +1,5 @@
 ---
+import Button from 'src/components/ui/Button';
 import { getSiteConfig } from '@ancla/content';
 import type { Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
@@ -60,9 +61,7 @@ const ITEM_TEXT = 'm-0 leading-[1.55] text-obra-ink-soft';
       <h1 class="ln-h text-[clamp(2.6rem,7vw,5rem)]">{copy.hero.title}</h1>
       <p class={LEAD}>{copy.hero.body}</p>
       <div class={ACTIONS}>
-        <a href={directionsUrl} class="ln-btn" target="_blank" rel="noopener">
-          {copy.hero.cta}<span class="ln-btn__dot" aria-hidden="true">→</span>
-        </a>
+        <Button href={directionsUrl} arrow target="_blank" rel="noopener">{copy.hero.cta}</Button>
       </div>
     </section>
 
@@ -94,9 +93,7 @@ const ITEM_TEXT = 'm-0 leading-[1.55] text-obra-ink-soft';
         <h2 id="vs-where" class={H2}>{copy.where.title}</h2>
         <p class={LEAD}>{site.address.street}, {site.address.city} {site.address.postalCode}. {copy.where.body}</p>
         <div class={ACTIONS}>
-          <a href={directionsUrl} class="ln-btn" target="_blank" rel="noopener">
-            {copy.where.cta}<span class="ln-btn__dot" aria-hidden="true">→</span>
-          </a>
+          <Button href={directionsUrl} arrow target="_blank" rel="noopener">{copy.where.cta}</Button>
           <a href={mapLink(site)} class="font-obra-sans-bold text-obra-ink" target="_blank" rel="noopener">Google Maps</a>
         </div>
       </div>
@@ -133,9 +130,9 @@ const ITEM_TEXT = 'm-0 leading-[1.55] text-obra-ink-soft';
     <section class={SECTION}>
       <h2 class={H2}>{copy.cta.title}</h2>
       <div class={ACTIONS}>
-        <a href={localizePath('/nosotros', locale)} class="ln-btn ln-btn--ghost">{copy.cta.about}</a>
-        <a href={localizePath('/confesion-de-fe', locale)} class="ln-btn ln-btn--ghost">{copy.cta.confession}</a>
-        <a href={localizePath('/sermones', locale)} class="ln-btn ln-btn--ghost">{copy.cta.sermons}</a>
+        <Button href={localizePath('/nosotros', locale)} variant="ghost">{copy.cta.about}</Button>
+        <Button href={localizePath('/confesion-de-fe', locale)} variant="ghost">{copy.cta.confession}</Button>
+        <Button href={localizePath('/sermones', locale)} variant="ghost">{copy.cta.sermons}</Button>
       </div>
     </section>
   </div>

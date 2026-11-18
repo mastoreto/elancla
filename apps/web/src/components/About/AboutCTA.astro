@@ -1,4 +1,5 @@
 ---
+import Button from 'src/components/ui/Button';
 import AnchorMark from 'src/components/AnchorMark.astro';
 import InlineText from 'src/components/ContentPage/InlineText.astro';
 import type { ContentCta } from 'src/data/contentPages';
@@ -19,8 +20,8 @@ const { cta } = Astro.props;
     </h2>
     <p class="relative m-0 max-w-140 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-sand">{cta.body}</p>
     <div class="relative flex flex-wrap gap-3">
-      <a href={cta.primary.href} class="ln-btn">{cta.primary.label}<span class="ln-btn__dot" aria-hidden="true">→</span></a>
-      {cta.secondary && <a href={cta.secondary.href} class="ln-btn ln-btn--ghost border-obra-white/70 text-white">{cta.secondary.label}</a>}
+      <Button href={cta.primary.href} arrow>{cta.primary.label}</Button>
+      {cta.secondary && <Button href={cta.secondary.href} variant="ghost" class="border-obra-white/70 text-white">{cta.secondary.label}</Button>}
     </div>
   </div>
 </section>

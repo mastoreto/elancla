@@ -1,4 +1,6 @@
 ---
+import { PHOTO } from 'src/styles/classes';
+import Button from 'src/components/ui/Button';
 import AnchorMark from 'src/components/AnchorMark.astro';
 import { LandingSection } from 'src/sections/landing/components/LandingSection';
 import { localizePath } from 'src/i18n/utils';
@@ -75,9 +77,7 @@ const FACT_CLASS = [
     >
       {copy.text}
     </p>
-    <a href={localizePath('/visitanos', locale)} class="ln-btn self-start" data-hero-in>
-      {copy.cta}<span class="ln-btn__dot" aria-hidden="true">→</span>
-    </a>
+    <Button href={localizePath('/visitanos', locale)} arrow class="self-start" data-hero-in>{copy.cta}</Button>
   </div>
 
   <div
@@ -104,7 +104,7 @@ const FACT_CLASS = [
                     <img
                       src={`/images/hero/hero${tile.n}-md.webp`}
                       alt=""
-                      class="ln-photo"
+                      class={PHOTO}
                       style={`object-position: ${tile.pos}`}
                       loading={copyIndex === 0 ? 'eager' : 'lazy'}
                       decoding="async"

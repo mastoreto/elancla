@@ -1,8 +1,9 @@
 ---
+import Button from 'src/components/ui/Button';
 import { ULINK } from 'src/styles/classes';
 import type { ContentPage } from 'src/data/contentPages';
 import AnchorMark from 'src/components/AnchorMark.astro';
-import Pill from 'src/components/ui/Pill.astro';
+import Pill from 'src/components/ui/Pill';
 import InlineText from 'src/components/ContentPage/InlineText.astro';
 import { RISE_IN } from 'src/utils/riseIn';
 
@@ -219,11 +220,10 @@ const BOX_LABEL = 'font-obra-sans-bold text-[0.75rem] tracking-[0.16em] text-obr
             <p class="m-0 max-w-120 text-[1.125rem] leading-normal">{cta.body}</p>
           </div>
           <div class="relative flex flex-[0_0_min(22.5rem,100%)] flex-col gap-3 max-lg:w-full max-lg:basis-auto">
-            <a href={cta.primary.href} class="ln-btn ln-btn--dark justify-center px-6.5">{cta.primary.label}</a>
-            {cta.secondary && <a
-                href={cta.secondary.href}
-                class="ln-btn justify-center border-[1.5px] border-white px-6.5 text-white"
-              >{cta.secondary.label}</a>}
+            <Button href={cta.primary.href} variant="dark" class="justify-center px-6.5">{cta.primary.label}</Button>
+            {cta.secondary && (
+              <Button href={cta.secondary.href} class="justify-center border-[1.5px] border-white px-6.5 text-white">{cta.secondary.label}</Button>
+            )}
           </div>
         </div>
       </section>

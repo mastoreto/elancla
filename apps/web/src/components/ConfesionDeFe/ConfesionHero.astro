@@ -1,4 +1,5 @@
 ---
+import Button from 'src/components/ui/Button';
 import { ULINK } from 'src/styles/classes';
 import { RISE_IN } from 'src/utils/riseIn';
 import AnchorMark from 'src/components/AnchorMark.astro';
@@ -37,12 +38,10 @@ const [titleBefore, titleAfter = ''] = copy.titleLines.join(' ').split(copy.emph
         style="--d: 0.3s"
       >{copy.body}</p>
       <div class:list={['flex flex-wrap gap-3', RISE_IN]} style="--d: 0.45s">
-        <a href="#doctrinas" class="ln-btn">
-          {copy.primaryCta}<span class="ln-btn__dot" aria-hidden="true">→</span>
-        </a>
-        <button type="button" id="expandAll" class="ln-btn ln-btn--ghost cursor-pointer font-obra-sans-bold">
+        <Button href="#doctrinas" arrow>{copy.primaryCta}</Button>
+        <Button variant="ghost" id="expandAll" class="cursor-pointer">
           <span id="expandAllLabel" data-collapsed-label={copy.expandAll} data-expanded-label={copy.collapseAll}>{copy.expandAll}</span>
-        </button>
+        </Button>
       </div>
     </div>
 

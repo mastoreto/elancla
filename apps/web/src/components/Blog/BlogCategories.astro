@@ -1,4 +1,5 @@
 ---
+import Chip from 'src/components/ui/Chip';
 // Heading + category chips. The chips are the grid filters (wired by initBlog via data-blog-filter-button).
 import type { BlogCategory } from 'src/data/blog';
 
@@ -22,9 +23,9 @@ const filters = [
   <div class="flex flex-wrap gap-2.5" role="group">
     {
       filters.map((filter, index) => (
-        <button type="button" class="ln-chip" data-blog-filter-button data-filter={filter.value} data-on={index === 0 ? 'true' : 'false'}>
+        <Chip data-blog-filter-button data-filter={filter.value} data-on={index === 0 ? 'true' : 'false'}>
           {filter.label}
-        </button>
+        </Chip>
       ))
     }
   </div>

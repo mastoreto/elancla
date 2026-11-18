@@ -1,4 +1,5 @@
 ---
+import Button from 'src/components/ui/Button';
 import type { Messages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
 import type { Locale } from 'src/i18n/config';
@@ -29,8 +30,8 @@ const { copy, locale, next } = Astro.props;
       </h1>
       <p class={LEAD}>{copy.hero.body}</p>
       <div class="flex flex-wrap gap-3">
-        <a href="#llevalo" class="ln-btn">{copy.hero.orderCta}<span class="ln-btn__dot" aria-hidden="true">→</span></a>
-        <a href="#llevalo" class="ln-btn ln-btn--ghost">{copy.hero.downloadCta}</a>
+        <Button href="#llevalo" arrow>{copy.hero.orderCta}</Button>
+        <Button href="#llevalo" variant="ghost">{copy.hero.downloadCta}</Button>
       </div>
     </div>
     <div class="flex w-full max-w-110 flex-none flex-col gap-3.5 rounded-[36px] bg-obra-warm p-7.5 text-obra-cream max-md:max-w-none max-md:rounded-[28px] max-md:p-5.5">

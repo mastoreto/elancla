@@ -1,4 +1,5 @@
 ---
+import Chip from 'src/components/ui/Chip';
 import type { BlogArticle, BlogArticleBodyBlock } from 'src/data/blog';
 import type { Locale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
@@ -159,7 +160,7 @@ const FIGURE_HEIGHT: Record<FigureAspect, string> = {
           <div class="mt-8 flex flex-col gap-3.5">
             <div class="flex flex-wrap gap-2">
               {block.tags.map((tag) => (
-                <a href={localizePath('/blog', locale)} class="ln-chip">{tag}</a>
+                <Chip href={localizePath('/blog', locale)}>{tag}</Chip>
               ))}
             </div>
           </div>

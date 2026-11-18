@@ -1,4 +1,5 @@
 ---
+import Button from 'src/components/ui/Button';
 import AnchorMark from 'src/components/AnchorMark.astro';
 import type { Messages } from 'src/i18n/messages';
 import { CALENDAR_YEAR } from 'src/data/calendar';
@@ -25,7 +26,9 @@ const FIELD_INPUT =
 const DOWNLOAD = 'flex flex-col gap-3.5 rounded-[28px] bg-obra-paper p-5';
 const DOWNLOAD_TITLE = 'font-obra-serif text-[1.5rem]';
 const DOWNLOAD_BODY = 'm-0 text-[0.9375rem] leading-[1.45] text-obra-ink-soft';
-const DOWNLOAD_BUTTON = 'ln-btn self-start px-6.5 text-center';
+const DOWNLOAD_BUTTON = 'self-start px-6.5 text-center';
+// The PDF links keep the primary hover glow on an ink fill.
+const DOWNLOAD_BUTTON_INK = 'self-start bg-obra-ink px-6.5 text-center';
 const THUMB = 'h-32.5 overflow-hidden rounded-[14px]';
 ---
 
@@ -48,7 +51,7 @@ const THUMB = 'h-32.5 overflow-hidden rounded-[14px]';
         <label for="cal-qty" class={FIELD_LABEL}>{print.quantity}</label>
         <input id="cal-qty" name="quantity" type="number" min="1" max="20" value="1" required class={FIELD_INPUT} />
       </div>
-      <button type="submit" class="ln-btn cursor-pointer self-start">{print.submit}<span class="ln-btn__dot" aria-hidden="true">→</span></button>
+      <Button type="submit" arrow class="cursor-pointer self-start">{print.submit}</Button>
     </form>
 
     <div class:list={[CARD, CARD_TONE.mist]}>
@@ -64,8 +67,8 @@ const THUMB = 'h-32.5 overflow-hidden rounded-[14px]';
           </div>
           <b class={DOWNLOAD_TITLE}>{download.pdf.title}</b>
           <p class={DOWNLOAD_BODY}>{download.pdf.body}</p>
-          <a href={`${PRINT_BASE}/a3?descargar`} class:list={[DOWNLOAD_BUTTON, 'bg-obra-ink']} target="_blank" rel="noopener">{download.pdf.ctaA3}</a>
-          <a href={`${PRINT_BASE}/a4?descargar`} class:list={[DOWNLOAD_BUTTON, 'bg-obra-ink']} target="_blank" rel="noopener">{download.pdf.ctaA4}</a>
+          <Button href={`${PRINT_BASE}/a3?descargar`} class={DOWNLOAD_BUTTON_INK} target="_blank" rel="noopener">{download.pdf.ctaA3}</Button>
+          <Button href={`${PRINT_BASE}/a4?descargar`} class={DOWNLOAD_BUTTON_INK} target="_blank" rel="noopener">{download.pdf.ctaA4}</Button>
         </div>
         <div class={DOWNLOAD}>
           <div class:list={[THUMB, 'flex items-center justify-between bg-obra-warm px-5.5 text-obra-cream']} aria-hidden="true">
@@ -74,7 +77,7 @@ const THUMB = 'h-32.5 overflow-hidden rounded-[14px]';
           </div>
           <b class={DOWNLOAD_TITLE}>{download.digital.title}</b>
           <p class={DOWNLOAD_BODY}>{download.digital.body}</p>
-          <a href={`${PRINT_BASE}/digital?descargar`} class:list={[DOWNLOAD_BUTTON, 'ln-btn--ghost']} target="_blank" rel="noopener">{download.digital.cta}</a>
+          <Button href={`${PRINT_BASE}/digital?descargar`} variant="ghost" class={DOWNLOAD_BUTTON} target="_blank" rel="noopener">{download.digital.cta}</Button>
         </div>
       </div>
     </div>

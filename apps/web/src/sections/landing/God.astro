@@ -1,4 +1,5 @@
 ---
+import Button from 'src/components/ui/Button';
 import { doctrineIcons } from 'src/data/doctrineIcons';
 import { LandingSection } from 'src/sections/landing/components/LandingSection';
 import { localizePath } from 'src/i18n/utils';
@@ -55,6 +56,6 @@ const lines = copy.lines.map((raw) => ({
   </p>
   <div class="flex flex-wrap items-center justify-center gap-6 max-lg:flex-col max-lg:gap-4.5" data-god-foot>
     <span class="text-[0.875rem] text-obra-muted">{copy.refs}</span>
-    <a href={localizePath('/confesion-de-fe', locale)} class="ln-btn ln-btn--ghost">{copy.cta}</a>
+    <Button href={localizePath('/confesion-de-fe', locale)} variant="ghost">{copy.cta}</Button>
   </div>
 </LandingSection>

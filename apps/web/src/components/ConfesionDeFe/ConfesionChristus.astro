@@ -1,4 +1,5 @@
 ---
+import Button from 'src/components/ui/Button';
 import { CAPTION } from './styles';
 import type { Messages } from 'src/i18n/messages';
 
@@ -23,11 +24,11 @@ const { copy } = Astro.props;
       <cite class:list={[CAPTION, 'text-obra-blush']}>{copy.reference}</cite>
     </blockquote>
     <div class="relative">
-      <a
+      <Button
         href="#doctrine-jesucristo"
         data-open-doctrine="jesucristo"
-        class="ln-btn bg-obra-white px-6.5 text-obra-red hover:shadow-[0_14px_28px_-14px_rgba(21,21,21,0.45)]"
-      >{copy.cta}</a>
+        class="bg-obra-white px-6.5 text-obra-red hover:shadow-[0_14px_28px_-14px_rgba(21,21,21,0.45)]"
+      >{copy.cta}</Button>
     </div>
   </div>
 </section>

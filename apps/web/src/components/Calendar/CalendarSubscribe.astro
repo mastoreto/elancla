@@ -1,4 +1,5 @@
 ---
+import Button from 'src/components/ui/Button';
 import AnchorMark from 'src/components/AnchorMark.astro';
 import type { Messages } from 'src/i18n/messages';
 import { SECTION, SECTION_SPACING } from './styles';
@@ -10,10 +11,9 @@ interface Props {
 }
 const { copy, googleHref, icsHref } = Astro.props;
 
-const ACTION = 'ln-btn justify-center px-6.5';
 const ACTION_VARIANT = {
-  solid: 'bg-obra-white text-obra-red',
-  outline: 'bg-transparent text-white shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.7)]',
+  solid: 'justify-center bg-obra-white px-6.5 text-obra-red',
+  outline: 'justify-center bg-transparent px-6.5 text-white shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.7)] hover:shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.7)]',
 } as const;
 ---
 
@@ -27,8 +27,8 @@ const ACTION_VARIANT = {
       <h3 class="ln-h text-[clamp(1.875rem,3.6vw,3.25rem)] leading-none">{copy.subscribe.title}</h3>
     </div>
     <div class="relative flex flex-[0_0_21rem] flex-col gap-3 max-md:flex-none">
-      <a href={googleHref} class:list={[ACTION, ACTION_VARIANT.solid]} target="_blank" rel="noopener">{copy.subscribe.google}</a>
-      <a href={icsHref} class:list={[ACTION, ACTION_VARIANT.outline]}>{copy.subscribe.ics}</a>
+      <Button href={googleHref} class={ACTION_VARIANT.solid} target="_blank" rel="noopener">{copy.subscribe.google}</Button>
+      <Button href={icsHref} class={ACTION_VARIANT.outline}>{copy.subscribe.ics}</Button>
     </div>
   </div>
 </section>

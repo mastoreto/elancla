@@ -1,4 +1,6 @@
 ---
+import { PHOTO } from 'src/styles/classes';
+import Button from 'src/components/ui/Button';
 import type { Messages } from 'src/i18n/messages';
 import { LandingSection } from 'src/sections/landing/components/LandingSection';
 
@@ -28,7 +30,7 @@ const { copy, street, mapsUrl, email } = Astro.props;
       class="relative flex-[0_0_39%] overflow-hidden rounded-[40px] max-lg:h-85 max-lg:flex-none max-lg:rounded-[32px] max-sm:h-57.5"
       data-sun-photo
     >
-      <img src="/images/salon.jpg" alt={copy.photoAlt} class="ln-photo" style="object-position:50% 40%" loading="lazy" decoding="async" />
+      <img src="/images/salon.jpg" alt={copy.photoAlt} class:list={[PHOTO, 'object-[50%_40%]']} loading="lazy" decoding="async" />
       <span
         class="absolute top-5 left-5 rounded-full bg-obra-white px-3.5 py-2 font-obra-sans-bold text-[0.875rem] max-lg:top-3.5 max-lg:left-3.5"
       >
@@ -82,8 +84,8 @@ const { copy, street, mapsUrl, email } = Astro.props;
         ))}
       </div>
       <div class="flex flex-wrap gap-3" data-sun-in>
-        <a href={mapsUrl} class="ln-btn" target="_blank" rel="noopener">{copy.how}<span class="ln-btn__dot" aria-hidden="true">→</span></a>
-        <a href={`mailto:${email}`} class="ln-btn ln-btn--ghost">{copy.write}</a>
+        <Button href={mapsUrl} arrow target="_blank" rel="noopener">{copy.how}</Button>
+        <Button href={`mailto:${email}`} variant="ghost">{copy.write}</Button>
       </div>
     </div>
   </div>
