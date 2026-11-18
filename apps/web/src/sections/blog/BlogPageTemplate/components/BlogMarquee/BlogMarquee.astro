@@ -1,0 +1,33 @@
+---
+import cn from 'src/utils/cn';
+interface Props {
+  items: string[];
+}
+
+const { items } = Astro.props;
+// Four copies so each half of the track is wider than any viewport; the track shifts -50% seamlessly.
+const repeated = [...items, ...items, ...items, ...items];
+
+const blogMarquee = {
+  container: cn('mt-[clamp(3rem,6vw,4.5rem)] overflow-hidden bg-obra-warm py-6 text-obra-cream'),
+  repeated: cn('flex w-max animate-marquee', 'motion-reduce:animate-none'),
+  item: cn(
+    'inline-flex items-center gap-7 pr-7 font-obra-serif',
+    'text-[clamp(1.625rem,2.4vw,2.125rem)] font-bold whitespace-nowrap',
+  ),
+  repeatedIcon: cn('text-[0.6em] text-obra-red-live not-italic'),
+};
+---
+
+<div
+  class={blogMarquee.container}
+  aria-hidden="true"
+>
+  <div class={blogMarquee.repeated}>
+    {repeated.map((item) => (
+      <span class={blogMarquee.item}>
+        {item}<i class={blogMarquee.repeatedIcon}>●</i>
+      </span>
+    ))}
+  </div>
+</div>
