@@ -1,12 +1,15 @@
 "use client";
 
 import { BellRing, Plus } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import type { NotificationSetting } from "@/app/(dashboard)/settings/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
+import { EMAIL_TEMPLATES } from "../emails/emails-registry";
 import { SettingsSectionShell } from "./settings-section-shell";
 
 interface NotificationsPanelProps {
@@ -111,6 +114,17 @@ export function NotificationsPanel({ notifications }: NotificationsPanelProps) {
               Flujos listos para cierre, aprobación y observaciones administrativas.
             </p>
           </div>
+        </SettingsSectionShell>
+        <SettingsSectionShell
+          title="Plantillas de correo"
+          description="Vista previa de los correos que envía el sistema."
+          contentClassName="flex flex-wrap gap-2"
+        >
+          {Object.entries(EMAIL_TEMPLATES).map(([key, template]) => (
+            <Button asChild={true} key={key} size="sm" variant="outline">
+              <Link href={getChurchRoutePath("settings", "emails", key)}>{template.label}</Link>
+            </Button>
+          ))}
         </SettingsSectionShell>
       </div>
     </div>
