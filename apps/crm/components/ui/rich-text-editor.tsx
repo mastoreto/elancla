@@ -1,9 +1,7 @@
 "use client";
 
-import LinkExtension from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
-import UnderlineExtension from "@tiptap/extension-underline";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { type Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {
   Bold,
@@ -65,9 +63,7 @@ function ToolbarDivider() {
 
 // ─── Toolbar ───────────────────────────────────────────────────────────────
 
-function RichTextToolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
-  if (!editor) return null;
-
+function RichTextToolbar({ editor }: { editor: Editor }) {
   const setLink = () => {
     const prev = editor.getAttributes("link").href as string | undefined;
     const url = window.prompt("URL del enlace", prev ?? "https://");
@@ -234,11 +230,11 @@ export function RichTextEditor({
 }: RichTextEditorProps) {
   const editor = useEditor({
     extensions: [
-      StarterKit,
-      UnderlineExtension,
-      LinkExtension.configure({
-        openOnClick: false,
-        HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" },
+      StarterKit.configure({
+        link: {
+          openOnClick: false,
+          HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" },
+        },
       }),
       Placeholder.configure({ placeholder }),
     ],
@@ -263,7 +259,7 @@ export function RichTextEditor({
         className,
       )}
     >
-      <RichTextToolbar editor={editor} />
+      {editor ? <RichTextToolbar editor={editor} /> : null}
       <EditorContent editor={editor} className={cn("cursor-text", editorClassName)} />
     </div>
   );
