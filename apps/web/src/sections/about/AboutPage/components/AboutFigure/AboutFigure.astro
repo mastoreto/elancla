@@ -1,0 +1,35 @@
+---
+import { PHOTO } from 'src/styles/classes';
+import type { ContentFigureData } from 'src/data/contentPages';
+import cn from 'src/utils/cn';
+
+interface Props {
+  figure: ContentFigureData;
+}
+
+const { figure } = Astro.props;
+const place = [figure.badge, figure.meta].filter(Boolean).join(' ');
+const PILL =
+  'absolute left-4.5 inline-flex max-w-[calc(100%-36px)] items-center rounded-full bg-obra-white px-3.25 py-1.75 font-obra-sans-bold text-[0.75rem] tracking-[0.04em] text-obra-ink';
+
+const aboutFigure = {
+  container: cn('px-gutter-sm pt-[clamp(1.75rem,3vw,2.75rem)]'),
+  figure: cn(
+    'relative m-0 h-[clamp(14.375rem,36vw,32.5rem)] overflow-hidden',
+    'rounded-[clamp(1.75rem,3.3vw,3rem)]',
+  ),
+  image: cn(PHOTO, 'object-[50%_60%]'),
+  figureLabel: cn(PILL, 'top-4.5'),
+  place: cn(PILL, 'bottom-4.5'),
+  caption: cn('sr-only'),
+};
+---
+
+<section class={aboutFigure.container}>
+  <figure class={aboutFigure.figure}>
+    <img src={figure.src} alt={figure.alt} class={aboutFigure.image} loading="eager" />
+    <span class={aboutFigure.figureLabel}>{figure.label}</span>
+    {place && <span class={aboutFigure.place}>{place}</span>}
+    <figcaption class={aboutFigure.caption}>{figure.caption}</figcaption>
+  </figure>
+</section>

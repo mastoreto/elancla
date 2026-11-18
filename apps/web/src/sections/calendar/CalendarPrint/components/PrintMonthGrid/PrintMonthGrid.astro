@@ -1,0 +1,45 @@
+---
+// Compact month grid (L M M J V S D). Event days get a red circle, Sundays are red.
+import { monthLayout } from 'src/data/calendar';
+import cn from 'src/utils/cn';
+
+interface Props {
+  year: number;
+  month: number;
+  eventDays: number[];
+  size?: 'a3' | 'slide';
+}
+const { year, month, eventDays, size = 'a3' } = Astro.props;
+const { lead, days } = monthLayout(year, month);
+const SUNDAY_COLUMN = 6;
+const cells = Array.from({ length: days }, (_, i) => ({
+  day: i + 1,
+  tone: eventDays.includes(i + 1) ? 'event' : (lead + i) % 7 === SUNDAY_COLUMN ? 'sunday' : 'plain',
+})) satisfies { day: number; tone: 'event' | 'sunday' | 'plain' }[];
+
+const GRID_GAP = { a3: 'gap-0.5', slide: 'gap-px' } as const;
+const DAY_SIZE = {
+  a3: 'text-[12px] leading-[26px]',
+  slide: 'text-[11px] leading-[21px]',
+} as const;
+const EVENT_SIZE = { a3: 'size-[26px]', slide: 'size-[21px]' } as const;
+const DAY_TONE = {
+  plain: 'text-obra-ink-soft',
+  sunday: 'text-obra-red',
+  event: ['m-auto flex items-center justify-center rounded-full bg-obra-red font-bold text-white', EVENT_SIZE[size]],
+} as const;
+
+const printMonthGrid = {
+  container: cn('grid grid-cols-[repeat(7,1fr)]', GRID_GAP[size]),
+  letter: cn('text-center text-[11px] font-bold text-obra-stone'),
+  day: cn('text-center', DAY_SIZE[size]),
+};
+---
+
+<div class={printMonthGrid.container}>
+  {['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((letter) => <span class={printMonthGrid.letter}>{letter}</span>)}
+  {Array.from({ length: lead }, () => <span></span>)}
+  {cells.map(({ day, tone }) => (
+    <span class={cn(printMonthGrid.day, DAY_TONE[tone])}>{day}</span>
+  ))}
+</div>
