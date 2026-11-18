@@ -35,9 +35,7 @@ export function TreasuryNotesCard() {
             data-highlighted={note.highlighted || undefined}
             key={note.label}
           >
-            <div className={treasuryNotesCardDashboardPage.label}>
-              {note.label}
-            </div>
+            <div className={treasuryNotesCardDashboardPage.label}>{note.label}</div>
             <p className={treasuryNotesCardDashboardPage.text}>{note.text}</p>
           </li>
         ))}

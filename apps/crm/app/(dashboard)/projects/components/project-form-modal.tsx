@@ -30,6 +30,12 @@ import { ministries } from "@/lib/data";
 import type { Currency, Project } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
+const projectFormModalProjectsPage = {
+  content: cn("sm:max-w-[600px] max-h-[90vh] overflow-y-auto"),
+  ministryPicker: cn("flex flex-wrap gap-2 p-3 border rounded-lg bg-muted/30"),
+  dropzone: cn("border-2 border-dashed rounded-lg p-6 text-center bg-muted/20"),
+};
+
 interface ProjectFormModalProps {
   project?: Project;
   trigger?: React.ReactNode;
@@ -119,7 +125,7 @@ export function ProjectFormModal({ project, trigger, onSave }: ProjectFormModalP
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className={projectFormModalProjectsPage.content}>
         <DialogHeader>
           <DialogTitle>{isEditing ? "Editar Proyecto" : "Crear Nuevo Proyecto"}</DialogTitle>
           <DialogDescription>
@@ -153,7 +159,7 @@ export function ProjectFormModal({ project, trigger, onSave }: ProjectFormModalP
 
           <div className="space-y-2">
             <Label>Ministerios *</Label>
-            <div className="flex flex-wrap gap-2 p-3 border rounded-lg bg-muted/30">
+            <div className={projectFormModalProjectsPage.ministryPicker}>
               {allMinistries.map((ministry) => (
                 <Badge
                   key={ministry}
@@ -276,7 +282,7 @@ export function ProjectFormModal({ project, trigger, onSave }: ProjectFormModalP
               <Upload className="size-4" />
               Documents (Optional)
             </Label>
-            <div className="border-2 border-dashed rounded-lg p-6 text-center bg-muted/20">
+            <div className={projectFormModalProjectsPage.dropzone}>
               <p className="text-sm text-muted-foreground">
                 Drag and drop files here, or click to browse
               </p>

@@ -3,12 +3,23 @@
 import { format } from "date-fns";
 import { Calendar, Users } from "lucide-react";
 import Link from "next/link";
-import { BudgetProgressBar } from "@/components/budget-progress-bar";
-import { ProjectStatusBadge } from "@/components/project-status-badge";
+import { BudgetProgressBar } from "./budget-progress-bar";
+import { ProjectStatusBadge } from "./project-status-badge";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getChurchRoutePath } from "@/lib/church";
 import type { Project } from "@/lib/types";
+import { cn } from "@/lib/utils";
+
+const projectCardProjectsPage = {
+  card: cn(
+    "group hover:shadow-md transition-all duration-200 hover:border-accent/50 cursor-pointer h-full",
+  ),
+  name: cn("font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-1"),
+  description: cn("text-sm text-muted-foreground mt-1 line-clamp-2"),
+  ministries: cn("flex items-center gap-1.5 text-muted-foreground"),
+  dates: cn("flex items-center gap-1.5 text-xs text-muted-foreground"),
+};
 
 interface ProjectCardProps {
   project: Project;
@@ -17,17 +28,13 @@ interface ProjectCardProps {
 export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Link href={getChurchRoutePath("projects", project.id)}>
-      <Card className="group hover:shadow-md transition-all duration-200 hover:border-accent/50 cursor-pointer h-full">
+      <Card className={projectCardProjectsPage.card}>
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
-              <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors line-clamp-1">
-                {project.name}
-              </h3>
+              <h3 className={projectCardProjectsPage.name}>{project.name}</h3>
               {project.description && (
-                <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                  {project.description}
-                </p>
+                <p className={projectCardProjectsPage.description}>{project.description}</p>
               )}
             </div>
             <ProjectStatusBadge status={project.status} />
@@ -43,13 +50,13 @@ export function ProjectCard({ project }: ProjectCardProps) {
           />
 
           <div className="flex items-center gap-4 text-sm">
-            <div className="flex items-center gap-1.5 text-muted-foreground">
+            <div className={projectCardProjectsPage.ministries}>
               <Users className="size-3.5" />
               <span className="line-clamp-1">{project.ministries.join(", ")}</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <div className={projectCardProjectsPage.dates}>
             <Calendar className="size-3" />
             <span>
               {format(new Date(project.startDate), "MMM d, yyyy")}

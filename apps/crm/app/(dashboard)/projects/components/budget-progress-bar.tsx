@@ -2,6 +2,23 @@
 
 import { cn } from "@/lib/utils";
 
+const budgetProgressBarProjectsPage = {
+  container: cn("w-full"),
+  amounts: cn("mb-1.5 flex items-center justify-between text-sm"),
+  amountMuted: cn("text-muted-foreground"),
+  amountStrong: cn("font-medium"),
+  track: cn("w-full overflow-hidden rounded-full bg-muted"),
+  bar: cn("h-full rounded-full transition-all duration-500"),
+  footer: cn("mt-1 flex items-center justify-between text-xs"),
+  percentage: cn("font-medium"),
+};
+
+const budgetProgressBarSizeProjectsPage = {
+  sm: "h-1.5",
+  md: "h-2",
+  lg: "h-3",
+} as const;
+
 interface BudgetProgressBarProps {
   budget: number;
   spent: number;
@@ -31,35 +48,35 @@ export function BudgetProgressBar({
   const isOverBudget = spent > budget;
   const isNearLimit = percentage >= 80 && percentage < 100;
 
-  const heightClass = {
-    sm: "h-1.5",
-    md: "h-2",
-    lg: "h-3",
-  }[size];
-
   const barColor = isOverBudget ? "bg-expense" : isNearLimit ? "bg-oro" : "bg-income";
 
   return (
-    <div className="w-full">
+    <div className={budgetProgressBarProjectsPage.container}>
       {showLabels && (
-        <div className="flex items-center justify-between text-sm mb-1.5">
-          <span className="text-muted-foreground">{formatCurrency(spent, currency)} gastado</span>
-          <span className="font-medium">{formatCurrency(remaining, currency)} disponible</span>
+        <div className={budgetProgressBarProjectsPage.amounts}>
+          <span className={budgetProgressBarProjectsPage.amountMuted}>
+            {formatCurrency(spent, currency)} gastado
+          </span>
+          <span className={budgetProgressBarProjectsPage.amountStrong}>
+            {formatCurrency(remaining, currency)} disponible
+          </span>
         </div>
       )}
 
-      <div className={cn("w-full bg-muted rounded-full overflow-hidden", heightClass)}>
+      <div
+        className={cn(budgetProgressBarProjectsPage.track, budgetProgressBarSizeProjectsPage[size])}
+      >
         <div
-          className={cn("h-full rounded-full transition-all duration-500", barColor)}
+          className={cn(budgetProgressBarProjectsPage.bar, barColor)}
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
       </div>
 
       {showLabels && (
-        <div className="flex items-center justify-between text-xs mt-1">
+        <div className={budgetProgressBarProjectsPage.footer}>
           <span
             className={cn(
-              "font-medium",
+              budgetProgressBarProjectsPage.percentage,
               isOverBudget
                 ? "text-expense"
                 : isNearLimit
@@ -69,7 +86,7 @@ export function BudgetProgressBar({
           >
             {percentage.toFixed(0)}% utilizado
           </span>
-          <span className="text-muted-foreground">
+          <span className={budgetProgressBarProjectsPage.amountMuted}>
             Presupuesto: {formatCurrency(budget, currency)}
           </span>
         </div>

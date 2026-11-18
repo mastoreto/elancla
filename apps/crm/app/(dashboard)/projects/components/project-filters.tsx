@@ -16,18 +16,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ministries } from "@/lib/data";
-import type { ProjectStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import type { ProjectFilters } from "../types";
+import type { ProjectStatus } from "@/lib/types";
 
-export interface ProjectFilters {
-  search: string;
-  status: ProjectStatus | "all";
-  ministry: string;
-  dateFrom: Date | undefined;
-  dateTo: Date | undefined;
-  sortBy: "name" | "budget" | "status" | "date";
-  sortOrder: "asc" | "desc";
-}
+const projectFiltersProjectsPage = {
+  searchIcon: cn("absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground"),
+};
 
 interface ProjectFiltersProps {
   filters: ProjectFilters;
@@ -58,7 +53,7 @@ export function ProjectFiltersComponent({ filters, onFiltersChange }: ProjectFil
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+          <Search className={projectFiltersProjectsPage.searchIcon} />
           <Input
             placeholder="Buscar proyectos..."
             value={filters.search}

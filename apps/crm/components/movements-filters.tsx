@@ -133,7 +133,10 @@ export function MovementsFilters({
                       )}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className={movementsFiltersMovementsPage.calendarPopover} align="start">
+                  <PopoverContent
+                    className={movementsFiltersMovementsPage.calendarPopover}
+                    align="start"
+                  >
                     <Calendar
                       autoFocus={true}
                       mode="range"
@@ -147,7 +150,10 @@ export function MovementsFilters({
               </Field>
 
               {hasActiveFilters && (
-                <Button variant="ghost" size="sm" onClick={onClearFilters}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onClearFilters}
                   className={movementsFiltersMovementsPage.clearButton}
                 >
                   <X className={movementsFiltersMovementsPage.clearIcon} />

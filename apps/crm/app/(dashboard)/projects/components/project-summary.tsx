@@ -2,11 +2,23 @@
 
 import { format } from "date-fns";
 import { Calendar, Check, PiggyBank, TrendingDown, TrendingUp, Users, Wallet } from "lucide-react";
-import { BudgetProgressBar } from "@/components/budget-progress-bar";
+import { BudgetProgressBar } from "./budget-progress-bar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Project } from "@/lib/types";
 import { cn } from "@/lib/utils";
+
+const projectSummaryProjectsPage = {
+  metricIcon: cn("flex size-11 shrink-0 items-center justify-center rounded-xl"),
+  fieldLabel: cn("mb-1 text-sm font-medium text-muted-foreground"),
+  label: cn("text-sm font-medium text-muted-foreground"),
+  stepTrack: cn("absolute left-0 right-0 top-5 h-1 rounded-full bg-muted"),
+  stepProgress: cn("absolute left-0 top-5 h-1 rounded-full bg-accent transition-all duration-500"),
+  infoCard: cn("flex items-center gap-3 rounded-xl border bg-muted/20 p-4"),
+  infoIcon: cn("flex size-10 items-center justify-center rounded-lg bg-muted"),
+  sectionLabel: cn("mb-3 text-sm font-medium text-muted-foreground"),
+  cardHeader: cn("mb-4 flex items-start justify-between gap-4"),
+};
 
 interface ProjectSummaryProps {
   project: Project;
@@ -99,14 +111,14 @@ export function ProjectSummary({ project, totalIncome, totalExpenses }: ProjectS
         <CardContent className="space-y-8">
           {project.description && (
             <div>
-              <h4 className="mb-1 text-sm font-medium text-muted-foreground">Descripción</h4>
+              <h4 className={projectSummaryProjectsPage.fieldLabel}>Descripción</h4>
               <p className="text-foreground">{project.description}</p>
             </div>
           )}
 
           <div className="space-y-4">
             <div>
-              <h4 className="text-sm font-medium text-muted-foreground">Etapas del Proyecto</h4>
+              <h4 className={projectSummaryProjectsPage.label}>Etapas del Proyecto</h4>
               <p className="text-sm text-muted-foreground">
                 Seguimiento del avance desde planificación hasta cierre.
               </p>
@@ -114,9 +126,9 @@ export function ProjectSummary({ project, totalIncome, totalExpenses }: ProjectS
 
             <div className="hidden md:block">
               <div className="relative pt-1">
-                <div className="absolute left-0 right-0 top-5 h-1 rounded-full bg-muted" />
+                <div className={projectSummaryProjectsPage.stepTrack} />
                 <div
-                  className="absolute left-0 top-5 h-1 rounded-full bg-accent transition-all duration-500"
+                  className={projectSummaryProjectsPage.stepProgress}
                   style={{ width: `${progressWidth}%` }}
                 />
 
@@ -183,8 +195,8 @@ export function ProjectSummary({ project, totalIncome, totalExpenses }: ProjectS
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div className="flex items-center gap-3 rounded-xl border bg-muted/20 p-4">
-              <div className="flex size-10 items-center justify-center rounded-lg bg-muted">
+            <div className={projectSummaryProjectsPage.infoCard}>
+              <div className={projectSummaryProjectsPage.infoIcon}>
                 <Users className="size-5 text-muted-foreground" />
               </div>
               <div>
@@ -201,8 +213,8 @@ export function ProjectSummary({ project, totalIncome, totalExpenses }: ProjectS
               </div>
             </div>
 
-            <div className="flex items-center gap-3 rounded-xl border bg-muted/20 p-4">
-              <div className="flex size-10 items-center justify-center rounded-lg bg-muted">
+            <div className={projectSummaryProjectsPage.infoCard}>
+              <div className={projectSummaryProjectsPage.infoIcon}>
                 <Calendar className="size-5 text-muted-foreground" />
               </div>
               <div>
@@ -216,9 +228,7 @@ export function ProjectSummary({ project, totalIncome, totalExpenses }: ProjectS
           </div>
 
           <div>
-            <h4 className="mb-3 text-sm font-medium text-muted-foreground">
-              Progreso de Presupuesto
-            </h4>
+            <h4 className={projectSummaryProjectsPage.sectionLabel}>Progreso de Presupuesto</h4>
             <BudgetProgressBar
               budget={project.budget}
               spent={project.spent}
@@ -236,18 +246,13 @@ export function ProjectSummary({ project, totalIncome, totalExpenses }: ProjectS
           return (
             <Card key={card.label}>
               <CardContent className="pt-6">
-                <div className="mb-4 flex items-start justify-between gap-4">
+                <div className={projectSummaryProjectsPage.cardHeader}>
                   <div>
                     <p className="text-sm text-muted-foreground">{card.label}</p>
                     <p className={cn("text-2xl font-bold", card.valueClassName)}>{card.value}</p>
                   </div>
 
-                  <div
-                    className={cn(
-                      "flex size-11 shrink-0 items-center justify-center rounded-xl",
-                      card.iconClassName,
-                    )}
-                  >
+                  <div className={cn(projectSummaryProjectsPage.metricIcon, card.iconClassName)}>
                     <Icon className="size-5" />
                   </div>
                 </div>

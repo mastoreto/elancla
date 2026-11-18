@@ -34,7 +34,9 @@ const quickActions = [
 const quickActionsCardDashboardPage = {
   container: cn("mb-7"),
   grid: cn("grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4"),
-  action: cn("flex flex-col gap-3 rounded-[14px] border border-border bg-card p-4 text-left transition hover:-translate-y-0.5 hover:border-foreground"),
+  action: cn(
+    "flex flex-col gap-3 rounded-[14px] border border-border bg-card p-4 text-left transition hover:-translate-y-0.5 hover:border-foreground",
+  ),
   icon: cn("flex size-9 items-center justify-center rounded-[10px] bg-primary/10 text-primary"),
   iconGlyph: cn("size-4"),
   title: cn("block text-sm font-semibold text-foreground"),

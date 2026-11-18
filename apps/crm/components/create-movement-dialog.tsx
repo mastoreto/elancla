@@ -228,9 +228,7 @@ export function CreateMovementDialog({
           {fixedProject ? (
             <Field>
               <FieldLabel>Proyecto</FieldLabel>
-              <div className={createMovementDialogMovementsPage.fixedProject}>
-                {fixedProject}
-              </div>
+              <div className={createMovementDialogMovementsPage.fixedProject}>{fixedProject}</div>
             </Field>
           ) : (
             <Field>

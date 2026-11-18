@@ -7,19 +7,27 @@ import { DashboardCard, DashboardCardHeader } from "@/src/componentes/dashboard"
 import { formatCurrency, formatShortDate } from "./dashboard-formatters";
 
 const recentFinancialMovementsCardDashboardPage = {
-  link: cn("hidden items-center gap-1.5 text-xs font-semibold text-tinta-suave transition hover:text-primary sm:inline-flex"),
+  link: cn(
+    "hidden items-center gap-1.5 text-xs font-semibold text-tinta-suave transition hover:text-primary sm:inline-flex",
+  ),
   linkIcon: cn("size-3"),
   list: cn("divide-y divide-border"),
-  row: cn("grid min-w-0 grid-cols-[2rem_minmax(0,1fr)] items-center gap-2 px-1 py-3 transition hover:bg-bruma sm:grid-cols-[3rem_minmax(0,1fr)_7rem_7rem_auto] sm:gap-3"),
+  row: cn(
+    "grid min-w-0 grid-cols-[2rem_minmax(0,1fr)] items-center gap-2 px-1 py-3 transition hover:bg-bruma sm:grid-cols-[3rem_minmax(0,1fr)_7rem_7rem_auto] sm:gap-3",
+  ),
   index: cn("font-mono text-[11px] text-muted-foreground"),
   body: cn("min-w-0"),
   concept: cn("truncate text-sm font-semibold text-foreground"),
   description: cn("mt-0.5 truncate text-[11.5px] text-muted-foreground"),
   chip: cn("mt-1 inline-flex w-fit rounded-full px-2 py-0.5 text-[10px] font-semibold"),
   date: cn("hidden font-mono text-[11px] uppercase text-muted-foreground sm:block"),
-  badge: cn("hidden w-fit rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] sm:inline-flex"),
+  badge: cn(
+    "hidden w-fit rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] sm:inline-flex",
+  ),
   badgeIcon: cn("mr-1 size-3"),
-  amount: cn("col-start-2 min-w-0 text-left text-sm font-semibold tabular-nums sm:col-auto sm:min-w-[6.75rem] sm:text-right"),
+  amount: cn(
+    "col-start-2 min-w-0 text-left text-sm font-semibold tabular-nums sm:col-auto sm:min-w-[6.75rem] sm:text-right",
+  ),
 };
 
 type RecentFinancialMovementsCardProps = {
@@ -98,12 +106,7 @@ export function RecentFinancialMovementsCard({ movements }: RecentFinancialMovem
               <div className={recentFinancialMovementsCardDashboardPage.date}>
                 {formatShortDate(movement.date)}
               </div>
-              <span
-                className={cn(
-                  recentFinancialMovementsCardDashboardPage.badge,
-                  tone.className,
-                )}
-              >
+              <span className={cn(recentFinancialMovementsCardDashboardPage.badge, tone.className)}>
                 <Icon className={recentFinancialMovementsCardDashboardPage.badgeIcon} />
                 {tone.label}
               </span>

@@ -19,6 +19,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { ProjectDocument } from "@/lib/types";
+import { cn } from "@/lib/utils";
+
+const projectDocumentsProjectsPage = {
+  empty: cn(
+    "rounded-xl border border-dashed border-border/50 bg-card p-12 flex flex-col items-center justify-center text-center",
+  ),
+  emptyIcon: cn("size-12 rounded-full bg-muted flex items-center justify-center mb-4"),
+  emptyText: cn("text-sm text-muted-foreground max-w-[250px] mb-4"),
+  item: cn(
+    "flex items-center gap-4 p-4 rounded-lg border bg-card hover:bg-muted/30 transition-colors group",
+  ),
+  itemActions: cn("flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"),
+};
 
 interface ProjectDocumentsProps {
   documents: ProjectDocument[];
@@ -40,12 +53,12 @@ const typeColors = {
 export function ProjectDocuments({ documents, canEdit = false }: ProjectDocumentsProps) {
   if (documents.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border/50 bg-card p-12 flex flex-col items-center justify-center text-center">
-        <div className="size-12 rounded-full bg-muted flex items-center justify-center mb-4">
+      <div className={projectDocumentsProjectsPage.empty}>
+        <div className={projectDocumentsProjectsPage.emptyIcon}>
           <FileText className="size-6 text-muted-foreground" />
         </div>
         <h3 className="font-semibold text-foreground mb-1">Sin documentos</h3>
-        <p className="text-sm text-muted-foreground max-w-[250px] mb-4">
+        <p className={projectDocumentsProjectsPage.emptyText}>
           Carga documentos para mantener todo organizado
         </p>
         {canEdit && (
@@ -75,10 +88,7 @@ export function ProjectDocuments({ documents, canEdit = false }: ProjectDocument
           const colorClass = typeColors[doc.type];
 
           return (
-            <div
-              key={doc.id}
-              className="flex items-center gap-4 p-4 rounded-lg border bg-card hover:bg-muted/30 transition-colors group"
-            >
+            <div key={doc.id} className={projectDocumentsProjectsPage.item}>
               <div className={`size-10 rounded-lg flex items-center justify-center ${colorClass}`}>
                 <Icon className="size-5" />
               </div>
@@ -90,7 +100,7 @@ export function ProjectDocuments({ documents, canEdit = false }: ProjectDocument
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className={projectDocumentsProjectsPage.itemActions}>
                 {doc.type !== "link" && (
                   <Button variant="ghost" size="icon">
                     <Download className="size-4" />

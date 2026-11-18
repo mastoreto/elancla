@@ -7,7 +7,9 @@ import { DashboardCard, DashboardCardHeader } from "@/src/componentes/dashboard"
 import { formatCurrency } from "./dashboard-formatters";
 
 const projectBudgetCardDashboardPage = {
-  link: cn("inline-flex items-center gap-1.5 text-xs font-semibold text-tinta-suave transition hover:text-primary"),
+  link: cn(
+    "inline-flex items-center gap-1.5 text-xs font-semibold text-tinta-suave transition hover:text-primary",
+  ),
   linkIcon: cn("size-3"),
   list: cn("space-y-4"),
   row: cn("mb-2 flex items-start justify-between gap-3"),
@@ -74,7 +76,9 @@ export function ProjectBudgetCard({ projects }: ProjectBudgetCardProps) {
                 <div
                   className={cn(
                     projectBudgetBarDashboardPage.base,
-                    isHigh ? projectBudgetBarDashboardPage.high : projectBudgetBarDashboardPage.normal,
+                    isHigh
+                      ? projectBudgetBarDashboardPage.high
+                      : projectBudgetBarDashboardPage.normal,
                   )}
                   style={{ width: `${progress}%` }}
                 />

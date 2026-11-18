@@ -13,13 +13,19 @@ const pendingRequestsCardDashboardPage = {
   linkIcon: cn("size-3"),
   list: cn("divide-y divide-border"),
   item: cn("grid grid-cols-[2rem_minmax(0,1fr)] gap-3 py-3 sm:grid-cols-[2rem_minmax(0,1fr)_auto]"),
-  itemIcon: cn("mt-1 flex size-8 items-center justify-center rounded-[10px] bg-primary/10 text-primary"),
+  itemIcon: cn(
+    "mt-1 flex size-8 items-center justify-center rounded-[10px] bg-primary/10 text-primary",
+  ),
   itemIconGlyph: cn("size-4"),
   itemBody: cn("min-w-0"),
   itemConcept: cn("truncate text-sm font-semibold text-foreground"),
   itemMeta: cn("mt-1 text-[11.5px] text-muted-foreground"),
-  itemAmount: cn("col-start-2 font-mono text-xs font-semibold text-foreground tabular-nums sm:col-auto"),
-  empty: cn("flex min-h-[190px] flex-col items-center justify-center rounded-[14px] border border-dashed border-border bg-bruma text-center"),
+  itemAmount: cn(
+    "col-start-2 font-mono text-xs font-semibold text-foreground tabular-nums sm:col-auto",
+  ),
+  empty: cn(
+    "flex min-h-[190px] flex-col items-center justify-center rounded-[14px] border border-dashed border-border bg-bruma text-center",
+  ),
   emptyIcon: cn("mb-3 size-9 text-income"),
   emptyTitle: cn("text-sm font-semibold text-foreground"),
   emptyText: cn("mt-1 max-w-56 text-xs text-muted-foreground"),

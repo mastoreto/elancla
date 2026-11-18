@@ -3,8 +3,8 @@
 import { format } from "date-fns";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
-import { BudgetProgressBar } from "@/components/budget-progress-bar";
-import { ProjectStatusBadge } from "@/components/project-status-badge";
+import { BudgetProgressBar } from "./budget-progress-bar";
+import { ProjectStatusBadge } from "./project-status-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +18,18 @@ import {
 import { getChurchRoutePath } from "@/lib/church";
 import type { Project } from "@/lib/types";
 import { cn } from "@/lib/utils";
+
+const projectTableProjectsPage = {
+  empty: cn(
+    "rounded-xl border border-dashed border-border/50 bg-card p-12 flex flex-col items-center justify-center text-center",
+  ),
+  emptyIcon: cn("size-12 rounded-full bg-muted flex items-center justify-center mb-4"),
+  emptyText: cn("text-sm text-muted-foreground max-w-[250px]"),
+  container: cn("rounded-lg border border-border bg-card overflow-hidden"),
+  nameLink: cn("font-medium text-foreground hover:text-accent transition-colors"),
+  remaining: cn("font-medium"),
+  rowAction: cn("opacity-0 group-hover:opacity-100 transition-opacity"),
+};
 
 interface ProjectTableProps {
   projects: Project[];
@@ -35,12 +47,12 @@ function formatCurrency(amount: number, currency: string) {
 export function ProjectTable({ projects }: ProjectTableProps) {
   if (projects.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border/50 bg-card p-12 flex flex-col items-center justify-center text-center">
-        <div className="size-12 rounded-full bg-muted flex items-center justify-center mb-4">
+      <div className={projectTableProjectsPage.empty}>
+        <div className={projectTableProjectsPage.emptyIcon}>
           <ExternalLink className="size-6 text-muted-foreground" />
         </div>
         <h3 className="font-semibold text-foreground mb-1">No hay proyectos encontrados</h3>
-        <p className="text-sm text-muted-foreground max-w-[250px]">
+        <p className={projectTableProjectsPage.emptyText}>
           Intenta ajustando tus filtros o crea un nuevo proyecto
         </p>
       </div>
@@ -48,7 +60,7 @@ export function ProjectTable({ projects }: ProjectTableProps) {
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card overflow-hidden">
+    <div className={projectTableProjectsPage.container}>
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50 hover:bg-muted/50">
@@ -73,7 +85,7 @@ export function ProjectTable({ projects }: ProjectTableProps) {
                 <TableCell>
                   <Link
                     href={getChurchRoutePath("projects", project.id)}
-                    className="font-medium text-foreground hover:text-accent transition-colors"
+                    className={projectTableProjectsPage.nameLink}
                   >
                     {project.name}
                   </Link>
@@ -116,7 +128,10 @@ export function ProjectTable({ projects }: ProjectTableProps) {
                 </TableCell>
                 <TableCell className="text-right">
                   <span
-                    className={cn("font-medium", isOverBudget ? "text-expense" : "text-income")}
+                    className={cn(
+                      projectTableProjectsPage.remaining,
+                      isOverBudget ? "text-expense" : "text-income",
+                    )}
                   >
                     {formatCurrency(remaining, project.currency)}
                   </span>
@@ -131,7 +146,7 @@ export function ProjectTable({ projects }: ProjectTableProps) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                    className={projectTableProjectsPage.rowAction}
                     asChild={true}
                   >
                     <Link href={getChurchRoutePath("projects", project.id)}>

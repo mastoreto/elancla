@@ -5,6 +5,12 @@ import { DollarSign, Edit, Plus, RefreshCw } from "lucide-react";
 import type { ProjectHistoryEntry } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
+const projectTimelineProjectsPage = {
+  line: cn("absolute left-[19px] top-0 bottom-0 w-px bg-border"),
+  oldValue: cn("px-2 py-0.5 rounded bg-muted text-muted-foreground line-through"),
+  newValue: cn("px-2 py-0.5 rounded bg-accent/10 text-accent font-medium"),
+};
+
 interface ProjectTimelineProps {
   history: ProjectHistoryEntry[];
 }
@@ -51,7 +57,7 @@ export function ProjectTimeline({ history }: ProjectTimelineProps) {
   return (
     <div className="relative">
       {/* Timeline line */}
-      <div className="absolute left-[19px] top-0 bottom-0 w-px bg-border" />
+      <div className={projectTimelineProjectsPage.line} />
 
       <div className="space-y-6">
         {sortedHistory.map((entry, index) => {
@@ -86,11 +92,11 @@ export function ProjectTimeline({ history }: ProjectTimelineProps) {
 
                 {entry.previousValue && entry.newValue && (
                   <div className="flex items-center gap-2 mt-2 text-sm">
-                    <span className="px-2 py-0.5 rounded bg-muted text-muted-foreground line-through">
+                    <span className={projectTimelineProjectsPage.oldValue}>
                       {entry.previousValue}
                     </span>
                     <span className="text-muted-foreground">a</span>
-                    <span className="px-2 py-0.5 rounded bg-accent/10 text-accent font-medium">
+                    <span className={projectTimelineProjectsPage.newValue}>
                       {entry.newValue.replace("_", " ")}
                     </span>
                   </div>

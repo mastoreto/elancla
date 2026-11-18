@@ -80,7 +80,11 @@ export default function MovementsPage() {
     <div className={movementsPage.page}>
       <DashboardPageHeader
         actions={
-          <Button className={movementsPage.action} onClick={() => setIsCreateOpen(true)} type="button">
+          <Button
+            className={movementsPage.action}
+            onClick={() => setIsCreateOpen(true)}
+            type="button"
+          >
             <Plus aria-hidden="true" />
             Nuevo movimiento
           </Button>

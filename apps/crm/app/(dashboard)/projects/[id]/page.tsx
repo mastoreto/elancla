@@ -16,12 +16,12 @@ import {
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { use, useState } from "react";
-import { ProjectDocuments } from "@/components/project-documents";
-import { ProjectFormModal } from "@/components/project-form-modal";
-import { ProjectMovements } from "@/components/project-movements";
-import { ProjectStatusBadge } from "@/components/project-status-badge";
-import { ProjectSummary } from "@/components/project-summary";
-import { ProjectTimeline } from "@/components/project-timeline";
+import { ProjectDocuments } from "../components/project-documents";
+import { ProjectFormModal } from "../components/project-form-modal";
+import { ProjectMovements } from "../components/project-movements";
+import { ProjectStatusBadge } from "../components/project-status-badge";
+import { ProjectSummary } from "../components/project-summary";
+import { ProjectTimeline } from "../components/project-timeline";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -35,6 +35,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getChurchRoutePath } from "@/lib/church";
 import { currentUser, movements as initialMovements, projects } from "@/lib/data";
 import type { Movement } from "@/lib/types";
+import { cn } from "@/lib/utils";
+
+const pageProjectsPage = {
+  header: cn("flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"),
+};
 
 type ProjectTabValue = "summary" | "movements" | "documents" | "history";
 
@@ -90,7 +95,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   return (
     <div className="space-y-6">
       {/* Breadcrumb & Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className={pageProjectsPage.header}>
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" asChild={true}>
             <Link href={getChurchRoutePath("projects")}>

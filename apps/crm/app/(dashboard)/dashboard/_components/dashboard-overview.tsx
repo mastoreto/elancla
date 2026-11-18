@@ -88,7 +88,11 @@ export function DashboardOverview() {
       <DashboardPageHeader
         actions={
           <>
-            <Button asChild={true} className={dashboardOverviewDashboardPage.exportButton} variant="outline">
+            <Button
+              asChild={true}
+              className={dashboardOverviewDashboardPage.exportButton}
+              variant="outline"
+            >
               <Link href={getChurchRoutePath("reports")}>
                 <Download className={dashboardOverviewDashboardPage.buttonIcon} />
                 Exportar
@@ -108,7 +112,10 @@ export function DashboardOverview() {
         title="Buenos días,"
       />
 
-      <DashboardMetricStrip className={dashboardOverviewDashboardPage.metrics} metrics={createDashboardMetrics()} />
+      <DashboardMetricStrip
+        className={dashboardOverviewDashboardPage.metrics}
+        metrics={createDashboardMetrics()}
+      />
 
       <div className={dashboardOverviewDashboardPage.chartSection}>
         <WeeklyOfferingsChart data={weeklyOfferings} />
