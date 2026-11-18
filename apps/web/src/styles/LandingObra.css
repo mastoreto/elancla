@@ -433,7 +433,7 @@
 
   /* 6 · Closing */
   .ln-end { min-height: auto; }
-  .ln-end__main { grid-template-columns: 1fr; gap: 1.75rem; padding: 5.5rem 2.75rem 3.5rem; align-items: start; }
+  .ln-end__main { grid-template-columns: 1fr; gap: 1.75rem; padding: 5.5rem 2.75rem 5rem; align-items: start; }
   .ln-end__left { gap: 1.75rem; max-width: none; }
   .ln-end__title { font-size: 4.75rem; }
   .ln-end__text { font-size: 1.25rem; }
@@ -492,7 +492,7 @@
   .ln-row__h { font-size: 1.125rem; }
   .ln-row__d { grid-column: 2; font-size: 0.9375rem; }
 
-  .ln-end__main { padding: 4rem 1.5rem 2.5rem; gap: 1.5rem; }
+  .ln-end__main { padding: 4rem 1.5rem 4rem; gap: 1.5rem; }
   .ln-end__left { gap: 1.5rem; }
   .ln-end__title { font-size: 3.125rem; line-height: 0.96; }
   .ln-end__text { font-size: 1.125rem; }

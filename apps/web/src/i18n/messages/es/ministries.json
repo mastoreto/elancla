@@ -16,6 +16,8 @@
     { "key": "jovenes", "name": "Jóvenes", "description": "Una generación para Cristo", "href": "/ministerios/jovenes" },
     { "key": "adolescentes", "name": "Adolescentes", "description": "Raíces en la adolescencia", "href": "/ministerios/adolescentes" },
     { "key": "servicio", "name": "Servicio", "description": "Manos que cuidan", "href": "/ministerios/servicio" },
-    { "key": "multimedia", "name": "Multimedia", "description": "Contar la historia", "href": "/ministerios/multimedia" }
+    { "key": "multimedia", "name": "Multimedia", "description": "Contar la historia", "href": "/ministerios/multimedia" },
+    { "key": "espacio-cuidado", "name": "Espacio Cuidado", "description": "Acompañar y cuidar", "href": "/ministerios/espacio-cuidado" },
+    { "key": "espacio-ancladitos", "name": "Espacio Ancladitos", "description": "Los niños, junto a Jesús", "href": "/ministerios/espacio-ancladitos" }
   ]
 }

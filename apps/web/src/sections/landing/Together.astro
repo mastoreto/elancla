@@ -19,6 +19,9 @@ const ministryHref: Record<string, string> = {
   missions: '/ministerios/misiones',
   men: '/ministerios/hombres',
   media: '/ministerios/multimedia',
+  service: '/ministerios/servicio',
+  care: '/ministerios/espacio-cuidado',
+  kids: '/ministerios/espacio-ancladitos',
 };
 const EXTERNAL_WOMEN = 'https://emujer.elancla.uy/';
 type Tile =
@@ -56,8 +59,13 @@ const rows: Tile[][] = [
     { kind: 'photo', key: 'kids', src: '/images/comunidad.jpg', w: 360, om: 13, ot: 13, crop: 'width:200%;left:-50%;top:-200%', pos: '50% 72%', wide: true },
     { kind: 'link', key: 'media', w: 360, om: 12, ot: 12 },
   ],
+  [
+    { kind: 'link', key: 'service', w: 300, om: 14, ot: 14 },
+    { kind: 'link', key: 'care', w: 340, om: 15, ot: 15, tone: 'dark' },
+    { kind: 'link', key: 'kids', w: 340, om: 16, ot: 16 },
+  ],
 ];
-const orderOf = (r: number, c: number) => (r === 2 ? 0 : r === 1 ? 4 : 8) + c;
+const orderOf = (r: number, c: number) => (r === 3 ? -4 : r === 2 ? 0 : r === 1 ? 4 : 8) + c;
 ---
 
 <section id="juntos" class="ln-section ln-tog" data-ln="together">

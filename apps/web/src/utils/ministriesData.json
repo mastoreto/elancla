@@ -48,5 +48,15 @@
     "name": "Alabanza",
     "icon": "/images/ministries/Alabanza.svg",
     "url": "/ministerios/alabanza"
+  },
+  {
+    "name": "Espacio Cuidado",
+    "icon": "/images/ministries/servicio.svg",
+    "url": "/ministerios/espacio-cuidado"
+  },
+  {
+    "name": "Espacio Ancladitos",
+    "icon": "/images/ministries/servicio.svg",
+    "url": "/ministerios/espacio-ancladitos"
   }
 ]

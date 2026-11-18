@@ -13,6 +13,8 @@
     { "key": "jovenes", "name": "Youth", "description": "A generation for Christ", "href": "/ministerios/jovenes" },
     { "key": "adolescentes", "name": "Teens", "description": "Roots in adolescence", "href": "/ministerios/adolescentes" },
     { "key": "servicio", "name": "Service", "description": "Hands that care", "href": "/ministerios/servicio" },
-    { "key": "multimedia", "name": "Multimedia", "description": "Telling the story", "href": "/ministerios/multimedia" }
+    { "key": "multimedia", "name": "Multimedia", "description": "Telling the story", "href": "/ministerios/multimedia" },
+    { "key": "espacio-cuidado", "name": "Care Space", "description": "Walking alongside, caring", "href": "/ministerios/espacio-cuidado" },
+    { "key": "espacio-ancladitos", "name": "Ancladitos Space", "description": "Children, close to Jesus", "href": "/ministerios/espacio-ancladitos" }
   ]
 }
