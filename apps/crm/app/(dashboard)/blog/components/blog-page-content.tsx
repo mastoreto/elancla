@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import { type ColumnDef, DataTable, type FilterConfig } from "@/components/DataTable";
+import { DashboardMetricStrip, DashboardPageHeader } from "@/components/dashboard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,12 +26,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { parseLocalDate } from "@/lib/utils";
-import { DashboardMetricStrip, DashboardPageHeader } from "@/src/componentes/dashboard";
-import { type ColumnDef, DataTable, type FilterConfig } from "@/src/components/DataTable";
+import { cn, parseLocalDate } from "@/lib/utils";
 import type { BlogAuthor, BlogCategory, BlogConfig, BlogPost } from "../types";
 import { BlogPostStatusBadge } from "./blog-post-status-badge";
 import { BlogStatusControl } from "./blog-status-control";
+
+const blogPageContentContentPage = {
+  count: cn("text-sm text-muted-foreground tabular-nums"),
+};
 
 function formatDate(dateStr: string | undefined): string {
   if (!dateStr) return "—";
@@ -125,18 +129,14 @@ function buildColumns(
       key: "writtenAt",
       label: "Redacción",
       render: (post) => (
-        <span className="text-sm text-muted-foreground tabular-nums">
-          {formatDate(post.writtenAt)}
-        </span>
+        <span className={blogPageContentContentPage.count}>{formatDate(post.writtenAt)}</span>
       ),
     },
     {
       key: "publishedAt",
       label: "Publicación",
       render: (post) => (
-        <span className="text-sm text-muted-foreground tabular-nums">
-          {formatDate(post.publishedAt)}
-        </span>
+        <span className={blogPageContentContentPage.count}>{formatDate(post.publishedAt)}</span>
       ),
     },
     {

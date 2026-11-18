@@ -1,12 +1,14 @@
 import { HeartHandshake, Plus, Users, Wallet } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import Link from "next/link";
 import {
   DashboardCard,
   DashboardCardHeader,
   DashboardMetricStrip,
   DashboardPageHeader,
-} from "@/src/componentes/dashboard";
+} from "@/components/dashboard";
+import { Button } from "@/components/ui/button";
+import { getChurchRoutePath } from "@/lib/church";
+import { cn } from "@/lib/utils";
 import { MinistryCard } from "./components/ministry-card";
 import { ministries } from "./data/ministries";
 
@@ -15,6 +17,7 @@ const PERCENT = 100;
 const ministriesPage = {
   action: cn("rounded-full"),
   grid: cn("grid gap-4 md:grid-cols-2 xl:grid-cols-3"),
+  cardLink: cn("block rounded-xl transition hover:-translate-y-0.5"),
 };
 
 /** biome-ignore lint/style/noDefaultExport: Next.js App Router page files require default exports. */
@@ -28,9 +31,11 @@ export default function MinistriesPage() {
     <>
       <DashboardPageHeader
         actions={
-          <Button className={ministriesPage.action} type="button">
-            <Plus aria-hidden="true" />
-            Nuevo ministerio
+          <Button asChild={true} className={ministriesPage.action}>
+            <Link href={getChurchRoutePath("ministries", "new")}>
+              <Plus aria-hidden="true" />
+              Nuevo ministerio
+            </Link>
           </Button>
         }
         description="Contenido del sitio web: cada ministerio con su descripción, líder y horarios. El presupuesto se gestiona aparte."
@@ -71,7 +76,13 @@ export default function MinistriesPage() {
         />
         <div className={ministriesPage.grid}>
           {ministries.map((ministry) => (
-            <MinistryCard key={ministry.id} ministry={ministry} />
+            <Link
+              className={ministriesPage.cardLink}
+              href={getChurchRoutePath("ministries", ministry.id)}
+              key={ministry.id}
+            >
+              <MinistryCard ministry={ministry} />
+            </Link>
           ))}
         </div>
       </DashboardCard>

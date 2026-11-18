@@ -26,6 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import { SettingsSectionShell } from "./settings-section-shell";
 
 interface UsersSettingsPanelProps {
@@ -33,6 +34,11 @@ interface UsersSettingsPanelProps {
   ministryOptions: SettingsSelectOption[];
   roleOptions: SettingsSelectOption[];
 }
+
+const usersSettingsPanelSettingsPage = {
+  block: cn("grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_340px]"),
+  blockBorder: cn("rounded-lg border border-border bg-card overflow-hidden"),
+};
 
 function getStatusBadgeClass(status: SettingsUser["status"]) {
   if (status === "Activo") {
@@ -173,7 +179,7 @@ export function UsersSettingsPanel({
 
   return (
     <>
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_340px]">
+      <div className={usersSettingsPanelSettingsPage.block}>
         <div className="space-y-4">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1">
@@ -188,7 +194,7 @@ export function UsersSettingsPanel({
             </Button>
           </div>
 
-          <div className="rounded-lg border border-border bg-card overflow-hidden">
+          <div className={usersSettingsPanelSettingsPage.blockBorder}>
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50 hover:bg-muted/50">

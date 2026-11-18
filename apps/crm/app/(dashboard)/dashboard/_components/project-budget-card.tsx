@@ -1,10 +1,31 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { DashboardCard, DashboardCardHeader } from "@/components/dashboard";
 import { getChurchRoutePath } from "@/lib/church";
 import type { Project } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { DashboardCard, DashboardCardHeader } from "@/src/componentes/dashboard";
 import { formatCurrency } from "./dashboard-formatters";
+
+const projectBudgetCardDashboardPage = {
+  link: cn(
+    "inline-flex items-center gap-1.5 text-xs font-semibold text-tinta-suave transition hover:text-primary",
+  ),
+  linkIcon: cn("size-3"),
+  list: cn("space-y-4"),
+  row: cn("mb-2 flex items-start justify-between gap-3"),
+  body: cn("min-w-0"),
+  name: cn("truncate text-sm font-semibold text-foreground"),
+  ministries: cn("mt-0.5 text-[11.5px] text-muted-foreground"),
+  percent: cn("font-mono text-xs font-semibold text-foreground"),
+  track: cn("h-2 rounded-full bg-bruma"),
+  footer: cn("mt-2 flex justify-between text-[11.5px] text-muted-foreground"),
+};
+
+const projectBudgetBarDashboardPage = {
+  base: "h-full rounded-full",
+  normal: "bg-income",
+  high: "bg-primary",
+} as const;
 
 type ProjectBudgetCardProps = {
   projects: Project[];
@@ -24,40 +45,45 @@ export function ProjectBudgetCard({ projects }: ProjectBudgetCardProps) {
       <DashboardCardHeader
         action={
           <Link
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--tinta-suave)] transition hover:text-primary"
+            className={projectBudgetCardDashboardPage.link}
             href={getChurchRoutePath("projects")}
           >
             Abrir
-            <ArrowRight className="size-3" />
+            <ArrowRight className={projectBudgetCardDashboardPage.linkIcon} />
           </Link>
         }
         subtitle="Presupuesto y ejecución"
         title="Proyectos activos"
       />
 
-      <div className="space-y-4">
+      <div className={projectBudgetCardDashboardPage.list}>
         {activeProjects.map((project) => {
           const progress = getProgress(project);
           const isHigh = progress >= 80;
 
           return (
             <article key={project.id}>
-              <div className="mb-2 flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <h3 className="truncate text-sm font-semibold text-foreground">{project.name}</h3>
-                  <p className="mt-0.5 text-[11.5px] text-muted-foreground">
+              <div className={projectBudgetCardDashboardPage.row}>
+                <div className={projectBudgetCardDashboardPage.body}>
+                  <h3 className={projectBudgetCardDashboardPage.name}>{project.name}</h3>
+                  <p className={projectBudgetCardDashboardPage.ministries}>
                     {project.ministries.join(", ")}
                   </p>
                 </div>
-                <span className="font-mono text-xs font-semibold text-foreground">{progress}%</span>
+                <span className={projectBudgetCardDashboardPage.percent}>{progress}%</span>
               </div>
-              <div className="h-2 rounded-full bg-[var(--bruma)]">
+              <div className={projectBudgetCardDashboardPage.track}>
                 <div
-                  className={cn("h-full rounded-full bg-income", isHigh && "bg-primary")}
+                  className={cn(
+                    projectBudgetBarDashboardPage.base,
+                    isHigh
+                      ? projectBudgetBarDashboardPage.high
+                      : projectBudgetBarDashboardPage.normal,
+                  )}
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              <div className="mt-2 flex justify-between text-[11.5px] text-muted-foreground">
+              <div className={projectBudgetCardDashboardPage.footer}>
                 <span>{formatCurrency(project.spent, project.currency)} usado</span>
                 <span>{formatCurrency(project.budget, project.currency)} total</span>
               </div>

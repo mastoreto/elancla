@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -6,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
 import type { AssemblyReport } from "../types";
 import { AssemblyStatusBadge } from "./assembly-status-badge";
@@ -14,7 +16,7 @@ const assemblyTableAssemblyPage = {
   headRow: cn("bg-bruma hover:bg-bruma"),
   numeric: cn("text-right"),
   numericCell: cn("text-right tabular-nums"),
-  title: cn("font-semibold"),
+  title: cn("font-semibold hover:underline"),
   assembly: cn("text-xs text-muted-foreground"),
   code: cn("font-mono text-xs"),
 };
@@ -40,7 +42,12 @@ export function AssemblyTable({ reports }: AssemblyTableProps) {
         {reports.map((report) => (
           <TableRow key={report.id}>
             <TableCell>
-              <p className={assemblyTableAssemblyPage.title}>{report.title}</p>
+              <Link
+                className={assemblyTableAssemblyPage.title}
+                href={getChurchRoutePath("assembly", report.id)}
+              >
+                {report.title}
+              </Link>
               <p className={assemblyTableAssemblyPage.assembly}>{report.assembly}</p>
             </TableCell>
             <TableCell className={assemblyTableAssemblyPage.code}>{report.accessCode}</TableCell>

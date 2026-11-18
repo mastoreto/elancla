@@ -1,9 +1,8 @@
 import { Clock3, FilePlus2, FolderOpenDot, Sparkles } from "lucide-react";
 import Link from "next/link";
-
+import { DashboardMetricStrip, DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 import { getChurchRoutePath } from "@/lib/church";
-import { DashboardMetricStrip, DashboardPageHeader } from "@/src/componentes/dashboard";
 
 import type { GeneratedReportListItem } from "../types";
 import { ReportGeneratedList } from "./report-generated-list";

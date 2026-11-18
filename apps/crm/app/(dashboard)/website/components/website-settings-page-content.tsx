@@ -1,4 +1,4 @@
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { AboutSection } from "./about-section";
 import { SiteStatusSection } from "./site-status-section";
 import { SocialLinksSection } from "./social-links-section";

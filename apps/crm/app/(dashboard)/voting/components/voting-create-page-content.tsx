@@ -27,7 +27,8 @@ import {
 import { getVotingListPath, getVotingModeratorPath } from "../voting-routes";
 import { VotingStatusBadge } from "./voting-status-badge";
 
-const styles = {
+const votingCreatePageContentVotingPage = {
+  hint: cn("flex items-center gap-2 text-sm text-muted-foreground"),
   page: cn("grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_360px]"),
   formCard: cn("border-border/70 bg-card shadow-sm"),
   previewCard: cn("border-border/70 bg-card/80 shadow-sm"),
@@ -125,10 +126,10 @@ export function VotingCreatePageContent() {
   };
 
   return (
-    <div className={styles.page}>
-      <Card className={styles.formCard}>
+    <div className={votingCreatePageContentVotingPage.page}>
+      <Card className={votingCreatePageContentVotingPage.formCard}>
         <CardHeader>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className={votingCreatePageContentVotingPage.hint}>
             <ChevronLeft className="size-4" />
             <Link href={getVotingListPath()} className="hover:text-foreground transition-colors">
               Volver al listado
@@ -142,8 +143,8 @@ export function VotingCreatePageContent() {
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit} className={styles.section}>
-            <FieldGroup className={styles.fieldGroup}>
+          <form onSubmit={handleSubmit} className={votingCreatePageContentVotingPage.section}>
+            <FieldGroup className={votingCreatePageContentVotingPage.fieldGroup}>
               <Field>
                 <FieldLabel htmlFor="voting-title">Título</FieldLabel>
                 <Input
@@ -218,10 +219,10 @@ export function VotingCreatePageContent() {
                 <FieldLabel>Opciones</FieldLabel>
                 <div className="space-y-3">
                   {options.map((option, index) => (
-                    <div key={option.id} className={styles.optionRow}>
+                    <div key={option.id} className={votingCreatePageContentVotingPage.optionRow}>
                       <GripVertical className="size-4 text-muted-foreground" />
                       <Input
-                        className={styles.optionInput}
+                        className={votingCreatePageContentVotingPage.optionInput}
                         value={option.value}
                         onChange={(event) => handleOptionChange(option.id, event.target.value)}
                         placeholder={`Opción ${index + 1}`}
@@ -240,7 +241,7 @@ export function VotingCreatePageContent() {
                 </div>
 
                 <div className="flex items-center justify-between gap-3">
-                  <p className={styles.helper}>
+                  <p className={votingCreatePageContentVotingPage.helper}>
                     {trimmedOptions.length} opción{trimmedOptions.length === 1 ? "" : "es"} válidas.
                   </p>
                   <Button type="button" variant="outline" onClick={handleAddOption}>
@@ -251,7 +252,7 @@ export function VotingCreatePageContent() {
               </Field>
             </FieldGroup>
 
-            <div className={styles.footer}>
+            <div className={votingCreatePageContentVotingPage.footer}>
               <Button type="button" variant="ghost" asChild={true}>
                 <Link href={getVotingListPath()}>Cancelar</Link>
               </Button>
@@ -264,11 +265,13 @@ export function VotingCreatePageContent() {
         </CardContent>
       </Card>
 
-      <Card className={styles.previewCard}>
+      <Card className={votingCreatePageContentVotingPage.previewCard}>
         <CardHeader>
           <div className="flex items-center gap-3">
             <VotingStatusBadge status="draft" />
-            <span className={styles.optionPill}>{votingStatusLabels.draft}</span>
+            <span className={votingCreatePageContentVotingPage.optionPill}>
+              {votingStatusLabels.draft}
+            </span>
           </div>
           <CardTitle className="text-xl">{title.trim() || "Vista previa de la votación"}</CardTitle>
           <CardDescription className="leading-6">
@@ -277,26 +280,26 @@ export function VotingCreatePageContent() {
         </CardHeader>
 
         <CardContent className="space-y-6">
-          <div className={styles.previewMeta}>
+          <div className={votingCreatePageContentVotingPage.previewMeta}>
             <div>
-              <p className={styles.previewLabel}>Tipo</p>
+              <p className={votingCreatePageContentVotingPage.previewLabel}>Tipo</p>
               <p className="text-foreground">{votingTypeLabels[type]}</p>
             </div>
             <div>
-              <p className={styles.previewLabel}>Mayoría</p>
+              <p className={votingCreatePageContentVotingPage.previewLabel}>Mayoría</p>
               <p className="text-foreground">{majorityTypeLabels[majorityType]}</p>
             </div>
             <div>
-              <p className={styles.previewLabel}>Quorum</p>
+              <p className={votingCreatePageContentVotingPage.previewLabel}>Quorum</p>
               <p className="text-foreground">{Number(quorum) || 1} presentes</p>
             </div>
           </div>
 
           <div className="space-y-3">
-            <p className={styles.previewLabel}>Opciones visibles</p>
-            <div className={styles.previewOptions}>
+            <p className={votingCreatePageContentVotingPage.previewLabel}>Opciones visibles</p>
+            <div className={votingCreatePageContentVotingPage.previewOptions}>
               {trimmedOptions.map((option) => (
-                <span key={option} className={styles.optionPill}>
+                <span key={option} className={votingCreatePageContentVotingPage.optionPill}>
                   {option}
                 </span>
               ))}

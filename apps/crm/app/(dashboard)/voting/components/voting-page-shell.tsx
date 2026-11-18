@@ -1,5 +1,6 @@
 import { ArrowLeft, BarChart3, Gavel, ShieldCheck, Vote } from "lucide-react";
 import Link from "next/link";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -16,12 +17,12 @@ import { VotingStatusBadge } from "./voting-status-badge";
 
 type VotingView = "overview" | "moderator" | "vote" | "results";
 
-const styles = {
+const votingPageShellVotingPage = {
+  navLink: cn("justify-start"),
   page: cn("space-y-6"),
-  backLink: cn("inline-flex"),
+  backLink: cn("rounded-full"),
   hero: cn("overflow-hidden border-border/70 bg-card shadow-sm"),
   heroContent: cn("space-y-5 p-6"),
-  metaRow: cn("flex flex-wrap items-center gap-3"),
   title: cn("text-2xl font-semibold tracking-tight text-balance text-foreground"),
   description: cn("max-w-3xl text-sm leading-6 text-muted-foreground"),
   facts: cn("grid gap-3 text-sm text-muted-foreground sm:grid-cols-3"),
@@ -63,11 +64,13 @@ export function VotingPageShell({
 }) {
   if (!voting) {
     return (
-      <Card className={styles.hero}>
-        <CardContent className={styles.heroContent}>
-          <p className={styles.factLabel}>Votación no encontrada</p>
-          <h1 className={styles.title}>No pudimos cargar esta sesión de votación.</h1>
-          <p className={styles.description}>
+      <Card className={votingPageShellVotingPage.hero}>
+        <CardContent className={votingPageShellVotingPage.heroContent}>
+          <p className={votingPageShellVotingPage.factLabel}>Votación no encontrada</p>
+          <h1 className={votingPageShellVotingPage.title}>
+            No pudimos cargar esta sesión de votación.
+          </h1>
+          <p className={votingPageShellVotingPage.description}>
             La URL puede apuntar a un identificador inexistente o a una sesión demo ya descartada.
           </p>
           <Button asChild={true}>
@@ -79,46 +82,50 @@ export function VotingPageShell({
   }
 
   return (
-    <div className={styles.page}>
-      <Button variant="ghost" className={styles.backLink} asChild={true}>
-        <Link href={getVotingListPath()}>
-          <ArrowLeft className="size-4" />
-          Volver a votaciones
-        </Link>
-      </Button>
-
-      <Card className={styles.hero}>
-        <CardContent className={styles.heroContent}>
-          <div className={styles.metaRow}>
+    <div className={votingPageShellVotingPage.page}>
+      <DashboardPageHeader
+        actions={
+          <>
             <VotingStatusBadge status={voting.status} />
-          </div>
+            <Button asChild={true} className={votingPageShellVotingPage.backLink} variant="outline">
+              <Link href={getVotingListPath()}>
+                <ArrowLeft aria-hidden="true" />
+                Volver a votaciones
+              </Link>
+            </Button>
+          </>
+        }
+        description={voting.summary}
+        kicker="Gobierno"
+        title={voting.title}
+      />
 
-          <div>
-            <h1 className={styles.title}>{voting.title}</h1>
-            <p className={styles.description}>{voting.summary}</p>
-          </div>
-
-          <div className={styles.facts}>
+      <Card className={votingPageShellVotingPage.hero}>
+        <CardContent className={votingPageShellVotingPage.heroContent}>
+          <div className={votingPageShellVotingPage.facts}>
             <div>
-              <p className={styles.factLabel}>Tipo</p>
+              <p className={votingPageShellVotingPage.factLabel}>Tipo</p>
               <p>{votingTypeLabels[voting.type]}</p>
             </div>
             <div>
-              <p className={styles.factLabel}>Mayoría requerida</p>
+              <p className={votingPageShellVotingPage.factLabel}>Mayoría requerida</p>
               <p>{majorityTypeLabels[voting.majorityType]}</p>
             </div>
             <div>
-              <p className={styles.factLabel}>Última actualización</p>
+              <p className={votingPageShellVotingPage.factLabel}>Última actualización</p>
               <p>{formatVotingDate(voting.updatedAt)}</p>
             </div>
           </div>
 
-          <div className={styles.nav}>
+          <div className={votingPageShellVotingPage.nav}>
             {navigationItems.map((item) => (
               <Button
                 key={item.key}
                 variant={activeView === item.key ? "default" : "outline"}
-                className={cn("justify-start", activeView === item.key && "shadow-sm")}
+                className={cn(
+                  votingPageShellVotingPage.navLink,
+                  activeView === item.key && "shadow-sm",
+                )}
                 asChild={true}
               >
                 <Link href={getNavigationHref(voting.id, item.key)}>

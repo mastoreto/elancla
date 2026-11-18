@@ -1,9 +1,29 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import { cn } from "@/lib/utils";
 import { ReportDataState } from "./report-data-state";
 import { ReportSectionShell } from "./report-section-shell";
+
+const reportChartsSectionReportsPage = {
+  card: cn("border-border/60 bg-gradient-to-b from-card to-muted/20 shadow-none"),
+  barChart: cn(
+    "grid h-60 grid-cols-5 gap-4 rounded-2xl border border-dashed border-border/60 bg-gradient-to-b from-muted/20 to-background p-4",
+  ),
+  barColumn: cn("flex flex-col items-center justify-end gap-3"),
+  incomeBadge: cn("rounded-full bg-income/10 px-3 py-1 text-income hover:bg-income/10"),
+  expenseBadge: cn("rounded-full bg-expense/10 px-3 py-1 text-expense hover:bg-expense/10"),
+  donutLayout: cn("grid items-center gap-6 lg:grid-cols-[220px_1fr]"),
+  donutOuter: cn("mx-auto flex size-52 items-center justify-center rounded-full bg-muted/20"),
+  donutRing: cn("flex size-44 items-center justify-center rounded-full"),
+  donutCenter: cn(
+    "flex size-[6.5rem] flex-col items-center justify-center rounded-full bg-card text-center shadow-inner",
+  ),
+  donutLabel: cn("text-xs uppercase tracking-[0.24em] text-muted-foreground"),
+  legendItem: cn(
+    "flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background/80 px-4 py-3",
+  ),
+};
 
 interface ReportChartsSectionProps {
   isLoading?: boolean;
@@ -78,7 +98,7 @@ export function ReportChartsSection({
         />
       ) : (
         <div className="grid gap-4 xl:grid-cols-2">
-          <Card className="border-border/60 bg-gradient-to-b from-card to-muted/20 shadow-none">
+          <Card className={reportChartsSectionReportsPage.card}>
             <CardHeader className="gap-2">
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -91,9 +111,9 @@ export function ReportChartsSection({
               </div>
             </CardHeader>
             <CardContent className="space-y-5">
-              <div className="grid h-60 grid-cols-5 gap-4 rounded-2xl border border-dashed border-border/60 bg-gradient-to-b from-muted/20 to-background p-4">
+              <div className={reportChartsSectionReportsPage.barChart}>
                 {comparisonBars.map((bar) => (
-                  <div key={bar.label} className="flex flex-col items-center justify-end gap-3">
+                  <div key={bar.label} className={reportChartsSectionReportsPage.barColumn}>
                     <div className="flex h-full items-end gap-2">
                       <div
                         className="w-5 rounded-t-full bg-income/85"
@@ -109,17 +129,13 @@ export function ReportChartsSection({
                 ))}
               </div>
               <div className="flex flex-wrap gap-2">
-                <Badge className="rounded-full bg-income/10 px-3 py-1 text-income hover:bg-income/10">
-                  Ingresos
-                </Badge>
-                <Badge className="rounded-full bg-expense/10 px-3 py-1 text-expense hover:bg-expense/10">
-                  Egresos
-                </Badge>
+                <Badge className={reportChartsSectionReportsPage.incomeBadge}>Ingresos</Badge>
+                <Badge className={reportChartsSectionReportsPage.expenseBadge}>Egresos</Badge>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-border/60 bg-gradient-to-b from-card to-muted/20 shadow-none">
+          <Card className={reportChartsSectionReportsPage.card}>
             <CardHeader className="gap-2">
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -132,19 +148,17 @@ export function ReportChartsSection({
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid items-center gap-6 lg:grid-cols-[220px_1fr]">
-                <div className="mx-auto flex size-52 items-center justify-center rounded-full bg-muted/20">
+              <div className={reportChartsSectionReportsPage.donutLayout}>
+                <div className={reportChartsSectionReportsPage.donutOuter}>
                   <div
-                    className="flex size-44 items-center justify-center rounded-full"
+                    className={reportChartsSectionReportsPage.donutRing}
                     style={{
                       background:
                         "conic-gradient(var(--color-chart-1) 0 32%, var(--color-chart-3) 32% 60%, var(--color-chart-4) 60% 82%, var(--color-chart-5) 82% 100%)",
                     }}
                   >
-                    <div className="flex size-[6.5rem] flex-col items-center justify-center rounded-full bg-card text-center shadow-inner">
-                      <span className="text-xs uppercase tracking-[0.24em] text-muted-foreground">
-                        Total
-                      </span>
+                    <div className={reportChartsSectionReportsPage.donutCenter}>
+                      <span className={reportChartsSectionReportsPage.donutLabel}>Total</span>
                       <span className="text-xl font-semibold tracking-tight">100%</span>
                     </div>
                   </div>
@@ -152,10 +166,7 @@ export function ReportChartsSection({
 
                 <div className="space-y-3">
                   {ministrySegments.map((segment) => (
-                    <div
-                      key={segment.label}
-                      className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background/80 px-4 py-3"
-                    >
+                    <div key={segment.label} className={reportChartsSectionReportsPage.legendItem}>
                       <div className="flex items-center gap-3">
                         <span className={`size-3 rounded-full ${segment.colorClassName}`} />
                         <span className="text-sm font-medium">{segment.label}</span>

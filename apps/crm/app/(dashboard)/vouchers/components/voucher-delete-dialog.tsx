@@ -9,6 +9,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
+
+const voucherDeleteDialogVouchersPage = {
+  icon: cn(
+    "bg-warning-surface text-warning mb-4 flex size-12 items-center justify-center rounded-full",
+  ),
+  confirm: cn("bg-destructive text-white hover:bg-destructive/90"),
+};
 
 interface VoucherDeleteDialogProps {
   open: boolean;
@@ -29,7 +37,7 @@ export function VoucherDeleteDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="sm:max-w-md">
         <AlertDialogHeader>
-          <div className="bg-warning-surface text-warning mb-4 flex size-12 items-center justify-center rounded-full">
+          <div className={voucherDeleteDialogVouchersPage.icon}>
             <TriangleAlert className="size-6" />
           </div>
           <AlertDialogTitle>Eliminar comprobante</AlertDialogTitle>
@@ -46,7 +54,7 @@ export function VoucherDeleteDialog({
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel}>Cancelar</AlertDialogCancel>
           <AlertDialogAction
-            className="bg-destructive text-white hover:bg-destructive/90"
+            className={voucherDeleteDialogVouchersPage.confirm}
             onClick={onConfirm}
           >
             Eliminar

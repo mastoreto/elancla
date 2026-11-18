@@ -15,8 +15,8 @@ import type {
   BudgetSelectOption,
   BudgetSummaryValues,
 } from "@/app/(dashboard)/budgets/types/index";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
 
 type BudgetsPageContentProps = {
   initialBudgets: Budget[];

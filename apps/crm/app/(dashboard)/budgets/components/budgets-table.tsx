@@ -1,5 +1,4 @@
 import { CircleAlert, PencilLine } from "lucide-react";
-import { BudgetProgressBar } from "@/app/(dashboard)/budgets/components/budget-progress-bar";
 import type { Budget } from "@/app/(dashboard)/budgets/types/index";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -14,6 +13,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { BudgetProgressBar } from "./budget-progress-bar";
+
+const budgetsTableBudgetsPage = {
+  empty: cn(
+    "flex min-h-56 items-center justify-center rounded-xl border border-dashed border-border/60 bg-muted/20 px-6 text-center",
+  ),
+};
 
 type BudgetsTableProps = {
   budgets: Budget[];
@@ -139,7 +145,7 @@ export function BudgetsTable({
             </TableBody>
           </Table>
         ) : budgets.length === 0 ? (
-          <div className="flex min-h-56 items-center justify-center rounded-xl border border-dashed border-border/60 bg-muted/20 px-6 text-center">
+          <div className={budgetsTableBudgetsPage.empty}>
             <p className="text-muted-foreground text-sm">No hay presupuestos registrados</p>
           </div>
         ) : (

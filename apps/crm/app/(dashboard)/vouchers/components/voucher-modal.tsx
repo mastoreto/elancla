@@ -16,6 +16,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+
+const voucherModalVouchersPage = {
+  content: cn("max-h-[90vh] overflow-y-auto sm:max-w-5xl"),
+  layout: cn("grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]"),
+};
 
 interface VoucherModalProps {
   open: boolean;
@@ -69,7 +75,7 @@ export function VoucherModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-5xl" showCloseButton={false}>
+      <DialogContent className={voucherModalVouchersPage.content} showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>{dialogCopy.title}</DialogTitle>
           <DialogDescription>{dialogCopy.description}</DialogDescription>
@@ -78,7 +84,7 @@ export function VoucherModal({
         {mode === "view" && voucher ? (
           <VoucherDetail voucher={voucher} />
         ) : (
-          <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+          <div className={voucherModalVouchersPage.layout}>
             <VoucherForm
               values={values}
               relatedOptions={relatedOptions}

@@ -11,6 +11,9 @@ import {
   defaultChurchRouteSegment,
 } from "./lib/church";
 
+// Pages reachable without a session (attendee-facing assembly reports).
+const PUBLIC_ROUTE_SEGMENTS: readonly string[] = ["informe"];
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const segments = pathname.split("/").filter(Boolean);
@@ -19,7 +22,8 @@ export function middleware(request: NextRequest) {
   // Guard optimista de auth: sin cookie de sesión solo se permite el login ("/").
   // La validación real (contra BD) la hace el layout del dashboard. El matcher ya
   // excluye /api/auth/* y assets, así que aquí solo llegan rutas de página.
-  if (pathname !== "/" && !getSessionCookie(request)) {
+  const isPublicRoute = PUBLIC_ROUTE_SEGMENTS.includes(segments[0] ?? "");
+  if (pathname !== "/" && !isPublicRoute && !getSessionCookie(request)) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/";
     loginUrl.search = "";

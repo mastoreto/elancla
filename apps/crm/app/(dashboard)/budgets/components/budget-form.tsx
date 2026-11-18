@@ -15,6 +15,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+
+const budgetFormBudgetsPage = {
+  fields: cn("grid gap-4 md:grid-cols-2 [&>[data-slot=field]]:gap-2"),
+  actions: cn("flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"),
+};
 
 type BudgetFormProps = {
   values: BudgetFormValues;
@@ -61,7 +67,7 @@ export function BudgetForm({
         onSubmit();
       }}
     >
-      <FieldGroup className="grid gap-4 md:grid-cols-2 [&>[data-slot=field]]:gap-2">
+      <FieldGroup className={budgetFormBudgetsPage.fields}>
         <Field className="md:col-span-2">
           <FieldLabel htmlFor="budget-name">Nombre</FieldLabel>
           <Input
@@ -207,7 +213,7 @@ export function BudgetForm({
         </Field>
       </FieldGroup>
 
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+      <div className={budgetFormBudgetsPage.actions}>
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancelar
         </Button>

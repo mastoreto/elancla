@@ -24,7 +24,7 @@ Next 16.2.0 -> 16.4.6; React 19.2.4 -> 19.3.1; zod 3.25 -> 4.6; recharts 2.15 ->
 
 ## Code quality findings
 
-- `src/componentes/dashboard` and `src/components` coexist (typo + duplicate folder); `desing/` holds an old `Dashboard CMS.html` and uploads.
+- `components/dashboard` and `src/components` coexist (typo + duplicate folder); `desing/` holds an old `Dashboard CMS.html` and uploads.
 - `lib/data.ts` (462 lines) is mock data; `lib/church.ts`, `lib/types.ts` flat in `lib/`.
 - Flat `components/*.tsx` (project-*, request-*, movements-*) do not follow the folder-per-component + barrel rule of CLAUDE.md.
 - No `any` outside `components/ui`; the 2 type errors above are the only ones.

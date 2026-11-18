@@ -12,6 +12,7 @@ import {
   Vote,
 } from "lucide-react";
 import Link from "next/link";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,7 +25,6 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
 import { useVotingCollection } from "../use-voting-data";
 import {
   formatVotingDate,
@@ -42,7 +42,8 @@ import {
 import { VotingMetricCard } from "./voting-metric-card";
 import { VotingStatusBadge } from "./voting-status-badge";
 
-const styles = {
+const votingListPageContentVotingPage = {
+  emptyContent: cn("flex min-h-44 flex-col items-center justify-center gap-3 text-center"),
   page: cn("space-y-6"),
   header: cn("flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"),
   title: cn("text-2xl font-semibold tracking-tight text-foreground"),
@@ -68,7 +69,7 @@ export function VotingListPageContent() {
   const liveVotes = votings.reduce((sum, voting) => sum + voting.votesSubmitted, 0);
 
   return (
-    <div className={styles.page}>
+    <div className={votingListPageContentVotingPage.page}>
       <DashboardPageHeader
         actions={
           <Button asChild={true} className="rounded-full">
@@ -84,7 +85,7 @@ export function VotingListPageContent() {
         title="Votaciones"
       />
 
-      <div className={styles.metrics}>
+      <div className={votingListPageContentVotingPage.metrics}>
         <VotingMetricCard
           label="Borradores"
           value={String(draftCount)}
@@ -111,20 +112,22 @@ export function VotingListPageContent() {
         />
       </div>
 
-      <div className={styles.list}>
+      <div className={votingListPageContentVotingPage.list}>
         {votings.map((voting) => {
           const outcome = getVotingOutcome(voting);
           const voteProgress =
             voting.presentUsers === 0 ? 0 : (voting.votesSubmitted / voting.presentUsers) * 100;
 
           return (
-            <Card key={voting.id} className={styles.card}>
+            <Card key={voting.id} className={votingListPageContentVotingPage.card}>
               <CardHeader>
                 <div className="space-y-3">
                   <div className="flex flex-wrap items-center gap-3">
                     <VotingStatusBadge status={voting.status} />
-                    <span className={styles.optionPill}>{votingTypeLabels[voting.type]}</span>
-                    <span className={styles.optionPill}>
+                    <span className={votingListPageContentVotingPage.optionPill}>
+                      {votingTypeLabels[voting.type]}
+                    </span>
+                    <span className={votingListPageContentVotingPage.optionPill}>
                       {majorityTypeLabels[voting.majorityType]}
                     </span>
                   </div>
@@ -148,28 +151,28 @@ export function VotingListPageContent() {
               </CardHeader>
 
               <CardContent className="space-y-6">
-                <div className={styles.summaryRow}>
+                <div className={votingListPageContentVotingPage.summaryRow}>
                   <div>
-                    <p className={styles.summaryLabel}>Quorum</p>
+                    <p className={votingListPageContentVotingPage.summaryLabel}>Quorum</p>
                     <p className="text-foreground">
                       {voting.presentUsers}/{voting.quorum} presentes
                     </p>
                   </div>
                   <div>
-                    <p className={styles.summaryLabel}>Votos emitidos</p>
+                    <p className={votingListPageContentVotingPage.summaryLabel}>Votos emitidos</p>
                     <p className="text-foreground">
                       {voting.votesSubmitted} de {Math.max(voting.presentUsers, 1)} presentes
                     </p>
                   </div>
                   <div>
-                    <p className={styles.summaryLabel}>Actualización</p>
+                    <p className={votingListPageContentVotingPage.summaryLabel}>Actualización</p>
                     <p className="text-foreground">{formatVotingDate(voting.updatedAt)}</p>
                   </div>
                 </div>
 
-                <div className={styles.progressWrap}>
+                <div className={votingListPageContentVotingPage.progressWrap}>
                   <div>
-                    <div className={styles.progressLabel}>
+                    <div className={votingListPageContentVotingPage.progressLabel}>
                       <span>Avance de quorum</span>
                       <span>{Math.round(outcome.quorumProgress)}%</span>
                     </div>
@@ -177,7 +180,7 @@ export function VotingListPageContent() {
                   </div>
 
                   <div>
-                    <div className={styles.progressLabel}>
+                    <div className={votingListPageContentVotingPage.progressLabel}>
                       <span>Participación sobre presentes</span>
                       <span>{Math.round(voteProgress)}%</span>
                     </div>
@@ -185,16 +188,16 @@ export function VotingListPageContent() {
                   </div>
                 </div>
 
-                <div className={styles.optionList}>
+                <div className={votingListPageContentVotingPage.optionList}>
                   {voting.options.map((option) => (
-                    <span key={option.id} className={styles.optionPill}>
+                    <span key={option.id} className={votingListPageContentVotingPage.optionPill}>
                       {option.label}: {option.votes}
                     </span>
                   ))}
                 </div>
               </CardContent>
 
-              <CardFooter className={styles.actions}>
+              <CardFooter className={votingListPageContentVotingPage.actions}>
                 <Button variant="outline" asChild={true}>
                   <Link href={getVotingModeratorPath(voting.id)}>
                     <ShieldCheck className="size-4" />
@@ -228,8 +231,13 @@ export function VotingListPageContent() {
         })}
 
         {votings.length === 0 ? (
-          <Card className={cn(styles.card, styles.emptyCard)}>
-            <CardContent className="flex min-h-44 flex-col items-center justify-center gap-3 text-center">
+          <Card
+            className={cn(
+              votingListPageContentVotingPage.card,
+              votingListPageContentVotingPage.emptyCard,
+            )}
+          >
+            <CardContent className={votingListPageContentVotingPage.emptyContent}>
               <Vote className="size-10 text-muted-foreground" />
               <div className="space-y-1">
                 <p className="text-lg font-semibold text-foreground">No hay votaciones cargadas</p>

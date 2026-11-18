@@ -10,6 +10,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { churchConfig, getChurchRoutePath } from "@/lib/church";
+import { cn } from "@/lib/utils";
+
+const loginPage = {
+  main: cn("min-h-screen flex items-center justify-center p-4"),
+  block: cn("size-14 rounded-xl bg-primary flex items-center justify-center mb-4"),
+  action: cn("absolute right-0 top-0 h-full px-3 hover:bg-transparent"),
+  fieldLabel: cn("text-sm text-muted-foreground cursor-pointer"),
+  text: cn("rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive"),
+  textText: cn("text-center text-xs text-muted-foreground mt-6"),
+};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,11 +51,11 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4">
+    <main className={loginPage.main}>
       <div className="w-full max-w-md">
         {/* Logo & Branding */}
         <div className="flex flex-col items-center mb-8">
-          <div className="size-14 rounded-xl bg-primary flex items-center justify-center mb-4">
+          <div className={loginPage.block}>
             <Church className="size-7 text-primary-foreground" />
           </div>
           <h1 className="text-2xl font-semibold text-foreground">{churchConfig.name}</h1>
@@ -90,7 +100,7 @@ export default function LoginPage() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                    className={loginPage.action}
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                   >
@@ -110,10 +120,7 @@ export default function LoginPage() {
                     checked={rememberMe}
                     onCheckedChange={(checked) => setRememberMe(checked as boolean)}
                   />
-                  <label
-                    htmlFor="remember"
-                    className="text-sm text-muted-foreground cursor-pointer"
-                  >
+                  <label htmlFor="remember" className={loginPage.fieldLabel}>
                     Recuérdame
                   </label>
                 </div>
@@ -123,10 +130,7 @@ export default function LoginPage() {
               </div>
 
               {error ? (
-                <p
-                  role="alert"
-                  className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive"
-                >
+                <p role="alert" className={loginPage.text}>
                   {error}
                 </p>
               ) : null}
@@ -143,9 +147,7 @@ export default function LoginPage() {
         </Card>
 
         {/* Footer */}
-        <p className="text-center text-xs text-muted-foreground mt-6">
-          Acceso seguro solo para personal autorizado
-        </p>
+        <p className={loginPage.textText}>Acceso seguro solo para personal autorizado</p>
       </div>
     </main>
   );

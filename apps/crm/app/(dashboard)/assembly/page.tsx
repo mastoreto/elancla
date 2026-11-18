@@ -1,12 +1,14 @@
 import { CalendarClock, DoorOpen, Plus, ShieldAlert } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import Link from "next/link";
 import {
   DashboardCard,
   DashboardCardHeader,
   DashboardMetricStrip,
   DashboardPageHeader,
-} from "@/src/componentes/dashboard";
+} from "@/components/dashboard";
+import { Button } from "@/components/ui/button";
+import { getChurchRoutePath } from "@/lib/church";
+import { cn } from "@/lib/utils";
 import { AssemblyTable } from "./components/assembly-table";
 import { assemblyReports } from "./data/assembly-reports";
 
@@ -24,9 +26,11 @@ export default function AssemblyPage() {
     <>
       <DashboardPageHeader
         actions={
-          <Button className={assemblyPage.action} type="button">
-            <Plus aria-hidden="true" />
-            Publicar informe
+          <Button asChild={true} className={assemblyPage.action}>
+            <Link href={getChurchRoutePath("assembly", "new")}>
+              <Plus aria-hidden="true" />
+              Publicar informe
+            </Link>
           </Button>
         }
         description="Comparte informes completos con los asistentes mediante un código, solo durante la sesión y en el lugar."

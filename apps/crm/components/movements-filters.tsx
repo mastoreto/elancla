@@ -18,6 +18,30 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
+const movementsFiltersMovementsPage = {
+  container: cn("flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"),
+  controls: cn("flex flex-1 items-center gap-2"),
+  search: cn("relative max-w-sm flex-1"),
+  searchIcon: cn("absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"),
+  searchInput: cn("pl-9"),
+  filterButton: cn("gap-2"),
+  filterButtonIcon: cn("size-4"),
+  filterButtonLabel: cn("hidden sm:inline"),
+  countBadge: cn("size-5 justify-center p-0"),
+  popover: cn("w-80"),
+  popoverBody: cn("space-y-4"),
+  popoverTitle: cn("font-medium"),
+  dateTrigger: cn("w-full justify-start text-left font-normal"),
+  dateTriggerEmpty: cn("text-muted-foreground"),
+  calendarPopover: cn("w-auto p-0"),
+  clearButton: cn("w-full"),
+  clearIcon: cn("mr-2 size-4"),
+  activeFilters: cn("flex items-center gap-2"),
+  activeBadge: cn("gap-1"),
+  removeButton: cn("ml-1 hover:text-foreground"),
+  removeIcon: cn("size-3"),
+};
+
 interface MovementsFiltersProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
@@ -40,35 +64,35 @@ export function MovementsFilters({
   hasActiveFilters,
 }: MovementsFiltersProps) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex flex-1 items-center gap-2">
+    <div className={movementsFiltersMovementsPage.container}>
+      <div className={movementsFiltersMovementsPage.controls}>
         {/* Search Input */}
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+        <div className={movementsFiltersMovementsPage.search}>
+          <Search className={movementsFiltersMovementsPage.searchIcon} />
           <Input
             placeholder="Buscar movimientos..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-9"
+            className={movementsFiltersMovementsPage.searchInput}
           />
         </div>
 
         {/* Filters Popover */}
         <Popover>
           <PopoverTrigger asChild={true}>
-            <Button variant="outline" className="gap-2">
-              <SlidersHorizontal className="size-4" />
-              <span className="hidden sm:inline">Filtros</span>
+            <Button variant="outline" className={movementsFiltersMovementsPage.filterButton}>
+              <SlidersHorizontal className={movementsFiltersMovementsPage.filterButtonIcon} />
+              <span className={movementsFiltersMovementsPage.filterButtonLabel}>Filtros</span>
               {hasActiveFilters && (
-                <Badge variant="secondary" className="size-5 p-0 justify-center">
+                <Badge variant="secondary" className={movementsFiltersMovementsPage.countBadge}>
                   {(currency === "all" ? 0 : 1) + (dateRange ? 1 : 0)}
                 </Badge>
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-80" align="start">
-            <div className="space-y-4">
-              <div className="font-medium">Filtros</div>
+          <PopoverContent className={movementsFiltersMovementsPage.popover} align="start">
+            <div className={movementsFiltersMovementsPage.popoverBody}>
+              <div className={movementsFiltersMovementsPage.popoverTitle}>Filtros</div>
 
               <Field>
                 <FieldLabel>Moneda</FieldLabel>
@@ -91,8 +115,8 @@ export function MovementsFilters({
                     <Button
                       variant="outline"
                       className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !dateRange && "text-muted-foreground",
+                        movementsFiltersMovementsPage.dateTrigger,
+                        !dateRange && movementsFiltersMovementsPage.dateTriggerEmpty,
                       )}
                     >
                       {dateRange?.from ? (
@@ -109,7 +133,10 @@ export function MovementsFilters({
                       )}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
+                  <PopoverContent
+                    className={movementsFiltersMovementsPage.calendarPopover}
+                    align="start"
+                  >
                     <Calendar
                       autoFocus={true}
                       mode="range"
@@ -123,8 +150,13 @@ export function MovementsFilters({
               </Field>
 
               {hasActiveFilters && (
-                <Button variant="ghost" size="sm" onClick={onClearFilters} className="w-full">
-                  <X className="mr-2 size-4" />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onClearFilters}
+                  className={movementsFiltersMovementsPage.clearButton}
+                >
+                  <X className={movementsFiltersMovementsPage.clearIcon} />
                   Limpiar filtros
                 </Button>
               )}
@@ -135,29 +167,29 @@ export function MovementsFilters({
 
       {/* Active Filters Display */}
       {hasActiveFilters && (
-        <div className="flex items-center gap-2">
+        <div className={movementsFiltersMovementsPage.activeFilters}>
           {currency !== "all" && (
-            <Badge variant="secondary" className="gap-1">
+            <Badge variant="secondary" className={movementsFiltersMovementsPage.activeBadge}>
               {currency}
               <button
                 type="button"
                 onClick={() => onCurrencyChange("all")}
-                className="ml-1 hover:text-foreground"
+                className={movementsFiltersMovementsPage.removeButton}
               >
-                <X className="size-3" />
+                <X className={movementsFiltersMovementsPage.removeIcon} />
               </button>
             </Badge>
           )}
           {dateRange && (
-            <Badge variant="secondary" className="gap-1">
+            <Badge variant="secondary" className={movementsFiltersMovementsPage.activeBadge}>
               {format(dateRange.from!, "MMM d")}
               {dateRange.to && ` - ${format(dateRange.to, "MMM d")}`}
               <button
                 type="button"
                 onClick={() => onDateRangeChange(undefined)}
-                className="ml-1 hover:text-foreground"
+                className={movementsFiltersMovementsPage.removeButton}
               >
-                <X className="size-3" />
+                <X className={movementsFiltersMovementsPage.removeIcon} />
               </button>
             </Badge>
           )}

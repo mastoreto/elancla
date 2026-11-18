@@ -12,8 +12,8 @@ import type {
   ReceiptModalMode,
   ReceiptRelatedOption,
 } from "@/app/(dashboard)/receipts/types/index";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
 
 interface ReceiptsPageContentProps {
   initialReceipts: Receipt[];

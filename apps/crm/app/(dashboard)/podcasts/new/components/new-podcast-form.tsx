@@ -10,12 +10,18 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { getChurchRoutePath } from "@/lib/church";
+import { cn } from "@/lib/utils";
 import { type NewPodcastFormValues, newPodcastSchema } from "../schema";
 import { DescriptionField } from "./fields/description-field";
 import { LinkField } from "./fields/link-field";
 import { ParticipantsField } from "./fields/participants-field";
 import { TitleField } from "./fields/title-field";
 import { HeroImageUploadField } from "./hero-image-upload-field";
+
+const newPodcastFormContentPage = {
+  header: cn("flex items-center justify-between gap-4 mb-6"),
+  layout: cn("grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start"),
+};
 
 interface NewPodcastFormProps {
   platformHosts: PodcastHost[];
@@ -60,7 +66,7 @@ export function NewPodcastForm({ platformHosts }: NewPodcastFormProps) {
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate={true}>
         {/* ── Page header ─────────────────────────────────────────── */}
-        <div className="flex items-center justify-between gap-4 mb-6">
+        <div className={newPodcastFormContentPage.header}>
           <div className="flex items-center gap-3 min-w-0">
             <Button
               type="button"
@@ -92,7 +98,7 @@ export function NewPodcastForm({ platformHosts }: NewPodcastFormProps) {
         <Separator className="mb-8" />
 
         {/* ── Two-column layout ────────────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start">
+        <div className={newPodcastFormContentPage.layout}>
           {/* ── Main column ──────────────────────────────────────── */}
           <div className="space-y-6">
             <TitleField control={control} />

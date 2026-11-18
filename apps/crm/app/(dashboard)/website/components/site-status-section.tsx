@@ -9,6 +9,26 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { updateSiteStatus } from "../actions";
 
+const siteStatusSectionContentPage = {
+  checkedOnline: cn(
+    "data-[state=checked]:border-income data-[state=checked]:bg-success-surface dark:data-[state=checked]:bg-success-surface/40",
+  ),
+  checkedMaintenance: cn(
+    "data-[state=checked]:border-oro data-[state=checked]:bg-warning-surface dark:data-[state=checked]:bg-warning-surface/40",
+  ),
+  checkedOffline: cn(
+    "data-[state=checked]:border-granada data-[state=checked]:bg-accent dark:data-[state=checked]:bg-accent/40",
+  ),
+  option: cn(
+    "group relative flex flex-col gap-2 rounded-xl border border-border bg-background p-4 text-left",
+  ),
+  optionInteractive: cn("cursor-pointer transition-all outline-none"),
+  optionHover: cn("hover:border-foreground/25 hover:shadow-sm"),
+  radio: cn("size-4 rounded-full border-2 border-border transition-colors"),
+  radioInner: cn("flex h-full w-full items-center justify-center"),
+  optionHint: cn("text-xs leading-relaxed text-muted-foreground"),
+};
+
 type SiteStatus = "online" | "maintenance" | "closed";
 
 const statusOptions: {
@@ -25,7 +45,7 @@ const statusOptions: {
     description: "El sitio web es visible y accesible para todos.",
     color: "text-income",
     dot: "bg-income",
-    ring: "data-[state=checked]:border-income data-[state=checked]:bg-success-surface dark:data-[state=checked]:bg-success-surface/40",
+    ring: siteStatusSectionContentPage.checkedOnline,
   },
   {
     value: "maintenance",
@@ -33,7 +53,7 @@ const statusOptions: {
     description: "Se muestra una página de mantenimiento a los visitantes.",
     color: "text-warning",
     dot: "bg-oro",
-    ring: "data-[state=checked]:border-oro data-[state=checked]:bg-warning-surface dark:data-[state=checked]:bg-warning-surface/40",
+    ring: siteStatusSectionContentPage.checkedMaintenance,
   },
   {
     value: "closed",
@@ -41,7 +61,7 @@ const statusOptions: {
     description: "El sitio está inaccesible. Solo los administradores pueden verlo.",
     color: "text-expense",
     dot: "bg-granada",
-    ring: "data-[state=checked]:border-granada data-[state=checked]:bg-accent dark:data-[state=checked]:bg-accent/40",
+    ring: siteStatusSectionContentPage.checkedOffline,
   },
 ];
 
@@ -81,9 +101,9 @@ export function SiteStatusSection({ initialStatus }: { initialStatus: SiteStatus
             key={opt.value}
             value={opt.value}
             className={cn(
-              "group relative flex flex-col gap-2 rounded-xl border border-border bg-background p-4 text-left",
-              "cursor-pointer transition-all outline-none",
-              "hover:border-foreground/25 hover:shadow-sm",
+              siteStatusSectionContentPage.option,
+              siteStatusSectionContentPage.optionInteractive,
+              siteStatusSectionContentPage.optionHover,
               "focus-visible:ring-[3px] focus-visible:ring-ring/30",
               opt.ring,
             )}
@@ -102,17 +122,17 @@ export function SiteStatusSection({ initialStatus }: { initialStatus: SiteStatus
               </span>
               <div
                 className={cn(
-                  "size-4 rounded-full border-2 border-border transition-colors",
+                  siteStatusSectionContentPage.radio,
                   "group-data-[state=checked]:border-current",
                   opt.color,
                 )}
               >
-                <RadioGroupPrimitive.Indicator className="flex h-full w-full items-center justify-center">
+                <RadioGroupPrimitive.Indicator className={siteStatusSectionContentPage.radioInner}>
                   <div className={cn("size-1.5 rounded-full", opt.dot)} />
                 </RadioGroupPrimitive.Indicator>
               </div>
             </div>
-            <p className="text-xs leading-relaxed text-muted-foreground">{opt.description}</p>
+            <p className={siteStatusSectionContentPage.optionHint}>{opt.description}</p>
           </RadioGroupPrimitive.Item>
         ))}
       </RadioGroupPrimitive.Root>
