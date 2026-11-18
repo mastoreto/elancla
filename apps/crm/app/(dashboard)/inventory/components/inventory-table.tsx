@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -6,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
 import type { InventoryItem } from "../types";
 import { InventoryStatusBadge } from "./inventory-status-badge";
@@ -14,7 +16,7 @@ const inventoryTableInventoryPage = {
   headRow: cn("bg-bruma hover:bg-bruma"),
   numeric: cn("text-right"),
   numericCell: cn("text-right tabular-nums"),
-  name: cn("font-semibold"),
+  name: cn("font-semibold hover:underline"),
   code: cn("font-mono text-[11px] text-muted-foreground"),
 };
 
@@ -39,7 +41,12 @@ export function InventoryTable({ items }: InventoryTableProps) {
         {items.map((item) => (
           <TableRow key={item.id}>
             <TableCell>
-              <p className={inventoryTableInventoryPage.name}>{item.name}</p>
+              <Link
+                className={inventoryTableInventoryPage.name}
+                href={getChurchRoutePath("inventory", item.id)}
+              >
+                {item.name}
+              </Link>
               <p className={inventoryTableInventoryPage.code}>{item.code}</p>
             </TableCell>
             <TableCell>{item.category}</TableCell>

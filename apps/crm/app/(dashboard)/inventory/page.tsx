@@ -1,5 +1,7 @@
 import { Boxes, HandCoins, Plus, Wrench } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
 import {
   DashboardCard,
@@ -21,9 +23,11 @@ export default function InventoryPage() {
     <>
       <DashboardPageHeader
         actions={
-          <Button className={inventoryPage.action} type="button">
-            <Plus aria-hidden="true" />
-            Nuevo ítem
+          <Button asChild={true} className={inventoryPage.action}>
+            <Link href={getChurchRoutePath("inventory", "new")}>
+              <Plus aria-hidden="true" />
+              Nuevo ítem
+            </Link>
           </Button>
         }
         description="Todo lo que la iglesia tiene: dónde está, en qué estado y quién responde por cada ítem."
