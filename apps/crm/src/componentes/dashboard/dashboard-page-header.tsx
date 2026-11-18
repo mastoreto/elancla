@@ -21,7 +21,7 @@ export function DashboardPageHeader({
   return (
     <header
       className={cn(
-        "mb-7 flex w-full max-w-[calc(100vw_-_2.5rem)] min-w-0 flex-col gap-5 border-b border-[var(--dashboard-border)] pb-6 lg:flex-row lg:items-end lg:justify-between",
+        "mb-7 flex w-full max-w-[calc(100vw_-_2.5rem)] min-w-0 flex-col gap-5 border-b border-[var(--border)] pb-6 lg:flex-row lg:items-end lg:justify-between",
         className,
       )}
       {...props}
@@ -40,7 +40,7 @@ export function DashboardPageHeader({
           ) : null}
         </h1>
         {description ? (
-          <p className="mt-3 max-w-full break-words text-sm leading-6 text-[var(--dashboard-ink-soft)] whitespace-normal sm:max-w-2xl">
+          <p className="mt-3 max-w-full break-words text-sm leading-6 text-[var(--tinta-suave)] whitespace-normal sm:max-w-2xl">
             {description}
           </p>
         ) : null}

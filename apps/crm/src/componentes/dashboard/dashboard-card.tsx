@@ -13,7 +13,7 @@ export function DashboardCard({ className, ...props }: DashboardCardProps) {
   return (
     <section
       className={cn(
-        "w-full max-w-[calc(100vw_-_2.5rem)] min-w-0 overflow-hidden rounded-[18px] border border-[var(--dashboard-border)] bg-[var(--dashboard-surface)] p-5 text-foreground shadow-[var(--dashboard-shadow-soft)] md:p-6",
+        "w-full max-w-[calc(100vw_-_2.5rem)] min-w-0 overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--card)] p-5 text-foreground shadow-[var(--sombra)] md:p-6",
         className,
       )}
       {...props}
@@ -31,7 +31,7 @@ export function DashboardCardHeader({
   return (
     <div
       className={cn(
-        "mb-5 flex min-w-0 flex-wrap items-end justify-between gap-4 border-b border-[var(--dashboard-border)] pb-4",
+        "mb-5 flex min-w-0 flex-wrap items-end justify-between gap-4 border-b border-[var(--border)] pb-4",
         className,
       )}
       {...props}

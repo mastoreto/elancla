@@ -165,7 +165,7 @@ function HeaderIconButton({ className, ...props }: React.ComponentProps<typeof B
   return (
     <Button
       className={cn(
-        "relative size-9 rounded-[10px] text-[var(--dashboard-ink-soft)] hover:bg-[var(--dashboard-canvas-muted)] hover:text-foreground",
+        "relative size-9 rounded-[10px] text-[var(--tinta-suave)] hover:bg-[var(--bruma)] hover:text-foreground",
         className,
       )}
       size="icon"
@@ -183,7 +183,7 @@ export function DashboardLayoutShell({ children }: DashboardLayoutShellProps) {
 
   return (
     <SidebarProvider
-      className="min-h-svh bg-[var(--dashboard-canvas)] text-foreground"
+      className="min-h-svh bg-[var(--background)] text-foreground"
       style={
         {
           "--sidebar-width": "16.5rem",
@@ -192,27 +192,27 @@ export function DashboardLayoutShell({ children }: DashboardLayoutShellProps) {
       }
     >
       <AppSidebar />
-      <SidebarInset className="min-w-0 overflow-hidden bg-[var(--dashboard-canvas)]">
-        <header className="sticky top-0 z-30 flex h-[72px] shrink-0 items-center gap-3 border-b border-[var(--dashboard-border)] bg-[var(--dashboard-surface)] px-4 md:px-7">
-          <SidebarTrigger className="size-9 rounded-[10px] text-[var(--dashboard-ink-soft)] hover:bg-[var(--dashboard-canvas-muted)] md:hidden" />
+      <SidebarInset className="min-w-0 overflow-hidden bg-[var(--background)]">
+        <header className="sticky top-0 z-30 flex h-[72px] shrink-0 items-center gap-3 border-b border-[var(--border)] bg-[var(--card)] px-4 md:px-7">
+          <SidebarTrigger className="size-9 rounded-[10px] text-[var(--tinta-suave)] hover:bg-[var(--bruma)] md:hidden" />
 
           <div className="flex min-w-0 flex-1 items-center gap-2">
             <span className="truncate text-xs text-muted-foreground">{currentRoute.section}</span>
-            <span className="text-[var(--dashboard-border-strong)]">/</span>
+            <span className="text-[var(--input)]">/</span>
             <span className="truncate font-display text-lg font-medium leading-none tracking-normal text-foreground">
               {currentRoute.title}
             </span>
           </div>
 
-          <div className="hidden items-center gap-2 rounded-full border border-[var(--dashboard-border)] px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground xl:inline-flex">
+          <div className="hidden items-center gap-2 rounded-full border border-[var(--border)] px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground xl:inline-flex">
             <span className="relative size-1.5 rounded-full bg-primary before:absolute before:inset-[-3px] before:rounded-full before:bg-primary/30 before:content-[''] before:animate-ping" />
             {churchConfig.name} activo
           </div>
 
-          <div className="hidden items-center gap-2 rounded-full border border-[var(--dashboard-border)] bg-[var(--dashboard-canvas-muted)] px-3 py-2 text-xs text-muted-foreground lg:flex">
+          <div className="hidden items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bruma)] px-3 py-2 text-xs text-muted-foreground lg:flex">
             <Search className="size-3.5" />
             Buscar
-            <kbd className="rounded border border-[var(--dashboard-border-strong)] px-1.5 font-mono text-[10px]">
+            <kbd className="rounded border border-[var(--input)] px-1.5 font-mono text-[10px]">
               Ctrl K
             </kbd>
           </div>
@@ -229,7 +229,7 @@ export function DashboardLayoutShell({ children }: DashboardLayoutShellProps) {
               <CircleHelp className="size-4" />
             </HeaderIconButton>
 
-            <div className="mx-1 hidden h-7 w-px bg-[var(--dashboard-border)] sm:block" />
+            <div className="mx-1 hidden h-7 w-px bg-[var(--border)] sm:block" />
 
             <Button
               asChild={true}
@@ -242,7 +242,7 @@ export function DashboardLayoutShell({ children }: DashboardLayoutShellProps) {
             </Button>
 
             <button
-              className="ml-1 flex items-center gap-2 rounded-full bg-[var(--dashboard-canvas-muted)] p-1 pr-2 text-left transition hover:bg-[var(--dashboard-canvas)] hover:shadow-[var(--dashboard-shadow-soft)]"
+              className="ml-1 flex items-center gap-2 rounded-full bg-[var(--bruma)] p-1 pr-2 text-left transition hover:bg-[var(--background)] hover:shadow-[var(--sombra)]"
               type="button"
             >
               <span className="flex size-8 items-center justify-center rounded-full bg-primary font-display text-sm font-medium text-white">

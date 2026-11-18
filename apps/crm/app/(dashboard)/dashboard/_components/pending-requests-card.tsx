@@ -17,7 +17,7 @@ export function PendingRequestsCard({ requests }: PendingRequestsCardProps) {
       <DashboardCardHeader
         action={
           <Link
-            className="hidden items-center gap-1.5 text-xs font-semibold text-[var(--dashboard-ink-soft)] transition hover:text-primary sm:inline-flex"
+            className="hidden items-center gap-1.5 text-xs font-semibold text-[var(--tinta-suave)] transition hover:text-primary sm:inline-flex"
             href={getChurchRoutePath("requests")}
           >
             Revisar
@@ -29,7 +29,7 @@ export function PendingRequestsCard({ requests }: PendingRequestsCardProps) {
       />
 
       {pendingRequests.length > 0 ? (
-        <div className="divide-y divide-[var(--dashboard-border)]">
+        <div className="divide-y divide-[var(--border)]">
           {pendingRequests.map((request) => (
             <article
               className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3 py-3 sm:grid-cols-[2rem_minmax(0,1fr)_auto]"
@@ -53,7 +53,7 @@ export function PendingRequestsCard({ requests }: PendingRequestsCardProps) {
           ))}
         </div>
       ) : (
-        <div className="flex min-h-[190px] flex-col items-center justify-center rounded-[14px] border border-dashed border-[var(--dashboard-border)] bg-[var(--dashboard-surface-muted)] text-center">
+        <div className="flex min-h-[190px] flex-col items-center justify-center rounded-[14px] border border-dashed border-[var(--border)] bg-[var(--bruma)] text-center">
           <CheckCircle2 className="mb-3 size-9 text-emerald-600" />
           <h3 className="text-sm font-semibold text-foreground">Sin pendientes</h3>
           <p className="mt-1 max-w-56 text-xs text-muted-foreground">

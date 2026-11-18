@@ -40,7 +40,7 @@ export function QuickActionsCard() {
 
           return (
             <Link
-              className="flex flex-col gap-3 rounded-[14px] border border-[var(--dashboard-border)] bg-[var(--dashboard-surface)] p-4 text-left transition hover:-translate-y-0.5 hover:border-foreground"
+              className="flex flex-col gap-3 rounded-[14px] border border-[var(--border)] bg-[var(--card)] p-4 text-left transition hover:-translate-y-0.5 hover:border-foreground"
               href={action.href}
               key={action.title}
             >

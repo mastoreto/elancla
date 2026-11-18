@@ -19,14 +19,14 @@ type DashboardMetricStripProps = {
 const toneClasses = {
   up: "text-emerald-600",
   down: "text-primary",
-  neutral: "text-[var(--dashboard-ink-muted)]",
+  neutral: "text-[var(--muted-foreground)]",
 };
 
 export function DashboardMetricStrip({ metrics, className }: DashboardMetricStripProps) {
   return (
     <div
       className={cn(
-        "mb-7 grid w-full max-w-[calc(100vw_-_2.5rem)] min-w-0 grid-cols-1 overflow-hidden rounded-[18px] border border-[var(--dashboard-border)] bg-[var(--dashboard-border)] shadow-[var(--dashboard-shadow-soft)] sm:grid-cols-2 xl:grid-cols-4",
+        "mb-7 grid w-full max-w-[calc(100vw_-_2.5rem)] min-w-0 grid-cols-1 overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--border)] shadow-[var(--sombra)] sm:grid-cols-2 xl:grid-cols-4",
         className,
       )}
     >
@@ -37,9 +37,8 @@ export function DashboardMetricStrip({ metrics, className }: DashboardMetricStri
         return (
           <article
             className={cn(
-              "relative min-w-0 overflow-hidden bg-[var(--dashboard-surface)] p-5 md:min-h-[160px] md:p-6",
-              metric.accent &&
-                "bg-[var(--dashboard-surface-strong)] text-[var(--dashboard-ink-inverse)]",
+              "relative min-w-0 overflow-hidden bg-[var(--card)] p-5 md:min-h-[160px] md:p-6",
+              metric.accent && "bg-[var(--sidebar)] text-[var(--lino)]",
             )}
             key={metric.label}
           >

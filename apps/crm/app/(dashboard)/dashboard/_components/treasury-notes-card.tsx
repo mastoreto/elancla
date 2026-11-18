@@ -23,7 +23,7 @@ export function TreasuryNotesCard() {
       <ul className="flex flex-col gap-3">
         {notes.map((note) => (
           <li
-            className="rounded-[14px] border border-[var(--dashboard-border)] bg-[var(--dashboard-surface)] p-4 data-[highlighted=true]:bg-[var(--dashboard-surface-muted)]"
+            className="rounded-[14px] border border-[var(--border)] bg-[var(--card)] p-4 data-[highlighted=true]:bg-[var(--bruma)]"
             data-highlighted={note.highlighted || undefined}
             key={note.label}
           >

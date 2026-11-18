@@ -24,7 +24,7 @@ export function ProjectBudgetCard({ projects }: ProjectBudgetCardProps) {
       <DashboardCardHeader
         action={
           <Link
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--dashboard-ink-soft)] transition hover:text-primary"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--tinta-suave)] transition hover:text-primary"
             href={getChurchRoutePath("projects")}
           >
             Abrir
@@ -51,7 +51,7 @@ export function ProjectBudgetCard({ projects }: ProjectBudgetCardProps) {
                 </div>
                 <span className="font-mono text-xs font-semibold text-foreground">{progress}%</span>
               </div>
-              <div className="h-2 rounded-full bg-[var(--dashboard-canvas-muted)]">
+              <div className="h-2 rounded-full bg-[var(--bruma)]">
                 <div
                   className={cn("h-full rounded-full bg-emerald-600", isHigh && "bg-primary")}
                   style={{ width: `${progress}%` }}

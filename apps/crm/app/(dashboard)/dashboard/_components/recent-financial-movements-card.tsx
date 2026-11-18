@@ -33,7 +33,7 @@ export function RecentFinancialMovementsCard({ movements }: RecentFinancialMovem
       <DashboardCardHeader
         action={
           <Link
-            className="hidden items-center gap-1.5 text-xs font-semibold text-[var(--dashboard-ink-soft)] transition hover:text-primary sm:inline-flex"
+            className="hidden items-center gap-1.5 text-xs font-semibold text-[var(--tinta-suave)] transition hover:text-primary sm:inline-flex"
             href={getChurchRoutePath("movements")}
           >
             Ver todo
@@ -44,14 +44,14 @@ export function RecentFinancialMovementsCard({ movements }: RecentFinancialMovem
         title="Movimientos recientes"
       />
 
-      <div className="divide-y divide-[var(--dashboard-border)]">
+      <div className="divide-y divide-[var(--border)]">
         {movements.map((movement, index) => {
           const tone = movementTone[movement.type];
           const Icon = tone.icon;
 
           return (
             <article
-              className="grid min-w-0 grid-cols-[2rem_minmax(0,1fr)] items-center gap-2 px-1 py-3 transition hover:bg-[var(--dashboard-surface-muted)] sm:grid-cols-[3rem_minmax(0,1fr)_7rem_7rem_auto] sm:gap-3"
+              className="grid min-w-0 grid-cols-[2rem_minmax(0,1fr)] items-center gap-2 px-1 py-3 transition hover:bg-[var(--bruma)] sm:grid-cols-[3rem_minmax(0,1fr)_7rem_7rem_auto] sm:gap-3"
               key={movement.id}
             >
               <span className="font-mono text-[11px] text-muted-foreground">

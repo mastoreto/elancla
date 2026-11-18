@@ -337,7 +337,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar
-      className="border-r border-white/10 bg-[var(--dashboard-surface-strong)] text-[var(--dashboard-ink-inverse)]"
+      className="border-r border-sidebar-border bg-sidebar text-sidebar-foreground"
       collapsible="icon"
     >
       <SidebarHeader className="h-[72px] justify-center border-b border-white/10 px-[22px] py-0">
