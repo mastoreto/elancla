@@ -1,0 +1,69 @@
+---
+// Bare document for the printable calendars: no site chrome, plus a screen-only toolbar to save as PDF.
+import 'src/styles/global.css';
+import cn from 'src/utils/cn';
+
+interface Props {
+  title: string;
+  hint: string;
+  /** CSS `@page size` value; emitted only for the requested format. */
+  pageSize: string;
+}
+const { title, hint, pageSize } = Astro.props;
+// Page setup for the print dialog: exact sheet size and keep every background color.
+const printSetup = `@page { size: ${pageSize}; margin: 0; } * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }`;
+const FOCUS = 'focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-obra-white';
+
+const printLayout = {
+  container: cn('m-0 bg-obra-gravel font-obra-sans text-obra-ink', 'print:bg-transparent'),
+  row: cn(
+    'sticky top-0 z-10 flex flex-wrap items-center gap-4 bg-obra-ink px-5 py-3 text-[14px]',
+    'text-white',
+    'print:hidden',
+  ),
+  link: cn('font-bold text-white no-underline', FOCUS),
+  hint: cn('min-w-48 flex-1 text-obra-dune'),
+  cpPrint: cn(
+    'min-h-11 cursor-pointer rounded-full bg-obra-red px-5.5 font-bold text-white',
+    FOCUS,
+  ),
+  stack: cn(
+    'ln box-border flex w-max min-w-full flex-col items-center gap-6 px-4 pt-6 pb-12',
+    '[&>*+*]:break-before-page',
+    'print:block print:w-auto print:p-0',
+  ),
+};
+---
+
+<!doctype html>
+<html lang="es-UY">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title}</title>
+    <style set:html={printSetup}></style>
+  </head>
+  <body class={printLayout.container}>
+    <div class={printLayout.row}>
+      <a href="/calendario-anual" class={printLayout.link}>← Volver al calendario</a>
+      <span class={printLayout.hint}>{hint}</span>
+      <button
+        type="button"
+        class={printLayout.cpPrint}
+        data-cp-print
+      >Guardar como PDF</button>
+    </div>
+    <div class={printLayout.stack}>
+      <slot />
+    </div>
+    <script>
+      const run = () => window.print();
+      document.querySelector('[data-cp-print]')?.addEventListener('click', run);
+      // Links from the site add ?descargar so the save dialog opens as soon as fonts are ready.
+      if (new URLSearchParams(location.search).has('descargar')) {
+        document.fonts.ready.then(() => setTimeout(run, 400));
+      }
+    </script>
+  </body>
+</html>

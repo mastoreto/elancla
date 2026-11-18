@@ -1,0 +1,57 @@
+---
+// Pill button of the "obra" system. Renders an <a> when `href` is given, a <button> otherwise.
+// `arrow` adds the white dot with →. Extra classes merge over the variant (later wins).
+import cn from 'src/utils/cn';
+
+type Variant = 'primary' | 'ghost' | 'dark' | 'light';
+
+interface Props {
+  href?: string;
+  /** Render a <span> that only looks like a button (for use inside another link). */
+  as?: 'span';
+  variant?: Variant;
+  arrow?: boolean;
+  /** Extra classes for the arrow dot. */
+  dotClass?: string;
+  type?: 'button' | 'submit';
+  class?: string;
+  [attr: string]: unknown;
+}
+
+const {
+  as,
+  href,
+  variant = 'primary',
+  arrow = false,
+  dotClass,
+  type = 'button',
+  class: className,
+  ...rest
+} = Astro.props;
+
+const BASE = [
+  'inline-flex min-h-13 items-center gap-2.5 rounded-full pr-2 pl-6 font-obra-sans-bold text-[1rem] no-underline',
+  '[transition:transform_0.5s_var(--ease-obra),box-shadow_0.5s_var(--ease-obra)]',
+  'hover:[transform:translateY(-2px)] active:[transform:scale(0.98)] active:[transition-duration:0.12s]',
+];
+const VARIANT: Record<Variant, string> = {
+  primary: 'bg-obra-red text-white hover:shadow-[0_14px_28px_-14px_rgba(168,20,27,0.55)]',
+  ghost:
+    'border-[1.5px] border-obra-ink bg-transparent px-6 text-obra-ink hover:shadow-[0_14px_28px_-14px_rgba(21,21,21,0.45)]',
+  light: 'bg-obra-cream pr-5.5 pl-6.5 text-obra-ink hover:shadow-[0_14px_28px_-14px_rgba(0,0,0,0.6)]',
+  dark: 'bg-obra-ink px-6.5 text-white hover:shadow-[0_14px_28px_-14px_rgba(21,21,21,0.6)]',
+};
+const DOT = 'inline-flex size-9.5 items-center justify-center rounded-full bg-obra-white text-obra-red';
+
+const Tag = href ? 'a' : (as ?? 'button');
+
+const button = {
+  container: cn(BASE, VARIANT[variant], className),
+  arrow: cn(DOT, dotClass),
+};
+---
+
+<Tag href={href} type={href || as ? undefined : type} class={button.container} {...rest}>
+  <slot />
+  {arrow && <span class={button.arrow} aria-hidden="true">→</span>}
+</Tag>

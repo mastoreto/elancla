@@ -1,0 +1,38 @@
+---
+// BRAND RULE: the wordmark must look the same everywhere the logo appears.
+// "IGLESIA BAUTISTA" is uppercase, regular weight (not bold) and justified to span exactly
+// the width of "EL ANCLA" (first letter to last letter); "EL ANCLA" is the bold futura name.
+// Size it by setting the font-size of the wrapper (the label scales with it).
+import cn from 'src/utils/cn';
+
+interface Props {
+  label: string;
+  name: string;
+  class?: string;
+}
+
+const { label, name, class: className } = Astro.props;
+
+const logoText = {
+  container: cn('inline-flex flex-col leading-none', className),
+  label: cn(
+    'w-full text-[0.4em] tracking-[0.22em] font-futura font-normal uppercase opacity-60',
+    '[text-align-last:justify]',
+  ),
+  name: cn(
+    'font-display tracking-tight font-futura-bold font-semibold leading-none uppercase',
+    'whitespace-nowrap',
+  ),
+};
+---
+
+<div class={logoText.container}>
+  <div
+    class={logoText.label}
+  >
+    {label}
+  </div>
+  <div class={logoText.name}>
+    {name}
+  </div>
+</div>

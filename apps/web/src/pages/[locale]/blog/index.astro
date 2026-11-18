@@ -1,9 +1,9 @@
 ---
-import BlogPageTemplate from 'src/components/Blog/BlogPageTemplate.astro';
+import BlogPageTemplate from 'src/sections/blog/BlogPageTemplate';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
-import Layout from 'src/layouts/Layout.astro';
+import Layout from 'src/layouts/Layout';
 import {
   buildBlogPageData,
   getAllCategories,
@@ -51,7 +51,7 @@ const copy = getMessages(locale).blog;
 </Layout>
 
 <script>
-  import { initBlog } from 'src/scripts/blog';
+  import { initBlog } from 'src/sections/blog/scripts/blog';
 
   initBlog();
 </script>
