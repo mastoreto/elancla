@@ -12,6 +12,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+
+const receiptsTableReceiptsPage = {
+  empty: cn(
+    "flex min-h-56 items-center justify-center rounded-xl border border-dashed border-border/60 bg-muted/20 px-6 text-center",
+  ),
+};
 
 interface ReceiptsTableProps {
   receipts: Receipt[];
@@ -122,7 +129,7 @@ export function ReceiptsTable({
         ) : null}
 
         {!errorMessage && !isLoading && receipts.length === 0 ? (
-          <div className="flex min-h-56 items-center justify-center rounded-xl border border-dashed border-border/60 bg-muted/20 px-6 text-center">
+          <div className={receiptsTableReceiptsPage.empty}>
             <p className="text-muted-foreground text-sm">No hay boletas registradas</p>
           </div>
         ) : null}

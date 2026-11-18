@@ -1,5 +1,11 @@
 import type { Receipt } from "@/app/(dashboard)/receipts/types/index";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+
+const receiptDetailsPanelReceiptsPage = {
+  item: cn("space-y-1 rounded-lg border bg-muted/20 p-4"),
+  itemLabel: cn("text-muted-foreground text-xs uppercase tracking-wide"),
+};
 
 interface ReceiptDetailsPanelProps {
   receipt: Receipt;
@@ -42,8 +48,8 @@ export function ReceiptDetailsPanel({ receipt }: ReceiptDetailsPanelProps) {
       </CardHeader>
       <CardContent className="grid gap-4 sm:grid-cols-2">
         {detailItems.map((item) => (
-          <div key={item.label} className="space-y-1 rounded-lg border bg-muted/20 p-4">
-            <p className="text-muted-foreground text-xs uppercase tracking-wide">{item.label}</p>
+          <div key={item.label} className={receiptDetailsPanelReceiptsPage.item}>
+            <p className={receiptDetailsPanelReceiptsPage.itemLabel}>{item.label}</p>
             <p className="font-medium text-foreground">{item.value}</p>
           </div>
         ))}

@@ -159,14 +159,6 @@ const routeMeta: RouteMeta[] = [
     ctaLabel: "Publicar informe",
     ctaHref: getChurchRoutePath("assembly"),
   },
-  {
-    route: "general",
-    internalRoute: churchToDashboardRouteMap.general,
-    section: "Contenido",
-    title: "General",
-    ctaLabel: "Nueva categoría",
-    ctaHref: getChurchRoutePath("general"),
-  },
 ];
 
 function isRouteMatch(pathname: string, meta: RouteMeta) {

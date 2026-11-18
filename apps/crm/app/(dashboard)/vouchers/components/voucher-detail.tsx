@@ -1,5 +1,10 @@
 import type { Voucher } from "@/app/(dashboard)/vouchers/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+
+const voucherDetailVouchersPage = {
+  itemLabel: cn("text-muted-foreground text-xs uppercase tracking-wide"),
+};
 
 interface VoucherDetailProps {
   voucher: Voucher;
@@ -53,7 +58,7 @@ export function VoucherDetail({ voucher }: VoucherDetailProps) {
               item.fullWidth ? "md:col-span-2" : "",
             ].join(" ")}
           >
-            <p className="text-muted-foreground text-xs uppercase tracking-wide">{item.label}</p>
+            <p className={voucherDetailVouchersPage.itemLabel}>{item.label}</p>
             <p
               className={[
                 "text-foreground whitespace-pre-wrap font-medium",

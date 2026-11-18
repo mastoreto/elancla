@@ -16,6 +16,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+
+const receiptModalReceiptsPage = {
+  layout: cn("grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]"),
+};
 
 interface ReceiptModalProps {
   open: boolean;
@@ -77,12 +82,12 @@ export function ReceiptModal({
         </DialogHeader>
 
         {mode === "view" && receipt ? (
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+          <div className={receiptModalReceiptsPage.layout}>
             <ReceiptDetailsPanel receipt={receipt} />
             <ReceiptFilePreview fileUrl={previewFileUrl} receiptNumber={previewNumber} />
           </div>
         ) : (
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+          <div className={receiptModalReceiptsPage.layout}>
             <ReceiptForm
               values={values}
               relatedOptions={relatedOptions}

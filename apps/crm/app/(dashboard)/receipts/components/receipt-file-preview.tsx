@@ -1,5 +1,26 @@
 import { FileImage, FileText, Paperclip } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+
+const receiptFilePreviewReceiptsPage = {
+  pdfPreview: cn(
+    "from-expense to-warning dark:from-muted dark:to-muted/60 flex aspect-[4/3] flex-col items-center justify-center rounded-xl border border-dashed border-border bg-gradient-to-br p-6 text-center",
+  ),
+  pdfIcon: cn(
+    "mb-4 flex size-16 items-center justify-center rounded-full bg-accent text-accent-foreground dark:text-expense",
+  ),
+  imagePreview: cn(
+    "from-secondary-foreground via-secondary-foreground to-income dark:from-muted dark:via-muted/80 dark:to-muted/60 flex aspect-[4/3] flex-col items-center justify-center rounded-xl border border-dashed border-border bg-gradient-to-br p-6 text-center",
+  ),
+  imageIcon: cn(
+    "mb-4 flex size-16 items-center justify-center rounded-full bg-secondary text-secondary-foreground",
+  ),
+  emptyPreview: cn(
+    "flex aspect-[4/3] items-center justify-center rounded-xl border border-dashed border-border bg-muted/20 p-6 text-center",
+  ),
+  emptyIcon: cn("bg-muted mx-auto flex size-14 items-center justify-center rounded-full"),
+  fileInfo: cn("bg-muted/30 flex items-center gap-3 rounded-lg border px-4 py-3 text-sm"),
+};
 
 interface ReceiptFilePreviewProps {
   fileUrl?: string;
@@ -48,8 +69,8 @@ export function ReceiptFilePreview({ fileUrl, receiptNumber }: ReceiptFilePrevie
       </CardHeader>
       <CardContent className="space-y-4">
         {previewVariant === "pdf" ? (
-          <div className="from-expense to-warning dark:from-muted dark:to-muted/60 flex aspect-[4/3] flex-col items-center justify-center rounded-xl border border-dashed border-border bg-gradient-to-br p-6 text-center">
-            <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-accent text-accent-foreground dark:text-expense">
+          <div className={receiptFilePreviewReceiptsPage.pdfPreview}>
+            <div className={receiptFilePreviewReceiptsPage.pdfIcon}>
               <FileText className="size-8" />
             </div>
             <p className="font-medium text-foreground">Vista previa de PDF</p>
@@ -60,8 +81,8 @@ export function ReceiptFilePreview({ fileUrl, receiptNumber }: ReceiptFilePrevie
         ) : null}
 
         {previewVariant === "image" ? (
-          <div className="from-secondary-foreground via-secondary-foreground to-income dark:from-muted dark:via-muted/80 dark:to-muted/60 flex aspect-[4/3] flex-col items-center justify-center rounded-xl border border-dashed border-border bg-gradient-to-br p-6 text-center">
-            <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
+          <div className={receiptFilePreviewReceiptsPage.imagePreview}>
+            <div className={receiptFilePreviewReceiptsPage.imageIcon}>
               <FileImage className="size-8" />
             </div>
             <p className="font-medium text-foreground">Vista previa de imagen</p>
@@ -72,9 +93,9 @@ export function ReceiptFilePreview({ fileUrl, receiptNumber }: ReceiptFilePrevie
         ) : null}
 
         {previewVariant === "empty" ? (
-          <div className="flex aspect-[4/3] items-center justify-center rounded-xl border border-dashed border-border bg-muted/20 p-6 text-center">
+          <div className={receiptFilePreviewReceiptsPage.emptyPreview}>
             <div className="space-y-2">
-              <div className="bg-muted mx-auto flex size-14 items-center justify-center rounded-full">
+              <div className={receiptFilePreviewReceiptsPage.emptyIcon}>
                 <Paperclip className="text-muted-foreground size-6" />
               </div>
               <p className="font-medium text-foreground">Sin archivo adjunto</p>
@@ -86,7 +107,7 @@ export function ReceiptFilePreview({ fileUrl, receiptNumber }: ReceiptFilePrevie
         ) : null}
 
         {fileName ? (
-          <div className="bg-muted/30 flex items-center gap-3 rounded-lg border px-4 py-3 text-sm">
+          <div className={receiptFilePreviewReceiptsPage.fileInfo}>
             <Paperclip className="text-muted-foreground size-4" />
             <div className="min-w-0">
               <p className="truncate font-medium text-foreground">{fileName}</p>

@@ -1,5 +1,10 @@
 import { FileWarning, ShieldCheck, Workflow } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+
+const voucherGuidancePanelVouchersPage = {
+  icon: cn("mb-3 flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary"),
+};
 
 const guidanceItems = [
   {
@@ -37,7 +42,7 @@ export function VoucherGuidancePanel() {
 
           return (
             <div key={item.title} className="rounded-lg border bg-muted/20 p-4">
-              <div className="mb-3 flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <div className={voucherGuidancePanelVouchersPage.icon}>
                 <Icon className="size-5" />
               </div>
               <p className="font-medium text-foreground">{item.title}</p>

@@ -12,6 +12,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+
+const vouchersTableVouchersPage = {
+  card: cn("rounded-xl border bg-card p-4 shadow-xs"),
+  responsibleCard: cn("rounded-lg bg-muted/30 p-3 sm:col-span-2"),
+  empty: cn(
+    "flex min-h-56 items-center justify-center rounded-xl border border-dashed border-border/60 bg-muted/20 px-6 text-center",
+  ),
+  amountBadge: cn("rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary"),
+  termLabel: cn("text-muted-foreground text-xs uppercase tracking-wide"),
+};
 
 interface VouchersTableProps {
   vouchers: Voucher[];
@@ -186,7 +197,7 @@ function LoadingCards() {
 
 function EmptyState() {
   return (
-    <div className="flex min-h-56 items-center justify-center rounded-xl border border-dashed border-border/60 bg-muted/20 px-6 text-center">
+    <div className={vouchersTableVouchersPage.empty}>
       <p className="text-muted-foreground text-sm">No hay comprobantes registrados</p>
     </div>
   );
@@ -232,36 +243,28 @@ export function VouchersTable({
           <>
             <div className="space-y-3 md:hidden">
               {vouchers.map((voucher) => (
-                <article key={voucher.id} className="rounded-xl border bg-card p-4 shadow-xs">
+                <article key={voucher.id} className={vouchersTableVouchersPage.card}>
                   <div className="flex items-start justify-between gap-3">
                     <div className="space-y-1">
                       <h3 className="font-medium text-foreground">{voucher.description}</h3>
                       <p className="text-muted-foreground text-sm">{voucher.relatedEntity}</p>
                     </div>
-                    <div className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-                      {voucher.currency}
-                    </div>
+                    <div className={vouchersTableVouchersPage.amountBadge}>{voucher.currency}</div>
                   </div>
 
                   <dl className="mt-4 grid gap-3 sm:grid-cols-2">
                     <div className="rounded-lg bg-muted/30 p-3">
-                      <dt className="text-muted-foreground text-xs uppercase tracking-wide">
-                        Monto
-                      </dt>
+                      <dt className={vouchersTableVouchersPage.termLabel}>Monto</dt>
                       <dd className="mt-1 font-medium">
                         {formatCurrency(voucher.currency, voucher.amount)}
                       </dd>
                     </div>
                     <div className="rounded-lg bg-muted/30 p-3">
-                      <dt className="text-muted-foreground text-xs uppercase tracking-wide">
-                        Fecha
-                      </dt>
+                      <dt className={vouchersTableVouchersPage.termLabel}>Fecha</dt>
                       <dd className="mt-1 font-medium">{formatDate(voucher.date)}</dd>
                     </div>
-                    <div className="rounded-lg bg-muted/30 p-3 sm:col-span-2">
-                      <dt className="text-muted-foreground text-xs uppercase tracking-wide">
-                        Responsable
-                      </dt>
+                    <div className={vouchersTableVouchersPage.responsibleCard}>
+                      <dt className={vouchersTableVouchersPage.termLabel}>Responsable</dt>
                       <dd className="mt-1 font-medium">{voucher.responsible}</dd>
                     </div>
                   </dl>

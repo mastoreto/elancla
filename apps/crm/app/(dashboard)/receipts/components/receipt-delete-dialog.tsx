@@ -7,6 +7,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+
+const receiptDeleteDialogReceiptsPage = {
+  icon: cn(
+    "bg-warning-surface text-warning mb-4 flex size-12 items-center justify-center rounded-full",
+  ),
+  footer: cn("flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"),
+};
 
 interface ReceiptDeleteDialogProps {
   open: boolean;
@@ -27,7 +35,7 @@ export function ReceiptDeleteDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md" showCloseButton={false}>
         <DialogHeader>
-          <div className="bg-warning-surface text-warning mb-4 flex size-12 items-center justify-center rounded-full">
+          <div className={receiptDeleteDialogReceiptsPage.icon}>
             <TriangleAlert className="size-6" />
           </div>
           <DialogTitle>Eliminar boleta</DialogTitle>
@@ -41,7 +49,7 @@ export function ReceiptDeleteDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+        <div className={receiptDeleteDialogReceiptsPage.footer}>
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancelar
           </Button>

@@ -14,6 +14,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+
+const receiptFormReceiptsPage = {
+  fields: cn("grid gap-4 md:grid-cols-2 [&>[data-slot=field]]:gap-2"),
+  actions: cn("flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"),
+};
 
 interface ReceiptFormProps {
   values: ReceiptFormValues;
@@ -47,7 +53,7 @@ export function ReceiptForm({
         onSubmit();
       }}
     >
-      <FieldGroup className="grid gap-4 md:grid-cols-2 [&>[data-slot=field]]:gap-2">
+      <FieldGroup className={receiptFormReceiptsPage.fields}>
         <Field>
           <FieldLabel htmlFor="receipt-number">Número de boleta</FieldLabel>
           <Input
@@ -159,7 +165,7 @@ export function ReceiptForm({
         </Field>
       </FieldGroup>
 
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+      <div className={receiptFormReceiptsPage.actions}>
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancelar
         </Button>

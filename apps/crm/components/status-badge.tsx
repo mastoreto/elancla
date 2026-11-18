@@ -7,7 +7,7 @@ interface StatusBadgeProps {
   className?: string;
 }
 
-const statusConfig: Record<RequestStatus, { label: string; className: string }> = {
+const statusBadgeRequestsPageStatus = {
   pending: {
     label: "Pendiente",
     className: "bg-warning-surface text-warning",
@@ -20,13 +20,16 @@ const statusConfig: Record<RequestStatus, { label: string; className: string }> 
     label: "Rechazada",
     className: "bg-expense/20 text-expense",
   },
-};
+} satisfies Record<RequestStatus, { label: string; className: string }>;
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
-  const config = statusConfig[status];
+  const config = statusBadgeRequestsPageStatus[status];
+  const statusBadgeRequestsPage = {
+    badge: cn("rounded-full border-0", config.className, className),
+  };
 
   return (
-    <Badge variant="secondary" className={cn(config.className, className)}>
+    <Badge variant="secondary" className={statusBadgeRequestsPage.badge}>
       {config.label}
     </Badge>
   );

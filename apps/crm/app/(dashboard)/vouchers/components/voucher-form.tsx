@@ -15,6 +15,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+
+const voucherFormVouchersPage = {
+  fields: cn("grid gap-4 md:grid-cols-2 [&>[data-slot=field]]:gap-2"),
+  actions: cn("flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"),
+};
 
 interface VoucherFormProps {
   values: VoucherFormValues;
@@ -56,7 +62,7 @@ export function VoucherForm({
         onSubmit();
       }}
     >
-      <FieldGroup className="grid gap-4 md:grid-cols-2 [&>[data-slot=field]]:gap-2">
+      <FieldGroup className={voucherFormVouchersPage.fields}>
         <Field className="md:col-span-2">
           <FieldLabel htmlFor="voucher-description">Descripción</FieldLabel>
           <Input
@@ -162,7 +168,7 @@ export function VoucherForm({
         </Field>
       </FieldGroup>
 
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+      <div className={voucherFormVouchersPage.actions}>
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancelar
         </Button>

@@ -16,67 +16,81 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
-interface ApprovalActionsProps {
+interface RequestApprovalActionsProps {
   requestId: string;
   onApprove: (requestId: string, comment?: string) => void;
   onReject: (requestId: string, comment?: string) => void;
   disabled?: boolean;
+  className?: string;
 }
 
-export function ApprovalActions({
+export function RequestApprovalActions({
   requestId,
   onApprove,
   onReject,
   disabled = false,
-}: ApprovalActionsProps) {
+  className,
+}: RequestApprovalActionsProps) {
   const [approveComment, setApproveComment] = useState("");
   const [rejectComment, setRejectComment] = useState("");
+  const requestApprovalActionsRequestsPage = {
+    container: cn("flex items-center gap-2", className),
+    approve: cn("border-income text-income hover:bg-income hover:text-income-foreground"),
+    reject: cn("border-expense text-expense hover:bg-expense hover:text-expense-foreground"),
+    buttonIcon: cn("mr-1.5 size-4"),
+    field: cn("py-4"),
+    label: cn("text-sm font-medium"),
+    textarea: cn("mt-2"),
+    confirmApprove: cn("bg-income text-income-foreground hover:bg-income/90"),
+    confirmReject: cn("bg-expense text-expense-foreground hover:bg-expense/90"),
+  };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className={requestApprovalActionsRequestsPage.container}>
       <AlertDialog>
         <AlertDialogTrigger asChild={true}>
           <Button
+            className={requestApprovalActionsRequestsPage.approve}
+            disabled={disabled}
             size="sm"
             variant="outline"
-            className="border-income text-income hover:bg-income hover:text-income-foreground"
-            disabled={disabled}
           >
-            <CheckCircle2 className="mr-1.5 size-4" />
-            Approve
+            <CheckCircle2 className={requestApprovalActionsRequestsPage.buttonIcon} />
+            Aprobar
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Aprobar Solicitud</AlertDialogTitle>
+            <AlertDialogTitle>Aprobar solicitud</AlertDialogTitle>
             <AlertDialogDescription>
-              ¿Estás seguro de que deseas aprobar esta solicitud de fondos? Esta acción no se puede
+              ¿Seguro que quieres aprobar esta solicitud de fondos? Esta acción no se puede
               deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="py-4">
-            <Label htmlFor="approve-comment" className="text-sm font-medium">
+          <div className={requestApprovalActionsRequestsPage.field}>
+            <Label className={requestApprovalActionsRequestsPage.label} htmlFor="approve-comment">
               Comentario (opcional)
             </Label>
             <Textarea
+              className={requestApprovalActionsRequestsPage.textarea}
               id="approve-comment"
+              onChange={(event) => setApproveComment(event.target.value)}
               placeholder="Añade notas sobre esta aprobación..."
               value={approveComment}
-              onChange={(e) => setApproveComment(e.target.value)}
-              className="mt-2"
             />
           </div>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
+              className={requestApprovalActionsRequestsPage.confirmApprove}
               onClick={() => {
                 onApprove(requestId, approveComment || undefined);
                 setApproveComment("");
               }}
-              className="bg-income text-income-foreground hover:bg-income/90"
             >
-              Aprobar Solicitud
+              Aprobar solicitud
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -85,45 +99,45 @@ export function ApprovalActions({
       <AlertDialog>
         <AlertDialogTrigger asChild={true}>
           <Button
+            className={requestApprovalActionsRequestsPage.reject}
+            disabled={disabled}
             size="sm"
             variant="outline"
-            className="border-expense text-expense hover:bg-expense hover:text-expense-foreground"
-            disabled={disabled}
           >
-            <XCircle className="mr-1.5 size-4" />
-            Reject
+            <XCircle className={requestApprovalActionsRequestsPage.buttonIcon} />
+            Rechazar
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Rechazar Solicitud</AlertDialogTitle>
+            <AlertDialogTitle>Rechazar solicitud</AlertDialogTitle>
             <AlertDialogDescription>
-              ¿Estás seguro de que deseas rechazar esta solicitud de fondos? Esta acción no se puede
+              ¿Seguro que quieres rechazar esta solicitud de fondos? Esta acción no se puede
               deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="py-4">
-            <Label htmlFor="reject-comment" className="text-sm font-medium">
+          <div className={requestApprovalActionsRequestsPage.field}>
+            <Label className={requestApprovalActionsRequestsPage.label} htmlFor="reject-comment">
               Razón del rechazo (opcional)
             </Label>
             <Textarea
+              className={requestApprovalActionsRequestsPage.textarea}
               id="reject-comment"
-              placeholder="Proporciona una razón para rechazar esta solicitud..."
+              onChange={(event) => setRejectComment(event.target.value)}
+              placeholder="Explica por qué se rechaza esta solicitud..."
               value={rejectComment}
-              onChange={(e) => setRejectComment(e.target.value)}
-              className="mt-2"
             />
           </div>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
+              className={requestApprovalActionsRequestsPage.confirmReject}
               onClick={() => {
                 onReject(requestId, rejectComment || undefined);
                 setRejectComment("");
               }}
-              className="bg-expense text-expense-foreground hover:bg-expense/90"
             >
-              Reject Request
+              Rechazar solicitud
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

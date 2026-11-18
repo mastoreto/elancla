@@ -19,7 +19,6 @@ import {
   Search,
   Settings,
   ShieldCheck,
-  Tags,
   Vote,
 } from "lucide-react";
 import Link from "next/link";
@@ -100,12 +99,6 @@ const navigationSections: NavigationSection[] = [
         title: "Podcasts",
         url: getChurchRoutePath("podcasts"),
         icon: Mic,
-      },
-      {
-        type: "link",
-        title: "General",
-        url: getChurchRoutePath("general"),
-        icon: Tags,
       },
     ],
   },
