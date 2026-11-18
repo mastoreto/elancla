@@ -1,0 +1,189 @@
+---
+import Button from 'src/components/ui/Button';
+import { getSiteConfig } from '@ancla/content';
+import type { Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { getHtmlLang, localizePath } from 'src/i18n/utils';
+import Layout from 'src/layouts/Layout';
+import { buildFaqLd, buildServiceEventLd, mapLink } from 'src/utils/seo';
+import cn from 'src/utils/cn';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const copy = getMessages(locale).visit;
+const sunday = getMessages(locale).landing.sunday;
+const site = Astro.locals.site ?? (await getSiteConfig());
+const path = localizePath('/visitanos', locale);
+const coords = `${site.geo.latitude},${site.geo.longitude}`;
+const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${coords}`;
+const embedUrl = `https://www.google.com/maps?ll=${coords}&z=17&output=embed`;
+
+const faqLd = buildFaqLd(copy.faq.items);
+const jsonLd = [
+  ...(faqLd ? [faqLd] : []),
+  buildServiceEventLd({
+    name: copy.schema.eventName,
+    description: copy.schema.eventDescription,
+    url: new URL(path, site.url).toString(),
+    site,
+    language: getHtmlLang(locale),
+  }),
+];
+const WRAP = 'mx-auto max-w-275 px-gutter';
+const SECTION = `${WRAP} flex flex-col gap-5 pt-[clamp(3rem,7vw,5.5rem)]`;
+const H2 = 'ln-h max-w-[22ch] text-[clamp(1.8rem,4vw,3rem)] text-balance';
+const LEAD = 'm-0 max-w-[56ch] text-[1.125rem] leading-[1.6] text-obra-ink-soft';
+const ACTIONS = 'flex flex-wrap items-center gap-x-4 gap-y-3';
+const ITEM_TITLE = 'mx-0 mt-0 mb-1 font-obra-sans-bold text-[1.125rem]';
+const ITEM_TEXT = 'm-0 leading-[1.55] text-obra-ink-soft';
+
+const visitPage = {
+  container: cn('ln bg-obra-paper pt-[clamp(6rem,12vw,9rem)] pb-[clamp(3rem,8vw,6rem)]'),
+  hero: cn(WRAP, 'flex flex-col items-start gap-5'),
+  nav: cn('flex gap-2 text-[0.875rem] text-obra-ink-soft'),
+  home: cn('text-inherit'),
+  heroEyebrow: cn('ln-eyebrow'),
+  heroTitle: cn('ln-h text-[clamp(2.6rem,7vw,5rem)]'),
+  heroBody: cn(LEAD),
+  heroActions: cn(ACTIONS),
+  when: cn(SECTION),
+  whenEyebrow: cn('ln-eyebrow'),
+  whenTitle: cn(H2),
+  whenRows: cn('m-0 flex max-w-180 list-none flex-col gap-2 p-0'),
+  whenRow: cn(
+    'grid grid-cols-[5.5rem_1fr] gap-4 border-t border-obra-mist py-4',
+    'max-[800px]:grid-cols-[4.25rem_1fr]',
+  ),
+  whenTime: cn('font-obra-serif text-[2rem] leading-none text-obra-red'),
+  whenRowTitle: cn(ITEM_TITLE),
+  whenRowText: cn(ITEM_TEXT),
+  where: cn(
+    WRAP,
+    'grid grid-cols-[1fr_1fr] flex-col items-stretch gap-[clamp(1.5rem,4vw,3rem)]',
+    'pt-[clamp(3rem,7vw,5.5rem)]',
+    'max-[800px]:grid-cols-[1fr]',
+  ),
+  whereCopy: cn('flex min-w-0 flex-col gap-5'),
+  whereEyebrow: cn('ln-eyebrow'),
+  whereTitle: cn(H2),
+  whereStreet: cn(LEAD),
+  whereActions: cn(ACTIONS),
+  mapsLink: cn('font-obra-sans-bold text-obra-ink'),
+  whereMap: cn('h-full min-h-80 w-full rounded-3xl border-0 bg-obra-mist'),
+  expect: cn(SECTION),
+  expectEyebrow: cn('ln-eyebrow'),
+  expectTitle: cn(H2),
+  expectList: cn('m-0 grid list-none grid-cols-[repeat(auto-fit,minmax(210px,1fr))] gap-4 p-0'),
+  expectItem: cn('rounded-[20px] bg-obra-white p-5'),
+  expectItemTitle: cn(ITEM_TITLE),
+  expectItemText: cn(ITEM_TEXT),
+  faq: cn(SECTION),
+  faqEyebrow: cn('ln-eyebrow'),
+  faqTitle: cn(H2),
+  faqList: cn('flex max-w-190 flex-col'),
+  faqItem: cn('border-t border-obra-mist py-4'),
+  faqQuestion: cn('cursor-pointer font-obra-sans-bold text-[1.0625rem]'),
+  faqAnswer: cn('mx-0 mt-3 mb-0 max-w-[62ch] leading-[1.6] text-obra-ink-soft'),
+  cta: cn(SECTION),
+  ctaTitle: cn(H2),
+  ctaActions: cn(ACTIONS),
+};
+---
+
+<Layout
+  title={copy.seo.title}
+  description={copy.seo.description}
+  keywords={copy.seo.keywords}
+  breadcrumbs={[
+    { name: copy.breadcrumbs.home, url: localizePath('/', locale) },
+    { name: copy.breadcrumbs.current, url: path },
+  ]}
+  jsonLd={jsonLd}
+  locale={locale}
+>
+  <div class={visitPage.container}>
+    <section class={visitPage.hero}>
+      <nav class={visitPage.nav} aria-label="Breadcrumb">
+        <a class={visitPage.home} href={localizePath('/', locale)}>{copy.breadcrumbs.home}</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{copy.breadcrumbs.current}</span>
+      </nav>
+      <span class={visitPage.heroEyebrow}>{copy.hero.eyebrow}</span>
+      <h1 class={visitPage.heroTitle}>{copy.hero.title}</h1>
+      <p class={visitPage.heroBody}>{copy.hero.body}</p>
+      <div class={visitPage.heroActions}>
+        <Button href={directionsUrl} arrow target="_blank" rel="noopener">{copy.hero.cta}</Button>
+      </div>
+    </section>
+
+    <section class={visitPage.when} aria-labelledby="vs-when">
+      <span class={visitPage.whenEyebrow}>{copy.when.eyebrow}</span>
+      <h2 id="vs-when" class={visitPage.whenTitle}>{copy.when.title}</h2>
+      <ol class={visitPage.whenRows}>
+        {sunday.rows.map((row) => (
+          <li class={visitPage.whenRow}>
+            <b class={visitPage.whenTime}>{row.time}</b>
+            <div>
+              <h3 class={visitPage.whenRowTitle}>{row.title}</h3>
+              <p class={visitPage.whenRowText}>{row.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section
+      class={visitPage.where}
+      aria-labelledby="vs-where"
+    >
+      <div class={visitPage.whereCopy}>
+        <span class={visitPage.whereEyebrow}>{copy.where.eyebrow}</span>
+        <h2 id="vs-where" class={visitPage.whereTitle}>{copy.where.title}</h2>
+        <p class={visitPage.whereStreet}>{site.address.street}, {site.address.city} {site.address.postalCode}. {copy.where.body}</p>
+        <div class={visitPage.whereActions}>
+          <Button href={directionsUrl} arrow target="_blank" rel="noopener">{copy.where.cta}</Button>
+          <a href={mapLink(site)} class={visitPage.mapsLink} target="_blank" rel="noopener">Google Maps</a>
+        </div>
+      </div>
+      <iframe
+        class={visitPage.whereMap} src={embedUrl} title={copy.where.mapLabel} loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </section>
+
+    <section class={visitPage.expect} aria-labelledby="vs-expect">
+      <span class={visitPage.expectEyebrow}>{copy.expect.eyebrow}</span>
+      <h2 id="vs-expect" class={visitPage.expectTitle}>{copy.expect.title}</h2>
+      <ul class={visitPage.expectList}>
+        {copy.expect.items.map((item) => (
+          <li class={visitPage.expectItem}>
+            <h3 class={visitPage.expectItemTitle}>{item.title}</h3>
+            <p class={visitPage.expectItemText}>{item.text}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class={visitPage.faq} aria-labelledby="vs-faq">
+      <span class={visitPage.faqEyebrow}>{copy.faq.eyebrow}</span>
+      <h2 id="vs-faq" class={visitPage.faqTitle}>{copy.faq.title}</h2>
+      <div class={visitPage.faqList}>
+        {copy.faq.items.map((item) => (
+          <details class={visitPage.faqItem}>
+            <summary class={visitPage.faqQuestion}>{item.q}</summary>
+            <p class={visitPage.faqAnswer}>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class={visitPage.cta}>
+      <h2 class={visitPage.ctaTitle}>{copy.cta.title}</h2>
+      <div class={visitPage.ctaActions}>
+        <Button href={localizePath('/nosotros', locale)} variant="ghost">{copy.cta.about}</Button>
+        <Button href={localizePath('/confesion-de-fe', locale)} variant="ghost">{copy.cta.confession}</Button>
+        <Button href={localizePath('/sermones', locale)} variant="ghost">{copy.cta.sermons}</Button>
+      </div>
+    </section>
+  </div>
+</Layout>

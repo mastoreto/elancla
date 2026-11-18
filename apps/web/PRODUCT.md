@@ -47,7 +47,7 @@ Welcome plus doctrinal clarity. Warm invitation sits next to an explicit confess
 
 - Real address, geo coordinates, service time and social links in `packages/content/src/site.ts`.
 - Confession of faith and doctrine content in the repo.
-- Hero image at `public/images/homebanner.jpeg`.
+- Hero photos in `public/images/hero/` (`hero<n>-md.webp`).
 - No confirmed testimonials, attendance figures or staff photos; do not fabricate them.
 
 ## Product Principles
