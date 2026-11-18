@@ -5,20 +5,14 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdminSession } from "./lib/requireAdminSession";
 
-// Valores mínimos requeridos al crear el singleton de configuración.
-const DEFAULTS = {
-  id: "singleton",
-  name: "Iglesia Bautista El Ancla",
-  url: "https://elancla.uy",
-} as const;
+const DEFAULT_LOCALE = "es";
 
-/** Garantiza que exista el registro singleton de SiteSettings. */
-async function ensureSettings() {
-  return db.siteSettings.upsert({
-    where: { id: DEFAULTS.id },
-    create: { ...DEFAULTS },
-    update: {},
-  });
+/**
+ * Site settings of the organization; the seed creates them.
+ * ponytail: single organization today; the API (phase 1.3) resolves it from the session tenant.
+ */
+async function getSettings() {
+  return db.siteSettings.findFirstOrThrow();
 }
 
 // ─── Estado del sitio ────────────────────────────────────────────────────────
@@ -33,9 +27,9 @@ const STATUS_TO_ENUM = {
 export async function updateSiteStatus(input: unknown) {
   await requireAdminSession();
   const status = statusSchema.parse(input);
-  await ensureSettings();
+  const settings = await getSettings();
   await db.siteSettings.update({
-    where: { id: DEFAULTS.id },
+    where: { id: settings.id },
     data: { status: STATUS_TO_ENUM[status] },
   });
   revalidatePath("/website");
@@ -59,8 +53,8 @@ export async function updateSocialLinks(input: unknown) {
   const links = socialSchema.parse(input);
   // Cadena vacía → null en la BD.
   const data = Object.fromEntries(Object.entries(links).map(([k, v]) => [k, v === "" ? null : v]));
-  await ensureSettings();
-  await db.siteSettings.update({ where: { id: DEFAULTS.id }, data });
+  const settings = await getSettings();
+  await db.siteSettings.update({ where: { id: settings.id }, data });
   revalidatePath("/website");
 }
 
@@ -70,10 +64,10 @@ export async function updateAbout(input: unknown) {
   await requireAdminSession();
   // RichTextEditor produce HTML (string); se guarda en el campo Json como string.
   const aboutRichText = z.string().parse(input);
-  const settings = await ensureSettings();
+  const settings = await getSettings();
   await db.siteSettingsTranslation.upsert({
-    where: { settingsId_locale: { settingsId: settings.id, locale: "ES" } },
-    create: { settingsId: settings.id, locale: "ES", aboutRichText },
+    where: { siteSettingsId_locale: { siteSettingsId: settings.id, locale: DEFAULT_LOCALE } },
+    create: { siteSettingsId: settings.id, locale: DEFAULT_LOCALE, aboutRichText },
     update: { aboutRichText },
   });
   revalidatePath("/website");

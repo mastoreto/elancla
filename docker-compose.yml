@@ -2,7 +2,7 @@
 #
 # Uso típico (solo BD para desarrollo con `bun run dev`):
 #   docker compose up -d db
-#   bun run db:push && bun run --filter @ancla/auth seed:admin <email> <pass>
+#   bun run db:migrate:deploy && bun run db:seed && bun run --filter @ancla/auth seed:admin <email> <pass>
 #
 # Stack completo en contenedores (BD + migración/seed + backoffice):
 #   docker compose --profile app up --build
@@ -23,19 +23,23 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-ancla}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ancla}
       POSTGRES_DB: ${POSTGRES_DB:-ancla}
+      # Application roles created by packages/db/docker/init-roles.sh.
+      APP_MIGRATOR_PASSWORD: ${APP_MIGRATOR_PASSWORD:-ancla_migrator}
+      APP_RUNTIME_PASSWORD: ${APP_RUNTIME_PASSWORD:-ancla_runtime}
     ports:
       # host:contenedor — el puerto externo es configurable para evitar conflictos
       # con un Postgres local; el interno siempre es 5432.
       - "${POSTGRES_PORT:-5433}:5432"
     volumes:
       - ancla-pgdata:/var/lib/postgresql/data
+      - ./packages/db/docker/init-roles.sh:/docker-entrypoint-initdb.d/init-roles.sh:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ancla} -d ${POSTGRES_DB:-ancla}"]
       interval: 5s
       timeout: 5s
       retries: 10
 
-  # Migración del schema (db push) + seed opcional del admin. Corre una vez y sale.
+  # Migraciones versionadas (migrate deploy) + seed + admin opcional. Corre una vez y sale.
   migrate:
     profiles: ["app", "migrate"]
     build:
@@ -44,7 +48,8 @@ services:
       target: builder
     environment:
       # Conexión interna a la red de compose (siempre db:5432, no el puerto del host).
-      DATABASE_URL: postgresql://${POSTGRES_USER:-ancla}:${POSTGRES_PASSWORD:-ancla}@db:5432/${POSTGRES_DB:-ancla}
+      DATABASE_URL: postgresql://app_runtime:${APP_RUNTIME_PASSWORD:-ancla_runtime}@db:5432/${POSTGRES_DB:-ancla}
+      DATABASE_MIGRATION_URL: postgresql://app_migrator:${APP_MIGRATOR_PASSWORD:-ancla_migrator}@db:5432/${POSTGRES_DB:-ancla}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?define BETTER_AUTH_SECRET en .env}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
       SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-}
@@ -57,7 +62,8 @@ services:
       - sh
       - -c
       - |
-        bun run --filter @ancla/db db:push
+        bun run --filter @ancla/db db:migrate:deploy
+        bun run --filter @ancla/db db:seed
         if [ -n "$$SEED_ADMIN_EMAIL" ] && [ -n "$$SEED_ADMIN_PASSWORD" ]; then
           bun run --filter @ancla/auth seed:admin
         else
@@ -75,7 +81,7 @@ services:
     environment:
       NODE_ENV: production
       # Conexión interna a la red de compose (siempre db:5432, no el puerto del host).
-      DATABASE_URL: postgresql://${POSTGRES_USER:-ancla}:${POSTGRES_PASSWORD:-ancla}@db:5432/${POSTGRES_DB:-ancla}
+      DATABASE_URL: postgresql://app_runtime:${APP_RUNTIME_PASSWORD:-ancla_runtime}@db:5432/${POSTGRES_DB:-ancla}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?define BETTER_AUTH_SECRET en .env}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
       NEXT_PUBLIC_BETTER_AUTH_URL: ${NEXT_PUBLIC_BETTER_AUTH_URL:-http://localhost:3000}
