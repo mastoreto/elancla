@@ -3,7 +3,6 @@
   "include": [
     ".astro/types.d.ts",
     "**/*",
-    "./node_modules/swiper/types",
     "./node_modules/@types"
   ],
   "compilerOptions": {
@@ -13,11 +12,9 @@
         "name": "@astrojs/ts-plugin"
       }
     ],
-    "typeRoots": ["./node_modules/@types", "./node_modules/swiper/types"],
+    "typeRoots": ["./node_modules/@types"],
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
     "allowImportingTsExtensions": true,
     "paths": {
       "@ancla/utils": ["../../packages/utils/src"],
