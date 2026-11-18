@@ -1,257 +1,208 @@
 "use client";
 
-import {
-  Activity,
-  ArrowRight,
-  BarChart3,
-  CheckCircle2,
-  Clock3,
-  Plus,
-  ShieldCheck,
-  Users,
-  Vote,
-} from "lucide-react";
+import { ArrowUpRight, CircleCheck, Plus } from "lucide-react";
 import Link from "next/link";
-import { DashboardPageHeader } from "@/components/dashboard";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { useMemo, useState } from "react";
+import { BoardButton } from "@/components/dashboard/board/board-button";
+import { BoardCard } from "@/components/dashboard/board/board-card";
+import { FilterChip } from "@/components/dashboard/board/filter-chip";
+import { IconBubble, type IconBubbleTone } from "@/components/dashboard/board/icon-bubble";
+import { ProgressBar } from "@/components/dashboard/board/progress-bar";
+import { SearchField } from "@/components/dashboard/board/search-field";
+import { StatCard, StatCardGrid } from "@/components/dashboard/board/stat-card";
 import { cn } from "@/lib/utils";
+import type { VotingStatus } from "../types";
 import { useVotingCollection } from "../use-voting-data";
 import {
-  formatVotingDate,
-  getVotingOutcome,
-  majorityTypeLabels,
-  votingTypeLabels,
-} from "../voting-config";
-import {
-  getVotingCreatePath,
-  getVotingDetailPath,
-  getVotingModeratorPath,
-  getVotingResultsPath,
-  getVotingVotePath,
-} from "../voting-routes";
-import { VotingMetricCard } from "./voting-metric-card";
-import { VotingStatusBadge } from "./voting-status-badge";
+  filterVotings,
+  getPresencePercent,
+  summarizeVotings,
+  type VotingFilter,
+} from "../utils/voting-view";
+import { majorityTypeLabels } from "../voting-config";
+import { getVotingCreatePath, getVotingDetailPath } from "../voting-routes";
+import { VotingStatusPill } from "./voting-status-pill";
+
+const FILTER_CHIPS: { value: VotingFilter; label: string }[] = [
+  { value: "all", label: "Todas" },
+  { value: "open", label: "En curso" },
+  { value: "draft", label: "Programadas" },
+  { value: "closed", label: "Cerradas" },
+];
+
+const BUBBLE_TONE = {
+  open: "green",
+  draft: "gold",
+  closed: "ink",
+} satisfies Record<VotingStatus, IconBubbleTone>;
+
+const QUORUM_TONE = { open: "green", draft: "rose", closed: "rose" } as const;
 
 const votingListPageContentVotingPage = {
-  emptyContent: cn("flex min-h-44 flex-col items-center justify-center gap-3 text-center"),
-  page: cn("space-y-6"),
-  header: cn("flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"),
-  title: cn("text-2xl font-semibold tracking-tight text-foreground"),
-  description: cn("max-w-2xl text-sm leading-6 text-muted-foreground"),
-  metrics: cn("grid gap-4 md:grid-cols-2 xl:grid-cols-4"),
-  list: cn("grid gap-4"),
-  card: cn("overflow-hidden border-border/70 bg-card shadow-sm"),
-  summaryRow: cn("grid gap-3 text-sm text-muted-foreground sm:grid-cols-3"),
-  summaryLabel: cn("mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground"),
-  progressWrap: cn("space-y-3"),
-  progressLabel: cn("flex items-center justify-between text-sm text-muted-foreground"),
-  actions: cn("flex flex-wrap gap-2"),
-  optionList: cn("flex flex-wrap gap-2"),
-  optionPill: cn("rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground"),
-  emptyCard: cn("border-dashed"),
+  page: cn("flex flex-col gap-5"),
+  header: cn("flex flex-wrap items-center gap-4"),
+  description: cn("min-w-60 flex-1 text-[14.5px] leading-normal text-[var(--tinta-suave)]"),
+  action: cn("ml-auto"),
+  icon: cn("size-4"),
+  toolbar: cn("flex flex-wrap items-center gap-2.5"),
+  search: cn("w-full sm:w-[300px]"),
+  grid: cn("grid grid-cols-1 gap-4 lg:grid-cols-2"),
+  card: cn("flex flex-col p-[22px]"),
+  cardHeader: cn("flex items-start gap-3"),
+  bubble: cn("size-11"),
+  heading: cn("flex min-w-0 flex-1 flex-col gap-[3px]"),
+  title: cn("font-display text-xl leading-tight font-medium after:absolute after:inset-0"),
+  session: cn("text-[13px] text-[var(--tinta-apagada)]"),
+  quorum: cn("mt-4 mb-3.5 flex flex-col gap-1.5"),
+  quorumRow: cn("flex justify-between text-[13px] text-[var(--tinta-apagada)]"),
+  quorumValue: cn("text-foreground"),
+  track: cn("h-2.5"),
+  footer: cn("flex items-center gap-2"),
+  majority: cn("flex-1 text-[12.5px] text-[var(--tinta-suave)]"),
+  open: cn("relative z-10"),
+  empty: cn("py-10 text-center text-sm text-[var(--tinta-apagada)]"),
 };
 
 export function VotingListPageContent() {
-  const { votings } = useVotingCollection({ live: true });
-  const draftCount = votings.filter((voting) => voting.status === "draft").length;
-  const openCount = votings.filter((voting) => voting.status === "open").length;
-  const closedCount = votings.filter((voting) => voting.status === "closed").length;
-  const liveVotes = votings.reduce((sum, voting) => sum + voting.votesSubmitted, 0);
+  const { votings } = useVotingCollection();
+  const [filter, setFilter] = useState<VotingFilter>("all");
+  const [search, setSearch] = useState("");
+
+  const summary = useMemo(() => summarizeVotings(votings), [votings]);
+  const visible = useMemo(() => filterVotings(votings, filter, search), [votings, filter, search]);
+  const openVoting = votings.find((voting) => voting.status === "open");
+  const nextScheduled = votings.find((voting) => voting.status === "draft");
 
   return (
     <div className={votingListPageContentVotingPage.page}>
-      <DashboardPageHeader
-        actions={
-          <Button asChild={true} className="rounded-full">
-            <Link href={getVotingCreatePath()}>
-              <Plus aria-hidden="true" />
-              Crear nueva votación
-            </Link>
-          </Button>
-        }
-        description="Decisiones de la iglesia con quórum, mayoría y voto anónimo."
-        emphasis="de la asamblea"
-        kicker="Gobierno"
-        title="Votaciones"
-      />
-
-      <div className={votingListPageContentVotingPage.metrics}>
-        <VotingMetricCard
-          label="Borradores"
-          value={String(draftCount)}
-          hint="Preparadas para revisión del moderador."
-          icon={Clock3}
-        />
-        <VotingMetricCard
-          label="Abiertas"
-          value={String(openCount)}
-          hint="Con avance en tiempo real y quorum visible."
-          icon={Activity}
-        />
-        <VotingMetricCard
-          label="Cerradas"
-          value={String(closedCount)}
-          hint="Listas para lectura final y archivo."
-          icon={CheckCircle2}
-        />
-        <VotingMetricCard
-          label="Votos registrados"
-          value={String(liveVotes)}
-          hint="Suma acumulada de esta demo de frontend."
-          icon={Vote}
-        />
+      <div className={votingListPageContentVotingPage.header}>
+        <p className={votingListPageContentVotingPage.description}>
+          Decisiones de la iglesia con quórum, mayoría y voto anónimo.
+        </p>
+        <BoardButton
+          className={votingListPageContentVotingPage.action}
+          href={getVotingCreatePath()}
+          variant="primary"
+        >
+          <Plus aria-hidden="true" className={votingListPageContentVotingPage.icon} />
+          Crear nueva votación
+        </BoardButton>
       </div>
 
-      <div className={votingListPageContentVotingPage.list}>
-        {votings.map((voting) => {
-          const outcome = getVotingOutcome(voting);
-          const voteProgress =
-            voting.presentUsers === 0 ? 0 : (voting.votesSubmitted / voting.presentUsers) * 100;
+      <StatCardGrid>
+        <StatCard
+          detail={
+            openVoting
+              ? `Quórum ${openVoting.presentUsers} de ${openVoting.enabledUsers}`
+              : "Ninguna en curso"
+          }
+          highlighted={true}
+          label="Votaciones activas"
+          value={String(summary.open)}
+        />
+        <StatCard
+          detail={
+            nextScheduled?.scheduledLabel
+              ? `Próxima: ${nextScheduled.scheduledLabel}`
+              : "Sin fecha próxima"
+          }
+          label="Programadas"
+          value={String(summary.scheduled)}
+        />
+        <StatCard
+          detail={`${summary.approved} aprobadas · ${summary.rejected} rechazadas`}
+          label="Cerradas este año"
+          value={String(summary.closed)}
+        />
+        <StatCard
+          detail="Presentes sobre habilitados"
+          label="Participación media"
+          value={`${summary.averagePresence} %`}
+        />
+      </StatCardGrid>
 
-          return (
-            <Card key={voting.id} className={votingListPageContentVotingPage.card}>
-              <CardHeader>
-                <div className="space-y-3">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <VotingStatusBadge status={voting.status} />
-                    <span className={votingListPageContentVotingPage.optionPill}>
-                      {votingTypeLabels[voting.type]}
-                    </span>
-                    <span className={votingListPageContentVotingPage.optionPill}>
-                      {majorityTypeLabels[voting.majorityType]}
-                    </span>
-                  </div>
+      <div className={votingListPageContentVotingPage.toolbar}>
+        <SearchField
+          aria-label="Buscar votación"
+          className={votingListPageContentVotingPage.search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Buscar votación…"
+          value={search}
+        />
+        {FILTER_CHIPS.map(({ value, label }) => (
+          <FilterChip active={filter === value} key={value} onClick={() => setFilter(value)}>
+            {label}
+          </FilterChip>
+        ))}
+      </div>
 
-                  <div className="space-y-2">
-                    <CardTitle className="text-xl">{voting.title}</CardTitle>
-                    <CardDescription className="max-w-3xl leading-6">
-                      {voting.summary}
-                    </CardDescription>
-                  </div>
-                </div>
-
-                <CardAction>
-                  <Button variant="outline" asChild={true}>
-                    <Link href={getVotingDetailPath(voting.id)}>
-                      Ver resumen
-                      <ArrowRight className="size-4" />
-                    </Link>
-                  </Button>
-                </CardAction>
-              </CardHeader>
-
-              <CardContent className="space-y-6">
-                <div className={votingListPageContentVotingPage.summaryRow}>
-                  <div>
-                    <p className={votingListPageContentVotingPage.summaryLabel}>Quorum</p>
-                    <p className="text-foreground">
-                      {voting.presentUsers}/{voting.quorum} presentes
-                    </p>
-                  </div>
-                  <div>
-                    <p className={votingListPageContentVotingPage.summaryLabel}>Votos emitidos</p>
-                    <p className="text-foreground">
-                      {voting.votesSubmitted} de {Math.max(voting.presentUsers, 1)} presentes
-                    </p>
-                  </div>
-                  <div>
-                    <p className={votingListPageContentVotingPage.summaryLabel}>Actualización</p>
-                    <p className="text-foreground">{formatVotingDate(voting.updatedAt)}</p>
-                  </div>
-                </div>
-
-                <div className={votingListPageContentVotingPage.progressWrap}>
-                  <div>
-                    <div className={votingListPageContentVotingPage.progressLabel}>
-                      <span>Avance de quorum</span>
-                      <span>{Math.round(outcome.quorumProgress)}%</span>
-                    </div>
-                    <Progress value={outcome.quorumProgress} className="mt-2 h-3" />
-                  </div>
-
-                  <div>
-                    <div className={votingListPageContentVotingPage.progressLabel}>
-                      <span>Participación sobre presentes</span>
-                      <span>{Math.round(voteProgress)}%</span>
-                    </div>
-                    <Progress value={voteProgress} className="mt-2 h-3" />
-                  </div>
-                </div>
-
-                <div className={votingListPageContentVotingPage.optionList}>
-                  {voting.options.map((option) => (
-                    <span key={option.id} className={votingListPageContentVotingPage.optionPill}>
-                      {option.label}: {option.votes}
-                    </span>
-                  ))}
-                </div>
-              </CardContent>
-
-              <CardFooter className={votingListPageContentVotingPage.actions}>
-                <Button variant="outline" asChild={true}>
-                  <Link href={getVotingModeratorPath(voting.id)}>
-                    <ShieldCheck className="size-4" />
-                    Moderar
+      {visible.length === 0 ? (
+        <p className={votingListPageContentVotingPage.empty}>No hay votaciones encontradas.</p>
+      ) : (
+        <div className={votingListPageContentVotingPage.grid}>
+          {visible.map((voting) => (
+            <BoardCard
+              className={cn(votingListPageContentVotingPage.card, "relative")}
+              key={voting.id}
+            >
+              <div className={votingListPageContentVotingPage.cardHeader}>
+                <IconBubble
+                  className={votingListPageContentVotingPage.bubble}
+                  tone={BUBBLE_TONE[voting.status]}
+                >
+                  <CircleCheck
+                    aria-hidden="true"
+                    className={votingListPageContentVotingPage.icon}
+                  />
+                </IconBubble>
+                <div className={votingListPageContentVotingPage.heading}>
+                  <Link
+                    className={votingListPageContentVotingPage.title}
+                    href={getVotingDetailPath(voting.id)}
+                  >
+                    {voting.title}
                   </Link>
-                </Button>
-
-                <Button variant="outline" asChild={true}>
-                  <Link href={getVotingVotePath(voting.id)}>
-                    <Users className="size-4" />
-                    Ir a votar
-                  </Link>
-                </Button>
-
-                {voting.status === "closed" ? (
-                  <Button asChild={true}>
-                    <Link href={getVotingResultsPath(voting.id)}>
-                      <BarChart3 className="size-4" />
-                      Ver resultados
-                    </Link>
-                  </Button>
-                ) : (
-                  <Button disabled={true}>
-                    <BarChart3 className="size-4" />
-                    Resultados al cerrar
-                  </Button>
-                )}
-              </CardFooter>
-            </Card>
-          );
-        })}
-
-        {votings.length === 0 ? (
-          <Card
-            className={cn(
-              votingListPageContentVotingPage.card,
-              votingListPageContentVotingPage.emptyCard,
-            )}
-          >
-            <CardContent className={votingListPageContentVotingPage.emptyContent}>
-              <Vote className="size-10 text-muted-foreground" />
-              <div className="space-y-1">
-                <p className="text-lg font-semibold text-foreground">No hay votaciones cargadas</p>
-                <p className="max-w-md text-sm text-muted-foreground">
-                  Crea una nueva sesión para habilitar el panel de moderación y el flujo de voto.
-                </p>
+                  <span className={votingListPageContentVotingPage.session}>
+                    {voting.sessionLabel}
+                  </span>
+                </div>
+                <VotingStatusPill status={voting.status} />
               </div>
-              <Button asChild={true}>
-                <Link href={getVotingCreatePath()}>Crear primera votación</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        ) : null}
-      </div>
+              <div className={votingListPageContentVotingPage.quorum}>
+                <div className={votingListPageContentVotingPage.quorumRow}>
+                  <span>Quórum</span>
+                  <b className={votingListPageContentVotingPage.quorumValue}>
+                    {voting.presentUsers} de {voting.enabledUsers}
+                  </b>
+                </div>
+                <ProgressBar
+                  className={votingListPageContentVotingPage.track}
+                  label={`Quórum de ${voting.title}`}
+                  tone={QUORUM_TONE[voting.status]}
+                  value={getPresencePercent(voting)}
+                />
+              </div>
+              <div className={votingListPageContentVotingPage.footer}>
+                <span className={votingListPageContentVotingPage.majority}>
+                  {majorityTypeLabels[voting.majorityType].replace(" 2/3", "")}
+                </span>
+                <BoardButton
+                  className={votingListPageContentVotingPage.open}
+                  href={getVotingDetailPath(voting.id)}
+                  size="sm"
+                  variant="soft"
+                >
+                  <ArrowUpRight
+                    aria-hidden="true"
+                    className={votingListPageContentVotingPage.icon}
+                  />
+                  Abrir
+                </BoardButton>
+              </div>
+            </BoardCard>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

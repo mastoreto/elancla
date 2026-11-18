@@ -1,164 +1,214 @@
 "use client";
 
-import { AlertTriangle, BarChart3, ShieldCheck, Users, Vote } from "lucide-react";
-import Link from "next/link";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import {
+  ChartColumn,
+  Check,
+  ClipboardList,
+  Gavel,
+  Radio,
+  Smartphone,
+  UserCheck,
+} from "lucide-react";
+import { BoardButton } from "@/components/dashboard/board/board-button";
+import { BoardCard, BoardCardHeader } from "@/components/dashboard/board/board-card";
+import { BoardTimeline, type BoardTimelineItem } from "@/components/dashboard/board/board-timeline";
+import { ProgressBar } from "@/components/dashboard/board/progress-bar";
+import { StatCard, StatCardGrid } from "@/components/dashboard/board/stat-card";
 import { cn } from "@/lib/utils";
 import { useVotingCollection } from "../use-voting-data";
-import { getTotalVotes, getVotingOutcome } from "../voting-config";
+import {
+  getPresencePercent,
+  getQuorumRequiredPercent,
+  getVotingActivity,
+  percentOf,
+  type VotingActivityKind,
+} from "../utils/voting-view";
+import { getTotalVotes, getVotingOutcome, majorityTypeLabels } from "../voting-config";
 import { getVotingModeratorPath, getVotingResultsPath, getVotingVotePath } from "../voting-routes";
-import { VotingMetricCard } from "./voting-metric-card";
-import { VotingPageShell } from "./voting-page-shell";
+import { VotingMissing } from "./voting-missing";
+import { VotingOptionBars } from "./voting-option-bars";
+import { VotingStatusPill } from "./voting-status-pill";
+
+const MAJORITY_HINT = {
+  simple: "50 % + 1 de los votos válidos",
+  absolute: "50 % del padrón habilitado",
+  qualified: "2/3 de los votos emitidos",
+} as const;
+
+const ACTIVITY_APPEARANCE = {
+  quorum: { icon: Check, tone: "green" },
+  opened: { icon: Gavel, tone: "gold" },
+  accreditation: { icon: UserCheck, tone: "ink" },
+  closed: { icon: ClipboardList, tone: "rose" },
+} satisfies Record<VotingActivityKind, Pick<BoardTimelineItem, "icon" | "tone">>;
+
+const OPERATING_LABEL = {
+  open: "Sesión en vivo",
+  draft: "Sesión programada",
+  closed: "Sesión cerrada",
+} as const;
 
 const votingOverviewPageContentVotingPage = {
-  block: cn("flex items-center justify-between text-sm text-muted-foreground"),
-  text: cn("text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground"),
-  blockBorder: cn(
-    "rounded-xl border border-border/70 bg-muted/10 p-4 text-sm text-muted-foreground",
-  ),
-  content: cn("space-y-6"),
-  grid: cn("grid gap-4 xl:grid-cols-[minmax(0,1.1fr)_360px]"),
-  section: cn("space-y-4"),
-  optionRow: cn(
-    "flex items-center justify-between rounded-xl border border-border/70 bg-muted/10 px-4 py-3",
-  ),
-  optionLabel: cn("text-sm font-medium text-foreground"),
-  optionVotes: cn("text-sm text-muted-foreground"),
-  alert: cn("border-oro bg-warning-surface text-warning"),
-  actionCard: cn("border-border/70 bg-card shadow-sm"),
-  actionButtons: cn("flex flex-col gap-3"),
+  page: cn("flex flex-col gap-[18px]"),
+  columns: cn("grid grid-cols-1 items-start gap-[18px] xl:grid-cols-3"),
+  card: cn("p-6"),
+  stack: cn("flex flex-col gap-[18px]"),
+  facts: cn("flex flex-col gap-4"),
+  quorumBlock: cn("flex flex-col gap-2"),
+  quorumRow: cn("flex justify-between text-[13.5px]"),
+  quorumOk: cn("font-bold text-[var(--vida)]"),
+  quorumMissing: cn("font-bold text-[var(--oro-texto)]"),
+  quorumTrack: cn("h-3.5"),
+  fact: cn("flex justify-between gap-3 border-b border-border py-[11px] text-sm"),
+  factLabel: cn("text-[var(--tinta-apagada)]"),
+  factValue: cn("text-right font-bold"),
+  actions: cn("flex flex-col gap-2.5"),
+  action: cn("w-full"),
+  icon: cn("size-4"),
 };
 
 export function VotingOverviewPageContent({ votingId }: { votingId: string }) {
   const { votings } = useVotingCollection({ live: true });
-  const voting = votings.find((currentVoting) => currentVoting.id === votingId) ?? null;
-  const outcome = voting ? getVotingOutcome(voting) : null;
+  const voting = votings.find((record) => record.id === votingId);
+
+  if (!voting) {
+    return <VotingMissing />;
+  }
+
+  const outcome = getVotingOutcome(voting);
+  const totalVotes = getTotalVotes(voting);
+  const presencePercent = getPresencePercent(voting);
+  const projected = outcome.leadingOption;
+  const projectedPercent = projected ? percentOf(projected.votes, totalVotes) : 0;
+  const activity: BoardTimelineItem[] = getVotingActivity(voting).map((entry) => ({
+    id: entry.id,
+    ...ACTIVITY_APPEARANCE[entry.kind],
+    title: entry.title,
+    detail: entry.detail,
+    time: entry.time,
+  }));
 
   return (
-    <VotingPageShell voting={voting} activeView="overview">
-      {voting && outcome ? (
-        <div className={votingOverviewPageContentVotingPage.content}>
-          {voting.status === "draft" ? (
-            <Alert className={votingOverviewPageContentVotingPage.alert}>
-              <AlertTriangle className="size-4" />
-              <AlertTitle>Pendiente de apertura</AlertTitle>
-              <AlertDescription>
-                La sesión todavía no está disponible para la asamblea. Revisa opciones, quorum y
-                mayoría antes de abrirla desde moderación.
-              </AlertDescription>
-            </Alert>
-          ) : null}
+    <div className={votingOverviewPageContentVotingPage.page}>
+      <StatCardGrid>
+        <StatCard
+          detail={`${presencePercent} % · requerido ${getQuorumRequiredPercent(voting)} %`}
+          label="Quórum"
+          value={`${voting.presentUsers} / ${voting.enabledUsers}`}
+        />
+        <StatCard
+          detail={`Participación ${Math.round(outcome.participationRate)} % de presentes`}
+          label="Votos emitidos"
+          value={String(totalVotes)}
+        />
+        <StatCard
+          detail={MAJORITY_HINT[voting.majorityType]}
+          label="Mayoría requerida"
+          value={majorityTypeLabels[voting.majorityType]
+            .replace("Mayoría ", "")
+            .replace(" 2/3", "")
+            .replace(/^./, (letter) => letter.toUpperCase())}
+        />
+        <StatCard
+          detail={`${projectedPercent} % con ${totalVotes} votos`}
+          highlighted={true}
+          label="Resultado proyectado"
+          value={projected?.label ?? "—"}
+        />
+      </StatCardGrid>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            <VotingMetricCard
-              label="Presentes"
-              value={String(voting.presentUsers)}
-              hint={`Quorum mínimo: ${voting.quorum}`}
-              icon={Users}
-            />
-            <VotingMetricCard
-              label="Votos emitidos"
-              value={String(voting.votesSubmitted)}
-              hint="Actualización simulada en tiempo real."
-              icon={Vote}
-            />
-            <VotingMetricCard
-              label="Resultado estimado"
-              value={outcome.resultLabel}
-              hint={outcome.thresholdLabel}
-              icon={BarChart3}
-            />
-          </div>
-
-          <div className={votingOverviewPageContentVotingPage.grid}>
-            <Card className={votingOverviewPageContentVotingPage.actionCard}>
-              <CardHeader>
-                <CardTitle>Estado operativo</CardTitle>
-              </CardHeader>
-              <CardContent className={votingOverviewPageContentVotingPage.section}>
-                <div>
-                  <div className={votingOverviewPageContentVotingPage.block}>
-                    <span>Quorum alcanzado</span>
-                    <span>{Math.round(outcome.quorumProgress)}%</span>
-                  </div>
-                  <Progress value={outcome.quorumProgress} className="mt-2 h-3" />
-                </div>
-
-                <div>
-                  <div className={votingOverviewPageContentVotingPage.block}>
-                    <span>Participación sobre presentes</span>
-                    <span>{Math.round(outcome.participationRate)}%</span>
-                  </div>
-                  <Progress value={outcome.participationRate} className="mt-2 h-3" />
-                </div>
-
-                <div className="space-y-3">
-                  <p className={votingOverviewPageContentVotingPage.text}>Distribución actual</p>
-
-                  {voting.options.map((option) => (
-                    <div key={option.id} className={votingOverviewPageContentVotingPage.optionRow}>
-                      <span className={votingOverviewPageContentVotingPage.optionLabel}>
-                        {option.label}
-                      </span>
-                      <span className={votingOverviewPageContentVotingPage.optionVotes}>
-                        {option.votes} votos
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className={votingOverviewPageContentVotingPage.actionCard}>
-              <CardHeader>
-                <CardTitle>Acciones rápidas</CardTitle>
-              </CardHeader>
-              <CardContent className={votingOverviewPageContentVotingPage.actionButtons}>
-                <Button className="w-full justify-start" asChild={true}>
-                  <Link href={getVotingModeratorPath(voting.id)}>
-                    <ShieldCheck className="size-4" />
-                    Abrir panel de moderación
-                  </Link>
-                </Button>
-
-                <Button variant="outline" className="w-full justify-start" asChild={true}>
-                  <Link href={getVotingVotePath(voting.id)}>
-                    <Users className="size-4" />
-                    Abrir pantalla de voto
-                  </Link>
-                </Button>
-
-                <Button
-                  variant="outline"
-                  className="w-full justify-start"
-                  disabled={voting.status !== "closed"}
-                  asChild={voting.status === "closed"}
+      <div className={votingOverviewPageContentVotingPage.columns}>
+        <BoardCard className={votingOverviewPageContentVotingPage.card}>
+          <BoardCardHeader
+            action={<VotingStatusPill status={voting.status} />}
+            subtitle={OPERATING_LABEL[voting.status]}
+            title="Estado operativo"
+          />
+          <div className={votingOverviewPageContentVotingPage.facts}>
+            <div className={votingOverviewPageContentVotingPage.quorumBlock}>
+              <div className={votingOverviewPageContentVotingPage.quorumRow}>
+                <b>Avance de quórum</b>
+                <span
+                  className={
+                    outcome.quorumReached
+                      ? votingOverviewPageContentVotingPage.quorumOk
+                      : votingOverviewPageContentVotingPage.quorumMissing
+                  }
                 >
-                  {voting.status === "closed" ? (
-                    <Link href={getVotingResultsPath(voting.id)}>
-                      <BarChart3 className="size-4" />
-                      Ver resultados finales
-                    </Link>
-                  ) : (
-                    <>
-                      <BarChart3 className="size-4" />
-                      Resultados disponibles al cerrar
-                    </>
-                  )}
-                </Button>
-
-                <div className={votingOverviewPageContentVotingPage.blockBorder}>
-                  Total contabilizado: {getTotalVotes(voting)} voto
-                  {getTotalVotes(voting) === 1 ? "" : "s"}.
+                  {outcome.quorumReached ? "Quórum alcanzado" : "Quórum pendiente"}
+                </span>
+              </div>
+              <ProgressBar
+                className={votingOverviewPageContentVotingPage.quorumTrack}
+                label={`Avance de quórum: ${presencePercent} %`}
+                tone={outcome.quorumReached ? "green" : "gold"}
+                value={presencePercent}
+              />
+            </div>
+            <div>
+              {[
+                { label: "Voto", value: voting.anonymous ? "Anónimo" : "Nominal" },
+                { label: "Opciones visibles", value: String(voting.options.length) },
+                { label: "Última actualización", value: "hace 12 s" },
+              ].map((fact) => (
+                <div className={votingOverviewPageContentVotingPage.fact} key={fact.label}>
+                  <span className={votingOverviewPageContentVotingPage.factLabel}>
+                    {fact.label}
+                  </span>
+                  <b className={votingOverviewPageContentVotingPage.factValue}>{fact.value}</b>
                 </div>
-              </CardContent>
-            </Card>
+              ))}
+            </div>
           </div>
+        </BoardCard>
+
+        <BoardCard className={votingOverviewPageContentVotingPage.card}>
+          <BoardCardHeader subtitle="Resultados parciales" title="Detalle por opción" />
+          <VotingOptionBars voting={voting} />
+        </BoardCard>
+
+        <div className={votingOverviewPageContentVotingPage.stack}>
+          <BoardCard className={votingOverviewPageContentVotingPage.card}>
+            <BoardCardHeader title="Acciones rápidas" />
+            <div className={votingOverviewPageContentVotingPage.actions}>
+              <BoardButton
+                className={votingOverviewPageContentVotingPage.action}
+                href={getVotingModeratorPath(voting.id)}
+                variant="primary"
+              >
+                <Radio aria-hidden="true" className={votingOverviewPageContentVotingPage.icon} />
+                Modo moderación en vivo
+              </BoardButton>
+              <BoardButton
+                className={votingOverviewPageContentVotingPage.action}
+                href={getVotingVotePath(voting.id)}
+                variant="outline"
+              >
+                <Smartphone
+                  aria-hidden="true"
+                  className={votingOverviewPageContentVotingPage.icon}
+                />
+                Pantalla de votación
+              </BoardButton>
+              <BoardButton
+                className={votingOverviewPageContentVotingPage.action}
+                href={getVotingResultsPath(voting.id)}
+                variant="outline"
+              >
+                <ChartColumn
+                  aria-hidden="true"
+                  className={votingOverviewPageContentVotingPage.icon}
+                />
+                Ir a resultados
+              </BoardButton>
+            </div>
+          </BoardCard>
+          <BoardCard className={votingOverviewPageContentVotingPage.card}>
+            <BoardCardHeader title="Actividad reciente" />
+            <BoardTimeline items={activity} />
+          </BoardCard>
         </div>
-      ) : null}
-    </VotingPageShell>
+      </div>
+    </div>
   );
 }

@@ -1,217 +1,118 @@
-import { CircleAlert, Eye, FileText, PencilLine, Trash2 } from "lucide-react";
-import type { Receipt } from "@/app/(dashboard)/receipts/types/index";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { BoardCard } from "@/components/dashboard/board/board-card";
+import { BoardPagination } from "@/components/dashboard/board/board-pagination";
+import { formatMoney } from "@/lib/format-money";
 import { cn } from "@/lib/utils";
-
-const receiptsTableReceiptsPage = {
-  empty: cn(
-    "flex min-h-56 items-center justify-center rounded-xl border border-dashed border-border/60 bg-muted/20 px-6 text-center",
-  ),
-};
+import type { Receipt } from "../types";
+import { formatShortDate, RECEIPTS_PAGE_SIZE, stripRelationKind } from "../utils";
 
 interface ReceiptsTableProps {
   receipts: Receipt[];
-  isLoading?: boolean;
+  selectedId: string | null;
+  total: number;
+  page: number;
+  pageCount: number;
   errorMessage?: string | null;
-  onView?: (receipt: Receipt) => void;
-  onEdit?: (receipt: Receipt) => void;
-  onDelete?: (receipt: Receipt) => void;
+  onPageChange: (page: number) => void;
+  onSelect: (receipt: Receipt) => void;
 }
 
-const loadingRowIds = [
-  "receipt-loading-row-1",
-  "receipt-loading-row-2",
-  "receipt-loading-row-3",
-  "receipt-loading-row-4",
-];
+const GRID = cn(
+  "sm:grid sm:grid-cols-[120px_1.4fr_110px_70px_1.2fr] sm:items-center sm:gap-3.5 sm:px-[18px]",
+);
 
-function formatCurrency(currency: Receipt["currency"], amount: number) {
-  return new Intl.NumberFormat("es-UY", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("es-UY", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(date);
-}
+const receiptsTableReceiptsPage = {
+  card: cn("flex flex-col gap-1 p-5"),
+  head: cn(
+    GRID,
+    "hidden rounded-[14px] bg-secondary py-3 text-xs font-bold text-[var(--tinta-suave)]",
+  ),
+  list: cn("flex flex-col gap-1"),
+  row: cn(
+    GRID,
+    "relative flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border-b border-border/60 px-4 py-[13px] text-sm",
+  ),
+  rowSelected: cn("border-b-0 bg-(--granada-50)"),
+  number: cn(
+    "text-left text-[13.5px] font-bold after:absolute after:inset-0 after:rounded-2xl focus-visible:after:ring-2 focus-visible:after:ring-ring",
+  ),
+  provider: cn("min-w-0 font-bold"),
+  amount: cn("font-bold whitespace-nowrap tabular-nums"),
+  date: cn("text-[var(--tinta-suave)]"),
+  related: cn("text-[13px] text-[var(--tinta-suave)]"),
+  message: cn("py-10 text-center text-sm text-[var(--tinta-apagada)]"),
+  error: cn("py-10 text-center text-sm text-primary"),
+};
 
 export function ReceiptsTable({
   receipts,
-  isLoading = false,
+  selectedId,
+  total,
+  page,
+  pageCount,
   errorMessage,
-  onView,
-  onEdit,
-  onDelete,
+  onPageChange,
+  onSelect,
 }: ReceiptsTableProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Listado de boletas</CardTitle>
-        <CardDescription>
-          Visualiza comprobantes de gasto asociados a movimientos o solicitudes aprobadas.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {errorMessage ? (
-          <Alert variant="destructive">
-            <CircleAlert className="size-4" />
-            <AlertTitle>Ocurrió un error</AlertTitle>
-            <AlertDescription>{errorMessage}</AlertDescription>
-          </Alert>
-        ) : null}
+    <BoardCard className={receiptsTableReceiptsPage.card}>
+      <div aria-hidden="true" className={receiptsTableReceiptsPage.head}>
+        <span>N.º</span>
+        <span>Proveedor</span>
+        <span>Monto</span>
+        <span>Fecha</span>
+        <span>Relacionada con</span>
+      </div>
 
-        {!errorMessage && isLoading ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Número</TableHead>
-                <TableHead>Proveedor</TableHead>
-                <TableHead>Monto</TableHead>
-                <TableHead>Moneda</TableHead>
-                <TableHead>Fecha</TableHead>
-                <TableHead>Relacionado a</TableHead>
-                <TableHead>Archivo</TableHead>
-                <TableHead>Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loadingRowIds.map((rowId) => (
-                <TableRow key={rowId}>
-                  <TableCell>
-                    <Skeleton className="h-5 w-24" />
-                  </TableCell>
-                  <TableCell className="whitespace-normal">
-                    <Skeleton className="h-5 w-36" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-5 w-28" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-5 w-14" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-5 w-28" />
-                  </TableCell>
-                  <TableCell className="whitespace-normal">
-                    <Skeleton className="h-5 w-48" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-8 w-24" />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Skeleton className="h-8 w-16" />
-                      <Skeleton className="h-8 w-16" />
-                      <Skeleton className="h-8 w-18" />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        ) : null}
+      {errorMessage ? (
+        <p className={receiptsTableReceiptsPage.error} role="alert">
+          {errorMessage}
+        </p>
+      ) : null}
 
-        {!errorMessage && !isLoading && receipts.length === 0 ? (
-          <div className={receiptsTableReceiptsPage.empty}>
-            <p className="text-muted-foreground text-sm">No hay boletas registradas</p>
-          </div>
-        ) : null}
+      {!errorMessage && receipts.length === 0 ? (
+        <p className={receiptsTableReceiptsPage.message}>No hay boletas registradas.</p>
+      ) : null}
 
-        {!errorMessage && !isLoading && receipts.length > 0 ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Número</TableHead>
-                <TableHead>Proveedor</TableHead>
-                <TableHead>Monto</TableHead>
-                <TableHead>Moneda</TableHead>
-                <TableHead>Fecha</TableHead>
-                <TableHead>Relacionado a</TableHead>
-                <TableHead>Archivo</TableHead>
-                <TableHead>Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {receipts.map((receipt) => (
-                <TableRow key={receipt.id}>
-                  <TableCell className="font-medium">{receipt.number}</TableCell>
-                  <TableCell className="whitespace-normal">{receipt.provider}</TableCell>
-                  <TableCell>{formatCurrency(receipt.currency, receipt.amount)}</TableCell>
-                  <TableCell>{receipt.currency}</TableCell>
-                  <TableCell>{formatDate(receipt.date)}</TableCell>
-                  <TableCell className="max-w-72 whitespace-normal">
-                    {receipt.relatedEntity}
-                  </TableCell>
-                  <TableCell>
-                    {receipt.fileUrl ? (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="h-auto px-0 py-1"
-                        onClick={() => onView?.(receipt)}
-                      >
-                        <FileText className="size-4" />
-                        Ver archivo
-                      </Button>
-                    ) : (
-                      <span className="text-muted-foreground text-xs">Sin archivo</span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onView?.(receipt)}
-                      >
-                        <Eye className="size-4" />
-                        Ver
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onEdit?.(receipt)}
-                      >
-                        <PencilLine className="size-4" />
-                        Editar
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => onDelete?.(receipt)}
-                      >
-                        <Trash2 className="size-4" />
-                        Eliminar
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        ) : null}
-      </CardContent>
-    </Card>
+      {receipts.length > 0 ? (
+        <ul className={receiptsTableReceiptsPage.list}>
+          {receipts.map((receipt) => (
+            <li
+              className={cn(
+                receiptsTableReceiptsPage.row,
+                receipt.id === selectedId && receiptsTableReceiptsPage.rowSelected,
+              )}
+              key={receipt.id}
+            >
+              <button
+                aria-pressed={receipt.id === selectedId}
+                className={receiptsTableReceiptsPage.number}
+                onClick={() => onSelect(receipt)}
+                type="button"
+              >
+                {receipt.number}
+              </button>
+              <span className={receiptsTableReceiptsPage.provider}>{receipt.provider}</span>
+              <b className={receiptsTableReceiptsPage.amount}>
+                {formatMoney(receipt.amount, receipt.currency)}
+              </b>
+              <span className={receiptsTableReceiptsPage.date}>
+                {formatShortDate(receipt.date)}
+              </span>
+              <span className={receiptsTableReceiptsPage.related}>
+                {stripRelationKind(receipt.relatedEntity)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      <BoardPagination
+        onPageChange={onPageChange}
+        page={page}
+        pageCount={pageCount}
+        pageSize={RECEIPTS_PAGE_SIZE}
+        total={total}
+      />
+    </BoardCard>
   );
 }
