@@ -5,7 +5,6 @@
 .bl-pad { padding-left: var(--ln-pad); padding-right: var(--ln-pad); }
 .bl-section { padding-top: clamp(3.5rem, 7vw, 5rem); }
 .bl-lead { margin: 0; font-size: clamp(1.0625rem, 1.3vw, 1.1875rem); line-height: 1.55; color: var(--ln-ink-soft); }
-.bl-muted { color: #4a4a48; }
 .bl-anchor-ghost { color: var(--ln-red); opacity: 0.16; display: block; }
 .bl-anchor-ghost svg { width: 100%; height: auto; display: block; }
 

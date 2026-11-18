@@ -37,7 +37,6 @@
   margin-top: 0;
   border-radius: 0;
 }
-.ln-b { font-family: var(--ln-sans-b); }
 .ln-eyebrow {
   font-family: var(--ln-sans-b);
   font-size: 0.8125rem;
@@ -287,8 +286,6 @@
 .ln-tile--photo:hover { translate: none; box-shadow: none; background: var(--ln-mist); }
 .ln-tile--photo img { position: absolute; max-width: none; filter: grayscale(1) sepia(0.14) contrast(1.06); transition: transform 1.4s var(--ln-ease); }
 .ln-tile--photo:hover img { transform: scale(1.04); }
-.ln-tog__gap { border: 1.5px dashed rgba(168, 20, 27, 0.35); background: transparent; animation: ln-breathe 2.6s ease-in-out infinite; }
-@keyframes ln-breathe { 0%, 100% { border-color: rgba(168, 20, 27, 0.35); } 50% { border-color: rgba(168, 20, 27, 0.95); } }
 
 /* ───────── 5 · Sunday ───────── */
 .ln-sun { background: var(--ln-paper); min-height: 100svh; display: flex; align-items: stretch; padding: clamp(6rem, 11vh, 7rem) 3.9vw clamp(1rem, 6vh, 3.5rem); }
@@ -503,7 +500,6 @@
 @media (prefers-reduced-motion: reduce) {
   .ln-hero__track { animation: none; }
   .ln-halo { display: none; }
-  .ln-tog__gap { animation: none; }
 }
 .ln.is-static .ln-doc { min-height: auto; padding: 5rem var(--ln-pad); }
 .ln.is-static .ln-doc__side, .ln.is-static .ln-doc__foot { position: relative; inset: auto; width: auto; padding: 0; }
