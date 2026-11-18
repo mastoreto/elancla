@@ -1,0 +1,51 @@
+---
+import InlineText from 'src/components/InlineText';
+import type { ContentSection } from 'src/data/contentPages';
+import AboutLinkGrid from 'src/sections/about/AboutPage/components/AboutSection/components/AboutLinkGrid';
+import AboutProse from 'src/sections/about/AboutPage/components/AboutSection/components/AboutProse';
+import AboutTeam from 'src/sections/about/AboutPage/components/AboutSection/components/AboutTeam';
+import AboutTimeline from 'src/sections/about/AboutPage/components/AboutSection/components/AboutTimeline';
+import AboutValues from 'src/sections/about/AboutPage/components/AboutSection/components/AboutValues';
+import AboutVerse from 'src/sections/about/AboutPage/components/AboutSection/components/AboutVerse';
+import cn from 'src/utils/cn';
+
+interface Props {
+  section: ContentSection;
+}
+
+const { section } = Astro.props;
+// The design shows the history as a timeline only; the long narrative stays in the data but is not rendered.
+const blocks = section.blocks.filter(
+  (b) => !(b.type === 'prose' && section.blocks.some((o) => o.type === 'timeline'))
+);
+
+const aboutSection = {
+  container: cn('flex scroll-mt-24 flex-col gap-7'),
+  header: cn('flex flex-col gap-3.5'),
+  eyebrow: cn('ln-eyebrow'),
+  heading: cn('ln-h text-[clamp(2.125rem,3.6vw,3.25rem)]'),
+  description: cn('m-0 max-w-160 text-[1.0625rem] leading-[1.55] text-obra-ink-soft'),
+};
+---
+
+<section id={section.id} class={aboutSection.container}>
+  <header class={aboutSection.header}>
+    <span class={aboutSection.eyebrow}>{section.eyebrow}</span>
+    <h2 class={aboutSection.heading}>
+      <InlineText value={section.title} emphasisClass="text-obra-red not-italic" />
+    </h2>
+    {section.description && <p class={aboutSection.description}>{section.description}</p>}
+  </header>
+  {
+    blocks.map((block) => (
+      <>
+        {block.type === 'prose' && <AboutProse block={block} />}
+        {block.type === 'verse' && <AboutVerse block={block} sectionId={section.id} />}
+        {block.type === 'values' && <AboutValues block={block} />}
+        {block.type === 'timeline' && <AboutTimeline block={block} />}
+        {block.type === 'team' && <AboutTeam block={block} />}
+        {block.type === 'linkGrid' && <AboutLinkGrid block={block} />}
+      </>
+    ))
+  }
+</section>
