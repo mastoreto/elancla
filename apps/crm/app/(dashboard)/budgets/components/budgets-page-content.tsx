@@ -2,155 +2,50 @@
 
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
-import { BudgetModal } from "@/app/(dashboard)/budgets/components/budget-modal";
-import { BudgetSummaryCards } from "@/app/(dashboard)/budgets/components/budget-summary-cards";
-import { BudgetsTable } from "@/app/(dashboard)/budgets/components/budgets-table";
+import { BoardButton } from "@/components/dashboard/board/board-button";
+import { cn } from "@/lib/utils";
 import type {
   Budget,
-  BudgetCurrency,
   BudgetFormField,
   BudgetFormMode,
   BudgetFormValues,
   BudgetOwnerType,
   BudgetSelectOption,
-  BudgetSummaryValues,
-} from "@/app/(dashboard)/budgets/types/index";
-import { DashboardPageHeader } from "@/components/dashboard";
-import { Button } from "@/components/ui/button";
+} from "../types";
+import {
+  BUDGETS_PAGE_SIZE,
+  createDefaultFormValues,
+  filterBudgets,
+  getBudgetOwner,
+  mapBudgetToFormValues,
+  mapFormValuesToBudget,
+  paginateBudgets,
+  summarizeBudgets,
+} from "../utils";
+import { BudgetModal } from "./budget-modal";
+import { BudgetsSummary } from "./budgets-summary";
+import { BudgetsTable } from "./budgets-table";
+import { BudgetsToolbar } from "./budgets-toolbar";
 
 type BudgetsPageContentProps = {
   initialBudgets: Budget[];
   ministryOptions: BudgetSelectOption[];
   projectOptions: BudgetSelectOption[];
   initialErrorMessage?: string | null;
-  isLoading?: boolean;
 };
 
-type CurrencyTotals = Record<
-  BudgetCurrency,
-  {
-    total: number;
-    used: number;
-    available: number;
-  }
->;
-
-function formatCurrency(currency: BudgetCurrency, amount: number) {
-  return new Intl.NumberFormat("es-UY", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
-function formatDateInput(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
-
-function parseDateInput(value: string, fallback: Date) {
-  if (!value) {
-    return fallback;
-  }
-
-  return new Date(`${value}T00:00:00`);
-}
-
-function createDefaultFormValues(): BudgetFormValues {
-  const startDate = new Date();
-  const endDate = new Date(startDate);
-  endDate.setMonth(endDate.getMonth() + 1);
-
-  return {
-    name: "",
-    ownerType: "MINISTRY",
-    ministry: "",
-    project: "",
-    currency: "UYU",
-    totalAmount: "",
-    startDate: formatDateInput(startDate),
-    endDate: formatDateInput(endDate),
-  };
-}
-
-function createSummaryValues(budgets: Budget[]): BudgetSummaryValues | null {
-  if (budgets.length === 0) {
-    return null;
-  }
-
-  const totals = budgets.reduce<CurrencyTotals>(
-    (currentTotals, budget) => {
-      currentTotals[budget.currency].total += budget.totalAmount;
-      currentTotals[budget.currency].used += budget.usedAmount;
-      currentTotals[budget.currency].available += budget.totalAmount - budget.usedAmount;
-
-      return currentTotals;
-    },
-    {
-      UYU: { total: 0, used: 0, available: 0 },
-      USD: { total: 0, used: 0, available: 0 },
-    },
-  );
-
-  const formatBreakdown = (valueKey: keyof CurrencyTotals[BudgetCurrency]) => {
-    const items = (["UYU", "USD"] as const)
-      .filter((currency) => totals[currency][valueKey] > 0)
-      .map((currency) => formatCurrency(currency, totals[currency][valueKey]));
-
-    if (items.length === 0) {
-      return formatCurrency("UYU", 0);
-    }
-
-    return items.join(" · ");
-  };
-
-  return {
-    totalBudget: formatBreakdown("total"),
-    totalUsed: formatBreakdown("used"),
-    totalAvailable: formatBreakdown("available"),
-  };
-}
-
-function mapBudgetToFormValues(budget: Budget): BudgetFormValues {
-  return {
-    name: budget.name,
-    ownerType: budget.project ? "PROJECT" : "MINISTRY",
-    ministry: budget.ministry ?? "",
-    project: budget.project ?? "",
-    currency: budget.currency,
-    totalAmount: String(budget.totalAmount),
-    startDate: formatDateInput(budget.startDate),
-    endDate: formatDateInput(budget.endDate),
-  };
-}
-
-function mapFormValuesToBudget(values: BudgetFormValues, id: string, usedAmount: number): Budget {
-  const fallbackStartDate = new Date();
-  const fallbackEndDate = new Date(fallbackStartDate);
-  fallbackEndDate.setMonth(fallbackEndDate.getMonth() + 1);
-
-  return {
-    id,
-    name: values.name,
-    ministry: values.ownerType === "MINISTRY" ? values.ministry || undefined : undefined,
-    project: values.ownerType === "PROJECT" ? values.project || undefined : undefined,
-    currency: values.currency ?? "UYU",
-    totalAmount: Number(values.totalAmount) || 0,
-    usedAmount,
-    startDate: parseDateInput(values.startDate, fallbackStartDate),
-    endDate: parseDateInput(values.endDate, fallbackEndDate),
-  };
-}
+const budgetsPageContentBudgetsPage = {
+  page: cn("flex flex-col gap-5"),
+  header: cn("flex flex-wrap items-center gap-4"),
+  description: cn("min-w-60 flex-1 text-[14.5px] leading-normal text-[var(--tinta-suave)]"),
+  actionIcon: cn("size-4"),
+};
 
 export function BudgetsPageContent({
   initialBudgets,
   ministryOptions,
   projectOptions,
   initialErrorMessage = null,
-  isLoading = false,
 }: BudgetsPageContentProps) {
   const [budgets, setBudgets] = useState(initialBudgets);
   const [modalMode, setModalMode] = useState<BudgetFormMode>("create");
@@ -159,7 +54,29 @@ export function BudgetsPageContent({
   const [formValues, setFormValues] = useState<BudgetFormValues>(createDefaultFormValues());
   const [requiredFields, setRequiredFields] = useState<BudgetFormField[]>([]);
 
-  const summary = useMemo(() => createSummaryValues(budgets), [budgets]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [ministry, setMinistry] = useState("all");
+  const [currency, setCurrency] = useState("all");
+  const [page, setPage] = useState(1);
+
+  const summary = useMemo(() => summarizeBudgets(budgets), [budgets]);
+  const ministries = useMemo(
+    () => [...new Set(budgets.map(getBudgetOwner).filter(Boolean))].sort(),
+    [budgets],
+  );
+  const filtered = useMemo(
+    () => filterBudgets(budgets, { searchQuery, ministry, currency }),
+    [budgets, searchQuery, ministry, currency],
+  );
+  const pageCount = Math.max(1, Math.ceil(filtered.length / BUDGETS_PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+
+  const withFirstPage =
+    <T,>(setter: (value: T) => void) =>
+    (value: T) => {
+      setter(value);
+      setPage(1);
+    };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -222,53 +139,62 @@ export function BudgetsPageContent({
     closeModal();
   };
 
-  return (
-    <div className="space-y-6">
-      <DashboardPageHeader
-        actions={
-          <Button className="rounded-full" onClick={handleCreate} type="button">
-            <Plus aria-hidden="true" />
-            Nuevo presupuesto
-          </Button>
-        }
-        description="Montos asignados por ministerio y proyecto, con alertas de uso."
-        emphasis="con orden"
-        kicker="Tesorería"
-        title="Presupuestos"
-      />
+  const handleDelete = (budget: Budget) => {
+    setBudgets((currentBudgets) => currentBudgets.filter((item) => item.id !== budget.id));
+  };
 
-      <BudgetSummaryCards
-        summary={summary}
-        isLoading={isLoading}
-        isEmpty={!isLoading && budgets.length === 0}
-        errorMessage={initialErrorMessage}
+  return (
+    <div className={budgetsPageContentBudgetsPage.page}>
+      <div className={budgetsPageContentBudgetsPage.header}>
+        <p className={budgetsPageContentBudgetsPage.description}>
+          Montos asignados por ministerio y proyecto, con alertas de uso.
+        </p>
+        <BoardButton onClick={handleCreate} variant="primary">
+          <Plus aria-hidden="true" className={budgetsPageContentBudgetsPage.actionIcon} />
+          Nuevo presupuesto
+        </BoardButton>
+      </div>
+
+      <BudgetsSummary summary={summary} />
+
+      <BudgetsToolbar
+        currency={currency}
+        ministries={ministries}
+        ministry={ministry}
+        onCurrencyChange={withFirstPage(setCurrency)}
+        onMinistryChange={withFirstPage(setMinistry)}
+        onSearchChange={withFirstPage(setSearchQuery)}
+        searchQuery={searchQuery}
       />
 
       <BudgetsTable
-        budgets={budgets}
-        isLoading={isLoading}
+        budgets={paginateBudgets(filtered, currentPage)}
         errorMessage={initialErrorMessage}
+        onDelete={handleDelete}
         onEdit={handleEdit}
+        onPageChange={setPage}
+        page={currentPage}
+        pageCount={pageCount}
+        total={filtered.length}
       />
 
       <BudgetModal
-        open={isModalOpen}
         mode={modalMode}
-        values={formValues}
         ministryOptions={ministryOptions}
-        projectOptions={projectOptions}
-        requiredFields={requiredFields}
+        onCancel={closeModal}
+        onFieldChange={handleFieldChange}
         onOpenChange={(open) => {
           if (!open) {
             closeModal();
             return;
           }
-
           setIsModalOpen(true);
         }}
-        onFieldChange={handleFieldChange}
         onSubmit={handleSubmit}
-        onCancel={closeModal}
+        open={isModalOpen}
+        projectOptions={projectOptions}
+        requiredFields={requiredFields}
+        values={formValues}
       />
     </div>
   );

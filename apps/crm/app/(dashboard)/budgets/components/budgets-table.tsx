@@ -1,228 +1,154 @@
-import { CircleAlert, PencilLine } from "lucide-react";
-import type { Budget } from "@/app/(dashboard)/budgets/types/index";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { PencilLine, Trash2 } from "lucide-react";
+import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
+import { BoardCard } from "@/components/dashboard/board/board-card";
+import { BoardPagination } from "@/components/dashboard/board/board-pagination";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  BoardTableHead,
+  BoardTableList,
+  BoardTableRow,
+} from "@/components/dashboard/board/board-table";
+import { ProgressBar, type ProgressBarTone } from "@/components/dashboard/board/progress-bar";
+import { RowIconButton, rowIconButtonClass } from "@/components/dashboard/board/row-icon-button";
+import { formatMoney } from "@/lib/format-money";
 import { cn } from "@/lib/utils";
-import { BudgetProgressBar } from "./budget-progress-bar";
+import type { Budget } from "../types";
+import {
+  BUDGETS_PAGE_SIZE,
+  type BudgetUsageLevel,
+  getBudgetOwner,
+  getUsageLevel,
+  getUsagePercent,
+} from "../utils";
+
+interface BudgetsTableProps {
+  budgets: Budget[];
+  total: number;
+  page: number;
+  pageCount: number;
+  errorMessage?: string | null;
+  onPageChange: (page: number) => void;
+  onEdit: (budget: Budget) => void;
+  onDelete: (budget: Budget) => void;
+}
+
+const COLUMNS = "1.6fr 80px 130px 1.2fr 130px 90px";
+const HEADERS = ["Presupuesto", "Moneda", "Total", "Uso", "Vigencia", ""];
+
+const USAGE_TONE = {
+  normal: "green",
+  near: "gold",
+  over: "rose",
+} satisfies Record<BudgetUsageLevel, ProgressBarTone>;
+
+/** "ene – jun 2026" when both ends fall in the same year, otherwise with both years. */
+function formatValidity(start: Date, end: Date): string {
+  const startMonth = format(start, "MMM", { locale: es });
+  if (start.getFullYear() === end.getFullYear()) {
+    return `${startMonth} – ${format(end, "MMM yyyy", { locale: es })}`;
+  }
+  return `${format(start, "MMM yyyy", { locale: es })} – ${format(end, "MMM yyyy", { locale: es })}`;
+}
 
 const budgetsTableBudgetsPage = {
-  empty: cn(
-    "flex min-h-56 items-center justify-center rounded-xl border border-dashed border-border/60 bg-muted/20 px-6 text-center",
-  ),
+  card: cn("flex flex-col gap-1 p-5"),
+  name: cn("flex min-w-0 flex-col gap-0.5"),
+  nameText: cn("font-bold"),
+  owner: cn("text-[12.5px] text-[var(--tinta-apagada)]"),
+  currency: cn("text-[var(--tinta-suave)]"),
+  total: cn("font-bold whitespace-nowrap tabular-nums"),
+  usage: cn("flex w-full flex-col gap-2"),
+  usageLabel: cn("text-xs text-[var(--tinta-apagada)]"),
+  validity: cn("text-[13.5px] text-[var(--tinta-suave)]"),
+  actions: cn("flex justify-end gap-1.5"),
+  icon: cn("size-4"),
+  message: cn("py-10 text-center text-sm text-[var(--tinta-apagada)]"),
+  error: cn("py-10 text-center text-sm text-primary"),
 };
-
-type BudgetsTableProps = {
-  budgets: Budget[];
-  isLoading?: boolean;
-  errorMessage?: string | null;
-  onEdit?: (budget: Budget) => void;
-};
-
-const loadingRowIds = [
-  "budget-loading-row-1",
-  "budget-loading-row-2",
-  "budget-loading-row-3",
-  "budget-loading-row-4",
-];
-
-function formatCurrency(currency: Budget["currency"], amount: number) {
-  return new Intl.NumberFormat("es-UY", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
-function formatPeriod(startDate: Date, endDate: Date) {
-  const formatter = new Intl.DateTimeFormat("es-UY", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-
-  return `${formatter.format(startDate)} - ${formatter.format(endDate)}`;
-}
-
-function getOwnerLabel(budget: Budget) {
-  if (budget.project) {
-    return {
-      name: budget.project,
-      type: "Proyecto",
-    };
-  }
-
-  if (budget.ministry) {
-    return {
-      name: budget.ministry,
-      type: "Ministerio",
-    };
-  }
-
-  return {
-    name: "Sin asignación",
-    type: "Sin tipo",
-  };
-}
 
 export function BudgetsTable({
   budgets,
-  isLoading = false,
+  total,
+  page,
+  pageCount,
   errorMessage,
+  onPageChange,
   onEdit,
+  onDelete,
 }: BudgetsTableProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Listado de presupuestos</CardTitle>
-        <CardDescription>
-          Revisa asignaciones vigentes, disponibilidad y consumo visual por ministerio o proyecto.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {errorMessage ? (
-          <Alert variant="destructive">
-            <CircleAlert className="size-4" />
-            <AlertTitle>Ocurrió un error</AlertTitle>
-            <AlertDescription>{errorMessage}</AlertDescription>
-          </Alert>
-        ) : isLoading ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nombre</TableHead>
-                <TableHead>Ministerio / Proyecto</TableHead>
-                <TableHead>Moneda</TableHead>
-                <TableHead>Monto total</TableHead>
-                <TableHead>Monto utilizado</TableHead>
-                <TableHead>Disponible</TableHead>
-                <TableHead>Periodo</TableHead>
-                <TableHead>Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loadingRowIds.map((rowId) => (
-                <TableRow key={rowId}>
-                  <TableCell className="whitespace-normal">
-                    <Skeleton className="h-5 w-40" />
-                  </TableCell>
-                  <TableCell className="whitespace-normal">
-                    <Skeleton className="h-5 w-36" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-5 w-14" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-5 w-24" />
-                  </TableCell>
-                  <TableCell className="min-w-56 whitespace-normal">
-                    <div className="space-y-3">
-                      <Skeleton className="h-5 w-24" />
-                      <Skeleton className="h-2 w-full" />
-                      <Skeleton className="h-4 w-32" />
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-5 w-24" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-5 w-36" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-8 w-20" />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        ) : budgets.length === 0 ? (
-          <div className={budgetsTableBudgetsPage.empty}>
-            <p className="text-muted-foreground text-sm">No hay presupuestos registrados</p>
-          </div>
-        ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nombre</TableHead>
-                <TableHead>Ministerio / Proyecto</TableHead>
-                <TableHead>Moneda</TableHead>
-                <TableHead>Monto total</TableHead>
-                <TableHead>Monto utilizado</TableHead>
-                <TableHead>Disponible</TableHead>
-                <TableHead>Periodo</TableHead>
-                <TableHead>Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {budgets.map((budget) => {
-                const owner = getOwnerLabel(budget);
-                const availableAmount = budget.totalAmount - budget.usedAmount;
+    <BoardCard className={budgetsTableBudgetsPage.card}>
+      <BoardTableHead columns={COLUMNS} labels={HEADERS} />
 
-                return (
-                  <TableRow key={budget.id}>
-                    <TableCell className="whitespace-normal align-top">
-                      <div className="space-y-1">
-                        <p className="font-medium text-foreground">{budget.name || "Sin nombre"}</p>
-                      </div>
-                    </TableCell>
-                    <TableCell className="whitespace-normal align-top">
-                      <div className="space-y-1">
-                        <p className="font-medium text-foreground">{owner.name}</p>
-                        <p className="text-muted-foreground text-xs">{owner.type}</p>
-                      </div>
-                    </TableCell>
-                    <TableCell className="align-top">{budget.currency}</TableCell>
-                    <TableCell className="align-top">
-                      {formatCurrency(budget.currency, budget.totalAmount)}
-                    </TableCell>
-                    <TableCell className="min-w-64 whitespace-normal align-top">
-                      <div className="space-y-3">
-                        <p>{formatCurrency(budget.currency, budget.usedAmount)}</p>
-                        <BudgetProgressBar
-                          currency={budget.currency}
-                          totalAmount={budget.totalAmount}
-                          usedAmount={budget.usedAmount}
-                        />
-                      </div>
-                    </TableCell>
-                    <TableCell
-                      className={cn(
-                        "align-top font-medium",
-                        availableAmount < 0 && "text-accent-foreground dark:text-expense",
-                      )}
-                    >
-                      {formatCurrency(budget.currency, availableAmount)}
-                    </TableCell>
-                    <TableCell className="whitespace-normal align-top">
-                      {formatPeriod(budget.startDate, budget.endDate)}
-                    </TableCell>
-                    <TableCell className="align-top">
-                      <Button
+      {errorMessage ? (
+        <p className={budgetsTableBudgetsPage.error} role="alert">
+          {errorMessage}
+        </p>
+      ) : null}
+      {!errorMessage && budgets.length === 0 ? (
+        <p className={budgetsTableBudgetsPage.message}>No hay presupuestos registrados.</p>
+      ) : null}
+
+      {budgets.length > 0 ? (
+        <BoardTableList>
+          {budgets.map((budget) => {
+            const percent = getUsagePercent(budget);
+            return (
+              <BoardTableRow columns={COLUMNS} key={budget.id}>
+                <div className={budgetsTableBudgetsPage.name}>
+                  <span className={budgetsTableBudgetsPage.nameText}>{budget.name}</span>
+                  <span className={budgetsTableBudgetsPage.owner}>{getBudgetOwner(budget)}</span>
+                </div>
+                <span className={budgetsTableBudgetsPage.currency}>{budget.currency}</span>
+                <b className={budgetsTableBudgetsPage.total}>
+                  {formatMoney(budget.totalAmount, budget.currency)}
+                </b>
+                <div className={budgetsTableBudgetsPage.usage}>
+                  <ProgressBar
+                    label={`${budget.name}: ${percent} % usado`}
+                    tone={USAGE_TONE[getUsageLevel(percent)]}
+                    value={percent}
+                  />
+                  <span className={budgetsTableBudgetsPage.usageLabel}>{percent} % usado</span>
+                </div>
+                <span className={budgetsTableBudgetsPage.validity}>
+                  {formatValidity(budget.startDate, budget.endDate)}
+                </span>
+                <div className={budgetsTableBudgetsPage.actions}>
+                  <RowIconButton label={`Editar ${budget.name}`} onClick={() => onEdit(budget)}>
+                    <PencilLine aria-hidden="true" className={budgetsTableBudgetsPage.icon} />
+                  </RowIconButton>
+                  <ConfirmDeleteDialog
+                    confirmLabel="Eliminar presupuesto"
+                    onConfirm={() => onDelete(budget)}
+                    title="Eliminar presupuesto"
+                    trigger={
+                      <button
+                        aria-label={`Eliminar ${budget.name}`}
+                        className={rowIconButtonClass}
                         type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onEdit?.(budget)}
                       >
-                        <PencilLine className="size-4" />
-                        Editar
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        )}
-      </CardContent>
-    </Card>
+                        <Trash2 aria-hidden="true" className={budgetsTableBudgetsPage.icon} />
+                      </button>
+                    }
+                  >
+                    ¿Seguro que quieres eliminar “{budget.name}”? Esta acción no se puede deshacer.
+                  </ConfirmDeleteDialog>
+                </div>
+              </BoardTableRow>
+            );
+          })}
+        </BoardTableList>
+      ) : null}
+
+      <BoardPagination
+        onPageChange={onPageChange}
+        page={page}
+        pageCount={pageCount}
+        pageSize={BUDGETS_PAGE_SIZE}
+        total={total}
+      />
+    </BoardCard>
   );
 }
