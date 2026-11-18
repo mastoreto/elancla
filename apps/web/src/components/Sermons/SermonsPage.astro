@@ -13,6 +13,7 @@ import { getHtmlLang, localizePath } from 'src/i18n/utils';
 import { getMessages } from 'src/i18n/messages';
 import Layout from 'src/layouts/Layout.astro';
 import { getSiteConfig } from '@ancla/content';
+import { RISE_IN } from 'src/utils/riseIn';
 
 interface Props {
   locale: Locale;
@@ -41,6 +42,17 @@ const initialId = live?.id ?? latest?.id;
 const initialTitle = live?.title ?? latest?.title ?? copy.player.emptyTitle;
 const PAGE_SIZE = 9;
 const subscribeUrl = `${site.social.youtube ?? 'https://youtube.com'}?sub_confirmation=1`;
+// The server sets `data-live` on the hero and scripts/sermons.ts flips it when the stream starts or ends.
+const LIVE_ONLY = 'group-data-[live=false]/hero:hidden';
+const IDLE_ONLY = 'group-data-[live=true]/hero:hidden';
+const DOT = 'inline-block rounded-full bg-obra-white animate-pulse-soft motion-reduce:animate-none';
+const SECTION = 'flex flex-col gap-5 px-gutter pt-[clamp(3.5rem,7vw,5rem)]';
+const HERO_BLOCK = 'flex flex-col gap-6.5';
+const HERO_TITLE = 'ln-h text-[clamp(2.875rem,7.5vw,6.75rem)] leading-[0.94] tracking-[-0.03em] text-balance';
+const LEAD = 'm-0 max-w-140 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft';
+const SCREEN_CHIP =
+  'pointer-events-none absolute top-4 left-4 z-1 inline-flex items-center gap-2 rounded-full px-3.25 py-1.75 font-obra-sans-bold text-[0.75rem]';
+const RED_EM = 'text-obra-red not-italic';
 const chips = [
   { label: copy.list.all, href: `${path}#sermones`, on: !selected },
   ...series.map((serie) => ({
@@ -61,9 +73,9 @@ const chips = [
   ]}
   locale={locale}
 >
-  <div class="ln sm">
+  <div class="ln overflow-x-clip bg-obra-paper [&_[hidden]]:hidden!">
     <section
-      class="sm-hero sm-pad"
+      class="group/hero flex items-center gap-14 px-gutter pt-[clamp(7rem,12vh,8.5rem)] max-lg:flex-col max-lg:items-stretch max-lg:gap-8"
       data-sermons-hero
       data-live={live ? 'true' : 'false'}
       data-latest-id={latest?.id ?? ''}
@@ -73,32 +85,46 @@ const chips = [
       data-playing-chip={copy.player.playingChip}
       data-latest-chip={copy.player.latestChip}
     >
-      <div class="sm-hero__text">
-        <div class="sm-hero__block" data-live-only>
-          <span class="sm-badge sm-rise"><i class="sm-dot" aria-hidden="true"></i>{copy.hero.live.badge}</span>
-          <h1 class="ln-h sm-hero__title sm-rise" style="--d: .15s">{copy.hero.live.titleBefore}<em>{copy.hero.live.titleEmphasis}</em></h1>
-          <p class="sm-lead sm-rise" style="--d: .3s">{copy.hero.live.body}</p>
-          <div class="sm-hero__cta sm-rise" style="--d: .45s">
+      <div class="min-w-0 flex-1">
+        <div class:list={[HERO_BLOCK, LIVE_ONLY]} data-live-only>
+          <span
+            class:list={[
+              'inline-flex items-center gap-2.5 self-start rounded-full bg-obra-live px-4 py-2.25 font-obra-sans-bold text-[0.8125rem] tracking-[0.14em] text-white uppercase',
+              RISE_IN,
+            ]}
+          ><i class:list={[DOT, 'size-2']} aria-hidden="true"></i>{copy.hero.live.badge}</span>
+          <h1 class:list={[HERO_TITLE, RISE_IN]} style="--d: .15s">{copy.hero.live.titleBefore}<em class={RED_EM}>{copy.hero.live.titleEmphasis}</em></h1>
+          <p class:list={[LEAD, RISE_IN]} style="--d: .3s">{copy.hero.live.body}</p>
+          <div class:list={['flex flex-wrap gap-3', RISE_IN]} style="--d: .45s">
             <Button href={live ? watchUrl(live.id) : site.social.youtube} arrow target="_blank" rel="noopener" data-live-link>{copy.hero.live.primaryCta}</Button>
             <Button href="#sermones" variant="ghost">{copy.hero.live.secondaryCta}</Button>
           </div>
         </div>
-        <div class="sm-hero__block" data-idle-only>
-          <span class="ln-eyebrow sm-rise">{copy.hero.idle.eyebrow}</span>
-          <h1 class="ln-h sm-hero__title sm-rise" style="--d: .15s">{copy.hero.idle.titleBefore}<em>{copy.hero.idle.titleEmphasis}</em>{copy.hero.idle.titleAfter}</h1>
-          <p class="sm-lead sm-rise" style="--d: .3s">{copy.hero.idle.body}</p>
-          <div class="sm-hero__cta sm-rise" style="--d: .45s">
+        <div class:list={[HERO_BLOCK, IDLE_ONLY]} data-idle-only>
+          <span class:list={['ln-eyebrow', RISE_IN]}>{copy.hero.idle.eyebrow}</span>
+          <h1 class:list={[HERO_TITLE, RISE_IN]} style="--d: .15s">{copy.hero.idle.titleBefore}<em class={RED_EM}>{copy.hero.idle.titleEmphasis}</em>{copy.hero.idle.titleAfter}</h1>
+          <p class:list={[LEAD, RISE_IN]} style="--d: .3s">{copy.hero.idle.body}</p>
+          <div class:list={['flex flex-wrap gap-3', RISE_IN]} style="--d: .45s">
             <Button href="#sermones" arrow>{copy.hero.idle.primaryCta}</Button>
             <Button href={subscribeUrl} variant="ghost" target="_blank" rel="noopener">{copy.hero.idle.secondaryCta}</Button>
           </div>
         </div>
       </div>
 
-      <div class="sm-player sm-rise" style="--d: .5s" id="vivo">
-        <div class="sm-screen" id="reproductor">
+      <div
+        class:list={[
+          'flex flex-[0_0_min(640px,46%)] flex-col gap-5 rounded-[48px] bg-obra-mist p-5 max-lg:flex-none max-lg:rounded-[32px] max-lg:p-3',
+          RISE_IN,
+        ]}
+        style="--d: .5s"
+        id="vivo"
+        data-sermons-player
+      >
+        <div class="relative aspect-video overflow-hidden rounded-[36px] bg-obra-warm max-lg:rounded-[22px]" id="reproductor">
           {
             initialId ? (
               <iframe
+                class="absolute inset-0 size-full border-0"
                 data-player
                 src={embedUrl(initialId)}
                 title={copy.player.iframeTitle}
@@ -108,56 +134,74 @@ const chips = [
                 allowfullscreen
               />
             ) : (
-              <div class="sm-screen__empty">
-                <AnchorMark id="sm-empty" outline={false} class="sm-screen__anchor" />
-                <b>{copy.player.emptyTitle}</b>
-                <span>{copy.player.emptyBody}</span>
+              <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 p-6 text-center text-obra-cream">
+                <AnchorMark id="sm-empty" outline={false} class="mb-2 h-auto w-12 text-obra-red-live opacity-60" />
+                <b class="font-obra-serif text-[1.5rem]">{copy.player.emptyTitle}</b>
+                <span class="text-[0.9375rem] text-obra-sand">{copy.player.emptyBody}</span>
               </div>
             )
           }
-          <span class="sm-chip sm-chip--live" data-live-only><i class="sm-dot" aria-hidden="true"></i>{copy.player.liveChip}</span>
-          <span class="sm-chip" data-idle-only data-player-chip>{copy.player.latestChip}</span>
+          <span
+            class:list={[SCREEN_CHIP, 'bg-obra-live tracking-[0.08em] text-white uppercase', LIVE_ONLY]}
+            data-live-only
+          ><i class:list={[DOT, 'size-1.75']} aria-hidden="true"></i>{copy.player.liveChip}</span>
+          <span
+            class:list={[SCREEN_CHIP, 'bg-obra-white tracking-[0.04em] text-obra-ink', IDLE_ONLY]}
+            data-idle-only
+            data-player-chip
+          >{copy.player.latestChip}</span>
         </div>
         {
           initialId && (
-            <div class="sm-player__info">
-              <span class="sm-player__eyebrow" data-player-eyebrow>{live || !latest ? copy.player.liveMeta : metaOf(latest)}</span>
-              <b data-player-title>{initialTitle}</b>
-              <span class="sm-next" data-idle-only>{copy.player.nextService}</span>
+            <div class="flex flex-col gap-2.5 px-4 pb-3 max-sm:px-2 max-sm:pb-2">
+              <span class="font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-red uppercase" data-player-eyebrow>{live || !latest ? copy.player.liveMeta : metaOf(latest)}</span>
+              <b class="font-obra-serif text-[clamp(1.625rem,2.4vw,2.125rem)] leading-[1.05] font-bold wrap-anywhere" data-player-title>{initialTitle}</b>
+              <span
+                class:list={[
+                  "inline-flex items-center gap-2.5 font-obra-sans-bold text-[0.875rem] before:size-2 before:rounded-full before:bg-obra-stone before:content-['']",
+                  IDLE_ONLY,
+                ]}
+                data-idle-only
+              >{copy.player.nextService}</span>
             </div>
           )
         }
       </div>
     </section>
 
-    <section id="sermones" class="sm-section sm-pad" data-sermons-list data-page-size={PAGE_SIZE}>
+    <section id="sermones" class={SECTION} data-sermons-list data-page-size={PAGE_SIZE}>
       <span class="ln-eyebrow">{copy.list.eyebrow}</span>
-      <h2 class="ln-h sm-title">{copy.list.title}<em>{copy.list.emphasis}</em></h2>
-      <div class="sm-tools">
+      <h2 class="ln-h text-[clamp(2.25rem,4.2vw,3.75rem)] leading-none">{copy.list.title}<em class={RED_EM}>{copy.list.emphasis}</em></h2>
+      <div class="flex items-center justify-between gap-4 max-lg:flex-col max-lg:items-stretch">
         {
           chips.length > 1 && (
-            <div class="sm-chips">
+            <div class="flex flex-wrap gap-2.5">
               {chips.map((chip) => (
                 <a href={chip.href} class="ln-chip" data-on={chip.on} aria-current={chip.on ? 'page' : undefined}>{chip.label}</a>
               ))}
             </div>
           )
         }
-        <label class="sm-search">
+        <label class="flex min-h-13 flex-[0_0_340px] items-center gap-3 rounded-full bg-obra-white px-5.5 text-obra-muted focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-obra-red max-lg:flex-none">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4 4"></path></svg>
           <span class="sr-only">{copy.list.searchLabel}</span>
-          <input type="search" placeholder={copy.list.searchPlaceholder} data-sermons-search />
+          <input
+            class="min-w-0 flex-1 border-0 bg-transparent text-[0.9375rem] leading-[inherit] text-obra-ink [outline:0] placeholder:text-obra-placeholder"
+            type="search"
+            placeholder={copy.list.searchPlaceholder}
+            data-sermons-search
+          />
         </label>
       </div>
 
-      {sermons.length === 0 && <p class="sm-empty">{copy.list.empty}</p>}
-      <p class="sm-empty" data-sermons-empty hidden>{copy.list.noResults}</p>
-      <div class="sm-grid">
+      {sermons.length === 0 && <p class="mx-0 my-6 text-[1.0625rem] text-obra-ink-soft">{copy.list.empty}</p>}
+      <p class="mx-0 my-6 text-[1.0625rem] text-obra-ink-soft" data-sermons-empty hidden>{copy.list.noResults}</p>
+      <div class="mt-3 grid grid-cols-3 gap-5 max-lg:grid-cols-2 max-sm:grid-cols-[1fr]">
         {
           sermons.map((sermon, index) => (
             <a
               href={watchUrl(sermon.id)}
-              class="sm-card"
+              class="group flex flex-col gap-4 rounded-[32px] bg-obra-mist px-4 pt-4 pb-6 text-inherit no-underline [transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s,background-color_0.4s] hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-obra-red"
               target="_blank"
               rel="noopener"
               hidden={index >= PAGE_SIZE}
@@ -166,15 +210,18 @@ const chips = [
               data-title={sermon.title}
               data-meta={metaOf(sermon)}
             >
-              <div class="sm-card__art">
+              <div class="relative aspect-video overflow-hidden rounded-[22px] bg-obra-linen">
                 <img class="ln-photo" src={`https://i.ytimg.com/vi/${sermon.id}/mqdefault.jpg`} alt="" loading="lazy" width="320" height="180" />
-                <span class="sm-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5.5v13l11-6.5z" fill="currentColor"></path></svg></span>
-                <span class="sm-card__dur">{sermon.duration}</span>
+                <span
+                  class="absolute top-1/2 left-1/2 flex size-14 -translate-1/2 items-center justify-center rounded-full bg-obra-white text-obra-red shadow-[0_12px_28px_-12px_rgba(21,21,21,0.6)] [transition:scale_0.5s_var(--ease-obra)] group-hover:scale-108"
+                  aria-hidden="true"
+                ><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5.5v13l11-6.5z" fill="currentColor"></path></svg></span>
+                <span class="absolute bottom-3.5 left-3.5 rounded-full bg-obra-ink/82 px-2.75 py-1.25 font-obra-sans-bold text-[0.75rem] text-white">{sermon.duration}</span>
               </div>
-              <div class="sm-card__body">
-                <span class="sm-card__meta">{dateFormat.format(new Date(sermon.publishedAt)).replace(/\./g, '')}</span>
-                <h3 class="sm-card__title">{sermon.title}</h3>
-                <span class="sm-card__by">{copy.list.watch} ↗</span>
+              <div class="flex flex-col gap-2.5 px-2">
+                <span class="font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-muted uppercase">{dateFormat.format(new Date(sermon.publishedAt)).replace(/\./g, '')}</span>
+                <h3 class="m-0 font-obra-serif text-[1.5625rem] leading-[1.1] font-bold wrap-anywhere max-sm:text-[1.375rem]">{sermon.title}</h3>
+                <span class="font-obra-sans-bold text-[0.8125rem] text-obra-red">{copy.list.watch} ↗</span>
               </div>
             </a>
           ))
@@ -182,7 +229,7 @@ const chips = [
       </div>
       {
         sermons.length > PAGE_SIZE && (
-          <div class="sm-more">
+          <div class="mt-4 flex justify-center">
             <Button variant="ghost" data-sermons-more>{copy.list.more}</Button>
           </div>
         )
@@ -191,20 +238,24 @@ const chips = [
 
     {
       series.length > 0 && (
-        <section class="sm-section sm-pad">
-          <div class="sm-series">
-            <div class="sm-series__head">
+        <section class={SECTION}>
+          <div class="rounded-[48px] bg-obra-warm p-[clamp(2rem,5vw,4rem)] text-obra-cream max-lg:rounded-[32px]">
+            <div class="mb-10 flex gap-16 *:min-w-0 *:flex-1 max-lg:flex-col max-lg:gap-5">
               <div>
-                <span class="ln-eyebrow">{copy.series.eyebrow}</span>
-                <h3 class="ln-h sm-series__title">{copy.series.title}<em>{copy.series.emphasis}</em></h3>
+                <span class="ln-eyebrow text-obra-red-live">{copy.series.eyebrow}</span>
+                <h3 class="ln-h mt-4 text-[clamp(2.5rem,4.4vw,4rem)] leading-none">
+                  {copy.series.title}<em class="text-obra-red-live not-italic">{copy.series.emphasis}</em></h3>
               </div>
-              <p>{copy.series.body}</p>
+              <p class="m-0 text-[1.125rem] leading-[1.55] text-obra-sand">{copy.series.body}</p>
             </div>
-            <div class="sm-series__grid">
+            <div class="grid grid-cols-3 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-[1fr]">
               {series.map((serie) => (
-                <a href={`${path}?serie=${serie.id}#sermones`} class="sm-serie">
-                  <small>{serie.count === 1 ? copy.series.countOne : copy.series.count.replace('{n}', String(serie.count))}</small>
-                  <b>{serie.title}</b>
+                <a
+                  href={`${path}?serie=${serie.id}#sermones`}
+                  class="flex flex-col gap-3 rounded-[28px] border border-obra-warm-line bg-obra-warm-card p-6 text-obra-cream no-underline [transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s] hover:-translate-y-0.5 hover:shadow-[0_14px_28px_-14px_rgba(0,0,0,0.6)]"
+                >
+                  <small class="font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-sand uppercase">{serie.count === 1 ? copy.series.countOne : copy.series.count.replace('{n}', String(serie.count))}</small>
+                  <b class="font-obra-serif text-[1.875rem] leading-[1.05] wrap-anywhere">{serie.title}</b>
                 </a>
               ))}
             </div>
@@ -213,20 +264,24 @@ const chips = [
       )
     }
 
-    <section class="sm-section sm-pad">
-      <div class="sm-cta">
-        <AnchorMark id="sm-cta" outline={false} class="sm-cta__anchor" />
-        <div class="sm-cta__text">
-          <span class="ln-eyebrow">{copy.cta.eyebrow}</span>
-          <h3 class="ln-h sm-cta__title">{copy.cta.title}</h3>
-          <p>{copy.cta.body}</p>
+    <section class={SECTION}>
+      <div class="relative flex items-center gap-14 overflow-hidden rounded-[48px] bg-obra-red p-[clamp(2rem,5vw,4rem)] text-white max-lg:flex-col max-lg:items-stretch max-lg:gap-7 max-lg:rounded-[32px]">
+        <AnchorMark
+          id="sm-cta"
+          outline={false}
+          class="pointer-events-none absolute -right-7.5 -bottom-10 h-auto w-65 text-white opacity-10"
+        />
+        <div class="relative flex flex-1 flex-col gap-3.5">
+          <span class="ln-eyebrow text-obra-blush">{copy.cta.eyebrow}</span>
+          <h3 class="ln-h text-[clamp(2.25rem,3.9vw,3.5rem)] leading-none">{copy.cta.title}</h3>
+          <p class="m-0 max-w-120 text-[1.125rem] leading-normal">{copy.cta.body}</p>
         </div>
-        <div class="sm-cta__actions">
-          <Button href={subscribeUrl} variant="dark" target="_blank" rel="noopener">{copy.cta.subscribe}</Button>
+        <div class="relative flex flex-[0_0_auto] flex-col">
+          <Button href={subscribeUrl} variant="dark" class="justify-center" target="_blank" rel="noopener">{copy.cta.subscribe}</Button>
         </div>
       </div>
     </section>
-    <div class="sm-end"></div>
+    <div class="h-[clamp(4rem,8vw,6rem)]"></div>
   </div>
 </Layout>
 

@@ -1,4 +1,5 @@
 ---
+import { RISE_IN } from 'src/utils/riseIn';
 import type { BlogArticle } from 'src/data/blog';
 import type { Locale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
@@ -14,23 +15,37 @@ interface Props {
 const { article, copy, locale } = Astro.props;
 ---
 
-<header class="bl-art-head bl-pad">
-  <nav class="bl-crumbs" aria-label="breadcrumb">
-    <a href={localizePath('/blog', locale)}>Blog</a><span aria-hidden="true">/</span><b>{article.category}</b>
+<header class="flex max-w-275 flex-col gap-6.5 px-gutter pt-[clamp(6.5rem,11vh,8rem)]">
+  <nav
+    class="flex items-center gap-2 font-obra-sans-bold text-[0.875rem] text-obra-muted"
+    aria-label="breadcrumb"
+  >
+    <a href={localizePath('/blog', locale)} class="no-underline hover:text-obra-red">Blog</a>
+    <span aria-hidden="true">/</span>
+    <b class="text-obra-red [font-weight:inherit]">{article.category}</b>
   </nav>
-  <h1 class="ln-h bl-rise">{article.title}</h1>
-  <p class="bl-lead bl-rise" style="--d: .15s">{article.description}</p>
-  <div class="bl-author bl-rise" style="--d: .3s">
-    <span class="bl-avatar" aria-hidden="true">{article.author.initials}</span>
-    <span>
+  <h1
+    class:list={['ln-h text-[clamp(2.5rem,5.8vw,5.25rem)] leading-[0.97] tracking-[-0.03em] text-balance', RISE_IN]}
+  >{article.title}</h1>
+  <p
+    class:list={['m-0 max-w-180 text-[clamp(1.1875rem,1.6vw,1.375rem)] leading-normal text-obra-ink-soft', RISE_IN]}
+    style="--d: .15s"
+  >{article.description}</p>
+  <div class:list={['flex flex-wrap items-center gap-3.5', RISE_IN]} style="--d: .3s">
+    <span class="flex size-12 flex-none items-center justify-center rounded-full bg-obra-red font-obra-sans-bold text-white" aria-hidden="true">{article.author.initials}</span>
+    <span class="flex flex-col gap-0.5">
       <b>{article.author.name}</b>
-      <small>{article.displayDate} · {article.readTime} · {article.wordCount} {copy.words}</small>
+      <small class="text-[0.875rem] text-obra-muted">{article.displayDate} · {article.readTime} · {article.wordCount} {copy.words}</small>
     </span>
   </div>
 </header>
 
-<section class="bl-cover bl-pad">
-  <BlogCover tint={article.tint} size="lg" class="bl-rise">
+<section class="mt-10 px-gutter">
+  <BlogCover
+    tint={article.tint}
+    size="hero"
+    class:list={['h-[clamp(240px,36vw,520px)]', RISE_IN]}
+  >
     <Pill>{article.coverCaption}</Pill>
   </BlogCover>
 </section>

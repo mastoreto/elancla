@@ -18,19 +18,22 @@ const href = article ? localizePath(getBlogArticlePath(article), locale) : '';
 ---
 
 {article && (
-  <section class="bl-section bl-pad">
+  <section class="pt-[clamp(3.5rem,7vw,5rem)] px-gutter">
     <span class="ln-eyebrow">{copy.counter}</span>
-    <a href={href} class="bl-feat">
-      <BlogCover tint={article.tint} size="lg" class="bl-feat__art">
+    <a
+    href={href}
+    class="mt-5 flex gap-10 rounded-[48px] bg-obra-mist p-5 text-inherit no-underline [transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s,background-color_0.4s] hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift max-lg:flex-col max-lg:gap-5 max-lg:rounded-[32px] max-lg:p-4"
+  >
+      <BlogCover tint={article.tint} size="lg" class="min-h-105 flex-[0_0_min(640px,46%)] max-lg:h-70 max-lg:min-h-0 max-lg:flex-none">
         <Pill tone="red">{copy.featured}</Pill>
       </BlogCover>
-      <div class="bl-feat__body">
+      <div class="flex min-w-0 flex-1 flex-col justify-center gap-4.5 py-5 pr-9 max-lg:px-2 max-lg:pt-2 max-lg:pb-4">
         <span class="ln-eyebrow">{article.category} · {article.displayDate}</span>
-        <h2 class="ln-h bl-feat__title">{article.title}</h2>
-        <p class="bl-lead">{article.excerpt}</p>
-        <div class="bl-feat__foot">
+        <h2 class="ln-h text-[clamp(2rem,3.6vw,3.25rem)] leading-none">{article.title}</h2>
+        <p class="m-0 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft">{article.excerpt}</p>
+        <div class="flex flex-wrap items-center gap-4">
           <Button as="span" arrow>{copy.read}</Button>
-          <small>{copy.by} {article.author.name} · {article.readTime}</small>
+          <small class="text-[0.875rem] text-obra-muted">{copy.by} {article.author.name} · {article.readTime}</small>
         </div>
       </div>
     </a>

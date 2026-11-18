@@ -119,7 +119,7 @@ function initFilters(signal: AbortSignal): void {
 
 function initNewsletterForms(signal: AbortSignal): void {
   document
-    .querySelectorAll<HTMLFormElement>('.blog-newsletter-form')
+    .querySelectorAll<HTMLFormElement>('[data-newsletter-form]')
     .forEach((form) => {
       form.addEventListener(
         'submit',
@@ -143,7 +143,7 @@ function initNewsletterForms(signal: AbortSignal): void {
 
 function initTocActiveState(): void {
   const tocLinks = Array.from(
-    document.querySelectorAll<HTMLAnchorElement>('.bl-toc-link')
+    document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')
   );
   const targets = tocLinks
     .map((link) => {
@@ -180,7 +180,7 @@ function initTocActiveState(): void {
 
 function initTocSmoothScroll(signal: AbortSignal): void {
   document
-    .querySelectorAll<HTMLAnchorElement>('.bl-toc-link[href^="#"]')
+    .querySelectorAll<HTMLAnchorElement>('[data-toc-link][href^="#"]')
     .forEach((link) => {
       link.addEventListener(
         'click',
@@ -210,7 +210,7 @@ function initReactions(signal: AbortSignal): void {
         'click',
         () => {
           const isActive = button.dataset.active === 'true';
-          const count = button.querySelector<HTMLElement>('.bl-react-count');
+          const count = button.querySelector<HTMLElement>('[data-reaction-count]');
           const current = Number.parseInt(count?.textContent ?? '0', 10);
 
           button.dataset.active = isActive ? 'false' : 'true';

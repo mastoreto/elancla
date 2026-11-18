@@ -1,4 +1,5 @@
 ---
+import { RISE_IN } from 'src/utils/riseIn';
 import Button from '../ui/Button.astro';
 import AnchorMark from '../AnchorMark.astro';
 
@@ -8,38 +9,46 @@ interface Props {
 
 const { copy } = Astro.props;
 const { frequency, now, categories } = copy.facts;
+const FACT_LABEL = 'font-obra-sans-bold text-[0.75rem] tracking-[0.12em] uppercase';
+const FACT_VALUE = 'font-obra-serif text-[1.875rem] leading-none';
 ---
 
-<section class="bl-hero bl-pad">
-  <div class="bl-hero__text">
-    <span class="ln-eyebrow bl-rise">{copy.eyebrow}</span>
-    <h1 class="ln-h bl-hero__title bl-rise" style="--d: .15s">
-      {copy.titleBefore}<em>{copy.emphasis}</em>{copy.titleAfter}
+<section class="flex items-end gap-16 px-gutter pt-[clamp(7rem,12vh,8.5rem)] max-lg:flex-col max-lg:items-stretch max-lg:gap-8">
+  <div class="flex min-w-0 flex-1 flex-col gap-6.5">
+    <span class:list={['ln-eyebrow', RISE_IN]}>{copy.eyebrow}</span>
+    <h1
+      class:list={['ln-h text-[clamp(2.875rem,7.5vw,6.75rem)] leading-[0.94] tracking-[-0.03em] text-balance', RISE_IN]}
+      style="--d: .15s"
+    >
+      {copy.titleBefore}<em class="text-obra-red not-italic">{copy.emphasis}</em>{copy.titleAfter}
     </h1>
-    <p class="bl-lead bl-rise" style="--d: .3s">{copy.body}</p>
-    <div class="bl-hero__cta bl-rise" style="--d: .45s">
+    <p class:list={['m-0 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft max-w-140', RISE_IN]} style="--d: .3s">{copy.body}</p>
+    <div class:list={['flex flex-wrap gap-3', RISE_IN]} style="--d: .45s">
       <Button href="#articulos" arrow>{copy.primaryCta}</Button>
       <Button href="#newsletter" variant="ghost">{copy.secondaryCta}</Button>
     </div>
   </div>
 
-  <div class="bl-facts bl-rise" style="--d: .5s">
-    <div class="bl-fact">
-      <small>{frequency.label}</small>
-      <strong>{frequency.value}</strong>
-      <span>{frequency.description}</span>
+  <div
+    class:list={['grid flex-[0_0_min(440px,34vw)] grid-cols-2 gap-2.5 max-lg:flex-none', RISE_IN]}
+    style="--d: .5s"
+  >
+    <div class="flex flex-col gap-1.5 rounded-[28px] p-5 bg-obra-white">
+      <small class:list={[FACT_LABEL, 'text-obra-muted']}>{frequency.label}</small>
+      <strong class={FACT_VALUE}>{frequency.value}</strong>
+      <span class="text-[0.875rem] text-obra-muted">{frequency.description}</span>
     </div>
-    <div class="bl-fact bl-fact--red">
-      <small>{now.label}</small>
-      <strong>{now.value}</strong>
-      <span>{now.description}</span>
+    <div class="flex flex-col gap-1.5 rounded-[28px] p-5 bg-obra-red text-white">
+      <small class:list={[FACT_LABEL, 'text-obra-blush']}>{now.label}</small>
+      <strong class={FACT_VALUE}>{now.value}</strong>
+      <span class="text-[0.875rem] text-obra-blush">{now.description}</span>
     </div>
-    <div class="bl-fact bl-fact--wide">
-      <div>
-        <small>{categories.label}</small>
-        <strong>{categories.value}</strong>
+    <div class="flex flex-col gap-1.5 rounded-[28px] p-5 col-span-2 flex-row items-center justify-between bg-obra-mist">
+      <div class="flex flex-col gap-1.5">
+        <small class:list={[FACT_LABEL, 'text-obra-muted']}>{categories.label}</small>
+        <strong class={FACT_VALUE}>{categories.value}</strong>
       </div>
-      <AnchorMark id="blog-fact-anchor" outline={false} />
+      <AnchorMark id="blog-fact-anchor" outline={false} class="h-auto w-7.5 text-obra-red" />
     </div>
   </div>
 </section>

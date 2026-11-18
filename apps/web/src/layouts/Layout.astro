@@ -330,7 +330,7 @@ if (pageType === 'article' && article) {
     {
       site.status === 'online' ? (
         <>
-          <main class="max-w-full flex flex-col relative overflow-clip">
+          <main class="max-w-full flex flex-col relative overflow-clip in-[.has-live-bar]:pt-11">
             <slot />
           </main>
           {footer && <Footer locale={locale} variant={footer === 'dark' ? 'dark' : 'red'} social={site.social} />}

@@ -8,8 +8,15 @@ const { items } = Astro.props;
 const repeated = [...items, ...items, ...items, ...items];
 ---
 
-<div class="bl-marquee" aria-hidden="true">
-  <div class="bl-marquee__track">
-    {repeated.map((item) => <span class="bl-marquee__item">{item}<i>●</i></span>)}
+<div
+  class="mt-[clamp(3rem,6vw,4.5rem)] overflow-hidden bg-obra-warm py-6 text-obra-cream"
+  aria-hidden="true"
+>
+  <div class="flex w-max animate-marquee motion-reduce:animate-none">
+    {repeated.map((item) => (
+      <span class="inline-flex items-center gap-7 pr-7 font-obra-serif text-[clamp(1.625rem,2.4vw,2.125rem)] font-bold whitespace-nowrap">
+        {item}<i class="text-[0.6em] text-obra-red-live not-italic">●</i>
+      </span>
+    ))}
   </div>
 </div>

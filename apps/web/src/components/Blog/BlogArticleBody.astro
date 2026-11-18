@@ -10,96 +10,154 @@ interface Props {
 }
 
 const { article, locale } = Astro.props;
-const figureClass = (block: Extract<BlogArticleBodyBlock, { type: 'figure' }>) =>
-  block.aspect === 'wide' ? 'bl-fig--wide' : block.aspect === 'square' ? 'bl-fig--square' : '';
+type FigureAspect = NonNullable<Extract<BlogArticleBodyBlock, { type: 'figure' }>['aspect']>;
+
+// Running text size shared by paragraphs, list items, pull quotes and captions.
+const BODY_TEXT = 'm-0 text-[clamp(1.0625rem,1.4vw,1.25rem)] leading-[1.7]';
+const DROP_CAP =
+  'first-letter:float-left first-letter:pt-1.5 first-letter:pr-3 first-letter:font-obra-serif first-letter:text-[5.75rem] first-letter:leading-[0.8] first-letter:font-bold first-letter:text-obra-red';
+const BLOCK_LABEL = 'font-obra-sans-bold text-[0.8125rem] not-italic';
+const FIGURE_HEIGHT: Record<FigureAspect, string> = {
+  landscape: 'h-85',
+  wide: 'h-70',
+  square: 'aspect-square h-auto',
+};
 ---
 
-<div class="bl-body">
+<div
+  class="flex max-w-180 min-w-0 flex-1 flex-col gap-6.5 text-obra-body [&_a]:text-obra-red [&_a]:underline [&_a]:underline-offset-3"
+>
   {
     article.body.map((block) => (
       <>
-        {block.type === 'paragraph' && <p class:list={[block.dropCap && 'bl-drop']} set:html={block.html} />}
+        {block.type === 'paragraph' && (
+          <p class:list={[BODY_TEXT, { [DROP_CAP]: block.dropCap }]} set:html={block.html} />
+        )}
 
         {block.type === 'heading' && block.level === 2 && (
-          <div class="bl-h" id={block.id}>
+          <div class="mt-5 flex scroll-mt-24 flex-col gap-2.5" id={block.id}>
             {block.eyebrow && <span class="ln-eyebrow">{block.eyebrow}</span>}
-            <h2>{block.text}</h2>
+            <h2 class="m-0 font-obra-serif text-[clamp(1.875rem,3.2vw,2.75rem)] leading-[1.02] font-bold tracking-[-0.02em] text-obra-ink">
+              {block.text}
+            </h2>
           </div>
         )}
 
-        {block.type === 'heading' && block.level === 3 && <h3>{block.text}</h3>}
+        {block.type === 'heading' && block.level === 3 && (
+          <h3 class="mx-0 mt-2 mb-0 font-obra-serif text-[1.75rem] leading-[1.1] text-obra-ink">{block.text}</h3>
+        )}
 
         {block.type === 'verse' && (
-          <blockquote class="bl-verse">
-            <p>{block.text}</p>
-            <cite>{block.reference}</cite>
+          <blockquote class="mx-0 my-2 flex flex-col gap-3.5 rounded-[36px] bg-obra-red p-[clamp(1.5rem,3vw,2.5rem)] text-white">
+            <p class="m-0 font-obra-serif text-[clamp(1.375rem,2.2vw,2rem)] leading-[1.2] font-bold">{block.text}</p>
+            <cite class:list={[BLOCK_LABEL, 'tracking-[0.16em] text-obra-blush uppercase']}>{block.reference}</cite>
           </blockquote>
         )}
 
         {block.type === 'figure' && (
-          <figure class:list={['bl-fig', figureClass(block)]}>
-            <div class="bl-art" style={`--tint: ${block.tint ?? '#efebe3'}`}>
-              <span class="bl-anchor-ghost" style="width: 90px"><AnchorMark id="blog-fig" outline={false} /></span>
+          <figure class="mx-0 my-2 flex flex-col gap-2.5">
+            <div
+              class:list={[
+                'relative flex items-center justify-center overflow-hidden rounded-[28px] bg-(--tint) p-4 max-sm:h-55',
+                FIGURE_HEIGHT[block.aspect ?? 'landscape'],
+              ]}
+              style={`--tint: ${block.tint ?? 'var(--color-obra-linen)'}`}
+            >
+              <span class="block w-22.5 text-obra-red opacity-16">
+                <AnchorMark id="blog-fig" outline={false} class="block h-auto w-full" />
+              </span>
             </div>
-            <figcaption><span>{block.label}</span><span>{block.caption}</span></figcaption>
+            <figcaption class="flex gap-3 text-[0.8125rem] text-obra-muted">
+              <span>{block.label}</span><span>{block.caption}</span>
+            </figcaption>
           </figure>
         )}
 
         {block.type === 'pullquote' && (
-          <blockquote class="bl-quote">
-            <p>{block.quote}</p>
-            {block.cite && <cite>{block.cite}</cite>}
+          <blockquote class="mx-0 my-3 flex flex-col gap-3 border-l-4 border-obra-red py-1.5 pl-6.5 font-obra-serif text-[clamp(1.5rem,2.5vw,2.25rem)] leading-[1.15] font-bold text-obra-ink">
+            <p class={BODY_TEXT}>{block.quote}</p>
+            {block.cite && (
+              <cite class:list={[BLOCK_LABEL, 'tracking-[0.12em] text-obra-muted']}>{block.cite}</cite>
+            )}
           </blockquote>
         )}
 
-        {block.type === 'list' && !block.ordered && <ul>{block.items.map((item) => <li><span set:html={item} /></li>)}</ul>}
-        {block.type === 'list' && block.ordered && <ol>{block.items.map((item) => <li><span set:html={item} /></li>)}</ol>}
+        {block.type === 'list' && !block.ordered && (
+          <ul class="m-0 flex list-none flex-col gap-3.5 p-0">
+            {block.items.map((item) => (
+              <li
+                class:list={[
+                  BODY_TEXT,
+                  "flex gap-3.5 before:mt-[0.7em] before:size-[9px] before:flex-none before:rounded-full before:bg-obra-red before:content-['']",
+                ]}
+              >
+                <span set:html={item} />
+              </li>
+            ))}
+          </ul>
+        )}
+        {block.type === 'list' && block.ordered && (
+          <ol class="m-0 flex list-none flex-col gap-3 p-0 [counter-reset:n]">
+            {block.items.map((item) => (
+              <li class="m-0 flex items-start gap-4 rounded-3xl bg-obra-white px-5.5 py-5 text-[1.0625rem] leading-normal [counter-increment:n] before:font-obra-serif before:text-[2.125rem] before:leading-none before:font-bold before:text-obra-red before:content-[counter(n)]">
+                <span set:html={item} />
+              </li>
+            ))}
+          </ol>
+        )}
 
         {block.type === 'video' && (
           <div>
-            <div class="bl-vid">
-              <div class="bl-vid__screen">
-                <span class="bl-vid__play" aria-hidden="true">
+            <div class="mx-0 my-2 flex flex-col gap-4 rounded-[36px] bg-obra-warm p-5 text-obra-cream">
+              <div class="flex h-75 items-center justify-center rounded-3xl bg-obra-warm-line max-sm:h-50">
+                <span class="flex size-19 items-center justify-center rounded-full bg-obra-red-live" aria-hidden="true">
                   <svg viewBox="0 0 24 24" width="30" height="30"><path d="M9 6.5v11l9-5.5z" fill="#fff" /></svg>
                 </span>
               </div>
-              <div class="bl-vid__info">
-                <span>
-                  <span class="bl-vid__eyebrow">{block.eyebrow}</span>
-                  <b>{block.title}</b>
-                  <small>{block.meta}</small>
+              <div class="flex items-end justify-between gap-3.5 px-2 pb-1.5">
+                <span class="flex flex-col gap-1.5">
+                  <span class="font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] text-obra-red-live uppercase">
+                    {block.eyebrow}
+                  </span>
+                  <b class="font-obra-serif text-[1.5rem]">{block.title}</b>
+                  <small class="text-[0.875rem] text-obra-sand">{block.meta}</small>
                 </span>
-                <small>{block.duration}</small>
+                <small class="text-[0.875rem] text-obra-sand">{block.duration}</small>
               </div>
             </div>
-            <p class="bl-vid__cap" style="margin-top: 10px">{block.caption}</p>
+            <p class="mx-0 mt-2.5 mb-0 flex gap-3 text-[clamp(1.0625rem,1.4vw,1.25rem)] leading-[1.7] text-obra-muted">
+              {block.caption}
+            </p>
           </div>
         )}
 
         {block.type === 'note' && (
-          <div class="bl-note">
+          <div class="mx-0 my-2 flex flex-col gap-2 rounded-3xl bg-obra-mist px-6.5 py-5.5">
             <span class="ln-eyebrow">{block.label}</span>
-            <p set:html={block.html} />
+            <p class="m-0 text-[1.0625rem] leading-[1.55]" set:html={block.html} />
           </div>
         )}
 
         {block.type === 'links' && (
-          <div class="bl-links">
+          <div class="flex flex-col gap-3">
             {block.links.map((link) => (
-              <a href={link.href} class="bl-link">
-                <b>{link.title}</b>
-                <span>{link.description}</span>
-                <span>{link.sourceLabel} · {link.meta}</span>
+              <a
+                href={link.href}
+                class="flex flex-col gap-1 rounded-3xl bg-obra-white px-5.5 py-4.5 [transition:translate_0.5s_var(--ease-obra)] hover:-translate-y-0.5"
+              >
+                <b class="font-obra-serif text-[1.25rem]">{link.title}</b>
+                <span class="text-[0.9375rem] text-obra-ink-soft">{link.description}</span>
+                <span class="text-[0.9375rem] text-obra-ink-soft">{link.sourceLabel} · {link.meta}</span>
               </a>
             ))}
           </div>
         )}
 
-        {block.type === 'divider' && <hr class="bl-divider" />}
+        {block.type === 'divider' && <hr class="mx-0 my-4 h-px bg-obra-ink/15" />}
 
         {block.type === 'tags' && (
-          <div class="bl-tags">
-            <div>
+          <div class="mt-8 flex flex-col gap-3.5">
+            <div class="flex flex-wrap gap-2">
               {block.tags.map((tag) => (
                 <a href={localizePath('/blog', locale)} class="ln-chip">{tag}</a>
               ))}
@@ -108,14 +166,19 @@ const figureClass = (block: Extract<BlogArticleBodyBlock, { type: 'figure' }>) =
         )}
 
         {block.type === 'reactions' && (
-          <div class="bl-reactions">
+          <div class="mt-6 flex flex-col gap-3.5">
             <b>{block.prompt}</b>
-            <div>
+            <div class="flex flex-wrap gap-2">
               {block.reactions.map((reaction) => (
-                <button type="button" class="bl-react" data-blog-reaction data-active="false">
+                <button
+                  type="button"
+                  class="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border-0 bg-obra-mist px-4.5 font-obra-sans-bold data-[active=true]:bg-obra-red data-[active=true]:text-white"
+                  data-blog-reaction
+                  data-active="false"
+                >
                   <span aria-hidden="true">{reaction.icon}</span>
                   {reaction.label}
-                  <span class="bl-react-count">{reaction.count}</span>
+                  <span data-reaction-count>{reaction.count}</span>
                 </button>
               ))}
             </div>

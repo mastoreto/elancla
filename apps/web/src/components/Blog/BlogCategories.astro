@@ -14,11 +14,12 @@ const filters = [
 ];
 ---
 
-<section class="bl-section bl-pad bl-cats">
+<section class="flex flex-col gap-5 pt-[clamp(3.5rem,7vw,5rem)] px-gutter">
   <span class="ln-eyebrow">{copy.counter}</span>
-  <h2 class="ln-h bl-cats__title">{copy.headlineBefore}<em>{copy.headlineEmphasis}</em></h2>
-  <p class="bl-lead">{copy.body}</p>
-  <div class="bl-cats__chips" role="group">
+  <h2 class="ln-h text-[clamp(2.25rem,4.2vw,3.75rem)] leading-none">
+    {copy.headlineBefore}<em class="text-obra-red not-italic">{copy.headlineEmphasis}</em></h2>
+  <p class="m-0 max-w-140 text-[1.0625rem] leading-[1.55] text-obra-ink-soft">{copy.body}</p>
+  <div class="flex flex-wrap gap-2.5" role="group">
     {
       filters.map((filter, index) => (
         <button type="button" class="ln-chip" data-blog-filter-button data-filter={filter.value} data-on={index === 0 ? 'true' : 'false'}>

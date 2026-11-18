@@ -56,7 +56,7 @@ export function initSermons(): void {
         play(videoId, name, meta, true, hero.dataset.playingChip);
         // Playing a sermon overrides the "live" look of the hero only for the player, not the stream state.
         frame
-          .closest<HTMLElement>('.sm-player')
+          .closest<HTMLElement>('[data-sermons-player]')
           ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       },
       { signal }

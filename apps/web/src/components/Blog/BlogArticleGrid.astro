@@ -13,11 +13,11 @@ interface Props {
 const { articles, copy, locale } = Astro.props;
 ---
 
-<section id="articulos" class="bl-pad" style="scroll-margin-top: 6rem">
-  <div id="blogArticleGrid" class="bl-grid">
+<section id="articulos" class="scroll-mt-24 px-gutter">
+  <div id="blogArticleGrid" class="grid grid-cols-[repeat(3,1fr)] max-lg:grid-cols-[repeat(2,1fr)] max-sm:grid-cols-[1fr] gap-5 pt-12 [&_[hidden]]:hidden">
     {articles.map((article) => <BlogArticleCard article={article} by={copy.by} locale={locale} />)}
   </div>
-  <div class="bl-more" data-blog-more>
+  <div class="mt-9 flex justify-center" data-blog-more>
     <Button variant="ghost" data-blog-more-button>{copy.loadMore}</Button>
   </div>
 </section>

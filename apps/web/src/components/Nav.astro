@@ -50,6 +50,45 @@ const styles = {
   actions: cn('flex items-center gap-2 xl:gap-3'),
   liveChip: cn('hidden xl:flex items-center gap-2 text-[11px] font-ui font-medium text-ink/60 uppercase tracking-wider'),
   liveDot: cn('w-1.5 h-1.5 rounded-full bg-primary live-dot'),
+  // Site-wide live bar and "we are live" popup, both shown by scripts/live.ts.
+  liveBar: cn(
+    'pointer-events-auto flex flex-wrap items-center justify-center gap-x-3.5 gap-y-1.5 px-4 py-2.25',
+    'bg-obra-live text-center font-obra-sans-bold text-[0.875rem] text-white no-underline [&[hidden]]:hidden'
+  ),
+  livePulse: cn('size-2 rounded-full bg-obra-white animate-pulse-soft motion-reduce:animate-none'),
+  liveDialog: cn(
+    'pointer-events-auto fixed inset-0 m-auto h-fit max-h-[calc(100dvh-2rem)] w-[min(31rem,calc(100vw-2rem))] overflow-hidden',
+    'rounded-[36px] border-0 bg-obra-paper p-0 font-obra-sans text-obra-ink',
+    'shadow-[0_40px_80px_-30px_rgba(21,21,21,0.6),0_0_0_1px_rgba(21,21,21,0.06)]',
+    'backdrop:bg-[radial-gradient(circle_at_50%_40%,rgba(168,20,27,0.28),rgba(21,21,21,0.62)_70%)] backdrop:[backdrop-filter:blur(5px)]',
+    'open:animate-dialog-in open:backdrop:animate-fade-in motion-reduce:open:animate-none motion-reduce:open:backdrop:animate-none',
+    '[&_:focus-visible]:outline-2 [&_:focus-visible]:outline-offset-2 [&_:focus-visible]:outline-obra-red'
+  ),
+  liveDialogMedia: cn(
+    'group relative flex aspect-video items-center justify-center overflow-hidden bg-obra-warm',
+    "after:absolute after:inset-0 after:bg-[linear-gradient(180deg,rgba(36,32,31,0.1),rgba(36,32,31,0.55))] after:content-['']"
+  ),
+  liveDialogThumb: cn(
+    'absolute inset-0 size-full object-cover opacity-75 [filter:grayscale(1)_sepia(0.14)_contrast(1.06)] [&[hidden]]:hidden',
+    'transition-transform duration-800 ease-obra group-hover:scale-104 motion-reduce:transition-none'
+  ),
+  liveDialogPlay: cn(
+    'relative z-1 flex size-18 items-center justify-center rounded-full bg-obra-white text-obra-red',
+    'shadow-[0_0_0_0_rgba(255,255,255,0.55)] animate-ring motion-reduce:animate-none'
+  ),
+  liveDialogBadge: cn(
+    'absolute top-4 left-4 z-1 inline-flex items-center gap-2.5 rounded-full bg-obra-live px-3.5 py-2',
+    'text-[0.75rem] tracking-[0.14em] text-white uppercase'
+  ),
+  liveDialogClose: cn(
+    'absolute top-2.5 right-2.5 z-2 size-11 cursor-pointer rounded-full border-0 bg-obra-paper/92',
+    'text-[1.5rem] leading-none text-obra-ink [transition:background-color_0.3s] hover:bg-obra-white'
+  ),
+  liveDialogButton: cn(
+    'inline-flex min-h-13 flex-auto items-center justify-center rounded-full px-6 text-[1rem] whitespace-nowrap no-underline',
+    '[transition:translate_0.5s_var(--ease-obra),scale_0.5s_var(--ease-obra),box-shadow_0.5s]',
+    'hover:-translate-y-0.5 hover:shadow-[0_14px_28px_-14px_rgba(168,20,27,0.55)] active:translate-none active:scale-98'
+  ),
   iconBtn: cn(
     isOnline ? 'hidden sm:inline-flex' : 'inline-flex',
     'h-9 w-9 items-center justify-center rounded-full',
@@ -77,10 +116,10 @@ const styles = {
 <!-- NAV -->
 <header class={styles.header} id="siteHeader">
   {isOnline && (
-    <a href={localizePath('/sermones#vivo', locale)} class="live-bar" data-live-bar hidden>
-      <span class="live-bar__dot" aria-hidden="true"></span>
+    <a href={localizePath('/sermones#vivo', locale)} class={styles.liveBar} data-live-bar hidden>
+      <span class={styles.livePulse} aria-hidden="true"></span>
       <span>{copy.liveStream.barText}</span>
-      <u>{copy.liveStream.barCta}</u>
+      <u class="underline-offset-3">{copy.liveStream.barCta}</u>
     </a>
   )}
   <div class={styles.wrapper}>
@@ -132,11 +171,11 @@ const styles = {
       <div class={styles.actions}>
         {isOnline && (
         <span class={styles.liveChip}>
-          <span data-live-off class="inline-flex items-center gap-2">
+          <span data-live-off class="inline-flex items-center gap-2 [&[hidden]]:hidden!">
             <span class={styles.liveDot}></span>
             {copy.live}
           </span>
-          <a href={localizePath('/sermones#vivo', locale)} data-live-on hidden class="inline-flex items-center gap-2 text-primary">
+          <a href={localizePath('/sermones#vivo', locale)} data-live-on hidden class="inline-flex items-center gap-2 text-primary [&[hidden]]:hidden!">
             <span class="w-1.5 h-1.5 rounded-full bg-primary live-dot"></span>
             {copy.liveStream.chip}
           </a>
@@ -213,20 +252,27 @@ const styles = {
 </header>
 
 {isOnline && (
-  <dialog class="live-dialog" data-live-dialog aria-labelledby="live-dialog-title">
-    <a href={localizePath('/sermones#vivo', locale)} class="live-dialog__media" data-live-dialog-close tabindex="-1" aria-hidden="true">
-      <img data-live-dialog-thumb alt="" width="640" height="360" />
-      <span class="live-dialog__play"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M8 5.5v13l11-6.5z" fill="currentColor"></path></svg></span>
+  <dialog class={styles.liveDialog} data-live-dialog aria-labelledby="live-dialog-title">
+    <a href={localizePath('/sermones#vivo', locale)} class={styles.liveDialogMedia} data-live-dialog-close tabindex="-1" aria-hidden="true">
+      <img class={styles.liveDialogThumb} data-live-dialog-thumb alt="" width="640" height="360" />
+      <span class={styles.liveDialogPlay}><svg viewBox="0 0 24 24" width="26" height="26"><path d="M8 5.5v13l11-6.5z" fill="currentColor"></path></svg></span>
     </a>
-    <span class="live-dialog__badge"><i class="live-bar__dot" aria-hidden="true"></i>{copy.liveStream.chip}</span>
-    <button type="button" class="live-dialog__x" data-live-dialog-close aria-label={copy.liveStream.popupClose}>×</button>
-    <div class="live-dialog__content">
-      <AnchorMark id="live-dialog-anchor" outline={false} class="live-dialog__anchor" />
-      <h2 id="live-dialog-title" class="live-dialog__title">{copy.liveStream.popupTitle}</h2>
-      <p class="live-dialog__body">{copy.liveStream.popupBody}</p>
-      <div class="live-dialog__actions">
-        <a href={localizePath('/sermones#vivo', locale)} class="live-dialog__btn" data-live-dialog-close autofocus>{copy.liveStream.popupHere}</a>
-        <a href="https://www.youtube.com" target="_blank" rel="noopener" class="live-dialog__btn live-dialog__btn--ghost" data-live-dialog-close data-live-dialog-youtube>{copy.liveStream.popupYoutube} ↗</a>
+    <span class={styles.liveDialogBadge}><i class={styles.livePulse} aria-hidden="true"></i>{copy.liveStream.chip}</span>
+    <button type="button" class={styles.liveDialogClose} data-live-dialog-close aria-label={copy.liveStream.popupClose}>×</button>
+    <div class="relative flex flex-col gap-3.5 overflow-hidden px-7 pt-7 pb-7.5">
+      <AnchorMark
+        id="live-dialog-anchor"
+        outline={false}
+        class="pointer-events-none absolute -right-3.5 -bottom-5.5 h-auto w-30 text-obra-red opacity-7"
+      />
+      <h2
+        id="live-dialog-title"
+        class="relative m-0 font-obra-serif text-[clamp(1.875rem,6vw,2.375rem)] leading-none font-bold tracking-[-0.02em] text-balance"
+      >{copy.liveStream.popupTitle}</h2>
+      <p class="relative m-0 text-[1.0625rem] leading-normal text-obra-ink-soft">{copy.liveStream.popupBody}</p>
+      <div class="relative mt-2 flex flex-wrap gap-3">
+        <a href={localizePath('/sermones#vivo', locale)} class={cn(styles.liveDialogButton, 'bg-obra-red text-white')} data-live-dialog-close autofocus>{copy.liveStream.popupHere}</a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" class={cn(styles.liveDialogButton, 'border-[1.5px] border-obra-ink bg-transparent text-obra-ink')} data-live-dialog-close data-live-dialog-youtube>{copy.liveStream.popupYoutube} ↗</a>
       </div>
     </div>
   </dialog>

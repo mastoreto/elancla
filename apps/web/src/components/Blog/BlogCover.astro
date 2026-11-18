@@ -3,16 +3,30 @@
 // Slot = pills shown top-left. (Swap for a real <img class="ln-photo"> once articles carry a photo.)
 import AnchorMark from '../AnchorMark.astro';
 
+type CoverSize = 'sm' | 'lg' | 'hero';
+
 interface Props {
   tint: string;
-  size?: 'sm' | 'lg';
+  size?: CoverSize;
   class?: string;
 }
 
+const SIZE: Record<CoverSize, { box: string; pills: string; ghost: string }> = {
+  sm: { box: 'rounded-[22px] p-4', pills: 'top-3.5 left-3.5', ghost: 'w-14' },
+  lg: { box: 'rounded-[36px] p-7', pills: 'top-4 left-4', ghost: 'w-30' },
+  hero: { box: 'rounded-[clamp(28px,3.3vw,48px)] p-7', pills: 'top-4 left-4', ghost: 'w-[clamp(90px,10vw,150px)]' },
+};
+
 const { tint, size = 'sm', class: className } = Astro.props;
+const { box, pills, ghost } = SIZE[size];
 ---
 
-<div class:list={['bl-art', size === 'lg' && 'bl-art--lg', className]} style={`--tint: ${tint}`}>
-  <span class="bl-art__pill"><slot /></span>
-  <span class="bl-anchor-ghost"><AnchorMark id="blog-cover" outline={false} /></span>
+<div
+  class:list={['relative flex items-end justify-end overflow-hidden bg-(--tint)', box, className]}
+  style={`--tint: ${tint}`}
+>
+  <span class:list={['absolute flex gap-2', pills]}><slot /></span>
+  <span class:list={['block text-obra-red opacity-16', ghost]}>
+    <AnchorMark id="blog-cover" outline={false} class="block h-auto w-full" />
+  </span>
 </div>

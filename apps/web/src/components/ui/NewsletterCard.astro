@@ -1,5 +1,5 @@
 ---
-// Red subscribe card with the faint anchor. The form is handled by initBlog (`.bl-newsletter-form`).
+// Red subscribe card with the faint anchor. The form is handled by initBlog (`[data-newsletter-form]`).
 import AnchorMark from '../AnchorMark.astro';
 import Button from './Button.astro';
 
@@ -20,27 +20,50 @@ interface Props {
 }
 
 const { copy, id } = Astro.props;
+const FIELD =
+  'min-h-13 w-full rounded-full border-0 bg-obra-white px-5.5 py-0 text-[0.9375rem] leading-[inherit] text-obra-ink placeholder:text-obra-placeholder focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-obra-ink';
 ---
 
-<section id={id} class="bl-news">
-  <div class="bl-news__card">
-    <AnchorMark id="news-anchor" outline={false} class="bl-news__anchor" />
-    <div class="bl-news__text">
-      <span class="ln-eyebrow bl-news__eyebrow">{copy.eyebrow}</span>
-      <h2 class="ln-h bl-news__title">{copy.title}</h2>
-      <p>{copy.description}</p>
+<section id={id} class="px-gutter pt-[clamp(3.5rem,7vw,5rem)]">
+  <div class="relative flex items-center gap-14 overflow-hidden rounded-[48px] bg-obra-red p-[clamp(2rem,5vw,4rem)] text-white max-lg:flex-col max-lg:items-stretch max-lg:gap-7 max-lg:rounded-[32px]">
+    <AnchorMark
+      id="news-anchor"
+      outline={false}
+      class="pointer-events-none absolute -right-7.5 -bottom-10 h-auto w-65 text-white opacity-10"
+    />
+    <div class="relative flex flex-1 flex-col gap-3.5">
+      <span class="ln-eyebrow text-obra-blush">{copy.eyebrow}</span>
+      <h2 class="ln-h text-[clamp(2.25rem,3.9vw,3.5rem)] leading-none">{copy.title}</h2>
+      <p class="m-0 max-w-120 text-[1.125rem] leading-normal">{copy.description}</p>
     </div>
-    <form class="bl-newsletter-form bl-news__form" data-thanks={copy.thanks}>
-      <label class="bl-field">
+    <form
+      class="relative flex flex-[0_0_min(460px,100%)] flex-col gap-3 max-lg:flex-none"
+      data-newsletter-form
+      data-thanks={copy.thanks}
+    >
+      <label>
         <span class="sr-only">{copy.name}</span>
-        <input type="text" name="name" autocomplete="name" placeholder={copy.namePlaceholder} />
+        <input
+          class={FIELD}
+          type="text"
+          name="name"
+          autocomplete="name"
+          placeholder={copy.namePlaceholder}
+        />
       </label>
-      <label class="bl-field">
+      <label>
         <span class="sr-only">{copy.email}</span>
-        <input type="email" name="email" autocomplete="email" required placeholder={copy.emailPlaceholder} />
+        <input
+          class={FIELD}
+          type="email"
+          name="email"
+          autocomplete="email"
+          required
+          placeholder={copy.emailPlaceholder}
+        />
       </label>
-      <Button type="submit" variant="dark"><span data-newsletter-label>{copy.submit}</span></Button>
-      <small>{copy.readers}</small>
+      <Button type="submit" variant="dark" class="justify-center"><span data-newsletter-label>{copy.submit}</span></Button>
+      <small class="text-[0.8125rem] text-obra-blush">{copy.readers}</small>
     </form>
   </div>
 </section>

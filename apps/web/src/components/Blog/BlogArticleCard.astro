@@ -16,12 +16,17 @@ const { article, by, locale } = Astro.props;
 const href = localizePath(getBlogArticlePath(article), locale);
 ---
 
-<a href={href} class="bl-card reveal" data-blog-article-card data-blog-filter={article.filter}>
-  <BlogCover tint={article.tint}><Pill>{article.category}</Pill></BlogCover>
-  <div class="bl-card__body">
-    <span class="bl-card__meta">{article.compactDate} · {article.readTime}</span>
-    <h3 class="bl-card__title">{article.title}</h3>
-    <span class="bl-card__excerpt">{article.excerpt}</span>
-    <span class="bl-card__by">{by} {article.author.name}</span>
+<a
+  href={href}
+  class="reveal flex flex-col gap-4 rounded-[32px] bg-obra-mist px-4 pt-4 pb-6 text-inherit no-underline [transition:transform_0.5s_var(--ease-obra),box-shadow_0.5s,background-color_0.4s] hover:[transform:translateY(-4px)] hover:bg-obra-white hover:shadow-obra-lift"
+  data-blog-article-card
+  data-blog-filter={article.filter}
+>
+  <BlogCover tint={article.tint} class="h-47.5 max-sm:h-37.5"><Pill>{article.category}</Pill></BlogCover>
+  <div class="flex flex-col gap-2.5 px-2">
+    <span class="font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-muted">{article.compactDate} · {article.readTime}</span>
+    <h3 class="m-0 font-obra-serif text-[1.5625rem] leading-[1.1] font-bold max-sm:text-[1.375rem]">{article.title}</h3>
+    <span class="text-[0.9375rem] leading-normal text-obra-ink-soft">{article.excerpt}</span>
+    <span class="font-obra-sans-bold text-[0.8125rem] text-obra-red">{by} {article.author.name}</span>
   </div>
 </a>

@@ -19,9 +19,19 @@ const prev = previous
 const nxt = next
   ? { href: getBlogArticlePath(next), label: `${copy.next} →`, title: next.title }
   : { href: '/blog#newsletter', label: `${copy.next} →`, title: copy.nextDelivery };
+const CARD =
+  'flex flex-col gap-2.5 rounded-[32px] bg-obra-mist p-7 text-inherit no-underline [transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s,background-color_0.4s] hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift max-sm:rounded-[28px] max-sm:p-5.5';
+const LABEL = 'font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] uppercase text-obra-muted';
+const TITLE = 'font-obra-serif text-[1.625rem] leading-[1.1] max-sm:text-[1.375rem]';
 ---
 
-<section class="bl-prevnext bl-pad">
-  <a href={localizePath(prev.href, locale)} class="bl-pn"><small>{prev.label}</small><b>{prev.title}</b></a>
-  <a href={localizePath(nxt.href, locale)} class="bl-pn bl-pn--next"><small>{nxt.label}</small><b>{nxt.title}</b></a>
+<section
+  class="grid grid-cols-[1fr_1fr] gap-4 px-gutter pt-[clamp(3.5rem,6vw,4.5rem)] max-sm:grid-cols-[1fr]"
+>
+  <a href={localizePath(prev.href, locale)} class={CARD}>
+    <small class={LABEL}>{prev.label}</small><b class={TITLE}>{prev.title}</b>
+  </a>
+  <a href={localizePath(nxt.href, locale)} class:list={[CARD, 'text-right max-sm:text-left']}>
+    <small class={LABEL}>{nxt.label}</small><b class={TITLE}>{nxt.title}</b>
+  </a>
 </section>

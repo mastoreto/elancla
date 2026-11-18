@@ -22,7 +22,7 @@ interface Props {
 const { articles, categories, featured, marqueeItems, series, copy, locale } = Astro.props;
 ---
 
-<div class="ln bl">
+<div class="ln overflow-x-clip bg-obra-paper">
   <BlogHero copy={copy.hero} />
   <BlogMarquee items={marqueeItems} />
   <BlogFeatured article={featured} copy={copy.featured} locale={locale} />
@@ -30,5 +30,5 @@ const { articles, categories, featured, marqueeItems, series, copy, locale } = A
   <BlogArticleGrid articles={articles} copy={copy.articles} locale={locale} />
   <BlogSeries series={series} copy={copy.series} locale={locale} />
   <NewsletterCard id="newsletter" copy={copy.newsletter} />
-  <div class="bl-end"></div>
+  <div class="h-[clamp(4rem,8vw,6rem)]"></div>
 </div>

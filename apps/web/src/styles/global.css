@@ -4,8 +4,6 @@
 @import "./LandingObra.css" layer(components);
 @import "./ContentPage.css" layer(components);
 @import "./Calendar.css" layer(components);
-@import "./blog.css" layer(components);
-@import "./Sermons.css" layer(components);
 @import "./loading.css" layer(components);
 @import "./PageTransitions.css" layer(components);
 @import "./ThemeTransition.css" layer(components);
@@ -156,6 +154,12 @@
   --color-obra-sand: #cfc7ba;
   --color-obra-cream: #f4efe6;
   --color-obra-blush: #fbe3e4;
+  --color-obra-body: #2c2927;
+  --color-obra-linen: #efebe3;
+  --color-obra-stone: #8a857d;
+  --color-obra-warm-card: #2f2a28;
+  --color-obra-live: #c8141c;
+  --color-obra-placeholder: #6f6b64;
   --color-obra-white: #ffffff; /* stays white in dark mode, unlike `white` (see the .dark overrides) */
   --color-obra-red: #a8141b;
   --color-obra-red-live: #ff2e34;
@@ -167,6 +171,7 @@
   --font-obra-brand: "Barastika", "Boston Angel Bold", serif;
 
   --shadow-obra-float: 0 14px 30px -20px rgba(21, 21, 21, 0.5);
+  --shadow-obra-lift: 0 22px 40px -26px rgba(21, 21, 21, 0.5);
 
   --ease-obra: cubic-bezier(0.22, 1, 0.36, 1);
   --spacing-gutter: clamp(1.25rem, 5vw, 4.5rem);
@@ -175,6 +180,13 @@
   --animate-drift-up: drift-up var(--t, 70s) linear infinite;
   --animate-drift-down: drift-down var(--t, 70s) linear infinite;
   --animate-halo: halo 2.6s 2.2s ease-out infinite;
+  /* Load entrance ("rise"); `--d` staggers each element. */
+  --animate-rise: rise 1.2s var(--ease-obra) var(--d, 0s) forwards;
+  --animate-marquee: marquee 34s linear infinite;
+  --animate-pulse-soft: pulse-soft 2.2s ease-in-out infinite;
+  --animate-ring: ring 2.6s ease-out infinite;
+  --animate-dialog-in: dialog-in 0.6s var(--ease-obra);
+  --animate-fade-in: fade-in 0.5s ease-out;
 
   @keyframes drift-up {
     from { transform: translateY(0); }
@@ -183,6 +195,26 @@
   @keyframes drift-down {
     from { transform: translateY(-50%); }
     to { transform: translateY(0); }
+  }
+  @keyframes rise {
+    to { opacity: 1; translate: none; }
+  }
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+  @keyframes ring {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5); }
+    70%, 100% { box-shadow: 0 0 0 22px rgba(255, 255, 255, 0); }
+  }
+  @keyframes dialog-in {
+    from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
   }
   @keyframes halo {
     0% { opacity: 0.5; transform: scale(0.6); }
