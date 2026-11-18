@@ -1,14 +1,11 @@
-import { ReceiptDetailsPanel } from "@/app/(dashboard)/receipts/components/receipt-details-panel";
 import { ReceiptFilePreview } from "@/app/(dashboard)/receipts/components/receipt-file-preview";
 import { ReceiptForm } from "@/app/(dashboard)/receipts/components/receipt-form";
 import type {
-  Receipt,
   ReceiptFormField,
   ReceiptFormValues,
   ReceiptModalMode,
   ReceiptRelatedOption,
 } from "@/app/(dashboard)/receipts/types/index";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -25,7 +22,6 @@ const receiptModalReceiptsPage = {
 interface ReceiptModalProps {
   open: boolean;
   mode: ReceiptModalMode;
-  receipt: Receipt | null;
   values: ReceiptFormValues;
   relatedOptions: ReceiptRelatedOption[];
   requiredFields?: ReceiptFormField[];
@@ -44,23 +40,15 @@ function getDialogCopy(mode: ReceiptModalMode) {
     };
   }
 
-  if (mode === "edit") {
-    return {
-      title: "Editar boleta",
-      description: "Actualiza los datos visibles y revisa el archivo asociado antes de guardar.",
-    };
-  }
-
   return {
-    title: "Ver boleta",
-    description: "Consulta la información visible de la boleta y su archivo adjunto.",
+    title: "Editar boleta",
+    description: "Actualiza los datos visibles y revisa el archivo asociado antes de guardar.",
   };
 }
 
 export function ReceiptModal({
   open,
   mode,
-  receipt,
   values,
   relatedOptions,
   requiredFields,
@@ -70,8 +58,6 @@ export function ReceiptModal({
   onCancel,
 }: ReceiptModalProps) {
   const dialogCopy = getDialogCopy(mode);
-  const previewFileUrl = mode === "view" ? receipt?.fileUrl : values.fileUrl;
-  const previewNumber = mode === "view" ? receipt?.number : values.number;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -81,32 +67,17 @@ export function ReceiptModal({
           <DialogDescription>{dialogCopy.description}</DialogDescription>
         </DialogHeader>
 
-        {mode === "view" && receipt ? (
-          <div className={receiptModalReceiptsPage.layout}>
-            <ReceiptDetailsPanel receipt={receipt} />
-            <ReceiptFilePreview fileUrl={previewFileUrl} receiptNumber={previewNumber} />
-          </div>
-        ) : (
-          <div className={receiptModalReceiptsPage.layout}>
-            <ReceiptForm
-              values={values}
-              relatedOptions={relatedOptions}
-              requiredFields={requiredFields}
-              onFieldChange={onFieldChange}
-              onSubmit={onSubmit}
-              onCancel={onCancel}
-            />
-            <ReceiptFilePreview fileUrl={previewFileUrl} receiptNumber={previewNumber} />
-          </div>
-        )}
-
-        {mode === "view" ? (
-          <div className="flex justify-end">
-            <Button type="button" variant="outline" onClick={onCancel}>
-              Cerrar
-            </Button>
-          </div>
-        ) : null}
+        <div className={receiptModalReceiptsPage.layout}>
+          <ReceiptForm
+            values={values}
+            relatedOptions={relatedOptions}
+            requiredFields={requiredFields}
+            onFieldChange={onFieldChange}
+            onSubmit={onSubmit}
+            onCancel={onCancel}
+          />
+          <ReceiptFilePreview fileUrl={values.fileUrl} receiptNumber={values.number} />
+        </div>
       </DialogContent>
     </Dialog>
   );

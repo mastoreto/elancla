@@ -1,0 +1,1 @@
+export { getValidityEndLabel } from "./validity";
