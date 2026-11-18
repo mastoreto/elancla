@@ -1,5 +1,7 @@
 import { CalendarClock, DoorOpen, Plus, ShieldAlert } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
 import {
   DashboardCard,
@@ -24,9 +26,11 @@ export default function AssemblyPage() {
     <>
       <DashboardPageHeader
         actions={
-          <Button className={assemblyPage.action} type="button">
-            <Plus aria-hidden="true" />
-            Publicar informe
+          <Button asChild={true} className={assemblyPage.action}>
+            <Link href={getChurchRoutePath("assembly", "new")}>
+              <Plus aria-hidden="true" />
+              Publicar informe
+            </Link>
           </Button>
         }
         description="Comparte informes completos con los asistentes mediante un código, solo durante la sesión y en el lugar."
