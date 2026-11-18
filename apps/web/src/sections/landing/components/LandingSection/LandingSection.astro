@@ -1,0 +1,25 @@
+---
+// A landing section that rests on the previous one like a laid stone: the rounded top
+// overlaps it by exactly the corner radius, so the corners always reveal the previous
+// section's colour. Scroll scripts square the corners off (`is-pinned`) while pinned.
+// Each section sets its own top padding, which must clear the 40px overlap.
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = HTMLAttributes<'section'>;
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<section
+  class:list={[
+    'relative isolate -mt-10 overflow-hidden rounded-t-[40px] first:mt-0',
+    'transition-[border-radius] duration-300 ease-obra',
+    'max-sm:rounded-t-[28px]',
+    // Higher priority than the breakpoint radius, as in the original cascade.
+    'first:rounded-none! [&.is-pinned]:rounded-none!',
+    className,
+  ]}
+  {...rest}
+>
+  <slot />
+</section>

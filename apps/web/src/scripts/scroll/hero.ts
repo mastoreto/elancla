@@ -6,14 +6,14 @@ export function initHero(root: HTMLElement, isDesktop: boolean): void {
   if (!hero) return;
   const q = <T extends Element>(s: string) => hero.querySelector<T>(s);
   const ins = hero.querySelectorAll('[data-hero-in]');
-  const facts = hero.querySelectorAll('.ln-fact');
+  const facts = hero.querySelectorAll('[data-hero-fact]');
   const photo = q<HTMLElement>('[data-hero-photo]');
   const anchorBox = q<HTMLElement>('[data-hero-anchor]');
   const anchorSvg = q<SVGElement>('[data-hero-anchor] svg');
   const outline = q<SVGPathElement>('[data-hero-anchor] [data-anchor-outline]');
   const clip = q<SVGRectElement>('[data-hero-anchor] [data-anchor-clip]');
-  const text = q<HTMLElement>('.ln-hero__text');
-  const factsBox = q<HTMLElement>('.ln-hero__facts');
+  const text = q<HTMLElement>('[data-hero-text]');
+  const factsBox = q<HTMLElement>('[data-hero-facts]');
   if (
     !photo ||
     !anchorBox ||

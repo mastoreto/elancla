@@ -3,7 +3,7 @@ import { gsap } from './lenis';
 /** Ministries wall: tiles are laid like stones, bottom row first. */
 export function initTogether(root: HTMLElement, isDesktop: boolean): void {
   const sec = root.querySelector<HTMLElement>('[data-ln="together"]');
-  const rows = sec?.querySelector<HTMLElement>('.ln-tog__rows');
+  const rows = sec?.querySelector<HTMLElement>('[data-tog-rows]');
   const head = sec?.querySelector<HTMLElement>('[data-tog-head]');
   if (!sec || !rows || !head) return;
   const tiles = [...sec.querySelectorAll<HTMLElement>('[data-tile]')].sort(

@@ -156,6 +156,7 @@
   --color-obra-sand: #cfc7ba;
   --color-obra-cream: #f4efe6;
   --color-obra-blush: #fbe3e4;
+  --color-obra-white: #ffffff; /* stays white in dark mode, unlike `white` (see the .dark overrides) */
   --color-obra-red: #a8141b;
   --color-obra-red-live: #ff2e34;
 

@@ -56,7 +56,7 @@ export function initLoadingOverlay(): void {
   const els = { ground, anchor, cap, outline, clip, hint: hint ?? ground };
   const navLogo = () => document.querySelector<HTMLElement>('[data-nav-anchor]');
   // Only the home has a hero anchor for the intro anchor to replace and carry to the header.
-  const isHome = () => !!document.querySelector('.ln-hero__anchor svg');
+  const isHome = () => !!document.querySelector('[data-hero-anchor] svg');
   const release = () => root.classList.remove('site-loader-lock', 'site-loader-pending');
 
   let flight: gsap.core.Tween | undefined;
@@ -111,7 +111,7 @@ export function initLoadingOverlay(): void {
       sync(flight.scrollTrigger?.progress ?? 0); // honours a restored scroll position
     };
     // The anchor first settles where the hero's own anchor sits, then travels to the nav on scroll.
-    const heroSvg = document.querySelector<SVGElement>('.ln-hero__anchor svg');
+    const heroSvg = document.querySelector<SVGElement>('[data-hero-anchor] svg');
     const spot = heroSvg?.getBoundingClientRect();
     if (spot && spot.width > 0) {
       settle = gsap.to(els.anchor, {

@@ -68,7 +68,6 @@ html.site-loader-pending body {
 }
 
 /* The floating anchor takes the place of the hero's own anchor while it is on screen. */
-html.ldr-floating .ln-hero__anchor svg { visibility: hidden; }
 
 /* Shown before paint via the inline script in Layout, and while the intro runs. */
 html.site-loader-pending .site-loader,

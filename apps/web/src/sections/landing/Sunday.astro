@@ -1,5 +1,6 @@
 ---
 import type { Messages } from 'src/i18n/messages';
+import { LandingSection } from 'src/sections/landing/components/LandingSection';
 
 interface Props {
   copy: Messages['landing']['sunday'];
@@ -10,30 +11,80 @@ interface Props {
 const { copy, street, mapsUrl, email } = Astro.props;
 ---
 
-<section id="domingo" class="ln-section ln-sun" data-ln="sunday">
-  <div class="ln-sun__card">
-    <div class="ln-sun__photo" data-sun-photo>
+<LandingSection
+  id="domingo"
+  data-ln="sunday"
+  class:list={[
+    'flex min-h-svh items-stretch bg-obra-paper px-[3.9vw] pt-[clamp(6rem,11vh,7rem)] pb-[clamp(1rem,6vh,3.5rem)]',
+    'max-lg:min-h-auto max-lg:px-8 max-lg:pt-8 max-lg:pb-11',
+    'max-sm:px-3 max-sm:pt-4 max-sm:pb-6',
+    'short-desktop:pt-22 short-desktop:pb-4',
+  ]}
+>
+  <div
+    class="flex flex-1 gap-[clamp(1.5rem,2.8vw,2.5rem)] rounded-[48px] bg-obra-mist p-5 max-lg:flex-col max-lg:gap-9 max-lg:p-6 max-sm:gap-7 max-sm:rounded-[32px] max-sm:p-4"
+  >
+    <div
+      class="relative flex-[0_0_39%] overflow-hidden rounded-[40px] max-lg:h-85 max-lg:flex-none max-lg:rounded-[32px] max-sm:h-57.5"
+      data-sun-photo
+    >
       <img src="/images/salon.jpg" alt={copy.photoAlt} class="ln-photo" style="object-position:50% 40%" loading="lazy" decoding="async" />
-      <span class="ln-sun__badge">{street}</span>
+      <span
+        class="absolute top-5 left-5 rounded-full bg-obra-white px-3.5 py-2 font-obra-sans-bold text-[0.875rem] max-lg:top-3.5 max-lg:left-3.5"
+      >
+        {street}
+      </span>
     </div>
-    <div class="ln-sun__body">
-      <div data-sun-in style="display:flex;flex-direction:column;gap:12px">
+    <div
+      class:list={[
+        'flex flex-1 flex-col justify-center gap-6 py-5 pr-10 pl-0',
+        'max-lg:gap-6.5 max-lg:px-4 max-lg:pt-0 max-lg:pb-3',
+        'max-sm:gap-5.5 max-sm:px-1 max-sm:pb-1',
+        'short-desktop:gap-[0.9rem] short-desktop:py-2 short-desktop:pr-8',
+      ]}
+    >
+      <div class="flex flex-col gap-3" data-sun-in>
         <span class="ln-eyebrow">{copy.eyebrow}</span>
-        <h2 class="ln-h ln-sun__title">{copy.title}</h2>
+        <h2
+          class="ln-h text-[clamp(2rem,3.9vw,3.5rem)] leading-none max-lg:text-[3.25rem] max-sm:text-[2.375rem] short-desktop:text-[clamp(1.9rem,3.2vw,2.75rem)]"
+        >
+          {copy.title}
+        </h2>
       </div>
-      <div class="ln-sun__rows" data-sun-in>
+      <div class="flex flex-col gap-1.5" data-sun-in>
         {copy.rows.map((row, i) => (
-          <div class="ln-row" data-sun-row={i}>
-            <span class="ln-row__t">{row.time}</span>
-            <b class="ln-row__h">{row.title}</b>
-            <span class="ln-row__d">{row.text}</span>
+          <div
+            class:list={[
+              'group grid grid-cols-[clamp(80px,8.3vw,120px)_1fr] items-baseline gap-x-5 gap-y-1 rounded-[28px] bg-transparent px-6 py-5',
+              'transition-[background-color,box-shadow] duration-600 ease-obra',
+              '[&.is-active]:bg-obra-white [&.is-active]:shadow-[0_16px_32px_-22px_rgba(21,21,21,0.45)]',
+              'max-lg:grid-cols-[110px_1fr] max-sm:grid-cols-[78px_1fr] max-sm:gap-x-3.5 max-sm:p-4',
+              'short-desktop:px-5 short-desktop:py-3',
+            ]}
+            data-sun-row={i}
+          >
+            <span
+              class="font-obra-serif text-[clamp(1.75rem,2.8vw,2.5rem)] leading-none text-obra-ash transition-[color] duration-600 ease-obra group-[.is-active]:text-obra-red max-lg:text-[2.375rem] max-sm:text-[1.875rem]"
+            >
+              {row.time}
+            </span>
+            <b class="font-obra-sans-bold text-[1.25rem] max-sm:text-[1.125rem]">{row.title}</b>
+            <span
+              class:list={[
+                'col-[2] text-[1rem] leading-[1.5] text-obra-ink-soft opacity-35 transition-opacity duration-600 ease-obra',
+                'group-[.is-active]:opacity-100 in-[.is-static]:opacity-100',
+                'max-sm:text-[0.9375rem] short-desktop:text-[0.9375rem] short-desktop:leading-[1.4]',
+              ]}
+            >
+              {row.text}
+            </span>
           </div>
         ))}
       </div>
-      <div class="ln-sun__cta" data-sun-in>
+      <div class="flex flex-wrap gap-3" data-sun-in>
         <a href={mapsUrl} class="ln-btn" target="_blank" rel="noopener">{copy.how}<span class="ln-btn__dot" aria-hidden="true">→</span></a>
         <a href={`mailto:${email}`} class="ln-btn ln-btn--ghost">{copy.write}</a>
       </div>
     </div>
   </div>
-</section>
+</LandingSection>

@@ -1,5 +1,6 @@
 ---
 import { localizePath } from 'src/i18n/utils';
+import { LandingSection } from 'src/sections/landing/components/LandingSection';
 import type { Locale } from 'src/i18n/config';
 import type { Messages } from 'src/i18n/messages';
 
@@ -66,37 +67,100 @@ const rows: Tile[][] = [
   ],
 ];
 const orderOf = (r: number, c: number) => (r === 3 ? -4 : r === 2 ? 0 : r === 1 ? 4 : 8) + c;
+
+// Desktop rows flex by `--grow`; stacked layouts become a grid ordered by `--ot` / `--om`.
+const TILE_LAYOUT = [
+  'box-border flex h-[clamp(96px,8.9vw,128px)] min-w-0 flex-[var(--grow,1)_1_0] items-end justify-between rounded-[32px]',
+  'font-obra-sans-bold text-[clamp(1rem,1.4vw,1.25rem)] no-underline',
+  'max-lg:order-(--ot) max-lg:h-28 max-lg:flex-none max-lg:rounded-[32px] max-lg:text-[1.25rem]',
+  'max-sm:order-(--om) max-sm:h-23 max-sm:rounded-[26px] max-sm:text-[1.0625rem]',
+];
+const LINK_TILE = [
+  TILE_LAYOUT,
+  'group px-6 py-5',
+  '[transition:background-color_0.4s,box-shadow_0.5s,translate_0.5s_var(--ease-obra)]',
+  'hover:-translate-y-0.75 hover:shadow-[0_18px_32px_-20px_rgba(21,21,21,0.5)]',
+  'max-lg:px-5.5 max-lg:py-5 max-sm:px-4.5 max-sm:py-4',
+];
+const TILE_TONE = {
+  light: 'bg-obra-mist text-obra-ink hover:bg-obra-white',
+  dark: 'bg-obra-ink text-white hover:bg-inherit hover:brightness-112',
+  red: 'bg-obra-red text-white hover:bg-inherit hover:brightness-112',
+} as const;
 ---
 
-<section id="juntos" class="ln-section ln-tog" data-ln="together">
-  <div class="ln-tog__head" data-tog-head>
-    <div>
+<LandingSection
+  id="juntos"
+  data-ln="together"
+  class:list={[
+    'flex min-h-svh flex-col justify-center gap-11 bg-obra-paper px-gutter pt-30 pb-18',
+    'max-lg:min-h-auto max-lg:justify-start max-lg:px-10 max-lg:py-24',
+    'max-sm:gap-8 max-sm:px-5 max-sm:py-18',
+  ]}
+>
+  <div class="flex items-end justify-between gap-12 max-lg:flex-col max-lg:items-start max-lg:gap-4" data-tog-head>
+    <div class="flex max-w-180 flex-col gap-3.5 max-lg:gap-4">
       <span class="ln-eyebrow">{copy.eyebrow}</span>
-      <h2 class="ln-h ln-tog__title">{copy.title}</h2>
+      <h2 class="ln-h text-[clamp(2.1rem,4.45vw,4rem)] max-lg:text-[3.375rem] max-lg:leading-none max-sm:text-[2.375rem]">
+        {copy.title}
+      </h2>
     </div>
-    <div class="ln-tog__side">
-      <p class="ln-tog__lead">{copy.text}</p>
-      <a href={localizePath('/nosotros', locale)} class="ln-tog__more">{copy.aboutLink}<span aria-hidden="true"> →</span></a>
+    <div class="flex max-w-180 flex-col items-start gap-3.5 max-lg:gap-4">
+      <p class="m-0 max-w-96 text-[1.0625rem] leading-[1.55] text-obra-ink-soft max-lg:max-w-130 max-sm:text-[1rem]">
+        {copy.text}
+      </p>
+      <a
+        href={localizePath('/nosotros', locale)}
+        class="font-obra-sans-bold text-obra-red underline underline-offset-4 hover:decoration-2"
+      >
+        {copy.aboutLink}<span aria-hidden="true"> →</span>
+      </a>
     </div>
   </div>
 
-  <div class="ln-tog__rows">
+  <div class="flex flex-col gap-3 max-lg:grid max-lg:grid-cols-3 max-lg:gap-2.5 max-sm:grid-cols-2" data-tog-rows>
     {rows.map((row, r) => (
-      <div class="ln-tog__row">
+      <div class="flex gap-3 max-lg:contents">
         {row.map((t, c) => t.kind === 'link' ? (
           <a
             href={t.key === 'women' ? EXTERNAL_WOMEN : localizePath(ministryHref[t.key], locale)}
             target={t.key === 'women' ? '_blank' : undefined}
             rel={t.key === 'women' ? 'noopener' : undefined}
-            class:list={['ln-tile', { 'ln-tile--dark': t.tone === 'dark', 'ln-tile--red': t.tone === 'red' }]} style={`--grow:${t.w};--om:${t.om};--ot:${t.ot}`} data-tile={orderOf(r, c)}>
-            {copy.tiles[t.key]}<span class="ln-tile__ar" aria-hidden="true">→</span>
+            class:list={[LINK_TILE, TILE_TONE[t.tone ?? 'light']]}
+            style={`--grow:${t.w};--om:${t.om};--ot:${t.ot}`}
+            data-tile={orderOf(r, c)}
+          >
+            {copy.tiles[t.key]}
+            <span
+              class="-translate-x-1.5 opacity-0 [transition:opacity_0.4s,translate_0.5s_var(--ease-obra)] group-hover:translate-none group-hover:opacity-100 group-focus-visible:translate-none group-focus-visible:opacity-100"
+              aria-hidden="true"
+            >→</span>
           </a>
         ) : (
-          <div class:list={['ln-tile', 'ln-tile--photo', { 'ln-tile--wide': t.wide }]} style={`--grow:${t.w};--om:${t.om};--ot:${t.ot};--pos:${t.pos}`} data-tile={orderOf(r, c)}>
-            <img src={t.src} alt={copy.photos[t.key]} style={t.crop} loading="lazy" decoding="async" />
+          <div
+            class:list={[
+              TILE_LAYOUT,
+              'group relative overflow-hidden bg-obra-mist p-0 max-sm:col-span-2',
+              { 'max-lg:col-span-3 max-lg:h-40 max-sm:col-span-2 max-sm:h-23': t.wide },
+            ]}
+            style={`--grow:${t.w};--om:${t.om};--ot:${t.ot};--pos:${t.pos}`}
+            data-tile={orderOf(r, c)}
+          >
+            <img
+              src={t.src}
+              alt={copy.photos[t.key]}
+              class:list={[
+                'absolute max-w-none [filter:grayscale(1)_sepia(0.14)_contrast(1.06)] transition-transform duration-1400 ease-obra group-hover:scale-104',
+                // The inline crop only applies to the desktop rows.
+                'max-lg:static max-lg:top-auto! max-lg:left-auto! max-lg:h-full max-lg:w-full! max-lg:max-w-full max-lg:object-cover max-lg:object-(--pos)',
+              ]}
+              style={t.crop}
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         ))}
       </div>
     ))}
   </div>
-</section>
+</LandingSection>

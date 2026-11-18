@@ -1,5 +1,6 @@
 ---
 import { doctrineIcons } from 'src/data/doctrineIcons';
+import { LandingSection } from 'src/sections/landing/components/LandingSection';
 import { localizePath } from 'src/i18n/utils';
 import type { Locale } from 'src/i18n/config';
 import type { Messages } from 'src/i18n/messages';
@@ -17,29 +18,43 @@ const lines = copy.lines.map((raw) => ({
 }));
 ---
 
-<section id="dios" class="ln-section ln-god" data-ln="god">
+<LandingSection
+  id="dios"
+  data-ln="god"
+  class:list={[
+    'flex min-h-svh flex-col items-center justify-center gap-[clamp(1.5rem,4vh,2.5rem)] bg-obra-paper px-gutter py-24 text-center',
+    'max-lg:gap-11 max-lg:px-11 max-lg:py-30',
+    'max-sm:gap-8 max-sm:px-6 max-sm:py-22',
+  ]}
+>
   <span class="ln-eyebrow" data-god-eyebrow>{copy.eyebrow}</span>
-  <p class="ln-god__text">
+  <p
+    class="m-0 font-obra-serif text-[clamp(2rem,5.55vw,5rem)] leading-[1.08] font-bold tracking-[-0.022em] max-lg:text-[4rem] max-lg:leading-[1.1] max-sm:text-[2.5rem]"
+  >
     {lines.map((line) => (
-      <span class:list={['ln-god__line', { 'ln-god__line--accent': line.accent }]}>
+      <span class:list={['block max-lg:not-first:mt-[0.15em]', { 'text-obra-red': line.accent }]}>
         {line.tokens.map((token, i) => (
           token.startsWith('@') ? (
             <>
-              <span class="ln-god__pic" data-god-pic aria-hidden="true">
-                <svg viewBox="0 0 120 120">
+              <span
+                class="inline-flex h-[0.8em] w-[1.3em] items-center justify-center rounded-[22px] bg-obra-red align-[-0.06em]"
+                data-god-pic
+                aria-hidden="true"
+              >
+                <svg viewBox="0 0 120 120" class="size-[56%] fill-obra-paper stroke-obra-paper stroke-6 [stroke-linejoin:round]">
                   {doctrineIcons[iconIndex[token.slice(1)]].map((s) => <path d={s.d} />)}
                 </svg>
               </span>{i < line.tokens.length - 1 ? ' ' : ''}
             </>
           ) : (
-            <><span class="ln-god__w" data-god-w>{token}</span>{i < line.tokens.length - 1 ? ' ' : ''}</>
+            <><span class="inline-block" data-god-w>{token}</span>{i < line.tokens.length - 1 ? ' ' : ''}</>
           )
         ))}
       </span>
     ))}
   </p>
-  <div class="ln-god__foot" data-god-foot>
-    <span>{copy.refs}</span>
+  <div class="flex flex-wrap items-center justify-center gap-6 max-lg:flex-col max-lg:gap-4.5" data-god-foot>
+    <span class="text-[0.875rem] text-obra-muted">{copy.refs}</span>
     <a href={localizePath('/confesion-de-fe', locale)} class="ln-btn ln-btn--ghost">{copy.cta}</a>
   </div>
-</section>
+</LandingSection>

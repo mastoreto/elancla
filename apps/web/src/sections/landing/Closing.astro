@@ -1,6 +1,7 @@
 ---
 import AnchorMark from 'src/components/AnchorMark.astro';
 import { ANCHOR_PATH } from 'src/data/anchorPath';
+import { LandingSection } from 'src/sections/landing/components/LandingSection';
 import type { Messages } from 'src/i18n/messages';
 
 interface Props {
@@ -18,23 +19,64 @@ const icons = {
 } as const;
 const names = { youtube: 'YouTube', instagram: 'Instagram', facebook: 'Facebook' } as const;
 const links = (Object.keys(icons) as (keyof typeof icons)[]).filter((k) => social[k]);
+const KICKER_CLASS = 'font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] text-obra-blush uppercase';
 ---
 
-<section id="visitanos" class="ln-section ln-end" data-ln="closing">
-  <div class="ln-end__main">
-    <div class="ln-end__left">
-      <div class="ln-end__kicker" data-end-in>
-        <AnchorMark id="end" color="#fff" strokeWidth={40} fillFrom="empty" class="" />
-        <span>{copy.eyebrow}</span>
+<LandingSection
+  id="visitanos"
+  data-ln="closing"
+  class="flex min-h-svh flex-col bg-obra-red pt-10 text-white max-lg:min-h-auto"
+>
+  <div
+    class:list={[
+      'grid flex-1 grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] items-center gap-[clamp(2rem,5vw,5rem)] px-[clamp(1.5rem,6.7vw,6rem)] pt-24 pb-18',
+      'max-lg:grid-cols-1 max-lg:items-start max-lg:gap-7 max-lg:px-11 max-lg:pt-22 max-lg:pb-20',
+      'max-sm:gap-6 max-sm:px-6 max-sm:py-16',
+    ]}
+  >
+    <div class="flex max-w-152 flex-col gap-6 max-lg:max-w-none max-lg:gap-7 max-sm:gap-6">
+      <div class="flex items-center gap-3.5" data-end-in>
+        <AnchorMark id="end" color="#fff" strokeWidth={40} fillFrom="empty" class="h-auto w-8.5" />
+        <span class={KICKER_CLASS}>{copy.eyebrow}</span>
       </div>
-      <h2 class="ln-h ln-end__title" data-end-in>{copy.title}</h2>
-      <p class="ln-end__text" data-end-in>{copy.text}</p>
-      <div class="ln-end__social" data-end-in>
-        <span>{copy.follow}</span>
-        <div class="ln-end__soc-list">
+      <h2
+        class="ln-h text-[clamp(2.6rem,5.85vw,5.25rem)] leading-[0.94] tracking-[-0.025em] max-lg:text-[4.75rem] max-sm:text-[3.125rem] max-sm:leading-[0.96]"
+        data-end-in
+      >
+        {copy.title}
+      </h2>
+      <p
+        class="m-0 max-w-130 text-[clamp(1.0625rem,1.4vw,1.25rem)] leading-[1.5] max-lg:text-[1.25rem] max-sm:text-[1.125rem]"
+        data-end-in
+      >
+        {copy.text}
+      </p>
+      <div class="mt-3 flex flex-col gap-3.5 border-t border-obra-white/30 pt-6" data-end-in>
+        <span class={KICKER_CLASS}>{copy.follow}</span>
+        <div class="flex flex-wrap gap-2.5">
           {links.map((k) => (
-            <a href={social[k]} class="ln-soc" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={icons[k]} />
+            <a
+              href={social[k]}
+              class:list={[
+                'inline-flex min-h-13 items-center gap-2.5 rounded-full border-[1.5px] border-obra-white/70 pr-5 pl-4',
+                'font-obra-sans-bold text-[1rem] text-white no-underline',
+                '[transition:background-color_0.4s,color_0.4s,translate_0.5s_var(--ease-obra)]',
+                'hover:-translate-y-0.5 hover:bg-obra-white hover:text-obra-red',
+              ]}
+              target="_blank"
+              rel="noopener"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                class="size-5.5"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                set:html={icons[k]}
+              />
               <span>{names[k]}</span>
             </a>
           ))}
@@ -42,22 +84,48 @@ const links = (Object.keys(icons) as (keyof typeof icons)[]).filter((k) => socia
       </div>
     </div>
 
-    <div class="ln-end__card" data-end-card>
-      <div class="ln-end__map">
-        <iframe class="ln-end__frame" src={embedUrl} title={copy.mapLabel} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-        <svg class="ln-end__pin-svg" viewBox="247 130 84 100" aria-hidden="true">
-          <circle class="ln-halo" cx="289" cy="214" r="14" fill="#a8141b" />
-          <g class="ln-pin" data-end-pin>
+    <div
+      class="flex flex-col overflow-hidden rounded-[40px] bg-obra-white text-obra-ink max-lg:mt-2 max-lg:rounded-[32px]"
+      data-end-card
+    >
+      <div class="relative aspect-[580/396]">
+        <iframe
+          class="absolute inset-0 block size-full border-0"
+          src={embedUrl}
+          title={copy.mapLabel}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+        <svg
+          class="pointer-events-none absolute top-1/2 left-1/2 h-25 w-21 -translate-x-1/2 -translate-y-[84%] overflow-visible"
+          viewBox="247 130 84 100"
+          aria-hidden="true"
+        >
+          <circle
+            class="origin-center opacity-0 transform-fill animate-halo motion-reduce:hidden"
+            cx="289"
+            cy="214"
+            r="14"
+            fill="#a8141b"
+          />
+          <g class="origin-bottom transform-fill" data-end-pin>
             <path d="M289 214 C271 190 261 176 261 162 A28 28 0 1 1 317 162 C317 176 307 190 289 214 Z" fill="#a8141b" />
             <path d={ANCHOR_PATH} transform="translate(276,178) scale(0.013,-0.013)" fill="#fff" />
           </g>
         </svg>
       </div>
-      <div class="ln-end__addr">
-        <div><b>{street}</b><span>{copy.where}</span></div>
-        <a href={mapsUrl} class="ln-btn" target="_blank" rel="noopener">{copy.how}<span class="ln-btn__dot" aria-hidden="true">→</span></a>
+      <div
+        class="flex flex-wrap items-center justify-between gap-5 py-6 pr-6 pl-7 max-lg:flex-nowrap max-lg:px-7 max-lg:py-5.5 max-sm:flex-col max-sm:items-start max-sm:gap-4.5 max-sm:px-5.5"
+      >
+        <div>
+          <b class="block font-obra-sans-bold text-[1.1875rem] leading-[1.3]">{street}</b>
+          <span class="text-[0.9375rem] text-obra-muted">{copy.where}</span>
+        </div>
+        <a href={mapsUrl} class="ln-btn" target="_blank" rel="noopener">
+          {copy.how}<span class="ln-btn__dot text-[0.9375rem] text-obra-muted" aria-hidden="true">→</span>
+        </a>
       </div>
     </div>
   </div>
-
-</section>
+</LandingSection>
