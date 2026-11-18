@@ -1,0 +1,1 @@
+export { nextDocumentNumber } from "./nextDocumentNumber";

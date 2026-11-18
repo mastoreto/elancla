@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@ancla/db": "*",
-    "better-auth": "^1.6.18",
+    "better-auth": "1.7.25",
     "dotenv": "^16.6.1"
   }
 }

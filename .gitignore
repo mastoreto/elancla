@@ -60,3 +60,6 @@ video/
 *.mkv
 *.avi
 *.m4v
+
+# Prisma generated client
+packages/db/src/generated/

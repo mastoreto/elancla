@@ -30,8 +30,14 @@
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
-    "db:push": {
-      "inputs": ["prisma/schema.prisma"],
+    "db:migrate:deploy": {
+      "cache": false
+    },
+    "db:seed": {
+      "cache": false
+    },
+    "test": {
+      "dependsOn": ["^db:generate"],
       "cache": false
     },
     "db:migrate": {
@@ -45,6 +51,7 @@
   },
   "globalEnv": [
     "DATABASE_URL",
+    "DATABASE_MIGRATION_URL",
     "APP_ENV",
     "NODE_ENV",
     "BETTER_AUTH_SECRET",

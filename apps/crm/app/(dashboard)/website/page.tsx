@@ -37,7 +37,7 @@ export default async function WebsitePage() {
     linkedin: settings?.linkedin ?? "",
   };
 
-  const aboutEs = settings?.translations.find((t) => t.locale === "ES")?.aboutRichText;
+  const aboutEs = settings?.translations.find((t) => t.locale === "es")?.aboutRichText;
   const initialAbout = typeof aboutEs === "string" ? aboutEs : "";
 
   return (

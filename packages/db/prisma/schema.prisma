@@ -1,109 +1,62 @@
-// @ancla/db — esquema de datos del monorepo (CMS custom + tesorería).
-// SCAFFOLD: arranca con el dominio de contenido (lo que hoy sirve @ancla/content
-// con datos seed) y stubs de finanzas. Se completa a medida que el CMS custom y
-// la tesorería se construyen. el ancla lee contenido; iEkklesia lee/escribe todo.
+// @ancla/db — database schema.
+// Conventions (mandatory for every model): docs/implementation/plans/0.1-db-rework.md
+//   - PK: UUIDv7 (`@default(uuid(7)) @db.Uuid`).
+//   - Domain models carry `organizationId` (tenant) and index by it first.
+//   - Money: `Decimal @db.Decimal(19, 4)` + ISO 4217 currency; never Float.
+//   - Translatable text lives in `<Model>Translation` tables keyed by (parentId, locale).
+//   - Tables are snake_case plural via @@map.
+// Feature models are added by their own phase, following these conventions.
 
 generator client {
-  provider = "prisma-client-js"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "esm"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
-// ─── Contenido (custom CMS) ──────────────────────────────────────────────────
+// ─── Tenancy ─────────────────────────────────────────────────────────────────
 
-model Author {
-  id        String   @id @default(cuid())
-  name      String
-  role      String?
-  initials  String?
-  bio       String?
-  posts     Post[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Organization {
+  id            String   @id @default(uuid(7)) @db.Uuid
+  slug          String   @unique
+  name          String
+  /// ISO 3166-1 alpha-2.
+  country       String   @db.Char(2)
+  /// IANA time zone, e.g. America/Montevideo.
+  timezone      String
+  /// BCP 47 language code used when a translation is missing.
+  defaultLocale String
+  /// Enabled content locales; always includes defaultLocale.
+  locales       String[]
+  /// Enabled ISO 4217 currencies.
+  currencies    String[]
+  createdAt     DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime @updatedAt @db.Timestamptz(3)
+
+  siteSettings      SiteSettings?
+  documentSequences DocumentSequence[]
+
+  @@map("organizations")
 }
 
-model Category {
-  id     String @id @default(cuid())
-  number String?
-  name   String
-  filter String @unique
-  blurb  String?
-  posts  Post[]
+/// Gap-free human codes (MOV-2026-000123). Incremented with UPDATE … RETURNING inside the
+/// same transaction as the insert that consumes the number.
+model DocumentSequence {
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  /// Document prefix, e.g. "MOV", "OC", "SOL".
+  type           String
+  year           Int
+  last           Int          @default(0)
+
+  @@id([organizationId, type, year])
+  @@map("document_sequences")
 }
 
-model Series {
-  id          String  @id @default(cuid())
-  title       String
-  slug        String  @unique
-  reference   String?
-  description String?
-  posts       Post[]
-}
-
-model Post {
-  id          String     @id @default(cuid())
-  slug        String     @unique
-  title       String
-  excerpt     String?
-  description String?
-  body        Json?
-  status      PostStatus @default(DRAFT)
-  featured    Boolean    @default(false)
-  publishedAt DateTime?
-  author      Author?    @relation(fields: [authorId], references: [id])
-  authorId    String?
-  category    Category?  @relation(fields: [categoryId], references: [id])
-  categoryId  String?
-  series      Series?    @relation(fields: [seriesId], references: [id])
-  seriesId    String?
-  seriesOrder Int?
-  tags        String[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-}
-
-enum PostStatus {
-  DRAFT
-  PUBLISHED
-  PAUSED
-}
-
-// ─── Tesorería (iEkklesia) — stubs iniciales ────────────────────────────────
-
-model Ministry {
-  id             String  @id @default(cuid())
-  name           String
-  budget         Float   @default(0)
-  budgetCurrency String  @default("UYU")
-}
-
-model Movement {
-  id       String       @id @default(cuid())
-  date     DateTime
-  concept  String
-  type     MovementType
-  currency String       @default("UYU")
-  amount   Float
-  createdAt DateTime    @default(now())
-}
-
-enum MovementType {
-  INCOME
-  EXPENSE
-}
-
-// ─── Configuración del sitio (el ancla lee en build; iEkklesia escribe) ───────
-// Registro único (singleton, id fijo "singleton"). Los campos traducibles viven
-// en SiteSettingsTranslation; el schedule del hero en ServiceTime.
-
-enum Locale {
-  ES
-  PT
-  EN
-}
+// ─── Public site configuration ───────────────────────────────────────────────
 
 enum SiteStatus {
   ONLINE
@@ -112,14 +65,15 @@ enum SiteStatus {
 }
 
 model SiteSettings {
-  id        String     @id @default("singleton")
-  name      String
-  shortName String?
-  subtitle  String?
-  url       String
-  status    SiteStatus @default(ONLINE)
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @unique @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  shortName      String?
+  subtitle       String?
+  url            String
+  status         SiteStatus   @default(ONLINE)
 
-  // Contacto / dirección (consumidos por schema.org)
   contactEmail   String?
   addressStreet  String?
   addressCity    String?
@@ -129,12 +83,11 @@ model SiteSettings {
   geoLat         Float?
   geoLng         Float?
 
-  // Branding / metadatos
   themeColor          String?
   founded             String?
+  /// Temporary until phase 1.6 derives service times from recurring activities.
   serviceTimesSummary String?
 
-  // Redes sociales (set fijo conocido)
   website   String?
   instagram String?
   youtube   String?
@@ -143,82 +96,87 @@ model SiteSettings {
   spotify   String?
   linkedin  String?
 
+  version      Int                       @default(0)
   translations SiteSettingsTranslation[]
-  serviceTimes ServiceTime[]
-  updatedAt    DateTime                  @updatedAt
+  createdAt    DateTime                  @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime                  @updatedAt @db.Timestamptz(3)
+
+  @@map("site_settings")
 }
 
 model SiteSettingsTranslation {
-  id            String       @id @default(cuid())
-  locale        Locale
-  aboutRichText Json?
-  settings      SiteSettings @relation(fields: [settingsId], references: [id], onDelete: Cascade)
-  settingsId    String
+  id             String       @id @default(uuid(7)) @db.Uuid
+  siteSettingsId String       @db.Uuid
+  siteSettings   SiteSettings @relation(fields: [siteSettingsId], references: [id], onDelete: Cascade)
+  /// BCP 47 language code.
+  locale         String
+  aboutRichText  Json?
 
-  @@unique([settingsId, locale])
+  @@unique([siteSettingsId, locale])
+  @@map("site_settings_translations")
 }
 
-model ServiceTime {
-  id          String       @id @default(cuid())
-  locale      Locale
-  order       Int          @default(0)
-  label       String
-  time        String
-  description String?
-  settings    SiteSettings @relation(fields: [settingsId], references: [id], onDelete: Cascade)
-  settingsId  String
-}
-
-// ─── Autenticación (Better Auth, adaptador Prisma) ───────────────────────────
-// Core schema de Better Auth + campo custom `role` (admin|treasurer|viewer).
+// ─── Authentication (Better Auth core schema) ────────────────────────────────
+// `role` is a temporary flat role (admin|viewer) used by the CRM guards; phase 0.4 (RBAC) removes it.
 
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @default(uuid(7)) @db.Uuid
   name          String
   email         String    @unique
   emailVerified Boolean   @default(false)
   image         String?
   role          String    @default("viewer")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime  @updatedAt @db.Timestamptz(3)
   sessions      Session[]
   accounts      Account[]
+
+  @@map("users")
 }
 
 model Session {
-  id        String   @id @default(cuid())
-  userId    String
+  id        String   @id @default(uuid(7)) @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   token     String   @unique
-  expiresAt DateTime
+  expiresAt DateTime @db.Timestamptz(3)
   ipAddress String?
   userAgent String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([userId])
+  @@map("sessions")
 }
 
 model Account {
-  id                    String    @id @default(cuid())
-  userId                String
+  id                    String    @id @default(uuid(7)) @db.Uuid
+  userId                String    @db.Uuid
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accountId             String
   providerId            String
   password              String?
   accessToken           String?
   refreshToken          String?
   idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
+  accessTokenExpiresAt  DateTime? @db.Timestamptz(3)
+  refreshTokenExpiresAt DateTime? @db.Timestamptz(3)
   scope                 String?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt             DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt             DateTime  @updatedAt @db.Timestamptz(3)
+
+  @@index([userId])
+  @@map("accounts")
 }
 
 model Verification {
-  id         String   @id @default(cuid())
+  id         String   @id @default(uuid(7)) @db.Uuid
   identifier String
   value      String
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  expiresAt  DateTime @db.Timestamptz(3)
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt  DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([identifier])
+  @@map("verifications")
 }

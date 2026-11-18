@@ -10,7 +10,9 @@
     "check": "biome check --write .",
     "clean": "turbo run clean && rm -rf node_modules .turbo",
     "db:generate": "turbo run db:generate",
-    "db:push": "turbo run db:push db:generate",
+    "db:migrate:deploy": "turbo run db:migrate:deploy",
+    "db:seed": "turbo run db:seed",
+    "test": "turbo run test",
     "db:migrate": "turbo run db:migrate",
     "db:reset": "turbo run db:reset"
   },

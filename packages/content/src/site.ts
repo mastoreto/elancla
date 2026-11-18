@@ -45,17 +45,6 @@ export interface SiteConfig {
   social: SiteSocial;
 }
 
-export interface ServiceTimeItem {
-  label: string;
-  time: string;
-  description?: string;
-}
-
-export interface SiteContent {
-  aboutRichText: unknown | null;
-  schedule: ServiceTimeItem[];
-}
-
 // Valores por defecto (copia de los valores históricos de apps/web/src/utils/seo.ts).
 export const SITE_FALLBACK: SiteConfig = {
   url: "https://elancla.uy",
@@ -95,12 +84,6 @@ const STATUS_MAP: Record<string, SiteStatus> = {
   CLOSED: "closed",
 };
 
-const LOCALE_ENUM: Record<SiteLocale, "ES" | "PT" | "EN"> = {
-  es: "ES",
-  pt: "PT",
-  en: "EN",
-};
-
 /** Carga perezosa del cliente Prisma (puede no existir hasta `db:generate`). */
 async function loadDb() {
   try {
@@ -121,6 +104,7 @@ export async function getSiteConfig(): Promise<SiteConfig> {
     const db = await loadDb();
     if (!db) return SITE_FALLBACK;
 
+    // ponytail: single organization today; phase 1.1 replaces this with the public API keyed by site.
     const s = await db.siteSettings.findFirst();
     if (!s) return SITE_FALLBACK;
 
@@ -157,38 +141,5 @@ export async function getSiteConfig(): Promise<SiteConfig> {
     };
   } catch {
     return SITE_FALLBACK;
-  }
-}
-
-/**
- * Contenido localizado del sitio (sección «nosotros» + schedule del hero).
- * Devuelve null/[] si no hay BD o registro para el locale; los consumidores
- * deben mantener su contenido i18n actual como fallback.
- */
-export async function getSiteContent(locale: SiteLocale): Promise<SiteContent> {
-  const empty: SiteContent = { aboutRichText: null, schedule: [] };
-  try {
-    const db = await loadDb();
-    if (!db) return empty;
-
-    const localeEnum = LOCALE_ENUM[locale];
-    const [translation, serviceTimes] = await Promise.all([
-      db.siteSettingsTranslation.findFirst({ where: { locale: localeEnum } }),
-      db.serviceTime.findMany({
-        where: { locale: localeEnum },
-        orderBy: { order: "asc" },
-      }),
-    ]);
-
-    return {
-      aboutRichText: translation?.aboutRichText ?? null,
-      schedule: serviceTimes.map((t) => ({
-        label: t.label,
-        time: t.time,
-        description: t.description ?? undefined,
-      })),
-    };
-  } catch {
-    return empty;
   }
 }

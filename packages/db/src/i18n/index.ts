@@ -1,0 +1,1 @@
+export { resolveTranslation } from "./resolveTranslation";
