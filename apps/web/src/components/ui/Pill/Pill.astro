@@ -1,0 +1,31 @@
+---
+// Small label on a photo or card (category, "Destacado", caption).
+import cn from 'src/utils/cn';
+
+type Tone = 'white' | 'red';
+
+interface Props {
+  tone?: Tone;
+  class?: string;
+}
+
+const { tone = 'white', class: className } = Astro.props;
+
+const TONE: Record<Tone, string> = {
+  white: 'bg-obra-white text-obra-ink',
+  red: 'bg-obra-red text-white',
+};
+
+const pill = {
+  container: cn(
+    'inline-flex items-center rounded-full px-3.25 py-1.75 font-obra-sans-bold text-[0.75rem]',
+    'tracking-[0.04em]',
+    TONE[tone],
+    className,
+  ),
+};
+---
+
+<span
+  class={pill.container}
+><slot /></span>

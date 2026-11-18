@@ -1,0 +1,66 @@
+---
+import { MINISTRY_COLORS, MINISTRY_KEYS } from 'src/data/calendar';
+import type { Locale } from 'src/i18n/config';
+import { getHtmlLang } from 'src/i18n/utils';
+import type { Messages } from 'src/i18n/messages';
+import { DOT, FOCUS_RING } from 'src/sections/calendar/CalendarPage/styles';
+import cn from 'src/utils/cn';
+
+interface Props {
+  copy: Messages['calendar'];
+  locale: Locale;
+}
+const { copy, locale } = Astro.props;
+
+const monthFormat = new Intl.DateTimeFormat(getHtmlLang(locale), { month: 'short', timeZone: 'UTC' });
+const months = Array.from({ length: 12 }, (_, i) => monthFormat.format(new Date(Date.UTC(2027, i, 1))).replace('.', ''));
+
+// On phones each chip row is one swipeable line bleeding to the screen edge.
+const CHIP_ROW =
+  'flex flex-wrap gap-2 max-md:-mx-gutter max-md:flex-nowrap max-md:overflow-x-auto max-md:px-gutter max-md:pb-1 max-md:[scrollbar-width:none] max-md:[&::-webkit-scrollbar]:hidden';
+const CHIP = [
+  'group inline-flex min-w-14 cursor-pointer items-center justify-center gap-2 rounded-full font-obra-sans-bold whitespace-nowrap text-obra-ink',
+  '[transition:translate_0.5s_var(--ease-obra),background-color_0.3s] hover:-translate-y-0.5',
+  'aria-pressed:bg-obra-ink aria-pressed:text-white',
+  'motion-reduce:transition-none motion-reduce:hover:translate-none',
+  'max-md:min-w-13 max-md:flex-none',
+  FOCUS_RING,
+];
+const CHIP_VARIANT = {
+  month: 'min-h-11 bg-obra-mist px-4 text-[0.9375rem]',
+  ministry: 'min-h-10 bg-transparent px-3.5 text-[0.875rem] shadow-[inset_0_0_0_1.5px_var(--color-obra-fog)] aria-pressed:shadow-none',
+} as const;
+// A pressed ministry chip turns ink, so its dot turns white.
+const CHIP_DOT = [DOT, 'group-aria-pressed:bg-obra-white'];
+
+const calendarFilters = {
+  container: cn('flex flex-col gap-3'),
+  months: cn(CHIP_ROW),
+  allYear: cn(CHIP, CHIP_VARIANT.month),
+  month: cn(CHIP, CHIP_VARIANT.month, 'capitalize'),
+  ministries: cn(CHIP_ROW),
+  allMinistries: cn(CHIP, CHIP_VARIANT.ministry),
+  allMinistriesDot: cn(CHIP_DOT),
+  ministry: cn(CHIP, CHIP_VARIANT.ministry),
+  ministryDot: cn(CHIP_DOT),
+};
+---
+
+<div class={calendarFilters.container}>
+  <div class={calendarFilters.months} role="group" aria-label={copy.months.monthFilterLabel}>
+    <button type="button" class={calendarFilters.allYear} data-cal-month="all" aria-pressed="true">{copy.months.allYear}</button>
+    {months.map((label, i) => (
+      <button type="button" class={calendarFilters.month} data-cal-month={i} aria-pressed="false">{label}</button>
+    ))}
+  </div>
+  <div class={calendarFilters.ministries} role="group" aria-label={copy.months.ministryFilterLabel}>
+    <button type="button" class={calendarFilters.allMinistries} data-cal-ministry="all" aria-pressed="true">
+      <span class={calendarFilters.allMinistriesDot} style="--c:var(--color-obra-white)"></span>{copy.months.allMinistries}
+    </button>
+    {MINISTRY_KEYS.map((key) => (
+      <button type="button" class={calendarFilters.ministry} data-cal-ministry={key} aria-pressed="false">
+        <span class={calendarFilters.ministryDot} style={`--c:${MINISTRY_COLORS[key]}`}></span>{copy.ministries[key]}
+      </button>
+    ))}
+  </div>
+</div>

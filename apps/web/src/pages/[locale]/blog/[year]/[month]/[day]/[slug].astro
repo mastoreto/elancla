@@ -1,11 +1,11 @@
 ---
-import BlogArticleTemplate from 'src/components/Blog/BlogArticleTemplate.astro';
+import BlogArticleTemplate from 'src/sections/blog/BlogArticleTemplate';
 import type { BlogArticle } from 'src/data/blog';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
 import { getBlogNeighbours } from 'src/data/blogNeighbours';
-import Layout from 'src/layouts/Layout.astro';
+import Layout from 'src/layouts/Layout';
 import { getAllPostsFull, isSeedArticle } from '@ancla/content';
 
 const { locale: localeParam, year, month, day, slug } = Astro.params;
@@ -58,7 +58,7 @@ const breadcrumbs = [
 </Layout>
 
 <script>
-  import { initBlog } from 'src/scripts/blog';
+  import { initBlog } from 'src/sections/blog/scripts/blog';
 
   initBlog();
 </script>

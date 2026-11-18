@@ -1,0 +1,78 @@
+---
+import type { ContentFigureData } from 'src/data/contentPages';
+import cn from 'src/utils/cn';
+
+interface Props {
+  figure: ContentFigureData;
+}
+
+const { figure } = Astro.props;
+
+const aspectClass = {
+  wide: 'aspect-[16/8]',
+  landscape: 'aspect-[3/2]',
+  portrait: 'aspect-[4/5]',
+}[figure.aspect ?? 'landscape'];
+
+// Crop marks on the four corners of the photo.
+const CORNER = 'absolute size-3.5 border-[1.5px] border-(--ink)';
+const CORNER_POSITION = {
+  tl: '-top-px -left-px border-r-0 border-b-0',
+  tr: '-top-px -right-px border-b-0 border-l-0',
+  bl: '-bottom-px -left-px border-t-0 border-r-0',
+  br: '-right-px -bottom-px border-t-0 border-l-0',
+} as const;
+const CORNERS = Object.values(CORNER_POSITION);
+// Grayscale photo that regains its color on hover (stays muted in dark mode).
+const DUOTONE =
+  '[filter:grayscale(1)_contrast(1.05)_brightness(0.95)] [transition:filter_0.8s_ease] hover:[filter:grayscale(0)_contrast(1.02)] dark:[filter:saturate(0.8)_contrast(1.05)_brightness(0.82)] dark:hover:[filter:saturate(0.8)_contrast(1.05)_brightness(0.82)]';
+
+const contentFigure = {
+  container: cn('relative'),
+  position: cn(CORNER),
+  wrapper: cn(aspectClass, 'relative overflow-hidden'),
+  image: cn('h-full w-full object-cover', DUOTONE),
+  badge: cn(
+    'absolute top-5 left-5 font-ui text-[10px] tracking-[0.18em] uppercase font-semibold',
+    'bg-white/85 text-ink px-3 py-1.5 rounded-full backdrop-blur-sm',
+  ),
+  meta: cn(
+    'absolute bottom-5 right-5 font-mono text-[10px] tracking-widest uppercase text-white/80',
+  ),
+  caption: cn(
+    'mt-3 flex items-baseline gap-4 font-ui text-[12px] text-ink/55',
+    'max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-1',
+  ),
+  figureLabel: cn(
+    'font-label-mono text-[10px] tracking-[0.22em] font-semibold whitespace-nowrap',
+    'text-primary',
+  ),
+};
+---
+
+<figure>
+  <div class={contentFigure.container}>
+    {CORNERS.map((position) => <div class={cn(contentFigure.position, position)}></div>)}
+    <div class={contentFigure.wrapper}>
+      <img src={figure.src} alt={figure.alt} class={contentFigure.image} />
+      {
+        figure.badge && (
+          <div class={contentFigure.badge}>
+            {figure.badge}
+          </div>
+        )
+      }
+      {
+        figure.meta && (
+          <div class={contentFigure.meta}>
+            {figure.meta}
+          </div>
+        )
+      }
+    </div>
+  </div>
+  <figcaption class={contentFigure.caption}>
+    <span class={contentFigure.figureLabel}>{figure.label}</span>
+    <span>{figure.caption}</span>
+  </figcaption>
+</figure>
