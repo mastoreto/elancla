@@ -17,11 +17,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import { SettingsSectionShell } from "./settings-section-shell";
 
 interface BankAccountsPanelProps {
   accounts: BankAccountSetting[];
 }
+
+const bankAccountsPanelSettingsPage = {
+  block: cn("grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_340px]"),
+  blockBorder: cn("rounded-lg border border-border bg-card overflow-hidden"),
+  text: cn("text-muted-foreground text-xs uppercase tracking-wide"),
+};
 
 function getStatusBadgeClass(status: BankAccountSetting["status"]) {
   if (status === "Principal") {
@@ -66,7 +73,7 @@ export function BankAccountsPanel({ accounts }: BankAccountsPanelProps) {
   ).length;
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_340px]">
+    <div className={bankAccountsPanelSettingsPage.block}>
       <div className="space-y-4">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
@@ -81,7 +88,7 @@ export function BankAccountsPanel({ accounts }: BankAccountsPanelProps) {
           </Button>
         </div>
 
-        <div className="rounded-lg border border-border bg-card overflow-hidden">
+        <div className={bankAccountsPanelSettingsPage.blockBorder}>
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50 hover:bg-muted/50">
@@ -135,9 +142,7 @@ export function BankAccountsPanel({ accounts }: BankAccountsPanelProps) {
             </p>
           </div>
           <div className="rounded-xl border bg-muted/20 p-4">
-            <p className="text-muted-foreground text-xs uppercase tracking-wide">
-              Cuentas en conciliación
-            </p>
+            <p className={bankAccountsPanelSettingsPage.text}>Cuentas en conciliación</p>
             <p className="mt-2 text-2xl font-semibold">{pendingReconciliationCount}</p>
             <p className="text-muted-foreground mt-1 text-sm">
               Requieren seguimiento antes del cierre del período.
