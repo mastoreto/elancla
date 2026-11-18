@@ -12,8 +12,8 @@ export const newPostSchema = z.object({
     .max(300, "La descripción no puede superar los 300 caracteres"),
 
   publishedAt: z.date({
-    required_error: "La fecha de publicación es requerida",
-    invalid_type_error: "Fecha inválida",
+    error: (issue) =>
+      issue.input === undefined ? "La fecha de publicación es requerida" : "Fecha inválida",
   }),
 
   categoryIds: z.array(z.string()).min(1, "Selecciona al menos una categoría"),

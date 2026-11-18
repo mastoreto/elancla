@@ -41,7 +41,7 @@ export async function updateSiteStatus(input: unknown) {
 
 // ─── Redes sociales ──────────────────────────────────────────────────────────
 
-const urlOrEmpty = z.union([z.string().url(), z.literal("")]);
+const urlOrEmpty = z.union([z.url(), z.literal("")]);
 const socialSchema = z.object({
   website: urlOrEmpty,
   instagram: urlOrEmpty,

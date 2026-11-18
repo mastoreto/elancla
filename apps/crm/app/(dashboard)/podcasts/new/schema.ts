@@ -22,7 +22,10 @@ export const newPodcastSchema = z.object({
 
   heroImage: z.string().min(1, "La imagen hero es requerida"),
 
-  link: z.string().min(1, "El link es requerido").url("Ingresa una URL válida (ej: https://...)"),
+  link: z
+    .string()
+    .min(1, "El link es requerido")
+    .pipe(z.url("Ingresa una URL válida (ej: https://...)")),
 
   participants: z.array(participantSchema).min(1, "Agrega al menos un participante"),
 });
