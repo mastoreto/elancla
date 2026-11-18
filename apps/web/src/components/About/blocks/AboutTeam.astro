@@ -8,14 +8,20 @@ interface Props {
 const { block } = Astro.props;
 ---
 
-<div class="ab-grid ab-grid--2">
+<div class="grid grid-cols-[1fr] gap-3.5 md:grid-cols-[repeat(2,1fr)]">
   {
     block.people.map((person, i) => (
-      <article class="ab-card ab-person">
-        <span class:list={['ab-person__avatar', i === 0 && 'is-lead']} aria-hidden="true">{person.initials}</span>
-        <span class="ab-person__role">{person.role}</span>
-        <b class="ab-card__title">{person.name}</b>
-        <span class="ab-card__text">{person.bio}</span>
+      <article class="flex flex-col gap-3 rounded-[28px] bg-obra-mist p-5.5 text-inherit no-underline [transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s_var(--ease-obra),background-color_0.4s] hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift motion-reduce:transition-none">
+        <span
+          class:list={[
+            'flex size-15 items-center justify-center rounded-full font-obra-sans-bold text-[1.125rem] text-white',
+            i === 0 ? 'bg-obra-red' : 'bg-obra-ink',
+          ]}
+          aria-hidden="true"
+        >{person.initials}</span>
+        <span class="font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] uppercase text-obra-muted">{person.role}</span>
+        <b class="font-obra-serif text-[1.5rem] leading-[1.1] font-bold">{person.name}</b>
+        <span class="text-[0.9375rem] leading-normal text-obra-ink-soft">{person.bio}</span>
       </article>
     ))
   }

@@ -1,4 +1,5 @@
 ---
+import { RISE_IN } from 'src/utils/riseIn';
 import AnchorMark from 'src/components/AnchorMark.astro';
 import { localizePath } from 'src/i18n/utils';
 import type { Locale } from 'src/i18n/config';
@@ -14,38 +15,47 @@ const { copy, locale } = Astro.props;
 const [titleBefore, titleAfter = ''] = copy.titleLines.join(' ').split(copy.emphasis);
 ---
 
-<section class="cf-hero">
-  <nav class="cf-crumb" aria-label={copy.breadcrumbCurrent}>
+<section class="flex flex-col gap-7 px-gutter-sm pt-[clamp(7.5rem,11vw,9.5rem)] max-sm:gap-5.5">
+  <nav class="flex items-center gap-2 font-obra-sans-bold text-[0.875rem] text-obra-muted" aria-label={copy.breadcrumbCurrent}>
     <a href={localizePath('/', locale)} class="ulink">{copy.breadcrumbHome}</a>
     <span aria-hidden="true">/</span>
-    <span class="cf-crumb__now" aria-current="page">{copy.breadcrumbCurrent}</span>
+    <span class="text-obra-red" aria-current="page">{copy.breadcrumbCurrent}</span>
   </nav>
 
-  <div class="cf-hero__row">
-    <div class="cf-hero__text">
-      <span class="ln-eyebrow cf-rise">{copy.counter} · {copy.meta}</span>
-      <h1 class="ln-h cf-hero__title cf-rise" style="--d: 0.15s">
-        {titleBefore}<span class="cf-accent">{copy.emphasis}</span>{titleAfter}
+  <div class="flex items-end justify-between gap-14 max-md:flex-col max-md:items-start max-md:gap-7">
+    <div class="flex flex-1 flex-col gap-[1.6rem] max-md:gap-5">
+      <span class:list={['ln-eyebrow', RISE_IN]}>{copy.counter} · {copy.meta}</span>
+      <h1
+        class:list={['ln-h text-[clamp(3.25rem,7.8vw,7rem)] leading-[0.94] tracking-[-0.03em]', RISE_IN]}
+        style="--d: 0.15s"
+      >
+        {titleBefore}<span class="text-obra-red">{copy.emphasis}</span>{titleAfter}
       </h1>
-      <p class="cf-hero__lead cf-rise" style="--d: 0.3s">{copy.body}</p>
-      <div class="cf-hero__cta cf-rise" style="--d: 0.45s">
+      <p
+        class:list={['m-0 max-w-150 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft', RISE_IN]}
+        style="--d: 0.3s"
+      >{copy.body}</p>
+      <div class:list={['flex flex-wrap gap-3', RISE_IN]} style="--d: 0.45s">
         <a href="#doctrinas" class="ln-btn">
           {copy.primaryCta}<span class="ln-btn__dot" aria-hidden="true">→</span>
         </a>
-        <button type="button" id="expandAll" class="ln-btn ln-btn--ghost">
+        <button type="button" id="expandAll" class="ln-btn ln-btn--ghost cursor-pointer font-obra-sans-bold">
           <span id="expandAllLabel" data-collapsed-label={copy.expandAll} data-expanded-label={copy.collapseAll}>{copy.expandAll}</span>
         </button>
       </div>
     </div>
 
-    <div class="cf-seal" aria-hidden="true">
-      <svg class="cf-seal__ring" viewBox="0 0 300 300">
+    <div class="relative aspect-square w-[clamp(11.875rem,20.8vw,18.75rem)] flex-none" aria-hidden="true">
+      <svg
+        class="size-full animate-seal-spin font-obra-sans-bold motion-reduce:animate-none"
+        viewBox="0 0 300 300"
+      >
         <defs>
           <path id="cf-seal-path" d="M150 150 m-118 0 a118 118 0 1 1 236 0 a118 118 0 1 1 -236 0" />
         </defs>
         <text font-size="19" fill="currentColor"><textPath href="#cf-seal-path" textLength="736" lengthAdjust="spacing">{copy.sealText}</textPath></text>
       </svg>
-      <AnchorMark id="cf-seal" color="#a8141b" outline={false} class="cf-seal__anchor" />
+      <AnchorMark id="cf-seal" color="#a8141b" outline={false} class="absolute inset-0 m-auto h-auto w-[22%]" />
     </div>
   </div>
 </section>

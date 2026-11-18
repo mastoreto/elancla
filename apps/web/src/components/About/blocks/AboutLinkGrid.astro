@@ -8,20 +8,20 @@ interface Props {
 const { block } = Astro.props;
 ---
 
-<div class="ab-grid ab-grid--2">
+<div class="grid grid-cols-[1fr] gap-3.5 md:grid-cols-[repeat(2,1fr)]">
   {
     block.links.map((link) => (
       <a
         href={link.href}
-        class="ab-card ab-link"
+        class="flex min-h-47.5 flex-col justify-between gap-2.5 rounded-[28px] bg-obra-mist p-6 text-inherit no-underline [transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s_var(--ease-obra),background-color_0.4s] hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift motion-reduce:transition-none"
         target={link.external ? '_blank' : undefined}
         rel={link.external ? 'noopener noreferrer' : undefined}
       >
-        <span class="ab-link__body">
-          <b class="ab-card__title">{link.title}</b>
-          <span class="ab-card__text">{link.description}</span>
+        <span class="flex flex-col gap-2.5">
+          <b class="font-obra-serif text-[1.5rem] leading-[1.1] font-bold">{link.title}</b>
+          <span class="text-[0.9375rem] leading-normal text-obra-ink-soft">{link.description}</span>
         </span>
-        <span class="ab-link__meta">{link.meta} →</span>
+        <span class="font-obra-sans-bold text-[0.875rem] text-obra-red">{link.meta} →</span>
       </a>
     ))
   }

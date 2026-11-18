@@ -10,15 +10,17 @@ interface Props {
 const { cta } = Astro.props;
 ---
 
-<section class="ab-cta-wrap">
-  <div class="ab-cta">
-    <AnchorMark id="ab-cta" color="#f4efe6" outline={false} class="ab-cta__anchor" />
-    <span class="ab-cta__eyebrow">{cta.eyebrow}</span>
-    <h2 class="ln-h ab-cta__title"><InlineText value={cta.title} emphasisClass="ab-cta__accent" /></h2>
-    <p class="ab-cta__body">{cta.body}</p>
-    <div class="ab-cta__buttons">
+<section class="px-gutter-sm pt-[clamp(3.5rem,6.1vw,5.5rem)]">
+  <div class="relative flex flex-col gap-5.5 overflow-hidden rounded-[clamp(2rem,3.3vw,3rem)] bg-obra-warm px-[clamp(1.5rem,5vw,4.5rem)] py-[clamp(2rem,5vw,4.5rem)] text-obra-cream">
+    <AnchorMark id="ab-cta" color="#f4efe6" outline={false} class="absolute right-10 -bottom-10 h-auto w-64 opacity-10" />
+    <span class="font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] text-obra-red-live uppercase">{cta.eyebrow}</span>
+    <h2 class="ln-h relative text-[clamp(2.75rem,6.1vw,5.5rem)]">
+      <InlineText value={cta.title} emphasisClass="text-obra-red-live not-italic" />
+    </h2>
+    <p class="relative m-0 max-w-140 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-sand">{cta.body}</p>
+    <div class="relative flex flex-wrap gap-3">
       <a href={cta.primary.href} class="ln-btn">{cta.primary.label}<span class="ln-btn__dot" aria-hidden="true">→</span></a>
-      {cta.secondary && <a href={cta.secondary.href} class="ln-btn ln-btn--ghost ab-cta__ghost">{cta.secondary.label}</a>}
+      {cta.secondary && <a href={cta.secondary.href} class="ln-btn ln-btn--ghost border-obra-white/70 text-white">{cta.secondary.label}</a>}
     </div>
   </div>
 </section>

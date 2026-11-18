@@ -4,7 +4,7 @@ let spy: IntersectionObserver | undefined;
 
 function init(): void {
   spy?.disconnect();
-  const links = [...document.querySelectorAll<HTMLElement>('.ab-toc__link')];
+  const links = [...document.querySelectorAll<HTMLElement>('[data-toc-link]')];
   const sections = links
     .map((link) => document.getElementById(link.dataset.target ?? ''))
     .filter((el): el is HTMLElement => Boolean(el));

@@ -2,6 +2,7 @@
 import { doctrineIcons } from 'src/data/doctrineIcons';
 import type { Doctrine } from 'src/data/doctrines';
 import type { Messages } from 'src/i18n/messages';
+import { CAPTION } from './styles';
 
 interface Props {
   doctrine: Doctrine;
@@ -11,50 +12,112 @@ interface Props {
 
 const { doctrine: d, index, copy } = Astro.props;
 const panelId = `doctrine-panel-${d.id}`;
+// The card toggles `is-open` (scripts/confesion.ts); children restyle through the `card` group
+// (`group-[.is-open]/card:` utilities).
 ---
 
-<article id={`doctrine-${d.id}`} class="cf-card" data-id={d.id}>
-  <button type="button" class="cf-card__head" aria-expanded="false" aria-controls={panelId}>
-    <span class="cf-card__num">{d.number}</span>
-    <span class="cf-card__icon">
-      <svg viewBox="0 0 120 120" fill="currentColor" stroke="currentColor" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+<article
+  id={`doctrine-${d.id}`}
+  class:list={[
+    'group/card flex scroll-mt-28 flex-col rounded-[2.25rem] bg-obra-mist px-(--pad-x) py-(--pad-y) text-obra-ink [--pad-x:2rem] [--pad-y:1.625rem]',
+    '[transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s_var(--ease-obra),background-color_0.4s] motion-reduce:transition-none',
+    'not-[.is-open]:hover:-translate-y-1 not-[.is-open]:hover:bg-obra-white not-[.is-open]:hover:shadow-obra-lift',
+    '[&.is-open]:bg-obra-warm [&.is-open]:text-obra-cream [&.is-open]:[--pad-y:2rem]',
+    'max-sm:rounded-[1.75rem] max-sm:[--pad-x:1.25rem] max-sm:[--pad-y:1.25rem]',
+    'max-sm:[&.is-open]:[--pad-x:1.375rem] max-sm:[&.is-open]:[--pad-y:1.375rem]',
+  ]}
+  data-doctrine-card
+  data-id={d.id}
+>
+  <button
+    type="button"
+    class="flex w-full cursor-pointer items-center gap-6 border-0 bg-transparent p-0 text-left text-inherit focus-visible:rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-6 focus-visible:outline-obra-red max-sm:gap-3.5"
+    aria-expanded="false"
+    aria-controls={panelId}
+    data-doctrine-toggle
+  >
+    <span
+      class:list={[
+        'min-w-[2.4rem] font-obra-serif text-[2.25rem] leading-none text-obra-taupe max-sm:min-w-[1.7rem] max-sm:text-[1.625rem]',
+        'group-[.is-open]/card:text-obra-red-live',
+      ]}
+    >{d.number}</span>
+    <span
+      class:list={[
+        'flex size-14 flex-none items-center justify-center rounded-full border border-obra-warm-line bg-obra-warm text-obra-cream max-sm:size-10',
+        'group-[.is-open]/card:border-obra-red-live group-[.is-open]/card:text-obra-red-live',
+      ]}
+    >
+      <svg
+        class="size-1/2"
+        viewBox="0 0 120 120" fill="currentColor" stroke="currentColor" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
         {doctrineIcons[index].map((s) => s.circle
           ? <circle cx={s.circle[0]} cy={s.circle[1]} r={s.circle[2]} />
-          : <path d={s.d} fill={s.cut ? 'var(--ln-warm)' : undefined} stroke={s.cut ? 'none' : undefined} />)}
+          : <path d={s.d} fill={s.cut ? 'var(--color-obra-warm)' : undefined} stroke={s.cut ? 'none' : undefined} />)}
       </svg>
     </span>
-    <span class="cf-card__title">
-      <b>{d.title}</b>
-      <span>{d.subtitle}</span>
+    <span class="flex flex-1 flex-col gap-1">
+      <b class="font-obra-serif text-[2.5rem] leading-none font-bold max-sm:text-[1.75rem]">{d.title}</b>
+      <span class:list={['text-[0.9375rem] text-obra-muted', 'group-[.is-open]/card:text-obra-sand']}>{d.subtitle}</span>
     </span>
-    <span class="cf-card__tag">{d.tag}</span>
-    <span class="cf-card__plus" aria-hidden="true"></span>
+    <span
+      class:list={[
+        'rounded-full border border-obra-ink/15 px-3.5 py-1.5 font-obra-sans-bold text-[0.75rem] whitespace-nowrap max-md:hidden',
+        'group-[.is-open]/card:border-obra-warm-line',
+      ]}
+    >{d.tag}</span>
+    <span
+      class:list={[
+        'relative size-10 flex-none rounded-full bg-obra-white text-obra-ink [transition:background-color_0.4s,color_0.4s]',
+        "before:absolute before:top-1/2 before:left-1/2 before:-mt-px before:-ml-1.75 before:h-0.5 before:w-3.5 before:rounded-[1px] before:bg-current before:content-['']",
+        "after:absolute after:top-1/2 after:left-1/2 after:-mt-px after:-ml-1.75 after:h-0.5 after:w-3.5 after:rotate-90 after:rounded-[1px] after:bg-current after:content-['']",
+        'before:[transition:rotate_0.5s_var(--ease-obra)] after:[transition:rotate_0.5s_var(--ease-obra)]',
+        'group-[.is-open]/card:bg-obra-red-live group-[.is-open]/card:text-white group-[.is-open]/card:after:rotate-0',
+      ]}
+      aria-hidden="true"
+    ></span>
     <span class="sr-only">{copy.expand}</span>
   </button>
 
-  <p class="cf-card__lead">{d.summary}</p>
+  <p
+    class:list={[
+      'mt-3 mr-0 mb-0 ml-[9.625rem] max-w-170 text-[1rem] leading-normal text-obra-ink-soft max-sm:hidden',
+      'group-[.is-open]/card:hidden',
+    ]}
+  >{d.summary}</p>
 
-  <div id={panelId} class="cf-card__panel" role="region" aria-label={d.title}>
-    <div class="cf-card__inner">
-      <p class="cf-card__summary">{d.summary}</p>
+  <div
+    id={panelId}
+    class:list={[
+      'invisible grid grid-rows-[0fr] [transition:grid-template-rows_0.6s_var(--ease-obra),visibility_0s_0.6s] motion-reduce:transition-none',
+      'group-[.is-open]/card:visible group-[.is-open]/card:grid-rows-[1fr] group-[.is-open]/card:delay-0',
+    ]}
+    role="region"
+    aria-label={d.title}
+  >
+    <div class="flex min-h-0 flex-col gap-5 overflow-hidden">
+      <p class="mx-0 mt-5 mb-0 text-[1.1875rem] leading-[1.55] text-obra-parchment max-sm:text-[1.0625rem]">{d.summary}</p>
 
-      <blockquote class="cf-card__verse">
-        <p>«{d.verse}»</p>
-        <cite class="cf-cap">{d.verseRef}</cite>
+      <blockquote class="m-0 flex flex-col gap-2 rounded-3xl bg-obra-red px-6.5 py-5.5 text-white">
+        <p class="m-0 font-obra-serif text-[1.75rem] leading-[1.15] max-sm:text-[1.375rem]">«{d.verse}»</p>
+        <cite class:list={[CAPTION, 'text-obra-blush']}>{d.verseRef}</cite>
       </blockquote>
 
-      <div class="cf-card__sections">
+      <div>
         {d.sections.map((section) => (
-          <div class="cf-card__section">
-            <span class="cf-cap">{section.h}</span>
-            <div class="cf-body" set:html={section.body} />
+          <div class="flex flex-col gap-1 border-t border-obra-warm-line py-3.5">
+            <span class:list={[CAPTION, 'text-obra-red-live']}>{section.h}</span>
+            <div
+              class="text-[1rem] leading-normal text-obra-parchment [&_b]:text-white [&_li+li]:mt-1 [&_ol]:pl-[1.1rem] [&_ul]:pl-[1.1rem] [&>*]:m-0 [&>*:not(:first-child)]:mt-2"
+              set:html={section.body}
+            />
           </div>
         ))}
       </div>
 
-      <div class="cf-card__refs">
-        <span class="cf-cap">{copy.references}</span>
-        {d.refs.map((ref) => <span class="cf-chip">{ref}</span>)}
+      <div class="flex flex-wrap gap-2">
+        <span class:list={[CAPTION, 'w-full text-obra-taupe']}>{copy.references}</span>
+        {d.refs.map((ref) => <span class="rounded-full border border-obra-warm-line px-3 py-1.25 font-obra-sans-bold text-[0.75rem] text-obra-sand">{ref}</span>)}
       </div>
     </div>
   </div>

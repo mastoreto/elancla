@@ -1,4 +1,5 @@
 ---
+import { RISE_IN } from 'src/utils/riseIn';
 import InlineText from 'src/components/ContentPage/InlineText.astro';
 import type { ContentHero } from 'src/data/contentPages';
 
@@ -10,18 +11,19 @@ const { hero } = Astro.props;
 const eyebrow = [hero.chip, ...hero.meta].filter(Boolean).join(' · ');
 const current = hero.breadcrumbs[hero.breadcrumbs.length - 1];
 // Stat tiles alternate white / red / mist.
-const tones = ['white', 'red', 'mist'];
+// Stat cards cycle through these tones.
+const tones = ['bg-obra-white', 'bg-obra-red text-white', 'bg-obra-mist'];
 ---
 
-<section class="ab-hero">
-  <nav class="ab-crumb" aria-label={current.label}>
+<section class="flex flex-col gap-7 px-gutter-sm pt-[clamp(7.5rem,11vw,9.5rem)]">
+  <nav class="flex items-center gap-2 font-obra-sans-bold text-[0.875rem] text-obra-muted" aria-label={current.label}>
     {
       hero.breadcrumbs.map((crumb, i) => (
         <>
           {crumb.href ? (
             <a href={crumb.href} class="ulink">{crumb.label}</a>
           ) : (
-            <span class="ab-crumb__now" aria-current="page">{crumb.label}</span>
+            <span class="text-obra-red" aria-current="page">{crumb.label}</span>
           )}
           {i < hero.breadcrumbs.length - 1 && <span aria-hidden="true">/</span>}
         </>
@@ -29,23 +31,37 @@ const tones = ['white', 'red', 'mist'];
     }
   </nav>
 
-  <div class="ab-hero__row">
-    <div class="ab-hero__text">
-      <span class="ln-eyebrow ab-rise">{eyebrow}</span>
-      <h1 class="ln-h ab-hero__title ab-rise" style="--d: 0.15s">
-        {hero.titleLines.map((line) => <><InlineText value={line} emphasisClass="ab-accent" />{' '}</>)}
+  <div class="flex items-end gap-[clamp(2rem,4.4vw,4rem)] max-lg:flex-col max-lg:items-stretch max-lg:gap-7">
+    <div class="flex min-w-0 flex-1 flex-col gap-[1.4rem]">
+      <span class:list={['ln-eyebrow', RISE_IN]}>{eyebrow}</span>
+      <h1
+        class:list={['ln-h text-[clamp(3rem,7.2vw,6.5rem)] text-balance', RISE_IN]}
+        style="--d: 0.15s"
+      >
+        {hero.titleLines.map((line) => <><InlineText value={line} emphasisClass="text-obra-red not-italic" />{' '}</>)}
       </h1>
     </div>
-    <p class="ab-hero__lead ab-rise" style="--d: 0.3s">{hero.standfirst}</p>
+    <p
+      class:list={[
+        'm-0 flex-[0_0_min(26.25rem,32vw)] text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft max-lg:flex-none',
+        RISE_IN,
+      ]}
+      style="--d: 0.3s"
+    >{hero.standfirst}</p>
   </div>
 
   {
     hero.stats?.length && (
-      <div class="ab-stats ab-rise" style="--d: 0.45s">
+      <div class:list={['grid grid-cols-[repeat(3,1fr)] gap-2.5', RISE_IN]} style="--d: 0.45s">
         {hero.stats.map((stat, i) => (
-          <div class={`ab-stat ab-stat--${tones[i % tones.length]}`}>
-            <b>{stat.value}</b>
-            <span>{stat.label}</span>
+          <div
+            class:list={[
+              'flex flex-col gap-1 rounded-[clamp(1.5rem,2.2vw,2rem)] p-[clamp(1rem,1.7vw,1.5rem)] max-md:rounded-3xl',
+              tones[i % tones.length],
+            ]}
+          >
+            <b class="font-obra-serif text-[clamp(2.25rem,3.9vw,3.5rem)] leading-none font-bold max-md:text-[2.25rem]">{stat.value}</b>
+            <span class="font-obra-sans-bold text-[0.8125rem] tracking-[0.12em] uppercase opacity-80">{stat.label}</span>
           </div>
         ))}
       </div>

@@ -8,14 +8,14 @@ interface Props {
 const { block } = Astro.props;
 ---
 
-<ol class="ab-timeline">
+<ol class="m-0 list-none p-0">
   {
     block.items.map((item) => (
-      <li class="ab-timeline__row">
-        <span class="ab-timeline__year">{item.year}</span>
-        <span class="ab-timeline__body">
-          <b>{item.title}</b>
-          <span>{item.description}</span>
+      <li class="grid grid-cols-[6.875rem_1fr] gap-4 border-t border-obra-ink/14 py-5 max-md:grid-cols-[4.5rem_1fr]">
+        <span class="font-obra-serif text-[2.5rem] leading-none font-bold text-obra-red max-md:text-[1.75rem]">{item.year}</span>
+        <span class="flex flex-col gap-1.5">
+          <b class="font-obra-sans-bold text-[1.1875rem]">{item.title}</b>
+          <span class="text-[1rem] leading-normal text-obra-ink-soft">{item.description}</span>
         </span>
       </li>
     ))

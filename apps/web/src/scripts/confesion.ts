@@ -3,14 +3,14 @@ let controller: AbortController | undefined;
 
 function init(): void {
   controller?.abort();
-  const cards = [...document.querySelectorAll<HTMLElement>('.cf-card')];
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-doctrine-card]')];
   if (!cards.length) return;
   controller = new AbortController();
   const { signal } = controller;
 
   const expandBtn = document.getElementById('expandAll');
   const expandLabel = document.getElementById('expandAllLabel');
-  const idxLinks = document.querySelectorAll<HTMLElement>('.cf-idx');
+  const idxLinks = document.querySelectorAll<HTMLElement>('[data-doctrine-index]');
 
   const updateExpandLabel = () => {
     if (!expandLabel) return;
@@ -22,11 +22,11 @@ function init(): void {
 
   const setOpen = (card: HTMLElement, open: boolean) => {
     card.classList.toggle('is-open', open);
-    card.querySelector('.cf-card__head')?.setAttribute('aria-expanded', String(open));
+    card.querySelector('[data-doctrine-toggle]')?.setAttribute('aria-expanded', String(open));
   };
 
   for (const card of cards) {
-    card.querySelector('.cf-card__head')?.addEventListener(
+    card.querySelector('[data-doctrine-toggle]')?.addEventListener(
       'click',
       () => {
         setOpen(card, !card.classList.contains('is-open'));
@@ -60,7 +60,7 @@ function init(): void {
   });
 
   // In-page links scroll smoothly (the cards carry scroll-margin for the fixed nav).
-  document.querySelectorAll<HTMLAnchorElement>('.cf a[href^="#"]').forEach((a) => {
+  document.querySelectorAll<HTMLAnchorElement>('[data-confession] a[href^="#"]').forEach((a) => {
     a.addEventListener(
       'click',
       (e) => {

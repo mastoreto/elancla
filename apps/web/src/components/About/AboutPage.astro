@@ -5,7 +5,6 @@ import AboutFigure from './AboutFigure.astro';
 import AboutHero from './AboutHero.astro';
 import AboutSection from './AboutSection.astro';
 import AboutToc from './AboutToc.astro';
-import 'src/styles/About.css';
 
 interface Props {
   page: ContentPage;
@@ -14,11 +13,11 @@ interface Props {
 const { page } = Astro.props;
 ---
 
-<div class="ln ab">
+<div class="ln bg-obra-paper pb-24">
   <AboutHero hero={page.hero} />
   {page.featuredImage && <AboutFigure figure={page.featuredImage} />}
-  <div class="ab-body">
-    <div class="ab-sections">
+  <div class="flex gap-14 px-gutter-sm pt-[clamp(3.5rem,6.1vw,5.5rem)]">
+    <div class="flex min-w-0 flex-1 flex-col gap-[clamp(4.5rem,7.6vw,6.875rem)]">
       {page.sections.map((section) => <AboutSection section={section} />)}
     </div>
     <AboutToc title={page.tocTitle ?? ''} sections={page.sections} />

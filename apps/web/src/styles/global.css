@@ -159,6 +159,7 @@
   --color-obra-stone: #8a857d;
   --color-obra-warm-card: #2f2a28;
   --color-obra-live: #c8141c;
+  --color-obra-parchment: #e7dfd2;
   --color-obra-placeholder: #6f6b64;
   --color-obra-white: #ffffff; /* stays white in dark mode, unlike `white` (see the .dark overrides) */
   --color-obra-red: #a8141b;
@@ -175,6 +176,7 @@
 
   --ease-obra: cubic-bezier(0.22, 1, 0.36, 1);
   --spacing-gutter: clamp(1.25rem, 5vw, 4.5rem);
+  --spacing-gutter-sm: clamp(1.25rem, 3.9vw, 3.5rem);
 
   /* Landing hero photo columns drift forever; `--t` sets each column's speed. */
   --animate-drift-up: drift-up var(--t, 70s) linear infinite;
@@ -183,6 +185,7 @@
   /* Load entrance ("rise"); `--d` staggers each element. */
   --animate-rise: rise 1.2s var(--ease-obra) var(--d, 0s) forwards;
   --animate-marquee: marquee 34s linear infinite;
+  --animate-seal-spin: spin 36s linear infinite;
   --animate-pulse-soft: pulse-soft 2.2s ease-in-out infinite;
   --animate-ring: ring 2.6s ease-out infinite;
   --animate-dialog-in: dialog-in 0.6s var(--ease-obra);

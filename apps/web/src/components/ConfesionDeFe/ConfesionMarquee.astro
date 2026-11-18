@@ -6,15 +6,17 @@ interface Props {
 const { solas } = Astro.props;
 // Two identical groups: the track slides by exactly one group (-50%) for a seamless loop.
 const group = [...solas, ...solas, ...solas];
+const ITEM =
+  "inline-flex items-center gap-7 pr-7 font-obra-serif text-[clamp(1.75rem,2.8vw,2.5rem)] whitespace-nowrap italic after:text-[0.55em] after:text-obra-red-live after:content-['●']";
 ---
 
-<div class="cf-marquee">
-  <div class="cf-marquee__track">
-    <ul class="cf-marquee__group">
-      {group.map((s) => <li class="cf-marquee__item">{s}</li>)}
+<div class="mt-[clamp(2.75rem,5vw,4.5rem)] overflow-hidden bg-obra-warm py-[clamp(1.1rem,1.8vw,1.6rem)] text-obra-cream">
+  <div class="flex w-max animate-marquee motion-reduce:animate-none">
+    <ul class="m-0 flex list-none p-0">
+      {group.map((s) => <li class={ITEM}>{s}</li>)}
     </ul>
-    <ul class="cf-marquee__group" aria-hidden="true">
-      {group.map((s) => <li class="cf-marquee__item">{s}</li>)}
+    <ul class="m-0 flex list-none p-0" aria-hidden="true">
+      {group.map((s) => <li class={ITEM}>{s}</li>)}
     </ul>
   </div>
 </div>

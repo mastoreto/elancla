@@ -1,4 +1,5 @@
 ---
+import { CAPTION } from './styles';
 import type { Doctrine } from 'src/data/doctrines';
 import type { Messages } from 'src/i18n/messages';
 import DoctrineRow from './DoctrineRow.astro';
@@ -11,30 +12,35 @@ interface Props {
 const { doctrines, copy } = Astro.props;
 ---
 
-<section id="doctrinas" class="cf-doc">
-  <div class="cf-doc__main">
-    <header class="cf-doc__head">
+<section id="doctrinas" class="flex scroll-mt-24 gap-14 px-gutter-sm pt-[clamp(3.5rem,6.7vw,6rem)]">
+  <div class="flex min-w-0 flex-1 flex-col gap-7">
+    <header class="flex flex-col gap-3">
       <span class="ln-eyebrow">{copy.counter}</span>
-      <span class="cf-doc__hint">{copy.hint}</span>
+      <span class="text-[0.9375rem] text-obra-muted">{copy.hint}</span>
     </header>
-    <div class="cf-doc__list">
+    <div class="flex flex-col gap-3">
       {doctrines.map((d, i) => <DoctrineRow doctrine={d} index={i} copy={copy} />)}
     </div>
   </div>
 
-  <aside class="cf-doc__aside">
-    <div class="cf-aside__group">
-      <span class="cf-cap">{copy.index}</span>
+  <aside class="sticky top-28 flex flex-[0_0_15.625rem] flex-col gap-[1.6rem] self-start max-lg:hidden">
+    <div class="flex flex-col gap-3">
+      <span class:list={[CAPTION, 'text-obra-muted']}>{copy.index}</span>
       {doctrines.map((d) => (
-        <a href={`#doctrine-${d.id}`} class="cf-idx ulink" data-id={d.id}>
+        <a
+          href={`#doctrine-${d.id}`}
+          class="ulink flex gap-3 w-fit font-obra-sans-bold text-[0.9375rem] no-underline text-obra-muted [transition:color_0.3s] [&.is-active]:text-obra-red"
+          data-doctrine-index
+          data-id={d.id}
+        >
           <span>{d.number}</span><span>{d.title}</span>
         </a>
       ))}
     </div>
-    <div class="cf-aside__group">
-      <span class="cf-cap">{copy.resources}</span>
+    <div class="flex flex-col gap-3">
+      <span class:list={[CAPTION, 'text-obra-muted']}>{copy.resources}</span>
       {copy.resourceLinks.map((label: string) => (
-        <a href="#" class="ulink cf-res">{label} →</a>
+        <a href="#" class="ulink w-fit font-obra-sans-bold text-[0.9375rem] no-underline text-obra-ink">{label} →</a>
       ))}
     </div>
   </aside>

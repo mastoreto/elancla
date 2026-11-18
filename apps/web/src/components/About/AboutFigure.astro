@@ -7,13 +7,15 @@ interface Props {
 
 const { figure } = Astro.props;
 const place = [figure.badge, figure.meta].filter(Boolean).join(' ');
+const PILL =
+  'absolute left-4.5 inline-flex max-w-[calc(100%-36px)] items-center rounded-full bg-obra-white px-3.25 py-1.75 font-obra-sans-bold text-[0.75rem] tracking-[0.04em] text-obra-ink';
 ---
 
-<section class="ab-figure">
-  <figure>
-    <img src={figure.src} alt={figure.alt} class="ln-photo" loading="eager" />
-    <span class="ab-pill ab-pill--tl">{figure.label}</span>
-    {place && <span class="ab-pill ab-pill--bl">{place}</span>}
+<section class="px-gutter-sm pt-[clamp(1.75rem,3vw,2.75rem)]">
+  <figure class="relative m-0 h-[clamp(14.375rem,36vw,32.5rem)] overflow-hidden rounded-[clamp(1.75rem,3.3vw,3rem)]">
+    <img src={figure.src} alt={figure.alt} class="ln-photo object-[50%_60%]" loading="eager" />
+    <span class:list={[PILL, 'top-4.5']}>{figure.label}</span>
+    {place && <span class:list={[PILL, 'bottom-4.5']}>{place}</span>}
     <figcaption class="sr-only">{figure.caption}</figcaption>
   </figure>
 </section>
