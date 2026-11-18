@@ -1,0 +1,37 @@
+---
+import type { ContentPage } from 'src/data/contentPages';
+import AboutCTA from 'src/sections/about/AboutPage/components/AboutCTA';
+import AboutFigure from 'src/sections/about/AboutPage/components/AboutFigure';
+import AboutHero from 'src/sections/about/AboutPage/components/AboutHero';
+import AboutSection from 'src/sections/about/AboutPage/components/AboutSection';
+import AboutToc from 'src/sections/about/AboutPage/components/AboutToc';
+import cn from 'src/utils/cn';
+
+interface Props {
+  page: ContentPage;
+}
+
+const { page } = Astro.props;
+
+const aboutPage = {
+  container: cn('ln bg-obra-paper pb-24'),
+  row: cn('flex gap-14 px-gutter-sm pt-[clamp(3.5rem,6.1vw,5.5rem)]'),
+  sections: cn('flex min-w-0 flex-1 flex-col gap-[clamp(4.5rem,7.6vw,6.875rem)]'),
+};
+---
+
+<div class={aboutPage.container}>
+  <AboutHero hero={page.hero} />
+  {page.featuredImage && <AboutFigure figure={page.featuredImage} />}
+  <div class={aboutPage.row}>
+    <div class={aboutPage.sections}>
+      {page.sections.map((section) => <AboutSection section={section} />)}
+    </div>
+    <AboutToc title={page.tocTitle ?? ''} sections={page.sections} />
+  </div>
+  {page.cta && <AboutCTA cta={page.cta} />}
+</div>
+
+<script>
+  import 'src/sections/about/AboutPage/scripts/about';
+</script>
