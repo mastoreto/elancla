@@ -47,5 +47,6 @@
       "cssModules": true,
       "tailwindDirectives": true
     }
-  }
+  },
+  "plugins": ["./biome-plugins/no-long-inline-classname.grit"]
 }

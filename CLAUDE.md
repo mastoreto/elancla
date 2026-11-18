@@ -165,6 +165,7 @@ Hay un `src/componentes/` heredado en español junto a `components/`: **no crear
    - Solo se permite `className` inline para una utilidad suelta de 1–2 clases cuando no justifica una clave; nunca strings largos.
    - `components/ui/` (shadcn) conserva `cva`; no se reescribe a mano.
    - Al crear o tocar un componente, conviértelo a esta convención en el mismo cambio. Detalle: `apps/crm/docs/migration/styles-convention.md`.
+   - Se verifica con el plugin de Biome `apps/crm/biome-plugins/no-long-inline-classname.grit` (`bun run check`): marca como *warning* los `className` con strings de más de 40 caracteres (también dentro de `cn(...)`). Pasará a *error* al terminar la migración de las secciones pendientes.
 
 ## 5. Buenas prácticas — Astro (`apps/web`)
 

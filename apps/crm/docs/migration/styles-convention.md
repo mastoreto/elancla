@@ -25,3 +25,6 @@ export function MinistryCard({ ministry, className }: MinistryCardProps) {
 `ministries`, `inventory`, `assembly` (all files), the whole Resumen dashboard (`dashboard/_components`) and Movimientos (page, filters, table, create dialog). The rest of the CRM (about 80 files with long inline classes) is migrated section by section.
 
 The rule is also written in the repo `CLAUDE.md` (section 4, point 8) so new code follows it by default. Theme tokens `tinta-suave` and `tinta-apagada` are now exposed as Tailwind colors.
+
+## Lint
+`biome-plugins/no-long-inline-classname.grit` (GritQL plugin registered in `biome.json`) warns on any `className` whose string literal is longer than 40 characters, including inline `cn("...")`. `components/ui/` is exempt. It is a warning while ~85 files are pending; switch `severity` to `"error"` once `biome lint` reports none.
