@@ -1,84 +1,126 @@
-import { Eye } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import { Globe, PencilLine } from "lucide-react";
+import Link from "next/link";
+import { BoardCard } from "@/components/dashboard/board/board-card";
+import { IconBubble } from "@/components/dashboard/board/icon-bubble";
+import { ProgressBar } from "@/components/dashboard/board/progress-bar";
+import { RowIconButton } from "@/components/dashboard/board/row-icon-button";
+import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
 import type { MinistrySummary } from "../types";
-import { formatMoney, getExecutionPercent, getLeaderInitials } from "../utils/ministry-stats";
+import {
+  formatMoney,
+  getExecutionPercent,
+  getExecutionTone,
+  getLeaderInitials,
+  getMinistryAppearance,
+} from "../utils";
 
 interface MinistryCardProps {
   ministry: MinistrySummary;
-  className?: string;
 }
 
-export function MinistryCard({ ministry, className }: MinistryCardProps) {
+const ministryCardMinistriesPage = {
+  card: cn("relative flex flex-col p-[22px]"),
+  header: cn("flex items-start gap-3"),
+  bubble: cn("size-12"),
+  bubbleIcon: cn("size-5"),
+  heading: cn("flex min-w-0 flex-1 flex-col gap-[3px]"),
+  name: cn("font-display text-[21px] leading-tight font-medium after:absolute after:inset-0"),
+  volunteers: cn("text-[12.5px] text-[var(--tinta-apagada)]"),
+  edit: cn("relative z-10"),
+  editIcon: cn("size-4"),
+  tags: cn("mt-3 flex flex-wrap gap-1.5"),
+  visible: cn(
+    "inline-flex items-center gap-1.5 rounded-full bg-[var(--vida-50)] px-2.5 py-[3px] text-[11.5px] font-bold text-[var(--vida)]",
+  ),
+  visibleIcon: cn("size-3"),
+  category: cn(
+    "rounded-full bg-secondary px-2.5 py-[3px] text-[11.5px] font-bold text-[var(--tinta-suave)]",
+  ),
+  description: cn("my-3.5 text-[13.5px] leading-[1.6] text-[var(--tinta-suave)]"),
+  leader: cn("mb-3.5 flex items-center gap-2.5"),
+  avatar: cn("size-[30px] text-[11px] font-extrabold shadow-[0_0_0_2px_#fff]"),
+  leaderText: cn("flex flex-col leading-[1.3]"),
+  leaderLabel: cn("text-[11.5px] text-[var(--tinta-apagada)]"),
+  leaderName: cn("text-[13.5px] font-bold"),
+  budget: cn("mt-auto flex flex-col gap-1.5"),
+  budgetRow: cn("flex justify-between text-[12.5px] text-[var(--tinta-apagada)] tabular-nums"),
+  executed: cn("text-foreground"),
+  percentGold: cn("font-bold text-[var(--oro-texto)]"),
+  percentGreen: cn("font-bold text-[var(--vida)]"),
+};
+
+export function MinistryCard({ ministry }: MinistryCardProps) {
   const percent = getExecutionPercent(ministry);
-  const ministryCardMinistriesPage = {
-    container: cn(
-      "flex min-w-0 flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card",
-      className,
-    ),
-    header: cn("flex flex-wrap items-start justify-between gap-2"),
-    heading: cn("min-w-0"),
-    name: cn("font-display text-lg font-medium leading-tight"),
-    volunteers: cn("mt-1 text-xs text-muted-foreground"),
-    category: cn("bg-accent text-accent-foreground"),
-    description: cn("text-sm leading-6 text-tinta-suave"),
-    leader: cn("flex items-center gap-3"),
-    leaderAvatar: cn(
-      "flex size-9 items-center justify-center rounded-full bg-primary font-display text-sm font-medium text-primary-foreground",
-    ),
-    leaderText: cn("leading-tight"),
-    leaderLabel: cn("text-[11px] text-muted-foreground"),
-    leaderName: cn("text-sm font-semibold"),
-    visibility: cn("ml-auto inline-flex items-center gap-1 text-xs text-income"),
-    visibilityIcon: cn("size-3.5"),
-    budget: cn("mt-auto"),
-    budgetRow: cn("mb-1.5 flex items-baseline justify-between gap-2 text-xs"),
-    executed: cn("font-semibold tabular-nums"),
-    budgetTotal: cn("text-muted-foreground"),
-  };
+  const tone = getExecutionTone(percent);
+  const { icon: Icon, tone: bubbleTone } = getMinistryAppearance(ministry.id);
+  const detailHref = getChurchRoutePath("ministries", ministry.id);
 
   return (
-    <article className={ministryCardMinistriesPage.container}>
-      <header className={ministryCardMinistriesPage.header}>
+    <BoardCard className={ministryCardMinistriesPage.card}>
+      <div className={ministryCardMinistriesPage.header}>
+        <IconBubble className={ministryCardMinistriesPage.bubble} tone={bubbleTone}>
+          <Icon aria-hidden="true" className={ministryCardMinistriesPage.bubbleIcon} />
+        </IconBubble>
         <div className={ministryCardMinistriesPage.heading}>
-          <h3 className={ministryCardMinistriesPage.name}>{ministry.name}</h3>
-          <p className={ministryCardMinistriesPage.volunteers}>{ministry.volunteers} voluntarios</p>
+          <Link className={ministryCardMinistriesPage.name} href={detailHref}>
+            {ministry.name}
+          </Link>
+          <span className={ministryCardMinistriesPage.volunteers}>
+            {ministry.volunteers} voluntarios
+          </span>
         </div>
-        <Badge className={ministryCardMinistriesPage.category} variant="secondary">
-          {ministry.category}
-        </Badge>
-      </header>
-
-      <p className={ministryCardMinistriesPage.description}>{ministry.description}</p>
-
-      <div className={ministryCardMinistriesPage.leader}>
-        <span aria-hidden="true" className={ministryCardMinistriesPage.leaderAvatar}>
-          {getLeaderInitials(ministry.leaderName)}
-        </span>
-        <div className={ministryCardMinistriesPage.leaderText}>
-          <p className={ministryCardMinistriesPage.leaderLabel}>Líder</p>
-          <p className={ministryCardMinistriesPage.leaderName}>{ministry.leaderName}</p>
-        </div>
+        <RowIconButton
+          className={ministryCardMinistriesPage.edit}
+          href={`${detailHref}/edit`}
+          label={`Editar ${ministry.name}`}
+        >
+          <PencilLine aria-hidden="true" className={ministryCardMinistriesPage.editIcon} />
+        </RowIconButton>
+      </div>
+      <div className={ministryCardMinistriesPage.tags}>
         {ministry.visibleOnSite ? (
-          <span className={ministryCardMinistriesPage.visibility}>
-            <Eye aria-hidden="true" className={ministryCardMinistriesPage.visibilityIcon} />
+          <span className={ministryCardMinistriesPage.visible}>
+            <Globe aria-hidden="true" className={ministryCardMinistriesPage.visibleIcon} />
             Visible en el sitio
           </span>
         ) : null}
+        <span className={ministryCardMinistriesPage.category}>{ministry.category}</span>
       </div>
-
+      <p className={ministryCardMinistriesPage.description}>{ministry.description}</p>
+      <div className={ministryCardMinistriesPage.leader}>
+        <IconBubble className={ministryCardMinistriesPage.avatar} tone={bubbleTone}>
+          {getLeaderInitials(ministry.leaderName)}
+        </IconBubble>
+        <div className={ministryCardMinistriesPage.leaderText}>
+          <span className={ministryCardMinistriesPage.leaderLabel}>Líder</span>
+          <b className={ministryCardMinistriesPage.leaderName}>{ministry.leaderName}</b>
+        </div>
+      </div>
       <div className={ministryCardMinistriesPage.budget}>
         <div className={ministryCardMinistriesPage.budgetRow}>
-          <span className={ministryCardMinistriesPage.executed}>
-            {formatMoney(ministry.currency, ministry.executed)}
+          <span>
+            <b className={ministryCardMinistriesPage.executed}>
+              {formatMoney(ministry.currency, ministry.executed)}
+            </b>{" "}
+            de {formatMoney(ministry.currency, ministry.budget)}
           </span>
-          <span className={ministryCardMinistriesPage.budgetTotal}>
-            de {formatMoney(ministry.currency, ministry.budget)} · {percent} %
-          </span>
+          <b
+            className={
+              tone === "green"
+                ? ministryCardMinistriesPage.percentGreen
+                : ministryCardMinistriesPage.percentGold
+            }
+          >
+            {percent} %
+          </b>
         </div>
-        <Progress aria-label={`Presupuesto ejecutado de ${ministry.name}`} value={percent} />
+        <ProgressBar
+          label={`Presupuesto ejecutado de ${ministry.name}`}
+          tone={tone}
+          value={percent}
+        />
       </div>
-    </article>
+    </BoardCard>
   );
 }

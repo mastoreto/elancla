@@ -3,6 +3,7 @@
 import { format } from "date-fns";
 import { AlertTriangle, CalendarIcon, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
+import { BoardButton } from "@/components/dashboard/board/board-button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -127,10 +128,10 @@ export function RequestFormModal({ onSubmit }: RequestFormModalProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild={true}>
-        <Button>
+        <BoardButton variant="primary">
           <Plus className={requestFormModalRequestsPage.triggerIcon} />
-          Nueva Solicitud
-        </Button>
+          Nueva solicitud
+        </BoardButton>
       </DialogTrigger>
       <DialogContent className={requestFormModalRequestsPage.content}>
         <DialogHeader>

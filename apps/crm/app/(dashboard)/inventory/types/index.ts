@@ -11,9 +11,14 @@ export interface InventoryItem {
   quantity: number;
   status: InventoryStatus;
   value: string;
+  /** Short return date ("30 nov") while the item is on loan. */
+  loanReturnOn?: string;
 }
 
+export type InventoryHistoryKind = "created" | "edit" | "status" | "loan" | "repair";
+
 export interface InventoryHistoryEntry {
+  kind: InventoryHistoryKind;
   date: string;
   event: string;
   detail: string;
@@ -26,6 +31,10 @@ export interface InventoryItemDetail extends InventoryItem {
   responsible: string;
   acquiredOn: string;
   acquisitionMode: string;
+  supplier: string;
+  purchaseValue: string;
+  warranty: string;
+  invoiceFile: string;
   notes: string;
   history: InventoryHistoryEntry[];
 }
@@ -36,12 +45,24 @@ export interface InventoryFormValues {
   location: string;
   quantity: string;
   status: InventoryStatus;
-  brand: string;
-  model: string;
+  brandModel: string;
   serialNumber: string;
   responsible: string;
   acquiredOn: string;
   acquisitionMode: string;
+  supplier: string;
+  purchaseCurrency: "UYU" | "USD";
+  purchaseValue: string;
   value: string;
   notes: string;
+  needsMaintenance: boolean;
+}
+
+export type InventoryViewMode = "table" | "grid";
+
+export type InventoryCategoryFilter = InventoryCategory | "all";
+
+export interface InventoryFilters {
+  search: string;
+  category: InventoryCategoryFilter;
 }

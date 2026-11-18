@@ -27,13 +27,7 @@ export function formatMoneyCompact(
     return `${prefix} ${millions} M`;
   }
   if (amount >= 1000) {
-    const thousands = amount / 1000;
-    // Under 100 mil a decimal keeps the figure honest ("8,2 mil"); above it the integer is enough.
-    const text =
-      thousands < 100
-        ? thousands.toFixed(1).replace(".", ",").replace(/,0$/, "")
-        : String(Math.round(thousands));
-    return `${prefix} ${text} mil`;
+    return `${prefix} ${Math.round(amount / 1000)} mil`;
   }
   return formatMoney(amount, currency);
 }
