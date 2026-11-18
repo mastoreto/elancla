@@ -24,7 +24,7 @@ const aspectClass = {
       <img src={figure.src} alt={figure.alt} class="w-full h-full object-cover duotone" />
       {
         figure.badge && (
-          <div class="absolute top-5 left-5 content-chip bg-white/85 text-ink px-3 py-1.5 rounded-full backdrop-blur-sm">
+          <div class="absolute top-5 left-5 font-ui text-[10px] tracking-[0.18em] uppercase font-semibold bg-white/85 text-ink px-3 py-1.5 rounded-full backdrop-blur-sm">
             {figure.badge}
           </div>
         )
@@ -38,8 +38,8 @@ const aspectClass = {
       }
     </div>
   </div>
-  <figcaption class="content-figure-caption mt-3 flex items-baseline gap-4 font-ui text-[12px] text-ink/55">
-    <span class="content-figure-label text-primary">{figure.label}</span>
+  <figcaption class="mt-3 flex items-baseline gap-4 font-ui text-[12px] text-ink/55 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-1">
+    <span class="font-label-mono text-[10px] tracking-[0.22em] font-semibold whitespace-nowrap text-primary">{figure.label}</span>
     <span>{figure.caption}</span>
   </figcaption>
 </figure>

@@ -2,7 +2,6 @@
 /* Legacy plain CSS still being migrated: layered so Tailwind utilities can override it. */
 @import "./Landing.css" layer(components);
 @import "./LandingObra.css" layer(components);
-@import "./ContentPage.css" layer(components);
 @import "./Calendar.css" layer(components);
 @import "./loading.css" layer(components);
 @import "./PageTransitions.css" layer(components);
@@ -170,6 +169,10 @@
   --font-obra-sans: "Futura No2 D OT Medium", system-ui, sans-serif;
   --font-obra-sans-bold: "FuturaNo2D", "Futura No2 D OT Medium", system-ui, sans-serif;
   --font-obra-brand: "Barastika", "Boston Angel Bold", serif;
+  /* Older editorial template (ContentPage) */
+  --font-label-mono: "JetBrains Mono", monospace;
+  --color-charcoal: #141414;
+  --color-sandstone: #f1ede4;
 
   --shadow-obra-float: 0 14px 30px -20px rgba(21, 21, 21, 0.5);
   --shadow-obra-lift: 0 22px 40px -26px rgba(21, 21, 21, 0.5);

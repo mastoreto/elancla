@@ -8,7 +8,13 @@ interface Props {
 const { block } = Astro.props;
 ---
 
-<blockquote class="content-pullquote mt-16">
+<blockquote class="relative mt-16 text-(--ink) border-y border-charcoal/15 py-[1.5em] font-display text-[clamp(1.7rem,3.2vw,2.4rem)] leading-[1.18] font-light tracking-[-0.01em] italic">
   {block.quote}
-  {block.cite && <cite>{block.cite}</cite>}
+  {
+    block.cite && (
+      <cite class="mt-[1.2em] block font-ui text-[11px] font-semibold tracking-[0.2em] text-charcoal/55 uppercase not-italic">
+        {block.cite}
+      </cite>
+    )
+  }
 </blockquote>

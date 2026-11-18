@@ -8,6 +8,10 @@ interface Props {
 const { block } = Astro.props;
 ---
 
-<div class="content-prose-block mt-8 max-w-2xl">
-  {block.paragraphs.map((paragraph) => <p set:html={paragraph} />)}
+<div class="mt-8 max-w-2xl font-ui text-charcoal/82 [&_strong]:font-semibold [&_strong]:text-(--ink)">
+  {
+    block.paragraphs.map((paragraph) => (
+      <p class="text-[17px] leading-[1.7] [&+p]:mt-[1.2em]" set:html={paragraph} />
+    ))
+  }
 </div>

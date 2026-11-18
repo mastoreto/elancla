@@ -63,7 +63,7 @@ function initReadProgress(signal: AbortSignal): void {
 }
 
 function initTocActiveState(): void {
-  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.content-toc-link'));
+  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-content-toc]'));
   const targets = tocLinks
     .map((link) => {
       const targetId = link.dataset.target;
@@ -98,7 +98,7 @@ function initTocActiveState(): void {
 }
 
 function initTocSmoothScroll(signal: AbortSignal): void {
-  document.querySelectorAll<HTMLAnchorElement>('.content-toc-link[href^="#"]').forEach((link) => {
+  document.querySelectorAll<HTMLAnchorElement>('[data-content-toc][href^="#"]').forEach((link) => {
     link.addEventListener('click', (event) => {
       const href = link.getAttribute('href');
       if (!href || href.length <= 1) return;

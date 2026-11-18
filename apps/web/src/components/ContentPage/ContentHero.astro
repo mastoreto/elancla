@@ -9,7 +9,7 @@ interface Props {
 const { hero } = Astro.props;
 ---
 
-<section class="content-hero relative pt-32 pb-12 overflow-hidden grain">
+<section class="relative pt-32 pb-12 overflow-hidden grain">
   <div class="absolute inset-0 grid-bg opacity-50"></div>
 
   <svg
@@ -42,7 +42,7 @@ const { hero } = Astro.props;
     </div>
 
     <div class="flex flex-wrap items-center gap-3 mb-8">
-      {hero.chip && <span class="content-chip text-primary">{hero.chip}</span>}
+      {hero.chip && <span class="font-ui text-[10px] tracking-[0.18em] uppercase font-semibold text-primary">{hero.chip}</span>}
       {
         hero.meta.map((item) => (
           <>
@@ -56,8 +56,8 @@ const { hero } = Astro.props;
     <h1 class="font-display text-[clamp(2.5rem,8vw,7.5rem)] leading-[0.92] tracking-[-0.035em] max-w-6xl font-light">
       {
         hero.titleLines.map((line) => (
-          <span class="hero-line">
-            <span>
+          <span class="hero-line mb-[-0.08em] pb-[0.08em]">
+            <span class="leading-none max-[640px]:whitespace-normal">
               <InlineText value={line} />
             </span>
           </span>

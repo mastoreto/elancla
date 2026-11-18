@@ -8,11 +8,18 @@ interface Props {
 const { block } = Astro.props;
 ---
 
-<div class="content-timeline-row mt-12 grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-10">
+<div class="relative mt-12 grid md:before:absolute md:before:inset-x-0 md:before:top-9 md:before:h-px md:before:bg-charcoal/12 md:before:content-[''] grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-10">
   {
     block.items.map((item) => (
       <div>
-        <div class:list={['content-timeline-dot', item.isCurrent && 'now']}></div>
+        <div
+          class:list={[
+            'relative z-1 size-3.25 rounded-full border-[1.5px]',
+            item.isCurrent
+              ? 'border-(--primary) bg-(--primary) shadow-[0_0_0_5px_rgba(255,46,52,0.18)]'
+              : 'border-(--ink) bg-(--paper)',
+          ]}
+        ></div>
         <div class="font-mono text-[11px] tracking-[0.18em] uppercase text-primary mt-5">{item.year}</div>
         <div class="font-display text-lg leading-tight mt-2 font-medium">{item.title}</div>
         <div class="font-ui text-[12.5px] text-ink/60 mt-1">{item.description}</div>

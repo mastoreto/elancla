@@ -13,21 +13,24 @@ const { block } = Astro.props;
     block.links.map((link) => (
       <a
         href={link.href}
-        class="content-url-card"
+        class="flex gap-0 border border-charcoal/10 bg-obra-white text-(--ink) no-underline [transition:border-color_0.3s_ease,translate_0.4s_ease] hover:-translate-y-0.5 hover:border-(--ink) max-[640px]:flex-col"
         target={link.external ? '_blank' : undefined}
         rel={link.external ? 'noopener noreferrer' : undefined}
       >
-        <div class="thumb" style={link.tint ? `--url-card-tint: ${link.tint}` : undefined}>
-          <span>{link.glyph}</span>
+        <div
+          class="flex min-h-32.5 w-[36%] shrink-0 items-center justify-center [background:repeating-linear-gradient(135deg,rgba(20,20,20,0.06)_0_1px,transparent_1px_14px),var(--tint,#efebe3)] max-[640px]:min-h-24 max-[640px]:w-full"
+          style={link.tint ? `--tint: ${link.tint}` : undefined}
+        >
+          <span class="font-display text-[1.875rem] font-light text-charcoal/30 italic">{link.glyph}</span>
         </div>
-        <div class="body">
+        <div class="flex min-w-0 flex-1 flex-col justify-between px-6.5 py-5.5">
           <div>
-            <div class="src">
+            <div class="mb-1.5 flex items-center gap-2 font-ui text-[10.5px] tracking-[0.18em] text-charcoal/50 uppercase">
               <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
               {link.sourceLabel}
             </div>
-            <div class="ttl">{link.title}</div>
-            <div class="desc">{link.description}</div>
+            <div class="font-display text-[1.25rem] leading-[1.18] tracking-[-0.01em]">{link.title}</div>
+            <div class="mt-1.5 line-clamp-2 font-ui text-[13px] leading-normal text-charcoal/60">{link.description}</div>
           </div>
           <div class="flex items-center gap-2 mt-3 font-ui text-[11px] text-ink/50">
             <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">

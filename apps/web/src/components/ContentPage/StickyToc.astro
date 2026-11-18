@@ -15,8 +15,13 @@ const { sections, shortcuts = [] } = Astro.props;
     <nav id="toc" class="flex flex-col" aria-label="Índice de página">
       {
         sections.map((section, index) => (
-          <a href={`#${section.id}`} class="content-toc-link" data-target={section.id}>
-            <span class="num">{String(index + 1).padStart(2, '0')}</span>
+          <a
+            href={`#${section.id}`}
+            class="group relative block border-l border-charcoal/10 py-2 pl-4.5 font-ui text-[13px] leading-[1.4] text-charcoal/55 [transition:color_0.3s_ease] hover:text-(--ink) [&.active]:border-l-(--primary) [&.active]:font-semibold [&.active]:text-(--ink)"
+            data-content-toc
+            data-target={section.id}
+          >
+            <span class="mr-2 font-label-mono text-[10px] tracking-[0.16em] text-charcoal/40 group-[.active]:text-(--primary)">{String(index + 1).padStart(2, '0')}</span>
             {section.tocLabel}
           </a>
         ))

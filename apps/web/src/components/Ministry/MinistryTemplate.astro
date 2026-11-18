@@ -140,7 +140,7 @@ const statTone = ['mn-stat--white', 'mn-stat--red', 'mn-stat--mist'];
         <nav>
           {
             sections.map((section, i) => (
-              <a href={`#${section.id}`} class="content-toc-link mn-toc-link" data-target={section.id}>
+              <a href={`#${section.id}`} class="mn-toc-link relative" data-content-toc data-target={section.id}>
                 <span>{String(i + 1).padStart(2, '0')}</span>{section.tocLabel}
               </a>
             ))
