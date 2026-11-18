@@ -9,7 +9,14 @@ import { MovementsTable } from "@/components/movements-table";
 import { Button } from "@/components/ui/button";
 import { movements as allMovements } from "@/lib/data";
 import type { Movement } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { DashboardPageHeader } from "@/src/componentes/dashboard";
+
+const movementsPage = {
+  page: cn("space-y-6"),
+  action: cn("rounded-full"),
+  count: cn("text-sm text-muted-foreground"),
+};
 
 export default function MovementsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -70,10 +77,10 @@ export default function MovementsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className={movementsPage.page}>
       <DashboardPageHeader
         actions={
-          <Button className="rounded-full" onClick={() => setIsCreateOpen(true)} type="button">
+          <Button className={movementsPage.action} onClick={() => setIsCreateOpen(true)} type="button">
             <Plus aria-hidden="true" />
             Nuevo movimiento
           </Button>
@@ -97,7 +104,7 @@ export default function MovementsPage() {
       />
 
       {/* Results Count */}
-      <div className="text-sm text-muted-foreground">
+      <div className={movementsPage.count}>
         Mostrando {filteredMovements.length} de {movements.length} movimientos
       </div>
 

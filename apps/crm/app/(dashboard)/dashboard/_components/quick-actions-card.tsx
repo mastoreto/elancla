@@ -1,6 +1,7 @@
 import { CalendarPlus, FilePlus2, HandCoins, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { getChurchRoutePath } from "@/lib/church";
+import { cn } from "@/lib/utils";
 import { DashboardCard, DashboardCardHeader } from "@/src/componentes/dashboard";
 
 const quickActions = [
@@ -30,26 +31,36 @@ const quickActions = [
   },
 ];
 
+const quickActionsCardDashboardPage = {
+  container: cn("mb-7"),
+  grid: cn("grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4"),
+  action: cn("flex flex-col gap-3 rounded-[14px] border border-border bg-card p-4 text-left transition hover:-translate-y-0.5 hover:border-foreground"),
+  icon: cn("flex size-9 items-center justify-center rounded-[10px] bg-primary/10 text-primary"),
+  iconGlyph: cn("size-4"),
+  title: cn("block text-sm font-semibold text-foreground"),
+  description: cn("mt-1 block text-xs text-muted-foreground"),
+};
+
 export function QuickActionsCard() {
   return (
-    <DashboardCard className="mb-7">
+    <DashboardCard className={quickActionsCardDashboardPage.container}>
       <DashboardCardHeader subtitle="Lo que más se usa en tesorería" title="Accesos rápidos" />
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className={quickActionsCardDashboardPage.grid}>
         {quickActions.map((action) => {
           const Icon = action.icon;
 
           return (
             <Link
-              className="flex flex-col gap-3 rounded-[14px] border border-[var(--border)] bg-[var(--card)] p-4 text-left transition hover:-translate-y-0.5 hover:border-foreground"
+              className={quickActionsCardDashboardPage.action}
               href={action.href}
               key={action.title}
             >
-              <span className="flex size-9 items-center justify-center rounded-[10px] bg-primary/10 text-primary">
-                <Icon className="size-4" />
+              <span className={quickActionsCardDashboardPage.icon}>
+                <Icon className={quickActionsCardDashboardPage.iconGlyph} />
               </span>
               <span>
-                <span className="block text-sm font-semibold text-foreground">{action.title}</span>
-                <span className="mt-1 block text-xs text-muted-foreground">
+                <span className={quickActionsCardDashboardPage.title}>{action.title}</span>
+                <span className={quickActionsCardDashboardPage.description}>
                   {action.description}
                 </span>
               </span>

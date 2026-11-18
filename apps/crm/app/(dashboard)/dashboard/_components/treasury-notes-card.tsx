@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { DashboardCard, DashboardCardHeader } from "@/src/componentes/dashboard";
 
 const notes = [
@@ -16,21 +17,28 @@ const notes = [
   },
 ];
 
+const treasuryNotesCardDashboardPage = {
+  list: cn("flex flex-col gap-3"),
+  note: cn("rounded-[14px] border border-border bg-card p-4 data-[highlighted=true]:bg-bruma"),
+  label: cn("mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground"),
+  text: cn("text-sm leading-6 text-foreground"),
+};
+
 export function TreasuryNotesCard() {
   return (
     <DashboardCard>
       <DashboardCardHeader subtitle="Recordatorios del equipo" title="Notas de tesorería" />
-      <ul className="flex flex-col gap-3">
+      <ul className={treasuryNotesCardDashboardPage.list}>
         {notes.map((note) => (
           <li
-            className="rounded-[14px] border border-[var(--border)] bg-[var(--card)] p-4 data-[highlighted=true]:bg-[var(--bruma)]"
+            className={treasuryNotesCardDashboardPage.note}
             data-highlighted={note.highlighted || undefined}
             key={note.label}
           >
-            <div className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+            <div className={treasuryNotesCardDashboardPage.label}>
               {note.label}
             </div>
-            <p className="text-sm leading-6 text-foreground">{note.text}</p>
+            <p className={treasuryNotesCardDashboardPage.text}>{note.text}</p>
           </li>
         ))}
       </ul>

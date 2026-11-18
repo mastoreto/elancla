@@ -2,8 +2,28 @@ import { ArrowRight, CheckCircle2, Clock3 } from "lucide-react";
 import Link from "next/link";
 import { getChurchRoutePath } from "@/lib/church";
 import type { MoneyRequest } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { DashboardCard, DashboardCardHeader } from "@/src/componentes/dashboard";
 import { formatCurrency, formatShortDate } from "./dashboard-formatters";
+
+const pendingRequestsCardDashboardPage = {
+  link: cn(
+    "hidden items-center gap-1.5 text-xs font-semibold text-tinta-suave transition hover:text-primary sm:inline-flex",
+  ),
+  linkIcon: cn("size-3"),
+  list: cn("divide-y divide-border"),
+  item: cn("grid grid-cols-[2rem_minmax(0,1fr)] gap-3 py-3 sm:grid-cols-[2rem_minmax(0,1fr)_auto]"),
+  itemIcon: cn("mt-1 flex size-8 items-center justify-center rounded-[10px] bg-primary/10 text-primary"),
+  itemIconGlyph: cn("size-4"),
+  itemBody: cn("min-w-0"),
+  itemConcept: cn("truncate text-sm font-semibold text-foreground"),
+  itemMeta: cn("mt-1 text-[11.5px] text-muted-foreground"),
+  itemAmount: cn("col-start-2 font-mono text-xs font-semibold text-foreground tabular-nums sm:col-auto"),
+  empty: cn("flex min-h-[190px] flex-col items-center justify-center rounded-[14px] border border-dashed border-border bg-bruma text-center"),
+  emptyIcon: cn("mb-3 size-9 text-income"),
+  emptyTitle: cn("text-sm font-semibold text-foreground"),
+  emptyText: cn("mt-1 max-w-56 text-xs text-muted-foreground"),
+};
 
 type PendingRequestsCardProps = {
   requests: MoneyRequest[];
@@ -17,11 +37,11 @@ export function PendingRequestsCard({ requests }: PendingRequestsCardProps) {
       <DashboardCardHeader
         action={
           <Link
-            className="hidden items-center gap-1.5 text-xs font-semibold text-[var(--tinta-suave)] transition hover:text-primary sm:inline-flex"
+            className={pendingRequestsCardDashboardPage.link}
             href={getChurchRoutePath("requests")}
           >
             Revisar
-            <ArrowRight className="size-3" />
+            <ArrowRight className={pendingRequestsCardDashboardPage.linkIcon} />
           </Link>
         }
         subtitle={`${pendingRequests.length} esperando decisión`}
@@ -29,34 +49,31 @@ export function PendingRequestsCard({ requests }: PendingRequestsCardProps) {
       />
 
       {pendingRequests.length > 0 ? (
-        <div className="divide-y divide-[var(--border)]">
+        <div className={pendingRequestsCardDashboardPage.list}>
           {pendingRequests.map((request) => (
-            <article
-              className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3 py-3 sm:grid-cols-[2rem_minmax(0,1fr)_auto]"
-              key={request.id}
-            >
-              <span className="mt-1 flex size-8 items-center justify-center rounded-[10px] bg-primary/10 text-primary">
-                <Clock3 className="size-4" />
+            <article className={pendingRequestsCardDashboardPage.item} key={request.id}>
+              <span className={pendingRequestsCardDashboardPage.itemIcon}>
+                <Clock3 className={pendingRequestsCardDashboardPage.itemIconGlyph} />
               </span>
-              <div className="min-w-0">
-                <div className="truncate text-sm font-semibold text-foreground">
+              <div className={pendingRequestsCardDashboardPage.itemBody}>
+                <div className={pendingRequestsCardDashboardPage.itemConcept}>
                   {request.concept}
                 </div>
-                <div className="mt-1 text-[11.5px] text-muted-foreground">
+                <div className={pendingRequestsCardDashboardPage.itemMeta}>
                   {request.ministry} · {request.leader} · {formatShortDate(request.date)}
                 </div>
               </div>
-              <div className="col-start-2 font-mono text-xs font-semibold text-foreground tabular-nums sm:col-auto">
+              <div className={pendingRequestsCardDashboardPage.itemAmount}>
                 {formatCurrency(request.amount, request.currency)}
               </div>
             </article>
           ))}
         </div>
       ) : (
-        <div className="flex min-h-[190px] flex-col items-center justify-center rounded-[14px] border border-dashed border-[var(--border)] bg-[var(--bruma)] text-center">
-          <CheckCircle2 className="mb-3 size-9 text-income" />
-          <h3 className="text-sm font-semibold text-foreground">Sin pendientes</h3>
-          <p className="mt-1 max-w-56 text-xs text-muted-foreground">
+        <div className={pendingRequestsCardDashboardPage.empty}>
+          <CheckCircle2 className={pendingRequestsCardDashboardPage.emptyIcon} />
+          <h3 className={pendingRequestsCardDashboardPage.emptyTitle}>Sin pendientes</h3>
+          <p className={pendingRequestsCardDashboardPage.emptyText}>
             Todas las solicitudes de fondos ya fueron procesadas.
           </p>
         </div>

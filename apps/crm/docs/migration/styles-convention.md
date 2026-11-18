@@ -22,4 +22,6 @@ export function MinistryCard({ ministry, className }: MinistryCardProps) {
 - shadcn primitives in `components/ui/` keep their own `cva` styles and are not rewritten by hand.
 
 ## Applied so far
-`ministries`, `inventory`, `assembly` (all files) and the weekly offerings chart of the dashboard. The rest of the CRM still has inline classes and is migrated section by section.
+`ministries`, `inventory`, `assembly` (all files), the whole Resumen dashboard (`dashboard/_components`) and Movimientos (page, filters, table, create dialog). The rest of the CRM (about 80 files with long inline classes) is migrated section by section.
+
+The rule is also written in the repo `CLAUDE.md` (section 4, point 8) so new code follows it by default. Theme tokens `tinta-suave` and `tinta-apagada` are now exposed as Tailwind colors.

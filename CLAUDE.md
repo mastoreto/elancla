@@ -150,6 +150,21 @@ Hay un `src/componentes/` heredado en español junto a `components/`: **no crear
 5. Variantes con un mapa tipado (o `cva`) + `cn()`; nada de concatenar clases con strings.
 6. Los textos entran por props o por i18n; el componente no conoce el idioma.
 7. Estilos junto al componente cuando son exclusivos; tokens y utilidades globales en `styles/`.
+8. **Convención de estilos Tailwind (obligatoria, `apps/crm` y toda app React)**: prohibido el `className="..."` con strings largos inline en JSX. Cada componente/sección declara **un** objeto `<nombreComponente><Seccion>Page` con una clave por elemento, cada valor envuelto en `cn()`, y la clave raíz recibe la prop `className`:
+
+   ```tsx
+   const ministryCardMinistriesPage = {
+     container: cn("flex flex-col gap-4 rounded-xl border bg-card p-5", className),
+     name: cn("font-display text-lg font-medium"),
+   };
+   // <article className={ministryCardMinistriesPage.container}>
+   ```
+
+   - Páginas sin prop `className`: el objeto va a nivel de módulo (`const ministriesPage = {...}`).
+   - Variantes por estado: mapa de módulo `satisfies Record<...>` que se combina dentro del objeto con `cn()`.
+   - Solo se permite `className` inline para una utilidad suelta de 1–2 clases cuando no justifica una clave; nunca strings largos.
+   - `components/ui/` (shadcn) conserva `cva`; no se reescribe a mano.
+   - Al crear o tocar un componente, conviértelo a esta convención en el mismo cambio. Detalle: `apps/crm/docs/migration/styles-convention.md`.
 
 ## 5. Buenas prácticas — Astro (`apps/web`)
 

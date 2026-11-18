@@ -2,6 +2,7 @@ import { Download, Plus, TrendingDown, TrendingUp, WalletCards } from "lucide-re
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getChurchRoutePath } from "@/lib/church";
+import { cn } from "@/lib/utils";
 import { balances, currentUser, moneyRequests, movements, projects } from "@/lib/data";
 import {
   type DashboardMetric,
@@ -15,6 +16,15 @@ import { QuickActionsCard } from "./quick-actions-card";
 import { RecentFinancialMovementsCard } from "./recent-financial-movements-card";
 import { TreasuryNotesCard } from "./treasury-notes-card";
 import { type WeeklyOffering, WeeklyOfferingsChart } from "./weekly-offerings-chart";
+
+const dashboardOverviewDashboardPage = {
+  exportButton: cn("bg-background"),
+  buttonIcon: cn("size-3.5"),
+  chartSection: cn("mb-7"),
+  columns: cn("mb-7 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]"),
+  sidebarColumn: cn("flex flex-col gap-6"),
+  metrics: cn("xl:grid-cols-3"),
+};
 
 const sparkPaths = {
   cash: "M2 22 L12 18 L22 20 L32 14 L42 16 L52 10 L62 12 L72 4 L78 6",
@@ -78,15 +88,15 @@ export function DashboardOverview() {
       <DashboardPageHeader
         actions={
           <>
-            <Button asChild={true} className="bg-background" variant="outline">
+            <Button asChild={true} className={dashboardOverviewDashboardPage.exportButton} variant="outline">
               <Link href={getChurchRoutePath("reports")}>
-                <Download className="size-3.5" />
+                <Download className={dashboardOverviewDashboardPage.buttonIcon} />
                 Exportar
               </Link>
             </Button>
             <Button asChild={true}>
               <Link href={getChurchRoutePath("movements")}>
-                <Plus className="size-3.5" />
+                <Plus className={dashboardOverviewDashboardPage.buttonIcon} />
                 Nuevo movimiento
               </Link>
             </Button>
@@ -98,15 +108,15 @@ export function DashboardOverview() {
         title="Buenos días,"
       />
 
-      <DashboardMetricStrip className="xl:grid-cols-3" metrics={createDashboardMetrics()} />
+      <DashboardMetricStrip className={dashboardOverviewDashboardPage.metrics} metrics={createDashboardMetrics()} />
 
-      <div className="mb-7">
+      <div className={dashboardOverviewDashboardPage.chartSection}>
         <WeeklyOfferingsChart data={weeklyOfferings} />
       </div>
 
-      <div className="mb-7 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
+      <div className={dashboardOverviewDashboardPage.columns}>
         <RecentFinancialMovementsCard movements={movements.slice(0, 8)} />
-        <div className="flex flex-col gap-6">
+        <div className={dashboardOverviewDashboardPage.sidebarColumn}>
           <PendingRequestsCard requests={moneyRequests} />
           <ProjectBudgetCard projects={projects} />
         </div>
