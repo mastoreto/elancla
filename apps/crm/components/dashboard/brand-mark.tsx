@@ -7,7 +7,7 @@ type BrandMarkProps = React.ComponentProps<"div"> & {
 
 const brandMarkDashboardPage = {
   container: cn(
-    "flex size-9 shrink-0 items-center justify-center rounded-xl bg-(image:--grad-granada) text-primary-foreground",
+    "flex size-9 shrink-0 items-center justify-center rounded-md bg-(image:--grad-granada) text-primary-foreground",
   ),
   icon: cn("size-[22px]"),
 };
