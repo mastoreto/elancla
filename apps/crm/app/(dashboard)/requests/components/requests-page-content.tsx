@@ -1,8 +1,8 @@
 "use client";
 
+import { Download } from "lucide-react";
 import { useMemo, useState } from "react";
-import type { DateRange } from "react-day-picker";
-import { DashboardPageHeader } from "@/components/dashboard";
+import { BoardButton } from "@/components/dashboard/board/board-button";
 import { RequestFormModal } from "@/components/request-form-modal";
 import { currentUser, moneyRequests as initialRequests } from "@/lib/data";
 import type { Currency, MoneyRequest, RequestStatus } from "@/lib/types";
@@ -15,12 +15,15 @@ import {
   type RequestStatusFilter,
 } from "../utils";
 import { RequestDetailSheet } from "./request-detail-sheet";
-import { RequestsPagination } from "./requests-pagination";
 import { RequestsTable } from "./requests-table";
 import { RequestsToolbar } from "./requests-toolbar";
 
 const requestsPageContentRequestsPage = {
-  page: cn("space-y-6"),
+  page: cn("flex flex-col gap-5"),
+  header: cn("flex flex-wrap items-center gap-4"),
+  description: cn("min-w-60 flex-1 text-[14.5px] leading-normal text-[var(--tinta-suave)]"),
+  actions: cn("flex shrink-0 gap-2.5"),
+  actionIcon: cn("size-4"),
 };
 
 type NewRequestData = {
@@ -59,14 +62,13 @@ export function RequestsPageContent() {
   const [searchQuery, setSearchQuery] = useState("");
   const [status, setStatus] = useState<RequestStatusFilter>("all");
   const [ministry, setMinistry] = useState("all");
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [page, setPage] = useState(1);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const counts = useMemo(() => countByStatus(requests), [requests]);
   const filtered = useMemo(
-    () => filterRequests(requests, { searchQuery, status, ministry, dateRange }),
-    [requests, searchQuery, status, ministry, dateRange],
+    () => filterRequests(requests, { searchQuery, status, ministry }),
+    [requests, searchQuery, status, ministry],
   );
   const pageCount = getPageCount(filtered.length);
   const currentPage = Math.min(page, pageCount);
@@ -113,19 +115,22 @@ export function RequestsPageContent() {
 
   return (
     <div className={requestsPageContentRequestsPage.page}>
-      <DashboardPageHeader
-        actions={<RequestFormModal onSubmit={createRequest} />}
-        description="Los ministerios piden fondos; tesorería aprueba, rechaza o pide más información."
-        emphasis="de fondos"
-        kicker="Tesorería"
-        title="Solicitudes"
-      />
+      <div className={requestsPageContentRequestsPage.header}>
+        <p className={requestsPageContentRequestsPage.description}>
+          Los ministerios piden fondos; tesorería aprueba, rechaza o pide más información.
+        </p>
+        <div className={requestsPageContentRequestsPage.actions}>
+          <BoardButton variant="outline">
+            <Download aria-hidden="true" className={requestsPageContentRequestsPage.actionIcon} />
+            Exportar
+          </BoardButton>
+          <RequestFormModal onSubmit={createRequest} />
+        </div>
+      </div>
 
       <RequestsToolbar
         counts={counts}
-        dateRange={dateRange}
         ministry={ministry}
-        onDateRangeChange={withFirstPage(setDateRange)}
         onMinistryChange={withFirstPage(setMinistry)}
         onSearchChange={withFirstPage(setSearchQuery)}
         onStatusChange={withFirstPage(setStatus)}
@@ -134,14 +139,15 @@ export function RequestsPageContent() {
       />
 
       <RequestsTable
-        onSelect={(request) => setSelectedId(request.id)}
-        requests={paginate(filtered, currentPage)}
-      />
-
-      <RequestsPagination
+        canDecide={canDecide}
+        onApprove={(id) => decide(id, "approved")}
         onPageChange={setPage}
+        onReject={(id) => decide(id, "rejected")}
+        onSelect={(request) => setSelectedId(request.id)}
         page={currentPage}
         pageCount={pageCount}
+        requests={paginate(filtered, currentPage)}
+        selectedId={selectedId}
         total={filtered.length}
       />
 

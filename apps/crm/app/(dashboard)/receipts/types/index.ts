@@ -11,7 +11,7 @@ export interface Receipt {
   fileUrl?: string;
 }
 
-export type ReceiptModalMode = "create" | "edit" | "view";
+export type ReceiptModalMode = "create" | "edit";
 
 export interface ReceiptFormValues {
   number: string;

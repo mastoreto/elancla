@@ -1,5 +1,4 @@
-import { isWithinInterval, parseISO } from "date-fns";
-import type { DateRange } from "react-day-picker";
+import { formatMoney } from "@/lib/format-money";
 import type { MoneyRequest, RequestStatus } from "@/lib/types";
 
 export const REQUESTS_PAGE_SIZE = 5;
@@ -10,7 +9,6 @@ export interface RequestFilters {
   searchQuery: string;
   status: RequestStatusFilter;
   ministry: string;
-  dateRange: DateRange | undefined;
 }
 
 export function filterRequests(requests: MoneyRequest[], filters: RequestFilters): MoneyRequest[] {
@@ -27,16 +25,9 @@ export function filterRequests(requests: MoneyRequest[], filters: RequestFilters
           .toLowerCase();
         if (!haystack.includes(query)) return false;
       }
-      return isInsideDateRange(request.date, filters.dateRange);
+      return true;
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-}
-
-function isInsideDateRange(isoDate: string, range: DateRange | undefined): boolean {
-  if (!range?.from) return true;
-  const date = parseISO(isoDate);
-  if (!range.to) return date >= range.from;
-  return isWithinInterval(date, { start: range.from, end: range.to });
 }
 
 export function countByStatus(requests: MoneyRequest[]): Record<RequestStatusFilter, number> {
@@ -66,10 +57,7 @@ export function getInitials(fullName: string): string {
     .join("");
 }
 
+/** "$U 15.000" for pesos and "USD 320" for dollars, as the boards write amounts. */
 export function formatRequestAmount(amount: number, currency: string): string {
-  return new Intl.NumberFormat("es-UY", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-  }).format(amount);
+  return formatMoney(amount, currency);
 }
