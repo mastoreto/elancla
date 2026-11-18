@@ -3,31 +3,30 @@
 import {
   ArrowLeftRight,
   Boxes,
+  ChevronDown,
   ChevronRight,
   FileBarChart2,
   FileText,
-  FileWarning,
   FolderKanban,
   Globe,
   HandCoins,
   HeartHandshake,
-  Landmark,
+  Image as ImageIcon,
   LayoutDashboard,
+  LayoutGrid,
   Mic,
   MonitorPlay,
   Newspaper,
   PiggyBank,
-  Search,
+  Receipt,
   Settings,
-  ShieldCheck,
   Vote,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BrandMark } from "@/components/dashboard";
-import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Sidebar,
@@ -44,26 +43,27 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { churchConfig, churchToDashboardRouteMap, getChurchRoutePath } from "@/lib/church";
-import { moneyRequests } from "@/lib/data";
+import { churchToDashboardRouteMap, getChurchRoutePath } from "@/lib/church";
+import { currentUser, moneyRequests } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
-const pendingRequestsCount = moneyRequests.filter((request) => request.status === "pending").length;
+type NavigationIcon = React.ComponentType<{ className?: string }>;
 
 type NavigationLinkItem = {
   type: "link";
   title: string;
   url: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: NavigationIcon;
   badge?: number;
 };
 
 type NavigationGroupItem = {
   type: "group";
   id: string;
+  defaultOpen?: boolean;
   title: string;
-  icon: React.ComponentType<{ className?: string }>;
-  items: Omit<NavigationLinkItem, "type">[];
+  icon: NavigationIcon;
+  items: { title: string; url: string | null; icon: NavigationIcon; soon?: boolean }[];
 };
 
 type NavigationItem = NavigationLinkItem | NavigationGroupItem;
@@ -73,80 +73,13 @@ type NavigationSection = {
   items: NavigationItem[];
 };
 
+const pendingRequestsCount = moneyRequests.filter((request) => request.status === "pending").length;
+
 const navigationSections: NavigationSection[] = [
-  {
-    label: "Contenido",
-    items: [
-      {
-        type: "link",
-        title: "Sitio Web",
-        url: getChurchRoutePath("website"),
-        icon: Globe,
-      },
-      {
-        type: "link",
-        title: "Ministerios",
-        url: getChurchRoutePath("ministries"),
-        icon: HeartHandshake,
-      },
-      {
-        type: "link",
-        title: "Blog",
-        url: getChurchRoutePath("blog"),
-        icon: Newspaper,
-      },
-      {
-        type: "link",
-        title: "Podcasts",
-        url: getChurchRoutePath("podcasts"),
-        icon: Mic,
-      },
-      {
-        type: "link",
-        title: "Sermones",
-        url: getChurchRoutePath("sermons"),
-        icon: MonitorPlay,
-      },
-    ],
-  },
-  {
-    label: "Gobierno",
-    items: [
-      {
-        type: "link",
-        title: "Votaciones",
-        url: getChurchRoutePath("voting"),
-        icon: Vote,
-      },
-      {
-        type: "link",
-        title: "Asamblea",
-        url: getChurchRoutePath("assembly"),
-        icon: Landmark,
-      },
-      {
-        type: "link",
-        title: "Inventario",
-        url: getChurchRoutePath("inventory"),
-        icon: Boxes,
-      },
-      {
-        type: "link",
-        title: "Informes",
-        url: getChurchRoutePath("reports"),
-        icon: FileBarChart2,
-      },
-    ],
-  },
   {
     label: "Tesorería",
     items: [
-      {
-        type: "link",
-        title: "Resumen",
-        url: getChurchRoutePath("resume"),
-        icon: LayoutDashboard,
-      },
+      { type: "link", title: "Resumen", url: getChurchRoutePath("resume"), icon: LayoutDashboard },
       {
         type: "link",
         title: "Movimientos",
@@ -160,40 +93,41 @@ const navigationSections: NavigationSection[] = [
         icon: HandCoins,
         badge: pendingRequestsCount > 0 ? pendingRequestsCount : undefined,
       },
+      { type: "link", title: "Boletas", url: getChurchRoutePath("receipts"), icon: Receipt },
+      { type: "link", title: "Comprobantes", url: getChurchRoutePath("vouchers"), icon: FileText },
+      { type: "link", title: "Proyectos", url: getChurchRoutePath("projects"), icon: FolderKanban },
       {
-        type: "group",
-        id: "documents",
-        title: "Documentos",
-        icon: FileText,
-        items: [
-          {
-            title: "Boletas",
-            url: getChurchRoutePath("receipts"),
-            icon: FileText,
-          },
-          {
-            title: "Comprobantes",
-            url: getChurchRoutePath("vouchers"),
-            icon: FileWarning,
-          },
-        ],
+        type: "link",
+        title: "Presupuestos",
+        url: getChurchRoutePath("budgets"),
+        icon: PiggyBank,
       },
+      { type: "link", title: "Inventario", url: getChurchRoutePath("inventory"), icon: Boxes },
+    ],
+  },
+  {
+    label: "Gobierno",
+    items: [
+      { type: "link", title: "Votaciones", url: getChurchRoutePath("voting"), icon: Vote },
+      { type: "link", title: "Informes", url: getChurchRoutePath("reports"), icon: FileBarChart2 },
+    ],
+  },
+  {
+    label: "Contenido",
+    items: [
+      { type: "link", title: "Sitio web", url: getChurchRoutePath("website"), icon: Globe },
+      { type: "link", title: "Blog", url: getChurchRoutePath("blog"), icon: Newspaper },
       {
         type: "group",
-        id: "planning",
-        title: "Planificación",
-        icon: FolderKanban,
+        id: "contents",
+        defaultOpen: true,
+        title: "Contenidos",
+        icon: LayoutGrid,
         items: [
-          {
-            title: "Proyectos",
-            url: getChurchRoutePath("projects"),
-            icon: FolderKanban,
-          },
-          {
-            title: "Presupuestos",
-            url: getChurchRoutePath("budgets"),
-            icon: PiggyBank,
-          },
+          { title: "Podcasts", url: getChurchRoutePath("podcasts"), icon: Mic },
+          { title: "Sermones", url: getChurchRoutePath("sermons"), icon: MonitorPlay },
+          { title: "Ministerios", url: getChurchRoutePath("ministries"), icon: HeartHandshake },
+          { title: "Galería", url: null, icon: ImageIcon, soon: true },
         ],
       },
     ],
@@ -201,65 +135,93 @@ const navigationSections: NavigationSection[] = [
   {
     label: "Sistema",
     items: [
-      {
-        type: "link",
-        title: "Configuración",
-        url: getChurchRoutePath("settings"),
-        icon: Settings,
-      },
+      { type: "link", title: "Configuración", url: getChurchRoutePath("settings"), icon: Settings },
     ],
   },
 ];
 
-const menuButtonClassName =
-  "relative h-10 rounded-[10px] px-3 text-[rgba(250,248,245,0.74)] hover:bg-white/5 hover:text-white data-[active=true]:bg-primary data-[active=true]:font-semibold data-[active=true]:text-white before:absolute before:-left-3 before:top-1/2 before:hidden before:h-5 before:w-[3px] before:-translate-y-1/2 before:rounded-r-full before:bg-primary data-[active=true]:before:block group-data-[collapsible=icon]:!size-11 group-data-[collapsible=icon]:!justify-center group-data-[collapsible=icon]:!p-0";
-
-const subButtonClassName =
-  "h-8 rounded-[9px] text-[rgba(250,248,245,0.62)] hover:bg-white/5 hover:text-white data-[active=true]:bg-white/10 data-[active=true]:text-white";
+const menuButtonShared = cn(
+  "h-[42px] gap-3 rounded-[14px] px-3 text-sm font-medium text-white/70",
+  "hover:bg-white/5 hover:text-white",
+  "data-[active=true]:bg-white/[0.09] data-[active=true]:font-bold data-[active=true]:text-white",
+  "data-[active=true]:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16)]",
+  "[&>svg]:size-[19px] data-[active=true]:[&>svg]:text-[var(--oro-100)]",
+);
 
 const appSidebarSharedPage = {
+  sidebar: cn(
+    "border-0 p-0 [&>[data-slot=sidebar-inner]]:bg-transparent",
+    "[&>[data-slot=sidebar-inner]]:text-white",
+  ),
+  header: cn("px-3 pt-[18px] pb-3.5"),
+  brandLink: cn("inline-flex items-center gap-2.5 px-2.5"),
+  brandMark: cn("shadow-[0_8px_18px_-8px_rgba(194,58,78,0.9)]"),
+  brandName: cn("font-display text-[21px] font-semibold tracking-tight text-white"),
+  content: cn("gap-0 px-3"),
+  group: cn("gap-0.5 p-0"),
+  groupLabel: cn(
+    "h-auto px-3 pt-4 pb-1.5 text-[11px] font-bold tracking-[0.14em] text-white/[0.42] uppercase",
+  ),
+  menu: cn("gap-0.5"),
+  menuButton: cn(menuButtonShared),
   chevron: cn("ml-auto size-4 transition-transform"),
   badge: cn(
-    "ml-auto rounded-full border-0 bg-white/10 px-2 py-0 font-mono text-[10px] font-medium text-white/85 group-data-[collapsible=icon]:hidden",
+    "ml-auto inline-flex h-[22px] min-w-[22px] items-center justify-center rounded-full bg-(image:--grad-granada) px-[7px] text-[11px] font-extrabold text-white",
   ),
-  sidebar: cn("border-r border-sidebar-border bg-sidebar text-sidebar-foreground"),
-  sidebarHeader: cn("h-[72px] justify-center border-b border-white/10 px-[22px] py-0"),
-  sidebarMenuButton: cn(
-    "h-12 rounded-[12px] px-0 text-white hover:bg-transparent hover:text-white group-data-[collapsible=icon]:!size-11 group-data-[collapsible=icon]:!justify-center group-data-[collapsible=icon]:!p-0",
+  subMenu: cn("mx-0 ml-[22px] gap-0 border-l-0 px-0 py-0.5"),
+  subSoon: cn(
+    "flex h-[38px] items-center gap-2.5 border-l border-white/[0.16] px-3 text-[13.5px] font-medium text-white/65",
   ),
-  label: cn("min-w-0 overflow-hidden leading-none group-data-[collapsible=icon]:hidden"),
-  labelText: cn(
-    "mb-1 block font-mono text-[9px] font-semibold uppercase tracking-[0.22em] text-white/55",
+  soonTag: cn(
+    "ml-auto text-[9.5px] font-extrabold tracking-[0.08em] text-[var(--oro-100)] uppercase opacity-80",
   ),
-  labelFont: cn("block truncate font-display text-[19px] font-semibold tracking-normal text-white"),
-  block: cn(
-    "shrink-0 px-[18px] py-4 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0",
+  subButton: cn(
+    "h-[38px] gap-2.5 rounded-xl rounded-l-none border-l border-white/[0.16] px-3 text-[13.5px] font-medium text-white/65",
+    "hover:bg-white/5 hover:text-white",
+    "data-[active=true]:bg-white/[0.09] data-[active=true]:text-white",
   ),
-  fieldLabel: cn(
-    "flex h-10 items-center gap-2 rounded-[10px] border border-white/10 bg-white/[0.05] px-3 text-white/55 transition focus-within:border-primary focus-within:bg-white/[0.08] group-data-[collapsible=icon]:size-11 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0",
+  footer: cn("px-3 pb-3"),
+  closeCard: cn(
+    "flex flex-col gap-3 rounded-[22px] bg-white/[0.07] p-4 text-white backdrop-blur-[10px]",
+    "shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14)]",
   ),
-  blockFlex: cn(
-    "min-w-0 flex-1 bg-transparent text-[13px] text-white outline-none placeholder:text-white/40 group-data-[collapsible=icon]:hidden",
+  closeIcon: cn(
+    "inline-flex size-[34px] items-center justify-center rounded-full bg-white/[0.12]",
+    "shadow-[inset_0_0_0_1px_rgba(255,255,255,0.22)]",
   ),
-  labelBorder: cn(
-    "rounded border border-white/15 px-1.5 py-0.5 font-mono text-[10px] text-white/50 group-data-[collapsible=icon]:hidden",
+  closeText: cn("flex flex-col gap-0.5"),
+  closeTitle: cn("text-[15px] font-bold"),
+  closeSubtitle: cn("text-xs text-white/65"),
+  segments: cn("flex gap-1"),
+  segmentDone: cn("h-[22px] flex-1 rounded-full bg-(image:--grad-oro)"),
+  segmentPending: cn("h-[22px] flex-1 rounded-full bg-white/[0.14]"),
+  closeAction: cn(
+    "inline-flex h-9 items-center self-start rounded-full bg-white/10 px-4 text-[13px] font-bold text-white",
+    "shadow-[inset_0_0_0_1px_rgba(255,255,255,0.2)] transition hover:-translate-y-px",
   ),
-  sidebarContent: cn("gap-0 px-3 pb-6 group-data-[collapsible=icon]:px-2"),
-  sidebarGroupLabel: cn(
-    "h-auto px-2 pb-2 pt-4 font-mono text-[9.5px] font-medium uppercase tracking-[0.22em] text-white/40 group-data-[collapsible=icon]:h-4 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:opacity-0",
+  user: cn("flex items-center gap-2.5 px-1.5 pt-2"),
+  avatar: cn(
+    "inline-flex size-[38px] shrink-0 items-center justify-center rounded-full bg-(image:--grad-avatar)",
+    "text-sm font-extrabold text-[var(--oro-texto)] ring-2 ring-white",
   ),
-  sidebarFooter: cn(
-    "border-t border-white/10 px-[18px] py-4 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-0",
-  ),
-  blockGap: cn("flex items-center gap-3 text-[11px] text-white/55"),
-  labelRounded: cn(
-    "relative size-2 shrink-0 rounded-full bg-income before:absolute before:inset-[-3px] before:rounded-full before:bg-income/40 before:content-[''] before:animate-ping",
-  ),
-  block2: cn("min-w-0 leading-snug group-data-[collapsible=icon]:hidden"),
-  shieldCheck: cn("ml-auto hidden size-4 text-white/35 group-data-[collapsible=icon]:block"),
+  userText: cn("flex min-w-0 flex-col leading-snug"),
+  userName: cn("truncate text-sm font-bold text-white"),
+  userRole: cn("text-xs text-white/55"),
+  userChevron: cn("ml-auto size-4 shrink-0 text-white/60"),
 };
 
-function getNavigationMatchUrls(url: string) {
+const ROLE_LABELS: Record<string, string> = { treasurer: "Tesorera" };
+
+function getUserInitials(name: string): string {
+  return name
+    .split(" ")
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+}
+
+function getNavigationMatchUrls(url: string): string[] {
   const matchingRoute = Object.entries(churchToDashboardRouteMap).find(([route]) => {
     const publicUrl = getChurchRoutePath(route as keyof typeof churchToDashboardRouteMap);
     return url === publicUrl || url.startsWith(`${publicUrl}/`);
@@ -276,30 +238,17 @@ function getNavigationMatchUrls(url: string) {
   return [url, `/${internalRoute}${suffix}`];
 }
 
-function isNavigationItemActive(pathname: string, url: string) {
+function isNavigationItemActive(pathname: string, url: string | null): boolean {
+  if (!url) {
+    return false;
+  }
   return getNavigationMatchUrls(url).some(
     (matchUrl) => pathname === matchUrl || pathname.startsWith(`${matchUrl}/`),
   );
 }
 
-function isNavigationGroupActive(pathname: string, item: NavigationGroupItem) {
+function isNavigationGroupActive(pathname: string, item: NavigationGroupItem): boolean {
   return item.items.some((subItem) => isNavigationItemActive(pathname, subItem.url));
-}
-
-function createInitialGroupState(pathname: string) {
-  return navigationSections.reduce<Record<string, boolean>>((state, section) => {
-    for (const item of section.items) {
-      if (item.type === "group") {
-        state[item.id] = isNavigationGroupActive(pathname, item);
-      }
-    }
-
-    return state;
-  }, {});
-}
-
-function NavigationBadge({ value }: { value: number }) {
-  return <Badge className={appSidebarSharedPage.badge}>{value}</Badge>;
 }
 
 function NavigationLink({ item, pathname }: { item: NavigationLinkItem; pathname: string }) {
@@ -307,62 +256,57 @@ function NavigationLink({ item, pathname }: { item: NavigationLinkItem; pathname
     <SidebarMenuItem>
       <SidebarMenuButton
         asChild={true}
-        className={menuButtonClassName}
+        className={appSidebarSharedPage.menuButton}
         isActive={isNavigationItemActive(pathname, item.url)}
-        tooltip={item.title}
       >
         <Link href={item.url}>
-          <item.icon className="size-[18px]" />
+          <item.icon />
           <span>{item.title}</span>
-          {item.badge ? <NavigationBadge value={item.badge} /> : null}
+          {item.badge ? <span className={appSidebarSharedPage.badge}>{item.badge}</span> : null}
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>
   );
 }
 
-function NavigationGroup({
-  item,
-  pathname,
-  open,
-  onOpenChange,
-}: {
-  item: NavigationGroupItem;
-  pathname: string;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}) {
+function NavigationGroup({ item, pathname }: { item: NavigationGroupItem; pathname: string }) {
   const isActive = isNavigationGroupActive(pathname, item);
+  const [open, setOpen] = useState(item.defaultOpen ?? isActive);
 
   return (
-    <Collapsible open={open} onOpenChange={onOpenChange}>
+    <Collapsible open={open || isActive} onOpenChange={setOpen}>
       <SidebarMenuItem>
         <CollapsibleTrigger asChild={true}>
-          <SidebarMenuButton
-            className={menuButtonClassName}
-            isActive={isActive}
-            tooltip={item.title}
-          >
-            <item.icon className="size-[18px]" />
+          <SidebarMenuButton className={appSidebarSharedPage.menuButton} isActive={isActive}>
+            <item.icon />
             <span>{item.title}</span>
-            <ChevronRight className={cn(appSidebarSharedPage.chevron, open && "rotate-90")} />
+            <ChevronRight
+              className={cn(appSidebarSharedPage.chevron, (open || isActive) && "rotate-90")}
+            />
           </SidebarMenuButton>
         </CollapsibleTrigger>
-
         <CollapsibleContent>
-          <SidebarMenuSub className="ml-6 border-white/10 py-1">
+          <SidebarMenuSub className={appSidebarSharedPage.subMenu}>
             {item.items.map((subItem) => (
               <SidebarMenuSubItem key={subItem.title}>
-                <SidebarMenuSubButton
-                  asChild={true}
-                  className={subButtonClassName}
-                  isActive={isNavigationItemActive(pathname, subItem.url)}
-                >
-                  <Link href={subItem.url}>
+                {subItem.url ? (
+                  <SidebarMenuSubButton
+                    asChild={true}
+                    className={appSidebarSharedPage.subButton}
+                    isActive={isNavigationItemActive(pathname, subItem.url)}
+                  >
+                    <Link href={subItem.url}>
+                      <subItem.icon className="size-4" />
+                      <span>{subItem.title}</span>
+                    </Link>
+                  </SidebarMenuSubButton>
+                ) : (
+                  <span className={appSidebarSharedPage.subSoon}>
                     <subItem.icon className="size-4" />
                     <span>{subItem.title}</span>
-                  </Link>
-                </SidebarMenuSubButton>
+                    <span className={appSidebarSharedPage.soonTag}>Pronto</span>
+                  </span>
+                )}
               </SidebarMenuSubItem>
             ))}
           </SidebarMenuSub>
@@ -374,76 +318,27 @@ function NavigationGroup({
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const [openGroups, setOpenGroups] = useState(() => createInitialGroupState(pathname));
-
-  useEffect(() => {
-    setOpenGroups((currentState) => {
-      const nextState = { ...currentState };
-
-      for (const section of navigationSections) {
-        for (const item of section.items) {
-          if (item.type === "group" && isNavigationGroupActive(pathname, item)) {
-            nextState[item.id] = true;
-          }
-        }
-      }
-
-      return nextState;
-    });
-  }, [pathname]);
 
   return (
-    <Sidebar className={appSidebarSharedPage.sidebar} collapsible="icon">
-      <SidebarHeader className={appSidebarSharedPage.sidebarHeader}>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild={true}
-              className={appSidebarSharedPage.sidebarMenuButton}
-              size="lg"
-            >
-              <Link href={getChurchRoutePath("resume")}>
-                <BrandMark />
-                <span className={appSidebarSharedPage.label}>
-                  <span className={appSidebarSharedPage.labelText}>Iglesia Bautista</span>
-                  <span className={appSidebarSharedPage.labelFont}>{churchConfig.name} · CMS</span>
-                </span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+    <Sidebar className={appSidebarSharedPage.sidebar} collapsible="offcanvas" variant="inset">
+      <SidebarHeader className={appSidebarSharedPage.header}>
+        <Link className={appSidebarSharedPage.brandLink} href={getChurchRoutePath("resume")}>
+          <BrandMark className={appSidebarSharedPage.brandMark} />
+          <b className={appSidebarSharedPage.brandName}>iEkklesia</b>
+        </Link>
       </SidebarHeader>
 
-      <div className={appSidebarSharedPage.block}>
-        <label className={appSidebarSharedPage.fieldLabel}>
-          <Search className="size-3.5 shrink-0" />
-          <input className={appSidebarSharedPage.blockFlex} placeholder="Buscar..." type="text" />
-          <span className={appSidebarSharedPage.labelBorder}>Ctrl K</span>
-        </label>
-      </div>
-
-      <SidebarContent className={appSidebarSharedPage.sidebarContent}>
+      <SidebarContent className={appSidebarSharedPage.content}>
         {navigationSections.map((section) => (
-          <SidebarGroup className="p-0" key={section.label}>
-            <SidebarGroupLabel className={appSidebarSharedPage.sidebarGroupLabel}>
+          <SidebarGroup className={appSidebarSharedPage.group} key={section.label}>
+            <SidebarGroupLabel className={appSidebarSharedPage.groupLabel}>
               {section.label}
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu className="gap-1">
+              <SidebarMenu className={appSidebarSharedPage.menu}>
                 {section.items.map((item) =>
                   item.type === "group" ? (
-                    <NavigationGroup
-                      item={item}
-                      key={item.id}
-                      onOpenChange={(open) =>
-                        setOpenGroups((currentState) => ({
-                          ...currentState,
-                          [item.id]: open,
-                        }))
-                      }
-                      open={openGroups[item.id] ?? false}
-                      pathname={pathname}
-                    />
+                    <NavigationGroup item={item} key={item.id} pathname={pathname} />
                   ) : (
                     <NavigationLink item={item} key={item.title} pathname={pathname} />
                   ),
@@ -454,15 +349,16 @@ export function AppSidebar() {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className={appSidebarSharedPage.sidebarFooter}>
-        <div className={appSidebarSharedPage.blockGap}>
-          <span className={appSidebarSharedPage.labelRounded} />
-          <div className={appSidebarSharedPage.block2}>
-            <strong className="font-semibold text-white">Sistema activo</strong>
-            <br />
-            <span>Interfaz local · sin BD</span>
+      <SidebarFooter className={appSidebarSharedPage.footer}>
+        <div className={appSidebarSharedPage.user}>
+          <span className={appSidebarSharedPage.avatar}>{getUserInitials(currentUser.name)}</span>
+          <div className={appSidebarSharedPage.userText}>
+            <b className={appSidebarSharedPage.userName}>{currentUser.name}</b>
+            <span className={appSidebarSharedPage.userRole}>
+              {ROLE_LABELS[currentUser.role] ?? currentUser.role}
+            </span>
           </div>
-          <ShieldCheck className={appSidebarSharedPage.shieldCheck} />
+          <ChevronDown aria-hidden="true" className={appSidebarSharedPage.userChevron} />
         </div>
       </SidebarFooter>
     </Sidebar>
