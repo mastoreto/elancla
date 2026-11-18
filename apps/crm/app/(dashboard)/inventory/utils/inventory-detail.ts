@@ -23,13 +23,16 @@ export function toInventoryFormValues(
     location: item.location,
     quantity: String(item.quantity),
     status: item.status,
-    brand: item.brand ?? "",
-    model: item.model ?? "",
+    brandModel: [item.brand, item.model].filter((part) => part && part !== "—").join(" "),
     serialNumber: item.serialNumber ?? "",
     responsible: item.responsible ?? "",
     acquiredOn: item.acquiredOn ?? "",
     acquisitionMode: item.acquisitionMode ?? "Compra",
+    supplier: item.supplier ?? "",
+    purchaseCurrency: item.purchaseValue?.startsWith("$U") ? "UYU" : "USD",
+    purchaseValue: (item.purchaseValue ?? "").replace(/[^\d]/g, ""),
     value: item.value.replace(/[^\d]/g, ""),
     notes: item.notes ?? "",
+    needsMaintenance: false,
   };
 }

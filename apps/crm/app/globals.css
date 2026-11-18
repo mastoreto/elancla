@@ -38,6 +38,17 @@
   --sombra: 0 10px 30px -18px rgba(60, 20, 30, 0.28);
   --sombra-flotante: 0 30px 60px -30px rgba(60, 20, 30, 0.45);
 
+  /* gradients: shared by the shell, buttons and badges */
+  --grad-granada: linear-gradient(160deg, #d65266 0%, #c23a4e 55%, #a92f44 100%);
+  --grad-oro: linear-gradient(180deg, #e9c873, #c9a14a);
+  --grad-avatar: linear-gradient(150deg, #fff1cf, #efd08a);
+  --grad-marco:
+    radial-gradient(120% 60% at 0% 100%, rgba(194, 58, 78, 0.55), transparent 60%),
+    radial-gradient(90% 45% at 100% 100%, rgba(201, 161, 74, 0.38), transparent 65%),
+    linear-gradient(180deg, #1c1013 0%, #25141a 55%, #2e171e 100%);
+  --sombra-marco: 0 40px 80px -40px rgba(37, 20, 26, 0.6);
+  --canvas: #eee8e1;
+
   /* motion */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --t-1: 150ms;

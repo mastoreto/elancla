@@ -1,109 +1,119 @@
 "use client";
 
-import { Eye, Library, Radio, Send } from "lucide-react";
-import Link from "next/link";
+import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
-import { DashboardMetricStrip, DashboardPageHeader } from "@/components/dashboard";
-import { ListPagination } from "@/components/list-pagination";
-import { Button } from "@/components/ui/button";
+import { BoardButton } from "@/components/dashboard/board/board-button";
+import { BoardPagination } from "@/components/dashboard/board/board-pagination";
+import { StatCard, StatCardGrid } from "@/components/dashboard/board/stat-card";
+import {
+  type ContentFilters,
+  ContentListToolbar,
+  ContentSectionTabs,
+  filterContent,
+  paginate,
+} from "@/components/dashboard/content";
 import { getChurchRoutePath } from "@/lib/church";
+import { formatCompactCount } from "@/lib/format-content";
 import { cn } from "@/lib/utils";
-import { sermons } from "../data/sermons";
-import type { SermonStatusFilter } from "../types";
-import { countByStatus, filterSermons, getTotalPlays, SERMONS_PAGE_SIZE } from "../utils";
+import { sermons as seedSermons } from "../data/sermons";
+import { getSeriesNames, getTotalPlays, SERMONS_PAGE_SIZE } from "../utils";
 import { SermonsLiveBanner } from "./sermons-live-banner";
 import { SermonsTable } from "./sermons-table";
-import { SermonsToolbar } from "./sermons-toolbar";
 
 const sermonsPageContentSermonsPage = {
-  page: cn("space-y-6"),
-  action: cn("rounded-full"),
+  page: cn("flex flex-col gap-5"),
+  header: cn("flex flex-wrap items-center gap-4"),
+  description: cn("min-w-60 flex-1 text-[14.5px] leading-normal text-[var(--tinta-suave)]"),
+  action: cn("ml-auto"),
+  icon: cn("size-4"),
 };
 
 export function SermonsPageContent() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [status, setStatus] = useState<SermonStatusFilter>("all");
+  const [library, setLibrary] = useState(seedSermons);
+  const [filters, setFilters] = useState<ContentFilters>({ status: "all", search: "", group: "" });
   const [page, setPage] = useState(1);
 
-  const counts = useMemo(() => countByStatus(sermons), []);
   const filtered = useMemo(
-    () => filterSermons(sermons, searchQuery, status),
-    [searchQuery, status],
+    () =>
+      filterContent(
+        library.map((sermon) => ({
+          ...sermon,
+          group: sermon.series,
+          searchText: `${sermon.title} ${sermon.preacher} ${sermon.passage} ${sermon.series}`,
+        })),
+        filters,
+      ),
+    [library, filters],
   );
-  const pageCount = Math.max(1, Math.ceil(filtered.length / SERMONS_PAGE_SIZE));
-  const currentPage = Math.min(page, pageCount);
-  const visible = filtered.slice(
-    (currentPage - 1) * SERMONS_PAGE_SIZE,
-    currentPage * SERMONS_PAGE_SIZE,
-  );
+  const paged = paginate(filtered, page, SERMONS_PAGE_SIZE);
+  const series = getSeriesNames(library);
+  const published = library.filter((sermon) => sermon.status === "published").length;
 
   return (
     <div className={sermonsPageContentSermonsPage.page}>
-      <DashboardPageHeader
-        actions={
-          <Button asChild={true} className={sermonsPageContentSermonsPage.action}>
-            <Link href={getChurchRoutePath("sermons", "new")}>Nuevo sermón</Link>
-          </Button>
-        }
-        description="Biblioteca de prédicas con video de YouTube, pasaje bíblico y serie."
-        emphasis="de la iglesia"
-        kicker="Contenido"
-        title="Sermones"
-      />
+      <div className={sermonsPageContentSermonsPage.header}>
+        <p className={sermonsPageContentSermonsPage.description}>
+          Biblioteca de prédicas con video de YouTube, pasaje bíblico y serie.
+        </p>
+        <BoardButton
+          className={sermonsPageContentSermonsPage.action}
+          href={getChurchRoutePath("sermons", "new")}
+          variant="primary"
+        >
+          <Plus aria-hidden="true" className={sermonsPageContentSermonsPage.icon} />
+          Nuevo sermón
+        </BoardButton>
+      </div>
 
-      <DashboardMetricStrip
-        metrics={[
-          {
-            accent: true,
-            label: "Sermones",
-            value: String(counts.all),
-            detail: "En la biblioteca",
-            icon: Library,
-          },
-          {
-            label: "Publicados",
-            value: String(counts.published),
-            detail: "Visibles en el sitio",
-            icon: Send,
-          },
-          {
-            label: "Reproducciones",
-            value: new Intl.NumberFormat("es-UY").format(getTotalPlays(sermons)),
-            detail: "Suma de los publicados",
-            icon: Eye,
-          },
-          {
-            label: "Próximo directo",
-            value: "Dom 11:15",
-            detail: "Detección automática de YouTube",
-            icon: Radio,
-          },
-        ]}
-      />
+      <ContentSectionTabs current="sermons" />
+
+      <StatCardGrid>
+        <StatCard
+          detail={`${series.length} series`}
+          label="Sermones"
+          value={String(library.length)}
+        />
+        <StatCard detail="1 por semana" label="Publicados" value={String(published)} />
+        <StatCard
+          detail="+11 % vs. mes anterior"
+          label="Reproducciones"
+          value={formatCompactCount(getTotalPlays(library))}
+        />
+        <StatCard
+          detail="Detección automática de YouTube"
+          highlighted={true}
+          label="Próximo directo"
+          value="Dom 11:15"
+        />
+      </StatCardGrid>
 
       <SermonsLiveBanner />
 
-      <SermonsToolbar
-        counts={counts}
-        onSearchChange={(value) => {
-          setSearchQuery(value);
+      <ContentListToolbar
+        filters={filters}
+        groupLabel="Serie"
+        groups={series}
+        onFiltersChange={(next) => {
+          setFilters(next);
           setPage(1);
         }}
-        onStatusChange={(value) => {
-          setStatus(value);
-          setPage(1);
-        }}
-        searchQuery={searchQuery}
-        status={status}
+        searchLabel="Buscar sermón"
+        searchPlaceholder="Buscar sermón, predicador o pasaje…"
       />
 
-      <SermonsTable sermons={visible} />
-
-      <ListPagination
-        onPageChange={setPage}
-        page={currentPage}
-        pageSize={SERMONS_PAGE_SIZE}
-        total={filtered.length}
+      <SermonsTable
+        footer={
+          <BoardPagination
+            onPageChange={setPage}
+            page={paged.page}
+            pageCount={paged.pageCount}
+            pageSize={SERMONS_PAGE_SIZE}
+            total={filtered.length}
+          />
+        }
+        library={library}
+        onDelete={(id) => setLibrary((current) => current.filter((sermon) => sermon.id !== id))}
+        sermons={paged.items}
       />
     </div>
   );

@@ -51,6 +51,7 @@ export const inventoryItems: InventoryItem[] = [
     quantity: 2,
     status: "Prestado",
     value: "USD 640",
+    loanReturnOn: "30 nov",
   },
   {
     id: "6",

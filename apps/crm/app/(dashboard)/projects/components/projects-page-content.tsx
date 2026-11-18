@@ -1,22 +1,24 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { DashboardPageHeader } from "@/components/dashboard";
 import { projects } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import type { ProjectFilters, ProjectViewMode } from "../types";
-import { DEFAULT_PROJECT_FILTERS, filterProjects, getProjectStats } from "../utils";
-import { ProjectFiltersComponent } from "./project-filters";
+import { DEFAULT_PROJECT_FILTERS, filterProjects } from "../utils";
 import { ProjectFormModal } from "./project-form-modal";
-import { ProjectTable } from "./project-table";
-import { ProjectsGrid } from "./projects-grid";
-import { ProjectsStats } from "./projects-stats";
-import { ProjectsViewToggle } from "./projects-view-toggle";
+import { ProjectsCards } from "./projects-cards";
+import { ProjectsTable } from "./projects-table";
+import { ProjectsToolbar } from "./projects-toolbar";
+
+const DESCRIPTIONS: Record<ProjectViewMode, string> = {
+  table: "Iniciativas con presupuesto propio, responsables y documentos.",
+  grid: "Vista de tarjetas: ideal para ver el avance de un vistazo.",
+};
 
 const projectsPageContentProjectsPage = {
-  page: cn("space-y-6"),
-  toolbar: cn("flex items-center justify-between"),
-  count: cn("text-sm text-muted-foreground"),
+  page: cn("flex flex-col gap-5"),
+  header: cn("flex flex-wrap items-center gap-4"),
+  description: cn("min-w-60 flex-1 text-[14.5px] leading-normal text-[var(--tinta-suave)]"),
 };
 
 export function ProjectsPageContent() {
@@ -24,33 +26,25 @@ export function ProjectsPageContent() {
   const [filters, setFilters] = useState<ProjectFilters>(DEFAULT_PROJECT_FILTERS);
 
   const filteredProjects = useMemo(() => filterProjects(projects, filters), [filters]);
-  const stats = useMemo(() => getProjectStats(projects), []);
-  const plural = filteredProjects.length === 1 ? "" : "s";
 
   return (
     <div className={projectsPageContentProjectsPage.page}>
-      <DashboardPageHeader
-        actions={<ProjectFormModal />}
-        description="Iniciativas con presupuesto propio, responsables y documentos."
-        emphasis="con propósito"
-        kicker="Tesorería"
-        title="Proyectos"
-      />
-
-      <ProjectsStats stats={stats} />
-      <ProjectFiltersComponent filters={filters} onFiltersChange={setFilters} />
-
-      <div className={projectsPageContentProjectsPage.toolbar}>
-        <p className={projectsPageContentProjectsPage.count}>
-          {filteredProjects.length} proyecto{plural} encontrado{plural}
-        </p>
-        <ProjectsViewToggle onChange={setViewMode} value={viewMode} />
+      <div className={projectsPageContentProjectsPage.header}>
+        <p className={projectsPageContentProjectsPage.description}>{DESCRIPTIONS[viewMode]}</p>
+        <ProjectFormModal />
       </div>
 
+      <ProjectsToolbar
+        filters={filters}
+        onFiltersChange={setFilters}
+        onViewModeChange={setViewMode}
+        viewMode={viewMode}
+      />
+
       {viewMode === "table" ? (
-        <ProjectTable projects={filteredProjects} />
+        <ProjectsTable projects={filteredProjects} />
       ) : (
-        <ProjectsGrid projects={filteredProjects} />
+        <ProjectsCards projects={filteredProjects} />
       )}
     </div>
   );

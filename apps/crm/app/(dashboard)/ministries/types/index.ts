@@ -46,3 +46,12 @@ export interface MinistryFormValues {
   currency: MinistrySummary["currency"];
   visibleOnSite: boolean;
 }
+
+export type MinistryViewMode = "cards" | "table";
+
+export type MinistryScope = "all" | "withLeader" | "noBudget";
+
+export interface MinistryFilters {
+  search: string;
+  scope: MinistryScope;
+}

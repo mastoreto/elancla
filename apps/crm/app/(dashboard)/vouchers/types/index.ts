@@ -12,7 +12,7 @@ export interface Voucher {
   justification?: string;
 }
 
-export type VoucherModalMode = "create" | "edit" | "view";
+export type VoucherModalMode = "create" | "edit";
 
 export interface VoucherFormValues {
   description: string;
