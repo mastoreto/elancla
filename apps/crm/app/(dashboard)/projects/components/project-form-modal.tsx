@@ -3,6 +3,7 @@
 import { format } from "date-fns";
 import { CalendarIcon, Plus, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
+import { BoardButton } from "@/components/dashboard/board/board-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -119,10 +120,10 @@ export function ProjectFormModal({ project, trigger, onSave }: ProjectFormModalP
     >
       <DialogTrigger asChild={true}>
         {trigger || (
-          <Button>
-            <Plus className="mr-2 size-4" />
-            Nuevo Proyecto
-          </Button>
+          <BoardButton variant="primary">
+            <Plus aria-hidden="true" className="size-4" />
+            Nuevo proyecto
+          </BoardButton>
         )}
       </DialogTrigger>
       <DialogContent className={projectFormModalProjectsPage.content}>

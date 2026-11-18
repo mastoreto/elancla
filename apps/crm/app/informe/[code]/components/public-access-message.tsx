@@ -1,58 +1,104 @@
-import { Ban, Clock, MapPinOff, SearchX } from "lucide-react";
+import { AlertTriangle, Lock, Mail, Trash2 } from "lucide-react";
 import type { PublicAccessState } from "@/app/(dashboard)/assembly/types";
-import { IconBubble } from "@/components/dashboard/board/icon-bubble";
 import { cn } from "@/lib/utils";
+import { PublicButton } from "./public-actions";
+import { PublicCodeForm } from "./public-code-form";
+import { PublicRetryButton } from "./public-retry-button";
+import { PublicShell } from "./public-shell";
+import { PublicStateScreen } from "./public-state-screen";
 
 type BlockedState = Exclude<PublicAccessState, "visible">;
 
-const MESSAGES = {
-  "not-yet": {
-    icon: Clock,
-    title: "Este informe aún no está disponible",
-    body: "Se habilitará cuando comience la sesión. Vuelve a escanear el código en ese momento.",
-  },
-  expired: {
-    icon: MapPinOff,
-    title: "Este informe ya venció",
-    body: "El acceso era válido solo durante la sesión y en el lugar de la asamblea.",
-  },
-  revoked: {
-    icon: Ban,
-    title: "Este informe fue dado de baja",
-    body: "La iglesia retiró el acceso. Consulta con la secretaría si necesitas una copia.",
-  },
-  invalid: {
-    icon: SearchX,
-    title: "No encontramos ese código",
-    body: "Revisa que esté bien escrito o escanea de nuevo el QR proyectado en la sala.",
-  },
-} satisfies Record<BlockedState, { icon: typeof Clock; title: string; body: string }>;
-
 const publicAccessMessageInformePage = {
-  card: cn(
-    "flex flex-col items-center gap-4 rounded-[28px] bg-card p-8 text-center shadow-(--sombra)",
+  chip: cn(
+    "inline-flex items-center gap-2 rounded-full bg-[var(--oro-50)] px-4 py-2 text-[12.5px] font-bold text-[var(--oro-texto)]",
+    "shadow-[inset_0_0_0_1px_var(--oro-100)]",
   ),
-  bubble: cn("size-14"),
-  icon: cn("size-6"),
-  title: cn("font-display text-2xl font-medium text-balance"),
-  body: cn("text-sm leading-6 text-[var(--tinta-suave)]"),
+  chipDot: cn("size-1.5 rounded-full bg-[var(--oro)]"),
+  hint: cn("text-xs text-[var(--tinta-apagada)]"),
+  meta: cn("text-[12.5px] text-[var(--tinta-apagada)]"),
 };
 
 interface PublicAccessMessageProps {
   state: BlockedState;
+  /** Access code and validity of the report, when the code matched one. */
+  accessCode?: string;
+  validity?: string;
 }
 
-export function PublicAccessMessage({ state }: PublicAccessMessageProps) {
-  const message = MESSAGES[state];
-  const Icon = message.icon;
+export function PublicAccessMessage({ state, accessCode, validity }: PublicAccessMessageProps) {
+  if (state === "not-yet") {
+    return (
+      <PublicShell withGlow={true}>
+        <PublicStateScreen
+          body="Se habilitará cuando comience la presentación. Mantén esta pantalla abierta."
+          icon={<Lock aria-hidden="true" className="size-10" />}
+          title="Este informe aún no está disponible para su acceso"
+          tone="gold"
+        >
+          {accessCode ? (
+            <span className={publicAccessMessageInformePage.chip}>
+              <span className={publicAccessMessageInformePage.chipDot} />
+              Código {accessCode}
+            </span>
+          ) : null}
+          <PublicRetryButton />
+          <span className={publicAccessMessageInformePage.hint}>
+            Esta página se actualiza sola cuando se habilite.
+          </span>
+        </PublicStateScreen>
+      </PublicShell>
+    );
+  }
+
+  if (state === "expired") {
+    return (
+      <PublicShell>
+        <PublicStateScreen
+          body="La asamblea terminó y el acceso a este informe fue cerrado."
+          icon={<Lock aria-hidden="true" className="size-10" />}
+          title="Este informe ya no está disponible"
+          tone="ink"
+        >
+          {accessCode ? (
+            <span className={publicAccessMessageInformePage.meta}>
+              Código {accessCode}
+              {validity ? ` · ${validity}` : ""}
+            </span>
+          ) : null}
+        </PublicStateScreen>
+      </PublicShell>
+    );
+  }
+
+  if (state === "revoked") {
+    return (
+      <PublicShell>
+        <PublicStateScreen
+          body="Quien lo publicó retiró el acceso. Si lo necesitas, pídelo a la directiva."
+          icon={<Trash2 aria-hidden="true" className="size-10" />}
+          title="Este informe fue dado de baja"
+          tone="rose"
+        >
+          <PublicButton>
+            <Mail aria-hidden="true" className="size-4" />
+            Contactar a la iglesia
+          </PublicButton>
+        </PublicStateScreen>
+      </PublicShell>
+    );
+  }
 
   return (
-    <div className={publicAccessMessageInformePage.card}>
-      <IconBubble className={publicAccessMessageInformePage.bubble} tone="gold">
-        <Icon aria-hidden="true" className={publicAccessMessageInformePage.icon} />
-      </IconBubble>
-      <h1 className={publicAccessMessageInformePage.title}>{message.title}</h1>
-      <p className={publicAccessMessageInformePage.body}>{message.body}</p>
-    </div>
+    <PublicShell>
+      <PublicStateScreen
+        body="Revisa que esté bien escrito o escanea de nuevo el QR de la pantalla."
+        icon={<AlertTriangle aria-hidden="true" className="size-10" />}
+        title="No encontramos este código"
+        tone="gold"
+      >
+        <PublicCodeForm />
+      </PublicStateScreen>
+    </PublicShell>
   );
 }

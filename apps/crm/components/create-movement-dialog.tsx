@@ -1,20 +1,14 @@
 "use client";
 
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { es } from "date-fns/locale";
+import { CalendarIcon, Check, CircleDollarSign } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { BoardButton } from "@/components/dashboard/board/board-button";
+import { BoardDialogContent } from "@/components/dashboard/board/board-dialog";
+import { BoardField, boardControlStyles } from "@/components/dashboard/board/board-field";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { Dialog } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,
@@ -23,29 +17,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { projects } from "@/lib/data";
 import type { Currency, Movement, MovementType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
+const NO_PROJECT = "none";
+
 const createMovementDialogMovementsPage = {
-  content: cn("sm:max-w-[500px]"),
-  form: cn("space-y-4"),
-  typeGroup: cn("justify-start"),
-  incomeToggle: cn(
-    "border data-[state=on]:border-income/30 data-[state=on]:bg-income/10 data-[state=on]:text-income",
-  ),
-  expenseToggle: cn(
-    "border data-[state=on]:border-expense/30 data-[state=on]:bg-expense/10 data-[state=on]:text-expense",
-  ),
-  dateTrigger: cn("w-full justify-start text-left font-normal"),
-  dateTriggerEmpty: cn("text-muted-foreground"),
-  dateIcon: cn("mr-2 size-4"),
+  form: cn("flex flex-col gap-3.5"),
+  pair: cn("grid grid-cols-1 gap-3 sm:grid-cols-2"),
+  amountPair: cn("grid grid-cols-1 gap-3 sm:grid-cols-[1.3fr_1fr]"),
+  dateTrigger: cn("text-left"),
+  dateText: cn("flex-1"),
+  dateEmpty: cn("text-[var(--tinta-apagada)]"),
   popover: cn("w-auto p-0"),
-  amountRow: cn("grid grid-cols-2 gap-4"),
-  fixedProject: cn("rounded-md border bg-muted/40 px-3 py-2 text-sm font-medium text-foreground"),
-  footer: cn("gap-2 sm:gap-0"),
+  textarea: cn(boardControlStyles.input, boardControlStyles.textarea),
+  fixedProject: cn(boardControlStyles.shell, "font-semibold"),
+  footer: cn("mt-1 flex justify-end gap-2.5"),
+  icon: cn("size-4"),
 };
 
 interface CreateMovementDialogProps {
@@ -61,15 +50,14 @@ export function CreateMovementDialog({
   onSubmit,
   fixedProject,
 }: CreateMovementDialogProps) {
-  const initialProjectValue = fixedProject ?? "none";
+  const initialProject = fixedProject ?? NO_PROJECT;
   const [date, setDate] = useState<Date>(new Date());
   const [concept, setConcept] = useState("");
   const [type, setType] = useState<MovementType>("income");
   const [description, setDescription] = useState("");
   const [currency, setCurrency] = useState<Currency>("UYU");
   const [amount, setAmount] = useState("");
-  const [project, setProject] = useState<string>(initialProjectValue);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [project, setProject] = useState(initialProject);
 
   const resetForm = () => {
     setDate(new Date());
@@ -78,16 +66,18 @@ export function CreateMovementDialog({
     setDescription("");
     setCurrency("UYU");
     setAmount("");
-    setProject(initialProjectValue);
+    setProject(initialProject);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      resetForm();
+    }
+    onOpenChange(nextOpen);
+  };
 
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
     onSubmit({
       date: format(date, "yyyy-MM-dd"),
       concept,
@@ -95,183 +85,148 @@ export function CreateMovementDialog({
       description,
       currency,
       amount: Number.parseFloat(amount),
-      project: fixedProject ?? (project === "none" ? undefined : project),
+      project: fixedProject ?? (project === NO_PROJECT ? undefined : project),
     });
-
-    setIsSubmitting(false);
-    resetForm();
-    onOpenChange(false);
-  };
-
-  const handleOpenChange = (newOpen: boolean) => {
-    if (!newOpen) {
-      resetForm();
-    }
-    onOpenChange(newOpen);
+    handleOpenChange(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className={createMovementDialogMovementsPage.content}>
-        <DialogHeader>
-          <DialogTitle>Crear Movimiento</DialogTitle>
-          <DialogDescription>Añade un nuevo ingreso o gasto a la tesoería</DialogDescription>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className={createMovementDialogMovementsPage.form}>
-          {/* Type Toggle */}
-          <Field>
-            <FieldLabel>Tipo</FieldLabel>
-            <ToggleGroup
-              type="single"
-              value={type}
-              onValueChange={(value) => value && setType(value as MovementType)}
-              className={createMovementDialogMovementsPage.typeGroup}
-            >
-              <ToggleGroupItem
-                value="income"
-                className={createMovementDialogMovementsPage.incomeToggle}
-              >
-                Ingreso
-              </ToggleGroupItem>
-              <ToggleGroupItem
-                value="expense"
-                className={createMovementDialogMovementsPage.expenseToggle}
-              >
-                Gasto
-              </ToggleGroupItem>
-            </ToggleGroup>
-          </Field>
-
-          {/* Date */}
-          <Field>
-            <FieldLabel>Fecha</FieldLabel>
-            <Popover>
-              <PopoverTrigger asChild={true}>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    createMovementDialogMovementsPage.dateTrigger,
-                    !date && createMovementDialogMovementsPage.dateTriggerEmpty,
-                  )}
-                >
-                  <CalendarIcon className={createMovementDialogMovementsPage.dateIcon} />
-                  {date ? format(date, "PPP") : <span>Selecciona una fecha</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className={createMovementDialogMovementsPage.popover} align="start">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={(d) => d && setDate(d)}
-                  autoFocus={true}
-                />
-              </PopoverContent>
-            </Popover>
-          </Field>
-
-          {/* Concept */}
-          <Field>
-            <FieldLabel htmlFor="concept">Concepto</FieldLabel>
-            <Input
-              id="concept"
-              placeholder="p. ej., Ofrenda Dominical"
-              value={concept}
-              onChange={(e) => setConcept(e.target.value)}
-              required={true}
-            />
-          </Field>
-
-          {/* Description */}
-          <Field>
-            <FieldLabel htmlFor="description">Descripción</FieldLabel>
-            <Textarea
-              id="description"
-              placeholder="Detalles adicionales sobre este movimiento..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={3}
-            />
-          </Field>
-
-          {/* Currency & Amount */}
-          <div className={createMovementDialogMovementsPage.amountRow}>
-            <Field>
-              <FieldLabel>Moneda</FieldLabel>
-              <Select value={currency} onValueChange={(v) => setCurrency(v as Currency)}>
-                <SelectTrigger>
+    <Dialog onOpenChange={handleOpenChange} open={open}>
+      <BoardDialogContent
+        description="Registra un ingreso o egreso del período."
+        title="Nuevo movimiento"
+      >
+        <form className={createMovementDialogMovementsPage.form} onSubmit={handleSubmit}>
+          <div className={createMovementDialogMovementsPage.pair}>
+            <BoardField label="Tipo">
+              <Select onValueChange={(value) => setType(value as MovementType)} value={type}>
+                <SelectTrigger className={boardControlStyles.select}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="UYU">UYU - Peso Uruguayo</SelectItem>
-                  <SelectItem value="USD">USD - Dólar Estadounidense</SelectItem>
+                  <SelectItem value="income">Ingreso</SelectItem>
+                  <SelectItem value="expense">Egreso</SelectItem>
                 </SelectContent>
               </Select>
-            </Field>
+            </BoardField>
 
-            <Field>
-              <FieldLabel htmlFor="amount">Cantidad</FieldLabel>
-              <Input
-                id="amount"
-                type="number"
-                placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                min="0"
-                step="0.01"
-                required={true}
-              />
-            </Field>
+            <BoardField label="Fecha">
+              <Popover>
+                <PopoverTrigger asChild={true}>
+                  <button
+                    className={cn(
+                      boardControlStyles.shell,
+                      createMovementDialogMovementsPage.dateTrigger,
+                    )}
+                    type="button"
+                  >
+                    <CalendarIcon aria-hidden="true" className={boardControlStyles.icon} />
+                    <span className={createMovementDialogMovementsPage.dateText}>
+                      {format(date, "d MMM yyyy", { locale: es })}
+                    </span>
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent align="start" className={createMovementDialogMovementsPage.popover}>
+                  <Calendar
+                    autoFocus={true}
+                    mode="single"
+                    onSelect={(selected) => selected && setDate(selected)}
+                    selected={date}
+                  />
+                </PopoverContent>
+              </Popover>
+            </BoardField>
           </div>
 
-          {/* Project */}
-          {fixedProject ? (
-            <Field>
-              <FieldLabel>Proyecto</FieldLabel>
-              <div className={createMovementDialogMovementsPage.fixedProject}>{fixedProject}</div>
-            </Field>
-          ) : (
-            <Field>
-              <FieldLabel>Proyecto (opcional)</FieldLabel>
-              <Select value={project} onValueChange={setProject}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecciona un proyecto" />
+          <BoardField htmlFor="movement-concept" label="Concepto">
+            <span className={boardControlStyles.shell}>
+              <input
+                className={boardControlStyles.input}
+                id="movement-concept"
+                onChange={(event) => setConcept(event.target.value)}
+                placeholder="Ofrenda dominical"
+                required={true}
+                value={concept}
+              />
+            </span>
+          </BoardField>
+
+          <div className={createMovementDialogMovementsPage.amountPair}>
+            <BoardField htmlFor="movement-amount" label="Monto">
+              <span className={boardControlStyles.shell}>
+                <CircleDollarSign aria-hidden="true" className={boardControlStyles.icon} />
+                <input
+                  className={boardControlStyles.input}
+                  id="movement-amount"
+                  min="0"
+                  onChange={(event) => setAmount(event.target.value)}
+                  placeholder="0"
+                  required={true}
+                  step="0.01"
+                  type="number"
+                  value={amount}
+                />
+              </span>
+            </BoardField>
+
+            <BoardField label="Moneda">
+              <Select onValueChange={(value) => setCurrency(value as Currency)} value={currency}>
+                <SelectTrigger className={boardControlStyles.select}>
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Sin proyecto</SelectItem>
-                  {projects.map((p) => (
-                    <SelectItem key={p.id} value={p.name}>
-                      {p.name}
+                  <SelectItem value="UYU">UYU · $U</SelectItem>
+                  <SelectItem value="USD">USD · US$</SelectItem>
+                </SelectContent>
+              </Select>
+            </BoardField>
+          </div>
+
+          {fixedProject ? (
+            <BoardField label="Proyecto">
+              <div className={createMovementDialogMovementsPage.fixedProject}>{fixedProject}</div>
+            </BoardField>
+          ) : (
+            <BoardField label="Proyecto (opcional)">
+              <Select onValueChange={setProject} value={project}>
+                <SelectTrigger className={boardControlStyles.select}>
+                  <SelectValue placeholder="Elegir proyecto" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={NO_PROJECT}>Sin proyecto</SelectItem>
+                  {projects.map((item) => (
+                    <SelectItem key={item.id} value={item.name}>
+                      {item.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            </Field>
+            </BoardField>
           )}
 
-          <DialogFooter className={createMovementDialogMovementsPage.footer}>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleOpenChange(false)}
-              disabled={isSubmitting}
-            >
+          <BoardField htmlFor="movement-description" label="Descripción">
+            <span className={boardControlStyles.shell}>
+              <textarea
+                className={createMovementDialogMovementsPage.textarea}
+                id="movement-description"
+                onChange={(event) => setDescription(event.target.value)}
+                placeholder="Detalle opcional…"
+                value={description}
+              />
+            </span>
+          </BoardField>
+
+          <div className={createMovementDialogMovementsPage.footer}>
+            <BoardButton onClick={() => handleOpenChange(false)} variant="ghost">
               Cancelar
-            </Button>
-            <Button
-              type="submit"
-              disabled={isSubmitting || !concept || !amount}
-              className={cn(
-                type === "income"
-                  ? "bg-income hover:bg-income/90 text-income-foreground"
-                  : "bg-expense hover:bg-expense/90 text-expense-foreground",
-              )}
-            >
-              {isSubmitting ? "Guardando..." : `Añadir ${type === "income" ? "ingreso" : "gasto"}`}
-            </Button>
-          </DialogFooter>
+            </BoardButton>
+            <BoardButton disabled={!concept || !amount} type="submit" variant="primary">
+              <Check aria-hidden="true" className={createMovementDialogMovementsPage.icon} />
+              Guardar movimiento
+            </BoardButton>
+          </div>
         </form>
-      </DialogContent>
+      </BoardDialogContent>
     </Dialog>
   );
 }
