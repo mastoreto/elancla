@@ -1,0 +1,344 @@
+---
+import Button from 'src/components/ui/Button';
+import AnchorMark from 'src/components/AnchorMark';
+import { doctrineIcons } from 'src/data/doctrineIcons';
+import { LandingSection } from 'src/sections/landing/components/LandingSection';
+import { localizePath } from 'src/i18n/utils';
+import { getMessages } from 'src/i18n/messages';
+import type { Locale } from 'src/i18n/config';
+import type { Messages } from 'src/i18n/messages';
+import cn from 'src/utils/cn';
+
+interface Props {
+  copy: Messages['landing']['doctrines'];
+  locale: Locale;
+}
+const { copy, locale } = Astro.props;
+const doctrines = getMessages(locale).confession.doctrines;
+const STEP = 40;
+// The orbit geometry is driven by custom properties: fluid on desktop, fixed sizes when stacked.
+const STACKED_GEOMETRY = [
+  'max-lg:[--orbit-r:190px] max-lg:[--dot:52px] max-lg:[--stage-h:568px] max-lg:[--cy:224px] max-lg:[--ring:290px]',
+  'max-lg:[--big:170px] max-lg:[--anc-w:130px] max-lg:[--cap-top:454px] max-lg:[--cap-h:120px]',
+  'max-sm:[--orbit-r:132px] max-sm:[--dot:48px] max-sm:[--stage-h:446px] max-sm:[--cy:170px] max-sm:[--ring:192px]',
+  'max-sm:[--big:104px] max-sm:[--anc-w:84px] max-sm:[--cap-top:348px] max-sm:[--cap-h:104px]',
+];
+// Without motion (`.is-static` on the landing root) the pinned layout falls back to a plain flow.
+const STATIC_FLOW = 'in-[.is-static]:relative! in-[.is-static]:inset-auto! in-[.is-static]:w-auto! in-[.is-static]:p-0!';
+
+const doctrinesSection = {
+  container: cn(
+    'min-h-svh bg-obra-warm pt-10 text-obra-cream',
+    '[--dot:clamp(36px,min(3.6vw,5.8vh),52px)]',
+    '[--orbit-r:clamp(104px,min(13.2vw,21.1vh),190px)]',
+    'max-lg:flex max-lg:min-h-auto max-lg:flex-col max-lg:gap-9 max-lg:px-11 max-lg:pt-24',
+    'max-lg:pb-17',
+    'max-sm:gap-7 max-sm:px-6 max-sm:pt-18 max-sm:pb-12',
+    STACKED_GEOMETRY,
+    'in-[.is-static]:min-h-auto! in-[.is-static]:px-gutter! in-[.is-static]:py-20!',
+  ),
+  docSide: cn(
+    'absolute top-[clamp(5.5rem,15vh,9.5rem)] left-gutter flex w-[min(270px,22vw)] flex-col',
+    'gap-[1.4rem]',
+    'max-lg:contents short-desktop:top-24 short-desktop:gap-4',
+    STATIC_FLOW,
+  ),
+  sideCopy: cn('flex flex-col gap-[1.4rem]', 'max-lg:max-w-130 max-lg:gap-4.5'),
+  title: cn(
+    'm-0 font-obra-brand text-[clamp(1.9rem,3.05vw,2.75rem)] leading-[0.95] font-black',
+    'max-lg:text-[3.5rem] max-sm:text-[2.5rem]',
+  ),
+  intro: cn(
+    'm-0 text-[1.0625rem] leading-[1.5] text-obra-sand',
+    'max-lg:text-[1.125rem] max-sm:text-[1rem] short-desktop:text-[0.9375rem]',
+  ),
+  quote: cn(
+    'm-0 flex flex-col gap-3 border-t border-obra-warm-line pt-[1.4rem]',
+    'max-lg:order-3 max-lg:pt-6 short-desktop:gap-2 short-desktop:pt-4',
+  ),
+  quoteText: cn(
+    'm-0 font-obra-serif text-[1.5rem] leading-[1.2]',
+    'max-lg:text-[1.75rem] max-lg:leading-[1.22] max-sm:text-[1.375rem]',
+    'short-desktop:text-[1.2rem]',
+  ),
+  cite: cn(
+    'font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] text-obra-red-live not-italic',
+    'uppercase',
+  ),
+  docStage: cn(
+    'absolute top-[max(9rem,15vh)] right-[12.5vw] left-[24vw] h-[min(540px,60vh)]',
+    'max-lg:relative max-lg:inset-auto max-lg:order-2 max-lg:m-0 max-lg:h-(--stage-h)',
+    'in-[.is-static]:hidden!',
+  ),
+  stageLabel: cn(
+    'absolute top-1/2 left-1/2 -mt-[calc(var(--orbit-r)*1.21)]',
+    '-ml-[calc(var(--orbit-r)*0.79)] box-border size-[calc(var(--orbit-r)*1.58)] rounded-full',
+    'border border-obra-red-live/35',
+    'max-lg:top-(--cy) max-lg:-mt-[calc(var(--ring)/2)] max-lg:-ml-[calc(var(--ring)/2)]',
+    'max-lg:size-(--ring)',
+  ),
+  wheel: cn(
+    'absolute top-1/2 left-1/2 -mt-[calc(var(--orbit-r)*0.42)] size-0',
+    'max-lg:top-(--cy) max-lg:mt-0',
+  ),
+  wheelSpin: cn('size-0 will-change-transform'),
+  wheelItem: cn('absolute top-[calc(var(--dot)/-2)] left-[calc(var(--dot)/-2)]'),
+  wheelCenter: cn('size-(--dot) will-change-transform'),
+  wheelDot: cn(
+    'box-border flex size-(--dot) cursor-pointer items-center justify-center rounded-full',
+    'border border-obra-warm-line bg-obra-warm p-0 text-obra-taupe',
+    '[transition:color_0.4s,border-color_0.4s,scale_0.5s_var(--ease-obra)]',
+    'focus-visible:outline-2 focus-visible:outline-offset-3',
+    'focus-visible:outline-obra-red-live',
+    '[&.is-active]:scale-118 [&.is-active]:border-obra-red-live',
+    '[&.is-active]:text-obra-red-live',
+  ),
+  wheelIcon: cn('size-[46%]'),
+  docAnchor: cn(
+    'absolute top-1/2 left-1/2 -mt-[calc(var(--orbit-r)*0.95)]',
+    '-ml-[calc(var(--orbit-r)*0.42)] w-[calc(var(--orbit-r)*0.84)]',
+    'drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)]',
+    'max-lg:top-(--cy) max-lg:-mt-[calc(var(--anc-w)*0.638)]',
+    'max-lg:-ml-[calc(var(--anc-w)*0.5)] max-lg:w-(--anc-w)',
+  ),
+  anchorMark: cn('block h-auto w-full'),
+  iconStage: cn(
+    'absolute top-1/2 left-1/2 -mt-[calc(var(--orbit-r)*0.92)] -ml-[calc(var(--orbit-r)*0.5)]',
+    'size-(--orbit-r) drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)]',
+    'max-lg:top-(--cy) max-lg:-mt-[calc(var(--big)/2)] max-lg:-ml-[calc(var(--big)/2)]',
+    'max-lg:size-(--big)',
+  ),
+  iconSvg: cn('size-full overflow-visible'),
+  iconGroup: cn('opacity-0'),
+  captions: cn(
+    'absolute right-0 bottom-0 left-0 h-[clamp(90px,13.3vh,120px)]',
+    'max-lg:top-(--cap-top) max-lg:bottom-auto max-lg:h-(--cap-h)',
+  ),
+  caption: cn(
+    'absolute top-0 right-0 left-0 flex flex-col items-center gap-2.5 text-center opacity-0',
+  ),
+  captionTitle: cn(
+    'font-obra-brand text-[clamp(1.5rem,3.6vw,3.25rem)] leading-none font-black',
+    'text-obra-red-live',
+    'max-lg:text-[2.875rem] max-sm:text-[1.75rem]',
+  ),
+  captionSubtitle: cn(
+    'font-obra-serif text-[clamp(1.0625rem,1.95vw,1.75rem)] leading-[1.1]',
+    'max-lg:text-[1.625rem] max-sm:text-[1.25rem]',
+  ),
+  seal: cn(
+    'absolute top-32.5 right-[4.8vw] flex w-16 flex-col items-center gap-4.5',
+    'text-obra-warm-line',
+    'in-[.is-static]:hidden!',
+    'max-lg:hidden short-desktop:top-27.5',
+  ),
+  sealMark: cn('h-auto w-11'),
+  mark: cn(
+    'rotate-180 font-obra-brand text-[clamp(2rem,5.4vh,4rem)] leading-none font-black',
+    '[writing-mode:vertical-rl]',
+  ),
+  docFoot: cn(
+    'absolute right-gutter bottom-[clamp(1.5rem,8vh,4.5rem)] left-gutter flex items-center',
+    'justify-between gap-10 border-t border-obra-warm-line pt-8',
+    'max-lg:relative max-lg:inset-auto max-lg:order-4 max-lg:flex-col max-lg:items-start',
+    'max-lg:gap-6 max-lg:pt-7',
+    'max-sm:gap-5.5 short-desktop:bottom-5 short-desktop:pt-[1.1rem]',
+    STATIC_FLOW,
+    'in-[.is-static]:mt-8!',
+  ),
+  closing: cn(
+    'm-0 max-w-188 font-obra-serif text-[clamp(1.25rem,2.6vw,2.375rem)] leading-[1.15]',
+    'max-lg:text-[2.25rem] max-sm:text-[1.75rem]',
+    'short-desktop:text-[clamp(1.15rem,2.2vw,1.6rem)]',
+  ),
+  list: cn(
+    'absolute size-px overflow-hidden',
+    '[clip-path:inset(50%)]',
+    'in-[.is-static]:static! in-[.is-static]:my-8! in-[.is-static]:grid!',
+    'in-[.is-static]:size-auto! in-[.is-static]:list-none!',
+    'in-[.is-static]:gap-3! in-[.is-static]:p-0! in-[.is-static]:[clip-path:none]!',
+  ),
+  listItem: cn('in-[.is-static]:flex in-[.is-static]:flex-col in-[.is-static]:gap-0.5'),
+  listTitle: cn(
+    'in-[.is-static]:font-obra-brand in-[.is-static]:font-black',
+    'in-[.is-static]:text-obra-red-live',
+  ),
+};
+---
+
+<LandingSection
+  id="doctrinas"
+  data-ln="doctrines"
+  aria-labelledby="ln-doc-title"
+  class={doctrinesSection.container}
+>
+  <div
+    class={doctrinesSection.docSide}
+    data-doc-side
+  >
+    <div class={doctrinesSection.sideCopy}>
+      <h2
+        id="ln-doc-title"
+        class={doctrinesSection.title}
+      >
+        {copy.title}
+      </h2>
+      <p
+        class={doctrinesSection.intro}
+      >
+        {copy.intro}
+      </p>
+    </div>
+    <blockquote
+      class={doctrinesSection.quote}
+    >
+      <p
+        class={doctrinesSection.quoteText}
+      >
+        {copy.quote}
+      </p>
+      <cite class={doctrinesSection.cite}>
+        {copy.cite}
+      </cite>
+    </blockquote>
+  </div>
+
+  <div
+    class={doctrinesSection.docStage}
+    data-doc-stage
+  >
+    <span
+      class={doctrinesSection.stageLabel}
+      aria-hidden="true"
+    >
+    </span>
+
+    <div
+      class={doctrinesSection.wheel}
+      role="group"
+      aria-label={copy.listLabel}
+    >
+      <div class={doctrinesSection.wheelSpin} data-doc-spin>
+        {doctrines.map((d, i) => (
+          <div
+            class={doctrinesSection.wheelItem}
+            style={`transform:rotate(${i * STEP}deg) translateY(calc(var(--orbit-r) * -1)) rotate(${-i * STEP}deg)`}
+          >
+            <div class={doctrinesSection.wheelCenter} data-doc-ctr>
+              <button
+                type="button"
+                class={doctrinesSection.wheelDot}
+                data-doc-dot={i}
+                aria-label={`${copy.goTo}: ${d.title}`}
+              >
+                <svg
+                  viewBox="0 0 120 120"
+                  class={doctrinesSection.wheelIcon}
+                  fill="currentColor"
+                  stroke="currentColor"
+                  stroke-width="6"
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                  aria-hidden="true"
+                >
+                  {doctrineIcons[i].map((s) => s.circle
+                    ? <circle cx={s.circle[0]} cy={s.circle[1]} r={s.circle[2]} />
+                    : <path d={s.d} fill={s.cut ? 'var(--color-obra-warm)' : undefined} />)}
+                </svg>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div
+      class={doctrinesSection.docAnchor}
+      data-doc-anchor
+    >
+      <AnchorMark id="doc" color="#f4efe6" strokeWidth={26} fillFrom="empty" class={doctrinesSection.anchorMark} />
+    </div>
+
+    <div
+      class={doctrinesSection.iconStage}
+      aria-hidden="true"
+    >
+      <svg viewBox="-4 -4 128 128" class={doctrinesSection.iconSvg} fill="none" stroke-linejoin="round" stroke-linecap="round">
+        {doctrineIcons.map((shapes, i) => (
+          <g data-ic={i} class={doctrinesSection.iconGroup}>
+            <clipPath id={`doc-clip-${i}`}><rect data-doc-forge x="-4" y="124" width="128" height="128" /></clipPath>
+            {shapes.filter((s) => !s.cut).map((s) => s.circle
+              ? <circle data-doc-draw pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" cx={s.circle[0]} cy={s.circle[1]} r={s.circle[2]} stroke="#f4efe6" stroke-width="4" />
+              : <path data-doc-draw pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" d={s.d} stroke="#f4efe6" stroke-width="4" />)}
+            <g clip-path={`url(#doc-clip-${i})`} fill="#f4efe6" stroke="#f4efe6" stroke-width="4">
+              {shapes.map((s) => s.circle
+                ? <circle cx={s.circle[0]} cy={s.circle[1]} r={s.circle[2]} />
+                : <path d={s.d} fill={s.cut ? 'var(--color-obra-warm)' : undefined} stroke={s.cut ? 'none' : undefined} />)}
+            </g>
+          </g>
+        ))}
+      </svg>
+    </div>
+
+    <div
+      class={doctrinesSection.captions}
+      aria-live="polite"
+    >
+      {doctrines.map((d, i) => (
+        <div class={doctrinesSection.caption} data-doc-cap={i}>
+          <strong
+            class={doctrinesSection.captionTitle}
+          >
+            {d.title.toUpperCase()}
+          </strong>
+          <span
+            class={doctrinesSection.captionSubtitle}
+          >
+            {d.subtitle}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div
+    class={doctrinesSection.seal}
+    aria-hidden="true"
+  >
+    <AnchorMark id="doc-seal" color="#3d3634" outline={false} class={doctrinesSection.sealMark} />
+    <span
+      class={doctrinesSection.mark}
+    >
+      {copy.mark}
+    </span>
+  </div>
+
+  <div
+    class={doctrinesSection.docFoot}
+    data-doc-foot
+  >
+    <p
+      class={doctrinesSection.closing}
+    >
+      {copy.closing}
+    </p>
+    <Button href={localizePath('/confesion-de-fe', locale)} variant="light">
+      {copy.cta}
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+    </Button>
+  </div>
+
+  <!-- Plain list for screen readers, and the visible fallback without motion. -->
+  <ol
+    class={doctrinesSection.list}
+  >
+    {doctrines.map((d) => (
+      <li class={doctrinesSection.listItem}>
+        <strong class={doctrinesSection.listTitle}>
+          {d.title}
+        </strong>
+        <span>{d.subtitle}</span>
+      </li>
+    ))}
+  </ol>
+</LandingSection>

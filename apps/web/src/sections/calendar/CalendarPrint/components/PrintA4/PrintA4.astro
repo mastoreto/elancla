@@ -1,0 +1,126 @@
+---
+import AnchorMark from 'src/components/AnchorMark';
+import { CALENDAR_YEAR, events, eventsOfMonth, monthLayout, weeklySorted } from 'src/data/calendar';
+import {
+  MONTHS_ES, capitalize, dayOf, ministryEs, placeEs, weekdayLong, weekdayShort, weekdayShortByIndex,
+} from 'src/sections/calendar/CalendarPrint/utils/printFormat';
+import { EYEBROW, EYEBROW_TONE, SERIF, SHEET, SHEET_TONE } from 'src/sections/calendar/CalendarPrint/styles';
+import cn from 'src/utils/cn';
+
+const weekly = weeklySorted();
+const weeklyLine = weekly.map((a) => `${capitalize(weekdayShortByIndex(a.day))} ${a.time} ${a.title}`).join(' · ');
+const WD = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
+const SUNDAY_COLUMN = 6;
+
+const PAGE = [SHEET, 'h-[296.6mm] w-[210mm] px-13 py-14'];
+// Day numbers: regular weight; event days turn bold, bigger and red; Sundays are red.
+const CELL_DAY = {
+  plain: 'text-[22px] font-normal text-obra-ink-soft',
+  sunday: 'text-[22px] font-normal text-obra-red',
+  event: 'text-[26px] leading-none font-bold text-obra-red',
+} as const;
+const RULE = 'border-t border-obra-flax';
+
+const printA4 = {
+  cover: cn(PAGE, SHEET_TONE.dark),
+  coverMark: cn('absolute -right-15 -bottom-10 w-130 opacity-12'),
+  coverChurch: cn(EYEBROW, EYEBROW_TONE.live),
+  coverTitle: cn(SERIF, 'mt-auto text-[150px] leading-[0.88] tracking-[-0.03em]'),
+  coverVerse: cn('mt-7 max-w-105 text-[20px] leading-[1.4] text-obra-dune'),
+  emphasis: cn('text-obra-red-live not-italic'),
+  month: cn(PAGE, SHEET_TONE.light),
+  monthHeader: cn('flex items-end justify-between'),
+  monthName: cn(SERIF, 'text-[110px] leading-[0.9] tracking-[-0.03em]'),
+  monthYear: cn('flex flex-col items-end gap-2'),
+  monthYearText: cn(EYEBROW, EYEBROW_TONE.red),
+  monthMark: cn('h-[43px] w-[34px]'),
+  monthGrid: cn('mt-6.5 grid grid-cols-[repeat(7,1fr)]'),
+  weekdayCell: cn('pb-2 text-[13px] font-bold tracking-[0.12em] text-obra-stone'),
+  blankCell: cn(RULE, 'flex min-h-21 flex-col gap-1 px-1.5 pt-2'),
+  dayCell: cn(RULE, 'flex min-h-21 flex-col gap-1 px-1.5 pt-2'),
+  day: cn('font-obra-serif'),
+  dayEvent: cn('text-[11px] leading-[1.2] font-bold text-obra-red'),
+  events: cn('mt-5.5 flex flex-col'),
+  eventsEyebrow: cn(EYEBROW, EYEBROW_TONE.red, 'mb-1.5'),
+  event: cn(RULE, 'flex items-baseline gap-3.5 py-[9px]'),
+  eventDay: cn(SERIF, 'w-11 text-[24px] text-obra-red'),
+  eventTitle: cn('flex-1 text-[16px]'),
+  eventMeta: cn('text-[14px] text-obra-muted'),
+  monthWeekly: cn(
+    'mt-auto border-t-[1.5px] border-obra-ink pt-2.5 text-[11px] leading-[1.5]',
+    'text-obra-muted',
+  ),
+  weekly: cn(PAGE, SHEET_TONE.dark),
+  weeklyEyebrow: cn(EYEBROW, EYEBROW_TONE.live),
+  weeklyTitle: cn(SERIF, 'mt-2.5 mb-6 text-[64px] leading-none'),
+  weeklyRow: cn('flex justify-between border-t border-obra-warm-line py-3 text-[18px]'),
+  weeklyFooter: cn('mt-auto flex flex-col gap-1.5 text-[16px] text-obra-dune'),
+};
+---
+
+<!-- Cover -->
+<section class={printA4.cover}>
+  <span class={printA4.coverMark} aria-hidden="true"><AnchorMark id="cp-a4-cover" outline={false} color="#ff2e34" /></span>
+  <span class={printA4.coverChurch}>Iglesia Bautista El Ancla · Montevideo</span>
+  <b class={printA4.coverTitle}>Calendario<br />{CALENDAR_YEAR}</b>
+  <span class={printA4.coverVerse}>Tenemos esta esperanza como firme y segura ancla del alma. <em class={printA4.emphasis}>Heb. 6:19</em></span>
+</section>
+
+{MONTHS_ES.map((name, month) => {
+  const { lead, days } = monthLayout(CALENDAR_YEAR, month);
+  const list = eventsOfMonth(events, month);
+  const byDay = new Map(list.map((e) => [dayOf(e), e]));
+  return (
+    <section class={printA4.month}>
+      <header class={printA4.monthHeader}>
+        <b class={printA4.monthName}>{name}</b>
+        <span class={printA4.monthYear}>
+          <span class={printA4.monthYearText}>{CALENDAR_YEAR}</span>
+          <AnchorMark id={`cp-a4-${month}`} outline={false} color="#a8141b" class={printA4.monthMark} />
+        </span>
+      </header>
+      <div class={printA4.monthGrid}>
+        {WD.map((d) => <span class={printA4.weekdayCell}>{d}</span>)}
+        {Array.from({ length: lead }, () => <span class={printA4.blankCell}></span>)}
+        {Array.from({ length: days }, (_, i) => {
+          const day = i + 1;
+          const ev = byDay.get(day);
+          const tone = ev ? 'event' : (lead + i) % 7 === SUNDAY_COLUMN ? 'sunday' : 'plain';
+          return (
+            <span class={printA4.dayCell}>
+              <b class={cn(printA4.day, CELL_DAY[tone])}>{day}</b>
+              {ev && <span class={printA4.dayEvent}>{ev.title}</span>}
+            </span>
+          );
+        })}
+      </div>
+      {list.length > 0 && (
+        <div class={printA4.events}>
+          <span class={printA4.eventsEyebrow}>Eventos del mes · ejemplo</span>
+          {list.map((e) => (
+            <div class={printA4.event}>
+              <b class={printA4.eventDay}>{dayOf(e)}</b>
+              <b class={printA4.eventTitle}>{e.title}</b>
+              <span class={printA4.eventMeta}>{weekdayShort(e.date).toUpperCase()} · {e.time} h · {placeEs(e)} · {ministryEs[e.ministry]}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      <div class={printA4.monthWeekly}><b>Cada semana:</b> {weeklyLine}</div>
+    </section>
+  );
+})}
+
+<!-- Back cover -->
+<section class={printA4.weekly}>
+  <span class={printA4.weeklyEyebrow}>Todas las semanas</span>
+  <b class={printA4.weeklyTitle}>Te esperamos.</b>
+  {weekly.map((a) => (
+    <div class={printA4.weeklyRow}><b>{weekdayLong(a.day)}</b><span>{a.time} · {a.title}</span></div>
+  ))}
+  <div class={printA4.weeklyFooter}>
+    <span>Av. Luis A. de Herrera 3101, esq. Juan Arrieta — Montevideo</span>
+    <span>Instagram · @iglesiaelancla</span>
+    <span>YouTube · @iglesiaelanclauy</span>
+  </div>
+</section>
