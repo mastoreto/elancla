@@ -10,6 +10,12 @@ type RecentFinancialMovementsCardProps = {
   movements: Movement[];
 };
 
+const reconciliationChip = {
+  reconciled: { label: "Conciliado", className: "bg-success-surface text-income" },
+  pending: { label: "Por conciliar", className: "bg-warning-surface text-warning" },
+  flagged: { label: "Observado", className: "bg-accent text-accent-foreground" },
+} as const;
+
 const movementTone = {
   income: {
     label: "Ingreso",
@@ -65,6 +71,16 @@ export function RecentFinancialMovementsCard({ movements }: RecentFinancialMovem
                   {movement.description}
                   {movement.project ? ` · ${movement.project}` : ""}
                 </div>
+                {movement.reconciliation ? (
+                  <span
+                    className={cn(
+                      "mt-1 inline-flex w-fit rounded-full px-2 py-0.5 text-[10px] font-semibold",
+                      reconciliationChip[movement.reconciliation].className,
+                    )}
+                  >
+                    {reconciliationChip[movement.reconciliation].label}
+                  </span>
+                ) : null}
               </div>
               <div className="hidden font-mono text-[11px] uppercase text-muted-foreground sm:block">
                 {formatShortDate(movement.date)}

@@ -11,8 +11,8 @@ export const ministries: MinistrySummary[] = [
     volunteers: 34,
     leaderName: "Carlos Rodríguez",
     currency: "$U",
-    executed: 38000,
-    budget: 50000,
+    executed: 38_000,
+    budget: 50_000,
     visibleOnSite: true,
   },
   {
@@ -24,8 +24,8 @@ export const ministries: MinistrySummary[] = [
     volunteers: 18,
     leaderName: "Ana Martínez",
     currency: "$U",
-    executed: 27500,
-    budget: 30000,
+    executed: 27_500,
+    budget: 30_000,
     visibleOnSite: true,
   },
   {
@@ -51,7 +51,7 @@ export const ministries: MinistrySummary[] = [
     leaderName: "Laura González",
     currency: "$U",
     executed: 9800,
-    budget: 25000,
+    budget: 25_000,
     visibleOnSite: true,
   },
   {
@@ -63,8 +63,8 @@ export const ministries: MinistrySummary[] = [
     volunteers: 15,
     leaderName: "Diego Fernández",
     currency: "$U",
-    executed: 19400,
-    budget: 20000,
+    executed: 19_400,
+    budget: 20_000,
     visibleOnSite: true,
   },
 ];

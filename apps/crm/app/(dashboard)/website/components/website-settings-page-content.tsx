@@ -1,3 +1,4 @@
+import { DashboardPageHeader } from "@/src/componentes/dashboard";
 import { AboutSection } from "./about-section";
 import { SiteStatusSection } from "./site-status-section";
 import { SocialLinksSection } from "./social-links-section";
@@ -26,10 +27,18 @@ export function WebsiteSettingsPageContent({
   initialAbout,
 }: WebsiteSettingsProps) {
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <SiteStatusSection initialStatus={initialStatus} />
-      <SocialLinksSection initialLinks={initialSocial} />
-      <AboutSection initialContent={initialAbout} />
+    <div>
+      <DashboardPageHeader
+        description="Gestiona cómo se ve y se comporta el sitio público de la iglesia."
+        emphasis="público"
+        kicker="Contenido"
+        title="Sitio web"
+      />
+      <div className="mx-auto max-w-3xl space-y-6">
+        <SiteStatusSection initialStatus={initialStatus} />
+        <SocialLinksSection initialLinks={initialSocial} />
+        <AboutSection initialContent={initialAbout} />
+      </div>
     </div>
   );
 }

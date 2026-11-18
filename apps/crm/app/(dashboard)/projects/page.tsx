@@ -8,6 +8,7 @@ import { ProjectFormModal } from "@/components/project-form-modal";
 import { ProjectTable } from "@/components/project-table";
 import { Button } from "@/components/ui/button";
 import { projects } from "@/lib/data";
+import { DashboardPageHeader } from "@/src/componentes/dashboard";
 
 export default function ProjectsPage() {
   const [viewMode, setViewMode] = useState<"table" | "grid">("table");
@@ -93,16 +94,13 @@ export default function ProjectsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Proyectos</h1>
-          <p className="text-muted-foreground">
-            Gestiona y realiza seguimiento a todos los proyectos de la iglesia y sus presupuestos
-          </p>
-        </div>
-        <ProjectFormModal />
-      </div>
+      <DashboardPageHeader
+        actions={<ProjectFormModal />}
+        description="Iniciativas con presupuesto propio, responsables y documentos."
+        emphasis="con propósito"
+        kicker="Tesorería"
+        title="Proyectos"
+      />
 
       {/* Stats Summary */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

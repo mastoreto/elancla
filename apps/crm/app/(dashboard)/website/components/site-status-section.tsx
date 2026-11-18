@@ -1,7 +1,7 @@
 "use client";
 
-import { RadioGroup as RadioGroupPrimitive } from "radix-ui";
 import { Save } from "lucide-react";
+import { RadioGroup as RadioGroupPrimitive } from "radix-ui";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { SettingsSectionShell } from "@/app/(dashboard)/settings/components/settings-section-shell";

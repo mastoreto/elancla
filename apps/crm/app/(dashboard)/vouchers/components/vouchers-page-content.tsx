@@ -13,6 +13,7 @@ import type {
   VoucherRelatedOption,
 } from "@/app/(dashboard)/vouchers/types";
 import { Button } from "@/components/ui/button";
+import { DashboardPageHeader } from "@/src/componentes/dashboard";
 
 interface VouchersPageContentProps {
   initialVouchers: Voucher[];
@@ -214,21 +215,18 @@ export function VouchersPageContent({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight">Comprobantes</h1>
-          <p className="text-muted-foreground max-w-3xl text-sm">
-            Gestiona justificativos manuales de gastos cuando no exista boleta y deja la interfaz
-            lista para integraciones con movimientos, solicitudes, auditoría y flujos obligatorios
-            de revisión.
-          </p>
-        </div>
-
-        <Button type="button" onClick={handleCreate}>
-          <Plus className="size-4" />
-          Nuevo comprobante
-        </Button>
-      </div>
+      <DashboardPageHeader
+        actions={
+          <Button className="rounded-full" onClick={handleCreate} type="button">
+            <Plus aria-hidden="true" />
+            Nuevo comprobante
+          </Button>
+        }
+        description="Respaldo interno para gastos sin boleta, con justificación y responsable."
+        emphasis="sin boleta"
+        kicker="Documentos"
+        title="Comprobantes"
+      />
 
       <VouchersTable
         vouchers={vouchers}

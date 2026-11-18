@@ -8,6 +8,7 @@ import { RequestFormModal } from "@/components/request-form-modal";
 import { RequestTable } from "@/components/request-table";
 import { currentUser, moneyRequests as initialRequests } from "@/lib/data";
 import type { Currency, MoneyRequest, RequestStatus } from "@/lib/types";
+import { DashboardPageHeader } from "@/src/componentes/dashboard";
 
 export default function RequestsPage() {
   const [requests, setRequests] = useState<MoneyRequest[]>(initialRequests);
@@ -140,19 +141,13 @@ export default function RequestsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-balance">
-            Solicitudes de Fondos
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {pendingCount} pendiente{pendingCount === 1 ? "" : "s"}, {approvedCount} aprobada
-            {approvedCount === 1 ? "" : "s"}, {rejectedCount} rechazada
-            {rejectedCount === 1 ? "" : "s"}
-          </p>
-        </div>
-        <RequestFormModal onSubmit={handleCreateRequest} />
-      </div>
+      <DashboardPageHeader
+        actions={<RequestFormModal onSubmit={handleCreateRequest} />}
+        description={`Los ministerios piden fondos; tesorería aprueba, rechaza o pide más información. ${pendingCount} pendiente${pendingCount === 1 ? "" : "s"}, ${approvedCount} aprobada${approvedCount === 1 ? "" : "s"}, ${rejectedCount} rechazada${rejectedCount === 1 ? "" : "s"}.`}
+        emphasis="de fondos"
+        kicker="Tesorería"
+        title="Solicitudes"
+      />
 
       <RequestFilters
         searchQuery={searchQuery}

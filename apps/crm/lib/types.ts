@@ -2,6 +2,8 @@ export type MovementType = "income" | "expense";
 
 export type Currency = "UYU" | "USD";
 
+export type MovementReconciliation = "reconciled" | "pending" | "flagged";
+
 export interface Movement {
   id: string;
   date: string;
@@ -11,6 +13,7 @@ export interface Movement {
   currency: Currency;
   amount: number;
   project?: string;
+  reconciliation?: MovementReconciliation;
 }
 
 export interface User {

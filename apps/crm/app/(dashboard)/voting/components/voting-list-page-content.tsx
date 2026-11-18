@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { DashboardPageHeader } from "@/src/componentes/dashboard";
 import { useVotingCollection } from "../use-voting-data";
 import {
   formatVotingDate,
@@ -68,22 +69,20 @@ export function VotingListPageContent() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div className="space-y-2">
-          <h1 className={styles.title}>Votaciones de asamblea</h1>
-          <p className={styles.description}>
-            Centro de control para sesiones de votación en tiempo real. El estado se actualiza
-            localmente con simulación de participación y conserva los cambios del navegador.
-          </p>
-        </div>
-
-        <Button className="w-full sm:w-auto" asChild={true}>
-          <Link href={getVotingCreatePath()}>
-            <Plus className="size-4" />
-            Crear votación
-          </Link>
-        </Button>
-      </div>
+      <DashboardPageHeader
+        actions={
+          <Button asChild={true} className="rounded-full">
+            <Link href={getVotingCreatePath()}>
+              <Plus aria-hidden="true" />
+              Crear nueva votación
+            </Link>
+          </Button>
+        }
+        description="Decisiones de la iglesia con quórum, mayoría y voto anónimo."
+        emphasis="de la asamblea"
+        kicker="Gobierno"
+        title="Votaciones"
+      />
 
       <div className={styles.metrics}>
         <VotingMetricCard

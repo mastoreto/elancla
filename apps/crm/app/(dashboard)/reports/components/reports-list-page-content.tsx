@@ -1,9 +1,9 @@
 import { Clock3, FilePlus2, FolderOpenDot, Sparkles } from "lucide-react";
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getChurchRoutePath } from "@/lib/church";
+import { DashboardMetricStrip, DashboardPageHeader } from "@/src/componentes/dashboard";
 
 import type { GeneratedReportListItem } from "../types";
 import { ReportGeneratedList } from "./report-generated-list";
@@ -23,76 +23,55 @@ export function ReportsListPageContent({
   const processingCount = reports.filter((report) => report.status === "PROCESSING").length;
 
   return (
-    <div className="space-y-8">
-      <section className="relative overflow-hidden rounded-[28px] border border-border/60 bg-card/95 px-6 py-7 shadow-sm md:px-8">
-        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/3 bg-[radial-gradient(circle_at_center,rgba(92,180,160,0.18),transparent_65%)] lg:block" />
-        <div className="relative flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
-          <div className="max-w-2xl space-y-4">
-            <div className="flex flex-wrap gap-2">
-              <Badge className="rounded-full bg-accent/10 px-3 py-1 text-accent hover:bg-accent/10">
-                Centro de reportes
-              </Badge>
-              <Badge variant="secondary" className="rounded-full px-3 py-1">
-                Historial y creación
-              </Badge>
-            </div>
+    <div className="space-y-2">
+      <DashboardPageHeader
+        actions={
+          <>
+            <Button asChild={true} className="rounded-full" type="button" variant="outline">
+              <Link href={getChurchRoutePath("reports", "resumen-marzo-2026")}>
+                <FolderOpenDot aria-hidden="true" />
+                Abrir último generado
+              </Link>
+            </Button>
+            <Button asChild={true} className="rounded-full" type="button">
+              <Link href={getChurchRoutePath("reports", "new")}>
+                <FilePlus2 aria-hidden="true" />
+                Nuevo informe
+              </Link>
+            </Button>
+          </>
+        }
+        description="Reportes listos para abrir o exportar, y plantillas para crear nuevos."
+        emphasis="de tesorería"
+        kicker="Gobierno"
+        title="Informes"
+      />
 
-            <div className="space-y-2">
-              <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
-                Reportes generados y nuevos borradores
-              </h1>
-              <p className="max-w-xl text-sm leading-6 text-muted-foreground md:text-base">
-                Administra el catálogo de reportes, revisa su estado y crea nuevas vistas para la
-                tesorería sin salir del módulo.
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Button type="button" asChild={true}>
-                <Link href={getChurchRoutePath("reports", "new")}>
-                  <FilePlus2 className="size-4" />
-                  Nuevo reporte
-                </Link>
-              </Button>
-              <Button type="button" variant="outline" asChild={true}>
-                <Link href={getChurchRoutePath("reports", "resumen-marzo-2026")}>
-                  <FolderOpenDot className="size-4" />
-                  Abrir último generado
-                </Link>
-              </Button>
-            </div>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-border/60 bg-background/70 px-4 py-3 shadow-xs">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <FolderOpenDot className="size-4 text-accent" />
-                Totales
-              </div>
-              <p className="mt-1 text-2xl font-semibold tracking-tight">{reports.length}</p>
-              <p className="text-xs text-muted-foreground">Reportes disponibles en el catálogo</p>
-            </div>
-
-            <div className="rounded-2xl border border-border/60 bg-background/70 px-4 py-3 shadow-xs">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <Sparkles className="size-4 text-income" />
-                Listos
-              </div>
-              <p className="mt-1 text-2xl font-semibold tracking-tight">{readyCount}</p>
-              <p className="text-xs text-muted-foreground">Reportes listos para abrir o exportar</p>
-            </div>
-
-            <div className="rounded-2xl border border-border/60 bg-background/70 px-4 py-3 shadow-xs">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <Clock3 className="size-4 text-warning" />
-                En proceso
-              </div>
-              <p className="mt-1 text-2xl font-semibold tracking-tight">{processingCount}</p>
-              <p className="text-xs text-muted-foreground">Solicitudes pendientes de generación</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <DashboardMetricStrip
+        className="xl:grid-cols-3"
+        metrics={[
+          {
+            accent: true,
+            label: "Totales",
+            value: String(reports.length),
+            detail: "Reportes disponibles en el catálogo",
+            icon: FolderOpenDot,
+          },
+          {
+            label: "Listos para abrir",
+            value: String(readyCount),
+            detail: "Listos para abrir o exportar",
+            icon: Sparkles,
+            tone: "up",
+          },
+          {
+            label: "Pendientes de generación",
+            value: String(processingCount),
+            detail: "Solicitudes en proceso",
+            icon: Clock3,
+          },
+        ]}
+      />
 
       <ReportGeneratedList reports={reports} isLoading={isLoading} errorMessage={errorMessage} />
     </div>

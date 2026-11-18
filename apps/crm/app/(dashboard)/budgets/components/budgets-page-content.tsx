@@ -16,6 +16,7 @@ import type {
   BudgetSummaryValues,
 } from "@/app/(dashboard)/budgets/types/index";
 import { Button } from "@/components/ui/button";
+import { DashboardPageHeader } from "@/src/componentes/dashboard";
 
 type BudgetsPageContentProps = {
   initialBudgets: Budget[];
@@ -223,20 +224,18 @@ export function BudgetsPageContent({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight">Presupuestos</h1>
-          <p className="text-muted-foreground max-w-3xl text-sm">
-            Visualiza consumos, ajusta montos vigentes y prepara la interfaz para validaciones
-            futuras, control financiero y seguimiento de disponibilidad.
-          </p>
-        </div>
-
-        <Button type="button" onClick={handleCreate}>
-          <Plus className="size-4" />
-          Nuevo presupuesto
-        </Button>
-      </div>
+      <DashboardPageHeader
+        actions={
+          <Button className="rounded-full" onClick={handleCreate} type="button">
+            <Plus aria-hidden="true" />
+            Nuevo presupuesto
+          </Button>
+        }
+        description="Montos asignados por ministerio y proyecto, con alertas de uso."
+        emphasis="con orden"
+        kicker="Tesorería"
+        title="Presupuestos"
+      />
 
       <BudgetSummaryCards
         summary={summary}
