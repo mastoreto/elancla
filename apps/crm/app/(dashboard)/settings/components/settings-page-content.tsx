@@ -1,147 +1,188 @@
-import { BellRing, Coins, Landmark, ShieldCheck, Users } from "lucide-react";
+"use client";
+
+import { Check, Plus } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { BoardButton } from "@/components/dashboard/board/board-button";
+import { BoardTabs } from "@/components/dashboard/board/board-tabs";
+import { cn } from "@/lib/utils";
+import type { UserInviteValues } from "../schema";
 import type {
   BankAccountSetting,
   CurrencySetting,
-  NotificationSetting,
+  NotificationSettings,
   SettingsRole,
   SettingsSelectOption,
   SettingsTabValue,
   SettingsUser,
-} from "@/app/(dashboard)/settings/types";
-import { DashboardPageHeader } from "@/components/dashboard";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { ChurchConfig } from "@/lib/church";
-import { BankAccountsPanel } from "./bank-accounts-panel";
-import { ChurchSettingsPanel } from "./church-settings-panel";
-import { CurrenciesPanel } from "./currencies-panel";
+} from "../types";
+import { BankAccountsCard } from "./bank-accounts-card";
+import { ChurchIdentityCard } from "./church-identity-card";
+import { CurrenciesCard } from "./currencies-card";
 import { NotificationsPanel } from "./notifications-panel";
-import { RolesPermissionsPanel } from "./roles-permissions-panel";
-import { SettingsSummaryCard } from "./settings-summary-card";
-import { UsersSettingsPanel } from "./users-settings-panel";
+import { RolesPanel } from "./roles-panel";
+import { UserDialog } from "./user-dialog";
+import { UsersPanel } from "./users-panel";
+
+const INTRO: Record<SettingsTabValue, string> = {
+  users: "Usuarios, identidad, cuentas, monedas y reglas de la iglesia.",
+  church: "Identidad de la iglesia, cuentas bancarias y monedas.",
+  bankAccounts: "Identidad de la iglesia, cuentas bancarias y monedas.",
+  currencies: "Identidad de la iglesia, cuentas bancarias y monedas.",
+  roles: "Roles con permisos claros para limitar alcance, aprobaciones y auditoría.",
+  notifications: "Elige qué avisos recibe tu equipo y por qué canal.",
+};
+
+const settingsPageContentSettingsPage = {
+  container: cn("flex flex-col gap-5"),
+  intro: cn("flex items-center gap-4"),
+  description: cn("flex-1 text-[14.5px] leading-normal text-[var(--tinta-suave)]"),
+  icon: cn("size-4"),
+  panel: cn("flex flex-col gap-5"),
+};
 
 interface SettingsPageContentProps {
-  church: ChurchConfig;
+  churchName: string;
+  churchSubtitle: string;
   users: SettingsUser[];
+  pendingInvitations: number;
   roles: SettingsRole[];
   bankAccounts: BankAccountSetting[];
   currencies: CurrencySetting[];
-  notifications: NotificationSetting[];
+  notifications: NotificationSettings;
   ministryOptions: SettingsSelectOption[];
-  roleOptions: SettingsSelectOption[];
 }
 
-const settingsTabs: Array<{
-  value: SettingsTabValue;
-  label: string;
-}> = [
-  { value: "church", label: "Iglesia" },
-  { value: "users", label: "Usuarios" },
-  { value: "roles", label: "Roles y Permisos" },
-  { value: "bankAccounts", label: "Cuentas Bancarias" },
-  { value: "currencies", label: "Monedas" },
-  { value: "notifications", label: "Notificaciones" },
-];
-
 export function SettingsPageContent({
-  church,
-  users,
-  roles,
+  churchName,
+  churchSubtitle,
+  users: initialUsers,
+  pendingInvitations: initialPending,
+  roles: initialRoles,
   bankAccounts,
   currencies,
-  notifications,
+  notifications: initialNotifications,
   ministryOptions,
-  roleOptions,
 }: SettingsPageContentProps) {
-  return (
-    <div className="space-y-6">
-      <DashboardPageHeader
-        actions={
-          <>
-            <Button type="button" variant="outline">
-              Ver auditoría
-            </Button>
-            <Button type="button">Guardar cambios</Button>
-          </>
-        }
-        description="Identidad de la iglesia, usuarios, cuentas bancarias y monedas."
-        emphasis="de la iglesia"
-        kicker="Sistema"
-        title="Configuración"
-      />
+  const [tab, setTab] = useState<SettingsTabValue>("users");
+  const [users, setUsers] = useState(initialUsers);
+  const [pending, setPending] = useState(initialPending);
+  const [roles, setRoles] = useState(initialRoles);
+  const [notifications, setNotifications] = useState(initialNotifications);
+  // `undefined` = closed, `null` = inviting, otherwise the user being edited.
+  const [dialogUser, setDialogUser] = useState<SettingsUser | null | undefined>(undefined);
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-        <SettingsSummaryCard
-          title="Usuarios activos"
-          value={String(users.filter((user) => user.status === "Activo").length)}
-          description="Cuentas habilitadas para operar en el período."
-          icon={Users}
-        />
-        <SettingsSummaryCard
-          title="Roles definidos"
-          value={String(roles.length)}
-          description="Perfiles disponibles para segmentar permisos."
-          icon={ShieldCheck}
-        />
-        <SettingsSummaryCard
-          title="Cuentas operativas"
-          value={String(
-            bankAccounts.filter((account) => account.status !== "En conciliación").length,
-          )}
-          description="Cuentas listas para cobros, pagos y control."
-          icon={Landmark}
-        />
-        <SettingsSummaryCard
-          title="Monedas visibles"
-          value={String(currencies.length)}
-          description="Configuraciones activas para registro y reportes."
-          icon={Coins}
-        />
-        <SettingsSummaryCard
-          title="Notificaciones activas"
-          value={String(notifications.filter((notification) => notification.enabled).length)}
-          description="Reglas habilitadas para alertas del sistema."
-          icon={BellRing}
-        />
+  const currencyOptions = currencies.map((currency) => ({
+    value: currency.code,
+    label: `${currency.code} · ${currency.symbol}`,
+  }));
+
+  const submitUser = (values: UserInviteValues) => {
+    if (dialogUser) {
+      setUsers((previous) =>
+        previous.map((user) =>
+          user.id === dialogUser.id
+            ? {
+                ...user,
+                name: values.name,
+                email: values.email,
+                role: values.role as SettingsUser["role"],
+              }
+            : user,
+        ),
+      );
+      toast.success("Usuario actualizado");
+    } else {
+      setPending((previous) => previous + 1);
+      toast.success(`Invitación enviada a ${values.email}`);
+    }
+    setDialogUser(undefined);
+  };
+
+  const showIdentity = tab === "church";
+  const showBankAccounts = tab === "church" || tab === "bankAccounts";
+  const showCurrencies = tab === "church" || tab === "currencies";
+
+  return (
+    <div className={settingsPageContentSettingsPage.container}>
+      <div className={settingsPageContentSettingsPage.intro}>
+        <span className={settingsPageContentSettingsPage.description}>{INTRO[tab]}</span>
+        {tab === "users" ? (
+          <BoardButton onClick={() => setDialogUser(null)} variant="primary">
+            <Plus aria-hidden="true" className={settingsPageContentSettingsPage.icon} />
+            Crear usuario
+          </BoardButton>
+        ) : null}
+        {tab === "notifications" ? (
+          <BoardButton
+            onClick={() => toast.success("Preferencias de notificaciones guardadas")}
+            variant="primary"
+          >
+            <Check aria-hidden="true" className={settingsPageContentSettingsPage.icon} />
+            Guardar cambios
+          </BoardButton>
+        ) : null}
       </div>
 
-      <Tabs defaultValue="church">
-        <TabsList className="w-full flex-wrap justify-start">
-          {settingsTabs.map((tab) => (
-            <TabsTrigger key={tab.value} value={tab.value}>
-              {tab.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      <BoardTabs
+        items={[
+          { value: "users", label: "Usuarios", count: users.length },
+          { value: "church", label: "Iglesia" },
+          { value: "bankAccounts", label: "Cuentas bancarias", count: bankAccounts.length },
+          { value: "currencies", label: "Monedas", count: currencies.length },
+          { value: "roles", label: "Roles y permisos" },
+          { value: "notifications", label: "Notificaciones" },
+        ]}
+        label="Secciones de configuración"
+        onValueChange={setTab}
+        value={tab}
+      />
 
-        <TabsContent value="church">
-          <ChurchSettingsPanel church={church} />
-        </TabsContent>
+      {tab === "users" ? (
+        <UsersPanel
+          onDelete={(userId) =>
+            setUsers((previous) => previous.filter((user) => user.id !== userId))
+          }
+          onEdit={setDialogUser}
+          pendingInvitations={pending}
+          users={users}
+        />
+      ) : null}
 
-        <TabsContent value="users">
-          <UsersSettingsPanel
-            users={users}
-            ministryOptions={ministryOptions}
-            roleOptions={roleOptions}
-          />
-        </TabsContent>
+      {showIdentity || showBankAccounts || showCurrencies ? (
+        <div className={settingsPageContentSettingsPage.panel}>
+          {showIdentity ? (
+            <ChurchIdentityCard initialName={churchName} initialSubtitle={churchSubtitle} />
+          ) : null}
+          {showBankAccounts ? <BankAccountsCard initialAccounts={bankAccounts} /> : null}
+          {showCurrencies ? <CurrenciesCard initialCurrencies={currencies} /> : null}
+        </div>
+      ) : null}
 
-        <TabsContent value="roles">
-          <RolesPermissionsPanel roles={roles} />
-        </TabsContent>
+      {tab === "roles" ? (
+        <RolesPanel
+          onDelete={(roleId) =>
+            setRoles((previous) => previous.filter((role) => role.id !== roleId))
+          }
+          roles={roles}
+        />
+      ) : null}
 
-        <TabsContent value="bankAccounts">
-          <BankAccountsPanel accounts={bankAccounts} />
-        </TabsContent>
+      {tab === "notifications" ? (
+        <NotificationsPanel
+          currencyOptions={currencyOptions}
+          onChange={setNotifications}
+          value={notifications}
+        />
+      ) : null}
 
-        <TabsContent value="currencies">
-          <CurrenciesPanel currencies={currencies} />
-        </TabsContent>
-
-        <TabsContent value="notifications">
-          <NotificationsPanel notifications={notifications} />
-        </TabsContent>
-      </Tabs>
+      <UserDialog
+        ministryOptions={ministryOptions}
+        onOpenChange={(open) => !open && setDialogUser(undefined)}
+        onSubmit={submitUser}
+        open={dialogUser !== undefined}
+        user={dialogUser ?? null}
+      />
     </div>
   );
 }

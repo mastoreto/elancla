@@ -1,154 +1,232 @@
 "use client";
 
+import { Check, ChevronRight, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { DashboardPageHeader } from "@/components/dashboard";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+import { BoardButton } from "@/components/dashboard/board/board-button";
+import { BoardConfirmDialog } from "@/components/dashboard/board/board-confirm-dialog";
+import {
+  BoardFormDivider,
+  BoardFormFooter,
+  BoardFormSection,
+  BoardFormSections,
+  BoardInput,
+} from "@/components/dashboard/board/board-form";
+import { IconBubble } from "@/components/dashboard/board/icon-bubble";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
-import { SETTINGS_PERMISSION_GROUPS } from "../data/roles";
-import { type RoleFormErrors, roleFormSchema } from "../schema";
-import type { SettingsRoleFormValues } from "../types";
+import { NEW_ROLE_GRID, PERMISSION_PRESETS } from "../data/permission-modules";
+import type { PermissionGrid, SettingsRole, SettingsUser } from "../types";
+import {
+  applyPreset,
+  countActivePermissions,
+  detectPreset,
+  TOTAL_PERMISSIONS,
+  toggleAction,
+  toggleModule,
+} from "../utils";
+import { PermissionMatrix } from "./permission-matrix";
 
-export const EMPTY_ROLE_FORM: SettingsRoleFormValues = {
-  name: "",
-  description: "",
-  scope: "",
-  permissions: [],
+const roleFormSettingsPage = {
+  breadcrumb: cn("mx-auto mb-5 flex w-full max-w-[1060px] items-center gap-2 text-sm"),
+  crumb: cn("font-medium text-[var(--tinta-apagada)] hover:text-foreground"),
+  crumbIcon: cn("size-4 text-[var(--tinta-apagada)]"),
+  crumbCurrent: cn("font-bold"),
+  card: cn("mx-auto w-full max-w-[1060px] rounded-[28px] bg-card p-[30px] shadow-(--sombra)"),
+  header: cn("mb-3.5 flex flex-col gap-[3px]"),
+  title: cn("font-display text-[21px] font-medium tracking-tight"),
+  subtitle: cn("text-[13px] text-[var(--tinta-apagada)]"),
+  names: cn("grid grid-cols-1 gap-3.5 md:grid-cols-[1fr_1.4fr]"),
+  presets: cn("flex flex-wrap items-center gap-2"),
+  presetsLabel: cn("text-[13px] text-[var(--tinta-apagada)]"),
+  preset: cn(
+    "inline-flex h-[34px] items-center rounded-full bg-card px-3.5 text-[13px] font-semibold whitespace-nowrap text-[var(--tinta-suave)]",
+    "shadow-[inset_0_0_0_1px_rgba(42,21,26,0.16)]",
+  ),
+  presetActive: cn("bg-foreground text-white shadow-none"),
+  spacer: cn("flex-1"),
+  count: cn("text-[13px] text-[var(--tinta-suave)]"),
+  countValue: cn("font-bold text-foreground"),
+  error: cn("text-xs font-semibold text-primary"),
+  people: cn("flex flex-wrap items-center gap-3.5"),
+  peopleText: cn("flex min-w-0 flex-1 flex-col gap-2"),
+  peopleTitle: cn("text-sm font-bold"),
+  peopleRow: cn("flex items-center gap-2.5"),
+  avatar: cn("size-9 text-[13px] font-extrabold"),
+  peopleHint: cn("text-[13.5px] text-[var(--tinta-suave)]"),
+  icon: cn("size-4"),
 };
 
 interface RoleFormProps {
-  mode: "create" | "edit";
-  initialValues?: SettingsRoleFormValues;
+  /** `undefined` creates a role; otherwise the role being edited. */
+  role?: SettingsRole;
+  /** Users that currently hold the role (edit mode). */
+  members?: SettingsUser[];
 }
 
-const roleFormSettingsPage = {
-  form: cn("space-y-6"),
-  card: cn("space-y-5 rounded-xl border border-border bg-card p-6 shadow-card"),
-  cardTitle: cn("font-display text-lg font-medium"),
-  groups: cn("grid gap-6 md:grid-cols-2"),
-  groupTitle: cn("mb-3 text-sm font-semibold"),
-  permission: cn("flex items-center gap-3 py-1 text-sm"),
-  actions: cn("flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"),
-};
+function describeMembers(members: SettingsUser[]): string {
+  if (members.length === 0) return "Nadie tiene este rol todavía.";
+  const names = members.map((member) => member.name).join(", ");
+  const total = `${members.length} ${members.length === 1 ? "usuario" : "usuarios"}`;
+  return `${names} · ${total}. Los cambios se aplican la próxima vez que inicie sesión.`;
+}
 
-export function RoleForm({ mode, initialValues = EMPTY_ROLE_FORM }: RoleFormProps) {
+export function RoleForm({ role, members = [] }: RoleFormProps) {
   const router = useRouter();
-  const [values, setValues] = useState<SettingsRoleFormValues>(initialValues);
-  const [errors, setErrors] = useState<RoleFormErrors>({});
-  const isEdit = mode === "edit";
+  const isEdit = role !== undefined;
+  const [name, setName] = useState(role?.name ?? "");
+  const [description, setDescription] = useState(role?.description ?? "");
+  const [grid, setGrid] = useState<PermissionGrid>(role?.permissions ?? NEW_ROLE_GRID);
+  const [errors, setErrors] = useState<{ name?: string; permissions?: string }>({});
 
-  const update = <K extends keyof SettingsRoleFormValues>(
-    field: K,
-    value: SettingsRoleFormValues[K],
-  ) => setValues((previous) => ({ ...previous, [field]: value }));
+  const activePreset = detectPreset(grid);
+  const rolesPath = getChurchRoutePath("settings");
+  const title = isEdit ? `Editar rol: ${role.name}` : "Nuevo rol";
 
-  const togglePermission = (permission: string, checked: boolean) =>
-    update(
-      "permissions",
-      checked
-        ? [...values.permissions, permission]
-        : values.permissions.filter((item) => item !== permission),
-    );
-
-  // Seed-data screen: validating and returning to settings stands in for the real save.
-  const submit = () => {
-    const result = roleFormSchema.safeParse(values);
-    if (!result.success) {
-      const next: RoleFormErrors = {};
-      for (const issue of result.error.issues) {
-        next[issue.path[0] as keyof RoleFormErrors] ??= issue.message;
-      }
-      setErrors(next);
-      return;
-    }
-    router.push(getChurchRoutePath("settings"));
+  // Seed-data screen: validating and going back to the list stands in for the real save.
+  const save = () => {
+    const next: typeof errors = {};
+    if (!name.trim()) next.name = "Ponle un nombre al rol";
+    if (countActivePermissions(grid) === 0) next.permissions = "Elige al menos un permiso";
+    setErrors(next);
+    if (Object.keys(next).length > 0) return;
+    toast.success(isEdit ? "Rol actualizado" : "Rol creado");
+    router.push(rolesPath);
   };
 
   return (
-    <form
-      className={roleFormSettingsPage.form}
-      noValidate={true}
-      onSubmit={(event) => {
-        event.preventDefault();
-        submit();
-      }}
-    >
-      <DashboardPageHeader
-        description="Define qué puede ver y hacer quien tenga este rol."
-        emphasis="rol"
-        kicker="Sistema · Configuración"
-        title={isEdit ? "Editar" : "Nuevo"}
-      />
+    <>
+      <nav aria-label="Ruta" className={roleFormSettingsPage.breadcrumb}>
+        <Link className={roleFormSettingsPage.crumb} href={rolesPath}>
+          Configuración
+        </Link>
+        <ChevronRight aria-hidden="true" className={roleFormSettingsPage.crumbIcon} />
+        <Link className={roleFormSettingsPage.crumb} href={rolesPath}>
+          Roles y permisos
+        </Link>
+        <ChevronRight aria-hidden="true" className={roleFormSettingsPage.crumbIcon} />
+        <span className={roleFormSettingsPage.crumbCurrent}>{title}</span>
+      </nav>
 
-      <section className={roleFormSettingsPage.card}>
-        <h2 className={roleFormSettingsPage.cardTitle}>Datos del rol</h2>
-        <Field>
-          <FieldLabel htmlFor="role-name">Nombre *</FieldLabel>
-          <Input
-            aria-invalid={Boolean(errors.name)}
-            id="role-name"
-            onChange={(event) => update("name", event.target.value)}
-            value={values.name}
-          />
-          {errors.name ? <FieldError>{errors.name}</FieldError> : null}
-        </Field>
-        <Field>
-          <FieldLabel htmlFor="role-description">Descripción *</FieldLabel>
-          <Textarea
-            aria-invalid={Boolean(errors.description)}
-            id="role-description"
-            onChange={(event) => update("description", event.target.value)}
-            rows={2}
-            value={values.description}
-          />
-          {errors.description ? <FieldError>{errors.description}</FieldError> : null}
-        </Field>
-        <Field>
-          <FieldLabel htmlFor="role-scope">Alcance *</FieldLabel>
-          <Input
-            aria-invalid={Boolean(errors.scope)}
-            id="role-scope"
-            onChange={(event) => update("scope", event.target.value)}
-            value={values.scope}
-          />
-          {errors.scope ? <FieldError>{errors.scope}</FieldError> : null}
-        </Field>
-      </section>
+      <form
+        className={roleFormSettingsPage.card}
+        noValidate={true}
+        onSubmit={(event) => {
+          event.preventDefault();
+          save();
+        }}
+      >
+        <header className={roleFormSettingsPage.header}>
+          <h2 className={roleFormSettingsPage.title}>{title}</h2>
+          <p className={roleFormSettingsPage.subtitle}>
+            Define qué puede ver y hacer cada persona con este rol
+          </p>
+        </header>
 
-      <section className={roleFormSettingsPage.card}>
-        <h2 className={roleFormSettingsPage.cardTitle}>Permisos</h2>
-        <div className={roleFormSettingsPage.groups}>
-          {SETTINGS_PERMISSION_GROUPS.map((group) => (
-            <div key={group.group}>
-              <p className={roleFormSettingsPage.groupTitle}>{group.group}</p>
-              {group.permissions.map((permission) => (
-                <div className={roleFormSettingsPage.permission} key={permission}>
-                  <Checkbox
-                    checked={values.permissions.includes(permission)}
-                    id={`permission-${permission}`}
-                    onCheckedChange={(checked) => togglePermission(permission, checked === true)}
-                  />
-                  <FieldLabel htmlFor={`permission-${permission}`}>{permission}</FieldLabel>
-                </div>
+        <BoardFormSections>
+          <div className={roleFormSettingsPage.names}>
+            <BoardInput
+              error={errors.name}
+              id="role-name"
+              label="Nombre del rol"
+              onChange={(event) => setName(event.target.value)}
+              placeholder="Ej. Secretaría"
+              value={name}
+            />
+            <BoardInput
+              id="role-description"
+              label="Descripción"
+              onChange={(event) => setDescription(event.target.value)}
+              placeholder="Para qué sirve este rol"
+              value={description}
+            />
+          </div>
+
+          <BoardFormDivider />
+
+          <BoardFormSection>
+            <div className={roleFormSettingsPage.presets}>
+              <span className={roleFormSettingsPage.presetsLabel}>Partir de un perfil:</span>
+              {PERMISSION_PRESETS.map((preset) => (
+                <button
+                  aria-pressed={activePreset === preset.id}
+                  className={cn(
+                    roleFormSettingsPage.preset,
+                    activePreset === preset.id && roleFormSettingsPage.presetActive,
+                  )}
+                  key={preset.id}
+                  onClick={() => setGrid(applyPreset(preset.id))}
+                  type="button"
+                >
+                  {preset.label}
+                </button>
               ))}
+              <span className={roleFormSettingsPage.spacer} />
+              <span className={roleFormSettingsPage.count}>
+                <b className={roleFormSettingsPage.countValue}>{countActivePermissions(grid)}</b> de{" "}
+                {TOTAL_PERMISSIONS} permisos activos
+              </span>
             </div>
-          ))}
-        </div>
-        {errors.permissions ? <FieldError>{errors.permissions}</FieldError> : null}
-      </section>
+            <PermissionMatrix
+              grid={grid}
+              onToggleAction={(module, action) =>
+                setGrid((previous) => toggleAction(previous, module, action))
+              }
+              onToggleModule={(module) => setGrid((previous) => toggleModule(previous, module))}
+            />
+            {errors.permissions ? (
+              <span className={roleFormSettingsPage.error}>{errors.permissions}</span>
+            ) : null}
+          </BoardFormSection>
 
-      <div className={roleFormSettingsPage.actions}>
-        <Button asChild={true} type="button" variant="ghost">
-          <Link href={getChurchRoutePath("settings")}>Cancelar</Link>
-        </Button>
-        <Button type="submit">{isEdit ? "Guardar cambios" : "Crear rol"}</Button>
-      </div>
-    </form>
+          {isEdit ? (
+            <>
+              <BoardFormDivider />
+              <div className={roleFormSettingsPage.people}>
+                <div className={roleFormSettingsPage.peopleText}>
+                  <b className={roleFormSettingsPage.peopleTitle}>Personas con este rol</b>
+                  <div className={roleFormSettingsPage.peopleRow}>
+                    {members[0] ? (
+                      <IconBubble className={roleFormSettingsPage.avatar} tone={members[0].tone}>
+                        {members[0].initials}
+                      </IconBubble>
+                    ) : null}
+                    <span className={roleFormSettingsPage.peopleHint}>
+                      {describeMembers(members)}
+                    </span>
+                  </div>
+                </div>
+                <BoardConfirmDialog
+                  description={`El rol ${role.name} se eliminará. Las personas que lo tienen deberán asignarse a otro rol.`}
+                  onConfirm={() => {
+                    toast.success("Rol eliminado");
+                    router.push(rolesPath);
+                  }}
+                  title="Eliminar rol"
+                  trigger={
+                    <BoardButton variant="soft">
+                      <Trash2 aria-hidden="true" className={roleFormSettingsPage.icon} />
+                      Eliminar rol
+                    </BoardButton>
+                  }
+                />
+              </div>
+            </>
+          ) : null}
+        </BoardFormSections>
+
+        <BoardFormFooter>
+          <BoardButton href={rolesPath} variant="ghost">
+            Cancelar
+          </BoardButton>
+          <BoardButton onClick={save} variant="primary">
+            <Check aria-hidden="true" className={roleFormSettingsPage.icon} />
+            {isEdit ? "Guardar cambios" : "Crear rol"}
+          </BoardButton>
+        </BoardFormFooter>
+      </form>
+    </>
   );
 }

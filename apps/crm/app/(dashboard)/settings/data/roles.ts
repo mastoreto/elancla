@@ -1,80 +1,53 @@
-import type { SettingsRole } from "../types";
+import type { RoleProfile, SettingsRole } from "../types";
+import { EMPTY_GRID, FULL_GRID, OPERATIONAL_GRID } from "./permission-modules";
+
+export const ROLE_PROFILE_LABELS: Record<RoleProfile, string> = {
+  admin: "Admin",
+  treasury: "Tesorería",
+  leader: "Líder",
+  reader: "Lector",
+};
 
 // Seed roles until the Roles API is wired.
 export const settingsRoles: SettingsRole[] = [
   {
-    id: "role-1",
-    name: "Tesorera General",
+    id: "role-admin",
+    name: "Administrador",
+    profile: "admin",
     description: "Administra configuración crítica, aprobaciones y cierres del período.",
-    scope: "Acceso completo a tesorería, reportes y parámetros del sistema.",
+    scope: ["Todo el sistema"],
     membersCount: 1,
-    permissions: [
-      "Aprobar solicitudes",
-      "Editar configuración",
-      "Cerrar período",
-      "Gestionar cuentas",
-    ],
+    permissions: FULL_GRID,
   },
   {
-    id: "role-2",
-    name: "Revisor Financiero",
-    description: "Supervisa consistencia operativa y verifica trazabilidad antes de auditoría.",
-    scope: "Lectura avanzada, comentarios y revisión de justificativos.",
-    membersCount: 2,
-    permissions: [
-      "Ver auditoría",
-      "Exportar informes",
-      "Revisar comprobantes",
-      "Consultar movimientos",
-    ],
+    id: "role-treasury",
+    name: "Tesorería",
+    profile: "treasury",
+    description: "Registra movimientos, boletas y comprobantes, y aprueba solicitudes.",
+    scope: ["Movimientos", "Solicitudes", "Documentos"],
+    membersCount: 1,
+    permissions: OPERATIONAL_GRID,
   },
   {
-    id: "role-3",
-    name: "Operadora de Cajas",
-    description: "Registra movimientos, boletas y comprobantes sin acceso a parámetros críticos.",
-    scope: "Operación diaria con alcance limitado a registro y edición básica.",
+    id: "role-leader",
+    name: "Líder de ministerio",
+    profile: "leader",
+    description: "Pide fondos y consulta el presupuesto de su ministerio.",
+    scope: ["Solicitudes", "Presupuestos"],
     membersCount: 3,
-    permissions: [
-      "Crear movimientos",
-      "Registrar boletas",
-      "Crear comprobantes",
-      "Adjuntar respaldos",
-    ],
+    permissions: {
+      ...EMPTY_GRID,
+      requests: ["view", "create", "edit"],
+      budgets: ["view"],
+    },
   },
   {
-    id: "role-4",
-    name: "Consulta",
+    id: "role-reader",
+    name: "Lector",
+    profile: "reader",
     description: "Acceso restringido para seguimiento institucional y revisión ejecutiva.",
-    scope: "Solo lectura sobre informes, presupuestos y panel general.",
-    membersCount: 4,
-    permissions: ["Ver panel", "Ver presupuestos", "Ver informes"],
+    scope: ["Informes"],
+    membersCount: 2,
+    permissions: { ...EMPTY_GRID, reports: ["view"] },
   },
 ];
-
-export const SETTINGS_PERMISSION_GROUPS = [
-  {
-    group: "Tesorería",
-    permissions: [
-      "Crear movimientos",
-      "Registrar boletas",
-      "Crear comprobantes",
-      "Adjuntar respaldos",
-      "Consultar movimientos",
-    ],
-  },
-  {
-    group: "Aprobaciones",
-    permissions: ["Aprobar solicitudes", "Cerrar período", "Revisar comprobantes"],
-  },
-  {
-    group: "Informes",
-    permissions: [
-      "Ver panel",
-      "Ver presupuestos",
-      "Ver informes",
-      "Exportar informes",
-      "Ver auditoría",
-    ],
-  },
-  { group: "Sistema", permissions: ["Editar configuración", "Gestionar cuentas"] },
-] as const;
