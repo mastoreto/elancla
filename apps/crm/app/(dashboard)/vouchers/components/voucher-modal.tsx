@@ -1,14 +1,11 @@
-import { VoucherDetail } from "@/app/(dashboard)/vouchers/components/voucher-detail";
 import { VoucherForm } from "@/app/(dashboard)/vouchers/components/voucher-form";
-import { VoucherGuidancePanel } from "@/app/(dashboard)/vouchers/components/voucher-guidance-panel";
+import { VoucherGuidanceCard } from "@/app/(dashboard)/vouchers/components/voucher-guidance-card";
 import type {
-  Voucher,
   VoucherFormField,
   VoucherFormValues,
   VoucherModalMode,
   VoucherRelatedOption,
 } from "@/app/(dashboard)/vouchers/types";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -26,7 +23,6 @@ const voucherModalVouchersPage = {
 interface VoucherModalProps {
   open: boolean;
   mode: VoucherModalMode;
-  voucher: Voucher | null;
   values: VoucherFormValues;
   relatedOptions: VoucherRelatedOption[];
   requiredFields?: VoucherFormField[];
@@ -45,24 +41,16 @@ function getDialogCopy(mode: VoucherModalMode) {
     };
   }
 
-  if (mode === "edit") {
-    return {
-      title: "Editar comprobante",
-      description:
-        "Actualiza los datos visibles y deja preparada la justificación para controles posteriores.",
-    };
-  }
-
   return {
-    title: "Ver comprobante",
-    description: "Consulta el detalle completo del comprobante y su justificación manual.",
+    title: "Editar comprobante",
+    description:
+      "Actualiza los datos visibles y deja preparada la justificación para controles posteriores.",
   };
 }
 
 export function VoucherModal({
   open,
   mode,
-  voucher,
   values,
   relatedOptions,
   requiredFields,
@@ -81,29 +69,17 @@ export function VoucherModal({
           <DialogDescription>{dialogCopy.description}</DialogDescription>
         </DialogHeader>
 
-        {mode === "view" && voucher ? (
-          <VoucherDetail voucher={voucher} />
-        ) : (
-          <div className={voucherModalVouchersPage.layout}>
-            <VoucherForm
-              values={values}
-              relatedOptions={relatedOptions}
-              requiredFields={requiredFields}
-              onFieldChange={onFieldChange}
-              onSubmit={onSubmit}
-              onCancel={onCancel}
-            />
-            <VoucherGuidancePanel />
-          </div>
-        )}
-
-        {mode === "view" ? (
-          <div className="flex justify-end">
-            <Button type="button" variant="outline" onClick={onCancel}>
-              Cerrar
-            </Button>
-          </div>
-        ) : null}
+        <div className={voucherModalVouchersPage.layout}>
+          <VoucherForm
+            values={values}
+            relatedOptions={relatedOptions}
+            requiredFields={requiredFields}
+            onFieldChange={onFieldChange}
+            onSubmit={onSubmit}
+            onCancel={onCancel}
+          />
+          <VoucherGuidanceCard />
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -9,6 +9,10 @@ type DetailOverrides = Partial<
     | "responsible"
     | "acquiredOn"
     | "acquisitionMode"
+    | "supplier"
+    | "purchaseValue"
+    | "warranty"
+    | "invoiceFile"
     | "notes"
     | "history"
   >
@@ -21,14 +25,22 @@ export const DEFAULT_INVENTORY_DETAIL: Required<DetailOverrides> = {
   responsible: "Sin asignar",
   acquiredOn: "Sin registrar",
   acquisitionMode: "Compra",
+  supplier: "—",
+  purchaseValue: "—",
+  warranty: "Sin garantía registrada",
+  invoiceFile: "",
   notes: "Sin observaciones.",
   history: [],
 };
 
-const registeredHistory = (date: string): InventoryHistoryEntry => ({
+const registeredHistory = (
+  date: string,
+  detail = "Alta en el inventario",
+): InventoryHistoryEntry => ({
+  kind: "created",
   date,
-  event: "Registrado",
-  detail: "Alta en el inventario",
+  event: "Ítem registrado",
+  detail,
 });
 
 // Seed details from the "crm-s-inventario-detalle" board; other items fall back to defaults.
@@ -44,6 +56,7 @@ export const inventoryDetailOverrides: Record<string, DetailOverrides> = {
     history: [
       registeredHistory("12 mar 2022"),
       {
+        kind: "edit",
         date: "02 mar 2024",
         event: "Mantenimiento",
         detail: "Limpieza de faders y canales",
@@ -59,18 +72,45 @@ export const inventoryDetailOverrides: Record<string, DetailOverrides> = {
     notes: "Préstamo vigente para el retiro de jóvenes.",
     history: [
       registeredHistory("05 ago 2021"),
-      { date: "10 nov 2026", event: "Prestado", detail: "A Marcos Díaz hasta el 24 nov 2026" },
+      {
+        kind: "loan",
+        date: "10 nov 2026",
+        event: "Prestado",
+        detail: "A Marcos Díaz hasta el 24 nov 2026",
+      },
     ],
   },
   "6": {
     brand: "Epson",
     model: "EB-L630U",
-    responsible: "Equipo de tecnología",
-    acquiredOn: "20 ene 2020",
-    notes: "Falla de lámpara; en reparación desde octubre.",
+    serialNumber: "X4RK-228190",
+    responsible: "Equipo de medios",
+    acquiredOn: "12 mar 2022",
+    supplier: "Electro Sur",
+    purchaseValue: "USD 1.100",
+    warranty: "Vencida el 12 mar 2025",
+    invoiceFile: "Factura-0482.pdf",
+    notes: "Lámpara quemada, enviado a reparación.",
     history: [
-      registeredHistory("20 ene 2020"),
-      { date: "14 oct 2026", event: "En reparación", detail: "Enviado a servicio técnico" },
+      registeredHistory("12 mar 2022", "Por María García"),
+      {
+        kind: "edit",
+        date: "3 ago",
+        event: "Ubicación actualizada",
+        detail: "Sala de audio → Templo · fondo",
+      },
+      {
+        kind: "status",
+        date: "12 nov",
+        event: "Estado: Bueno → Regular",
+        detail: "Imagen amarillenta",
+      },
+      {
+        kind: "repair",
+        date: "hoy",
+        event: "Enviado a reparación",
+        detail: "Lámpara quemada · Técnico Soluciones AV",
+      },
     ],
   },
 };

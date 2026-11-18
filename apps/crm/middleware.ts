@@ -10,6 +10,7 @@ import {
   dashboardToChurchRouteMap,
   defaultChurchRouteSegment,
 } from "./lib/church";
+import { isDevAuthBypassEnabled } from "./lib/dev-auth-bypass";
 
 // Pages reachable without a session (attendee-facing assembly reports).
 const PUBLIC_ROUTE_SEGMENTS: readonly string[] = ["informe"];
@@ -23,7 +24,12 @@ export function middleware(request: NextRequest) {
   // La validación real (contra BD) la hace el layout del dashboard. El matcher ya
   // excluye /api/auth/* y assets, así que aquí solo llegan rutas de página.
   const isPublicRoute = PUBLIC_ROUTE_SEGMENTS.includes(segments[0] ?? "");
-  if (pathname !== "/" && !isPublicRoute && !getSessionCookie(request)) {
+  if (
+    pathname !== "/" &&
+    !isPublicRoute &&
+    !isDevAuthBypassEnabled() &&
+    !getSessionCookie(request)
+  ) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/";
     loginUrl.search = "";

@@ -15,5 +15,7 @@ export default async function EditInventoryItemPage({
     notFound();
   }
 
-  return <InventoryForm initialValues={toInventoryFormValues(item)} mode="edit" />;
+  return (
+    <InventoryForm initialValues={toInventoryFormValues(item)} itemCode={item.code} mode="edit" />
+  );
 }

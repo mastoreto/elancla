@@ -1,121 +1,167 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Headphones, Send } from "lucide-react";
+import { CalendarDays, Link2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import type { PodcastHost } from "@/app/(dashboard)/podcasts/types";
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+import {
+  BoardFormCard,
+  BoardFormDivider,
+  BoardFormRow,
+  BoardFormSection,
+  BoardFormSections,
+  BoardInput,
+  BoardSelect,
+  BoardTextarea,
+} from "@/components/dashboard/board/board-form";
+import {
+  ContentChipInput,
+  ContentFormActions,
+  ContentImageDropzone,
+} from "@/components/dashboard/content";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
-import { type NewPodcastFormValues, newPodcastSchema } from "../schema";
-import { DescriptionField } from "./fields/description-field";
-import { LinkField } from "./fields/link-field";
-import { ParticipantsField } from "./fields/participants-field";
-import { TitleField } from "./fields/title-field";
-import { HeroImageUploadField } from "./hero-image-upload-field";
+import type { PodcastSeries } from "../../types";
+import { type NewPodcastFormErrors, type NewPodcastFormValues, newPodcastSchema } from "../schema";
 
-const newPodcastFormContentPage = {
-  header: cn("flex items-center justify-between gap-4 mb-6"),
-  layout: cn("grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start"),
+const EMPTY_VALUES: NewPodcastFormValues = {
+  title: "",
+  description: "",
+  heroImage: "",
+  link: "",
+  series: "",
+  publishedAt: "",
+  participants: [],
 };
 
-interface NewPodcastFormProps {
-  platformHosts: PodcastHost[];
-}
+const newPodcastFormPodcastsPage = {
+  icon: cn("size-[18px] shrink-0 text-[var(--tinta-apagada)]"),
+};
 
-export function NewPodcastForm({ platformHosts }: NewPodcastFormProps) {
+export function NewPodcastForm({ series }: { series: PodcastSeries[] }) {
   const router = useRouter();
+  const [values, setValues] = useState<NewPodcastFormValues>(EMPTY_VALUES);
+  const [errors, setErrors] = useState<NewPodcastFormErrors>({});
 
-  const form = useForm<NewPodcastFormValues>({
-    resolver: zodResolver(newPodcastSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      heroImage: "",
-      link: "",
-      participants: [],
-    },
-  });
+  const update = <K extends keyof NewPodcastFormValues>(field: K, value: NewPodcastFormValues[K]) =>
+    setValues((previous) => ({ ...previous, [field]: value }));
 
-  const {
-    handleSubmit,
-    control,
-    formState: { isSubmitting },
-  } = form;
+  const goToList = () => router.push(getChurchRoutePath("podcasts"));
 
-  const onSubmit = async (data: NewPodcastFormValues) => {
-    // Mock save — replace with real API call
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
-    console.info("Nuevo episodio:", data);
-
-    toast.success("Episodio creado", {
-      description: `"${data.title}" fue guardado como borrador.`,
-    });
-
-    router.push(getChurchRoutePath("podcasts"));
+  // Seed-data screen: validating and going back to the list stands in for the real save.
+  const publish = () => {
+    const result = newPodcastSchema.safeParse(values);
+    if (!result.success) {
+      const next: NewPodcastFormErrors = {};
+      for (const issue of result.error.issues) {
+        next[issue.path[0] as keyof NewPodcastFormErrors] ??= issue.message;
+      }
+      setErrors(next);
+      return;
+    }
+    goToList();
   };
 
-  const handleBack = () => router.push(getChurchRoutePath("podcasts"));
-
   return (
-    <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} noValidate={true}>
-        {/* ── Page header ─────────────────────────────────────────── */}
-        <div className={newPodcastFormContentPage.header}>
-          <div className="flex items-center gap-3 min-w-0">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="shrink-0"
-              onClick={handleBack}
-              aria-label="Volver a podcasts"
-            >
-              <ArrowLeft className="size-4" />
-            </Button>
-            <div className="flex items-center gap-2 min-w-0">
-              <Headphones className="size-5 text-muted-foreground shrink-0" />
-              <h1 className="text-lg font-semibold truncate">Nuevo episodio</h1>
-            </div>
-          </div>
+    <form
+      noValidate={true}
+      onSubmit={(event) => {
+        event.preventDefault();
+        publish();
+      }}
+    >
+      <BoardFormCard
+        subtitle="Todo en un solo lugar: completa de arriba hacia abajo y publica"
+        title="Nuevo episodio"
+      >
+        <BoardFormSections>
+          <BoardFormSection>
+            <BoardInput
+              error={errors.title}
+              id="podcast-title"
+              label="Título *"
+              onChange={(event) => update("title", event.target.value)}
+              placeholder="Cuando la alabanza duele"
+              value={values.title}
+            />
+            <BoardTextarea
+              error={errors.description}
+              id="podcast-description"
+              label="Descripción *"
+              onChange={(event) => update("description", event.target.value)}
+              placeholder="De qué trata este episodio"
+              value={values.description}
+            />
+          </BoardFormSection>
 
-          <div className="flex items-center gap-2 shrink-0">
-            <Button type="button" variant="outline" onClick={handleBack}>
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              <Send className="size-4 mr-2" />
-              {isSubmitting ? "Publicando..." : "Publicar episodio"}
-            </Button>
-          </div>
-        </div>
+          <BoardFormDivider />
 
-        <Separator className="mb-8" />
+          <BoardFormSection>
+            <ContentImageDropzone
+              error={errors.heroImage}
+              fileName={values.heroImage}
+              hint="Cuadrada · 1400×1400"
+              id="podcast-hero"
+              label="Imagen hero *"
+              onFileNameChange={(name) => update("heroImage", name)}
+              title="Arrastra la portada"
+            />
+          </BoardFormSection>
 
-        {/* ── Two-column layout ────────────────────────────────────── */}
-        <div className={newPodcastFormContentPage.layout}>
-          {/* ── Main column ──────────────────────────────────────── */}
-          <div className="space-y-6">
-            <TitleField control={control} />
-            <DescriptionField control={control} />
-            <LinkField control={control} />
-          </div>
+          <BoardFormDivider />
 
-          {/* ── Sidebar ──────────────────────────────────────────── */}
-          <aside className="space-y-6 lg:sticky lg:top-6">
-            <HeroImageUploadField control={control} />
+          <BoardFormSection>
+            <BoardInput
+              error={errors.link}
+              icon={<Link2 aria-hidden="true" className={newPodcastFormPodcastsPage.icon} />}
+              id="podcast-link"
+              label="Link del episodio *"
+              onChange={(event) => update("link", event.target.value)}
+              placeholder="https://open.spotify.com/episode/…"
+              value={values.link}
+            />
+            <BoardFormRow>
+              <BoardSelect
+                id="podcast-series"
+                label="Serie"
+                onValueChange={(value) => update("series", value)}
+                options={series.map((item) => ({ value: item.id, label: item.label }))}
+                placeholder="Elegir serie"
+                value={values.series}
+              />
+              <BoardInput
+                icon={
+                  <CalendarDays aria-hidden="true" className={newPodcastFormPodcastsPage.icon} />
+                }
+                id="podcast-date"
+                label="Fecha de publicación"
+                onChange={(event) => update("publishedAt", event.target.value)}
+                type="date"
+                value={values.publishedAt}
+              />
+            </BoardFormRow>
+          </BoardFormSection>
 
-            <Separator />
+          <BoardFormDivider />
 
-            <ParticipantsField control={control} platformHosts={platformHosts} />
-          </aside>
-        </div>
-      </form>
-    </Form>
+          <BoardFormSection>
+            <ContentChipInput
+              error={errors.participants}
+              id="podcast-participants"
+              label="Participantes *"
+              onValuesChange={(participants) => update("participants", participants)}
+              values={values.participants}
+              variant="person"
+            />
+          </BoardFormSection>
+        </BoardFormSections>
+
+        <ContentFormActions
+          cancelHref={getChurchRoutePath("podcasts")}
+          onPublish={publish}
+          onSaveDraft={goToList}
+          publishLabel="Publicar episodio"
+        />
+      </BoardFormCard>
+    </form>
   );
 }
