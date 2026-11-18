@@ -1,312 +1,285 @@
 "use client";
 
-import { ChevronLeft, GripVertical, Plus, Trash2 } from "lucide-react";
-import Link from "next/link";
+import { CalendarDays, Check, GripVertical, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, useTransition } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { BoardButton } from "@/components/dashboard/board/board-button";
+import { BoardCard, BoardCardHeader } from "@/components/dashboard/board/board-card";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  BoardFormRow,
+  BoardInput,
+  BoardSwitchRow,
+  BoardTextarea,
+  boardFormStyles,
+} from "@/components/dashboard/board/board-form";
+import { RowIconButton } from "@/components/dashboard/board/row-icon-button";
+import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
-import type { MajorityType, VotingType } from "../types";
+import type { MajorityType } from "../types";
 import { useVotingCollection } from "../use-voting-data";
-import {
-  getDefaultOptionsForType,
-  majorityTypeLabels,
-  votingStatusLabels,
-  votingTypeLabels,
-} from "../voting-config";
-import { getVotingListPath, getVotingModeratorPath } from "../voting-routes";
-import { VotingStatusBadge } from "./voting-status-badge";
+import { getVotingListPath } from "../voting-routes";
+import { VotingMajorityToggle } from "./voting-majority-toggle";
 
-const votingCreatePageContentVotingPage = {
-  hint: cn("flex items-center gap-2 text-sm text-muted-foreground"),
-  page: cn("grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_360px]"),
-  formCard: cn("border-border/70 bg-card shadow-sm"),
-  previewCard: cn("border-border/70 bg-card/80 shadow-sm"),
-  section: cn("space-y-6"),
-  fieldGroup: cn("space-y-5"),
-  optionRow: cn("flex items-center gap-2 rounded-xl border border-border/70 bg-muted/20 p-3"),
-  optionInput: cn("h-11 bg-background"),
-  helper: cn("text-sm text-muted-foreground"),
-  previewMeta: cn("grid gap-4 text-sm text-muted-foreground"),
-  previewLabel: cn("text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground"),
-  optionPill: cn("rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground"),
-  previewOptions: cn("flex flex-wrap gap-2"),
-  footer: cn("flex flex-col gap-3 pt-2 sm:flex-row sm:justify-between"),
-};
+const ENABLED_USERS = 120;
+const MIN_OPTIONS = 2;
+const MIN_TITLE_LENGTH = 5;
+const DEFAULT_QUORUM_PERCENT = 50;
 
-const minimumOptionsByType: Record<VotingType, number> = {
-  motion: 2,
-  binary: 2,
-  list: 2,
-};
-
-interface VotingOptionDraft {
+interface OptionDraft {
   id: string;
   value: string;
 }
 
-function createOptionDraft(value: string): VotingOptionDraft {
-  return {
-    id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
-    value,
-  };
+const DEFAULT_OPTIONS = ["A favor", "En contra", "Abstención"];
+
+function createOptionDraft(value: string, index: number): OptionDraft {
+  return { id: `option-${Date.now().toString(36)}-${index}`, value };
 }
+
+const votingCreatePageContentVotingPage = {
+  page: cn("flex flex-col gap-5"),
+  description: cn("text-[14.5px] leading-normal text-[var(--tinta-suave)]"),
+  columns: cn("grid grid-cols-1 items-start gap-[18px] xl:grid-cols-[1.4fr_1fr]"),
+  stack: cn("flex flex-col gap-[18px]"),
+  card: cn("p-6"),
+  fields: cn("flex flex-col gap-4"),
+  options: cn("flex flex-col gap-2.5"),
+  option: cn("flex items-center gap-3 rounded-[20px] bg-secondary px-3.5 py-3"),
+  grip: cn("size-4 text-[var(--tinta-apagada)]"),
+  optionInput: cn("min-w-0 flex-1 bg-transparent text-sm outline-none"),
+  rules: cn("flex flex-col gap-[18px]"),
+  rule: cn("flex flex-col gap-2"),
+  ruleLabel: cn("text-[13px] text-[var(--tinta-suave)]"),
+  slider: cn(
+    "[&_[data-slot=slider-track]]:h-2 [&_[data-slot=slider-track]]:bg-secondary",
+    "[&_[data-slot=slider-range]]:bg-[var(--oro)]",
+    "[&_[data-slot=slider-thumb]]:size-7 [&_[data-slot=slider-thumb]]:border-0",
+    "[&_[data-slot=slider-thumb]]:shadow-[0_4px_10px_rgba(42,21,26,0.3),inset_0_0_0_1px_rgba(42,21,26,0.16)]",
+  ),
+  sliderRow: cn("flex justify-between text-[12.5px] text-[var(--tinta-apagada)]"),
+  sliderValue: cn("font-bold text-foreground"),
+  preview: cn("rounded-[30px] bg-(--vino) p-6"),
+  previewKicker: cn("text-[11.5px] font-extrabold tracking-[0.12em] text-[#f2e1b6] uppercase"),
+  previewTitle: cn("mt-2.5 mb-4 block font-display text-2xl leading-tight font-medium text-white"),
+  previewOptions: cn("flex flex-col gap-2"),
+  previewOption: cn(
+    "rounded-[18px] bg-white/10 px-4 py-[13px] text-sm font-semibold text-white",
+    "shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16)]",
+  ),
+  footer: cn("flex flex-wrap justify-end gap-2.5"),
+  icon: cn("size-4"),
+  fieldIcon: cn(boardFormStyles.icon),
+};
 
 export function VotingCreatePageContent() {
   const router = useRouter();
   const { createVoting } = useVotingCollection();
   const [title, setTitle] = useState("");
-  const [type, setType] = useState<VotingType>("motion");
-  const [quorum, setQuorum] = useState("80");
-  const [majorityType, setMajorityType] = useState<MajorityType>("simple");
+  const [description, setDescription] = useState("");
+  const [opensAt, setOpensAt] = useState("");
   const [options, setOptions] = useState(() =>
-    getDefaultOptionsForType("motion").map((option) => createOptionDraft(option)),
+    DEFAULT_OPTIONS.map((label, index) => createOptionDraft(label, index)),
   );
-  const [isPending, startTransition] = useTransition();
+  const [majority, setMajority] = useState<MajorityType>("simple");
+  const [quorumPercent, setQuorumPercent] = useState(DEFAULT_QUORUM_PERCENT);
+  const [anonymous, setAnonymous] = useState(true);
+  const [liveResults, setLiveResults] = useState(false);
 
-  const trimmedOptions = useMemo(
-    () => options.map((option) => option.value.trim()).filter(Boolean),
-    [options],
-  );
-  const canSubmit = title.trim().length >= 5 && trimmedOptions.length >= minimumOptionsByType[type];
+  const cleanOptions = options.map((option) => option.value.trim()).filter(Boolean);
+  const canSubmit = title.trim().length >= MIN_TITLE_LENGTH && cleanOptions.length >= MIN_OPTIONS;
+  const quorumCount = Math.round((quorumPercent / 100) * ENABLED_USERS);
 
-  const handleTypeChange = (value: VotingType) => {
-    setType(value);
-    setOptions(getDefaultOptionsForType(value).map((option) => createOptionDraft(option)));
-  };
-
-  const handleOptionChange = (optionId: string, value: string) => {
+  const updateOption = (id: string, value: string) =>
     setOptions((current) =>
-      current.map((option) => (option.id === optionId ? { ...option, value } : option)),
+      current.map((option) => (option.id === id ? { ...option, value } : option)),
     );
-  };
 
-  const handleAddOption = () => {
-    setOptions((current) => [...current, createOptionDraft(`Opción ${current.length + 1}`)]);
-  };
+  const removeOption = (id: string) =>
+    setOptions((current) =>
+      current.length <= MIN_OPTIONS ? current : current.filter((option) => option.id !== id),
+    );
 
-  const handleRemoveOption = (optionId: string) => {
-    setOptions((current) => {
-      if (current.length <= minimumOptionsByType[type]) {
-        return current;
-      }
-
-      return current.filter((option) => option.id !== optionId);
-    });
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const submit = () => {
     if (!canSubmit) {
       return;
     }
-
-    startTransition(() => {
-      const votingId = createVoting({
-        title,
-        type,
-        quorum: Number(quorum) || 1,
-        majorityType,
-        options: trimmedOptions,
-      });
-
-      router.push(getVotingModeratorPath(votingId));
+    createVoting({
+      title,
+      description,
+      type: cleanOptions.length === 2 ? "binary" : "motion",
+      options: cleanOptions,
+      quorum: quorumCount,
+      majorityType: majority,
+      anonymous,
+      liveResults,
     });
+    router.push(getVotingListPath());
   };
 
   return (
     <div className={votingCreatePageContentVotingPage.page}>
-      <Card className={votingCreatePageContentVotingPage.formCard}>
-        <CardHeader>
-          <div className={votingCreatePageContentVotingPage.hint}>
-            <ChevronLeft className="size-4" />
-            <Link href={getVotingListPath()} className="hover:text-foreground transition-colors">
-              Volver al listado
-            </Link>
-          </div>
-          <CardTitle className="text-2xl">Crear nueva votación</CardTitle>
-          <CardDescription className="max-w-2xl leading-6">
-            Define una estructura simple y legible para que el moderador pueda abrirla sin fricción
-            y los miembros voten con seguridad en un máximo de dos pasos.
-          </CardDescription>
-        </CardHeader>
+      <p className={votingCreatePageContentVotingPage.description}>
+        Define la pregunta, las opciones y las reglas antes de abrir la sesión.
+      </p>
 
-        <CardContent>
-          <form onSubmit={handleSubmit} className={votingCreatePageContentVotingPage.section}>
-            <FieldGroup className={votingCreatePageContentVotingPage.fieldGroup}>
-              <Field>
-                <FieldLabel htmlFor="voting-title">Título</FieldLabel>
-                <Input
-                  id="voting-title"
-                  className="h-11"
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
-                  placeholder="Ej. Confirmación del presupuesto de misiones"
-                  autoComplete="off"
+      <div className={votingCreatePageContentVotingPage.columns}>
+        <div className={votingCreatePageContentVotingPage.stack}>
+          <BoardCard className={votingCreatePageContentVotingPage.card}>
+            <BoardCardHeader subtitle="Qué se decide y cuándo" title="Datos de la votación" />
+            <div className={votingCreatePageContentVotingPage.fields}>
+              <BoardInput
+                id="voting-title"
+                label="Título"
+                onChange={(event) => setTitle(event.target.value)}
+                placeholder="Ej. Aprobación del presupuesto 2027"
+                value={title}
+              />
+              <BoardTextarea
+                id="voting-description"
+                label="Descripción"
+                onChange={(event) => setDescription(event.target.value)}
+                placeholder="Qué se vota y por qué"
+                value={description}
+              />
+              <BoardFormRow>
+                <BoardInput
+                  icon={
+                    <CalendarDays
+                      aria-hidden="true"
+                      className={votingCreatePageContentVotingPage.fieldIcon}
+                    />
+                  }
+                  id="voting-opens"
+                  label="Fecha de apertura"
+                  onChange={(event) => setOpensAt(event.target.value)}
+                  type="datetime-local"
+                  value={opensAt}
                 />
-                <FieldDescription>
-                  Usa un texto corto y explícito. Debe poder leerse en voz alta sin ambigüedad.
-                </FieldDescription>
-              </Field>
+                <BoardInput
+                  id="voting-close"
+                  label="Cierre automático"
+                  readOnly={true}
+                  value="Al terminar la sesión"
+                />
+              </BoardFormRow>
+            </div>
+          </BoardCard>
 
-              <div className="grid gap-5 md:grid-cols-2">
-                <Field>
-                  <FieldLabel>Tipo</FieldLabel>
-                  <Select
-                    value={type}
-                    onValueChange={(value) => handleTypeChange(value as VotingType)}
+          <BoardCard className={votingCreatePageContentVotingPage.card}>
+            <BoardCardHeader
+              action={
+                <BoardButton
+                  onClick={() =>
+                    setOptions((current) => [
+                      ...current,
+                      createOptionDraft(`Opción ${current.length + 1}`, current.length),
+                    ])
+                  }
+                  size="sm"
+                  variant="soft"
+                >
+                  <Plus aria-hidden="true" className={votingCreatePageContentVotingPage.icon} />
+                  Agregar
+                </BoardButton>
+              }
+              subtitle="Lo que las personas podrán elegir"
+              title="Opciones"
+            />
+            <div className={votingCreatePageContentVotingPage.options}>
+              {options.map((option, index) => (
+                <div className={votingCreatePageContentVotingPage.option} key={option.id}>
+                  <GripVertical
+                    aria-hidden="true"
+                    className={votingCreatePageContentVotingPage.grip}
+                  />
+                  <input
+                    aria-label={`Opción ${index + 1}`}
+                    className={votingCreatePageContentVotingPage.optionInput}
+                    onChange={(event) => updateOption(option.id, event.target.value)}
+                    value={option.value}
+                  />
+                  <RowIconButton
+                    label={`Quitar opción ${index + 1}`}
+                    onClick={() => removeOption(option.id)}
                   >
-                    <SelectTrigger className="h-11 w-full">
-                      <SelectValue placeholder="Selecciona el tipo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(votingTypeLabels).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </Field>
+                    <Trash2 aria-hidden="true" className={votingCreatePageContentVotingPage.icon} />
+                  </RowIconButton>
+                </div>
+              ))}
+            </div>
+          </BoardCard>
+        </div>
 
-                <Field>
-                  <FieldLabel>Mayoría</FieldLabel>
-                  <Select
-                    value={majorityType}
-                    onValueChange={(value) => setMajorityType(value as MajorityType)}
-                  >
-                    <SelectTrigger className="h-11 w-full">
-                      <SelectValue placeholder="Selecciona la mayoría" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(majorityTypeLabels).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </Field>
+        <div className={votingCreatePageContentVotingPage.stack}>
+          <BoardCard className={votingCreatePageContentVotingPage.card}>
+            <BoardCardHeader subtitle="Cómo se valida el resultado" title="Reglas" />
+            <div className={votingCreatePageContentVotingPage.rules}>
+              <div className={votingCreatePageContentVotingPage.rule}>
+                <b className={votingCreatePageContentVotingPage.ruleLabel}>Mayoría requerida</b>
+                <VotingMajorityToggle onValueChange={setMajority} value={majority} />
               </div>
-
-              <Field>
-                <FieldLabel htmlFor="voting-quorum">Quorum requerido</FieldLabel>
-                <Input
-                  id="voting-quorum"
-                  type="number"
-                  min={1}
-                  className="h-11"
-                  value={quorum}
-                  onChange={(event) => setQuorum(event.target.value)}
+              <div className={votingCreatePageContentVotingPage.rule}>
+                <b className={votingCreatePageContentVotingPage.ruleLabel}>Quórum requerido</b>
+                <Slider
+                  aria-label="Quórum requerido"
+                  className={votingCreatePageContentVotingPage.slider}
+                  max={100}
+                  onValueChange={([value]) => setQuorumPercent(value ?? DEFAULT_QUORUM_PERCENT)}
+                  step={5}
+                  value={[quorumPercent]}
                 />
-                <FieldDescription>
-                  Número mínimo de presentes para validar el resultado final.
-                </FieldDescription>
-              </Field>
-
-              <Field>
-                <FieldLabel>Opciones</FieldLabel>
-                <div className="space-y-3">
-                  {options.map((option, index) => (
-                    <div key={option.id} className={votingCreatePageContentVotingPage.optionRow}>
-                      <GripVertical className="size-4 text-muted-foreground" />
-                      <Input
-                        className={votingCreatePageContentVotingPage.optionInput}
-                        value={option.value}
-                        onChange={(event) => handleOptionChange(option.id, event.target.value)}
-                        placeholder={`Opción ${index + 1}`}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleRemoveOption(option.id)}
-                        disabled={options.length <= minimumOptionsByType[type]}
-                      >
-                        <Trash2 className="size-4" />
-                      </Button>
-                    </div>
-                  ))}
+                <div className={votingCreatePageContentVotingPage.sliderRow}>
+                  <span>0 %</span>
+                  <b className={votingCreatePageContentVotingPage.sliderValue}>
+                    {quorumPercent} % de los habilitados ({quorumCount} de {ENABLED_USERS})
+                  </b>
                 </div>
-
-                <div className="flex items-center justify-between gap-3">
-                  <p className={votingCreatePageContentVotingPage.helper}>
-                    {trimmedOptions.length} opción{trimmedOptions.length === 1 ? "" : "es"} válidas.
-                  </p>
-                  <Button type="button" variant="outline" onClick={handleAddOption}>
-                    <Plus className="size-4" />
-                    Agregar opción
-                  </Button>
-                </div>
-              </Field>
-            </FieldGroup>
-
-            <div className={votingCreatePageContentVotingPage.footer}>
-              <Button type="button" variant="ghost" asChild={true}>
-                <Link href={getVotingListPath()}>Cancelar</Link>
-              </Button>
-
-              <Button type="submit" disabled={!canSubmit || isPending}>
-                {isPending ? "Creando..." : "Guardar y abrir moderación"}
-              </Button>
+              </div>
+              <BoardSwitchRow
+                checked={anonymous}
+                hint="Nadie verá qué eligió cada persona."
+                onCheckedChange={setAnonymous}
+                title="Voto anónimo"
+              />
+              <BoardSwitchRow
+                checked={liveResults}
+                hint="Si está apagado, se ven al cerrar."
+                onCheckedChange={setLiveResults}
+                title="Mostrar resultados en vivo"
+              />
             </div>
-          </form>
-        </CardContent>
-      </Card>
+          </BoardCard>
 
-      <Card className={votingCreatePageContentVotingPage.previewCard}>
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <VotingStatusBadge status="draft" />
-            <span className={votingCreatePageContentVotingPage.optionPill}>
-              {votingStatusLabels.draft}
+          <section className={votingCreatePageContentVotingPage.preview}>
+            <span className={votingCreatePageContentVotingPage.previewKicker}>
+              Así lo verá la gente
             </span>
-          </div>
-          <CardTitle className="text-xl">{title.trim() || "Vista previa de la votación"}</CardTitle>
-          <CardDescription className="leading-6">
-            Así verá el equipo moderador la configuración inicial antes de abrir la sesión.
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent className="space-y-6">
-          <div className={votingCreatePageContentVotingPage.previewMeta}>
-            <div>
-              <p className={votingCreatePageContentVotingPage.previewLabel}>Tipo</p>
-              <p className="text-foreground">{votingTypeLabels[type]}</p>
-            </div>
-            <div>
-              <p className={votingCreatePageContentVotingPage.previewLabel}>Mayoría</p>
-              <p className="text-foreground">{majorityTypeLabels[majorityType]}</p>
-            </div>
-            <div>
-              <p className={votingCreatePageContentVotingPage.previewLabel}>Quorum</p>
-              <p className="text-foreground">{Number(quorum) || 1} presentes</p>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <p className={votingCreatePageContentVotingPage.previewLabel}>Opciones visibles</p>
+            <b className={votingCreatePageContentVotingPage.previewTitle}>
+              {title.trim() || "Título de la votación"}
+            </b>
             <div className={votingCreatePageContentVotingPage.previewOptions}>
-              {trimmedOptions.map((option) => (
-                <span key={option} className={votingCreatePageContentVotingPage.optionPill}>
-                  {option}
+              {cleanOptions.map((label) => (
+                <span className={votingCreatePageContentVotingPage.previewOption} key={label}>
+                  {label}
                 </span>
               ))}
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </section>
+        </div>
+      </div>
+
+      <div className={votingCreatePageContentVotingPage.footer}>
+        <BoardButton href={getVotingListPath()} variant="ghost">
+          Cancelar
+        </BoardButton>
+        <BoardButton disabled={!canSubmit} onClick={submit} variant="outline">
+          Guardar borrador
+        </BoardButton>
+        <BoardButton disabled={!canSubmit} onClick={submit} variant="primary">
+          <Check aria-hidden="true" className={votingCreatePageContentVotingPage.icon} />
+          Crear votación
+        </BoardButton>
+      </div>
     </div>
   );
 }
