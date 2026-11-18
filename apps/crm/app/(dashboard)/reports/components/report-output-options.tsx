@@ -14,6 +14,12 @@ import { cn } from "@/lib/utils";
 import type { ReportBuilderValues, ReportExportFormat } from "../types/index";
 import { ReportSectionShell } from "./report-section-shell";
 
+const reportOutputOptionsReportsPage = {
+  option: cn("rounded-2xl border px-4 py-4 text-left transition-colors"),
+  optionIdle: cn("border-border/60 bg-background hover:border-border"),
+  optionTitle: cn("flex items-center gap-2 text-sm font-medium"),
+};
+
 interface ReportOutputOptionsProps {
   values: ReportBuilderValues;
   onChange: (values: ReportBuilderValues) => void;
@@ -66,15 +72,15 @@ export function ReportOutputOptions({ values, onChange }: ReportOutputOptionsPro
                 onClick={() => toggleOption(option.key)}
                 aria-pressed={isChecked}
                 className={cn(
-                  "rounded-2xl border px-4 py-4 text-left transition-colors",
+                  reportOutputOptionsReportsPage.option,
                   isChecked
                     ? "border-accent bg-accent/5"
-                    : "border-border/60 bg-background hover:border-border",
+                    : reportOutputOptionsReportsPage.optionIdle,
                 )}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm font-medium">
+                    <div className={reportOutputOptionsReportsPage.optionTitle}>
                       <Icon className="size-4 text-accent" />
                       {option.label}
                     </div>

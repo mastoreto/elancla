@@ -6,6 +6,17 @@ import { Separator } from "@/components/ui/separator";
 
 import type { ReportBuilderValues } from "../types/index";
 import { ReportSectionShell } from "./report-section-shell";
+import { cn } from "@/lib/utils";
+
+const reportCreationSummaryReportsPage = {
+  panel: cn("rounded-2xl border border-border/60 bg-background/80 px-4 py-4"),
+  eyebrow: cn("text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground"),
+  value: cn("mt-2 text-lg font-semibold tracking-tight"),
+  row: cn(
+    "flex items-start justify-between gap-4 rounded-2xl border border-border/60 bg-background/80 px-4 py-3",
+  ),
+  rowTitle: cn("flex items-center gap-2 text-sm font-medium"),
+};
 
 interface ReportCreationSummaryProps {
   values: ReportBuilderValues;
@@ -92,11 +103,9 @@ export function ReportCreationSummary({
           </Alert>
         ) : null}
 
-        <div className="rounded-2xl border border-border/60 bg-background/80 px-4 py-4">
-          <p className="text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">
-            Nombre del reporte
-          </p>
-          <p className="mt-2 text-lg font-semibold tracking-tight">
+        <div className={reportCreationSummaryReportsPage.panel}>
+          <p className={reportCreationSummaryReportsPage.eyebrow}>Nombre del reporte</p>
+          <p className={reportCreationSummaryReportsPage.value}>
             {values.name || "Sin nombre definido"}
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -105,8 +114,8 @@ export function ReportCreationSummary({
         </div>
 
         <div className="space-y-3">
-          <div className="flex items-start justify-between gap-4 rounded-2xl border border-border/60 bg-background/80 px-4 py-3">
-            <div className="flex items-center gap-2 text-sm font-medium">
+          <div className={reportCreationSummaryReportsPage.row}>
+            <div className={reportCreationSummaryReportsPage.rowTitle}>
               <Layers3 className="size-4 text-accent" />
               Plantilla
             </div>
@@ -115,8 +124,8 @@ export function ReportCreationSummary({
             </span>
           </div>
 
-          <div className="flex items-start justify-between gap-4 rounded-2xl border border-border/60 bg-background/80 px-4 py-3">
-            <div className="flex items-center gap-2 text-sm font-medium">
+          <div className={reportCreationSummaryReportsPage.row}>
+            <div className={reportCreationSummaryReportsPage.rowTitle}>
               <CalendarRange className="size-4 text-accent" />
               Período
             </div>
@@ -125,8 +134,8 @@ export function ReportCreationSummary({
             </span>
           </div>
 
-          <div className="flex items-start justify-between gap-4 rounded-2xl border border-border/60 bg-background/80 px-4 py-3">
-            <div className="flex items-center gap-2 text-sm font-medium">
+          <div className={reportCreationSummaryReportsPage.row}>
+            <div className={reportCreationSummaryReportsPage.rowTitle}>
               <FolderTree className="size-4 text-accent" />
               Cobertura
             </div>
@@ -136,8 +145,8 @@ export function ReportCreationSummary({
             </span>
           </div>
 
-          <div className="flex items-start justify-between gap-4 rounded-2xl border border-border/60 bg-background/80 px-4 py-3">
-            <div className="flex items-center gap-2 text-sm font-medium">
+          <div className={reportCreationSummaryReportsPage.row}>
+            <div className={reportCreationSummaryReportsPage.rowTitle}>
               <Files className="size-4 text-accent" />
               Exportación
             </div>

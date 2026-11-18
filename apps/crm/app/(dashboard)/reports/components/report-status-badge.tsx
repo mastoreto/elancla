@@ -3,6 +3,11 @@ import { cn } from "@/lib/utils";
 
 import type { GeneratedReportStatus } from "../types/index";
 
+const reportStatusBadgeReportsPage = {
+  ready: cn("border-income/30 bg-income/10 text-income"),
+  failed: cn("border-expense/30 bg-expense/10 text-expense"),
+};
+
 interface ReportStatusBadgeProps {
   status: GeneratedReportStatus;
 }
@@ -10,7 +15,7 @@ interface ReportStatusBadgeProps {
 const statusConfig = {
   READY: {
     label: "Listo",
-    className: "border-income/30 bg-income/10 text-income",
+    className: reportStatusBadgeReportsPage.ready,
   },
   PROCESSING: {
     label: "En generación",
@@ -18,7 +23,7 @@ const statusConfig = {
   },
   ERROR: {
     label: "Con errores",
-    className: "border-expense/30 bg-expense/10 text-expense",
+    className: reportStatusBadgeReportsPage.failed,
   },
 } as const;
 

@@ -8,6 +8,15 @@ import { cn } from "@/lib/utils";
 import type { ReportCurrency, ReportSummary } from "../types/index";
 import { ReportDataState } from "./report-data-state";
 
+const reportSummaryCardsReportsPage = {
+  header: cn("flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"),
+  card: cn(
+    "overflow-hidden border-border/60 bg-gradient-to-br from-card via-card to-muted/30 shadow-sm",
+  ),
+  cardLabel: cn("text-sm font-medium text-muted-foreground"),
+  cardIcon: cn("flex size-11 items-center justify-center rounded-2xl"),
+};
+
 interface ReportSummaryCardsProps {
   summary: ReportSummary | null;
   currency?: ReportCurrency;
@@ -152,7 +161,7 @@ export function ReportSummaryCards({
 
   return (
     <section className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div className={reportSummaryCardsReportsPage.header}>
         <div>
           <h2 className="text-lg font-semibold tracking-tight">Resumen general</h2>
           <p className="text-sm text-muted-foreground">
@@ -169,24 +178,16 @@ export function ReportSummaryCards({
           const Icon = item.icon;
 
           return (
-            <Card
-              key={item.label}
-              className="overflow-hidden border-border/60 bg-gradient-to-br from-card via-card to-muted/30 shadow-sm"
-            >
+            <Card key={item.label} className={reportSummaryCardsReportsPage.card}>
               <CardHeader className="gap-3">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                    <CardTitle className={reportSummaryCardsReportsPage.cardLabel}>
                       {item.label}
                     </CardTitle>
                     <CardDescription>{item.description}</CardDescription>
                   </div>
-                  <div
-                    className={cn(
-                      "flex size-11 items-center justify-center rounded-2xl",
-                      item.chipClassName,
-                    )}
-                  >
+                  <div className={cn(reportSummaryCardsReportsPage.cardIcon, item.chipClassName)}>
                     <Icon className="size-5" />
                   </div>
                 </div>

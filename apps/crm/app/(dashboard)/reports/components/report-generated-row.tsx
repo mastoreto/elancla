@@ -9,6 +9,15 @@ import { cn } from "@/lib/utils";
 import type { GeneratedReportListItem } from "../types";
 import { ReportStatusBadge } from "./report-status-badge";
 
+const reportGeneratedRowReportsPage = {
+  row: cn(
+    "rounded-2xl border border-border/60 bg-background/80 px-4 py-4 transition-colors hover:border-border md:px-5",
+  ),
+  layout: cn("flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between"),
+  facts: cn("grid gap-3 text-sm md:grid-cols-2 xl:grid-cols-4"),
+  fact: cn("flex items-center gap-2 text-muted-foreground"),
+};
+
 interface ReportGeneratedRowProps {
   report: GeneratedReportListItem;
 }
@@ -43,8 +52,8 @@ export function ReportGeneratedRow({ report }: ReportGeneratedRowProps) {
   const canOpen = report.status === "READY";
 
   return (
-    <article className="rounded-2xl border border-border/60 bg-background/80 px-4 py-4 transition-colors hover:border-border md:px-5">
-      <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+    <article className={reportGeneratedRowReportsPage.row}>
+      <div className={reportGeneratedRowReportsPage.layout}>
         <div className="min-w-0 flex-1 space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             <ReportStatusBadge status={report.status} />
@@ -61,8 +70,8 @@ export function ReportGeneratedRow({ report }: ReportGeneratedRowProps) {
             <p className="text-sm text-muted-foreground">{report.description}</p>
           </div>
 
-          <dl className="grid gap-3 text-sm md:grid-cols-2 xl:grid-cols-4">
-            <div className="flex items-center gap-2 text-muted-foreground">
+          <dl className={reportGeneratedRowReportsPage.facts}>
+            <div className={reportGeneratedRowReportsPage.fact}>
               <CalendarDays className="size-4 text-accent" />
               <div>
                 <dt className="sr-only">Generado</dt>
@@ -70,7 +79,7 @@ export function ReportGeneratedRow({ report }: ReportGeneratedRowProps) {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 text-muted-foreground">
+            <div className={reportGeneratedRowReportsPage.fact}>
               <FileOutput className="size-4 text-accent" />
               <div>
                 <dt className="sr-only">Formato</dt>
@@ -78,7 +87,7 @@ export function ReportGeneratedRow({ report }: ReportGeneratedRowProps) {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 text-muted-foreground">
+            <div className={reportGeneratedRowReportsPage.fact}>
               <Filter className="size-4 text-accent" />
               <div>
                 <dt className="sr-only">Período</dt>
@@ -86,7 +95,7 @@ export function ReportGeneratedRow({ report }: ReportGeneratedRowProps) {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 text-muted-foreground">
+            <div className={reportGeneratedRowReportsPage.fact}>
               <UserRound className="size-4 text-accent" />
               <div>
                 <dt className="sr-only">Responsable</dt>

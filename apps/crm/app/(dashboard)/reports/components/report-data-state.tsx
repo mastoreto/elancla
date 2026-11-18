@@ -9,6 +9,10 @@ import {
 } from "@/components/ui/empty";
 import { cn } from "@/lib/utils";
 
+const reportDataStateReportsPage = {
+  empty: cn("border border-dashed border-border/60 bg-muted/20 py-10"),
+};
+
 interface ReportDataStateProps {
   variant: "empty" | "error";
   title?: string;
@@ -21,7 +25,7 @@ export function ReportDataState({ variant, title, description, className }: Repo
   const Icon = isError ? AlertCircle : FileSearch;
 
   return (
-    <Empty className={cn("border border-dashed border-border/60 bg-muted/20 py-10", className)}>
+    <Empty className={cn(reportDataStateReportsPage.empty, className)}>
       <EmptyHeader>
         <EmptyMedia
           variant="icon"

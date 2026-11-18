@@ -3,6 +3,11 @@ import { Download, FileSpreadsheet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { ReportSectionShell } from "./report-section-shell";
+import { cn } from "@/lib/utils";
+
+const reportExportActionsReportsPage = {
+  container: cn("flex flex-col gap-4 md:flex-row md:items-center md:justify-between"),
+};
 
 interface ReportExportActionsProps {
   disabled?: boolean;
@@ -14,7 +19,7 @@ export function ReportExportActions({ disabled = true }: ReportExportActionsProp
       title="Exportar resultados"
       description="Acciones de salida preparadas para conectarse con la capa de generación."
     >
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className={reportExportActionsReportsPage.container}>
         <p className="text-sm text-muted-foreground">
           Las exportaciones se habilitan cuando haya resultados disponibles.
         </p>

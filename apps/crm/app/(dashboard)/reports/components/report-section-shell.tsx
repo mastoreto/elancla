@@ -10,6 +10,15 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
+const reportSectionShellReportsPage = {
+  card: cn(
+    "overflow-hidden border-border/60 bg-gradient-to-br from-card via-card to-muted/25 shadow-sm",
+  ),
+  header: cn(
+    "gap-3 border-b border-border/50 bg-gradient-to-r from-transparent via-transparent to-muted/35",
+  ),
+};
+
 interface ReportSectionShellProps {
   title: string;
   description?: string;
@@ -30,18 +39,8 @@ export function ReportSectionShell({
   headerClassName,
 }: ReportSectionShellProps) {
   return (
-    <Card
-      className={cn(
-        "overflow-hidden border-border/60 bg-gradient-to-br from-card via-card to-muted/25 shadow-sm",
-        className,
-      )}
-    >
-      <CardHeader
-        className={cn(
-          "gap-3 border-b border-border/50 bg-gradient-to-r from-transparent via-transparent to-muted/35",
-          headerClassName,
-        )}
-      >
+    <Card className={cn(reportSectionShellReportsPage.card, className)}>
+      <CardHeader className={cn(reportSectionShellReportsPage.header, headerClassName)}>
         <div className="space-y-1">
           <CardTitle>{title}</CardTitle>
           {description ? <CardDescription>{description}</CardDescription> : null}

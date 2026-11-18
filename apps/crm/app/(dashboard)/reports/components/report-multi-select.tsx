@@ -7,6 +7,17 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
+const reportMultiSelectReportsPage = {
+  trigger: cn("h-auto min-h-9 w-full justify-between px-3 py-2 text-left"),
+  options: cn("max-h-60 space-y-3 overflow-y-auto px-4 py-3"),
+  option: cn(
+    "flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-transparent px-2 py-2 transition-colors hover:border-border/60 hover:bg-muted/40",
+  ),
+  footer: cn("flex items-center justify-between border-t border-border/60 px-4 py-3"),
+  chip: cn("gap-1 rounded-full border border-border/60 bg-muted/70 px-3 py-1"),
+  chipRemove: cn("rounded-full text-muted-foreground transition-colors hover:text-foreground"),
+};
+
 interface ReportMultiSelectProps {
   label: string;
   placeholder: string;
@@ -57,11 +68,7 @@ export function ReportMultiSelect({
       <FieldLabel>{label}</FieldLabel>
       <Popover>
         <PopoverTrigger asChild={true}>
-          <Button
-            type="button"
-            variant="outline"
-            className="h-auto min-h-9 w-full justify-between px-3 py-2 text-left"
-          >
+          <Button type="button" variant="outline" className={reportMultiSelectReportsPage.trigger}>
             <span
               className={cn("truncate", selectedValues.length === 0 && "text-muted-foreground")}
             >
@@ -76,14 +83,14 @@ export function ReportMultiSelect({
             <p className="text-xs text-muted-foreground">{helperText}</p>
           </div>
 
-          <div className="max-h-60 space-y-3 overflow-y-auto px-4 py-3">
+          <div className={reportMultiSelectReportsPage.options}>
             {options.map((option) => (
               <button
                 key={option}
                 type="button"
                 onClick={() => toggleValue(option)}
                 aria-pressed={selectedValues.includes(option)}
-                className="flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-transparent px-2 py-2 transition-colors hover:border-border/60 hover:bg-muted/40"
+                className={reportMultiSelectReportsPage.option}
               >
                 <div className="space-y-0.5">
                   <p className="text-sm font-medium">{option}</p>
@@ -99,7 +106,7 @@ export function ReportMultiSelect({
             ))}
           </div>
 
-          <div className="flex items-center justify-between border-t border-border/60 px-4 py-3">
+          <div className={reportMultiSelectReportsPage.footer}>
             <span className="text-xs text-muted-foreground">{selectedText}</span>
             <Button
               type="button"
@@ -117,16 +124,12 @@ export function ReportMultiSelect({
       {selectedValues.length > 0 ? (
         <div className="flex flex-wrap gap-2">
           {selectedValues.map((value) => (
-            <Badge
-              key={value}
-              variant="secondary"
-              className="gap-1 rounded-full border border-border/60 bg-muted/70 px-3 py-1"
-            >
+            <Badge key={value} variant="secondary" className={reportMultiSelectReportsPage.chip}>
               {value}
               <button
                 type="button"
                 onClick={() => removeValue(value)}
-                className="rounded-full text-muted-foreground transition-colors hover:text-foreground"
+                className={reportMultiSelectReportsPage.chipRemove}
                 aria-label={`Quitar ${value}`}
               >
                 <X className="size-3" />

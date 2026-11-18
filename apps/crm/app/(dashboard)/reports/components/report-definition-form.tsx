@@ -14,6 +14,12 @@ import { Textarea } from "@/components/ui/textarea";
 
 import type { ReportBuilderValues, ReportTemplate } from "../types/index";
 import { ReportSectionShell } from "./report-section-shell";
+import { cn } from "@/lib/utils";
+
+const reportDefinitionFormReportsPage = {
+  panel: cn("rounded-2xl border border-border/60 bg-muted/25 px-4 py-4"),
+  panelTitle: cn("flex items-center gap-2 text-sm font-medium"),
+};
 
 interface ReportDefinitionFormProps {
   values: ReportBuilderValues;
@@ -91,8 +97,8 @@ export function ReportDefinitionForm({ values, onChange }: ReportDefinitionFormP
           </Select>
         </Field>
 
-        <div className="rounded-2xl border border-border/60 bg-muted/25 px-4 py-4">
-          <div className="flex items-center gap-2 text-sm font-medium">
+        <div className={reportDefinitionFormReportsPage.panel}>
+          <div className={reportDefinitionFormReportsPage.panelTitle}>
             <FileText className="size-4 text-accent" />
             Enfoque seleccionado
           </div>

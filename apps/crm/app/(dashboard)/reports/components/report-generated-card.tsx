@@ -8,6 +8,18 @@ import { getChurchRoutePath } from "@/lib/church";
 
 import type { GeneratedReportListItem } from "../types";
 import { ReportStatusBadge } from "./report-status-badge";
+import { cn } from "@/lib/utils";
+
+const reportGeneratedCardReportsPage = {
+  card: cn(
+    "overflow-hidden border-border/60 bg-gradient-to-br from-card via-card to-muted/20 shadow-sm",
+  ),
+  meta: cn("flex flex-wrap items-center justify-between gap-3"),
+  panel: cn("rounded-2xl border border-border/60 bg-background/80 px-4 py-3"),
+  eyebrow: cn(
+    "flex items-center gap-2 text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground",
+  ),
+};
 
 interface ReportGeneratedCardProps {
   report: GeneratedReportListItem;
@@ -43,9 +55,9 @@ export function ReportGeneratedCard({ report }: ReportGeneratedCardProps) {
   const canOpen = report.status === "READY";
 
   return (
-    <Card className="overflow-hidden border-border/60 bg-gradient-to-br from-card via-card to-muted/20 shadow-sm">
+    <Card className={reportGeneratedCardReportsPage.card}>
       <CardHeader className="gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className={reportGeneratedCardReportsPage.meta}>
           <div className="flex flex-wrap gap-2">
             <ReportStatusBadge status={report.status} />
             <Badge variant="secondary" className="rounded-full px-3 py-1">
@@ -65,16 +77,16 @@ export function ReportGeneratedCard({ report }: ReportGeneratedCardProps) {
 
       <CardContent className="space-y-5">
         <dl className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-2xl border border-border/60 bg-background/80 px-4 py-3">
-            <dt className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">
+          <div className={reportGeneratedCardReportsPage.panel}>
+            <dt className={reportGeneratedCardReportsPage.eyebrow}>
               <CalendarDays className="size-3.5" />
               Generado
             </dt>
             <dd className="mt-2 text-sm font-medium">{report.generatedAt}</dd>
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-background/80 px-4 py-3">
-            <dt className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">
+          <div className={reportGeneratedCardReportsPage.panel}>
+            <dt className={reportGeneratedCardReportsPage.eyebrow}>
               <FileOutput className="size-3.5" />
               Formato
             </dt>
@@ -83,16 +95,16 @@ export function ReportGeneratedCard({ report }: ReportGeneratedCardProps) {
             </dd>
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-background/80 px-4 py-3">
-            <dt className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">
+          <div className={reportGeneratedCardReportsPage.panel}>
+            <dt className={reportGeneratedCardReportsPage.eyebrow}>
               <Filter className="size-3.5" />
               Período
             </dt>
             <dd className="mt-2 text-sm font-medium">{report.dateRangeLabel}</dd>
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-background/80 px-4 py-3">
-            <dt className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">
+          <div className={reportGeneratedCardReportsPage.panel}>
+            <dt className={reportGeneratedCardReportsPage.eyebrow}>
               <UserRound className="size-3.5" />
               Responsable
             </dt>
