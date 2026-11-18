@@ -2,11 +2,11 @@
 
 import { useMemo, useState } from "react";
 import type { DateRange } from "react-day-picker";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { RequestFormModal } from "@/components/request-form-modal";
 import { currentUser, moneyRequests as initialRequests } from "@/lib/data";
 import type { Currency, MoneyRequest, RequestStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
 import {
   countByStatus,
   filterRequests,

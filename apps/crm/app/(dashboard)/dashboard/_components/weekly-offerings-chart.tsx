@@ -1,6 +1,7 @@
 "use client";
 
 import { Area, AreaChart, CartesianGrid, Line, XAxis, YAxis } from "recharts";
+import { DashboardCard, DashboardCardHeader } from "@/components/dashboard";
 import {
   type ChartConfig,
   ChartContainer,
@@ -8,7 +9,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { cn } from "@/lib/utils";
-import { DashboardCard, DashboardCardHeader } from "@/src/componentes/dashboard";
 
 export type WeeklyOffering = {
   week: string;

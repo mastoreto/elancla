@@ -1,13 +1,9 @@
 import { Pencil } from "lucide-react";
 import Link from "next/link";
+import { DashboardCard, DashboardCardHeader, DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
-import {
-  DashboardCard,
-  DashboardCardHeader,
-  DashboardPageHeader,
-} from "@/src/componentes/dashboard";
 import type { InventoryItemDetail } from "../types";
 import { InventoryDeleteButton } from "./inventory-delete-button";
 import { InventoryLendDialog } from "./inventory-lend-dialog";

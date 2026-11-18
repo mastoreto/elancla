@@ -117,7 +117,7 @@ components/<feature>/       # componentes compartidos por feature
 hooks/  lib/  types/        # globales
 ```
 
-Hay un `src/componentes/` heredado en español junto a `components/`: **no crear más ahí**; migrar al mover código.
+Los componentes compartidos del dashboard viven en `components/dashboard/` (el antiguo `src/componentes/` ya no existe); `src/components/` (DataTable, RichTextEditor) está pendiente de migrar a `components/`.
 
 ### Archivos principales permitidos sueltos
 
@@ -165,7 +165,7 @@ Hay un `src/componentes/` heredado en español junto a `components/`: **no crear
    - Solo se permite `className` inline para una utilidad suelta de 1–2 clases cuando no justifica una clave; nunca strings largos.
    - `components/ui/` (shadcn) conserva `cva`; no se reescribe a mano.
    - Al crear o tocar un componente, conviértelo a esta convención en el mismo cambio. Detalle: `apps/crm/docs/migration/styles-convention.md`.
-   - Se verifica con el plugin de Biome `apps/crm/biome-plugins/no-long-inline-classname.grit` (`bun run check`): marca como *warning* los `className` con strings de más de 40 caracteres (también dentro de `cn(...)`). Pasará a *error* al terminar la migración de las secciones pendientes.
+   - Se verifica con el plugin de Biome `apps/crm/biome-plugins/no-long-inline-classname.grit` (`bun run check`): marca como *error* los `className` con strings de más de 40 caracteres (también dentro de `cn(...)`). Es *error* desde que terminó la migración de las secciones.
 
 ## 5. Buenas prácticas — Astro (`apps/web`)
 

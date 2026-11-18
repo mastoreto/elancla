@@ -8,10 +8,10 @@ import type {
   SettingsTabValue,
   SettingsUser,
 } from "@/app/(dashboard)/settings/types";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { ChurchConfig } from "@/lib/church";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
 import { BankAccountsPanel } from "./bank-accounts-panel";
 import { ChurchSettingsPanel } from "./church-settings-panel";
 import { CurrenciesPanel } from "./currencies-panel";

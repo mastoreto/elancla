@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 
 const reportMultiSelectReportsPage = {
+  value: cn("truncate"),
   trigger: cn("h-auto min-h-9 w-full justify-between px-3 py-2 text-left"),
   options: cn("max-h-60 space-y-3 overflow-y-auto px-4 py-3"),
   option: cn(
@@ -70,7 +71,10 @@ export function ReportMultiSelect({
         <PopoverTrigger asChild={true}>
           <Button type="button" variant="outline" className={reportMultiSelectReportsPage.trigger}>
             <span
-              className={cn("truncate", selectedValues.length === 0 && "text-muted-foreground")}
+              className={cn(
+                reportMultiSelectReportsPage.value,
+                selectedValues.length === 0 && "text-muted-foreground",
+              )}
             >
               {getSelectedLabel(selectedValues, placeholder)}
             </span>

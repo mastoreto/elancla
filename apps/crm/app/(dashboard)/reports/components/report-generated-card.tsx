@@ -5,10 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getChurchRoutePath } from "@/lib/church";
-
+import { cn } from "@/lib/utils";
 import type { GeneratedReportListItem } from "../types";
 import { ReportStatusBadge } from "./report-status-badge";
-import { cn } from "@/lib/utils";
 
 const reportGeneratedCardReportsPage = {
   card: cn(

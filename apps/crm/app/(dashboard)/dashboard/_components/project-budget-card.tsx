@@ -1,9 +1,9 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { DashboardCard, DashboardCardHeader } from "@/components/dashboard";
 import { getChurchRoutePath } from "@/lib/church";
 import type { Project } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { DashboardCard, DashboardCardHeader } from "@/src/componentes/dashboard";
 import { formatCurrency } from "./dashboard-formatters";
 
 const projectBudgetCardDashboardPage = {

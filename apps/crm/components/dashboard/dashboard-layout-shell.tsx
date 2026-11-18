@@ -169,6 +169,46 @@ const routeMeta: RouteMeta[] = [
   },
 ];
 
+const dashboardLayoutShellDashboardPage = {
+  sidebarProvider: cn("min-h-svh bg-[var(--background)] text-foreground"),
+  sidebarInset: cn("min-w-0 overflow-hidden bg-[var(--background)]"),
+  header: cn(
+    "sticky top-0 z-30 flex h-[72px] shrink-0 items-center gap-3 border-b border-[var(--border)] bg-[var(--card)] px-4 md:px-7",
+  ),
+  sidebarTrigger: cn(
+    "size-9 rounded-[10px] text-[var(--tinta-suave)] hover:bg-[var(--bruma)] md:hidden",
+  ),
+  label: cn(
+    "truncate font-display text-lg font-medium leading-none tracking-normal text-foreground",
+  ),
+  block: cn(
+    "hidden items-center gap-2 rounded-full border border-[var(--border)] px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground xl:inline-flex",
+  ),
+  labelRounded: cn(
+    "relative size-1.5 rounded-full bg-primary before:absolute before:inset-[-3px] before:rounded-full before:bg-primary/30 before:content-[''] before:animate-ping",
+  ),
+  blockFlex: cn(
+    "hidden items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bruma)] px-3 py-2 text-xs text-muted-foreground lg:flex",
+  ),
+  blockBorder: cn("rounded border border-[var(--input)] px-1.5 font-mono text-[10px]"),
+  labelSize: cn("absolute right-2 top-2 size-1.5 rounded-full bg-primary"),
+  blockBg: cn("mx-1 hidden h-7 w-px bg-[var(--border)] sm:block"),
+  action: cn(
+    "hidden rounded-full bg-foreground px-4 text-xs font-semibold tracking-[0.04em] text-background hover:bg-primary sm:inline-flex",
+  ),
+  actionFlex: cn(
+    "ml-1 flex items-center gap-2 rounded-full bg-[var(--bruma)] p-1 pr-2 text-left transition hover:bg-[var(--background)] hover:shadow-[var(--sombra)]",
+  ),
+  labelFlex: cn(
+    "flex size-8 items-center justify-center rounded-full bg-primary font-display text-sm font-medium text-white",
+  ),
+  labelText: cn("block text-sm font-semibold text-foreground"),
+  label2: cn("block text-[11px] capitalize text-muted-foreground"),
+  chevronDown: cn("hidden size-3 text-muted-foreground md:block"),
+  block2: cn("min-h-0 flex-1 overflow-x-hidden overflow-y-auto scroll-smooth"),
+  block3: cn("mx-auto w-full max-w-[1480px] px-5 py-7 pb-20 md:px-8"),
+};
+
 function isRouteMatch(pathname: string, meta: RouteMeta) {
   const publicPath = getChurchRoutePath(meta.route);
   const internalPath = `/${meta.internalRoute}`;
@@ -207,7 +247,7 @@ export function DashboardLayoutShell({ children }: DashboardLayoutShellProps) {
 
   return (
     <SidebarProvider
-      className="min-h-svh bg-[var(--background)] text-foreground"
+      className={dashboardLayoutShellDashboardPage.sidebarProvider}
       style={
         {
           "--sidebar-width": "16.5rem",
@@ -216,35 +256,31 @@ export function DashboardLayoutShell({ children }: DashboardLayoutShellProps) {
       }
     >
       <AppSidebar />
-      <SidebarInset className="min-w-0 overflow-hidden bg-[var(--background)]">
-        <header className="sticky top-0 z-30 flex h-[72px] shrink-0 items-center gap-3 border-b border-[var(--border)] bg-[var(--card)] px-4 md:px-7">
-          <SidebarTrigger className="size-9 rounded-[10px] text-[var(--tinta-suave)] hover:bg-[var(--bruma)] md:hidden" />
+      <SidebarInset className={dashboardLayoutShellDashboardPage.sidebarInset}>
+        <header className={dashboardLayoutShellDashboardPage.header}>
+          <SidebarTrigger className={dashboardLayoutShellDashboardPage.sidebarTrigger} />
 
           <div className="flex min-w-0 flex-1 items-center gap-2">
             <span className="truncate text-xs text-muted-foreground">{currentRoute.section}</span>
             <span className="text-[var(--input)]">/</span>
-            <span className="truncate font-display text-lg font-medium leading-none tracking-normal text-foreground">
-              {currentRoute.title}
-            </span>
+            <span className={dashboardLayoutShellDashboardPage.label}>{currentRoute.title}</span>
           </div>
 
-          <div className="hidden items-center gap-2 rounded-full border border-[var(--border)] px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground xl:inline-flex">
-            <span className="relative size-1.5 rounded-full bg-primary before:absolute before:inset-[-3px] before:rounded-full before:bg-primary/30 before:content-[''] before:animate-ping" />
+          <div className={dashboardLayoutShellDashboardPage.block}>
+            <span className={dashboardLayoutShellDashboardPage.labelRounded} />
             {churchConfig.name} activo
           </div>
 
-          <div className="hidden items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bruma)] px-3 py-2 text-xs text-muted-foreground lg:flex">
+          <div className={dashboardLayoutShellDashboardPage.blockFlex}>
             <Search className="size-3.5" />
             Buscar
-            <kbd className="rounded border border-[var(--input)] px-1.5 font-mono text-[10px]">
-              Ctrl K
-            </kbd>
+            <kbd className={dashboardLayoutShellDashboardPage.blockBorder}>Ctrl K</kbd>
           </div>
 
           <div className="flex items-center gap-1.5">
             <HeaderIconButton aria-label="Notificaciones">
               <Bell className="size-4" />
-              <span className="absolute right-2 top-2 size-1.5 rounded-full bg-primary" />
+              <span className={dashboardLayoutShellDashboardPage.labelSize} />
             </HeaderIconButton>
             <HeaderIconButton aria-label="Mensajes" className="hidden sm:inline-flex">
               <MessageSquare className="size-4" />
@@ -253,40 +289,30 @@ export function DashboardLayoutShell({ children }: DashboardLayoutShellProps) {
               <CircleHelp className="size-4" />
             </HeaderIconButton>
 
-            <div className="mx-1 hidden h-7 w-px bg-[var(--border)] sm:block" />
+            <div className={dashboardLayoutShellDashboardPage.blockBg} />
 
-            <Button
-              asChild={true}
-              className="hidden rounded-full bg-foreground px-4 text-xs font-semibold tracking-[0.04em] text-background hover:bg-primary sm:inline-flex"
-            >
+            <Button asChild={true} className={dashboardLayoutShellDashboardPage.action}>
               <Link href={currentRoute.ctaHref}>
                 <Plus className="size-3.5" />
                 {currentRoute.ctaLabel}
               </Link>
             </Button>
 
-            <button
-              className="ml-1 flex items-center gap-2 rounded-full bg-[var(--bruma)] p-1 pr-2 text-left transition hover:bg-[var(--background)] hover:shadow-[var(--sombra)]"
-              type="button"
-            >
-              <span className="flex size-8 items-center justify-center rounded-full bg-primary font-display text-sm font-medium text-white">
-                {userInitials}
-              </span>
+            <button className={dashboardLayoutShellDashboardPage.actionFlex} type="button">
+              <span className={dashboardLayoutShellDashboardPage.labelFlex}>{userInitials}</span>
               <span className="hidden leading-tight md:block">
-                <span className="block text-sm font-semibold text-foreground">
+                <span className={dashboardLayoutShellDashboardPage.labelText}>
                   {currentUser.name}
                 </span>
-                <span className="block text-[11px] capitalize text-muted-foreground">
-                  {currentUser.role}
-                </span>
+                <span className={dashboardLayoutShellDashboardPage.label2}>{currentUser.role}</span>
               </span>
-              <ChevronDown className="hidden size-3 text-muted-foreground md:block" />
+              <ChevronDown className={dashboardLayoutShellDashboardPage.chevronDown} />
             </button>
           </div>
         </header>
 
-        <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto scroll-smooth">
-          <div className="mx-auto w-full max-w-[1480px] px-5 py-7 pb-20 md:px-8">{children}</div>
+        <div className={dashboardLayoutShellDashboardPage.block2}>
+          <div className={dashboardLayoutShellDashboardPage.block3}>{children}</div>
         </div>
       </SidebarInset>
     </SidebarProvider>

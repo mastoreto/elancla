@@ -2,13 +2,14 @@
 
 import { format } from "date-fns";
 import { Calendar, Check, PiggyBank, TrendingDown, TrendingUp, Users, Wallet } from "lucide-react";
-import { BudgetProgressBar } from "./budget-progress-bar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Project } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { BudgetProgressBar } from "./budget-progress-bar";
 
 const projectSummaryProjectsPage = {
+  cardValue: cn("text-2xl font-bold"),
   metricIcon: cn("flex size-11 shrink-0 items-center justify-center rounded-xl"),
   fieldLabel: cn("mb-1 text-sm font-medium text-muted-foreground"),
   label: cn("text-sm font-medium text-muted-foreground"),
@@ -249,7 +250,9 @@ export function ProjectSummary({ project, totalIncome, totalExpenses }: ProjectS
                 <div className={projectSummaryProjectsPage.cardHeader}>
                   <div>
                     <p className="text-sm text-muted-foreground">{card.label}</p>
-                    <p className={cn("text-2xl font-bold", card.valueClassName)}>{card.value}</p>
+                    <p className={cn(projectSummaryProjectsPage.cardValue, card.valueClassName)}>
+                      {card.value}
+                    </p>
                   </div>
 
                   <div className={cn(projectSummaryProjectsPage.metricIcon, card.iconClassName)}>

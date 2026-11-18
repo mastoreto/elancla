@@ -1,14 +1,14 @@
 import { Projector } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { getChurchRoutePath } from "@/lib/church";
-import { cn } from "@/lib/utils";
 import {
   DashboardCard,
   DashboardCardHeader,
   DashboardMetricStrip,
   DashboardPageHeader,
-} from "@/src/componentes/dashboard";
+} from "@/components/dashboard";
+import { Button } from "@/components/ui/button";
+import { getChurchRoutePath } from "@/lib/church";
+import { cn } from "@/lib/utils";
 import type { AssemblyReport } from "../types";
 import { AccessQr } from "./access-qr";
 import { AssemblyControls } from "./assembly-controls";

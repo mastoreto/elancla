@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
@@ -10,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
 import {
   ASSEMBLY_REPORT_SECTIONS,
   type AssemblyPublishErrors,

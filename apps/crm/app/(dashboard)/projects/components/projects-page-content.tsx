@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { projects } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
 import type { ProjectFilters, ProjectViewMode } from "../types";
 import { DEFAULT_PROJECT_FILTERS, filterProjects, getProjectStats } from "../utils";
 import { ProjectFiltersComponent } from "./project-filters";

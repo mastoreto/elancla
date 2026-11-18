@@ -3,11 +3,11 @@
 import { Eye, Library, Radio, Send } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { DashboardMetricStrip, DashboardPageHeader } from "@/components/dashboard";
 import { ListPagination } from "@/components/list-pagination";
 import { Button } from "@/components/ui/button";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
-import { DashboardMetricStrip, DashboardPageHeader } from "@/src/componentes/dashboard";
 import { sermons } from "../data/sermons";
 import type { SermonStatusFilter } from "../types";
 import { countByStatus, filterSermons, getTotalPlays, SERMONS_PAGE_SIZE } from "../utils";

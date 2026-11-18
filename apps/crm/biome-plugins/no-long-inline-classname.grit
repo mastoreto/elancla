@@ -6,5 +6,5 @@ JsxAttribute() as $attribute where {
   // shadcn primitives keep their own cva styles.
   $filename <: not r".*components/ui/.*",
   $attribute <: r"^className=(?:\{\s*(?:cn|twMerge|clsx)\()?\s*[\"'`].{42,}",
-  register_diagnostic(span=$attribute, message="Long inline className. Move it to the <component><Section>Page style object with cn() (see CLAUDE.md section 4, point 8).", severity="warn")
+  register_diagnostic(span=$attribute, message="Long inline className. Move it to the <component><Section>Page style object with cn() (see CLAUDE.md section 4, point 8).", severity="error")
 }

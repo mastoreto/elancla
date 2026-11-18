@@ -14,6 +14,11 @@ import { VotingMetricCard } from "./voting-metric-card";
 import { VotingPageShell } from "./voting-page-shell";
 
 const votingOverviewPageContentVotingPage = {
+  block: cn("flex items-center justify-between text-sm text-muted-foreground"),
+  text: cn("text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground"),
+  blockBorder: cn(
+    "rounded-xl border border-border/70 bg-muted/10 p-4 text-sm text-muted-foreground",
+  ),
   content: cn("space-y-6"),
   grid: cn("grid gap-4 xl:grid-cols-[minmax(0,1.1fr)_360px]"),
   section: cn("space-y-4"),
@@ -75,7 +80,7 @@ export function VotingOverviewPageContent({ votingId }: { votingId: string }) {
               </CardHeader>
               <CardContent className={votingOverviewPageContentVotingPage.section}>
                 <div>
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
+                  <div className={votingOverviewPageContentVotingPage.block}>
                     <span>Quorum alcanzado</span>
                     <span>{Math.round(outcome.quorumProgress)}%</span>
                   </div>
@@ -83,7 +88,7 @@ export function VotingOverviewPageContent({ votingId }: { votingId: string }) {
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
+                  <div className={votingOverviewPageContentVotingPage.block}>
                     <span>Participación sobre presentes</span>
                     <span>{Math.round(outcome.participationRate)}%</span>
                   </div>
@@ -91,9 +96,7 @@ export function VotingOverviewPageContent({ votingId }: { votingId: string }) {
                 </div>
 
                 <div className="space-y-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                    Distribución actual
-                  </p>
+                  <p className={votingOverviewPageContentVotingPage.text}>Distribución actual</p>
 
                   {voting.options.map((option) => (
                     <div key={option.id} className={votingOverviewPageContentVotingPage.optionRow}>
@@ -147,7 +150,7 @@ export function VotingOverviewPageContent({ votingId }: { votingId: string }) {
                   )}
                 </Button>
 
-                <div className="rounded-xl border border-border/70 bg-muted/10 p-4 text-sm text-muted-foreground">
+                <div className={votingOverviewPageContentVotingPage.blockBorder}>
                   Total contabilizado: {getTotalVotes(voting)} voto
                   {getTotalVotes(voting) === 1 ? "" : "s"}.
                 </div>

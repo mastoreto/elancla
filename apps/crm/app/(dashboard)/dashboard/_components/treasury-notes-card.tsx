@@ -1,5 +1,5 @@
+import { DashboardCard, DashboardCardHeader } from "@/components/dashboard";
 import { cn } from "@/lib/utils";
-import { DashboardCard, DashboardCardHeader } from "@/src/componentes/dashboard";
 
 const notes = [
   {

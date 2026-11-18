@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -16,7 +17,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
 import {
   INVENTORY_CATEGORIES,
   INVENTORY_STATUSES,

@@ -1,10 +1,9 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import { cn } from "@/lib/utils";
 import { ReportDataState } from "./report-data-state";
 import { ReportSectionShell } from "./report-section-shell";
-import { cn } from "@/lib/utils";
 
 const reportChartsSectionReportsPage = {
   card: cn("border-border/60 bg-gradient-to-b from-card to-muted/20 shadow-none"),

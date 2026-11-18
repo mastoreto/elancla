@@ -1,5 +1,4 @@
 import { CircleAlert, PencilLine } from "lucide-react";
-import { BudgetProgressBar } from "./budget-progress-bar";
 import type { Budget } from "@/app/(dashboard)/budgets/types/index";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -14,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { BudgetProgressBar } from "./budget-progress-bar";
 
 const budgetsTableBudgetsPage = {
   empty: cn(

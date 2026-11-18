@@ -2,7 +2,7 @@
   "$schema": "https://biomejs.dev/schemas/2.4.8/schema.json",
   "extends": ["../../packages/biome-config/biome.json"],
   "files": {
-    "includes": ["**", "!desing/**", "!.agents/**"]
+    "includes": ["**", "!desing", "!.agents"]
   },
   "formatter": {
     "lineWidth": 100

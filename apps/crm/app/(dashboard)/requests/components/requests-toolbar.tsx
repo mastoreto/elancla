@@ -121,6 +121,7 @@ export function RequestsToolbar({
         </div>
       </div>
 
+      {/* biome-ignore lint/a11y/useSemanticElements: segmented toggle; a fieldset would need its default borders reset. */}
       <div
         aria-label="Estado de la solicitud"
         className={requestsToolbarRequestsPage.tabs}

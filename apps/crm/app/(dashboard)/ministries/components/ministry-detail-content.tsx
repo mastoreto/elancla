@@ -1,14 +1,10 @@
 import { Calendar, Pencil, Users } from "lucide-react";
 import Link from "next/link";
+import { DashboardCard, DashboardCardHeader, DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
-import {
-  DashboardCard,
-  DashboardCardHeader,
-  DashboardPageHeader,
-} from "@/src/componentes/dashboard";
 import type { MinistryDetail } from "../types";
 import { formatMoney, getExecutionPercent, getLeaderInitials } from "../utils/ministry-stats";
 import { MinistryDeleteButton } from "./ministry-delete-button";

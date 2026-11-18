@@ -3,13 +3,13 @@
 import { format } from "date-fns";
 import { Calendar, Users } from "lucide-react";
 import Link from "next/link";
-import { BudgetProgressBar } from "./budget-progress-bar";
-import { ProjectStatusBadge } from "./project-status-badge";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getChurchRoutePath } from "@/lib/church";
 import type { Project } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { BudgetProgressBar } from "./budget-progress-bar";
+import { ProjectStatusBadge } from "./project-status-badge";
 
 const projectCardProjectsPage = {
   card: cn(

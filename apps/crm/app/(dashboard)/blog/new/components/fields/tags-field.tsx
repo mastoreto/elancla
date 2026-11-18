@@ -7,8 +7,8 @@ import { useFormContext } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import type { NewPostFormValues } from "../../schema";
 import { cn } from "@/lib/utils";
+import type { NewPostFormValues } from "../../schema";
 
 const tagsFieldContentPage = {
   container: cn(

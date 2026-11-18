@@ -1,9 +1,9 @@
 import { ArrowLeft, BarChart3, Gavel, ShieldCheck, Vote } from "lucide-react";
 import Link from "next/link";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
 import type { VotingRecord } from "../types";
 import { formatVotingDate, majorityTypeLabels, votingTypeLabels } from "../voting-config";
 import {
@@ -18,6 +18,7 @@ import { VotingStatusBadge } from "./voting-status-badge";
 type VotingView = "overview" | "moderator" | "vote" | "results";
 
 const votingPageShellVotingPage = {
+  navLink: cn("justify-start"),
   page: cn("space-y-6"),
   backLink: cn("rounded-full"),
   hero: cn("overflow-hidden border-border/70 bg-card shadow-sm"),
@@ -121,7 +122,10 @@ export function VotingPageShell({
               <Button
                 key={item.key}
                 variant={activeView === item.key ? "default" : "outline"}
-                className={cn("justify-start", activeView === item.key && "shadow-sm")}
+                className={cn(
+                  votingPageShellVotingPage.navLink,
+                  activeView === item.key && "shadow-sm",
+                )}
                 asChild={true}
               >
                 <Link href={getNavigationHref(voting.id, item.key)}>

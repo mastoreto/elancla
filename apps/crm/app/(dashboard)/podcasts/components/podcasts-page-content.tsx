@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useMemo } from "react";
 import { toast } from "sonner";
+import { DashboardMetricStrip, DashboardPageHeader } from "@/components/dashboard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,12 +26,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { parseLocalDate } from "@/lib/utils";
-import { DashboardMetricStrip, DashboardPageHeader } from "@/src/componentes/dashboard";
+import { cn, parseLocalDate } from "@/lib/utils";
 import { type ColumnDef, DataTable, type FilterConfig } from "@/src/components/DataTable";
 import type { Podcast, PodcastHost, PodcastSeries } from "../types";
 import { PodcastStatusBadge } from "./podcast-status-badge";
-import { cn } from "@/lib/utils";
 
 const podcastsPageContentContentPage = {
   count: cn("text-sm text-muted-foreground tabular-nums"),

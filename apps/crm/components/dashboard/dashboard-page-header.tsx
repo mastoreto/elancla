@@ -9,6 +9,17 @@ type DashboardPageHeaderProps = React.ComponentProps<"header"> & {
   actions?: React.ReactNode;
 };
 
+const dashboardPageHeaderDashboardPage = {
+  text: cn("mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground"),
+  title: cn(
+    "font-display text-[clamp(2rem,4vw,3rem)] font-normal leading-none tracking-normal text-foreground",
+  ),
+  textText: cn(
+    "mt-3 max-w-full break-words text-sm leading-6 text-[var(--tinta-suave)] whitespace-normal sm:max-w-2xl",
+  ),
+  block: cn("flex shrink-0 flex-wrap items-center gap-2"),
+};
+
 export function DashboardPageHeader({
   kicker,
   title,
@@ -27,10 +38,8 @@ export function DashboardPageHeader({
       {...props}
     >
       <div className="min-w-0 max-w-full">
-        <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-          {kicker}
-        </p>
-        <h1 className="font-display text-[clamp(2rem,4vw,3rem)] font-normal leading-none tracking-normal text-foreground">
+        <p className={dashboardPageHeaderDashboardPage.text}>{kicker}</p>
+        <h1 className={dashboardPageHeaderDashboardPage.title}>
           {title}
           {emphasis ? (
             <>
@@ -40,12 +49,10 @@ export function DashboardPageHeader({
           ) : null}
         </h1>
         {description ? (
-          <p className="mt-3 max-w-full break-words text-sm leading-6 text-[var(--tinta-suave)] whitespace-normal sm:max-w-2xl">
-            {description}
-          </p>
+          <p className={dashboardPageHeaderDashboardPage.textText}>{description}</p>
         ) : null}
       </div>
-      {actions ? <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div> : null}
+      {actions ? <div className={dashboardPageHeaderDashboardPage.block}>{actions}</div> : null}
     </header>
   );
 }

@@ -1,14 +1,14 @@
 import { Boxes, HandCoins, Plus, Wrench } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { getChurchRoutePath } from "@/lib/church";
-import { cn } from "@/lib/utils";
 import {
   DashboardCard,
   DashboardCardHeader,
   DashboardMetricStrip,
   DashboardPageHeader,
-} from "@/src/componentes/dashboard";
+} from "@/components/dashboard";
+import { Button } from "@/components/ui/button";
+import { getChurchRoutePath } from "@/lib/church";
+import { cn } from "@/lib/utils";
 import { InventoryTable } from "./components/inventory-table";
 import { inventoryItems } from "./data/inventory-items";
 import { countByStatus, countNeedingAttention, getTotalUnits } from "./utils/inventory-stats";

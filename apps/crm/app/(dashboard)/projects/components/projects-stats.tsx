@@ -1,5 +1,5 @@
 import { ClipboardList, Rocket, Wallet } from "lucide-react";
-import { DashboardMetricStrip } from "@/src/componentes/dashboard";
+import { DashboardMetricStrip } from "@/components/dashboard";
 import type { ProjectStats } from "../types";
 
 interface ProjectsStatsProps {

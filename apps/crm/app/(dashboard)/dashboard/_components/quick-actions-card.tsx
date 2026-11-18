@@ -1,8 +1,8 @@
 import { CalendarPlus, FilePlus2, HandCoins, PlusCircle } from "lucide-react";
 import Link from "next/link";
+import { DashboardCard, DashboardCardHeader } from "@/components/dashboard";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
-import { DashboardCard, DashboardCardHeader } from "@/src/componentes/dashboard";
 
 const quickActions = [
   {

@@ -1,17 +1,15 @@
 import { ArrowLeft, BadgeDollarSign, BarChart3 } from "lucide-react";
 import Link from "next/link";
-
+import { DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 import { getChurchRoutePath } from "@/lib/church";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
-
+import { cn } from "@/lib/utils";
 import type { ReportFilters, ReportMovementRow, ReportSummary, ReportViewState } from "../types";
 import { ReportChartsSection } from "./report-charts-section";
 import { ReportExportActions } from "./report-export-actions";
 import { ReportFiltersPanel } from "./report-filters-panel";
 import { ReportMovementsTable } from "./report-movements-table";
 import { ReportSummaryCards } from "./report-summary-cards";
-import { cn } from "@/lib/utils";
 
 const reportsPageContentReportsPage = {
   note: cn("rounded-2xl border border-border/60 bg-card px-4 py-4 shadow-xs"),

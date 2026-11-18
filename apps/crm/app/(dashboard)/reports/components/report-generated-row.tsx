@@ -10,6 +10,7 @@ import type { GeneratedReportListItem } from "../types";
 import { ReportStatusBadge } from "./report-status-badge";
 
 const reportGeneratedRowReportsPage = {
+  projectBadge: cn("rounded-full px-3 py-1"),
   row: cn(
     "rounded-2xl border border-border/60 bg-background/80 px-4 py-4 transition-colors hover:border-border md:px-5",
   ),
@@ -116,7 +117,10 @@ export function ReportGeneratedRow({ report }: ReportGeneratedRowProps) {
             </Badge>
             <Badge
               variant="secondary"
-              className={cn("rounded-full px-3 py-1", report.projects.length === 0 && "opacity-70")}
+              className={cn(
+                reportGeneratedRowReportsPage.projectBadge,
+                report.projects.length === 0 && "opacity-70",
+              )}
             >
               {report.projects.length} proyectos
             </Badge>

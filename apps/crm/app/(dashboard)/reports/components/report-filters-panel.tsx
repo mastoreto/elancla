@@ -2,11 +2,10 @@ import { RotateCcw, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { FieldSet } from "@/components/ui/field";
-
+import { cn } from "@/lib/utils";
 import type { ReportFilters } from "../types/index";
 import { ReportScopeFields } from "./report-scope-fields";
 import { ReportSectionShell } from "./report-section-shell";
-import { cn } from "@/lib/utils";
 
 const reportFiltersPanelReportsPage = {
   actions: cn(

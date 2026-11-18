@@ -27,6 +27,12 @@ interface ToolbarButtonProps {
   children: React.ReactNode;
 }
 
+const RichTextEditorSharedPage = {
+  toolbarButton: cn("h-8 w-8 rounded"),
+  separator: cn("w-px h-5 bg-border mx-0.5 self-center"),
+  block: cn("flex flex-wrap items-center gap-0.5 border-b border-border px-2 py-1.5 bg-muted/30"),
+};
+
 function ToolbarButton({ onClick, isActive, disabled, title, children }: ToolbarButtonProps) {
   return (
     <Button
@@ -36,7 +42,10 @@ function ToolbarButton({ onClick, isActive, disabled, title, children }: Toolbar
       title={title}
       disabled={disabled}
       onClick={onClick}
-      className={cn("h-8 w-8 rounded", isActive && "bg-accent text-accent-foreground")}
+      className={cn(
+        RichTextEditorSharedPage.toolbarButton,
+        isActive && "bg-accent text-accent-foreground",
+      )}
     >
       {children}
     </Button>
@@ -48,7 +57,7 @@ interface ToolbarSeparatorProps {
 }
 
 function ToolbarSeparator({ className }: ToolbarSeparatorProps) {
-  return <div className={cn("w-px h-5 bg-border mx-0.5 self-center", className)} />;
+  return <div className={cn(RichTextEditorSharedPage.separator, className)} />;
 }
 
 export interface RichTextEditorProps {
@@ -133,7 +142,7 @@ export function RichTextEditor({
       )}
     >
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-0.5 border-b border-border px-2 py-1.5 bg-muted/30">
+      <div className={RichTextEditorSharedPage.block}>
         <ToolbarButton
           title="Negrita"
           onClick={() => editor.chain().focus().toggleBold().run()}

@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils";
 import type { NewPodcastFormValues, PodcastParticipant } from "../../schema";
 
 const participantsFieldContentPage = {
+  chip: cn("gap-1 pr-1"),
+  input: cn("pl-9"),
   icon: cn(
     "absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none",
   ),
@@ -116,7 +118,10 @@ export function ParticipantsField({ control, platformHosts }: ParticipantsFieldP
                 <Badge
                   key={p.name}
                   variant={p.isExternal ? "secondary" : "default"}
-                  className={cn("gap-1 pr-1", !p.isExternal && "bg-accent text-accent-foreground")}
+                  className={cn(
+                    participantsFieldContentPage.chip,
+                    !p.isExternal && "bg-accent text-accent-foreground",
+                  )}
                 >
                   {p.isExternal ? (
                     <UserPlus className="size-3 shrink-0" />
@@ -149,7 +154,10 @@ export function ParticipantsField({ control, platformHosts }: ParticipantsFieldP
                 }}
                 onFocus={() => setOpen(true)}
                 placeholder="Buscar miembro o escribir nombre externo..."
-                className={cn("pl-9", fieldState.error && "border-destructive")}
+                className={cn(
+                  participantsFieldContentPage.input,
+                  fieldState.error && "border-destructive",
+                )}
               />
             </div>
 

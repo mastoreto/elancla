@@ -16,12 +16,6 @@ import {
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { use, useState } from "react";
-import { ProjectDocuments } from "../components/project-documents";
-import { ProjectFormModal } from "../components/project-form-modal";
-import { ProjectMovements } from "../components/project-movements";
-import { ProjectStatusBadge } from "../components/project-status-badge";
-import { ProjectSummary } from "../components/project-summary";
-import { ProjectTimeline } from "../components/project-timeline";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -36,6 +30,12 @@ import { getChurchRoutePath } from "@/lib/church";
 import { currentUser, movements as initialMovements, projects } from "@/lib/data";
 import type { Movement } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { ProjectDocuments } from "../components/project-documents";
+import { ProjectFormModal } from "../components/project-form-modal";
+import { ProjectMovements } from "../components/project-movements";
+import { ProjectStatusBadge } from "../components/project-status-badge";
+import { ProjectSummary } from "../components/project-summary";
+import { ProjectTimeline } from "../components/project-timeline";
 
 const pageProjectsPage = {
   header: cn("flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"),

@@ -72,6 +72,22 @@ export interface DataTableProps<T> {
 
 // ─── Type guards ─────────────────────────────────────────────────────────────
 
+const DataTableSharedPage = {
+  removeChip: cn("ml-0.5 rounded-full hover:bg-foreground/10 p-0.5 transition-colors"),
+  block: cn("flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"),
+  search: cn(
+    "absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none",
+  ),
+  action: cn("text-muted-foreground hover:text-foreground self-start sm:self-auto shrink-0"),
+  blockFlex: cn(
+    "flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between px-1 pt-3 border-t border-border",
+  ),
+  label: cn("flex size-8 items-center justify-center text-muted-foreground text-sm"),
+  blockText: cn("flex flex-col items-center justify-center py-16 text-center"),
+  blockRounded: cn("size-12 rounded-full bg-muted flex items-center justify-center mb-4"),
+  blockBorder: cn("rounded-lg border border-border bg-card overflow-hidden"),
+};
+
 function isTextFilter<T>(f: FilterConfig<T>): f is TextFilter<T> {
   return f.type === "text";
 }
@@ -132,11 +148,11 @@ const FiltersBar = memo(function FiltersBar<T>({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className={DataTableSharedPage.block}>
         <div className="flex flex-1 items-center gap-2">
           {textFilter && (
             <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+              <Search className={DataTableSharedPage.search} />
               <Input
                 placeholder={textFilter.placeholder ?? "Buscar..."}
                 value={state.text}
@@ -251,7 +267,7 @@ const FiltersBar = memo(function FiltersBar<T>({
             variant="ghost"
             size="sm"
             onClick={onClearAll}
-            className="text-muted-foreground hover:text-foreground self-start sm:self-auto shrink-0"
+            className={DataTableSharedPage.action}
           >
             <X className="mr-1.5 size-3.5" />
             Limpiar
@@ -274,7 +290,7 @@ const FiltersBar = memo(function FiltersBar<T>({
                   <button
                     type="button"
                     onClick={() => onSelectChange(key, "all")}
-                    className="ml-0.5 rounded-full hover:bg-foreground/10 p-0.5 transition-colors"
+                    className={DataTableSharedPage.removeChip}
                     aria-label={`Quitar filtro ${optionLabel}`}
                   >
                     <X className="size-2.5" />
@@ -295,7 +311,7 @@ const FiltersBar = memo(function FiltersBar<T>({
                   <button
                     type="button"
                     onClick={() => onDateRangeChange(key, undefined)}
-                    className="ml-0.5 rounded-full hover:bg-foreground/10 p-0.5 transition-colors"
+                    className={DataTableSharedPage.removeChip}
                     aria-label="Quitar filtro de fecha"
                   >
                     <X className="size-2.5" />
@@ -349,7 +365,7 @@ function PaginationBar({
   const pages = buildPageNumbers(currentPage, totalPages);
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between px-1 pt-3 border-t border-border">
+    <div className={DataTableSharedPage.blockFlex}>
       <p className="text-xs text-muted-foreground">
         Mostrando{" "}
         <span className="font-medium text-foreground">
@@ -373,10 +389,7 @@ function PaginationBar({
         {pages.map((page, idx) =>
           page === "…" ? (
             // biome-ignore lint/suspicious/noArrayIndexKey: ellipsis markers are positional, not data-keyed
-            <span
-              key={`ellipsis-${idx}`}
-              className="flex size-8 items-center justify-center text-muted-foreground text-sm"
-            >
+            <span key={`ellipsis-${idx}`} className={DataTableSharedPage.label}>
               …
             </span>
           ) : (
@@ -411,8 +424,8 @@ function PaginationBar({
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
-      <div className="size-12 rounded-full bg-muted flex items-center justify-center mb-4">
+    <div className={DataTableSharedPage.blockText}>
+      <div className={DataTableSharedPage.blockRounded}>
         <Search className="size-5 text-muted-foreground" />
       </div>
       <p className="font-semibold text-foreground text-sm">{message}</p>
@@ -526,7 +539,7 @@ export function DataTable<T>({
         />
       )}
 
-      <div className="rounded-lg border border-border bg-card overflow-hidden">
+      <div className={DataTableSharedPage.blockBorder}>
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50 hover:bg-muted/50">

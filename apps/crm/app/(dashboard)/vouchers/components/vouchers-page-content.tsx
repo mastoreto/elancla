@@ -12,8 +12,8 @@ import type {
   VoucherModalMode,
   VoucherRelatedOption,
 } from "@/app/(dashboard)/vouchers/types";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
 
 interface VouchersPageContentProps {
   initialVouchers: Voucher[];

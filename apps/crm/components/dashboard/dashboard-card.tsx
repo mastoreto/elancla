@@ -9,6 +9,10 @@ type DashboardCardHeaderProps = React.ComponentProps<"div"> & {
   action?: React.ReactNode;
 };
 
+const dashboardCardDashboardPage = {
+  heading: cn("font-display text-xl font-medium leading-none tracking-normal text-foreground"),
+};
+
 export function DashboardCard({ className, ...props }: DashboardCardProps) {
   return (
     <section
@@ -37,9 +41,7 @@ export function DashboardCardHeader({
       {...props}
     >
       <div className="min-w-0">
-        <h2 className="font-display text-xl font-medium leading-none tracking-normal text-foreground">
-          {title}
-        </h2>
+        <h2 className={dashboardCardDashboardPage.heading}>{title}</h2>
         {subtitle ? <p className="mt-1 text-xs text-muted-foreground">{subtitle}</p> : null}
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}

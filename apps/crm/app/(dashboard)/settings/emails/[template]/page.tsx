@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { cn } from "@/lib/utils";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
 import { EMAIL_TEMPLATES, isEmailTemplateKey } from "../emails-registry";
 
 const emailPreviewSettingsPage = {

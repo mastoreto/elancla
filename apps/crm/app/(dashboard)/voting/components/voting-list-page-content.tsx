@@ -12,6 +12,7 @@ import {
   Vote,
 } from "lucide-react";
 import Link from "next/link";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,7 +25,6 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
 import { useVotingCollection } from "../use-voting-data";
 import {
   formatVotingDate,

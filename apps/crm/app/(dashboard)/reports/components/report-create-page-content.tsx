@@ -3,18 +3,16 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-
+import { DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 import { getChurchRoutePath } from "@/lib/church";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
-
+import { cn } from "@/lib/utils";
 import type { ReportBuilderValues, ReportFilters } from "../types";
 import { ReportCreationSummary } from "./report-creation-summary";
 import { ReportDefinitionForm } from "./report-definition-form";
 import { ReportOutputOptions } from "./report-output-options";
 import { ReportScopeForm } from "./report-scope-form";
 import { ReportSectionShell } from "./report-section-shell";
-import { cn } from "@/lib/utils";
 
 const reportCreatePageContentReportsPage = {
   layout: cn("grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)]"),

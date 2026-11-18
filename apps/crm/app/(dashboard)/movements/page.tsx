@@ -4,13 +4,13 @@ import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { CreateMovementDialog } from "@/components/create-movement-dialog";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { MovementsFilters } from "@/components/movements-filters";
 import { MovementsTable } from "@/components/movements-table";
 import { Button } from "@/components/ui/button";
 import { movements as allMovements } from "@/lib/data";
 import type { Movement } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { DashboardPageHeader } from "@/src/componentes/dashboard";
 
 const movementsPage = {
   page: cn("space-y-6"),

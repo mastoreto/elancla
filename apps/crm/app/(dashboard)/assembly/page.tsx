@@ -1,14 +1,14 @@
 import { CalendarClock, DoorOpen, Plus, ShieldAlert } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { getChurchRoutePath } from "@/lib/church";
-import { cn } from "@/lib/utils";
 import {
   DashboardCard,
   DashboardCardHeader,
   DashboardMetricStrip,
   DashboardPageHeader,
-} from "@/src/componentes/dashboard";
+} from "@/components/dashboard";
+import { Button } from "@/components/ui/button";
+import { getChurchRoutePath } from "@/lib/church";
+import { cn } from "@/lib/utils";
 import { AssemblyTable } from "./components/assembly-table";
 import { assemblyReports } from "./data/assembly-reports";
 

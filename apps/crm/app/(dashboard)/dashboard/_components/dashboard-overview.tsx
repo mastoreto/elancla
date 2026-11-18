@@ -1,14 +1,14 @@
 import { Download, Plus, TrendingDown, TrendingUp, WalletCards } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { getChurchRoutePath } from "@/lib/church";
-import { cn } from "@/lib/utils";
-import { balances, currentUser, moneyRequests, movements, projects } from "@/lib/data";
 import {
   type DashboardMetric,
   DashboardMetricStrip,
   DashboardPageHeader,
-} from "@/src/componentes/dashboard";
+} from "@/components/dashboard";
+import { Button } from "@/components/ui/button";
+import { getChurchRoutePath } from "@/lib/church";
+import { balances, currentUser, moneyRequests, movements, projects } from "@/lib/data";
+import { cn } from "@/lib/utils";
 import { formatCompactCurrency, formatCurrency } from "./dashboard-formatters";
 import { PendingRequestsCard } from "./pending-requests-card";
 import { ProjectBudgetCard } from "./project-budget-card";

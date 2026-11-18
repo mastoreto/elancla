@@ -41,6 +41,7 @@ export function SermonsToolbar({
 }: SermonsToolbarProps) {
   return (
     <div className={sermonsToolbarSermonsPage.container}>
+      {/* biome-ignore lint/a11y/useSemanticElements: segmented toggle; a fieldset would need its default borders reset. */}
       <div className={sermonsToolbarSermonsPage.search}>
         <Search aria-hidden="true" className={sermonsToolbarSermonsPage.searchIcon} />
         <Input
@@ -51,6 +52,7 @@ export function SermonsToolbar({
           value={searchQuery}
         />
       </div>
+      {/* biome-ignore lint/a11y/useSemanticElements: segmented toggle; a fieldset would need its default borders reset. */}
       <div aria-label="Estado del sermón" className={sermonsToolbarSermonsPage.tabs} role="group">
         {tabs.map((tab) => (
           <button

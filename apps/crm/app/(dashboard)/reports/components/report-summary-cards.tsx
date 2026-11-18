@@ -9,6 +9,7 @@ import type { ReportCurrency, ReportSummary } from "../types/index";
 import { ReportDataState } from "./report-data-state";
 
 const reportSummaryCardsReportsPage = {
+  value: cn("text-3xl font-semibold tracking-tight"),
   header: cn("flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"),
   card: cn(
     "overflow-hidden border-border/60 bg-gradient-to-br from-card via-card to-muted/30 shadow-sm",
@@ -193,7 +194,7 @@ export function ReportSummaryCards({
                 </div>
               </CardHeader>
               <CardContent>
-                <p className={cn("text-3xl font-semibold tracking-tight", item.valueClassName)}>
+                <p className={cn(reportSummaryCardsReportsPage.value, item.valueClassName)}>
                   {item.value}
                 </p>
               </CardContent>

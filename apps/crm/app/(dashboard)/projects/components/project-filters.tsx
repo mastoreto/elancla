@@ -16,9 +16,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ministries } from "@/lib/data";
+import type { ProjectStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import type { ProjectFilters } from "../types";
-import type { ProjectStatus } from "@/lib/types";
 
 const projectFiltersProjectsPage = {
   searchIcon: cn("absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground"),

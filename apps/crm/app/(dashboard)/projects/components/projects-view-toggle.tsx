@@ -23,6 +23,7 @@ const viewOptions = [
 
 export function ProjectsViewToggle({ value, onChange }: ProjectsViewToggleProps) {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: segmented toggle; a fieldset would need its default borders reset.
     <div className={projectsViewToggleProjectsPage.group} role="group">
       {viewOptions.map((option) => {
         const Icon = option.icon;

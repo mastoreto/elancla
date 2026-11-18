@@ -11,10 +11,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-
+import { cn } from "@/lib/utils";
 import type { ReportBuilderValues, ReportTemplate } from "../types/index";
 import { ReportSectionShell } from "./report-section-shell";
-import { cn } from "@/lib/utils";
 
 const reportDefinitionFormReportsPage = {
   panel: cn("rounded-2xl border border-border/60 bg-muted/25 px-4 py-4"),

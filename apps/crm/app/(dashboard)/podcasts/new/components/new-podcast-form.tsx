@@ -10,13 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { getChurchRoutePath } from "@/lib/church";
+import { cn } from "@/lib/utils";
 import { type NewPodcastFormValues, newPodcastSchema } from "../schema";
 import { DescriptionField } from "./fields/description-field";
 import { LinkField } from "./fields/link-field";
 import { ParticipantsField } from "./fields/participants-field";
 import { TitleField } from "./fields/title-field";
 import { HeroImageUploadField } from "./hero-image-upload-field";
-import { cn } from "@/lib/utils";
 
 const newPodcastFormContentPage = {
   header: cn("flex items-center justify-between gap-4 mb-6"),

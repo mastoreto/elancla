@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { getChurchRoutePath } from "@/lib/church";
+import { cn } from "@/lib/utils";
 import { type NewPostFormValues, newPostSchema } from "../schema";
 import { AuthorDisplay } from "./author-display";
 import { ContentEditorField } from "./content-editor-field";
@@ -19,7 +20,6 @@ import { PublicationDateField } from "./fields/publication-date-field";
 import { TagsField } from "./fields/tags-field";
 import { TitleField } from "./fields/title-field";
 import { HeroImageUploadField } from "./hero-image-upload-field";
-import { cn } from "@/lib/utils";
 
 const newPostFormContentPage = {
   header: cn("flex items-center justify-between gap-4 mb-6"),

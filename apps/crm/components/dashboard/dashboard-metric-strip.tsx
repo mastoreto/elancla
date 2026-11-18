@@ -22,6 +22,13 @@ const toneClasses = {
   neutral: "text-[var(--muted-foreground)]",
 };
 
+const dashboardMetricStripDashboardPage = {
+  block: cn(
+    "mt-4 font-display text-[2.35rem] font-normal leading-none tracking-normal tabular-nums",
+  ),
+  block2: cn("absolute bottom-4 right-4 hidden h-7 w-20 opacity-80 sm:block"),
+};
+
 export function DashboardMetricStrip({ metrics, className }: DashboardMetricStripProps) {
   return (
     <div
@@ -62,9 +69,7 @@ export function DashboardMetricStrip({ metrics, className }: DashboardMetricStri
                 </span>
               ) : null}
             </div>
-            <div className="mt-4 font-display text-[2.35rem] font-normal leading-none tracking-normal tabular-nums">
-              {metric.value}
-            </div>
+            <div className={dashboardMetricStripDashboardPage.block}>{metric.value}</div>
             <div
               className={cn(
                 "mt-3 text-xs font-semibold",
@@ -77,7 +82,7 @@ export function DashboardMetricStrip({ metrics, className }: DashboardMetricStri
             {metric.sparkPath ? (
               <svg
                 aria-hidden="true"
-                className="absolute bottom-4 right-4 hidden h-7 w-20 opacity-80 sm:block"
+                className={dashboardMetricStripDashboardPage.block2}
                 fill="none"
                 stroke={metric.accent ? "var(--granada-100)" : "currentColor"}
                 strokeLinecap="round"

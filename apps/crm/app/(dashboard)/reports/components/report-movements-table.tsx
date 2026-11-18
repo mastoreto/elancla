@@ -18,6 +18,7 @@ import { ReportDataState } from "./report-data-state";
 import { ReportSectionShell } from "./report-section-shell";
 
 const reportMovementsTableReportsPage = {
+  amount: cn("font-semibold"),
   icon: cn("flex size-10 items-center justify-center rounded-full"),
   expenseBadge: cn("border-expense/30 bg-expense/5 text-expense"),
 };
@@ -206,7 +207,10 @@ export function ReportMovementsTable({
                   <div className="inline-flex items-center gap-2">
                     <BadgeDollarSign className="size-4 text-muted-foreground" />
                     <span
-                      className={cn("font-semibold", isIncome ? "text-income" : "text-expense")}
+                      className={cn(
+                        reportMovementsTableReportsPage.amount,
+                        isIncome ? "text-income" : "text-expense",
+                      )}
                     >
                       {isIncome ? "+" : "-"}
                       {formatCurrency(movement.amount, movement.currency)}

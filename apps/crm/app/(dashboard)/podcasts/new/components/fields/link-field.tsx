@@ -4,8 +4,8 @@ import { Link } from "lucide-react";
 import type { Control } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import type { NewPodcastFormValues } from "../../schema";
 import { cn } from "@/lib/utils";
+import type { NewPodcastFormValues } from "../../schema";
 
 const linkFieldContentPage = {
   icon: cn(
