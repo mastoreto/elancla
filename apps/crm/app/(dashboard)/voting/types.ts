@@ -16,6 +16,13 @@ export interface VotingRecord {
   id: string;
   title: string;
   summary: string;
+  /** Session the vote belongs to, e.g. "Asamblea ordinaria · 24 nov". */
+  sessionLabel: string;
+  /** Long date shown for scheduled votes, e.g. "8 de diciembre". */
+  scheduledLabel: string | null;
+  moderatorName: string;
+  anonymous: boolean;
+  liveResults: boolean;
   type: VotingType;
   status: VotingStatus;
   options: VotingOption[];
@@ -37,6 +44,9 @@ export interface VotingRecord {
 
 export interface CreateVotingInput {
   title: string;
+  description?: string;
+  anonymous?: boolean;
+  liveResults?: boolean;
   type: VotingType;
   options: string[];
   quorum: number;
