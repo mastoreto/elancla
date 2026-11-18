@@ -4,10 +4,6 @@ import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
-import icon from 'astro-icon';
-
-import react from '@astrojs/react';
-
 import node from '@astrojs/node';
 
 import vercel from '@astrojs/vercel';
@@ -40,13 +36,6 @@ export default defineConfig({
       prefixDefaultLocale: false,
     },
   },
-  integrations: [
-    icon(),
-    react({
-      // Configuración para compatibilidad con React 19
-      experimentalReactChildren: true,
-    }),
-  ],
   vite: {
     resolve: {
       alias: {

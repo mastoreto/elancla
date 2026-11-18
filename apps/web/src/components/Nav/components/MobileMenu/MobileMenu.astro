@@ -1,0 +1,280 @@
+---
+import { CTA_ARROW, CTA_FILL, LIVE_DOT } from 'src/styles/classes';
+import type { Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+import LogoText from 'src/components/LogoText';
+import cn from 'src/utils/cn';
+
+interface ResourceItem {
+  label: string;
+  href: string;
+  description?: string;
+}
+
+interface LocaleLink {
+  code: Locale;
+  label: string;
+  nativeName: string;
+  flag: string;
+  href: string;
+  current: boolean;
+}
+
+interface Props {
+  recursos: ResourceItem[];
+  locale: Locale;
+  localeLinks: LocaleLink[];
+}
+
+const { recursos, locale, localeLinks } = Astro.props;
+const copy = getMessages(locale).nav;
+
+// The panel fades and drops in while the script toggles `is-open`.
+const PANEL =
+  'pointer-events-none opacity-0 [transform:translateY(-6px)] [transition:opacity_0.25s_ease,transform_0.25s_ease] [&.is-open]:pointer-events-auto [&.is-open]:opacity-100 [&.is-open]:[transform:translateY(0)]';
+const NAV_LINK =
+  'block w-full py-4.5 text-[1.0625rem] [transition:color_0.15s_ease] hover:text-primary focus-visible:text-primary focus-visible:[outline:none]';
+
+const mobileMenu = {
+  container: cn('fixed inset-0 z-[9001] overflow-y-auto', 'lg:hidden', PANEL),
+  backdrop: cn('absolute inset-0 bg-paper/97 backdrop-blur-2xl'),
+  panel: cn('relative flex flex-col min-h-full px-6'),
+  topBar: cn('flex items-center justify-between py-5 border-b border-ink/10'),
+  logoLink: cn('flex items-center gap-3 menu-close-trigger'),
+  logoImage: cn('w-7 h-7 object-contain'),
+  logoText: cn('text-[17px]'),
+  closeButton: cn(
+    'flex items-center justify-center w-9 h-9 rounded-full border border-ink/10 bg-ink/5',
+    'text-ink transition-colors',
+    'hover:bg-ink/10',
+  ),
+  nav: cn('flex-1 py-2'),
+  links: cn('flex flex-col'),
+  navItem: cn('border-b border-ink/8'),
+  navLink: cn(NAV_LINK, 'menu-close-trigger font-ui font-medium text-ink/80'),
+  resourcesItem: cn('border-b border-ink/8'),
+  resourcesToggle: cn(
+    NAV_LINK,
+    'items-center justify-between text-left font-ui font-medium text-ink/80',
+  ),
+  resourcesChevron: cn('w-3.5 h-3.5 transition-transform duration-200 text-ink/40 flex-shrink-0'),
+  resourcesList: cn(
+    'ml-1 flex flex-col overflow-hidden border-l-2 border-primary/30 pl-4',
+    '[transition:max-height_0.25s_ease]',
+  ),
+  resourceLink: cn('flex flex-col gap-0.5 py-3 menu-close-trigger'),
+  resourceLabel: cn('font-ui text-[14px] font-medium text-ink/80'),
+  resourceDescription: cn('font-ui text-[11px] text-ink/45'),
+  footer: cn('py-8'),
+  footerGrid: cn('mb-4 grid grid-cols-[1fr_auto] gap-3'),
+  localeGroup: cn('rounded-2xl border border-ink/10 p-2'),
+  languageLabel: cn(
+    'px-2 pb-2 font-ui text-[10px] font-semibold uppercase tracking-[0.22em] text-ink/50',
+  ),
+  localeList: cn('flex flex-wrap gap-2'),
+  localeLink: cn(
+    'menu-close-trigger inline-flex items-center gap-1.5 rounded-full border px-3 py-2',
+    'font-ui text-[11px] font-semibold uppercase tracking-wide',
+  ),
+  localeLinkCurrent: cn('border-primary bg-primary text-white'),
+  localeLinkIdle: cn('border-ink/10 bg-ink/5 text-ink'),
+  themeToggle: cn(
+    'flex h-full min-h-[4.25rem] w-16 items-center justify-center rounded-2xl border',
+    'border-ink/10 bg-ink/5 text-ink transition-colors',
+    'hover:bg-ink/10',
+  ),
+  cta: cn(
+    'menu-close-trigger inline-flex w-full items-center justify-center gap-2 rounded-full',
+    'bg-ink px-5 py-3.5 font-ui text-[13px] font-semibold tracking-wide text-paper uppercase',
+    CTA_FILL,
+  ),
+  ctaArrow: cn(CTA_ARROW),
+  liveStatus: cn(
+    'mt-5 flex items-center gap-2 text-[11px] font-ui font-medium text-ink/50 uppercase',
+    'tracking-wider',
+  ),
+  liveDot: cn('h-1.5 w-1.5 rounded-full bg-primary', LIVE_DOT),
+};
+---
+
+<div
+  id="mobileMenu"
+  class={mobileMenu.container}
+  aria-modal="true"
+  role="dialog"
+  aria-label={copy.menuOpen}
+  aria-hidden="true"
+>
+  <div class={mobileMenu.backdrop} />
+
+  <div class={mobileMenu.panel}>
+    <!-- Top bar con logo repetido + botón cerrar -->
+    <div class={mobileMenu.topBar}>
+      <a href={localizePath('/#inicio', locale)} class={mobileMenu.logoLink}>
+        <img src="/images/anclarojo.png" alt="" class={mobileMenu.logoImage} />
+        <LogoText label={copy.brandLabel} name={copy.brandName} class={mobileMenu.logoText} />
+      </a>
+
+      <button
+        id="mobileMenuClose"
+        class={mobileMenu.closeButton}
+        aria-label={copy.menuClose}
+      >
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Links de navegación -->
+    <nav class={mobileMenu.nav}>
+      <ul class={mobileMenu.links}>
+        {copy.links.map((item) => (
+          <li class={mobileMenu.navItem}>
+            <a href={localizePath(item.href, locale)} class={mobileMenu.navLink}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+
+        <!-- Acordeón Recursos -->
+        <li class={mobileMenu.resourcesItem}>
+          <button
+            id="resourcesToggle"
+            class={mobileMenu.resourcesToggle}
+            aria-expanded="false"
+          >
+            <span>{copy.resources.label}</span>
+            <svg
+              id="resourcesChevron"
+              class={mobileMenu.resourcesChevron}
+              viewBox="0 0 10 6"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+
+          <ul
+            id="resourcesList"
+            class={mobileMenu.resourcesList}
+            style="max-height: 0"
+          >
+            {recursos.map((item) => (
+              <li>
+                <a href={item.href} class={mobileMenu.resourceLink}>
+                  <span class={mobileMenu.resourceLabel}>{item.label}</span>
+                  {item.description && (
+                    <span class={mobileMenu.resourceDescription}>{item.description}</span>
+                  )}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Pie con CTA -->
+    <div class={mobileMenu.footer}>
+      <div class={mobileMenu.footerGrid}>
+        <div class={mobileMenu.localeGroup}>
+          <div class={mobileMenu.languageLabel}>
+            {copy.language.label}
+          </div>
+          <div class={mobileMenu.localeList}>
+            {localeLinks.map((item) => (
+              <a
+                href={item.href}
+                class={cn(mobileMenu.localeLink, item.current ? mobileMenu.localeLinkCurrent : mobileMenu.localeLinkIdle)}
+                aria-current={item.current ? 'page' : undefined}
+              >
+                <span aria-hidden="true">{item.flag}</span>
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+        <button
+          type="button"
+          class={mobileMenu.themeToggle}
+          data-theme-toggle
+          data-label-light={copy.theme.lightLabel}
+          data-label-dark={copy.theme.darkLabel}
+          aria-label={copy.theme.label}
+          aria-pressed="false"
+        >
+          <svg data-theme-icon="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M21 14.6A8.5 8.5 0 0 1 9.4 3a7 7 0 1 0 11.6 11.6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <svg data-theme-icon="sun" style="display:none" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"></circle>
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+          </svg>
+        </button>
+      </div>
+
+      <a
+        href={localizePath('/#visitanos', locale)}
+        class={mobileMenu.cta}
+      >
+        {copy.cta}
+        <svg class={mobileMenu.ctaArrow} width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </a>
+
+      <div class={mobileMenu.liveStatus}>
+        <span class={mobileMenu.liveDot}></span>
+        {copy.live}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuClose = document.getElementById('mobileMenuClose');
+  const resourcesToggle = document.getElementById('resourcesToggle');
+  const resourcesList = document.getElementById('resourcesList') as HTMLElement | null;
+  const resourcesChevron = document.getElementById('resourcesChevron');
+
+  function openMenu() {
+    mobileMenu?.classList.add('is-open');
+    mobileMenu?.setAttribute('aria-hidden', 'false');
+    menuToggle?.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    mobileMenu?.classList.remove('is-open');
+    mobileMenu?.setAttribute('aria-hidden', 'true');
+    menuToggle?.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  menuToggle?.addEventListener('click', openMenu);
+  menuClose?.addEventListener('click', closeMenu);
+
+  mobileMenu?.querySelectorAll('.menu-close-trigger').forEach((el) => {
+    el.addEventListener('click', closeMenu);
+  });
+
+  resourcesToggle?.addEventListener('click', () => {
+    const isExpanded = resourcesToggle.getAttribute('aria-expanded') === 'true';
+
+    if (isExpanded) {
+      resourcesToggle.setAttribute('aria-expanded', 'false');
+      if (resourcesList) resourcesList.style.maxHeight = '0';
+      resourcesChevron?.classList.remove('rotate-180');
+    } else {
+      resourcesToggle.setAttribute('aria-expanded', 'true');
+      if (resourcesList) resourcesList.style.maxHeight = `${resourcesList.scrollHeight}px`;
+      resourcesChevron?.classList.add('rotate-180');
+    }
+  });
+</script>
