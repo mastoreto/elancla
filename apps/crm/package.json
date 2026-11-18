@@ -15,6 +15,7 @@
     "@ancla/auth": "*",
     "@ancla/db": "*",
     "@ancla/utils": "*",
+    "better-auth": "1.7.25",
     "@hookform/resolvers": "7.0.7",
     "@react-email/components": "1.0.12",
     "@react-email/render": "2.3.1",
