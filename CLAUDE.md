@@ -14,7 +14,7 @@ Monorepo de **El Ancla** (iglesia). Gestor de paquetes **bun**, orquestación co
 
 | Workspace | Qué es | Stack |
 |---|---|---|
-| `apps/web` | Sitio público (landing, ministerios, blog, sermones, calendario, visítanos, SEO/AEO) | Astro 7 + islas React 19 + Tailwind v4 + CSS por sección |
+| `apps/web` | Sitio público (landing, ministerios, blog, sermones, calendario, visítanos, SEO/AEO) | Astro 7 + islas React 19 + Tailwind v4 |
 | `apps/crm` | Gestión de tesorería (iEkklesia) | Next.js App Router + React 19 + shadcn/ui |
 | `packages/db` | Prisma + acceso a datos | Prisma |
 | `packages/auth` | Autenticación | — |
@@ -77,7 +77,6 @@ Hero/                      # ← la unidad
 ├── hooks/                 # (React) hooks exclusivos
 ├── lib/                   # integraciones/clientes exclusivos
 ├── data/                  # datos estáticos exclusivos
-├── styles/                # CSS exclusivo
 └── scripts/               # JS de cliente exclusivo
 ```
 
@@ -98,7 +97,7 @@ src/
 ├── data/           # datos globales
 ├── stores/         # estado global (nanostores/slices)
 ├── scripts/        # JS de cliente global
-├── styles/         # tokens y estilos globales
+├── styles/         # tokens + CSS de animaciones/casos que Tailwind no cubre (ver sección 5)
 ├── utils/          # utilidades globales, cada una en su carpeta
 ├── types/          # tipos globales
 ├── lib/            # integraciones globales (seo, youtube, llms)
@@ -147,11 +146,67 @@ Hay un `src/componentes/` heredado en español junto a `components/`: **no crear
 2. Si un bloque se repite, tiene estado propio, o supera ~80–100 líneas, **extráelo** a su carpeta.
 3. Componentes **presentacionales** (reciben props, no saben de dónde vienen los datos) vs. **contenedores** (obtienen/transforman datos y componen). Page → Section → Component → ui primitive.
 4. Composición sobre configuración: usa `children`/slots antes que un componente con 15 props booleanas.
-5. Variantes con un mapa tipado (o `cva`) + `cn()`; nada de concatenar clases con strings.
+5. Estilos y variantes: siempre con el mapa `styles` + `cn()` (ver sección 5). Nada de concatenar clases con strings.
 6. Los textos entran por props o por i18n; el componente no conoce el idioma.
-7. Estilos junto al componente cuando son exclusivos; tokens y utilidades globales en `styles/`.
+7. Los estilos viven **dentro del componente** (mapa `styles`); solo animaciones y CSS que Tailwind no soporta van a `src/styles/` global.
 
-## 5. Buenas prácticas — Astro (`apps/web`)
+## 5. Estilos con Tailwind (apps/web y apps/crm)
+
+**Regla: todo estilo se escribe con Tailwind y se construye con `cn()` dentro de un mapa `styles` por componente.** Sin `class="..."` largos inline en el markup, sin CSS por sección, sin `style=""` salvo valores realmente dinámicos (CSS variables).
+
+### Patrón obligatorio
+
+Un objeto con el nombre del componente/sección/page en `camelCase` + `Styles`; cada clave es el rol del elemento y su valor un `cn(...)`:
+
+```ts
+import { cn } from '@ancla/utils';
+
+const heroStyles = {
+  container: cn('relative isolate grid min-h-svh place-items-center px-6 py-24'),
+  card: cn('rounded-3xl bg-surface p-8 shadow-lg', 'md:p-12'),
+  title: cn('font-display text-4xl text-balance md:text-6xl'),
+  cta: cn('inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium'),
+};
+```
+
+Uso: `<section class={heroStyles.container}>` (Astro) / `className={heroStyles.container}` (React).
+
+- Un argumento de `cn` por grupo lógico (layout, tipografía, color, estados, breakpoints) para que se lea y se revise bien.
+- Clases condicionales/variantes dentro del mismo mapa; las variantes con parámetros usan un sub-mapa tipado o una función:
+
+```ts
+const buttonStyles = {
+  base: cn('inline-flex items-center rounded-full font-medium transition-colors'),
+  variant: {
+    primary: cn('bg-brand text-white hover:bg-brand/90'),
+    ghost: cn('bg-transparent text-brand hover:bg-brand/10'),
+  },
+  size: { sm: cn('px-4 py-2 text-sm'), md: cn('px-6 py-3 text-base') },
+} satisfies Record<string, unknown>;
+
+class={cn(buttonStyles.base, buttonStyles.variant[variant], buttonStyles.size[size], className)}
+```
+
+- Componentes que aceptan `class`/`className` lo reciben como **último** argumento de `cn` para que el llamador pueda sobrescribir.
+- El mapa vive en el mismo archivo si es corto; si crece (> ~40 líneas) pasa a `styles.ts` dentro de la carpeta del componente y se exporta por el barrel.
+- `cn` se importa **siempre** de `@ancla/utils` (en web, `utils/cn` es solo un re-export legacy; no usarlo en código nuevo).
+- Tokens de diseño (colores, fuentes, radios, espaciado) en el `@theme` de Tailwind; nada de valores arbitrarios (`w-[137px]`, `text-[#ff2e34]`) si existe un token.
+- Prohibido `@apply`, salvo en `src/styles/` global para los casos de abajo.
+
+### Excepción: CSS en `src/styles/` global
+
+Solo se permite CSS propio cuando Tailwind **no lo soporta o resulta ilegible**:
+
+- Animaciones y keyframes complejos, transiciones de página (`PageTransitions`, `ThemeTransition`), scroll-driven animations, view transitions.
+- Pseudo-elementos/selectores complejos, `@property`, `mask`/`clip-path` elaborados, estilos de impresión (`CalendarPrint`).
+
+Reglas de la excepción: un archivo `.css` **específico por caso** (`PageTransitions.css`, no un `misc.css`), en `src/styles/` de la app, importado desde el componente que lo usa; clases con nombre semántico y prefijadas; comentario del porqué Tailwind no alcanza; siempre con `prefers-reduced-motion`.
+
+### Refactor de código existente
+
+Si tocas un componente o página que **no** sigue este patrón (CSS por sección, clases largas inline, concatenación de strings), **refactorízalo al patrón en el mismo cambio**: migra a Tailwind + mapa `styles`, borra el CSS que quede huérfano y verifica visualmente que no haya regresiones (responsive, dark mode, hover/focus). Lo único que se conserva en `.css` es lo de la excepción anterior.
+
+## 6. Buenas prácticas — Astro (`apps/web`)
 
 - **Cero JS por defecto.** Todo es `.astro` (HTML estático) salvo que haya interactividad real. Antes de una isla React, pregúntate si CSS o un `<script>` pequeño basta.
 - **Islas con la directiva más perezosa posible**: `client:visible` > `client:idle` > `client:load`. `client:only` solo si no puede renderizar en servidor. Nunca `client:load` por costumbre.
@@ -161,14 +216,14 @@ Hay un `src/componentes/` heredado en español junto a `components/`: **no crear
 - **Imágenes**: `astro:assets` (`<Image>`/`<Picture>`), `width`/`height` o `aspect-ratio` para evitar CLS, `loading="lazy"` salvo el LCP (`fetchpriority="high"`). Siempre `alt` significativo (decorativas: `alt=""`).
 - **Fuentes**: precarga solo las críticas, `font-display: swap`, subset.
 - **Scripts de cliente**: en `scripts/` de la unidad, importados con `<script>` de Astro (se bundlean y deduplican). Sin `is:inline` salvo necesidad (theme flash, analytics). Limpia listeners; respeta `astro:page-load` si hay View Transitions.
-- **Estilos**: Tailwind para layout/utilidades; CSS de sección para composición compleja. Tokens (color, espaciado, tipografía) como variables CSS en `styles/`; nada de colores literales sueltos.
+- **Estilos**: ver sección 5 (Tailwind + mapa `styles`). Tokens (color, espaciado, tipografía) como variables CSS/`@theme` en `src/styles/`; nada de colores literales sueltos.
 - **Animaciones**: `prefers-reduced-motion` obligatorio; anima solo `transform`/`opacity`; GSAP/Lenis/Motion se importan dinámicamente donde se usan, no globalmente.
 - **SEO/AEO**: cada página define title, description, canonical, hreflang, OG y JSON-LD vía `utils/seo` / `astro-seo`. Mantén `llms.txt`, sitemap e índices al día al crear páginas.
 - **Accesibilidad**: HTML semántico (`header/nav/main/section/article`), un solo `h1`, jerarquía de headings, foco visible, contraste AA, navegación por teclado, `aria-*` solo cuando el HTML nativo no alcanza.
 - **Rendimiento**: `astro check` limpio, sin dependencias nuevas sin justificar el peso. Prefiere API nativa a librerías.
 - `pages/` solo enruta y compone; no contiene lógica de negocio ni estilos extensos.
 
-## 6. Buenas prácticas — React / Next.js
+## 7. Buenas prácticas — React / Next.js
 
 **React 19**
 - Componentes de función pequeños y puros. Sin lógica de negocio en JSX: extrae a hooks (`use*`) o `utils/`.
@@ -186,7 +241,7 @@ Hay un `src/componentes/` heredado en español junto a `components/`: **no crear
 - shadcn/ui: añade primitivas vía CLI en `components/ui/`; no las edites para casos puntuales: envuélvelas en un componente de feature.
 - Alias `@/*`; imports absolutos, nunca `../../../`.
 
-## 7. TypeScript, estilo y calidad
+## 8. TypeScript, estilo y calidad
 
 - Formato/lint: **Biome** (no ESLint/Prettier en código nuevo). 2 espacios, ancho 100, LF.
 - `type` para uniones/utilidades, `interface` para formas de objetos/props. Tipos compartidos en `types/`; sin tipos duplicados.
@@ -196,17 +251,18 @@ Hay un `src/componentes/` heredado en español junto a `components/`: **no crear
 - Dependencias: antes de añadir una, verifica stdlib/plataforma/dep ya instalada. Versiones fijas en workspaces; un solo gestor (`bun`), un solo lockfile.
 - Secretos: nunca en el repo. `.env` fuera de git; documenta toda variable nueva en `.env.example` y valídala en `packages/env`.
 
-## 8. Git
+## 9. Git
 
 - Rama desde `main` con prefijo `feat/`, `fix/`, `refactor/`, `chore/`. PR hacia `main`.
 - Commits en inglés, estilo Conventional Commits con scope: `refactor(web): rebuild the 404 page on the "obra" design`.
 - **Jamás** añadir `Co-Authored-By` ni "Generated with Claude Code" en commits o PRs.
 - No commitear ni hacer push sin que se pida. Un cambio lógico por commit.
 
-## 9. Checklist antes de dar algo por terminado
+## 10. Checklist antes de dar algo por terminado
 
 - [ ] ¿Cada archivo nuevo está dentro de su carpeta, con barrel, y en el alcance correcto (local vs. global)?
 - [ ] ¿Reutilicé componentes existentes y extraje lo repetido?
+- [ ] ¿Estilos en Tailwind con el mapa `styles` + `cn()`? ¿CSS propio solo para animaciones/casos no soportados?
 - [ ] ¿Textos en los tres idiomas? ¿Logo con `LogoText`?
 - [ ] ¿Sin `any`, sin JS de cliente innecesario, directiva de isla mínima?
 - [ ] ¿Accesibilidad, `alt`, reduced-motion y responsive (móvil primero) revisados?
