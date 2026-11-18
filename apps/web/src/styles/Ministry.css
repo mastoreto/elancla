@@ -1,3 +1,6 @@
+/* Declares the layer order first: this file can be bundled before global.css. */
+@layer theme, base, components, utilities;
+@layer components {
 /* Individual ministry page. Prefix `mn-`. Tokens and buttons come from the landing (.ln / .ln-btn). */
 
 .mn {
@@ -99,4 +102,5 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .mn-rise { animation: none; opacity: 1; transform: none; }
+}
 }

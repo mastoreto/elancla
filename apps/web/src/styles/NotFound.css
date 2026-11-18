@@ -1,3 +1,6 @@
+/* Declares the layer order first: this file can be bundled before global.css. */
+@layer theme, base, components, utilities;
+@layer components {
 /* 404 page. Prefix `nf-`. Tokens and buttons come from the landing (.ln / .ln-btn). */
 
 .nf {
@@ -36,4 +39,5 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .nf-rise, .nf-outline, .nf-forge, .nf-anchor { animation: none; opacity: 1; transform: none; stroke-dashoffset: 0; }
+}
 }

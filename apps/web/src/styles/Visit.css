@@ -1,3 +1,6 @@
+/* Declares the layer order first: this file can be bundled before global.css. */
+@layer theme, base, components, utilities;
+@layer components {
 /* /visitanos: practical visit info. Prefix `vs-`. Reuses the landing tokens (`.ln`). */
 .vs { background: var(--ln-paper); padding-top: clamp(6rem, 12vw, 9rem); padding-bottom: clamp(3rem, 8vw, 6rem); }
 .vs-wrap { max-width: 1100px; margin: 0 auto; padding-inline: var(--ln-pad); }
@@ -32,4 +35,5 @@
 @media (max-width: 800px) {
   .vs-where { grid-template-columns: 1fr; }
   .vs-times li { grid-template-columns: 4.25rem 1fr; }
+}
 }

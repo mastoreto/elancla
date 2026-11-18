@@ -1,3 +1,6 @@
+/* Declares the layer order first: this file can be bundled before global.css. */
+@layer theme, base, components, utilities;
+@layer components {
 /* Printable yearly calendar (A3 sheet, A4 booklet, 16:9 slides). Prefix `cp-`. Sizes come from the design "K · Calendario impreso / páginas / digital". */
 
 * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -103,3 +106,4 @@
 .cp-slide__mcard > b { font-size: 30px; }
 .cp-slide__ev { display: flex; gap: 10px; font-size: 16px; line-height: 1.3; }
 .cp-slide__ev b { color: #a8141b; width: 26px; flex: none; }
+}
