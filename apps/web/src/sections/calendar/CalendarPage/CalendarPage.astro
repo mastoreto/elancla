@@ -1,0 +1,61 @@
+---
+import { CALENDAR_YEAR, events } from 'src/data/calendar';
+import type { Locale } from 'src/i18n/config';
+import { getHtmlLang, localizePath } from 'src/i18n/utils';
+import { getMessages } from 'src/i18n/messages';
+import Layout from 'src/layouts/Layout';
+import CalendarHero from 'src/sections/calendar/CalendarPage/components/CalendarHero';
+import CalendarMonths from 'src/sections/calendar/CalendarPage/components/CalendarMonths';
+import CalendarSubscribe from 'src/sections/calendar/CalendarPage/components/CalendarSubscribe';
+import CalendarTakeHome from 'src/sections/calendar/CalendarPage/components/CalendarTakeHome';
+import CalendarWeekly from 'src/sections/calendar/CalendarPage/components/CalendarWeekly';
+import cn from 'src/utils/cn';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const copy = getMessages(locale).calendar;
+const lang = getHtmlLang(locale);
+
+const first = [...events].sort((a, b) => a.date.localeCompare(b.date))[0];
+const firstDate = new Date(`${first.date}T00:00:00Z`);
+const next = {
+  day: firstDate.getUTCDate(),
+  weekday: new Intl.DateTimeFormat(lang, { weekday: 'short', timeZone: 'UTC' }).format(firstDate).replace('.', ''),
+  month: new Intl.DateTimeFormat(lang, { month: 'short', timeZone: 'UTC' }).format(firstDate).replace('.', ''),
+  title: first.title,
+};
+
+const icsUrl = new URL('/calendario-anual.ics', Astro.site).toString();
+const googleHref = `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(icsUrl.replace(/^https?:/, 'webcal:'))}`;
+const path = localizePath('/calendario-anual', locale);
+
+const calendarPage = {
+  container: cn('ln bg-obra-paper pb-24'),
+};
+---
+
+<Layout
+  title={copy.seo.title}
+  description={copy.seo.description}
+  keywords={copy.seo.keywords}
+  breadcrumbs={[
+    { name: copy.breadcrumbs.home, url: localizePath('/', locale) },
+    { name: copy.breadcrumbs.current, url: path },
+  ]}
+  locale={locale}
+>
+  <div class={calendarPage.container} data-year={CALENDAR_YEAR}>
+    <CalendarHero copy={copy} locale={locale} next={next} />
+    <CalendarWeekly copy={copy} locale={locale} />
+    <CalendarMonths copy={copy} locale={locale} />
+    <CalendarTakeHome copy={copy} />
+    <CalendarSubscribe copy={copy} googleHref={googleHref} icsHref={icsUrl} />
+  </div>
+</Layout>
+
+<script>
+  import { initCalendar } from 'src/sections/calendar/CalendarPage/scripts/calendar';
+  document.addEventListener('astro:page-load', initCalendar);
+</script>

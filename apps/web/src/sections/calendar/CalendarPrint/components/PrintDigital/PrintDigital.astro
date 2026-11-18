@@ -1,0 +1,106 @@
+---
+import AnchorMark from 'src/components/AnchorMark';
+import { CALENDAR_YEAR, events, eventsOfMonth, weeklySorted } from 'src/data/calendar';
+import PrintMonthGrid from 'src/sections/calendar/CalendarPrint/components/PrintMonthGrid';
+import { MONTHS_ES, dayOf, weekdayLong } from 'src/sections/calendar/CalendarPrint/utils/printFormat';
+import { EYEBROW, EYEBROW_TONE, SERIF, SHEET, SLIDE_TONE } from 'src/sections/calendar/CalendarPrint/styles';
+import cn from 'src/utils/cn';
+
+const weekly = weeklySorted();
+const halves = [
+  { title: 'Enero a junio', months: [0, 1, 2, 3, 4, 5] },
+  { title: 'Julio a diciembre', months: [6, 7, 8, 9, 10, 11] },
+];
+
+const SLIDE = [SHEET, 'h-[719px] w-[1280px] rounded-3xl px-16 py-14'];
+const SLIDE_TITLE = [SERIF, 'mt-2 mb-7 text-[64px] leading-none'];
+const EVENT_LINE = 'flex gap-2.5 text-[16px] leading-[1.3]';
+
+const printDigital = {
+  cover: cn(SLIDE, SLIDE_TONE.dark),
+  coverMark: cn('absolute right-14 -bottom-[30px] w-105 opacity-12'),
+  coverChurch: cn(EYEBROW, EYEBROW_TONE.live),
+  coverTitle: cn(SERIF, 'mt-auto text-[150px] leading-[0.9] tracking-[-0.03em]'),
+  coverTagline: cn('mt-6 text-[22px] text-obra-dune'),
+  weekly: cn(SLIDE, SLIDE_TONE.light),
+  weeklyEyebrow: cn(EYEBROW, EYEBROW_TONE.red),
+  weeklyTitle: cn(SLIDE_TITLE),
+  weeklyGrid: cn('grid grid-cols-[repeat(7,1fr)] items-start gap-3.5'),
+  weekday: cn('flex flex-col gap-2.5'),
+  weekdayName: cn(SERIF, 'border-b-[1.5px] border-obra-ink pb-2.5 text-[26px]'),
+  activity: cn('rounded-[18px] bg-obra-mist p-3.5'),
+  activityTime: cn(SERIF, 'text-[28px] text-obra-red'),
+  activityTitle: cn('mt-1 text-[16px] leading-[1.25] font-bold'),
+  weeklyNote: cn('mt-auto text-[14px] text-obra-muted'),
+  year: cn(SLIDE, SLIDE_TONE.light),
+  yearEyebrow: cn(EYEBROW, EYEBROW_TONE.red),
+  yearTitle: cn(SLIDE_TITLE),
+  yearGrid: cn('grid grid-cols-[repeat(6,1fr)] gap-3'),
+  yearMonth: cn('flex flex-col gap-1.5 rounded-[20px] bg-obra-white px-3.5 py-3'),
+  yearMonthName: cn(SERIF, 'text-[22px]'),
+  half: cn(SLIDE, SLIDE_TONE.light),
+  halfLabel: cn(EYEBROW, EYEBROW_TONE.red),
+  halfTitle: cn(SLIDE_TITLE),
+  halfMonths: cn('grid grid-cols-[repeat(3,1fr)] content-start gap-4'),
+  month: cn('flex flex-col gap-2.5 rounded-3xl bg-obra-mist p-5'),
+  monthName: cn(SERIF, 'text-[30px]'),
+  event: cn(EVENT_LINE),
+  eventDay: cn('w-6.5 flex-none text-obra-red'),
+};
+---
+
+<section class={printDigital.cover}>
+  <span class={printDigital.coverMark} aria-hidden="true"><AnchorMark id="cp-sl" outline={false} color="#ff2e34" /></span>
+  <span class={printDigital.coverChurch}>Iglesia Bautista El Ancla · Montevideo</span>
+  <b class={printDigital.coverTitle}>Calendario<br />{CALENDAR_YEAR}</b>
+  <span class={printDigital.coverTagline}>Todo el año, para caminar juntos.</span>
+</section>
+
+<section class={printDigital.weekly}>
+  <span class={printDigital.weeklyEyebrow}>Todas las semanas</span>
+  <b class={printDigital.weeklyTitle}>Actividades recurrentes</b>
+  <div class={printDigital.weeklyGrid}>
+    {Array.from({ length: 7 }, (_, day) => (
+      <div class={printDigital.weekday}>
+        <b class={printDigital.weekdayName}>{weekdayLong(day)}</b>
+        {weekly.filter((a) => a.day === day).map((a) => (
+          <div class={printDigital.activity}>
+            <b class={printDigital.activityTime}>{a.time}</b>
+            <div class={printDigital.activityTitle}>{a.title}</div>
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+  <span class={printDigital.weeklyNote}>Horarios del domingo reales; el resto, de ejemplo.</span>
+</section>
+
+<section class={printDigital.year}>
+  <span class={printDigital.yearEyebrow}>Calendario {CALENDAR_YEAR}</span>
+  <b class={printDigital.yearTitle}>El año de un vistazo</b>
+  <div class={printDigital.yearGrid}>
+    {MONTHS_ES.map((name, month) => (
+      <div class={printDigital.yearMonth}>
+        <b class={printDigital.yearMonthName}>{name}</b>
+        <PrintMonthGrid year={CALENDAR_YEAR} month={month} eventDays={eventsOfMonth(events, month).map(dayOf)} size="slide" />
+      </div>
+    ))}
+  </div>
+</section>
+
+{halves.map((half) => (
+  <section class={printDigital.half}>
+    <span class={printDigital.halfLabel}>Calendario {CALENDAR_YEAR}</span>
+    <b class={printDigital.halfTitle}>{half.title}</b>
+    <div class={printDigital.halfMonths}>
+      {half.months.map((month) => (
+        <div class={printDigital.month}>
+          <b class={printDigital.monthName}>{MONTHS_ES[month]}</b>
+          {eventsOfMonth(events, month).map((e) => (
+            <div class={printDigital.event}><b class={printDigital.eventDay}>{dayOf(e)}</b><span>{e.title}</span></div>
+          ))}
+        </div>
+      ))}
+    </div>
+  </section>
+))}

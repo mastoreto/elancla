@@ -1,0 +1,40 @@
+---
+import Button from 'src/components/ui/Button';
+import { localizePath } from 'src/i18n/utils';
+import type { Locale } from 'src/i18n/config';
+import type { Messages } from 'src/i18n/messages';
+import cn from 'src/utils/cn';
+
+interface Props {
+  copy: Messages['confession']['cta'];
+  locale: Locale;
+}
+
+const { copy, locale } = Astro.props;
+
+const confesionCTA = {
+  container: cn(
+    'flex flex-col items-center gap-[1.4rem] px-gutter-sm pt-[clamp(3.5rem,6.7vw,6rem)]',
+    'text-center',
+  ),
+  headlineBefore: cn(
+    'ln-h max-w-224 text-[clamp(2.375rem,5vw,4.5rem)] leading-none tracking-[-0.03em]',
+  ),
+  headlineEmphasis: cn('text-obra-red'),
+  text: cn(
+    'm-0 max-w-140 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft',
+  ),
+  row: cn('flex flex-wrap justify-center gap-3'),
+};
+---
+
+<section class={confesionCTA.container}>
+  <h2 class={confesionCTA.headlineBefore}>
+    {copy.headlineBefore}<span class={confesionCTA.headlineEmphasis}>{copy.headlineEmphasis}</span>{copy.headlineAfter}
+  </h2>
+  <p class={confesionCTA.text}>{copy.body}</p>
+  <div class={confesionCTA.row}>
+    <Button href={localizePath('/#visitanos', locale)} arrow>{copy.primary}</Button>
+    <Button href={localizePath('/#domingo', locale)} variant="ghost">{copy.secondary}</Button>
+  </div>
+</section>
