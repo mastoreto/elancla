@@ -1,41 +1,42 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { Upload } from "lucide-react";
 import { useMemo, useState } from "react";
-import { ReceiptDeleteDialog } from "@/app/(dashboard)/receipts/components/receipt-delete-dialog";
-import { ReceiptModal } from "@/app/(dashboard)/receipts/components/receipt-modal";
-import { ReceiptsTable } from "@/app/(dashboard)/receipts/components/receipts-table";
+import type { DateRange } from "react-day-picker";
+import { BoardButton } from "@/components/dashboard/board/board-button";
+import { cn } from "@/lib/utils";
 import type {
   Receipt,
   ReceiptFormField,
   ReceiptFormValues,
   ReceiptModalMode,
   ReceiptRelatedOption,
-} from "@/app/(dashboard)/receipts/types/index";
-import { DashboardPageHeader } from "@/components/dashboard";
-import { Button } from "@/components/ui/button";
+} from "../types";
+import { filterReceipts, paginateReceipts, RECEIPTS_PAGE_SIZE } from "../utils";
+import { ReceiptDeleteDialog } from "./receipt-delete-dialog";
+import { ReceiptDetailPanel } from "./receipt-detail-panel";
+import { ReceiptModal } from "./receipt-modal";
+import { ReceiptsTable } from "./receipts-table";
+import { ReceiptsToolbar } from "./receipts-toolbar";
 
 interface ReceiptsPageContentProps {
   initialReceipts: Receipt[];
   relatedOptions: ReceiptRelatedOption[];
   initialErrorMessage?: string | null;
-  isLoading?: boolean;
 }
 
-function formatDateInput(date: Date) {
-  const year = date.getFullYear();
+const receiptsPageContentReceiptsPage = {
+  page: cn("flex flex-col gap-5"),
+  header: cn("flex flex-wrap items-center gap-4"),
+  description: cn("min-w-60 flex-1 text-[14.5px] leading-normal text-[var(--tinta-suave)]"),
+  actionIcon: cn("size-4"),
+  split: cn("grid items-start gap-[18px] xl:grid-cols-[1.6fr_1fr]"),
+};
+
+function formatDateInput(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
-
-function parseDateInput(value: string, fallback: Date) {
-  if (!value) {
-    return fallback;
-  }
-
-  return new Date(`${value}T00:00:00`);
+  return `${date.getFullYear()}-${month}-${day}`;
 }
 
 function createDefaultFormValues(): ReceiptFormValues {
@@ -63,15 +64,13 @@ function mapReceiptToFormValues(receipt: Receipt): ReceiptFormValues {
 }
 
 function mapFormValuesToReceipt(values: ReceiptFormValues, id: string): Receipt {
-  const fallbackDate = new Date();
-
   return {
     id,
     number: values.number,
     provider: values.provider,
     amount: Number(values.amount) || 0,
     currency: values.currency ?? "UYU",
-    date: parseDateInput(values.date, fallbackDate),
+    date: values.date ? new Date(`${values.date}T00:00:00`) : new Date(),
     relatedEntity: values.relatedEntity,
     fileUrl: values.fileUrl || undefined,
   };
@@ -81,158 +80,141 @@ export function ReceiptsPageContent({
   initialReceipts,
   relatedOptions,
   initialErrorMessage = null,
-  isLoading = false,
 }: ReceiptsPageContentProps) {
   const [receipts, setReceipts] = useState(initialReceipts);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currency, setCurrency] = useState("all");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [page, setPage] = useState(1);
+  const [selectedId, setSelectedId] = useState<string | null>(initialReceipts[0]?.id ?? null);
   const [modalMode, setModalMode] = useState<ReceiptModalMode>("create");
-  const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
-  const [selectedReceiptId, setSelectedReceiptId] = useState<string | null>(null);
-  const [deleteReceiptId, setDeleteReceiptId] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [formValues, setFormValues] = useState<ReceiptFormValues>(createDefaultFormValues());
-  const [requiredFields, setRequiredFields] = useState<ReceiptFormField[]>([]);
 
-  const selectedReceipt = useMemo(
-    () => receipts.find((receipt) => receipt.id === selectedReceiptId) ?? null,
-    [receipts, selectedReceiptId],
+  const filtered = useMemo(
+    () =>
+      filterReceipts(receipts, {
+        searchQuery,
+        currency,
+        dateFrom: dateRange?.from,
+        dateTo: dateRange?.to,
+      }),
+    [receipts, searchQuery, currency, dateRange],
   );
+  const pageCount = Math.max(1, Math.ceil(filtered.length / RECEIPTS_PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+  const selected = receipts.find((receipt) => receipt.id === selectedId) ?? null;
+  const receiptToDelete = receipts.find((receipt) => receipt.id === deleteId) ?? null;
 
-  const receiptToDelete = useMemo(
-    () => receipts.find((receipt) => receipt.id === deleteReceiptId) ?? null,
-    [deleteReceiptId, receipts],
-  );
+  const withFirstPage =
+    <T,>(setter: (value: T) => void) =>
+    (value: T) => {
+      setter(value);
+      setPage(1);
+    };
 
-  const closeReceiptModal = () => {
-    setIsReceiptModalOpen(false);
-    setSelectedReceiptId(null);
-    setRequiredFields([]);
-  };
-
-  const closeDeleteDialog = () => {
-    setDeleteReceiptId(null);
-  };
-
-  const handleCreate = () => {
+  const openCreate = () => {
     setModalMode("create");
-    setSelectedReceiptId(null);
     setFormValues(createDefaultFormValues());
-    setRequiredFields([]);
-    setIsReceiptModalOpen(true);
+    setIsModalOpen(true);
   };
 
-  const handleView = (receipt: Receipt) => {
-    setModalMode("view");
-    setSelectedReceiptId(receipt.id);
-    setFormValues(mapReceiptToFormValues(receipt));
-    setRequiredFields([]);
-    setIsReceiptModalOpen(true);
-  };
-
-  const handleEdit = (receipt: Receipt) => {
+  const openEdit = (receipt: Receipt) => {
     setModalMode("edit");
-    setSelectedReceiptId(receipt.id);
+    setSelectedId(receipt.id);
     setFormValues(mapReceiptToFormValues(receipt));
-    setRequiredFields([]);
-    setIsReceiptModalOpen(true);
-  };
-
-  const handleDeleteRequest = (receipt: Receipt) => {
-    setDeleteReceiptId(receipt.id);
+    setIsModalOpen(true);
   };
 
   const handleFieldChange = (
     field: ReceiptFormField,
     value: ReceiptFormValues[ReceiptFormField],
   ) => {
-    setFormValues((currentValues) => ({
-      ...currentValues,
-      [field]: value,
-    }));
+    setFormValues((current) => ({ ...current, [field]: value }));
   };
 
   const handleSubmit = () => {
-    if (modalMode === "edit" && selectedReceiptId) {
-      setReceipts((currentReceipts) =>
-        currentReceipts.map((receipt) =>
-          receipt.id === selectedReceiptId
-            ? mapFormValuesToReceipt(formValues, receipt.id)
-            : receipt,
+    if (modalMode === "edit" && selectedId) {
+      setReceipts((current) =>
+        current.map((receipt) =>
+          receipt.id === selectedId ? mapFormValuesToReceipt(formValues, receipt.id) : receipt,
         ),
       );
-      closeReceiptModal();
-      return;
+    } else {
+      const created = mapFormValuesToReceipt(formValues, `receipt-${Date.now()}`);
+      setReceipts((current) => [created, ...current]);
+      setSelectedId(created.id);
     }
-
-    const nextReceipt = mapFormValuesToReceipt(formValues, `receipt-${Date.now()}`);
-    setReceipts((currentReceipts) => [nextReceipt, ...currentReceipts]);
-    closeReceiptModal();
+    setIsModalOpen(false);
   };
 
   const handleConfirmDelete = () => {
-    if (!deleteReceiptId) {
-      return;
-    }
-
-    setReceipts((currentReceipts) =>
-      currentReceipts.filter((receipt) => receipt.id !== deleteReceiptId),
-    );
-    closeDeleteDialog();
+    if (!deleteId) return;
+    setReceipts((current) => current.filter((receipt) => receipt.id !== deleteId));
+    if (selectedId === deleteId) setSelectedId(null);
+    setDeleteId(null);
   };
 
   return (
-    <div className="space-y-6">
-      <DashboardPageHeader
-        actions={
-          <Button className="rounded-full" onClick={handleCreate} type="button">
-            <Plus aria-hidden="true" />
-            Subir boleta
-          </Button>
-        }
-        description="Facturas y boletas de proveedores, vinculadas al gasto que respaldan."
-        emphasis="de proveedores"
-        kicker="Documentos"
-        title="Boletas"
+    <div className={receiptsPageContentReceiptsPage.page}>
+      <div className={receiptsPageContentReceiptsPage.header}>
+        <p className={receiptsPageContentReceiptsPage.description}>
+          Facturas y boletas de proveedores, vinculadas al gasto que respaldan.
+        </p>
+        <BoardButton onClick={openCreate} variant="primary">
+          <Upload aria-hidden="true" className={receiptsPageContentReceiptsPage.actionIcon} />
+          Subir boleta
+        </BoardButton>
+      </div>
+
+      <ReceiptsToolbar
+        currency={currency}
+        dateRange={dateRange}
+        onCurrencyChange={withFirstPage(setCurrency)}
+        onDateRangeChange={withFirstPage(setDateRange)}
+        onSearchChange={withFirstPage(setSearchQuery)}
+        searchQuery={searchQuery}
       />
 
-      <ReceiptsTable
-        receipts={receipts}
-        isLoading={isLoading}
-        errorMessage={initialErrorMessage}
-        onView={handleView}
-        onEdit={handleEdit}
-        onDelete={handleDeleteRequest}
-      />
+      <div className={receiptsPageContentReceiptsPage.split}>
+        <ReceiptsTable
+          errorMessage={initialErrorMessage}
+          onPageChange={setPage}
+          onSelect={(receipt) => setSelectedId(receipt.id)}
+          page={currentPage}
+          pageCount={pageCount}
+          receipts={paginateReceipts(filtered, currentPage)}
+          selectedId={selectedId}
+          total={filtered.length}
+        />
+        <ReceiptDetailPanel
+          onDelete={(receipt) => setDeleteId(receipt.id)}
+          onEdit={openEdit}
+          receipt={selected}
+        />
+      </div>
 
       <ReceiptModal
-        open={isReceiptModalOpen}
         mode={modalMode}
-        receipt={selectedReceipt}
-        values={formValues}
-        relatedOptions={relatedOptions}
-        requiredFields={requiredFields}
-        onOpenChange={(open) => {
-          if (!open) {
-            closeReceiptModal();
-            return;
-          }
-
-          setIsReceiptModalOpen(true);
-        }}
+        onCancel={() => setIsModalOpen(false)}
         onFieldChange={handleFieldChange}
+        onOpenChange={setIsModalOpen}
         onSubmit={handleSubmit}
-        onCancel={closeReceiptModal}
+        open={isModalOpen}
+        relatedOptions={relatedOptions}
+        requiredFields={[]}
+        values={formValues}
       />
 
       <ReceiptDeleteDialog
-        open={deleteReceiptId !== null}
-        receiptNumber={receiptToDelete?.number}
-        onOpenChange={(open) => {
-          if (!open) {
-            closeDeleteDialog();
-            return;
-          }
-        }}
+        onCancel={() => setDeleteId(null)}
         onConfirm={handleConfirmDelete}
-        onCancel={closeDeleteDialog}
+        onOpenChange={(open) => {
+          if (!open) setDeleteId(null);
+        }}
+        open={deleteId !== null}
+        receiptNumber={receiptToDelete?.number}
       />
     </div>
   );

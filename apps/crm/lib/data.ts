@@ -2,7 +2,7 @@ import type { Leader, Ministry, MoneyRequest, Movement, Project, User } from "./
 
 export const currentUser: User = {
   id: "1",
-  name: "Maria Garcia",
+  name: "María García",
   email: "maria@church.org",
   role: "treasurer",
 };
@@ -77,13 +77,13 @@ export const projects: Project[] = [
     status: "planning",
     startDate: "2026-06-01",
     endDate: "2026-06-15",
-    createdBy: "Carlos Rodriguez",
+    createdBy: "Carlos Rodríguez",
     documents: [],
     history: [
       {
         id: "1",
         action: "created",
-        user: "Carlos Rodriguez",
+        user: "Carlos Rodríguez",
         date: "2026-03-01T11:00:00",
         details: "Proyecto creado para campamento de jóvenes de verano",
       },
@@ -158,20 +158,20 @@ export const projects: Project[] = [
     spent: 120_000,
     status: "finished",
     startDate: "2025-07-01",
-    endDate: "2026-03-31",
+    endDate: "2026-01-31",
     createdBy: "Laura Gonzalez",
     documents: [],
     history: [
       {
         id: "1",
         action: "created",
-        user: "Laura Gonzalez",
+        user: "Laura González",
         date: "2025-07-01T08:00:00",
       },
       {
         id: "2",
         action: "status_changed",
-        user: "Laura Gonzalez",
+        user: "Laura González",
         date: "2026-02-01T10:00:00",
         previousValue: "in_progress",
         newValue: "finished",
@@ -190,7 +190,7 @@ export const projects: Project[] = [
     spent: 850,
     status: "closed",
     startDate: "2025-10-01",
-    endDate: "2025-12-31",
+    endDate: "2025-12-15",
     createdBy: "Ana Martinez",
     documents: [
       {
@@ -198,7 +198,7 @@ export const projects: Project[] = [
         name: "Factura de Equipo.pdf",
         type: "pdf",
         url: "/documents/equipment-invoice.pdf",
-        uploadedBy: "Ana Martinez",
+        uploadedBy: "Ana Martínez",
         uploadedAt: "2025-12-15T11:00:00",
       },
     ],
@@ -206,13 +206,13 @@ export const projects: Project[] = [
       {
         id: "1",
         action: "created",
-        user: "Ana Martinez",
+        user: "Ana Martínez",
         date: "2025-10-01T09:00:00",
       },
       {
         id: "2",
         action: "status_changed",
-        user: "Ana Martinez",
+        user: "Ana Martínez",
         date: "2025-12-15T14:00:00",
         previousValue: "in_progress",
         newValue: "finished",
@@ -239,13 +239,13 @@ export const projects: Project[] = [
     status: "in_progress",
     startDate: "2026-02-01",
     endDate: "2026-12-31",
-    createdBy: "Diego Fernandez",
+    createdBy: "Diego Fernández",
     documents: [],
     history: [
       {
         id: "1",
         action: "created",
-        user: "Diego Fernandez",
+        user: "Diego Fernández",
         date: "2026-02-01T10:00:00",
       },
     ],
@@ -256,30 +256,30 @@ export const movements: Movement[] = [
   {
     id: "1",
     date: "2026-03-22",
-    concept: "Sunday Offering",
+    concept: "Ofrenda dominical",
     type: "income",
     reconciliation: "reconciled",
-    description: "Regular Sunday service collection",
+    description: "Culto de adoración",
     currency: "UYU",
     amount: 45_000,
   },
   {
     id: "2",
     date: "2026-03-21",
-    concept: "Electric Bill",
+    concept: "Factura de luz",
     type: "expense",
     reconciliation: "pending",
-    description: "Pago mensual de electricidad",
+    description: "UTE · marzo",
     currency: "UYU",
     amount: 8500,
   },
   {
     id: "3",
     date: "2026-03-20",
-    concept: "Youth Camp Donation",
+    concept: "Donación campamento",
     type: "income",
     reconciliation: "reconciled",
-    description: "Special donation for youth camp",
+    description: "Aporte de familia",
     currency: "USD",
     amount: 500,
     project: "Jóvenes",
@@ -287,20 +287,21 @@ export const movements: Movement[] = [
   {
     id: "4",
     date: "2026-03-19",
-    concept: "Sound Equipment",
+    concept: "Equipo de sonido",
     type: "expense",
     reconciliation: "flagged",
-    description: "New microphones for worship team",
+    description: "Cables y micrófonos",
     currency: "USD",
     amount: 350,
+    project: "Adoración",
   },
   {
     id: "5",
     date: "2026-03-18",
-    concept: "Tithes",
+    concept: "Diezmos",
     type: "income",
     reconciliation: "pending",
-    description: "Weekly tithes collection",
+    description: "Semana 3",
     currency: "UYU",
     amount: 125_000,
   },
@@ -318,10 +319,10 @@ export const movements: Movement[] = [
   {
     id: "7",
     date: "2026-03-16",
-    concept: "Mission Trip Funds",
+    concept: "Fondos viaje misionero",
     type: "income",
     reconciliation: "reconciled",
-    description: "Fundraiser for mission trip",
+    description: "Pasajes",
     currency: "USD",
     amount: 1200,
     project: "Misiones",
@@ -329,10 +330,10 @@ export const movements: Movement[] = [
   {
     id: "8",
     date: "2026-03-15",
-    concept: "Office Supplies",
+    concept: "Útiles de oficina",
     type: "expense",
     reconciliation: "pending",
-    description: "Printer paper and ink",
+    description: "Papelería",
     currency: "UYU",
     amount: 2800,
   },
@@ -358,11 +359,11 @@ export const ministries: Ministry[] = [
 ];
 
 export const leaders: Leader[] = [
-  { id: "1", name: "Carlos Rodriguez", ministryId: "1" },
-  { id: "2", name: "Ana Martinez", ministryId: "2" },
+  { id: "1", name: "Carlos Rodríguez", ministryId: "1" },
+  { id: "2", name: "Ana Martínez", ministryId: "2" },
   { id: "3", name: "Roberto Silva", ministryId: "3" },
-  { id: "4", name: "Laura Gonzalez", ministryId: "4" },
-  { id: "5", name: "Diego Fernandez", ministryId: "5" },
+  { id: "4", name: "Laura González", ministryId: "4" },
+  { id: "5", name: "Diego Fernández", ministryId: "5" },
 ];
 
 export const moneyRequests: MoneyRequest[] = [
@@ -372,7 +373,7 @@ export const moneyRequests: MoneyRequest[] = [
     concept: "Suministros para Campamento de Jóvenes",
     description:
       "Suministros para el próximo retiro de jóvenes incluyendo refrigerios, materiales y transporte.",
-    ministry: "Jóvenes",
+    ministry: "Ministerio de Jóvenes",
     leader: "Carlos Rodriguez",
     currency: "UYU",
     amount: 15_000,
@@ -381,7 +382,7 @@ export const moneyRequests: MoneyRequest[] = [
       {
         id: "1",
         action: "created",
-        user: "Carlos Rodriguez",
+        user: "Carlos Rodríguez",
         date: "2026-03-22T10:30:00",
       },
     ],
@@ -389,9 +390,9 @@ export const moneyRequests: MoneyRequest[] = [
   {
     id: "2",
     date: "2026-03-21",
-    concept: "Nuevas Cuerdas de Guitarra",
+    concept: "Nuevas cuerdas de guitarra",
     description: "Cuerdas de reemplazo para guitarras de adoración.",
-    ministry: "Adoración",
+    ministry: "Equipo de Adoración",
     leader: "Ana Martinez",
     currency: "UYU",
     amount: 4500,
@@ -400,7 +401,7 @@ export const moneyRequests: MoneyRequest[] = [
       {
         id: "1",
         action: "created",
-        user: "Ana Martinez",
+        user: "Ana Martínez",
         date: "2026-03-21T09:00:00",
       },
       {
@@ -415,7 +416,7 @@ export const moneyRequests: MoneyRequest[] = [
   {
     id: "3",
     date: "2026-03-20",
-    concept: "Tarifas de Visa para Viaje Misionero",
+    concept: "Tarifas de visa para viaje misionero",
     description: "Tarifas de procesamiento de visa para el próximo viaje misionero a Brasil.",
     ministry: "Misiones",
     leader: "Roberto Silva",
@@ -434,9 +435,9 @@ export const moneyRequests: MoneyRequest[] = [
   {
     id: "4",
     date: "2026-03-19",
-    concept: "Suministros para Banco de Alimentos",
+    concept: "Suministros para banco de alimentos",
     description: "Artículos de alimentos no perecederos para banco de alimentos comunitario.",
-    ministry: "Alcance comunitario",
+    ministry: "Alcance Comunitario",
     leader: "Laura Gonzalez",
     currency: "UYU",
     amount: 28_000,
@@ -445,7 +446,7 @@ export const moneyRequests: MoneyRequest[] = [
       {
         id: "1",
         action: "created",
-        user: "Laura Gonzalez",
+        user: "Laura González",
         date: "2026-03-19T08:45:00",
       },
       {
@@ -460,9 +461,9 @@ export const moneyRequests: MoneyRequest[] = [
   {
     id: "5",
     date: "2026-03-18",
-    concept: "Materiales Para Manualidades",
+    concept: "Materiales para manualidades",
     description: "Suministros de arte para actividades de escuela dominical.",
-    ministry: "Niños",
+    ministry: "Ministerio de Niños",
     leader: "Diego Fernandez",
     currency: "UYU",
     amount: 6500,
@@ -471,7 +472,7 @@ export const moneyRequests: MoneyRequest[] = [
       {
         id: "1",
         action: "created",
-        user: "Diego Fernandez",
+        user: "Diego Fernández",
         date: "2026-03-18T10:00:00",
       },
       {
