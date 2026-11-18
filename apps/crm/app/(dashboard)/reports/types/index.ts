@@ -1,86 +1,65 @@
-export type ReportCurrency = "UYU" | "USD";
+export type ReportStatus = "READY" | "PROCESSING";
+
+export type ReportKind = "SUMMARY" | "COMPARISON" | "DISTRIBUTION" | "DETAIL";
+
+export type ReportFormat = "PDF" | "CSV" | "PDF_CSV";
 
 export type ReportMovementType = "INCOME" | "EXPENSE";
-
-export type GeneratedReportStatus = "READY" | "PROCESSING" | "ERROR";
-
-export type ReportTemplate = "TREASURY" | "MINISTRY" | "EXECUTIVE";
-
-export type ReportExportFormat = "PDF" | "CSV" | "PDF_CSV";
-
-export type GeneratedReportsViewMode = "GRID" | "LIST";
-
-export interface ReportFilters {
-  dateFrom: Date | null;
-  dateTo: Date | null;
-  ministries: string[];
-  projects: string[];
-  currency: ReportCurrency | null;
-  movementType: ReportMovementType | null;
-  minAmount: number | null;
-  maxAmount: number | null;
-}
-
-export interface ReportSummary {
-  totalIncome: number;
-  totalExpenses: number;
-  balance: number;
-  movementCount: number;
-}
-
-export interface ReportMovementRow {
-  id: string;
-  date: string;
-  concept: string;
-  type: ReportMovementType;
-  ministry: string;
-  project: string;
-  currency: ReportCurrency;
-  amount: number;
-}
-
-export interface ReportViewState {
-  isLoading?: boolean;
-  isEmpty?: boolean;
-  errorMessage?: string | null;
-}
 
 export interface GeneratedReportListItem {
   id: string;
   name: string;
-  description: string;
-  status: GeneratedReportStatus;
-  template: ReportTemplate;
-  createdBy: string;
-  createdAt: string;
-  generatedAt: string;
-  dateRangeLabel: string;
-  ministries: string[];
-  projects: string[];
-  exportFormat: ReportExportFormat;
-  movementCount: number;
+  /** "Ejecutivo · 1 – 31 oct": template and period shown under the name. */
+  subtitle: string;
+  kind: ReportKind;
+  status: ReportStatus;
+  format: ReportFormat;
+  /** "Generado hoy 09:12", or "Generando…". */
+  generatedLabel: string;
 }
 
-export interface ReportBuilderValues {
+export interface ReportTemplateItem {
+  kind: ReportKind;
   name: string;
   description: string;
-  template: ReportTemplate;
-  filters: ReportFilters;
-  includeSummary: boolean;
-  includeCharts: boolean;
-  includeMovements: boolean;
-  exportFormat: ReportExportFormat;
+  /** Short line used by the creation form. */
+  hint: string;
+}
+
+export interface ReportKpi {
+  label: string;
+  value: string;
+  detail: string;
+}
+
+export interface ReportMonthBar {
+  month: string;
+  income: number;
+  expense: number;
+}
+
+export interface ReportMinistryShare {
+  label: string;
+  percent: number;
+}
+
+export interface ReportMovementRow {
+  id: string;
+  dateLabel: string;
+  concept: string;
+  note: string;
+  type: ReportMovementType;
+  project: string;
+  /** Already formatted with sign and currency, e.g. "+ $U 45.000". */
+  amountLabel: string;
 }
 
 export interface ReportDetailViewData {
-  id: string;
-  name: string;
-  description: string;
-  generatedAt: string;
-  createdAt: string;
-  filters: ReportFilters;
-  ministryOptions: string[];
-  projectOptions: string[];
-  summary: ReportSummary | null;
+  report: GeneratedReportListItem;
+  generatedBy: string;
+  kpis: [ReportKpi, ReportKpi, ReportKpi, ReportKpi];
+  months: ReportMonthBar[];
+  shares: ReportMinistryShare[];
   movements: ReportMovementRow[];
+  movementTotal: number;
 }

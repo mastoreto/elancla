@@ -1,5 +1,6 @@
 import { Ban, Clock, MapPinOff, SearchX } from "lucide-react";
 import type { PublicAccessState } from "@/app/(dashboard)/assembly/types";
+import { IconBubble } from "@/components/dashboard/board/icon-bubble";
 import { cn } from "@/lib/utils";
 
 type BlockedState = Exclude<PublicAccessState, "visible">;
@@ -29,11 +30,12 @@ const MESSAGES = {
 
 const publicAccessMessageInformePage = {
   card: cn(
-    "flex flex-col items-center gap-4 rounded-2xl border bg-card p-8 text-center shadow-card",
+    "flex flex-col items-center gap-4 rounded-[28px] bg-card p-8 text-center shadow-(--sombra)",
   ),
-  icon: cn("size-10 text-muted-foreground"),
+  bubble: cn("size-14"),
+  icon: cn("size-6"),
   title: cn("font-display text-2xl font-medium text-balance"),
-  body: cn("text-sm leading-6 text-muted-foreground"),
+  body: cn("text-sm leading-6 text-[var(--tinta-suave)]"),
 };
 
 interface PublicAccessMessageProps {
@@ -46,7 +48,9 @@ export function PublicAccessMessage({ state }: PublicAccessMessageProps) {
 
   return (
     <div className={publicAccessMessageInformePage.card}>
-      <Icon aria-hidden="true" className={publicAccessMessageInformePage.icon} />
+      <IconBubble className={publicAccessMessageInformePage.bubble} tone="gold">
+        <Icon aria-hidden="true" className={publicAccessMessageInformePage.icon} />
+      </IconBubble>
       <h1 className={publicAccessMessageInformePage.title}>{message.title}</h1>
       <p className={publicAccessMessageInformePage.body}>{message.body}</p>
     </div>

@@ -8,7 +8,7 @@ import { PublicAccessMessage } from "./components/public-access-message";
 import { PublicReportView } from "./components/public-report-view";
 
 const informePage = {
-  main: cn("mx-auto flex min-h-dvh w-full max-w-2xl flex-col justify-center px-4 py-10"),
+  main: cn("mx-auto flex min-h-dvh w-full max-w-3xl flex-col justify-center px-4 py-10"),
 };
 
 export const metadata: Metadata = {
