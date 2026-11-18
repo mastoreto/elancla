@@ -1,18 +1,25 @@
 "use client";
 
-import { Save } from "lucide-react";
+import { Check } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import { SettingsSectionShell } from "@/app/(dashboard)/settings/components/settings-section-shell";
-import { Button } from "@/components/ui/button";
-import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { BoardButton } from "@/components/dashboard/board/board-button";
+import { BoardCard, BoardCardHeader } from "@/components/dashboard/board/board-card";
+import { BoardTextarea } from "@/components/dashboard/board/board-form";
+import { cn } from "@/lib/utils";
 import { updateAbout } from "../actions";
+
+const aboutSectionWebsitePage = {
+  body: cn("flex flex-col gap-3.5"),
+  footer: cn("flex justify-end"),
+  icon: cn("size-4"),
+};
 
 export function AboutSection({ initialContent }: { initialContent: string }) {
   const [content, setContent] = useState(initialContent);
   const [isPending, startTransition] = useTransition();
 
-  const handleSave = () => {
+  const save = () => {
     startTransition(async () => {
       try {
         await updateAbout(content);
@@ -24,22 +31,27 @@ export function AboutSection({ initialContent }: { initialContent: string }) {
   };
 
   return (
-    <SettingsSectionShell
-      title="Sobre nosotros"
-      description="Texto que se muestra en la sección de presentación del sitio web de la iglesia."
-      action={
-        <Button size="sm" onClick={handleSave} disabled={isPending}>
-          <Save className="size-3.5" />
-          {isPending ? "Guardando…" : "Guardar"}
-        </Button>
-      }
-    >
-      <RichTextEditor
-        value={content}
-        onChange={setContent}
-        placeholder="Cuéntale a los visitantes quiénes son, cuál es su misión y visión…"
-        minHeight="280px"
+    <BoardCard>
+      <BoardCardHeader
+        subtitle="Lo que verán los visitantes en la sección Nosotros"
+        title="Sobre nosotros"
       />
-    </SettingsSectionShell>
+      <div className={aboutSectionWebsitePage.body}>
+        <BoardTextarea
+          id="about-text"
+          label="Texto"
+          onChange={(event) => setContent(event.target.value)}
+          placeholder="Cuéntale a los visitantes quiénes son y cuál es su misión"
+          rows={6}
+          value={content}
+        />
+        <div className={aboutSectionWebsitePage.footer}>
+          <BoardButton disabled={isPending} onClick={save} variant="primary">
+            <Check aria-hidden="true" className={aboutSectionWebsitePage.icon} />
+            {isPending ? "Guardando…" : "Guardar cambios"}
+          </BoardButton>
+        </div>
+      </div>
+    </BoardCard>
   );
 }

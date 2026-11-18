@@ -1,141 +1,116 @@
 "use client";
 
-import { Save } from "lucide-react";
-import { RadioGroup as RadioGroupPrimitive } from "radix-ui";
+import { Globe, Lock, Sun } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import { SettingsSectionShell } from "@/app/(dashboard)/settings/components/settings-section-shell";
-import { Button } from "@/components/ui/button";
+import { BoardCard, BoardCardHeader } from "@/components/dashboard/board/board-card";
+import { IconBubble, type IconBubbleTone } from "@/components/dashboard/board/icon-bubble";
+import { StatusPill, type StatusPillTone } from "@/components/dashboard/board/status-pill";
 import { cn } from "@/lib/utils";
 import { updateSiteStatus } from "../actions";
 
-const siteStatusSectionContentPage = {
-  checkedOnline: cn(
-    "data-[state=checked]:border-income data-[state=checked]:bg-success-surface dark:data-[state=checked]:bg-success-surface/40",
-  ),
-  checkedMaintenance: cn(
-    "data-[state=checked]:border-oro data-[state=checked]:bg-warning-surface dark:data-[state=checked]:bg-warning-surface/40",
-  ),
-  checkedOffline: cn(
-    "data-[state=checked]:border-granada data-[state=checked]:bg-accent dark:data-[state=checked]:bg-accent/40",
-  ),
-  option: cn(
-    "group relative flex flex-col gap-2 rounded-xl border border-border bg-background p-4 text-left",
-  ),
-  optionInteractive: cn("cursor-pointer transition-all outline-none"),
-  optionHover: cn("hover:border-foreground/25 hover:shadow-sm"),
-  radio: cn("size-4 rounded-full border-2 border-border transition-colors"),
-  radioInner: cn("flex h-full w-full items-center justify-center"),
-  optionHint: cn("text-xs leading-relaxed text-muted-foreground"),
-};
-
 type SiteStatus = "online" | "maintenance" | "closed";
 
-const statusOptions: {
+const siteStatusSectionWebsitePage = {
+  options: cn("grid gap-3.5 md:grid-cols-3"),
+  option: cn(
+    "flex flex-col items-start gap-2.5 rounded-[26px] bg-card p-[18px] text-left transition",
+    "shadow-[inset_0_0_0_1px_rgba(42,21,26,0.16)] hover:-translate-y-px disabled:opacity-60",
+    "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+  ),
+  bubble: cn("size-[42px]"),
+  icon: cn("size-5"),
+  label: cn("font-display text-[19px] font-medium"),
+  hint: cn("text-[13px] leading-normal text-[var(--tinta-suave)]"),
+};
+
+const STATUS_OPTIONS: {
   value: SiteStatus;
   label: string;
   description: string;
-  color: string;
-  dot: string;
-  ring: string;
+  icon: typeof Globe;
+  bubble: IconBubbleTone;
+  pill: StatusPillTone;
+  selected: string;
 }[] = [
   {
     value: "online",
     label: "En línea",
     description: "El sitio web es visible y accesible para todos.",
-    color: "text-income",
-    dot: "bg-income",
-    ring: siteStatusSectionContentPage.checkedOnline,
+    icon: Globe,
+    bubble: "green",
+    pill: "green",
+    selected: cn("bg-[var(--vida-50)] shadow-[inset_0_0_0_2px_var(--vida)]"),
   },
   {
     value: "maintenance",
     label: "Mantenimiento",
     description: "Se muestra una página de mantenimiento a los visitantes.",
-    color: "text-warning",
-    dot: "bg-oro",
-    ring: siteStatusSectionContentPage.checkedMaintenance,
+    icon: Sun,
+    bubble: "gold",
+    pill: "gold",
+    selected: cn("bg-[var(--oro-50)] shadow-[inset_0_0_0_2px_var(--oro)]"),
   },
   {
     value: "closed",
     label: "Cerrado",
     description: "El sitio está inaccesible. Solo los administradores pueden verlo.",
-    color: "text-expense",
-    dot: "bg-granada",
-    ring: siteStatusSectionContentPage.checkedOffline,
+    icon: Lock,
+    bubble: "rose",
+    pill: "rose",
+    selected: cn("bg-[var(--granada-50)] shadow-[inset_0_0_0_2px_var(--primary)]"),
   },
 ];
 
 export function SiteStatusSection({ initialStatus }: { initialStatus: SiteStatus }) {
   const [status, setStatus] = useState<SiteStatus>(initialStatus);
   const [isPending, startTransition] = useTransition();
+  const current = STATUS_OPTIONS.find((option) => option.value === status) ?? STATUS_OPTIONS[0];
 
-  const handleSave = () => {
+  const select = (next: SiteStatus) => {
+    if (next === status) return;
+    const previous = status;
+    setStatus(next);
     startTransition(async () => {
       try {
-        await updateSiteStatus(status);
+        await updateSiteStatus(next);
         toast.success("Estado del sitio actualizado");
       } catch {
+        setStatus(previous);
         toast.error("No se pudo actualizar el estado del sitio");
       }
     });
   };
 
   return (
-    <SettingsSectionShell
-      title="Estado del sitio"
-      description="Controla la visibilidad pública del sitio web de la iglesia."
-      action={
-        <Button size="sm" onClick={handleSave} disabled={isPending}>
-          <Save className="size-3.5" />
-          {isPending ? "Guardando…" : "Guardar"}
-        </Button>
-      }
-    >
-      <RadioGroupPrimitive.Root
-        value={status}
-        onValueChange={(v) => setStatus(v as SiteStatus)}
-        className="grid gap-3 sm:grid-cols-3"
-      >
-        {statusOptions.map((opt) => (
-          <RadioGroupPrimitive.Item
-            key={opt.value}
-            value={opt.value}
-            className={cn(
-              siteStatusSectionContentPage.option,
-              siteStatusSectionContentPage.optionInteractive,
-              siteStatusSectionContentPage.optionHover,
-              "focus-visible:ring-[3px] focus-visible:ring-ring/30",
-              opt.ring,
-            )}
-          >
-            <div className="flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <span
-                  className={cn(
-                    "relative size-2 rounded-full",
-                    opt.dot,
-                    opt.value === "online" &&
-                      "before:absolute before:inset-[-3px] before:rounded-full before:bg-income/40 before:content-[''] group-data-[state=checked]:before:animate-ping",
-                  )}
-                />
-                <span className={cn("text-sm font-semibold", opt.color)}>{opt.label}</span>
-              </span>
-              <div
-                className={cn(
-                  siteStatusSectionContentPage.radio,
-                  "group-data-[state=checked]:border-current",
-                  opt.color,
-                )}
-              >
-                <RadioGroupPrimitive.Indicator className={siteStatusSectionContentPage.radioInner}>
-                  <div className={cn("size-1.5 rounded-full", opt.dot)} />
-                </RadioGroupPrimitive.Indicator>
-              </div>
-            </div>
-            <p className={siteStatusSectionContentPage.optionHint}>{opt.description}</p>
-          </RadioGroupPrimitive.Item>
-        ))}
-      </RadioGroupPrimitive.Root>
-    </SettingsSectionShell>
+    <BoardCard>
+      <BoardCardHeader
+        action={<StatusPill tone={current.pill}>{current.label}</StatusPill>}
+        subtitle="Controla la visibilidad pública del sitio web de la iglesia"
+        title="Estado del sitio"
+      />
+      <div className={siteStatusSectionWebsitePage.options}>
+        {STATUS_OPTIONS.map((option) => {
+          const Icon = option.icon;
+          const isSelected = option.value === status;
+          return (
+            <button
+              aria-pressed={isSelected}
+              className={cn(siteStatusSectionWebsitePage.option, isSelected && option.selected)}
+              disabled={isPending}
+              key={option.value}
+              onClick={() => select(option.value)}
+              type="button"
+            >
+              <IconBubble className={siteStatusSectionWebsitePage.bubble} tone={option.bubble}>
+                <Icon aria-hidden="true" className={siteStatusSectionWebsitePage.icon} />
+              </IconBubble>
+              <b className={siteStatusSectionWebsitePage.label}>{option.label}</b>
+              <span className={siteStatusSectionWebsitePage.hint}>{option.description}</span>
+            </button>
+          );
+        })}
+      </div>
+    </BoardCard>
   );
 }

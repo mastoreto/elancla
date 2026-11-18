@@ -1,78 +1,94 @@
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+"use client";
+
+import { Pencil, Play, Trash2 } from "lucide-react";
+import { BoardConfirmDialog } from "@/components/dashboard/board/board-confirm-dialog";
+import { RowIconButton, rowIconButtonClass } from "@/components/dashboard/board/row-icon-button";
+import { ContentStatusPill, ContentTable } from "@/components/dashboard/content";
+import { getChurchRoutePath } from "@/lib/church";
+import { formatCount, formatShortDate } from "@/lib/format-content";
 import { cn } from "@/lib/utils";
 import type { Sermon } from "../types";
-import { SermonStatusBadge } from "./sermon-status-badge";
+import { describeSeries } from "../utils";
 
-interface SermonsTableProps {
-  sermons: Sermon[];
-}
+const COLUMNS = "1.7fr 1.2fr 110px 80px 120px 130px";
+const LABELS = ["Sermón", "Serie", "Estado", "Fecha", "Reproducciones", ""];
 
 const sermonsTableSermonsPage = {
-  container: cn("overflow-hidden rounded-xl border border-border bg-card shadow-card"),
-  numericHead: cn("text-right"),
-  title: cn("font-medium"),
-  meta: cn("text-xs text-muted-foreground"),
-  series: cn("text-muted-foreground"),
-  numeric: cn("text-right font-mono text-sm tabular-nums"),
-  muted: cn("text-muted-foreground"),
-  empty: cn("h-24 text-center text-muted-foreground"),
+  muted: cn("text-sm text-[var(--tinta-suave)]"),
+  plays: cn("font-bold tabular-nums"),
+  icon: cn("size-4"),
 };
 
-const NUMBER_FORMAT = new Intl.NumberFormat("es-UY");
+interface SermonsTableProps {
+  /** Sermons visible on the current page. */
+  sermons: Sermon[];
+  /** Whole library, used to tell real series from one-offs. */
+  library: Sermon[];
+  onDelete: (id: string) => void;
+  footer: React.ReactNode;
+}
 
-export function SermonsTable({ sermons }: SermonsTableProps) {
+export function SermonsTable({ sermons, library, onDelete, footer }: SermonsTableProps) {
   return (
-    <div className={sermonsTableSermonsPage.container}>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Sermón</TableHead>
-            <TableHead>Serie</TableHead>
-            <TableHead>Estado</TableHead>
-            <TableHead>Fecha</TableHead>
-            <TableHead className={sermonsTableSermonsPage.numericHead}>Reproducciones</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {sermons.length === 0 ? (
-            <TableRow>
-              <TableCell className={sermonsTableSermonsPage.empty} colSpan={5}>
-                No se encontraron sermones.
-              </TableCell>
-            </TableRow>
-          ) : (
-            sermons.map((sermon) => (
-              <TableRow key={sermon.id}>
-                <TableCell>
-                  <p className={sermonsTableSermonsPage.title}>{sermon.title}</p>
-                  <p className={sermonsTableSermonsPage.meta}>
-                    {sermon.preacher} · {sermon.passage}
-                  </p>
-                </TableCell>
-                <TableCell className={sermonsTableSermonsPage.series}>{sermon.series}</TableCell>
-                <TableCell>
-                  <SermonStatusBadge status={sermon.status} />
-                </TableCell>
-                <TableCell className={sermonsTableSermonsPage.muted}>
-                  {sermon.date ? format(new Date(sermon.date), "d MMM", { locale: es }) : "—"}
-                </TableCell>
-                <TableCell className={sermonsTableSermonsPage.numeric}>
-                  {sermon.plays === undefined ? "—" : NUMBER_FORMAT.format(sermon.plays)}
-                </TableCell>
-              </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
-    </div>
+    <ContentTable
+      columns={COLUMNS}
+      emptyMessage="No hay sermones encontrados."
+      footer={footer}
+      labels={LABELS}
+      rows={sermons.map((sermon) => ({
+        id: sermon.id,
+        icon: Play,
+        tone: "rose",
+        title: sermon.title,
+        subtitle: `${sermon.preacher} · ${sermon.passage}`,
+        href: getChurchRoutePath("sermons", "new"),
+        cells: [
+          <span className={sermonsTableSermonsPage.muted} key="series">
+            {describeSeries(sermon, library)}
+          </span>,
+          <ContentStatusPill key="status" status={sermon.status} />,
+          <span className={sermonsTableSermonsPage.muted} key="date">
+            {formatShortDate(sermon.date)}
+          </span>,
+          <b className={sermonsTableSermonsPage.plays} key="plays">
+            {formatCount(sermon.plays)}
+          </b>,
+        ],
+        actions: (
+          <>
+            <a
+              aria-label={`Ver ${sermon.title} en YouTube`}
+              className={rowIconButtonClass}
+              href={sermon.youtubeUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <Play aria-hidden="true" className={sermonsTableSermonsPage.icon} />
+            </a>
+            <RowIconButton
+              href={getChurchRoutePath("sermons", "new")}
+              label={`Editar ${sermon.title}`}
+            >
+              <Pencil aria-hidden="true" className={sermonsTableSermonsPage.icon} />
+            </RowIconButton>
+            <BoardConfirmDialog
+              confirmLabel="Eliminar sermón"
+              description={`«${sermon.title}» dejará de estar en la biblioteca y en el sitio. No se puede deshacer.`}
+              onConfirm={() => onDelete(sermon.id)}
+              title="¿Eliminar este sermón?"
+              trigger={
+                <button
+                  aria-label={`Eliminar ${sermon.title}`}
+                  className={rowIconButtonClass}
+                  type="button"
+                >
+                  <Trash2 aria-hidden="true" className={sermonsTableSermonsPage.icon} />
+                </button>
+              }
+            />
+          </>
+        ),
+      }))}
+    />
   );
 }

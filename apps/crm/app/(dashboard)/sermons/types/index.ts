@@ -12,6 +12,7 @@ export interface Sermon {
   /** ISO date of the service; undefined while the sermon is a draft. */
   date: string | undefined;
   plays: number | undefined;
+  youtubeUrl: string;
 }
 
 export interface SermonFormValues {

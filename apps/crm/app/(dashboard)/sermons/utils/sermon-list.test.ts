@@ -1,23 +1,21 @@
 import { describe, expect, test } from "bun:test";
 import type { Sermon } from "../types";
-import { countByStatus, filterSermons, getTotalPlays, isValidYoutubeUrl } from "./sermon-list";
+import { describeSeries, getSeriesNames, getTotalPlays, isValidYoutubeUrl } from "./sermon-list";
+
+const base = {
+  preacher: "Ana",
+  passage: "Efesios 2",
+  date: "2026-11-16",
+  youtubeUrl: "https://youtube.com/watch?v=abc",
+} as const;
 
 const sermons: Sermon[] = [
+  { ...base, id: "1", title: "Gracia", series: "A", status: "published", plays: 10 },
+  { ...base, id: "2", title: "Fe", series: "A", status: "published", plays: 5 },
   {
-    id: "1",
-    title: "Gracia",
-    preacher: "Ana",
-    passage: "Efesios 2",
-    series: "A",
-    status: "published",
-    date: "2026-11-16",
-    plays: 10,
-  },
-  {
-    id: "2",
+    ...base,
+    id: "3",
     title: "Esperanza",
-    preacher: "Luis",
-    passage: "Isaías 40",
     series: "B",
     status: "draft",
     date: undefined,
@@ -26,14 +24,14 @@ const sermons: Sermon[] = [
 ];
 
 describe("sermon list helpers", () => {
-  test("filters by status and text", () => {
-    expect(filterSermons(sermons, "", "draft").map((s) => s.id)).toEqual(["2"]);
-    expect(filterSermons(sermons, "efesios", "all").map((s) => s.id)).toEqual(["1"]);
+  test("totals plays and lists series", () => {
+    expect(getTotalPlays(sermons)).toBe(15);
+    expect(getSeriesNames(sermons)).toEqual(["A", "B"]);
   });
 
-  test("counts statuses and totals plays", () => {
-    expect(countByStatus(sermons)).toEqual({ all: 2, published: 1, draft: 1 });
-    expect(getTotalPlays(sermons)).toBe(10);
+  test("prefixes only real series", () => {
+    expect(describeSeries(sermons[0] as Sermon, sermons)).toBe("Serie: A");
+    expect(describeSeries(sermons[2] as Sermon, sermons)).toBe("B");
   });
 
   test("accepts only youtube links", () => {
