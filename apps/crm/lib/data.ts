@@ -12,7 +12,7 @@ export const projects: Project[] = [
     id: "1",
     name: "Fondo de Construcción",
     description:
-      "Fondos asignados para mantenimiento de la iglesia, reparaciones y mejoras incluyendo reparaciones de techo, pintura y mejoras de instalaciones.",
+      "Fondos para mantenimiento de la iglesia: techo, pintura y mejoras de instalaciones.",
     ministries: ["General"],
     budget: 500_000,
     currency: "UYU",
@@ -20,33 +20,48 @@ export const projects: Project[] = [
     status: "in_progress",
     startDate: "2026-01-01",
     endDate: "2026-12-31",
-    createdBy: "Maria Garcia",
+    createdBy: "María García",
     documents: [
       {
         id: "1",
-        name: "Reporte de Evaluación de Construcción.pdf",
+        name: "Evaluación de construcción.pdf",
         type: "pdf",
         url: "/documents/building-assessment.pdf",
-        uploadedBy: "Maria Garcia",
+        uploadedBy: "María García",
         uploadedAt: "2026-01-15T10:00:00",
+      },
+      {
+        id: "2",
+        name: "Foto del techo.jpg",
+        type: "image",
+        url: "/documents/roof.jpg",
+        uploadedBy: "Carlos Rodríguez",
+        uploadedAt: "2026-03-02T11:30:00",
       },
     ],
     history: [
       {
         id: "1",
         action: "created",
-        user: "Maria Garcia",
+        user: "María García",
         date: "2026-01-01T09:00:00",
-        details: "Proyecto creado con presupuesto inicial de $U 500,000",
+        details: "Presupuesto inicial de $U 500.000",
       },
       {
         id: "2",
         action: "status_changed",
-        user: "Maria Garcia",
+        user: "María García",
         date: "2026-01-15T14:00:00",
         previousValue: "planning",
         newValue: "in_progress",
-        details: "Inicio de ejecución del proyecto después de aprobación de junta",
+        details: "Aprobación de la junta",
+      },
+      {
+        id: "3",
+        action: "budget_updated",
+        user: "María García",
+        date: "2026-03-02T10:20:00",
+        details: "Sin cambios de monto",
       },
     ],
   },
@@ -55,7 +70,7 @@ export const projects: Project[] = [
     name: "Campamento de Jóvenes 2026",
     description:
       "Campamento de verano anual incluyendo transporte, alojamiento, comida y actividades para 50 jóvenes.",
-    ministries: ["Ministerio de Jóvenes"],
+    ministries: ["Jóvenes"],
     budget: 75_000,
     currency: "UYU",
     spent: 15_000,
@@ -76,16 +91,16 @@ export const projects: Project[] = [
   },
   {
     id: "3",
-    name: "Viaje Misionero a Brasil",
+    name: "Viaje misionero a Brasil",
     description:
       "Viaje misionero para apoyar a iglesia asociada en São Paulo. Incluye vuelos, alojamiento y suministros misioneros.",
     ministries: ["Misiones"],
     budget: 3500,
     currency: "USD",
-    spent: 1520,
+    spent: 1200,
     status: "in_progress",
-    startDate: "2026-04-01",
-    endDate: "2026-04-15",
+    startDate: "2026-07-01",
+    endDate: "2026-07-31",
     createdBy: "Roberto Silva",
     documents: [
       {
@@ -134,16 +149,16 @@ export const projects: Project[] = [
   },
   {
     id: "4",
-    name: "Banco de Alimentos Comunitario",
+    name: "Banco de alimentos comunitario",
     description:
       "Programa mensual de distribución de alimentos para familias necesitadas de nuestra comunidad.",
-    ministries: ["Alcance Comunitario"],
+    ministries: ["Alcance comunitario"],
     budget: 120_000,
     currency: "UYU",
     spent: 120_000,
     status: "finished",
     startDate: "2025-07-01",
-    endDate: "2026-01-31",
+    endDate: "2026-03-31",
     createdBy: "Laura Gonzalez",
     documents: [],
     history: [
@@ -166,16 +181,16 @@ export const projects: Project[] = [
   },
   {
     id: "5",
-    name: "Actualización de Equipo de Adoración",
+    name: "Actualización del equipo de adoración",
     description:
       "Compra de nuevo sistema de sonido, proyector e instrumentos musicales para servicios de adoración.",
-    ministries: ["Equipo de Adoración"],
+    ministries: ["Adoración"],
     budget: 850,
     currency: "USD",
     spent: 850,
     status: "closed",
     startDate: "2025-10-01",
-    endDate: "2025-12-15",
+    endDate: "2025-12-31",
     createdBy: "Ana Martinez",
     documents: [
       {
@@ -215,9 +230,9 @@ export const projects: Project[] = [
   },
   {
     id: "6",
-    name: "Sunday School Materials",
+    name: "Materiales de escuela dominical",
     description: "Educational materials and supplies for children Sunday school classes.",
-    ministries: ["Children Ministry"],
+    ministries: ["Niños"],
     budget: 25_000,
     currency: "UYU",
     spent: 6500,
@@ -267,7 +282,7 @@ export const movements: Movement[] = [
     description: "Special donation for youth camp",
     currency: "USD",
     amount: 500,
-    project: "Youth Ministry",
+    project: "Jóvenes",
   },
   {
     id: "4",
@@ -292,13 +307,13 @@ export const movements: Movement[] = [
   {
     id: "6",
     date: "2026-03-17",
-    concept: "Building Maintenance",
+    concept: "Mantenimiento del templo",
     type: "expense",
     reconciliation: "reconciled",
-    description: "Roof repair materials",
+    description: "Pintura del frente",
     currency: "UYU",
     amount: 35_000,
-    project: "Building Fund",
+    project: "Fondo de Construcción",
   },
   {
     id: "7",
@@ -309,7 +324,7 @@ export const movements: Movement[] = [
     description: "Fundraiser for mission trip",
     currency: "USD",
     amount: 1200,
-    project: "Missions",
+    project: "Misiones",
   },
   {
     id: "8",
@@ -335,11 +350,11 @@ export const balances = {
 };
 
 export const ministries: Ministry[] = [
-  { id: "1", name: "Ministerio de Jóvenes", budget: 50_000, budgetCurrency: "UYU" },
-  { id: "2", name: "Equipo de Adoración", budget: 30_000, budgetCurrency: "UYU" },
+  { id: "1", name: "Jóvenes", budget: 50_000, budgetCurrency: "UYU" },
+  { id: "2", name: "Adoración", budget: 30_000, budgetCurrency: "UYU" },
   { id: "3", name: "Misiones", budget: 1500, budgetCurrency: "USD" },
-  { id: "4", name: "Alcance Comunitario", budget: 25_000, budgetCurrency: "UYU" },
-  { id: "5", name: "Ministerio de Niños", budget: 20_000, budgetCurrency: "UYU" },
+  { id: "4", name: "Alcance comunitario", budget: 25_000, budgetCurrency: "UYU" },
+  { id: "5", name: "Niños", budget: 20_000, budgetCurrency: "UYU" },
 ];
 
 export const leaders: Leader[] = [
@@ -357,7 +372,7 @@ export const moneyRequests: MoneyRequest[] = [
     concept: "Suministros para Campamento de Jóvenes",
     description:
       "Suministros para el próximo retiro de jóvenes incluyendo refrigerios, materiales y transporte.",
-    ministry: "Ministerio de Jóvenes",
+    ministry: "Jóvenes",
     leader: "Carlos Rodriguez",
     currency: "UYU",
     amount: 15_000,
@@ -376,7 +391,7 @@ export const moneyRequests: MoneyRequest[] = [
     date: "2026-03-21",
     concept: "Nuevas Cuerdas de Guitarra",
     description: "Cuerdas de reemplazo para guitarras de adoración.",
-    ministry: "Equipo de Adoración",
+    ministry: "Adoración",
     leader: "Ana Martinez",
     currency: "UYU",
     amount: 4500,
@@ -421,7 +436,7 @@ export const moneyRequests: MoneyRequest[] = [
     date: "2026-03-19",
     concept: "Suministros para Banco de Alimentos",
     description: "Artículos de alimentos no perecederos para banco de alimentos comunitario.",
-    ministry: "Alcance Comunitario",
+    ministry: "Alcance comunitario",
     leader: "Laura Gonzalez",
     currency: "UYU",
     amount: 28_000,
@@ -447,7 +462,7 @@ export const moneyRequests: MoneyRequest[] = [
     date: "2026-03-18",
     concept: "Materiales Para Manualidades",
     description: "Suministros de arte para actividades de escuela dominical.",
-    ministry: "Ministerio de Niños",
+    ministry: "Niños",
     leader: "Diego Fernandez",
     currency: "UYU",
     amount: 6500,
