@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getLiveStream } from 'src/data/youtube';
 
-// Polled by the site header (scripts/live.ts). The CDN cache keeps YouTube quota use at ~1 call per minute.
+// Polled by the site header (src/scripts/live). The CDN cache keeps YouTube quota use at ~1 call per minute.
 export const GET: APIRoute = async () => {
   const live = await getLiveStream();
   return new Response(

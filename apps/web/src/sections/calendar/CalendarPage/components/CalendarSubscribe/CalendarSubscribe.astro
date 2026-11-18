@@ -1,0 +1,52 @@
+---
+import Button from 'src/components/ui/Button';
+import AnchorMark from 'src/components/AnchorMark';
+import type { Messages } from 'src/i18n/messages';
+import { SECTION, SECTION_SPACING } from 'src/sections/calendar/CalendarPage/styles';
+import cn from 'src/utils/cn';
+
+interface Props {
+  copy: Messages['calendar'];
+  googleHref: string;
+  icsHref: string;
+}
+const { copy, googleHref, icsHref } = Astro.props;
+
+const ACTION_VARIANT = {
+  solid: 'justify-center bg-obra-white px-6.5 text-obra-red',
+  outline: 'justify-center bg-transparent px-6.5 text-white shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.7)] hover:shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.7)]',
+} as const;
+
+const calendarSubscribe = {
+  container: cn(SECTION, SECTION_SPACING.default),
+  panel: cn(
+    'relative flex flex-col gap-8 overflow-hidden rounded-[48px] bg-obra-red',
+    'px-[clamp(1.5rem,5vw,4rem)] py-[clamp(2rem,5vw,3.5rem)] text-white',
+    'max-md:rounded-[36px] min-[900px]:flex-row min-[900px]:items-center min-[900px]:gap-14',
+  ),
+  markBox: cn('pointer-events-none absolute right-10 -bottom-10 w-64 opacity-10'),
+  mark: cn('h-auto w-full fill-obra-white'),
+  copy: cn('relative flex flex-1 flex-col gap-3.5'),
+  eyebrow: cn('font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] text-obra-blush uppercase'),
+  title: cn('ln-h text-[clamp(1.875rem,3.6vw,3.25rem)] leading-none'),
+  actions: cn('relative flex flex-[0_0_21rem] flex-col gap-3', 'max-md:flex-none'),
+  google: cn(ACTION_VARIANT.solid),
+  ics: cn(ACTION_VARIANT.outline),
+};
+---
+
+<section class={calendarSubscribe.container}>
+  <div class={calendarSubscribe.panel}>
+    <span class={calendarSubscribe.markBox} aria-hidden="true">
+      <AnchorMark id="cal-sub" outline={false} color="#fff" class={calendarSubscribe.mark} />
+    </span>
+    <div class={calendarSubscribe.copy}>
+      <span class={calendarSubscribe.eyebrow}>{copy.subscribe.eyebrow}</span>
+      <h3 class={calendarSubscribe.title}>{copy.subscribe.title}</h3>
+    </div>
+    <div class={calendarSubscribe.actions}>
+      <Button href={googleHref} class={calendarSubscribe.google} target="_blank" rel="noopener">{copy.subscribe.google}</Button>
+      <Button href={icsHref} class={calendarSubscribe.ics}>{copy.subscribe.ics}</Button>
+    </div>
+  </div>
+</section>

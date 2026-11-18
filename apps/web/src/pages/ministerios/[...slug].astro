@@ -1,9 +1,9 @@
 ---
-import MinistryTemplate from 'src/components/Ministry/MinistryTemplate.astro';
+import MinistryTemplate from 'src/sections/ministry/MinistryTemplate';
 import { getContentPageBySlug } from 'src/data/contentPages';
 import { defaultLocale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
-import Layout from 'src/layouts/Layout.astro';
+import Layout from 'src/layouts/Layout';
 
 const locale = defaultLocale;
 const { slug } = Astro.params;
