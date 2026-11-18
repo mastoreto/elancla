@@ -1,5 +1,6 @@
 import { Boxes, HandCoins, Plus, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   DashboardCard,
   DashboardCardHeader,
@@ -10,13 +11,17 @@ import { InventoryTable } from "./components/inventory-table";
 import { inventoryItems } from "./data/inventory-items";
 import { countByStatus, countNeedingAttention, getTotalUnits } from "./utils/inventory-stats";
 
+const inventoryPage = {
+  action: cn("rounded-full"),
+};
+
 /** biome-ignore lint/style/noDefaultExport: Next.js App Router page files require default exports. */
 export default function InventoryPage() {
   return (
     <>
       <DashboardPageHeader
         actions={
-          <Button className="rounded-full" type="button">
+          <Button className={inventoryPage.action} type="button">
             <Plus aria-hidden="true" />
             Nuevo ítem
           </Button>

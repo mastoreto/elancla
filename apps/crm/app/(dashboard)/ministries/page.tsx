@@ -1,5 +1,6 @@
 import { HeartHandshake, Plus, Users, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   DashboardCard,
   DashboardCardHeader,
@@ -10,6 +11,11 @@ import { MinistryCard } from "./components/ministry-card";
 import { ministries } from "./data/ministries";
 
 const PERCENT = 100;
+
+const ministriesPage = {
+  action: cn("rounded-full"),
+  grid: cn("grid gap-4 md:grid-cols-2 xl:grid-cols-3"),
+};
 
 /** biome-ignore lint/style/noDefaultExport: Next.js App Router page files require default exports. */
 export default function MinistriesPage() {
@@ -22,7 +28,7 @@ export default function MinistriesPage() {
     <>
       <DashboardPageHeader
         actions={
-          <Button className="rounded-full" type="button">
+          <Button className={ministriesPage.action} type="button">
             <Plus aria-hidden="true" />
             Nuevo ministerio
           </Button>
@@ -63,7 +69,7 @@ export default function MinistriesPage() {
           subtitle={`${ministries.length} ministerios`}
           title="Todos los ministerios"
         />
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className={ministriesPage.grid}>
           {ministries.map((ministry) => (
             <MinistryCard key={ministry.id} ministry={ministry} />
           ))}

@@ -6,8 +6,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import type { InventoryItem } from "../types";
 import { InventoryStatusBadge } from "./inventory-status-badge";
+
+const inventoryTableInventoryPage = {
+  headRow: cn("bg-bruma hover:bg-bruma"),
+  numeric: cn("text-right"),
+  numericCell: cn("text-right tabular-nums"),
+  name: cn("font-semibold"),
+  code: cn("font-mono text-[11px] text-muted-foreground"),
+};
 
 interface InventoryTableProps {
   items: readonly InventoryItem[];
@@ -17,29 +26,31 @@ export function InventoryTable({ items }: InventoryTableProps) {
   return (
     <Table>
       <TableHeader>
-        <TableRow className="bg-bruma hover:bg-bruma">
+        <TableRow className={inventoryTableInventoryPage.headRow}>
           <TableHead>Ítem</TableHead>
           <TableHead>Categoría</TableHead>
           <TableHead>Ubicación</TableHead>
-          <TableHead className="text-right">Cant.</TableHead>
+          <TableHead className={inventoryTableInventoryPage.numeric}>Cant.</TableHead>
           <TableHead>Estado</TableHead>
-          <TableHead className="text-right">Valor</TableHead>
+          <TableHead className={inventoryTableInventoryPage.numeric}>Valor</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {items.map((item) => (
           <TableRow key={item.id}>
             <TableCell>
-              <p className="font-semibold">{item.name}</p>
-              <p className="font-mono text-[11px] text-muted-foreground">{item.code}</p>
+              <p className={inventoryTableInventoryPage.name}>{item.name}</p>
+              <p className={inventoryTableInventoryPage.code}>{item.code}</p>
             </TableCell>
             <TableCell>{item.category}</TableCell>
             <TableCell>{item.location}</TableCell>
-            <TableCell className="text-right tabular-nums">{item.quantity}</TableCell>
+            <TableCell className={inventoryTableInventoryPage.numericCell}>
+              {item.quantity}
+            </TableCell>
             <TableCell>
               <InventoryStatusBadge status={item.status} />
             </TableCell>
-            <TableCell className="text-right tabular-nums">{item.value}</TableCell>
+            <TableCell className={inventoryTableInventoryPage.numericCell}>{item.value}</TableCell>
           </TableRow>
         ))}
       </TableBody>

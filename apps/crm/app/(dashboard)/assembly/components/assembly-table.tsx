@@ -6,8 +6,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import type { AssemblyReport } from "../types";
 import { AssemblyStatusBadge } from "./assembly-status-badge";
+
+const assemblyTableAssemblyPage = {
+  headRow: cn("bg-bruma hover:bg-bruma"),
+  numeric: cn("text-right"),
+  numericCell: cn("text-right tabular-nums"),
+  title: cn("font-semibold"),
+  assembly: cn("text-xs text-muted-foreground"),
+  code: cn("font-mono text-xs"),
+};
 
 interface AssemblyTableProps {
   reports: readonly AssemblyReport[];
@@ -17,29 +27,31 @@ export function AssemblyTable({ reports }: AssemblyTableProps) {
   return (
     <Table>
       <TableHeader>
-        <TableRow className="bg-bruma hover:bg-bruma">
+        <TableRow className={assemblyTableAssemblyPage.headRow}>
           <TableHead>Informe</TableHead>
           <TableHead>Código</TableHead>
           <TableHead>Estado</TableHead>
           <TableHead>Vigencia</TableHead>
           <TableHead>Lugar</TableHead>
-          <TableHead className="text-right">Accesos</TableHead>
+          <TableHead className={assemblyTableAssemblyPage.numeric}>Accesos</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {reports.map((report) => (
           <TableRow key={report.id}>
             <TableCell>
-              <p className="font-semibold">{report.title}</p>
-              <p className="text-xs text-muted-foreground">{report.assembly}</p>
+              <p className={assemblyTableAssemblyPage.title}>{report.title}</p>
+              <p className={assemblyTableAssemblyPage.assembly}>{report.assembly}</p>
             </TableCell>
-            <TableCell className="font-mono text-xs">{report.accessCode}</TableCell>
+            <TableCell className={assemblyTableAssemblyPage.code}>{report.accessCode}</TableCell>
             <TableCell>
               <AssemblyStatusBadge status={report.status} />
             </TableCell>
             <TableCell>{report.validity}</TableCell>
             <TableCell>{report.place}</TableCell>
-            <TableCell className="text-right tabular-nums">{report.accesses}</TableCell>
+            <TableCell className={assemblyTableAssemblyPage.numericCell}>
+              {report.accesses}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

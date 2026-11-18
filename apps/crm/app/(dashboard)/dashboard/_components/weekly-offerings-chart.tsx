@@ -7,6 +7,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { cn } from "@/lib/utils";
 import { DashboardCard, DashboardCardHeader } from "@/src/componentes/dashboard";
 
 export type WeeklyOffering = {
@@ -24,6 +25,10 @@ const chartConfig = {
   goal: { label: "Meta", color: "var(--chart-3)" },
 } satisfies ChartConfig;
 
+const weeklyOfferingsChartDashboardPage = {
+  chart: cn("h-64 w-full"),
+};
+
 const THOUSAND = 1000;
 
 function formatThousands(value: number) {
@@ -34,7 +39,7 @@ export function WeeklyOfferingsChart({ data }: WeeklyOfferingsChartProps) {
   return (
     <DashboardCard>
       <DashboardCardHeader subtitle="Últimas 7 semanas" title="Ofrendas y diezmos" />
-      <ChartContainer className="h-64 w-full" config={chartConfig}>
+      <ChartContainer className={weeklyOfferingsChartDashboardPage.chart} config={chartConfig}>
         <AreaChart
           accessibilityLayer={true}
           data={[...data]}

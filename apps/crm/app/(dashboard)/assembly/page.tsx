@@ -1,5 +1,6 @@
 import { CalendarClock, DoorOpen, Plus, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   DashboardCard,
   DashboardCardHeader,
@@ -8,6 +9,10 @@ import {
 } from "@/src/componentes/dashboard";
 import { AssemblyTable } from "./components/assembly-table";
 import { assemblyReports } from "./data/assembly-reports";
+
+const assemblyPage = {
+  action: cn("rounded-full"),
+};
 
 /** biome-ignore lint/style/noDefaultExport: Next.js App Router page files require default exports. */
 export default function AssemblyPage() {
@@ -19,7 +24,7 @@ export default function AssemblyPage() {
     <>
       <DashboardPageHeader
         actions={
-          <Button className="rounded-full" type="button">
+          <Button className={assemblyPage.action} type="button">
             <Plus aria-hidden="true" />
             Publicar informe
           </Button>
