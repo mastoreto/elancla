@@ -22,7 +22,7 @@ const styles = {
   ),
   optionLabel: cn("text-sm font-medium text-foreground"),
   optionVotes: cn("text-sm text-muted-foreground"),
-  alert: cn("border-amber-200 bg-amber-50 text-amber-900"),
+  alert: cn("border-oro bg-warning-surface text-warning"),
   actionCard: cn("border-border/70 bg-card shadow-sm"),
   actionButtons: cn("flex flex-col gap-3"),
 };

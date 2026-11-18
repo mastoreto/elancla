@@ -34,8 +34,8 @@ const STATUS_CONFIG = {
     label: "En reforma",
     description: "Visible sólo para administradores",
     icon: Wrench,
-    pill: "border-yellow-500/30 text-yellow-600 bg-yellow-500/10",
-    item: "text-yellow-600 focus:text-yellow-600 focus:bg-yellow-500/5",
+    pill: "border-oro/30 text-warning bg-oro/10",
+    item: "text-warning focus:text-warning focus:bg-oro/5",
   },
   offline: {
     label: "Fuera de servicio",

@@ -13,7 +13,7 @@ const statusConfig: Record<BlogStatus, { label: string; className: string }> = {
   },
   paused: {
     label: "Pausado",
-    className: "border-yellow-500/30 text-yellow-600 bg-yellow-500/5",
+    className: "border-oro/30 text-warning bg-oro/5",
   },
 };
 

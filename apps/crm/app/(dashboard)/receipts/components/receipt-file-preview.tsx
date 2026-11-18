@@ -48,8 +48,8 @@ export function ReceiptFilePreview({ fileUrl, receiptNumber }: ReceiptFilePrevie
       </CardHeader>
       <CardContent className="space-y-4">
         {previewVariant === "pdf" ? (
-          <div className="from-rose-50 to-orange-50 dark:from-muted dark:to-muted/60 flex aspect-[4/3] flex-col items-center justify-center rounded-xl border border-dashed border-border bg-gradient-to-br p-6 text-center">
-            <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300">
+          <div className="from-expense to-warning dark:from-muted dark:to-muted/60 flex aspect-[4/3] flex-col items-center justify-center rounded-xl border border-dashed border-border bg-gradient-to-br p-6 text-center">
+            <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-accent text-accent-foreground dark:text-expense">
               <FileText className="size-8" />
             </div>
             <p className="font-medium text-foreground">Vista previa de PDF</p>
@@ -60,8 +60,8 @@ export function ReceiptFilePreview({ fileUrl, receiptNumber }: ReceiptFilePrevie
         ) : null}
 
         {previewVariant === "image" ? (
-          <div className="from-sky-50 via-cyan-50 to-emerald-50 dark:from-muted dark:via-muted/80 dark:to-muted/60 flex aspect-[4/3] flex-col items-center justify-center rounded-xl border border-dashed border-border bg-gradient-to-br p-6 text-center">
-            <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300">
+          <div className="from-secondary-foreground via-secondary-foreground to-income dark:from-muted dark:via-muted/80 dark:to-muted/60 flex aspect-[4/3] flex-col items-center justify-center rounded-xl border border-dashed border-border bg-gradient-to-br p-6 text-center">
+            <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-secondary text-secondary-foreground">
               <FileImage className="size-8" />
             </div>
             <p className="font-medium text-foreground">Vista previa de imagen</p>

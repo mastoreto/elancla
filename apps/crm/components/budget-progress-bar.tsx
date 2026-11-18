@@ -37,7 +37,7 @@ export function BudgetProgressBar({
     lg: "h-3",
   }[size];
 
-  const barColor = isOverBudget ? "bg-expense" : isNearLimit ? "bg-amber-500" : "bg-income";
+  const barColor = isOverBudget ? "bg-expense" : isNearLimit ? "bg-oro" : "bg-income";
 
   return (
     <div className="w-full">
@@ -63,7 +63,7 @@ export function BudgetProgressBar({
               isOverBudget
                 ? "text-expense"
                 : isNearLimit
-                  ? "text-amber-600"
+                  ? "text-warning"
                   : "text-muted-foreground",
             )}
           >

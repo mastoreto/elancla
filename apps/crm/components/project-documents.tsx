@@ -32,8 +32,8 @@ const typeIcons = {
 };
 
 const typeColors = {
-  pdf: "text-red-500 bg-red-50 dark:bg-red-900/20",
-  image: "text-blue-500 bg-blue-50 dark:bg-blue-900/20",
+  pdf: "text-expense bg-accent",
+  image: "text-secondary-foreground bg-secondary",
   link: "text-accent bg-accent/10",
 };
 

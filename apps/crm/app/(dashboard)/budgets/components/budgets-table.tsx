@@ -191,7 +191,7 @@ export function BudgetsTable({
                     <TableCell
                       className={cn(
                         "align-top font-medium",
-                        availableAmount < 0 && "text-rose-700 dark:text-rose-400",
+                        availableAmount < 0 && "text-accent-foreground dark:text-expense",
                       )}
                     >
                       {formatCurrency(budget.currency, availableAmount)}

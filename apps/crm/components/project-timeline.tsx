@@ -26,12 +26,12 @@ const actionConfig: Record<
   status_changed: {
     icon: RefreshCw,
     label: "Estado Cambrado",
-    color: "text-amber-600 bg-amber-100 dark:text-amber-400 dark:bg-amber-900/30",
+    color: "text-warning bg-warning-surface",
   },
   budget_updated: {
     icon: DollarSign,
     label: "Presupuesto Actualizado",
-    color: "text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30",
+    color: "text-secondary-foreground bg-secondary",
   },
 };
 

@@ -8,9 +8,9 @@ const styles = {
 };
 
 const statusClassNames: Record<VotingStatus, string> = {
-  draft: cn("border-slate-300 bg-slate-100 text-slate-700"),
-  open: cn("border-emerald-200 bg-emerald-100 text-emerald-700"),
-  closed: cn("border-zinc-300 bg-zinc-100 text-zinc-700"),
+  draft: cn("border-border bg-secondary text-secondary-foreground"),
+  open: cn("border-income bg-success-surface text-income"),
+  closed: cn("border-border bg-secondary text-secondary-foreground"),
 };
 
 export function VotingStatusBadge({ status }: { status: VotingStatus }) {

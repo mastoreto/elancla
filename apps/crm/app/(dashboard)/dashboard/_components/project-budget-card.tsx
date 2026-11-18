@@ -53,7 +53,7 @@ export function ProjectBudgetCard({ projects }: ProjectBudgetCardProps) {
               </div>
               <div className="h-2 rounded-full bg-[var(--bruma)]">
                 <div
-                  className={cn("h-full rounded-full bg-emerald-600", isHigh && "bg-primary")}
+                  className={cn("h-full rounded-full bg-income", isHigh && "bg-primary")}
                   style={{ width: `${progress}%` }}
                 />
               </div>

@@ -64,7 +64,7 @@ export function ProjectSummary({ project, totalIncome, totalExpenses }: ProjectS
       label: "Presupuesto",
       value: formatCurrency(project.budget, project.currency),
       icon: Wallet,
-      iconClassName: "text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30",
+      iconClassName: "text-secondary-foreground bg-secondary",
       valueClassName: "text-foreground",
     },
     {
@@ -85,7 +85,7 @@ export function ProjectSummary({ project, totalIncome, totalExpenses }: ProjectS
       label: "Disponible",
       value: formatCurrency(availableBudget, project.currency),
       icon: PiggyBank,
-      iconClassName: "text-amber-600 bg-amber-100 dark:text-amber-400 dark:bg-amber-900/30",
+      iconClassName: "text-warning bg-warning-surface",
       valueClassName: "text-foreground",
     },
   ] as const;

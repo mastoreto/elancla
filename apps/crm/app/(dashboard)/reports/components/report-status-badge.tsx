@@ -14,7 +14,7 @@ const statusConfig = {
   },
   PROCESSING: {
     label: "En generación",
-    className: "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+    className: "border-oro/30 bg-oro/10 text-warning",
   },
   ERROR: {
     label: "Con errores",

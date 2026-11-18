@@ -112,7 +112,7 @@ export default function ProjectsPage() {
         </div>
         <div className="rounded-lg border bg-card p-4">
           <p className="text-sm text-muted-foreground">En Planificación</p>
-          <p className="text-2xl font-bold text-blue-600">{stats.planning}</p>
+          <p className="text-2xl font-bold text-secondary-foreground">{stats.planning}</p>
         </div>
         <div className="rounded-lg border bg-card p-4">
           <p className="text-sm text-muted-foreground">Presupuesto Total (UYU)</p>

@@ -241,10 +241,7 @@ export function RequestFormModal({ onSubmit }: RequestFormModalProps) {
           </div>
 
           {exceedsBudget && (
-            <Alert
-              variant="destructive"
-              className="border-amber-500 bg-amber-50 text-amber-900 dark:bg-amber-950 dark:text-amber-200"
-            >
+            <Alert variant="destructive" className="border-oro bg-warning-surface text-warning">
               <AlertTriangle className="size-4" />
               <AlertDescription>
                 This amount exceeds the ministry&apos;s budget of{" "}

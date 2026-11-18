@@ -17,7 +17,7 @@ type DashboardMetricStripProps = {
 };
 
 const toneClasses = {
-  up: "text-emerald-600",
+  up: "text-income",
   down: "text-primary",
   neutral: "text-[var(--muted-foreground)]",
 };

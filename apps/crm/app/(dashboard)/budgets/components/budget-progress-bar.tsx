@@ -18,21 +18,21 @@ function formatCurrency(currency: BudgetCurrency, amount: number) {
 function getUsageTone(percentage: number) {
   if (percentage < 70) {
     return {
-      barClassName: "bg-emerald-500",
-      textClassName: "text-emerald-700 dark:text-emerald-400",
+      barClassName: "bg-income",
+      textClassName: "text-income",
     };
   }
 
   if (percentage <= 90) {
     return {
-      barClassName: "bg-amber-500",
-      textClassName: "text-amber-700 dark:text-amber-400",
+      barClassName: "bg-oro",
+      textClassName: "text-warning",
     };
   }
 
   return {
-    barClassName: "bg-rose-500",
-    textClassName: "text-rose-700 dark:text-rose-400",
+    barClassName: "bg-granada",
+    textClassName: "text-accent-foreground dark:text-expense",
   };
 }
 

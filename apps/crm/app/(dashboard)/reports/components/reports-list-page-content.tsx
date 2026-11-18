@@ -84,7 +84,7 @@ export function ReportsListPageContent({
 
             <div className="rounded-2xl border border-border/60 bg-background/70 px-4 py-3 shadow-xs">
               <div className="flex items-center gap-2 text-sm font-medium">
-                <Clock3 className="size-4 text-amber-600 dark:text-amber-300" />
+                <Clock3 className="size-4 text-warning" />
                 En proceso
               </div>
               <p className="mt-1 text-2xl font-semibold tracking-tight">{processingCount}</p>

@@ -29,7 +29,7 @@ export function VoucherDeleteDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="sm:max-w-md">
         <AlertDialogHeader>
-          <div className="bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 mb-4 flex size-12 items-center justify-center rounded-full">
+          <div className="bg-warning-surface text-warning mb-4 flex size-12 items-center justify-center rounded-full">
             <TriangleAlert className="size-6" />
           </div>
           <AlertDialogTitle>Eliminar comprobante</AlertDialogTitle>

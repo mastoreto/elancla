@@ -36,26 +36,26 @@ interface UsersSettingsPanelProps {
 
 function getStatusBadgeClass(status: SettingsUser["status"]) {
   if (status === "Activo") {
-    return "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300";
+    return "bg-success-surface text-income";
   }
 
   if (status === "Pendiente") {
-    return "bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300";
+    return "bg-warning-surface text-warning";
   }
 
-  return "bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300";
+  return "bg-accent text-accent-foreground dark:text-expense";
 }
 
 function getUserTypeBadgeClass(userType: SettingsUser["userType"]) {
   if (userType === "Líder") {
-    return "bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300";
+    return "bg-secondary text-secondary-foreground";
   }
 
   if (userType === "Colaborador") {
-    return "bg-violet-100 text-violet-700 dark:bg-violet-950/60 dark:text-violet-300";
+    return "bg-secondary text-secondary-foreground";
   }
 
-  return "bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-200";
+  return "bg-secondary text-secondary-foreground";
 }
 
 function createDefaultUserFormValues(): SettingsUserFormValues {

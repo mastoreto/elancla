@@ -10,14 +10,14 @@ interface NotificationsPanelProps {
 
 function getChannelBadgeClass(channel: NotificationSetting["channel"]) {
   if (channel === "Sistema") {
-    return "bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-200";
+    return "bg-secondary text-secondary-foreground";
   }
 
   if (channel === "Correo") {
-    return "bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300";
+    return "bg-secondary text-secondary-foreground";
   }
 
-  return "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300";
+  return "bg-success-surface text-income";
 }
 
 export function NotificationsPanel({ notifications }: NotificationsPanelProps) {

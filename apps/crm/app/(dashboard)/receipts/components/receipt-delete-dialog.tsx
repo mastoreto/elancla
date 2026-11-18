@@ -27,7 +27,7 @@ export function ReceiptDeleteDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md" showCloseButton={false}>
         <DialogHeader>
-          <div className="bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 mb-4 flex size-12 items-center justify-center rounded-full">
+          <div className="bg-warning-surface text-warning mb-4 flex size-12 items-center justify-center rounded-full">
             <TriangleAlert className="size-6" />
           </div>
           <DialogTitle>Eliminar boleta</DialogTitle>

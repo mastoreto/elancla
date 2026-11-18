@@ -7,13 +7,11 @@ import { cn } from "@/lib/utils";
 const statusConfig: Record<ProjectStatus, { label: string; className: string }> = {
   planning: {
     label: "Planificación",
-    className:
-      "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800",
+    className: "bg-secondary text-secondary-foreground border-border",
   },
   in_progress: {
     label: "En Progreso",
-    className:
-      "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800",
+    className: "bg-warning-surface text-warning border-oro",
   },
   finished: {
     label: "Finalizado",

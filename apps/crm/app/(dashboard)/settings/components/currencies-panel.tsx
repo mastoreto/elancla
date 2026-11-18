@@ -10,10 +10,10 @@ interface CurrenciesPanelProps {
 
 function getStatusBadgeClass(status: CurrencySetting["status"]) {
   if (status === "Base") {
-    return "bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300";
+    return "bg-secondary text-secondary-foreground";
   }
 
-  return "bg-violet-100 text-violet-700 dark:bg-violet-950/60 dark:text-violet-300";
+  return "bg-secondary text-secondary-foreground";
 }
 
 export function CurrenciesPanel({ currencies }: CurrenciesPanelProps) {

@@ -10,15 +10,15 @@ interface StatusBadgeProps {
 const statusConfig: Record<RequestStatus, { label: string; className: string }> = {
   pending: {
     label: "Pendiente",
-    className: "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200",
+    className: "bg-warning-surface text-warning",
   },
   approved: {
     label: "Aprobada",
-    className: "bg-income/20 text-income dark:bg-income/30",
+    className: "bg-income/20 text-income",
   },
   rejected: {
     label: "Rechazada",
-    className: "bg-expense/20 text-expense dark:bg-expense/30",
+    className: "bg-expense/20 text-expense",
   },
 };
 

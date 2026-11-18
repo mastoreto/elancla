@@ -14,8 +14,8 @@ const movementTone = {
   income: {
     label: "Ingreso",
     icon: ArrowDownRight,
-    className: "bg-emerald-50 text-emerald-700",
-    amountClassName: "text-emerald-700",
+    className: "bg-success-surface text-income",
+    amountClassName: "text-income",
     sign: "+",
   },
   expense: {

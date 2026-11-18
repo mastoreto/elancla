@@ -54,7 +54,7 @@ export function PendingRequestsCard({ requests }: PendingRequestsCardProps) {
         </div>
       ) : (
         <div className="flex min-h-[190px] flex-col items-center justify-center rounded-[14px] border border-dashed border-[var(--border)] bg-[var(--bruma)] text-center">
-          <CheckCircle2 className="mb-3 size-9 text-emerald-600" />
+          <CheckCircle2 className="mb-3 size-9 text-income" />
           <h3 className="text-sm font-semibold text-foreground">Sin pendientes</h3>
           <p className="mt-1 max-w-56 text-xs text-muted-foreground">
             Todas las solicitudes de fondos ya fueron procesadas.

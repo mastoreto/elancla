@@ -412,7 +412,7 @@ export function AppSidebar() {
 
       <SidebarFooter className="border-t border-white/10 px-[18px] py-4 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-0">
         <div className="flex items-center gap-3 text-[11px] text-white/55">
-          <span className="relative size-2 shrink-0 rounded-full bg-emerald-400 before:absolute before:inset-[-3px] before:rounded-full before:bg-emerald-400/40 before:content-[''] before:animate-ping" />
+          <span className="relative size-2 shrink-0 rounded-full bg-income before:absolute before:inset-[-3px] before:rounded-full before:bg-income/40 before:content-[''] before:animate-ping" />
           <div className="min-w-0 leading-snug group-data-[collapsible=icon]:hidden">
             <strong className="font-semibold text-white">Sistema activo</strong>
             <br />

@@ -25,14 +25,14 @@ interface BankAccountsPanelProps {
 
 function getStatusBadgeClass(status: BankAccountSetting["status"]) {
   if (status === "Principal") {
-    return "bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300";
+    return "bg-secondary text-secondary-foreground";
   }
 
   if (status === "Activa") {
-    return "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300";
+    return "bg-success-surface text-income";
   }
 
-  return "bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300";
+  return "bg-warning-surface text-warning";
 }
 
 function AccountRowActions() {
