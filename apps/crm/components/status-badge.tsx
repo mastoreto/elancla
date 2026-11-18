@@ -7,26 +7,29 @@ interface StatusBadgeProps {
   className?: string;
 }
 
-const statusConfig: Record<RequestStatus, { label: string; className: string }> = {
+const statusBadgeRequestsPageStatus = {
   pending: {
     label: "Pendiente",
-    className: "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200",
+    className: "bg-warning-surface text-warning",
   },
   approved: {
     label: "Aprobada",
-    className: "bg-income/20 text-income dark:bg-income/30",
+    className: "bg-income/20 text-income",
   },
   rejected: {
     label: "Rechazada",
-    className: "bg-expense/20 text-expense dark:bg-expense/30",
+    className: "bg-expense/20 text-expense",
   },
-};
+} satisfies Record<RequestStatus, { label: string; className: string }>;
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
-  const config = statusConfig[status];
+  const config = statusBadgeRequestsPageStatus[status];
+  const statusBadgeRequestsPage = {
+    badge: cn("rounded-full border-0", config.className, className),
+  };
 
   return (
-    <Badge variant="secondary" className={cn(config.className, className)}>
+    <Badge variant="secondary" className={statusBadgeRequestsPage.badge}>
       {config.label}
     </Badge>
   );

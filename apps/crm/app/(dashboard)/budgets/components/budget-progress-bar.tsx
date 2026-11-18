@@ -1,6 +1,12 @@
 import type { BudgetCurrency } from "@/app/(dashboard)/budgets/types/index";
 import { cn } from "@/lib/utils";
 
+const budgetProgressBarBudgetsPage = {
+  track: cn("bg-muted h-2 overflow-hidden rounded-full"),
+  labels: cn("flex items-center justify-between gap-3 text-xs"),
+  bar: cn("h-full rounded-full transition-all"),
+};
+
 type BudgetProgressBarProps = {
   currency: BudgetCurrency;
   totalAmount: number;
@@ -18,21 +24,21 @@ function formatCurrency(currency: BudgetCurrency, amount: number) {
 function getUsageTone(percentage: number) {
   if (percentage < 70) {
     return {
-      barClassName: "bg-emerald-500",
-      textClassName: "text-emerald-700 dark:text-emerald-400",
+      barClassName: "bg-income",
+      textClassName: "text-income",
     };
   }
 
   if (percentage <= 90) {
     return {
-      barClassName: "bg-amber-500",
-      textClassName: "text-amber-700 dark:text-amber-400",
+      barClassName: "bg-oro",
+      textClassName: "text-warning",
     };
   }
 
   return {
-    barClassName: "bg-rose-500",
-    textClassName: "text-rose-700 dark:text-rose-400",
+    barClassName: "bg-granada",
+    textClassName: "text-accent-foreground dark:text-expense",
   };
 }
 
@@ -43,14 +49,14 @@ export function BudgetProgressBar({ currency, totalAmount, usedAmount }: BudgetP
 
   return (
     <div className="space-y-2">
-      <div className="bg-muted h-2 overflow-hidden rounded-full">
+      <div className={budgetProgressBarBudgetsPage.track}>
         <div
           aria-hidden="true"
-          className={cn("h-full rounded-full transition-all", tone.barClassName)}
+          className={cn(budgetProgressBarBudgetsPage.bar, tone.barClassName)}
           style={{ width: `${clampedPercentage}%` }}
         />
       </div>
-      <div className="flex items-center justify-between gap-3 text-xs">
+      <div className={budgetProgressBarBudgetsPage.labels}>
         <span className="text-muted-foreground">
           {`Usado: ${formatCurrency(currency, usedAmount)} de ${formatCurrency(currency, totalAmount)}`}
         </span>

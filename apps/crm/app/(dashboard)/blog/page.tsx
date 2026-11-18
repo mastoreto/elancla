@@ -228,11 +228,6 @@ const POSTS: BlogPost[] = [
 /** biome-ignore lint/style/noDefaultExport: Next.js App Router page files require default exports. */
 export default function BlogPage() {
   return (
-    <BlogPageContent
-      posts={POSTS}
-      authors={AUTHORS}
-      categories={CATEGORIES}
-      config={BLOG_CONFIG}
-    />
+    <BlogPageContent posts={POSTS} authors={AUTHORS} categories={CATEGORIES} config={BLOG_CONFIG} />
   );
 }

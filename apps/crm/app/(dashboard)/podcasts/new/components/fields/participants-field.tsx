@@ -11,6 +11,20 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import type { NewPodcastFormValues, PodcastParticipant } from "../../schema";
 
+const participantsFieldContentPage = {
+  chip: cn("gap-1 pr-1"),
+  input: cn("pl-9"),
+  icon: cn(
+    "absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none",
+  ),
+  menu: cn(
+    "absolute z-50 mt-1 w-full rounded-lg border border-border bg-popover shadow-md overflow-hidden",
+  ),
+  menuItem: cn(
+    "flex w-full items-center gap-2.5 px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors",
+  ),
+};
+
 interface ParticipantsFieldProps {
   control: Control<NewPodcastFormValues>;
   platformHosts: PodcastHost[];
@@ -104,7 +118,10 @@ export function ParticipantsField({ control, platformHosts }: ParticipantsFieldP
                 <Badge
                   key={p.name}
                   variant={p.isExternal ? "secondary" : "default"}
-                  className={cn("gap-1 pr-1", !p.isExternal && "bg-accent text-accent-foreground")}
+                  className={cn(
+                    participantsFieldContentPage.chip,
+                    !p.isExternal && "bg-accent text-accent-foreground",
+                  )}
                 >
                   {p.isExternal ? (
                     <UserPlus className="size-3 shrink-0" />
@@ -128,7 +145,7 @@ export function ParticipantsField({ control, platformHosts }: ParticipantsFieldP
           {/* Search input + dropdown */}
           <div ref={containerRef} className="relative">
             <div className="relative">
-              <Users className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+              <Users className={participantsFieldContentPage.icon} />
               <Input
                 value={query}
                 onChange={(e) => {
@@ -137,17 +154,20 @@ export function ParticipantsField({ control, platformHosts }: ParticipantsFieldP
                 }}
                 onFocus={() => setOpen(true)}
                 placeholder="Buscar miembro o escribir nombre externo..."
-                className={cn("pl-9", fieldState.error && "border-destructive")}
+                className={cn(
+                  participantsFieldContentPage.input,
+                  fieldState.error && "border-destructive",
+                )}
               />
             </div>
 
             {open && list.length > 0 && (
-              <div className="absolute z-50 mt-1 w-full rounded-lg border border-border bg-popover shadow-md overflow-hidden">
+              <div className={participantsFieldContentPage.menu}>
                 {list.map((item) => (
                   <button
                     key={`${item.type}-${item.name}`}
                     type="button"
-                    className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors"
+                    className={participantsFieldContentPage.menuItem}
                     onMouseDown={(e) => {
                       // Prevent input blur before click registers
                       e.preventDefault();

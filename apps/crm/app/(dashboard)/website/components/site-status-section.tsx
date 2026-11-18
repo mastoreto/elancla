@@ -1,13 +1,33 @@
 "use client";
 
-import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { Save } from "lucide-react";
+import { RadioGroup as RadioGroupPrimitive } from "radix-ui";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { SettingsSectionShell } from "@/app/(dashboard)/settings/components/settings-section-shell";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { updateSiteStatus } from "../actions";
+
+const siteStatusSectionContentPage = {
+  checkedOnline: cn(
+    "data-[state=checked]:border-income data-[state=checked]:bg-success-surface dark:data-[state=checked]:bg-success-surface/40",
+  ),
+  checkedMaintenance: cn(
+    "data-[state=checked]:border-oro data-[state=checked]:bg-warning-surface dark:data-[state=checked]:bg-warning-surface/40",
+  ),
+  checkedOffline: cn(
+    "data-[state=checked]:border-granada data-[state=checked]:bg-accent dark:data-[state=checked]:bg-accent/40",
+  ),
+  option: cn(
+    "group relative flex flex-col gap-2 rounded-xl border border-border bg-background p-4 text-left",
+  ),
+  optionInteractive: cn("cursor-pointer transition-all outline-none"),
+  optionHover: cn("hover:border-foreground/25 hover:shadow-sm"),
+  radio: cn("size-4 rounded-full border-2 border-border transition-colors"),
+  radioInner: cn("flex h-full w-full items-center justify-center"),
+  optionHint: cn("text-xs leading-relaxed text-muted-foreground"),
+};
 
 type SiteStatus = "online" | "maintenance" | "closed";
 
@@ -23,25 +43,25 @@ const statusOptions: {
     value: "online",
     label: "En línea",
     description: "El sitio web es visible y accesible para todos.",
-    color: "text-emerald-600 dark:text-emerald-400",
-    dot: "bg-emerald-500",
-    ring: "data-[state=checked]:border-emerald-500 data-[state=checked]:bg-emerald-50 dark:data-[state=checked]:bg-emerald-950/40",
+    color: "text-income",
+    dot: "bg-income",
+    ring: siteStatusSectionContentPage.checkedOnline,
   },
   {
     value: "maintenance",
     label: "Mantenimiento",
     description: "Se muestra una página de mantenimiento a los visitantes.",
-    color: "text-amber-600 dark:text-amber-400",
-    dot: "bg-amber-500",
-    ring: "data-[state=checked]:border-amber-500 data-[state=checked]:bg-amber-50 dark:data-[state=checked]:bg-amber-950/40",
+    color: "text-warning",
+    dot: "bg-oro",
+    ring: siteStatusSectionContentPage.checkedMaintenance,
   },
   {
     value: "closed",
     label: "Cerrado",
     description: "El sitio está inaccesible. Solo los administradores pueden verlo.",
-    color: "text-rose-600 dark:text-rose-400",
-    dot: "bg-rose-500",
-    ring: "data-[state=checked]:border-rose-500 data-[state=checked]:bg-rose-50 dark:data-[state=checked]:bg-rose-950/40",
+    color: "text-expense",
+    dot: "bg-granada",
+    ring: siteStatusSectionContentPage.checkedOffline,
   },
 ];
 
@@ -81,9 +101,9 @@ export function SiteStatusSection({ initialStatus }: { initialStatus: SiteStatus
             key={opt.value}
             value={opt.value}
             className={cn(
-              "group relative flex flex-col gap-2 rounded-xl border border-border bg-background p-4 text-left",
-              "cursor-pointer transition-all outline-none",
-              "hover:border-foreground/25 hover:shadow-sm",
+              siteStatusSectionContentPage.option,
+              siteStatusSectionContentPage.optionInteractive,
+              siteStatusSectionContentPage.optionHover,
               "focus-visible:ring-[3px] focus-visible:ring-ring/30",
               opt.ring,
             )}
@@ -95,24 +115,24 @@ export function SiteStatusSection({ initialStatus }: { initialStatus: SiteStatus
                     "relative size-2 rounded-full",
                     opt.dot,
                     opt.value === "online" &&
-                      "before:absolute before:inset-[-3px] before:rounded-full before:bg-emerald-400/40 before:content-[''] group-data-[state=checked]:before:animate-ping",
+                      "before:absolute before:inset-[-3px] before:rounded-full before:bg-income/40 before:content-[''] group-data-[state=checked]:before:animate-ping",
                   )}
                 />
                 <span className={cn("text-sm font-semibold", opt.color)}>{opt.label}</span>
               </span>
               <div
                 className={cn(
-                  "size-4 rounded-full border-2 border-border transition-colors",
+                  siteStatusSectionContentPage.radio,
                   "group-data-[state=checked]:border-current",
                   opt.color,
                 )}
               >
-                <RadioGroupPrimitive.Indicator className="flex h-full w-full items-center justify-center">
+                <RadioGroupPrimitive.Indicator className={siteStatusSectionContentPage.radioInner}>
                   <div className={cn("size-1.5 rounded-full", opt.dot)} />
                 </RadioGroupPrimitive.Indicator>
               </div>
             </div>
-            <p className="text-xs leading-relaxed text-muted-foreground">{opt.description}</p>
+            <p className={siteStatusSectionContentPage.optionHint}>{opt.description}</p>
           </RadioGroupPrimitive.Item>
         ))}
       </RadioGroupPrimitive.Root>

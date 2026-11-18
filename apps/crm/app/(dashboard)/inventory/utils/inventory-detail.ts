@@ -1,0 +1,35 @@
+import { DEFAULT_INVENTORY_DETAIL, inventoryDetailOverrides } from "../data/inventory-details";
+import { inventoryItems } from "../data/inventory-items";
+import type { InventoryFormValues, InventoryItem, InventoryItemDetail } from "../types";
+
+export function getInventoryDetail(id: string): InventoryItemDetail | null {
+  const item = inventoryItems.find((candidate) => candidate.id === id);
+  if (!item) {
+    return null;
+  }
+  return {
+    ...item,
+    ...DEFAULT_INVENTORY_DETAIL,
+    ...inventoryDetailOverrides[id],
+  };
+}
+
+export function toInventoryFormValues(
+  item: InventoryItem & Partial<InventoryItemDetail>,
+): InventoryFormValues {
+  return {
+    name: item.name,
+    category: item.category,
+    location: item.location,
+    quantity: String(item.quantity),
+    status: item.status,
+    brand: item.brand ?? "",
+    model: item.model ?? "",
+    serialNumber: item.serialNumber ?? "",
+    responsible: item.responsible ?? "",
+    acquiredOn: item.acquiredOn ?? "",
+    acquisitionMode: item.acquisitionMode ?? "Compra",
+    value: item.value.replace(/[^\d]/g, ""),
+    notes: item.notes ?? "",
+  };
+}

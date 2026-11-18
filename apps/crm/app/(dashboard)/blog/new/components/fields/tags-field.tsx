@@ -7,7 +7,15 @@ import { useFormContext } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import type { NewPostFormValues } from "../../schema";
+
+const tagsFieldContentPage = {
+  container: cn(
+    "rounded-lg border border-input bg-background p-2 focus-within:ring-1 focus-within:ring-ring",
+  ),
+  input: cn("border-0 p-0 h-auto text-sm focus-visible:ring-0 shadow-none"),
+};
 
 interface TagsFieldProps {
   control: Control<NewPostFormValues>;
@@ -54,7 +62,7 @@ export function TagsField({ control }: TagsFieldProps) {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Tags *</FormLabel>
-          <div className="rounded-lg border border-input bg-background p-2 focus-within:ring-1 focus-within:ring-ring">
+          <div className={tagsFieldContentPage.container}>
             <div className="flex flex-wrap gap-1.5 mb-1.5">
               {(field.value ?? []).map((tag) => (
                 <Badge key={tag} variant="secondary" className="gap-1 pr-1">
@@ -76,7 +84,7 @@ export function TagsField({ control }: TagsFieldProps) {
               onKeyDown={handleKeyDown}
               onBlur={() => addTag(inputValue)}
               placeholder="Escribe y presiona Enter o coma para agregar..."
-              className="border-0 p-0 h-auto text-sm focus-visible:ring-0 shadow-none"
+              className={tagsFieldContentPage.input}
             />
           </div>
           <p className="text-xs text-muted-foreground">Presiona Enter o coma para agregar un tag</p>

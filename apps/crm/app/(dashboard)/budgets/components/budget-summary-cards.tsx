@@ -10,6 +10,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+
+const budgetSummaryCardsBudgetsPage = {
+  icon: cn("bg-primary/10 text-primary flex size-10 items-center justify-center rounded-full"),
+};
 
 type BudgetSummaryCardsProps = {
   summary: BudgetSummaryValues | null;
@@ -65,7 +70,7 @@ export function BudgetSummaryCards({
             <CardHeader>
               <CardDescription>{item.title}</CardDescription>
               <CardAction>
-                <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-full">
+                <div className={budgetSummaryCardsBudgetsPage.icon}>
                   <Icon className="size-5" />
                 </div>
               </CardAction>

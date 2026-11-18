@@ -1,8 +1,8 @@
 "use client";
 
 import type { Control } from "react-hook-form";
+import { RichTextEditor } from "@/components/RichTextEditor";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { RichTextEditor } from "@/src/components/RichTextEditor";
 import type { NewPostFormValues } from "../schema";
 
 interface ContentEditorFieldProps {

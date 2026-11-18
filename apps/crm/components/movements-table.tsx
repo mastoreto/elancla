@@ -13,6 +13,46 @@ import {
 import type { Movement } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
+const movementsTableMovementsPage = {
+  empty: cn(
+    "flex flex-col items-center justify-center rounded-xl border border-dashed border-border/50 bg-card p-12 text-center",
+  ),
+  emptyIcon: cn("mb-4 flex size-12 items-center justify-center rounded-full bg-muted"),
+  emptyGlyph: cn("size-6 text-muted-foreground"),
+  emptyTitle: cn("mb-1 font-semibold text-foreground"),
+  emptyText: cn("max-w-[250px] text-sm text-muted-foreground"),
+  container: cn("overflow-hidden rounded-lg border border-border bg-card"),
+  headerRow: cn("bg-muted/50 hover:bg-muted/50"),
+  head: cn("font-semibold"),
+  headRight: cn("text-right font-semibold"),
+  row: cn("group"),
+  date: cn("font-medium text-muted-foreground"),
+  concept: cn("flex items-center gap-2"),
+  conceptIcon: cn("flex size-7 shrink-0 items-center justify-center rounded-full"),
+  conceptIconGlyph: cn("size-3.5"),
+  conceptName: cn("font-medium"),
+  conceptDescription: cn("line-clamp-1 text-xs text-muted-foreground"),
+  typeBadge: cn("capitalize"),
+  currencyBadge: cn("font-mono"),
+  amountCell: cn("text-right"),
+  amount: cn("font-semibold"),
+  project: cn("bg-accent/5 text-foreground"),
+  noProject: cn("text-sm text-muted-foreground"),
+};
+
+const movementsTableToneMovementsPage = {
+  income: {
+    icon: "bg-income/10 text-income",
+    badge: "border-income/30 bg-income/5 text-income",
+    amount: "text-income",
+  },
+  expense: {
+    icon: "bg-expense/10 text-expense",
+    badge: "border-expense/30 bg-expense/5 text-expense",
+    amount: "text-expense",
+  },
+} as const;
+
 interface MovementsTableProps {
   movements: Movement[];
 }
@@ -39,12 +79,12 @@ function formatDate(dateStr: string) {
 export function MovementsTable({ movements }: MovementsTableProps) {
   if (movements.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border/50 bg-card p-12 flex flex-col items-center justify-center text-center">
-        <div className="size-12 rounded-full bg-muted flex items-center justify-center mb-4">
-          <ArrowUpRight className="size-6 text-muted-foreground" />
+      <div className={movementsTableMovementsPage.empty}>
+        <div className={movementsTableMovementsPage.emptyIcon}>
+          <ArrowUpRight className={movementsTableMovementsPage.emptyGlyph} />
         </div>
-        <h3 className="font-semibold text-foreground mb-1">No hay movimientos encontrados</h3>
-        <p className="text-sm text-muted-foreground max-w-[250px]">
+        <h3 className={movementsTableMovementsPage.emptyTitle}>No hay movimientos encontrados</h3>
+        <p className={movementsTableMovementsPage.emptyText}>
           Intenta ajustando tus filtros o crea un nuevo movimiento
         </p>
       </div>
@@ -52,44 +92,42 @@ export function MovementsTable({ movements }: MovementsTableProps) {
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card overflow-hidden">
+    <div className={movementsTableMovementsPage.container}>
       <Table>
         <TableHeader>
-          <TableRow className="bg-muted/50 hover:bg-muted/50">
-            <TableHead className="font-semibold">Fecha</TableHead>
-            <TableHead className="font-semibold">Concepto</TableHead>
-            <TableHead className="font-semibold">Tipo</TableHead>
-            <TableHead className="font-semibold">Moneda</TableHead>
-            <TableHead className="font-semibold text-right">Cantidad</TableHead>
-            <TableHead className="font-semibold">Proyecto</TableHead>
+          <TableRow className={movementsTableMovementsPage.headerRow}>
+            <TableHead className={movementsTableMovementsPage.head}>Fecha</TableHead>
+            <TableHead className={movementsTableMovementsPage.head}>Concepto</TableHead>
+            <TableHead className={movementsTableMovementsPage.head}>Tipo</TableHead>
+            <TableHead className={movementsTableMovementsPage.head}>Moneda</TableHead>
+            <TableHead className={movementsTableMovementsPage.headRight}>Cantidad</TableHead>
+            <TableHead className={movementsTableMovementsPage.head}>Proyecto</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {movements.map((movement) => (
-            <TableRow key={movement.id} className="group">
-              <TableCell className="font-medium text-muted-foreground">
+            <TableRow key={movement.id} className={movementsTableMovementsPage.row}>
+              <TableCell className={movementsTableMovementsPage.date}>
                 {formatDate(movement.date)}
               </TableCell>
               <TableCell>
-                <div className="flex items-center gap-2">
+                <div className={movementsTableMovementsPage.concept}>
                   <div
                     className={cn(
-                      "size-7 rounded-full flex items-center justify-center shrink-0",
-                      movement.type === "income"
-                        ? "bg-income/10 text-income"
-                        : "bg-expense/10 text-expense",
+                      movementsTableMovementsPage.conceptIcon,
+                      movementsTableToneMovementsPage[movement.type].icon,
                     )}
                   >
                     {movement.type === "income" ? (
-                      <ArrowDownRight className="size-3.5" />
+                      <ArrowDownRight className={movementsTableMovementsPage.conceptIconGlyph} />
                     ) : (
-                      <ArrowUpRight className="size-3.5" />
+                      <ArrowUpRight className={movementsTableMovementsPage.conceptIconGlyph} />
                     )}
                   </div>
                   <div>
-                    <p className="font-medium">{movement.concept}</p>
+                    <p className={movementsTableMovementsPage.conceptName}>{movement.concept}</p>
                     {movement.description && (
-                      <p className="text-xs text-muted-foreground line-clamp-1">
+                      <p className={movementsTableMovementsPage.conceptDescription}>
                         {movement.description}
                       </p>
                     )}
@@ -100,25 +138,23 @@ export function MovementsTable({ movements }: MovementsTableProps) {
                 <Badge
                   variant="outline"
                   className={cn(
-                    "capitalize",
-                    movement.type === "income"
-                      ? "border-income/30 text-income bg-income/5"
-                      : "border-expense/30 text-expense bg-expense/5",
+                    movementsTableMovementsPage.typeBadge,
+                    movementsTableToneMovementsPage[movement.type].badge,
                   )}
                 >
                   {movement.type}
                 </Badge>
               </TableCell>
               <TableCell>
-                <Badge variant="secondary" className="font-mono">
+                <Badge variant="secondary" className={movementsTableMovementsPage.currencyBadge}>
                   {movement.currency}
                 </Badge>
               </TableCell>
-              <TableCell className="text-right">
+              <TableCell className={movementsTableMovementsPage.amountCell}>
                 <span
                   className={cn(
-                    "font-semibold",
-                    movement.type === "income" ? "text-income" : "text-expense",
+                    movementsTableMovementsPage.amount,
+                    movementsTableToneMovementsPage[movement.type].amount,
                   )}
                 >
                   {movement.type === "income" ? "+" : "-"}
@@ -127,11 +163,11 @@ export function MovementsTable({ movements }: MovementsTableProps) {
               </TableCell>
               <TableCell>
                 {movement.project ? (
-                  <Badge variant="outline" className="bg-accent/5 text-foreground">
+                  <Badge variant="outline" className={movementsTableMovementsPage.project}>
                     {movement.project}
                   </Badge>
                 ) : (
-                  <span className="text-muted-foreground text-sm">-</span>
+                  <span className={movementsTableMovementsPage.noProject}>-</span>
                 )}
               </TableCell>
             </TableRow>

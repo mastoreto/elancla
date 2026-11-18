@@ -9,6 +9,13 @@ import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/for
 import { cn } from "@/lib/utils";
 import type { NewPostFormValues } from "../schema";
 
+const heroImageUploadFieldContentPage = {
+  preview: cn("relative rounded-lg overflow-hidden border border-input"),
+  dropzone: cn("w-full rounded-lg border-2 border-dashed p-6 transition-colors"),
+  dropzoneBody: cn("flex flex-col items-center gap-2 text-center"),
+  dropzoneHover: cn("hover:border-primary/60 hover:bg-muted/30"),
+};
+
 interface HeroImageUploadFieldProps {
   control: Control<NewPostFormValues>;
 }
@@ -38,7 +45,7 @@ export function HeroImageUploadField({ control }: HeroImageUploadFieldProps) {
           <FormLabel>Imagen hero *</FormLabel>
 
           {field.value ? (
-            <div className="relative rounded-lg overflow-hidden border border-input">
+            <div className={heroImageUploadFieldContentPage.preview}>
               {/* biome-ignore lint/performance/noImgElement: preview image doesn't need next/image optimization */}
               <img src={field.value} alt="Vista previa hero" className="w-full h-40 object-cover" />
               <Button
@@ -57,9 +64,9 @@ export function HeroImageUploadField({ control }: HeroImageUploadFieldProps) {
               type="button"
               onClick={() => inputRef.current?.click()}
               className={cn(
-                "w-full rounded-lg border-2 border-dashed p-6 transition-colors",
-                "flex flex-col items-center gap-2 text-center",
-                "hover:border-primary/60 hover:bg-muted/30",
+                heroImageUploadFieldContentPage.dropzone,
+                heroImageUploadFieldContentPage.dropzoneBody,
+                heroImageUploadFieldContentPage.dropzoneHover,
                 fieldState.error ? "border-destructive" : "border-input",
               )}
             >

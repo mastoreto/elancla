@@ -8,6 +8,7 @@ import type {
   SettingsTabValue,
   SettingsUser,
 } from "@/app/(dashboard)/settings/types";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { ChurchConfig } from "@/lib/church";
@@ -54,22 +55,20 @@ export function SettingsPageContent({
 }: SettingsPageContentProps) {
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight">Configuración del sistema</h1>
-          <p className="text-muted-foreground max-w-3xl text-sm">
-            Centraliza identidad institucional, usuarios, permisos, cuentas, monedas y
-            notificaciones desde una sola interfaz.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          <Button type="button" variant="outline">
-            Ver auditoría
-          </Button>
-          <Button type="button">Guardar cambios</Button>
-        </div>
-      </div>
+      <DashboardPageHeader
+        actions={
+          <>
+            <Button type="button" variant="outline">
+              Ver auditoría
+            </Button>
+            <Button type="button">Guardar cambios</Button>
+          </>
+        }
+        description="Identidad de la iglesia, usuarios, cuentas bancarias y monedas."
+        emphasis="de la iglesia"
+        kicker="Sistema"
+        title="Configuración"
+      />
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         <SettingsSummaryCard

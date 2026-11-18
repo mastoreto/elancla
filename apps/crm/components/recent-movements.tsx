@@ -12,6 +12,14 @@ import { getChurchRoutePath } from "@/lib/church";
 import { movements } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
+const recentMovementsSharedPage = {
+  cardHeader: cn("flex flex-row items-center justify-between"),
+  block: cn("flex items-center justify-between gap-4 p-3 rounded-lg bg-muted/50"),
+  blockFlex: cn(
+    "flex items-center justify-between gap-4 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors",
+  ),
+};
+
 function formatCurrency(amount: number, currency: string) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -38,7 +46,7 @@ export function RecentMovements() {
   if (!mounted) {
     return (
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className={recentMovementsSharedPage.cardHeader}>
           <div>
             <CardTitle>Movimientos Recientes</CardTitle>
             <CardDescription>Últimas 5 transacciones financieras</CardDescription>
@@ -50,10 +58,7 @@ export function RecentMovements() {
         <CardContent>
           <div className="space-y-4">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between gap-4 p-3 rounded-lg bg-muted/50"
-              >
+              <div key={i} className={recentMovementsSharedPage.block}>
                 <div className="flex items-center gap-3">
                   <Skeleton className="size-9 rounded-full" />
                   <div className="space-y-1">
@@ -75,7 +80,7 @@ export function RecentMovements() {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader className={recentMovementsSharedPage.cardHeader}>
         <div>
           <CardTitle>Movimientos Recientes</CardTitle>
           <CardDescription>Últimas 5 transacciones financieras</CardDescription>
@@ -87,10 +92,7 @@ export function RecentMovements() {
       <CardContent>
         <div className="space-y-4">
           {recentMovements.map((movement) => (
-            <div
-              key={movement.id}
-              className="flex items-center justify-between gap-4 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
-            >
+            <div key={movement.id} className={recentMovementsSharedPage.blockFlex}>
               <div className="flex items-center gap-3">
                 <div
                   className={cn(

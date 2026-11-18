@@ -3,12 +3,12 @@ import type {
   BankAccountSetting,
   CurrencySetting,
   NotificationSetting,
-  SettingsRole,
   SettingsSelectOption,
   SettingsUser,
 } from "@/app/(dashboard)/settings/types";
 import { churchConfig } from "@/lib/church";
 import { ministries } from "@/lib/data";
+import { settingsRoles as roles } from "./data/roles";
 
 const users: SettingsUser[] = [
   {
@@ -50,56 +50,6 @@ const users: SettingsUser[] = [
     role: "Consulta",
     status: "Suspendido",
     lastAccess: "12 mar 2026",
-  },
-];
-
-const roles: SettingsRole[] = [
-  {
-    id: "role-1",
-    name: "Tesorera General",
-    description: "Administra configuración crítica, aprobaciones y cierres del período.",
-    scope: "Acceso completo a tesorería, reportes y parámetros del sistema.",
-    membersCount: 1,
-    permissions: [
-      "Aprobar solicitudes",
-      "Editar configuración",
-      "Cerrar período",
-      "Gestionar cuentas",
-    ],
-  },
-  {
-    id: "role-2",
-    name: "Revisor Financiero",
-    description: "Supervisa consistencia operativa y verifica trazabilidad antes de auditoría.",
-    scope: "Lectura avanzada, comentarios y revisión de justificativos.",
-    membersCount: 2,
-    permissions: [
-      "Ver auditoría",
-      "Exportar informes",
-      "Revisar comprobantes",
-      "Consultar movimientos",
-    ],
-  },
-  {
-    id: "role-3",
-    name: "Operadora de Cajas",
-    description: "Registra movimientos, boletas y comprobantes sin acceso a parámetros críticos.",
-    scope: "Operación diaria con alcance limitado a registro y edición básica.",
-    membersCount: 3,
-    permissions: [
-      "Crear movimientos",
-      "Registrar boletas",
-      "Crear comprobantes",
-      "Adjuntar respaldos",
-    ],
-  },
-  {
-    id: "role-4",
-    name: "Consulta",
-    description: "Acceso restringido para seguimiento institucional y revisión ejecutiva.",
-    scope: "Solo lectura sobre informes, presupuestos y panel general.",
-    membersCount: 4,
-    permissions: ["Ver panel", "Ver presupuestos", "Ver informes"],
   },
 ];
 

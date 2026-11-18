@@ -12,6 +12,7 @@ import type {
   ReceiptModalMode,
   ReceiptRelatedOption,
 } from "@/app/(dashboard)/receipts/types/index";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 
 interface ReceiptsPageContentProps {
@@ -179,20 +180,18 @@ export function ReceiptsPageContent({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight">Boletas</h1>
-          <p className="text-muted-foreground max-w-3xl text-sm">
-            Gestiona comprobantes de gasto con una interfaz preparada para conectarse a movimientos,
-            solicitudes aprobadas y futuros flujos de auditoría financiera.
-          </p>
-        </div>
-
-        <Button type="button" onClick={handleCreate}>
-          <Plus className="size-4" />
-          Nueva boleta
-        </Button>
-      </div>
+      <DashboardPageHeader
+        actions={
+          <Button className="rounded-full" onClick={handleCreate} type="button">
+            <Plus aria-hidden="true" />
+            Subir boleta
+          </Button>
+        }
+        description="Facturas y boletas de proveedores, vinculadas al gasto que respaldan."
+        emphasis="de proveedores"
+        kicker="Documentos"
+        title="Boletas"
+      />
 
       <ReceiptsTable
         receipts={receipts}

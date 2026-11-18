@@ -1,19 +1,30 @@
-import { Building2, Download, Plus, TrendingDown, TrendingUp, WalletCards } from "lucide-react";
+import { Download, Plus, TrendingDown, TrendingUp, WalletCards } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { getChurchRoutePath } from "@/lib/church";
-import { balances, currentUser, moneyRequests, movements, projects } from "@/lib/data";
 import {
   type DashboardMetric,
   DashboardMetricStrip,
   DashboardPageHeader,
-} from "@/src/componentes/dashboard";
+} from "@/components/dashboard";
+import { Button } from "@/components/ui/button";
+import { getChurchRoutePath } from "@/lib/church";
+import { balances, currentUser, moneyRequests, movements, projects } from "@/lib/data";
+import { cn } from "@/lib/utils";
 import { formatCompactCurrency, formatCurrency } from "./dashboard-formatters";
 import { PendingRequestsCard } from "./pending-requests-card";
 import { ProjectBudgetCard } from "./project-budget-card";
 import { QuickActionsCard } from "./quick-actions-card";
 import { RecentFinancialMovementsCard } from "./recent-financial-movements-card";
 import { TreasuryNotesCard } from "./treasury-notes-card";
+import { type WeeklyOffering, WeeklyOfferingsChart } from "./weekly-offerings-chart";
+
+const dashboardOverviewDashboardPage = {
+  exportButton: cn("bg-background"),
+  buttonIcon: cn("size-3.5"),
+  chartSection: cn("mb-7"),
+  columns: cn("mb-7 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]"),
+  sidebarColumn: cn("flex flex-col gap-6"),
+  metrics: cn("xl:grid-cols-3"),
+};
 
 const sparkPaths = {
   cash: "M2 22 L12 18 L22 20 L32 14 L42 16 L52 10 L62 12 L72 4 L78 6",
@@ -22,45 +33,47 @@ const sparkPaths = {
   expense: "M2 18 L12 14 L22 20 L32 12 L42 16 L52 8 L62 14 L72 6 L78 10",
 };
 
+// Seed series from the "crm-s-resumen" board until weekly totals come from the API.
+const weeklyOfferings: WeeklyOffering[] = [
+  { week: "13 oct", received: 14_200, goal: 18_000 },
+  { week: "20 oct", received: 17_800, goal: 18_000 },
+  { week: "27 oct", received: 15_600, goal: 18_000 },
+  { week: "3 nov", received: 21_400, goal: 18_000 },
+  { week: "10 nov", received: 19_900, goal: 18_000 },
+  { week: "17 nov", received: 24_300, goal: 18_000 },
+  { week: "24 nov", received: 22_100, goal: 18_000 },
+];
+
 function getFirstName(fullName: string) {
   return fullName.split(" ")[0] ?? fullName;
 }
 
 function createDashboardMetrics(): DashboardMetric[] {
   const totalUyu = balances.cashUYU + balances.bankUYU;
-  const netUyu = balances.monthlyIncomeUYU - balances.monthlyExpenseUYU;
 
   return [
     {
-      label: "Caja · efectivo",
-      value: formatCompactCurrency(balances.cashUYU, "UYU"),
-      detail: `+ ${formatCurrency(balances.cashUSD, "USD")} disponibles`,
+      accent: true,
+      label: "Saldo total",
+      value: formatCompactCurrency(totalUyu, "UYU"),
+      detail: `+ ${formatCurrency(balances.cashUSD + balances.bankUSD, "USD")} en dólares`,
       tone: "neutral",
       icon: WalletCards,
       sparkPath: sparkPaths.cash,
     },
     {
-      label: "Banco · cuentas",
-      value: formatCompactCurrency(balances.bankUYU, "UYU"),
-      detail: `+ ${formatCurrency(balances.bankUSD, "USD")} en USD`,
-      tone: "neutral",
-      icon: Building2,
-      sparkPath: sparkPaths.bank,
-    },
-    {
-      label: "Ingresos · mes",
+      label: "Ofrendas del mes",
       value: formatCompactCurrency(balances.monthlyIncomeUYU, "UYU"),
-      detail: "+12% vs. periodo anterior",
+      detail: "+12% vs. mes anterior",
       tone: "up",
       icon: TrendingUp,
       sparkPath: sparkPaths.income,
     },
     {
-      accent: true,
-      label: "Flujo neto",
-      value: formatCompactCurrency(netUyu, "UYU"),
-      detail: `${formatCompactCurrency(totalUyu, "UYU")} de saldo total`,
-      tone: "neutral",
+      label: "Egresos del mes",
+      value: formatCompactCurrency(balances.monthlyExpenseUYU, "UYU"),
+      detail: "+6% vs. mes anterior",
+      tone: "down",
       icon: TrendingDown,
       sparkPath: sparkPaths.expense,
     },
@@ -75,37 +88,42 @@ export function DashboardOverview() {
       <DashboardPageHeader
         actions={
           <>
-            <Button asChild={true} className="bg-background" variant="outline">
+            <Button
+              asChild={true}
+              className={dashboardOverviewDashboardPage.exportButton}
+              variant="outline"
+            >
               <Link href={getChurchRoutePath("reports")}>
-                <Download className="size-3.5" />
+                <Download className={dashboardOverviewDashboardPage.buttonIcon} />
                 Exportar
               </Link>
             </Button>
             <Button asChild={true}>
               <Link href={getChurchRoutePath("movements")}>
-                <Plus className="size-3.5" />
+                <Plus className={dashboardOverviewDashboardPage.buttonIcon} />
                 Nuevo movimiento
               </Link>
             </Button>
           </>
         }
-        description={
-          <>
-            <span className="block">Resumen financiero de tesorería.</span>
-            <span className="block">Hay {pendingCount} solicitudes pendientes.</span>
-            <span className="block">Modo interfaz con datos locales.</span>
-          </>
-        }
+        description={`Así va la mayordomía de la iglesia este mes. Hay ${pendingCount} solicitudes por aprobar.`}
         emphasis={`${getFirstName(currentUser.name)}.`}
-        kicker="[ 01 - Panel ]"
+        kicker="Tesorería"
         title="Buenos días,"
       />
 
-      <DashboardMetricStrip metrics={createDashboardMetrics()} />
+      <DashboardMetricStrip
+        className={dashboardOverviewDashboardPage.metrics}
+        metrics={createDashboardMetrics()}
+      />
 
-      <div className="mb-7 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
+      <div className={dashboardOverviewDashboardPage.chartSection}>
+        <WeeklyOfferingsChart data={weeklyOfferings} />
+      </div>
+
+      <div className={dashboardOverviewDashboardPage.columns}>
         <RecentFinancialMovementsCard movements={movements.slice(0, 8)} />
-        <div className="flex flex-col gap-6">
+        <div className={dashboardOverviewDashboardPage.sidebarColumn}>
           <PendingRequestsCard requests={moneyRequests} />
           <ProjectBudgetCard projects={projects} />
         </div>

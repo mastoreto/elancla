@@ -13,6 +13,17 @@ import {
 import { cn } from "@/lib/utils";
 import type { BlogConfigStatus } from "../types";
 
+const blogStatusControlContentPage = {
+  menuItem: cn("cursor-pointer gap-3"),
+  publishedBadge: cn("border-income/30 text-income bg-income/10"),
+  publishedItem: cn("text-income focus:text-income focus:bg-income/5"),
+  scheduledItem: cn("text-warning focus:text-warning focus:bg-oro/5"),
+  archivedBadge: cn("border-destructive/30 text-destructive bg-destructive/10"),
+  archivedItem: cn("text-destructive focus:text-destructive focus:bg-destructive/5"),
+  caption: cn("text-xs font-mono uppercase tracking-wider text-muted-foreground"),
+  dot: cn("ml-auto size-1.5 rounded-full bg-current shrink-0"),
+};
+
 // ─── Public contracts ────────────────────────────────────────────────────────
 
 export interface BlogStatusControlProps {
@@ -27,22 +38,22 @@ const STATUS_CONFIG = {
     label: "En vivo",
     description: "El blog es visible al público",
     icon: Radio,
-    pill: "border-income/30 text-income bg-income/10",
-    item: "text-income focus:text-income focus:bg-income/5",
+    pill: blogStatusControlContentPage.publishedBadge,
+    item: blogStatusControlContentPage.publishedItem,
   },
   maintenance: {
     label: "En reforma",
     description: "Visible sólo para administradores",
     icon: Wrench,
-    pill: "border-yellow-500/30 text-yellow-600 bg-yellow-500/10",
-    item: "text-yellow-600 focus:text-yellow-600 focus:bg-yellow-500/5",
+    pill: "border-oro/30 text-warning bg-oro/10",
+    item: blogStatusControlContentPage.scheduledItem,
   },
   offline: {
     label: "Fuera de servicio",
     description: "El blog está deshabilitado",
     icon: CloudOff,
-    pill: "border-destructive/30 text-destructive bg-destructive/10",
-    item: "text-destructive focus:text-destructive focus:bg-destructive/5",
+    pill: blogStatusControlContentPage.archivedBadge,
+    item: blogStatusControlContentPage.archivedItem,
   },
 } as const satisfies Record<
   BlogConfigStatus,
@@ -74,7 +85,7 @@ export function BlogStatusControl({ status, onStatusChange }: BlogStatusControlP
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+        <DropdownMenuLabel className={blogStatusControlContentPage.caption}>
           Estado del blog
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -88,14 +99,18 @@ export function BlogStatusControl({ status, onStatusChange }: BlogStatusControlP
             <DropdownMenuItem
               key={s}
               onClick={() => onStatusChange(s)}
-              className={cn("gap-3 cursor-pointer", cfg.item, isActive && "font-semibold")}
+              className={cn(
+                blogStatusControlContentPage.menuItem,
+                cfg.item,
+                isActive && "font-semibold",
+              )}
             >
               <ItemIcon className="size-4 shrink-0" />
               <div className="min-w-0">
                 <p className="text-sm leading-none">{cfg.label}</p>
                 <p className="mt-0.5 text-xs opacity-70 font-normal">{cfg.description}</p>
               </div>
-              {isActive && <span className="ml-auto size-1.5 rounded-full bg-current shrink-0" />}
+              {isActive && <span className={blogStatusControlContentPage.dot} />}
             </DropdownMenuItem>
           );
         })}

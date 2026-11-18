@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 interface UserFormProps {
   values: SettingsUserFormValues;
@@ -37,6 +38,11 @@ const userTypeOptions: Array<{
   { value: "Colaborador", label: "Colaborador" },
 ];
 
+const userFormSettingsPage = {
+  fieldGroup: cn("grid gap-4 md:grid-cols-2 [&>[data-slot=field]]:gap-2"),
+  block: cn("flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"),
+};
+
 export function UserForm({
   values,
   ministryOptions,
@@ -56,7 +62,7 @@ export function UserForm({
         onSubmit();
       }}
     >
-      <FieldGroup className="grid gap-4 md:grid-cols-2 [&>[data-slot=field]]:gap-2">
+      <FieldGroup className={userFormSettingsPage.fieldGroup}>
         <Field className="md:col-span-2">
           <FieldLabel htmlFor="user-full-name">Nombre y Apellido</FieldLabel>
           <Input
@@ -143,7 +149,7 @@ export function UserForm({
         </Field>
       </FieldGroup>
 
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+      <div className={userFormSettingsPage.block}>
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancelar
         </Button>

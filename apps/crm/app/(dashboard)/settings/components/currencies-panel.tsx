@@ -2,18 +2,25 @@ import { Coins, Plus } from "lucide-react";
 import type { CurrencySetting } from "@/app/(dashboard)/settings/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { SettingsSectionShell } from "./settings-section-shell";
 
 interface CurrenciesPanelProps {
   currencies: CurrencySetting[];
 }
 
+const currenciesPanelSettingsPage = {
+  card: cn("rounded-2xl border border-border/60 bg-background/70 p-5 shadow-xs"),
+  block: cn("flex size-10 items-center justify-center rounded-2xl bg-primary/10 text-primary"),
+  text: cn("text-muted-foreground text-xs uppercase tracking-wide"),
+};
+
 function getStatusBadgeClass(status: CurrencySetting["status"]) {
   if (status === "Base") {
-    return "bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300";
+    return "bg-secondary text-secondary-foreground";
   }
 
-  return "bg-violet-100 text-violet-700 dark:bg-violet-950/60 dark:text-violet-300";
+  return "bg-secondary text-secondary-foreground";
 }
 
 export function CurrenciesPanel({ currencies }: CurrenciesPanelProps) {
@@ -30,14 +37,11 @@ export function CurrenciesPanel({ currencies }: CurrenciesPanelProps) {
       contentClassName="grid gap-4 lg:grid-cols-2 xl:grid-cols-3"
     >
       {currencies.map((currency) => (
-        <article
-          key={currency.code}
-          className="rounded-2xl border border-border/60 bg-background/70 p-5 shadow-xs"
-        >
+        <article key={currency.code} className={currenciesPanelSettingsPage.card}>
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <div className="flex size-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <div className={currenciesPanelSettingsPage.block}>
                   <Coins className="size-4" />
                 </div>
                 <div>
@@ -51,15 +55,15 @@ export function CurrenciesPanel({ currencies }: CurrenciesPanelProps) {
 
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             <div className="rounded-xl bg-muted/20 p-3">
-              <p className="text-muted-foreground text-xs uppercase tracking-wide">Símbolo</p>
+              <p className={currenciesPanelSettingsPage.text}>Símbolo</p>
               <p className="mt-1 font-medium">{currency.symbol}</p>
             </div>
             <div className="rounded-xl bg-muted/20 p-3">
-              <p className="text-muted-foreground text-xs uppercase tracking-wide">Cotización</p>
+              <p className={currenciesPanelSettingsPage.text}>Cotización</p>
               <p className="mt-1 font-medium">{currency.exchangeRate}</p>
             </div>
             <div className="rounded-xl bg-muted/20 p-3 sm:col-span-2">
-              <p className="text-muted-foreground text-xs uppercase tracking-wide">Redondeo</p>
+              <p className={currenciesPanelSettingsPage.text}>Redondeo</p>
               <p className="mt-1 font-medium">{currency.rounding}</p>
             </div>
           </div>

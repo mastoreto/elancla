@@ -4,11 +4,19 @@ import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { CreateMovementDialog } from "@/components/create-movement-dialog";
+import { DashboardPageHeader } from "@/components/dashboard";
 import { MovementsFilters } from "@/components/movements-filters";
 import { MovementsTable } from "@/components/movements-table";
 import { Button } from "@/components/ui/button";
 import { movements as allMovements } from "@/lib/data";
 import type { Movement } from "@/lib/types";
+import { cn } from "@/lib/utils";
+
+const movementsPage = {
+  page: cn("space-y-6"),
+  action: cn("rounded-full"),
+  count: cn("text-sm text-muted-foreground"),
+};
 
 export default function MovementsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -69,18 +77,23 @@ export default function MovementsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Movimientos</h1>
-          <p className="text-muted-foreground">Realiza seguimiento a todos los ingresos y gastos</p>
-        </div>
-        <Button onClick={() => setIsCreateOpen(true)} className="gap-2">
-          <Plus className="size-4" />
-          Nuevo Movimiento
-        </Button>
-      </div>
+    <div className={movementsPage.page}>
+      <DashboardPageHeader
+        actions={
+          <Button
+            className={movementsPage.action}
+            onClick={() => setIsCreateOpen(true)}
+            type="button"
+          >
+            <Plus aria-hidden="true" />
+            Nuevo movimiento
+          </Button>
+        }
+        description="Registro de ingresos y egresos de la iglesia en pesos y dólares."
+        emphasis="de tesorería"
+        kicker="Tesorería"
+        title="Movimientos"
+      />
 
       {/* Filters */}
       <MovementsFilters
@@ -95,7 +108,7 @@ export default function MovementsPage() {
       />
 
       {/* Results Count */}
-      <div className="text-sm text-muted-foreground">
+      <div className={movementsPage.count}>
         Mostrando {filteredMovements.length} de {movements.length} movimientos
       </div>
 

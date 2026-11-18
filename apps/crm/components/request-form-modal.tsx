@@ -30,6 +30,23 @@ import { leaders, ministries } from "@/lib/data";
 import type { Currency } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
+const requestFormModalRequestsPage = {
+  triggerIcon: cn("mr-2 size-4"),
+  content: cn("max-w-lg"),
+  fields: cn("grid gap-4 py-4"),
+  field: cn("grid gap-2"),
+  dateTrigger: cn("w-full justify-start text-left font-normal"),
+  dateTriggerEmpty: cn("text-muted-foreground"),
+  dateIcon: cn("mr-2 size-4"),
+  popover: cn("w-auto p-0"),
+  hint: cn("text-xs text-muted-foreground"),
+  pair: cn("grid grid-cols-2 gap-4"),
+  triple: cn("grid grid-cols-3 gap-4"),
+  wideField: cn("col-span-2 grid gap-2"),
+  alert: cn("border-oro bg-warning-surface text-warning"),
+  alertIcon: cn("size-4"),
+};
+
 interface RequestFormModalProps {
   onSubmit: (data: {
     date: Date;
@@ -111,11 +128,11 @@ export function RequestFormModal({ onSubmit }: RequestFormModalProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild={true}>
         <Button>
-          <Plus className="mr-2 size-4" />
+          <Plus className={requestFormModalRequestsPage.triggerIcon} />
           Nueva Solicitud
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg">
+      <DialogContent className={requestFormModalRequestsPage.content}>
         <DialogHeader>
           <DialogTitle>Crear Solicitud de Fondos</DialogTitle>
           <DialogDescription>
@@ -124,8 +141,8 @@ export function RequestFormModal({ onSubmit }: RequestFormModalProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
+        <div className={requestFormModalRequestsPage.fields}>
+          <div className={requestFormModalRequestsPage.field}>
             <Label htmlFor="date">Fecha</Label>
             <Popover>
               <PopoverTrigger asChild={true}>
@@ -133,29 +150,29 @@ export function RequestFormModal({ onSubmit }: RequestFormModalProps) {
                   id="date"
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !date && "text-muted-foreground",
+                    requestFormModalRequestsPage.dateTrigger,
+                    !date && requestFormModalRequestsPage.dateTriggerEmpty,
                   )}
                 >
-                  <CalendarIcon className="mr-2 size-4" />
+                  <CalendarIcon className={requestFormModalRequestsPage.dateIcon} />
                   {date ? format(date, "PPP") : <span>Selecciona una fecha</span>}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className={requestFormModalRequestsPage.popover} align="start">
                 <Calendar
                   mode="single"
                   selected={date}
                   onSelect={(d) => d && setDate(d)}
-                  initialFocus={true}
+                  autoFocus={true}
                 />
               </PopoverContent>
             </Popover>
-            <p className="text-xs text-muted-foreground">
+            <p className={requestFormModalRequestsPage.hint}>
               Solicitudes presentadas antes del viernes serán procesadas a la semana siguiente.
             </p>
           </div>
 
-          <div className="grid gap-2">
+          <div className={requestFormModalRequestsPage.field}>
             <Label htmlFor="concept">Concepto</Label>
             <Input
               id="concept"
@@ -165,7 +182,7 @@ export function RequestFormModal({ onSubmit }: RequestFormModalProps) {
             />
           </div>
 
-          <div className="grid gap-2">
+          <div className={requestFormModalRequestsPage.field}>
             <Label htmlFor="description">Descripción (opcional)</Label>
             <Textarea
               id="description"
@@ -176,8 +193,8 @@ export function RequestFormModal({ onSubmit }: RequestFormModalProps) {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
+          <div className={requestFormModalRequestsPage.pair}>
+            <div className={requestFormModalRequestsPage.field}>
               <Label htmlFor="ministry">Ministerio</Label>
               <Select value={ministry} onValueChange={setMinistry}>
                 <SelectTrigger id="ministry">
@@ -193,7 +210,7 @@ export function RequestFormModal({ onSubmit }: RequestFormModalProps) {
               </Select>
             </div>
 
-            <div className="grid gap-2">
+            <div className={requestFormModalRequestsPage.field}>
               <Label htmlFor="leader">Líder</Label>
               <Select value={leader} onValueChange={setLeader} disabled={!ministry}>
                 <SelectTrigger id="leader">
@@ -212,8 +229,8 @@ export function RequestFormModal({ onSubmit }: RequestFormModalProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
-            <div className="grid gap-2">
+          <div className={requestFormModalRequestsPage.triple}>
+            <div className={requestFormModalRequestsPage.field}>
               <Label htmlFor="currency">Moneda</Label>
               <Select value={currency} onValueChange={(v) => setCurrency(v as Currency)}>
                 <SelectTrigger id="currency">
@@ -226,7 +243,7 @@ export function RequestFormModal({ onSubmit }: RequestFormModalProps) {
               </Select>
             </div>
 
-            <div className="col-span-2 grid gap-2">
+            <div className={requestFormModalRequestsPage.wideField}>
               <Label htmlFor="amount">Cantidad</Label>
               <Input
                 id="amount"
@@ -241,11 +258,8 @@ export function RequestFormModal({ onSubmit }: RequestFormModalProps) {
           </div>
 
           {exceedsBudget && (
-            <Alert
-              variant="destructive"
-              className="border-amber-500 bg-amber-50 text-amber-900 dark:bg-amber-950 dark:text-amber-200"
-            >
-              <AlertTriangle className="size-4" />
+            <Alert variant="destructive" className={requestFormModalRequestsPage.alert}>
+              <AlertTriangle className={requestFormModalRequestsPage.alertIcon} />
               <AlertDescription>
                 This amount exceeds the ministry&apos;s budget of{" "}
                 {new Intl.NumberFormat("es-UY", {

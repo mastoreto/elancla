@@ -116,7 +116,7 @@ components/<feature>/       # componentes compartidos por feature
 hooks/  lib/  types/        # globales
 ```
 
-Hay un `src/componentes/` heredado en español junto a `components/`: **no crear más ahí**; migrar al mover código.
+Los componentes compartidos del dashboard viven en `components/dashboard/` (el antiguo `src/componentes/` ya no existe); DataTable y RichTextEditor ya viven en `components/`.
 
 ### Archivos principales permitidos sueltos
 
@@ -149,6 +149,22 @@ Hay un `src/componentes/` heredado en español junto a `components/`: **no crear
 5. Estilos y variantes: siempre con el mapa `styles` + `cn()` (ver sección 5). Nada de concatenar clases con strings.
 6. Los textos entran por props o por i18n; el componente no conoce el idioma.
 7. Los estilos viven **dentro del componente** (mapa `styles`); solo animaciones y CSS que Tailwind no soporta van a `src/styles/` global.
+8. **Convención de estilos Tailwind (obligatoria, `apps/crm` y toda app React)**: prohibido el `className="..."` con strings largos inline en JSX. Cada componente/sección declara **un** objeto `<nombreComponente><Seccion>Page` con una clave por elemento, cada valor envuelto en `cn()`, y la clave raíz recibe la prop `className`:
+
+   ```tsx
+   const ministryCardMinistriesPage = {
+     container: cn("flex flex-col gap-4 rounded-xl border bg-card p-5", className),
+     name: cn("font-display text-lg font-medium"),
+   };
+   // <article className={ministryCardMinistriesPage.container}>
+   ```
+
+   - Páginas sin prop `className`: el objeto va a nivel de módulo (`const ministriesPage = {...}`).
+   - Variantes por estado: mapa de módulo `satisfies Record<...>` que se combina dentro del objeto con `cn()`.
+   - Solo se permite `className` inline para una utilidad suelta de 1–2 clases cuando no justifica una clave; nunca strings largos.
+   - `components/ui/` (shadcn) conserva `cva`; no se reescribe a mano.
+   - Al crear o tocar un componente, conviértelo a esta convención en el mismo cambio. Detalle: `apps/crm/docs/migration/styles-convention.md`.
+   - Se verifica con el plugin de Biome `apps/crm/biome-plugins/no-long-inline-classname.grit` (`bun run check`): marca como *error* los `className` con strings de más de 40 caracteres (también dentro de `cn(...)`). Es *error* desde que terminó la migración de las secciones.
 
 ## 5. Estilos con Tailwind (apps/web y apps/crm)
 

@@ -3,6 +3,12 @@ import { cn } from "@/lib/utils";
 
 import type { GeneratedReportStatus } from "../types/index";
 
+const reportStatusBadgeReportsPage = {
+  badge: cn("rounded-full px-3 py-1"),
+  ready: cn("border-income/30 bg-income/10 text-income"),
+  failed: cn("border-expense/30 bg-expense/10 text-expense"),
+};
+
 interface ReportStatusBadgeProps {
   status: GeneratedReportStatus;
 }
@@ -10,15 +16,15 @@ interface ReportStatusBadgeProps {
 const statusConfig = {
   READY: {
     label: "Listo",
-    className: "border-income/30 bg-income/10 text-income",
+    className: reportStatusBadgeReportsPage.ready,
   },
   PROCESSING: {
     label: "En generación",
-    className: "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+    className: "border-oro/30 bg-oro/10 text-warning",
   },
   ERROR: {
     label: "Con errores",
-    className: "border-expense/30 bg-expense/10 text-expense",
+    className: reportStatusBadgeReportsPage.failed,
   },
 } as const;
 
@@ -26,7 +32,7 @@ export function ReportStatusBadge({ status }: ReportStatusBadgeProps) {
   return (
     <Badge
       variant="outline"
-      className={cn("rounded-full px-3 py-1", statusConfig[status].className)}
+      className={cn(reportStatusBadgeReportsPage.badge, statusConfig[status].className)}
     >
       {statusConfig[status].label}
     </Badge>

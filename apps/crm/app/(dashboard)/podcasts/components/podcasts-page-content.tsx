@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { useMemo } from "react";
 import { toast } from "sonner";
+import { type ColumnDef, DataTable, type FilterConfig } from "@/components/DataTable";
+import { DashboardMetricStrip, DashboardPageHeader } from "@/components/dashboard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,11 +27,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { parseLocalDate } from "@/lib/utils";
-import { DashboardMetricStrip, DashboardPageHeader } from "@/src/componentes/dashboard";
-import { type ColumnDef, DataTable, type FilterConfig } from "@/src/components/DataTable";
+import { cn, parseLocalDate } from "@/lib/utils";
 import type { Podcast, PodcastHost, PodcastSeries } from "../types";
 import { PodcastStatusBadge } from "./podcast-status-badge";
+
+const podcastsPageContentContentPage = {
+  count: cn("text-sm text-muted-foreground tabular-nums"),
+};
 
 function formatDate(dateStr: string | undefined): string {
   if (!dateStr) return "—";
@@ -123,14 +127,14 @@ function buildColumns(
       key: "duration",
       label: "Duración",
       render: (podcast) => (
-        <span className="text-sm text-muted-foreground tabular-nums">{podcast.duration}</span>
+        <span className={podcastsPageContentContentPage.count}>{podcast.duration}</span>
       ),
     },
     {
       key: "publishedAt",
       label: "Publicación",
       render: (podcast) => (
-        <span className="text-sm text-muted-foreground tabular-nums">
+        <span className={podcastsPageContentContentPage.count}>
           {formatDate(podcast.publishedAt)}
         </span>
       ),

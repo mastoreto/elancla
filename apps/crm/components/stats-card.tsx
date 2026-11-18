@@ -14,6 +14,11 @@ interface StatsCardProps {
   variant?: "default" | "income" | "expense";
 }
 
+const statsCardSharedPage = {
+  title: cn("text-sm font-medium text-muted-foreground"),
+  cardHeader: cn("flex flex-row items-center justify-between pb-2"),
+};
+
 export function StatsCard({
   title,
   value,
@@ -24,8 +29,8 @@ export function StatsCard({
 }: StatsCardProps) {
   return (
     <Card className="relative overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+      <CardHeader className={statsCardSharedPage.cardHeader}>
+        <CardTitle className={statsCardSharedPage.title}>{title}</CardTitle>
         <div
           className={cn(
             "size-9 rounded-lg flex items-center justify-center",

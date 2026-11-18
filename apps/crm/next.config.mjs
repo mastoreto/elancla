@@ -21,9 +21,6 @@ const nextConfig = {
   turbopack: {
     root: monorepoRoot,
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   images: {
     unoptimized: true,
   },

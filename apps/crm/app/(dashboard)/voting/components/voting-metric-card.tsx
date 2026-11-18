@@ -2,7 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-const styles = {
+const votingMetricCardVotingPage = {
   card: cn("border-border/70 bg-card/80 shadow-sm"),
   content: cn("flex items-start justify-between gap-4 p-5"),
   label: cn("text-sm font-medium text-muted-foreground"),
@@ -24,16 +24,16 @@ export function VotingMetricCard({
   icon: LucideIcon;
 }) {
   return (
-    <Card className={styles.card}>
-      <CardContent className={styles.content}>
+    <Card className={votingMetricCardVotingPage.card}>
+      <CardContent className={votingMetricCardVotingPage.content}>
         <div>
-          <p className={styles.label}>{label}</p>
-          <p className={styles.value}>{value}</p>
-          <p className={styles.hint}>{hint}</p>
+          <p className={votingMetricCardVotingPage.label}>{label}</p>
+          <p className={votingMetricCardVotingPage.value}>{value}</p>
+          <p className={votingMetricCardVotingPage.hint}>{hint}</p>
         </div>
 
-        <div className={styles.iconWrap}>
-          <Icon className={styles.icon} />
+        <div className={votingMetricCardVotingPage.iconWrap}>
+          <Icon className={votingMetricCardVotingPage.icon} />
         </div>
       </CardContent>
     </Card>

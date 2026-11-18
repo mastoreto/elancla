@@ -29,6 +29,25 @@ import { projects } from "@/lib/data";
 import type { Currency, Movement, MovementType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
+const createMovementDialogMovementsPage = {
+  content: cn("sm:max-w-[500px]"),
+  form: cn("space-y-4"),
+  typeGroup: cn("justify-start"),
+  incomeToggle: cn(
+    "border data-[state=on]:border-income/30 data-[state=on]:bg-income/10 data-[state=on]:text-income",
+  ),
+  expenseToggle: cn(
+    "border data-[state=on]:border-expense/30 data-[state=on]:bg-expense/10 data-[state=on]:text-expense",
+  ),
+  dateTrigger: cn("w-full justify-start text-left font-normal"),
+  dateTriggerEmpty: cn("text-muted-foreground"),
+  dateIcon: cn("mr-2 size-4"),
+  popover: cn("w-auto p-0"),
+  amountRow: cn("grid grid-cols-2 gap-4"),
+  fixedProject: cn("rounded-md border bg-muted/40 px-3 py-2 text-sm font-medium text-foreground"),
+  footer: cn("gap-2 sm:gap-0"),
+};
+
 interface CreateMovementDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -93,13 +112,13 @@ export function CreateMovementDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className={createMovementDialogMovementsPage.content}>
         <DialogHeader>
           <DialogTitle>Crear Movimiento</DialogTitle>
           <DialogDescription>Añade un nuevo ingreso o gasto a la tesoería</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className={createMovementDialogMovementsPage.form}>
           {/* Type Toggle */}
           <Field>
             <FieldLabel>Tipo</FieldLabel>
@@ -107,23 +126,17 @@ export function CreateMovementDialog({
               type="single"
               value={type}
               onValueChange={(value) => value && setType(value as MovementType)}
-              className="justify-start"
+              className={createMovementDialogMovementsPage.typeGroup}
             >
               <ToggleGroupItem
                 value="income"
-                className={cn(
-                  "data-[state=on]:bg-income/10 data-[state=on]:text-income data-[state=on]:border-income/30",
-                  "border",
-                )}
+                className={createMovementDialogMovementsPage.incomeToggle}
               >
                 Ingreso
               </ToggleGroupItem>
               <ToggleGroupItem
                 value="expense"
-                className={cn(
-                  "data-[state=on]:bg-expense/10 data-[state=on]:text-expense data-[state=on]:border-expense/30",
-                  "border",
-                )}
+                className={createMovementDialogMovementsPage.expenseToggle}
               >
                 Gasto
               </ToggleGroupItem>
@@ -138,20 +151,20 @@ export function CreateMovementDialog({
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !date && "text-muted-foreground",
+                    createMovementDialogMovementsPage.dateTrigger,
+                    !date && createMovementDialogMovementsPage.dateTriggerEmpty,
                   )}
                 >
-                  <CalendarIcon className="mr-2 size-4" />
+                  <CalendarIcon className={createMovementDialogMovementsPage.dateIcon} />
                   {date ? format(date, "PPP") : <span>Selecciona una fecha</span>}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className={createMovementDialogMovementsPage.popover} align="start">
                 <Calendar
                   mode="single"
                   selected={date}
                   onSelect={(d) => d && setDate(d)}
-                  initialFocus={true}
+                  autoFocus={true}
                 />
               </PopoverContent>
             </Popover>
@@ -182,7 +195,7 @@ export function CreateMovementDialog({
           </Field>
 
           {/* Currency & Amount */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className={createMovementDialogMovementsPage.amountRow}>
             <Field>
               <FieldLabel>Moneda</FieldLabel>
               <Select value={currency} onValueChange={(v) => setCurrency(v as Currency)}>
@@ -215,9 +228,7 @@ export function CreateMovementDialog({
           {fixedProject ? (
             <Field>
               <FieldLabel>Proyecto</FieldLabel>
-              <div className="rounded-md border bg-muted/40 px-3 py-2 text-sm font-medium text-foreground">
-                {fixedProject}
-              </div>
+              <div className={createMovementDialogMovementsPage.fixedProject}>{fixedProject}</div>
             </Field>
           ) : (
             <Field>
@@ -238,7 +249,7 @@ export function CreateMovementDialog({
             </Field>
           )}
 
-          <DialogFooter className="gap-2 sm:gap-0">
+          <DialogFooter className={createMovementDialogMovementsPage.footer}>
             <Button
               type="button"
               variant="outline"

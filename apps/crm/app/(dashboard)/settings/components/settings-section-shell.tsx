@@ -18,6 +18,12 @@ interface SettingsSectionShellProps {
   contentClassName?: string;
 }
 
+const settingsSectionShellSettingsPage = {
+  cardHeader: cn(
+    "gap-3 border-b border-border/50 bg-gradient-to-r from-transparent via-transparent to-muted/30",
+  ),
+};
+
 export function SettingsSectionShell({
   title,
   description,
@@ -33,7 +39,7 @@ export function SettingsSectionShell({
         className,
       )}
     >
-      <CardHeader className="gap-3 border-b border-border/50 bg-gradient-to-r from-transparent via-transparent to-muted/30">
+      <CardHeader className={settingsSectionShellSettingsPage.cardHeader}>
         <div className="space-y-1">
           <CardTitle>{title}</CardTitle>
           {description ? <CardDescription>{description}</CardDescription> : null}

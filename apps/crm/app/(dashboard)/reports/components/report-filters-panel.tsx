@@ -2,10 +2,16 @@ import { RotateCcw, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { FieldSet } from "@/components/ui/field";
-
+import { cn } from "@/lib/utils";
 import type { ReportFilters } from "../types/index";
 import { ReportScopeFields } from "./report-scope-fields";
 import { ReportSectionShell } from "./report-section-shell";
+
+const reportFiltersPanelReportsPage = {
+  actions: cn(
+    "flex flex-col gap-3 border-t border-border/50 pt-5 sm:flex-row sm:items-center sm:justify-end",
+  ),
+};
 
 interface ReportFiltersPanelProps {
   filters: ReportFilters;
@@ -40,7 +46,7 @@ export function ReportFiltersPanel({
           showDateRangeError={showDateRangeError}
         />
 
-        <div className="flex flex-col gap-3 border-t border-border/50 pt-5 sm:flex-row sm:items-center sm:justify-end">
+        <div className={reportFiltersPanelReportsPage.actions}>
           <Button type="button" variant="outline" onClick={onClearFilters}>
             <RotateCcw className="size-4" />
             Limpiar filtros

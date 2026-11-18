@@ -13,7 +13,7 @@ import { getVotingResultsPath, getVotingVotePath } from "../voting-routes";
 import { VotingMetricCard } from "./voting-metric-card";
 import { VotingPageShell } from "./voting-page-shell";
 
-const styles = {
+const votingModeratorPageContentVotingPage = {
   page: cn("space-y-6"),
   grid: cn("grid gap-4 xl:grid-cols-[minmax(0,1.25fr)_360px]"),
   panel: cn("border-border/70 bg-card shadow-sm"),
@@ -36,7 +36,7 @@ export function VotingModeratorPageContent({ votingId }: { votingId: string }) {
   return (
     <VotingPageShell voting={voting} activeView="moderator">
       {voting && outcome ? (
-        <div className={styles.page}>
+        <div className={votingModeratorPageContentVotingPage.page}>
           <Alert>
             <Activity className="size-4" />
             <AlertTitle>Modo moderación en vivo</AlertTitle>
@@ -46,7 +46,7 @@ export function VotingModeratorPageContent({ votingId }: { votingId: string }) {
             </AlertDescription>
           </Alert>
 
-          <div className={styles.statGrid}>
+          <div className={votingModeratorPageContentVotingPage.statGrid}>
             <VotingMetricCard
               label="Habilitados"
               value={String(voting.enabledUsers)}
@@ -67,50 +67,54 @@ export function VotingModeratorPageContent({ votingId }: { votingId: string }) {
             />
           </div>
 
-          <div className={styles.grid}>
-            <Card className={styles.panel}>
+          <div className={votingModeratorPageContentVotingPage.grid}>
+            <Card className={votingModeratorPageContentVotingPage.panel}>
               <CardHeader>
                 <CardTitle>Control de la sesión</CardTitle>
               </CardHeader>
-              <CardContent className={styles.section}>
-                <div className={styles.kpi}>
-                  <div className={styles.kpiLabel}>
+              <CardContent className={votingModeratorPageContentVotingPage.section}>
+                <div className={votingModeratorPageContentVotingPage.kpi}>
+                  <div className={votingModeratorPageContentVotingPage.kpiLabel}>
                     <span>Quorum sobre presentes</span>
                     <span>{Math.round(outcome.quorumProgress)}%</span>
                   </div>
                   <Progress value={outcome.quorumProgress} className="h-3" />
                 </div>
 
-                <div className={styles.kpi}>
-                  <div className={styles.kpiLabel}>
+                <div className={votingModeratorPageContentVotingPage.kpi}>
+                  <div className={votingModeratorPageContentVotingPage.kpiLabel}>
                     <span>Participación efectiva</span>
                     <span>{Math.round(outcome.participationRate)}%</span>
                   </div>
                   <Progress value={outcome.participationRate} className="h-3" />
                 </div>
 
-                <div className={styles.feed}>
-                  <div className={styles.feedItem}>
-                    <p className={styles.feedTitle}>
+                <div className={votingModeratorPageContentVotingPage.feed}>
+                  <div className={votingModeratorPageContentVotingPage.feedItem}>
+                    <p className={votingModeratorPageContentVotingPage.feedTitle}>
                       {outcome.quorumReached ? "Quorum cumplido" : "Quorum aún pendiente"}
                     </p>
-                    <p className={styles.feedCopy}>
+                    <p className={votingModeratorPageContentVotingPage.feedCopy}>
                       {outcome.quorumReached
                         ? "La sesión ya tiene asistencia suficiente para validar el cierre."
                         : `Aún faltan ${Math.max(voting.quorum - voting.presentUsers, 0)} presentes para completar el quorum.`}
                     </p>
                   </div>
 
-                  <div className={styles.feedItem}>
-                    <p className={styles.feedTitle}>Actividad reciente</p>
-                    <p className={styles.feedCopy}>
+                  <div className={votingModeratorPageContentVotingPage.feedItem}>
+                    <p className={votingModeratorPageContentVotingPage.feedTitle}>
+                      Actividad reciente
+                    </p>
+                    <p className={votingModeratorPageContentVotingPage.feedCopy}>
                       Última actualización registrada: {formatVotingDate(voting.updatedAt)}.
                     </p>
                   </div>
 
-                  <div className={styles.feedItem}>
-                    <p className={styles.feedTitle}>Resultado proyectado</p>
-                    <p className={styles.feedCopy}>
+                  <div className={votingModeratorPageContentVotingPage.feedItem}>
+                    <p className={votingModeratorPageContentVotingPage.feedTitle}>
+                      Resultado proyectado
+                    </p>
+                    <p className={votingModeratorPageContentVotingPage.feedCopy}>
                       Con el estado actual, la sesión se cerraría como{" "}
                       {outcome.resultLabel.toLowerCase()}.
                     </p>
@@ -119,11 +123,11 @@ export function VotingModeratorPageContent({ votingId }: { votingId: string }) {
               </CardContent>
             </Card>
 
-            <Card className={styles.panel}>
+            <Card className={votingModeratorPageContentVotingPage.panel}>
               <CardHeader>
                 <CardTitle>Acciones del moderador</CardTitle>
               </CardHeader>
-              <CardContent className={styles.actionGroup}>
+              <CardContent className={votingModeratorPageContentVotingPage.actionGroup}>
                 <Button
                   className="w-full justify-start"
                   onClick={() => updateVotingStatus(voting.id, "open")}

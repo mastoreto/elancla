@@ -1,30 +1,58 @@
+"use client";
+
 import { BellRing, Plus } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 import type { NotificationSetting } from "@/app/(dashboard)/settings/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { getChurchRoutePath } from "@/lib/church";
+import { cn } from "@/lib/utils";
+import { EMAIL_TEMPLATES } from "../emails/emails-registry";
 import { SettingsSectionShell } from "./settings-section-shell";
 
 interface NotificationsPanelProps {
   notifications: NotificationSetting[];
 }
 
+const notificationsPanelSettingsPage = {
+  block: cn("grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_340px]"),
+  card: cn("rounded-2xl border border-border/60 bg-background/70 p-5 shadow-xs"),
+  blockFlex: cn("flex flex-wrap items-start justify-between gap-3"),
+};
+
 function getChannelBadgeClass(channel: NotificationSetting["channel"]) {
   if (channel === "Sistema") {
-    return "bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-200";
+    return "bg-secondary text-secondary-foreground";
   }
 
   if (channel === "Correo") {
-    return "bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300";
+    return "bg-secondary text-secondary-foreground";
   }
 
-  return "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300";
+  return "bg-success-surface text-income";
 }
 
 export function NotificationsPanel({ notifications }: NotificationsPanelProps) {
-  const enabledCount = notifications.filter((notification) => notification.enabled).length;
+  // Toggles are local state until the Notifications API exists.
+  const [enabledIds, setEnabledIds] = useState<Set<string>>(
+    () => new Set(notifications.filter((notification) => notification.enabled).map(({ id }) => id)),
+  );
+  const enabledCount = enabledIds.size;
+  const toggle = (id: string, enabled: boolean) =>
+    setEnabledIds((previous) => {
+      const next = new Set(previous);
+      if (enabled) {
+        next.add(id);
+      } else {
+        next.delete(id);
+      }
+      return next;
+    });
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_340px]">
+    <div className={notificationsPanelSettingsPage.block}>
       <SettingsSectionShell
         title="Notificaciones"
         description="Mantén visibles los disparadores operativos para eventos críticos y seguimiento."
@@ -37,18 +65,17 @@ export function NotificationsPanel({ notifications }: NotificationsPanelProps) {
         contentClassName="space-y-4"
       >
         {notifications.map((notification) => (
-          <article
-            key={notification.id}
-            className="rounded-2xl border border-border/60 bg-background/70 p-5 shadow-xs"
-          >
-            <div className="flex flex-wrap items-start justify-between gap-3">
+          <article key={notification.id} className={notificationsPanelSettingsPage.card}>
+            <div className={notificationsPanelSettingsPage.blockFlex}>
               <div className="space-y-1">
                 <h3 className="font-semibold">{notification.title}</h3>
                 <p className="text-muted-foreground text-sm">{notification.description}</p>
               </div>
-              <Badge variant={notification.enabled ? "default" : "secondary"}>
-                {notification.enabled ? "Activa" : "Inactiva"}
-              </Badge>
+              <Switch
+                aria-label={`Activar ${notification.title}`}
+                checked={enabledIds.has(notification.id)}
+                onCheckedChange={(checked) => toggle(notification.id, checked)}
+              />
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
@@ -87,6 +114,17 @@ export function NotificationsPanel({ notifications }: NotificationsPanelProps) {
               Flujos listos para cierre, aprobación y observaciones administrativas.
             </p>
           </div>
+        </SettingsSectionShell>
+        <SettingsSectionShell
+          title="Plantillas de correo"
+          description="Vista previa de los correos que envía el sistema."
+          contentClassName="flex flex-wrap gap-2"
+        >
+          {Object.entries(EMAIL_TEMPLATES).map(([key, template]) => (
+            <Button asChild={true} key={key} size="sm" variant="outline">
+              <Link href={getChurchRoutePath("settings", "emails", key)}>{template.label}</Link>
+            </Button>
+          ))}
         </SettingsSectionShell>
       </div>
     </div>

@@ -72,3 +72,10 @@ export interface NotificationSetting {
   enabled: boolean;
   description: string;
 }
+
+export interface SettingsRoleFormValues {
+  name: string;
+  description: string;
+  scope: string;
+  permissions: string[];
+}

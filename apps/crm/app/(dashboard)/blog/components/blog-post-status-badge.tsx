@@ -2,6 +2,10 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { BlogStatus } from "../types";
 
+const blogPostStatusBadgeContentPage = {
+  draft: cn("border-border text-muted-foreground bg-muted/50"),
+};
+
 const statusConfig: Record<BlogStatus, { label: string; className: string }> = {
   published: {
     label: "Publicado",
@@ -9,11 +13,11 @@ const statusConfig: Record<BlogStatus, { label: string; className: string }> = {
   },
   draft: {
     label: "Borrador",
-    className: "border-border text-muted-foreground bg-muted/50",
+    className: blogPostStatusBadgeContentPage.draft,
   },
   paused: {
     label: "Pausado",
-    className: "border-yellow-500/30 text-yellow-600 bg-yellow-500/5",
+    className: "border-oro/30 text-warning bg-oro/5",
   },
 };
 

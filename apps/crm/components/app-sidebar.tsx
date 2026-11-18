@@ -2,6 +2,7 @@
 
 import {
   ArrowLeftRight,
+  Boxes,
   ChevronRight,
   FileBarChart2,
   FileText,
@@ -9,20 +10,23 @@ import {
   FolderKanban,
   Globe,
   HandCoins,
+  HeartHandshake,
+  Landmark,
   LayoutDashboard,
   Mic,
+  MonitorPlay,
   Newspaper,
   PiggyBank,
   Search,
   Settings,
   ShieldCheck,
-  Tags,
   Vote,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type * as React from "react";
 import { useEffect, useState } from "react";
+import { BrandMark } from "@/components/dashboard";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
@@ -43,7 +47,6 @@ import {
 import { churchConfig, churchToDashboardRouteMap, getChurchRoutePath } from "@/lib/church";
 import { moneyRequests } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import { BrandMark } from "@/src/componentes/dashboard";
 
 const pendingRequestsCount = moneyRequests.filter((request) => request.status === "pending").length;
 
@@ -82,6 +85,12 @@ const navigationSections: NavigationSection[] = [
       },
       {
         type: "link",
+        title: "Ministerios",
+        url: getChurchRoutePath("ministries"),
+        icon: HeartHandshake,
+      },
+      {
+        type: "link",
         title: "Blog",
         url: getChurchRoutePath("blog"),
         icon: Newspaper,
@@ -94,9 +103,9 @@ const navigationSections: NavigationSection[] = [
       },
       {
         type: "link",
-        title: "General",
-        url: getChurchRoutePath("general"),
-        icon: Tags,
+        title: "Sermones",
+        url: getChurchRoutePath("sermons"),
+        icon: MonitorPlay,
       },
     ],
   },
@@ -108,6 +117,18 @@ const navigationSections: NavigationSection[] = [
         title: "Votaciones",
         url: getChurchRoutePath("voting"),
         icon: Vote,
+      },
+      {
+        type: "link",
+        title: "Asamblea",
+        url: getChurchRoutePath("assembly"),
+        icon: Landmark,
+      },
+      {
+        type: "link",
+        title: "Inventario",
+        url: getChurchRoutePath("inventory"),
+        icon: Boxes,
       },
       {
         type: "link",
@@ -196,6 +217,48 @@ const menuButtonClassName =
 const subButtonClassName =
   "h-8 rounded-[9px] text-[rgba(250,248,245,0.62)] hover:bg-white/5 hover:text-white data-[active=true]:bg-white/10 data-[active=true]:text-white";
 
+const appSidebarSharedPage = {
+  chevron: cn("ml-auto size-4 transition-transform"),
+  badge: cn(
+    "ml-auto rounded-full border-0 bg-white/10 px-2 py-0 font-mono text-[10px] font-medium text-white/85 group-data-[collapsible=icon]:hidden",
+  ),
+  sidebar: cn("border-r border-sidebar-border bg-sidebar text-sidebar-foreground"),
+  sidebarHeader: cn("h-[72px] justify-center border-b border-white/10 px-[22px] py-0"),
+  sidebarMenuButton: cn(
+    "h-12 rounded-[12px] px-0 text-white hover:bg-transparent hover:text-white group-data-[collapsible=icon]:!size-11 group-data-[collapsible=icon]:!justify-center group-data-[collapsible=icon]:!p-0",
+  ),
+  label: cn("min-w-0 overflow-hidden leading-none group-data-[collapsible=icon]:hidden"),
+  labelText: cn(
+    "mb-1 block font-mono text-[9px] font-semibold uppercase tracking-[0.22em] text-white/55",
+  ),
+  labelFont: cn("block truncate font-display text-[19px] font-semibold tracking-normal text-white"),
+  block: cn(
+    "shrink-0 px-[18px] py-4 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0",
+  ),
+  fieldLabel: cn(
+    "flex h-10 items-center gap-2 rounded-[10px] border border-white/10 bg-white/[0.05] px-3 text-white/55 transition focus-within:border-primary focus-within:bg-white/[0.08] group-data-[collapsible=icon]:size-11 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0",
+  ),
+  blockFlex: cn(
+    "min-w-0 flex-1 bg-transparent text-[13px] text-white outline-none placeholder:text-white/40 group-data-[collapsible=icon]:hidden",
+  ),
+  labelBorder: cn(
+    "rounded border border-white/15 px-1.5 py-0.5 font-mono text-[10px] text-white/50 group-data-[collapsible=icon]:hidden",
+  ),
+  sidebarContent: cn("gap-0 px-3 pb-6 group-data-[collapsible=icon]:px-2"),
+  sidebarGroupLabel: cn(
+    "h-auto px-2 pb-2 pt-4 font-mono text-[9.5px] font-medium uppercase tracking-[0.22em] text-white/40 group-data-[collapsible=icon]:h-4 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:opacity-0",
+  ),
+  sidebarFooter: cn(
+    "border-t border-white/10 px-[18px] py-4 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-0",
+  ),
+  blockGap: cn("flex items-center gap-3 text-[11px] text-white/55"),
+  labelRounded: cn(
+    "relative size-2 shrink-0 rounded-full bg-income before:absolute before:inset-[-3px] before:rounded-full before:bg-income/40 before:content-[''] before:animate-ping",
+  ),
+  block2: cn("min-w-0 leading-snug group-data-[collapsible=icon]:hidden"),
+  shieldCheck: cn("ml-auto hidden size-4 text-white/35 group-data-[collapsible=icon]:block"),
+};
+
 function getNavigationMatchUrls(url: string) {
   const matchingRoute = Object.entries(churchToDashboardRouteMap).find(([route]) => {
     const publicUrl = getChurchRoutePath(route as keyof typeof churchToDashboardRouteMap);
@@ -236,11 +299,7 @@ function createInitialGroupState(pathname: string) {
 }
 
 function NavigationBadge({ value }: { value: number }) {
-  return (
-    <Badge className="ml-auto rounded-full border-0 bg-white/10 px-2 py-0 font-mono text-[10px] font-medium text-white/85 group-data-[collapsible=icon]:hidden">
-      {value}
-    </Badge>
-  );
+  return <Badge className={appSidebarSharedPage.badge}>{value}</Badge>;
 }
 
 function NavigationLink({ item, pathname }: { item: NavigationLinkItem; pathname: string }) {
@@ -286,9 +345,7 @@ function NavigationGroup({
           >
             <item.icon className="size-[18px]" />
             <span>{item.title}</span>
-            <ChevronRight
-              className={cn("ml-auto size-4 transition-transform", open && "rotate-90")}
-            />
+            <ChevronRight className={cn(appSidebarSharedPage.chevron, open && "rotate-90")} />
           </SidebarMenuButton>
         </CollapsibleTrigger>
 
@@ -336,27 +393,20 @@ export function AppSidebar() {
   }, [pathname]);
 
   return (
-    <Sidebar
-      className="border-r border-white/10 bg-[var(--dashboard-surface-strong)] text-[var(--dashboard-ink-inverse)]"
-      collapsible="icon"
-    >
-      <SidebarHeader className="h-[72px] justify-center border-b border-white/10 px-[22px] py-0">
+    <Sidebar className={appSidebarSharedPage.sidebar} collapsible="icon">
+      <SidebarHeader className={appSidebarSharedPage.sidebarHeader}>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild={true}
-              className="h-12 rounded-[12px] px-0 text-white hover:bg-transparent hover:text-white group-data-[collapsible=icon]:!size-11 group-data-[collapsible=icon]:!justify-center group-data-[collapsible=icon]:!p-0"
+              className={appSidebarSharedPage.sidebarMenuButton}
               size="lg"
             >
               <Link href={getChurchRoutePath("resume")}>
                 <BrandMark />
-                <span className="min-w-0 overflow-hidden leading-none group-data-[collapsible=icon]:hidden">
-                  <span className="mb-1 block font-mono text-[9px] font-semibold uppercase tracking-[0.22em] text-white/55">
-                    Iglesia Bautista
-                  </span>
-                  <span className="block truncate font-display text-[19px] font-semibold tracking-normal text-white">
-                    {churchConfig.name} · CMS
-                  </span>
+                <span className={appSidebarSharedPage.label}>
+                  <span className={appSidebarSharedPage.labelText}>Iglesia Bautista</span>
+                  <span className={appSidebarSharedPage.labelFont}>{churchConfig.name} · CMS</span>
                 </span>
               </Link>
             </SidebarMenuButton>
@@ -364,24 +414,18 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarHeader>
 
-      <div className="shrink-0 px-[18px] py-4 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
-        <label className="flex h-10 items-center gap-2 rounded-[10px] border border-white/10 bg-white/[0.05] px-3 text-white/55 transition focus-within:border-primary focus-within:bg-white/[0.08] group-data-[collapsible=icon]:size-11 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
+      <div className={appSidebarSharedPage.block}>
+        <label className={appSidebarSharedPage.fieldLabel}>
           <Search className="size-3.5 shrink-0" />
-          <input
-            className="min-w-0 flex-1 bg-transparent text-[13px] text-white outline-none placeholder:text-white/40 group-data-[collapsible=icon]:hidden"
-            placeholder="Buscar..."
-            type="text"
-          />
-          <span className="rounded border border-white/15 px-1.5 py-0.5 font-mono text-[10px] text-white/50 group-data-[collapsible=icon]:hidden">
-            Ctrl K
-          </span>
+          <input className={appSidebarSharedPage.blockFlex} placeholder="Buscar..." type="text" />
+          <span className={appSidebarSharedPage.labelBorder}>Ctrl K</span>
         </label>
       </div>
 
-      <SidebarContent className="gap-0 px-3 pb-6 group-data-[collapsible=icon]:px-2">
+      <SidebarContent className={appSidebarSharedPage.sidebarContent}>
         {navigationSections.map((section) => (
           <SidebarGroup className="p-0" key={section.label}>
-            <SidebarGroupLabel className="h-auto px-2 pb-2 pt-4 font-mono text-[9.5px] font-medium uppercase tracking-[0.22em] text-white/40 group-data-[collapsible=icon]:h-4 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:opacity-0">
+            <SidebarGroupLabel className={appSidebarSharedPage.sidebarGroupLabel}>
               {section.label}
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -410,15 +454,15 @@ export function AppSidebar() {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-white/10 px-[18px] py-4 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-0">
-        <div className="flex items-center gap-3 text-[11px] text-white/55">
-          <span className="relative size-2 shrink-0 rounded-full bg-emerald-400 before:absolute before:inset-[-3px] before:rounded-full before:bg-emerald-400/40 before:content-[''] before:animate-ping" />
-          <div className="min-w-0 leading-snug group-data-[collapsible=icon]:hidden">
+      <SidebarFooter className={appSidebarSharedPage.sidebarFooter}>
+        <div className={appSidebarSharedPage.blockGap}>
+          <span className={appSidebarSharedPage.labelRounded} />
+          <div className={appSidebarSharedPage.block2}>
             <strong className="font-semibold text-white">Sistema activo</strong>
             <br />
             <span>Interfaz local · sin BD</span>
           </div>
-          <ShieldCheck className="ml-auto hidden size-4 text-white/35 group-data-[collapsible=icon]:block" />
+          <ShieldCheck className={appSidebarSharedPage.shieldCheck} />
         </div>
       </SidebarFooter>
     </Sidebar>

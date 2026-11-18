@@ -1,15 +1,15 @@
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
-import { Fraunces, JetBrains_Mono, Libre_Franklin } from "next/font/google";
+import { JetBrains_Mono, Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const libreFranklin = Libre_Franklin({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--font-ui",
   display: "swap",
 });
 
-const fraunces = Fraunces({
+const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
@@ -52,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${libreFranklin.variable} ${fraunces.variable} ${jetBrainsMono.variable} font-sans antialiased`}
+        className={`${plusJakartaSans.variable} ${outfit.variable} ${jetBrainsMono.variable} font-sans antialiased`}
       >
         {children}
         <Analytics />
