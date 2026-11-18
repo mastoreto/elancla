@@ -1,0 +1,26 @@
+---
+import type { ContentProseBlock } from 'src/data/contentPages';
+import cn from 'src/utils/cn';
+
+interface Props {
+  block: ContentProseBlock;
+}
+
+const { block } = Astro.props;
+
+const proseBlock = {
+  container: cn(
+    'mt-8 max-w-2xl font-ui text-charcoal/82',
+    '[&_strong]:font-semibold [&_strong]:text-(--ink)',
+  ),
+  paragraphText: cn('text-[17px] leading-[1.7]', '[&+p]:mt-[1.2em]'),
+};
+---
+
+<div class={proseBlock.container}>
+  {
+    block.paragraphs.map((paragraph) => (
+      <p class={proseBlock.paragraphText} set:html={paragraph} />
+    ))
+  }
+</div>
