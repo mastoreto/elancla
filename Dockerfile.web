@@ -9,7 +9,7 @@ WORKDIR /app
 # ─── deps: dependencias del workspace (capa cacheable) ───────────────────────
 FROM base AS deps
 COPY package.json bun.lock turbo.json ./
-COPY apps/admin/package.json apps/admin/
+COPY apps/crm/package.json apps/crm/
 COPY apps/web/package.json apps/web/
 COPY packages/auth/package.json packages/auth/
 COPY packages/db/package.json packages/db/
