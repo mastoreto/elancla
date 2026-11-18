@@ -1,28 +1,14 @@
 "use client";
 
-import { CheckCircle2, XCircle } from "lucide-react";
-import { useState } from "react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Check, X } from "lucide-react";
+import { useId, useState } from "react";
+import { BoardButton } from "@/components/dashboard/board/board-button";
 import { cn } from "@/lib/utils";
 
 interface RequestApprovalActionsProps {
   requestId: string;
   onApprove: (requestId: string, comment?: string) => void;
   onReject: (requestId: string, comment?: string) => void;
-  disabled?: boolean;
   className?: string;
 }
 
@@ -30,118 +16,57 @@ export function RequestApprovalActions({
   requestId,
   onApprove,
   onReject,
-  disabled = false,
   className,
 }: RequestApprovalActionsProps) {
-  const [approveComment, setApproveComment] = useState("");
-  const [rejectComment, setRejectComment] = useState("");
+  const [comment, setComment] = useState("");
+  const fieldId = useId();
   const requestApprovalActionsRequestsPage = {
-    container: cn("flex items-center gap-2", className),
-    approve: cn("border-income text-income hover:bg-income hover:text-income-foreground"),
-    reject: cn("border-expense text-expense hover:bg-expense hover:text-expense-foreground"),
-    buttonIcon: cn("mr-1.5 size-4"),
-    field: cn("py-4"),
-    label: cn("text-sm font-medium"),
-    textarea: cn("mt-2"),
-    confirmApprove: cn("bg-income text-income-foreground hover:bg-income/90"),
-    confirmReject: cn("bg-expense text-expense-foreground hover:bg-expense/90"),
+    container: cn("flex flex-col gap-4", className),
+    field: cn("flex w-full flex-col gap-[7px]"),
+    label: cn("text-[13px] font-bold text-[var(--tinta-suave)]"),
+    textarea: cn(
+      "min-h-[88px] resize-none rounded-2xl bg-card px-4 py-3.5 text-sm outline-none",
+      "shadow-[inset_0_0_0_1px_rgba(42,21,26,0.16)] placeholder:text-[var(--tinta-apagada)]",
+      "focus-visible:shadow-[inset_0_0_0_1.5px_var(--granada),0_0_0_4px_var(--granada-100)]",
+    ),
+    buttons: cn("flex gap-2.5"),
+    approve: cn("flex-1"),
+    icon: cn("size-4"),
+  };
+
+  const decide = (action: (id: string, text?: string) => void) => () => {
+    action(requestId, comment.trim() || undefined);
+    setComment("");
   };
 
   return (
     <div className={requestApprovalActionsRequestsPage.container}>
-      <AlertDialog>
-        <AlertDialogTrigger asChild={true}>
-          <Button
-            className={requestApprovalActionsRequestsPage.approve}
-            disabled={disabled}
-            size="sm"
-            variant="outline"
-          >
-            <CheckCircle2 className={requestApprovalActionsRequestsPage.buttonIcon} />
-            Aprobar
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Aprobar solicitud</AlertDialogTitle>
-            <AlertDialogDescription>
-              ¿Seguro que quieres aprobar esta solicitud de fondos? Esta acción no se puede
-              deshacer.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className={requestApprovalActionsRequestsPage.field}>
-            <Label className={requestApprovalActionsRequestsPage.label} htmlFor="approve-comment">
-              Comentario (opcional)
-            </Label>
-            <Textarea
-              className={requestApprovalActionsRequestsPage.textarea}
-              id="approve-comment"
-              onChange={(event) => setApproveComment(event.target.value)}
-              placeholder="Añade notas sobre esta aprobación..."
-              value={approveComment}
-            />
-          </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              className={requestApprovalActionsRequestsPage.confirmApprove}
-              onClick={() => {
-                onApprove(requestId, approveComment || undefined);
-                setApproveComment("");
-              }}
-            >
-              Aprobar solicitud
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <AlertDialog>
-        <AlertDialogTrigger asChild={true}>
-          <Button
-            className={requestApprovalActionsRequestsPage.reject}
-            disabled={disabled}
-            size="sm"
-            variant="outline"
-          >
-            <XCircle className={requestApprovalActionsRequestsPage.buttonIcon} />
-            Rechazar
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Rechazar solicitud</AlertDialogTitle>
-            <AlertDialogDescription>
-              ¿Seguro que quieres rechazar esta solicitud de fondos? Esta acción no se puede
-              deshacer.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className={requestApprovalActionsRequestsPage.field}>
-            <Label className={requestApprovalActionsRequestsPage.label} htmlFor="reject-comment">
-              Razón del rechazo (opcional)
-            </Label>
-            <Textarea
-              className={requestApprovalActionsRequestsPage.textarea}
-              id="reject-comment"
-              onChange={(event) => setRejectComment(event.target.value)}
-              placeholder="Explica por qué se rechaza esta solicitud..."
-              value={rejectComment}
-            />
-          </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              className={requestApprovalActionsRequestsPage.confirmReject}
-              onClick={() => {
-                onReject(requestId, rejectComment || undefined);
-                setRejectComment("");
-              }}
-            >
-              Rechazar solicitud
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <div className={requestApprovalActionsRequestsPage.field}>
+        <label className={requestApprovalActionsRequestsPage.label} htmlFor={fieldId}>
+          Comentario para el líder
+        </label>
+        <textarea
+          className={requestApprovalActionsRequestsPage.textarea}
+          id={fieldId}
+          onChange={(event) => setComment(event.target.value)}
+          placeholder="Escribe una respuesta…"
+          value={comment}
+        />
+      </div>
+      <div className={requestApprovalActionsRequestsPage.buttons}>
+        <BoardButton onClick={decide(onReject)} variant="outline">
+          <X aria-hidden="true" className={requestApprovalActionsRequestsPage.icon} />
+          Rechazar
+        </BoardButton>
+        <BoardButton
+          className={requestApprovalActionsRequestsPage.approve}
+          onClick={decide(onApprove)}
+          variant="primary"
+        >
+          <Check aria-hidden="true" className={requestApprovalActionsRequestsPage.icon} />
+          Aprobar solicitud
+        </BoardButton>
+      </div>
     </div>
   );
 }
