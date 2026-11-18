@@ -13,7 +13,7 @@ const { block } = Astro.props;
     block.people.map((person) => (
       <article class="group flex flex-col">
         <div
-          class="ratio-4-5 relative flex w-full items-center justify-center [background:repeating-linear-gradient(135deg,rgba(20,20,20,0.06)_0_1px,transparent_1px_14px),var(--tint,#efebe3)] [filter:grayscale(1)_contrast(1.05)] [transition:filter_0.6s_ease] group-hover:[filter:grayscale(0)_contrast(1.02)]"
+          class="relative aspect-[4/5] flex w-full items-center justify-center [background:repeating-linear-gradient(135deg,rgba(20,20,20,0.06)_0_1px,transparent_1px_14px),var(--tint,#efebe3)] [filter:grayscale(1)_contrast(1.05)] [transition:filter_0.6s_ease] group-hover:[filter:grayscale(0)_contrast(1.02)]"
           style={person.tint ? `--tint: ${person.tint}` : undefined}
         >
           <span class="font-display text-[clamp(3rem,8vw,6rem)] font-light text-charcoal/18 italic">{person.initials}</span>

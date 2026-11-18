@@ -1,4 +1,5 @@
 ---
+import { ULINK } from 'src/styles/classes';
 import { RISE_IN } from 'src/utils/riseIn';
 import AnchorMark from 'src/components/AnchorMark.astro';
 import { localizePath } from 'src/i18n/utils';
@@ -17,7 +18,7 @@ const [titleBefore, titleAfter = ''] = copy.titleLines.join(' ').split(copy.emph
 
 <section class="flex flex-col gap-7 px-gutter-sm pt-[clamp(7.5rem,11vw,9.5rem)] max-sm:gap-5.5">
   <nav class="flex items-center gap-2 font-obra-sans-bold text-[0.875rem] text-obra-muted" aria-label={copy.breadcrumbCurrent}>
-    <a href={localizePath('/', locale)} class="ulink">{copy.breadcrumbHome}</a>
+    <a href={localizePath('/', locale)} class:list={ULINK}>{copy.breadcrumbHome}</a>
     <span aria-hidden="true">/</span>
     <span class="text-obra-red" aria-current="page">{copy.breadcrumbCurrent}</span>
   </nav>

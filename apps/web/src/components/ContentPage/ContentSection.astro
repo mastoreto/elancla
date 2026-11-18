@@ -1,4 +1,5 @@
 ---
+import { REVEAL } from 'src/styles/classes';
 import type { ContentSection as ContentSectionData } from 'src/data/contentPages';
 import InlineText from './InlineText.astro';
 import ProseBlock from './blocks/ProseBlock.astro';
@@ -18,7 +19,7 @@ interface Props {
 const { section } = Astro.props;
 ---
 
-<section id={section.id} class="reveal scroll-mt-32">
+<section id={section.id} class:list={[REVEAL, 'scroll-mt-32']} data-reveal>
   <div class="flex items-baseline gap-4 mb-8">
     <span class="font-label-mono text-[10px] tracking-[0.22em] font-semibold text-(--primary)">{section.eyebrow}</span>
     <span class="flex-1 h-px bg-ink/15"></span>

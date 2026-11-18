@@ -12,16 +12,26 @@ const aspectClass = {
   landscape: 'aspect-[3/2]',
   portrait: 'aspect-[4/5]',
 }[figure.aspect ?? 'landscape'];
+
+// Crop marks on the four corners of the photo.
+const CORNER = 'absolute size-3.5 border-[1.5px] border-(--ink)';
+const CORNER_POSITION = {
+  tl: '-top-px -left-px border-r-0 border-b-0',
+  tr: '-top-px -right-px border-b-0 border-l-0',
+  bl: '-bottom-px -left-px border-t-0 border-r-0',
+  br: '-right-px -bottom-px border-t-0 border-l-0',
+} as const;
+const CORNERS = Object.values(CORNER_POSITION);
+// Grayscale photo that regains its color on hover (stays muted in dark mode).
+const DUOTONE =
+  '[filter:grayscale(1)_contrast(1.05)_brightness(0.95)] [transition:filter_0.8s_ease] hover:[filter:grayscale(0)_contrast(1.02)] dark:[filter:saturate(0.8)_contrast(1.05)_brightness(0.82)] dark:hover:[filter:saturate(0.8)_contrast(1.05)_brightness(0.82)]';
 ---
 
 <figure>
   <div class="relative">
-    <div class="corner tl"></div>
-    <div class="corner tr"></div>
-    <div class="corner bl"></div>
-    <div class="corner br"></div>
-    <div class={`${aspectClass} relative overflow-hidden`}>
-      <img src={figure.src} alt={figure.alt} class="w-full h-full object-cover duotone" />
+    {CORNERS.map((position) => <div class:list={[CORNER, position]}></div>)}
+    <div class:list={[aspectClass, 'relative overflow-hidden']}>
+      <img src={figure.src} alt={figure.alt} class:list={['h-full w-full object-cover', DUOTONE]} />
       {
         figure.badge && (
           <div class="absolute top-5 left-5 font-ui text-[10px] tracking-[0.18em] uppercase font-semibold bg-white/85 text-ink px-3 py-1.5 rounded-full backdrop-blur-sm">

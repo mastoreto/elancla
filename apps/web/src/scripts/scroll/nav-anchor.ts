@@ -21,7 +21,7 @@ export function initNavAnchor(): void {
 /** Highlights the nav link of the section that currently crosses the middle of the viewport. */
 export function initActiveNav(sectionIds: string[]): void {
   const links = document.querySelectorAll<HTMLElement>(
-    '.nav-item[data-section]'
+    '[data-nav-item][data-section]'
   );
   const sections = sectionIds
     .map((id) => document.getElementById(id))

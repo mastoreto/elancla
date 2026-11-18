@@ -16,7 +16,7 @@ export function initBlog(): void {
 }
 
 function initScrollReveal(): void {
-  const elements = document.querySelectorAll('.reveal');
+  const elements = document.querySelectorAll('[data-reveal]');
 
   if (!('IntersectionObserver' in window)) {
     elements.forEach((element) => element.classList.add('in'));

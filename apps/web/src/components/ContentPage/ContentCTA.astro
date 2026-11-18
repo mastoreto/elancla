@@ -1,4 +1,5 @@
 ---
+import { CTA_ARROW, CTA_FILL } from 'src/styles/classes';
 import type { ContentCta } from 'src/data/contentPages';
 import InlineText from './InlineText.astro';
 
@@ -22,9 +23,9 @@ const { cta } = Astro.props;
         </p>
       </div>
       <div class="lg:col-span-5 flex flex-col gap-3">
-        <a href={cta.primary.href} class="cta-btn btn-primary inline-flex items-center justify-between gap-3 rounded-full bg-ink text-paper px-7 py-5 font-ui text-[13px] font-semibold tracking-wide uppercase">
+        <a href={cta.primary.href} class:list={[CTA_FILL, 'inline-flex items-center justify-between gap-3 rounded-full bg-ink text-paper px-7 py-5 font-ui text-[13px] font-semibold tracking-wide uppercase']}>
           {cta.primary.label}
-          <svg class="cta-arrow" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <svg class={CTA_ARROW} width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
             <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
           </svg>
         </a>

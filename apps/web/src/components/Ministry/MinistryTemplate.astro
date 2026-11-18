@@ -1,4 +1,5 @@
 ---
+import { ULINK } from 'src/styles/classes';
 import type { ContentPage } from 'src/data/contentPages';
 import AnchorMark from 'src/components/AnchorMark.astro';
 import Pill from 'src/components/ui/Pill.astro';
@@ -37,7 +38,7 @@ const BOX_LABEL = 'font-obra-sans-bold text-[0.75rem] tracking-[0.16em] text-obr
       {
         hero.breadcrumbs.map((crumb, i) => (
           <>
-            {crumb.href ? <a href={crumb.href} class="ulink">{crumb.label}</a> : <span class="text-obra-red" aria-current="page">{crumb.label}</span>}
+            {crumb.href ? <a href={crumb.href} class:list={ULINK}>{crumb.label}</a> : <span class="text-obra-red" aria-current="page">{crumb.label}</span>}
             {i < hero.breadcrumbs.length - 1 && <span aria-hidden="true">/</span>}
           </>
         ))
@@ -192,7 +193,7 @@ const BOX_LABEL = 'font-obra-sans-bold text-[0.75rem] tracking-[0.16em] text-obr
           <div class:list={[BOX, 'gap-3 bg-obra-mist']}>
             <span class={BOX_LABEL}>{page.shortcutsTitle}</span>
             {page.shortcuts.map((s) => (
-              <a href={s.href} class="ulink w-fit font-obra-sans-bold text-[0.9375rem]">{s.label}</a>
+              <a href={s.href} class:list={[ULINK, 'w-fit font-obra-sans-bold text-[0.9375rem]']}>{s.label}</a>
             ))}
           </div>
         )

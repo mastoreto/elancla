@@ -1,4 +1,5 @@
 ---
+import { ULINK } from 'src/styles/classes';
 import type { ContentHero } from 'src/data/contentPages';
 import InlineText from './InlineText.astro';
 
@@ -7,10 +8,18 @@ interface Props {
 }
 
 const { hero } = Astro.props;
+
+// Paper grain over the hero and a faint 72px grid behind it.
+const GRAIN =
+  'before:pointer-events-none before:absolute before:inset-0 before:bg-(image:--texture-grain) before:opacity-35 before:mix-blend-multiply';
+const GRID_LINES =
+  '[background-image:linear-gradient(var(--grid)_1px,transparent_1px),linear-gradient(90deg,var(--grid)_1px,transparent_1px)] bg-size-[72px_72px]';
+// Title lines rise one after another.
+const LINE_DELAYS = [0.1, 0.22, 0.34];
 ---
 
-<section class="relative pt-32 pb-12 overflow-hidden grain">
-  <div class="absolute inset-0 grid-bg opacity-50"></div>
+<section class:list={['relative overflow-hidden pt-32 pb-12', GRAIN]}>
+  <div class:list={['absolute inset-0 opacity-50 dark:opacity-[0.42]', GRID_LINES]}></div>
 
   <svg
     aria-hidden="true"
@@ -29,7 +38,7 @@ const { hero } = Astro.props;
         hero.breadcrumbs.map((crumb, index) => (
           <>
             {crumb.href ? (
-              <a href={crumb.href} class="ulink">
+              <a href={crumb.href} class:list={ULINK}>
                 {crumb.label}
               </a>
             ) : (
@@ -55,9 +64,12 @@ const { hero } = Astro.props;
 
     <h1 class="font-display text-[clamp(2.5rem,8vw,7.5rem)] leading-[0.92] tracking-[-0.035em] max-w-6xl font-light">
       {
-        hero.titleLines.map((line) => (
-          <span class="hero-line mb-[-0.08em] pb-[0.08em]">
-            <span class="leading-none max-[640px]:whitespace-normal">
+        hero.titleLines.map((line, i) => (
+          <span class="mb-[-0.08em] block overflow-hidden pb-[0.08em]">
+            <span
+              class="inline-block [transform:translate3d(0,110%,0)] animate-hero-rise leading-none max-[640px]:whitespace-normal"
+              style={`--d: ${LINE_DELAYS[i] ?? 0}s`}
+            >
               <InlineText value={line} />
             </span>
           </span>

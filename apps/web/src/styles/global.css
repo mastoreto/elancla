@@ -1,6 +1,5 @@
 @import "tailwindcss";
 /* Legacy plain CSS still being migrated: layered so Tailwind utilities can override it. */
-@import "./Landing.css" layer(components);
 @import "./LandingObra.css" layer(components);
 @import "./loading.css" layer(components);
 @import "./PageTransitions.css" layer(components);
@@ -170,6 +169,8 @@
   --color-obra-white: #ffffff; /* stays white in dark mode, unlike `white` (see the .dark overrides) */
   --color-obra-red: #a8141b;
   --color-obra-red-live: #ff2e34;
+  /* Hover fill of the dark CTAs (`styles/classes/cta.ts`). */
+  --color-coal: #0a0a0a;
 
   --font-obra-serif: "Boston Angel Bold", Georgia, serif;
   --font-obra-serif-regular: "Boston Angel Regular", Georgia, serif;
@@ -204,6 +205,12 @@
   --animate-ring: ring 2.6s ease-out infinite;
   --animate-dialog-in: dialog-in 0.6s var(--ease-obra);
   --animate-fade-in: fade-in 0.5s ease-out;
+  /* Halo around the "live" dot. */
+  --animate-pulse-ring: pulse-ring 1.8s ease-out infinite;
+  /* Editorial hero lines slide up from their mask; `--d` staggers them. */
+  /* 404 decorators: the blob fills in. */
+  --animate-fill-fade: fill-fade 2s ease-in-out forwards;
+  --animate-hero-rise: hero-rise 1s var(--ease-obra) var(--d, 0s) forwards;
 
   @keyframes drift-up {
     from { transform: translateY(0); }
@@ -242,6 +249,17 @@
   }
   @keyframes fade-in {
     from { opacity: 0; }
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(0.6); opacity: 1; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+  @keyframes fill-fade {
+    from { fill-opacity: 0; }
+    to { fill-opacity: 1; }
+  }
+  @keyframes hero-rise {
+    to { transform: translate3d(0, 0, 0); }
   }
   @keyframes halo {
     0% { opacity: 0.5; transform: scale(0.6); }
@@ -307,6 +325,13 @@
 
 :root {
   color-scheme: light;
+  /* Editorial template (ContentPage) palette; dark values below. */
+  --paper: #faf8f5;
+  --ink: #141414;
+  --primary: #ff2e34;
+  --grid: rgba(20, 20, 20, 0.06);
+  /* Paper grain laid over the editorial hero. */
+  --texture-grain: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.035 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 
 :root.dark {
@@ -395,14 +420,6 @@
 
 :root.dark .border-white\/70 {
   border-color: rgba(247, 242, 234, 0.14) !important;
-}
-
-:root.dark .grid-bg {
-  opacity: 0.42;
-}
-
-:root.dark .duotone {
-  filter: saturate(0.8) contrast(1.05) brightness(0.82);
 }
 
 .clip-path {

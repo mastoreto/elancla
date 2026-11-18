@@ -1,4 +1,5 @@
 ---
+import { CTA_ARROW, CTA_FILL, LIVE_DOT, ULINK } from 'src/styles/classes';
 import cn from '../utils/cn.ts';
 import AnchorMark from './AnchorMark.astro';
 import MobileMenu from './MobileMenu.astro';
@@ -30,6 +31,9 @@ const recursos: ResourceItem[] = copy.resources.items.map((item) => ({
   href: localizePath(item.href, locale),
 }));
 
+// Red dot beside the nav link of the section in view (`data-active`, set by scroll/nav-anchor.ts).
+const NAV_ITEM_DOT =
+  'data-[active=true]:before:absolute data-[active=true]:before:top-1/2 data-[active=true]:before:-left-3.5 data-[active=true]:before:size-1.5 data-[active=true]:before:[transform:translateY(-50%)] data-[active=true]:before:animate-[fade-in_0.4s_ease] data-[active=true]:before:rounded-full data-[active=true]:before:bg-(--primary)';
 const styles = {
   header: cn(
     // Above all page content; only the loading overlay (z 9999) sits over it.
@@ -49,7 +53,7 @@ const styles = {
   navList: cn('hidden lg:flex items-center gap-5 xl:gap-9 whitespace-nowrap font-ui text-[13px] font-medium text-ink/80'),
   actions: cn('flex items-center gap-2 xl:gap-3'),
   liveChip: cn('hidden xl:flex items-center gap-2 text-[11px] font-ui font-medium text-ink/60 uppercase tracking-wider'),
-  liveDot: cn('w-1.5 h-1.5 rounded-full bg-primary live-dot'),
+  liveDot: cn('w-1.5 h-1.5 rounded-full bg-primary', LIVE_DOT),
   // Site-wide live bar and "we are live" popup, both shown by scripts/live.ts.
   liveBar: cn(
     'pointer-events-auto flex flex-wrap items-center justify-center gap-x-3.5 gap-y-1.5 px-4 py-2.25',
@@ -101,7 +105,8 @@ const styles = {
     'text-ink cursor-pointer select-none transition-colors hover:bg-ink/10'
   ),
   ctaBtn: cn(
-    'cta-btn btn-primary hidden lg:inline-flex items-center gap-2',
+    CTA_FILL,
+    'hidden lg:inline-flex items-center gap-2',
     'rounded-full bg-ink text-paper',
     'px-5 py-2.5 font-ui text-[12px] font-semibold tracking-wide uppercase'
   ),
@@ -138,13 +143,13 @@ const styles = {
       <ul class={styles.navList}>
         {copy.links.map((item) => (
           <li>
-            <a href={localizePath(item.href, locale)} class="nav-item ulink" data-section={item.section}>
+            <a href={localizePath(item.href, locale)} class:list={[ULINK, NAV_ITEM_DOT]} data-nav-item data-section={item.section}>
               {item.label}
             </a>
           </li>
         ))}
         <li class="relative group/recursos">
-          <button type="button" class="nav-item ulink cursor-pointer select-none">
+          <button type="button" class:list={[ULINK, NAV_ITEM_DOT, 'cursor-pointer select-none']} data-nav-item>
             <span class="inline-flex items-center gap-1.5 leading-none">
               {copy.resources.label}
               <svg class="w-2.5 h-2.5 translate-y-px opacity-50 transition-transform duration-300 group-hover/recursos:rotate-180 flex-shrink-0" viewBox="0 0 10 6" fill="none">
@@ -176,7 +181,7 @@ const styles = {
             {copy.live}
           </span>
           <a href={localizePath('/sermones#vivo', locale)} data-live-on hidden class="inline-flex items-center gap-2 text-primary [&[hidden]]:hidden!">
-            <span class="w-1.5 h-1.5 rounded-full bg-primary live-dot"></span>
+            <span class={styles.liveDot}></span>
             {copy.liveStream.chip}
           </a>
         </span>
@@ -240,7 +245,7 @@ const styles = {
             <!-- CTA oculto en mobile, visible en desktop -->
             <a href={localizePath('/#visitanos', locale)} class={styles.ctaBtn}>
               {copy.cta}
-              <svg class="cta-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <svg class={CTA_ARROW} width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
             </a>

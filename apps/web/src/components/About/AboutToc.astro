@@ -1,4 +1,5 @@
 ---
+import { ULINK } from 'src/styles/classes';
 import type { ContentSection } from 'src/data/contentPages';
 
 interface Props {
@@ -14,7 +15,7 @@ const { title, sections } = Astro.props;
   <nav class="flex flex-col gap-3.5" aria-label={title}>
     {sections.map((s) => <a
           href={`#${s.id}`}
-          class="ulink w-fit font-obra-sans-bold text-[0.9375rem] text-obra-muted no-underline [transition:color_0.3s] [&.is-active]:text-obra-red"
+          class:list={[ULINK, 'w-fit font-obra-sans-bold text-[0.9375rem] text-obra-muted no-underline [transition:color_0.3s] [&.is-active]:text-obra-red']}
           data-toc-link
           data-target={s.id}
         >{s.tocLabel}</a>)}

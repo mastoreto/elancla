@@ -1,26 +1,54 @@
 ---
 import AnchorMark from './AnchorMark.astro';
 import LogoText from './LogoText.astro';
+
+// Hidden until the inline script in Layout marks the page `site-loader-pending`, or while
+// scripts/loading.ts runs the intro (`is-active`). Reduced motion never shows it.
+const SHOWN_WHEN_ACTIVE = 'hidden in-[.site-loader-pending]:block [&.is-active]:block motion-reduce:hidden!';
+const LOADER_WIDTH = '[--ldr-w:clamp(130px,21vw,300px)]';
 ---
 
 <!-- First-visit intro: the anchor is drawn and forged on a dark ground, then flies to the nav logo. -->
-<div class="site-loader" role="status" aria-label="Cargando el sitio" data-site-loader transition:persist>
-  <div class="ldr-cap" data-ldr-cap>
+<div
+  class:list={['pointer-events-none fixed inset-0 z-9999 bg-obra-warm', SHOWN_WHEN_ACTIVE]}
+  role="status"
+  aria-label="Cargando el sitio"
+  data-site-loader
+  transition:persist
+>
+  <div
+    class="absolute inset-x-0 top-[calc(50%+clamp(130px,21vw,300px)*0.635+24px)] flex flex-col items-center font-obra-sans-bold font-bold text-obra-cream opacity-0"
+    data-ldr-cap
+  >
     <LogoText label="Iglesia Bautista" name="El Ancla" class="text-[26px]" />
   </div>
 </div>
-<div class="ldr-anchor" aria-hidden="true" data-ldr-anchor transition:persist>
-  <AnchorMark id="ldr" strokeWidth={28} fillFrom="empty" />
+<div
+  class:list={[
+    'pointer-events-none fixed top-[calc(50%-var(--ldr-w)*0.635-10px)] left-[calc(50%-var(--ldr-w)/2)] z-10000 w-(--ldr-w) text-obra-cream opacity-0 [filter:drop-shadow(0_22px_36px_rgba(21,21,21,0.25))]',
+    LOADER_WIDTH,
+    SHOWN_WHEN_ACTIVE,
+  ]}
+  aria-hidden="true"
+  data-ldr-anchor
+  transition:persist
+>
+  <AnchorMark id="ldr" strokeWidth={28} fillFrom="empty" class="block h-auto w-full overflow-visible" />
 </div>
 
-<div class="ldr-hint" aria-hidden="true" data-ldr-hint transition:persist>
+<div
+  class="pointer-events-none fixed bottom-6.5 left-1/2 z-10000 flex flex-col items-center gap-1.5 font-obra-sans-bold text-[12px] font-bold tracking-[0.16em] text-obra-muted uppercase opacity-0 [transform:translateX(-50%)] motion-reduce:hidden!"
+  aria-hidden="true"
+  data-ldr-hint
+  transition:persist
+>
   <span>Desliza</span>
   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6" /></svg>
 </div>
 
 <noscript>
   <style>
-    .site-loader, .ldr-anchor { display: none !important; }
+    [data-site-loader], [data-ldr-anchor] { display: none !important; }
   </style>
 </noscript>
 

@@ -1,80 +1,10 @@
-/* First-visit intro (design "Loading y scroll, el ancla"). */
+/* First-visit intro (design "Loading y scroll, el ancla"). The overlay itself is styled with
+   utilities in LoadingOverlay.astro; this file only holds the page lock that its scripts toggle
+   on <html> before the page paints. */
 
 html.site-loader-lock,
 html.site-loader-lock body,
 html.site-loader-pending,
 html.site-loader-pending body {
   overflow: hidden;
-}
-
-.site-loader,
-.ldr-anchor {
-  display: none;
-  position: fixed;
-  pointer-events: none;
-}
-
-.site-loader {
-  inset: 0;
-  z-index: 9999;
-  background: #24201f;
-}
-
-.ldr-anchor {
-  --ldr-w: clamp(130px, 21vw, 300px);
-  z-index: 10000;
-  width: var(--ldr-w);
-  left: calc(50% - var(--ldr-w) / 2);
-  top: calc(50% - var(--ldr-w) * 0.635 - 10px);
-  color: #f4efe6;
-  opacity: 0;
-  filter: drop-shadow(0 22px 36px rgba(21, 21, 21, 0.25));
-}
-.ldr-anchor svg { display: block; width: 100%; height: auto; overflow: visible; }
-
-.ldr-cap {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(50% + clamp(130px, 21vw, 300px) * 0.635 + 24px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #f4efe6;
-  opacity: 0;
-  font-family: "FuturaNo2D", "Futura No2 D OT Medium", system-ui, sans-serif;
-  font-weight: 700;
-}
-
-/* Scroll hint under the floating anchor. */
-.ldr-hint {
-  position: fixed;
-  z-index: 10000;
-  left: 50%;
-  bottom: 26px;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  opacity: 0;
-  pointer-events: none;
-  font-family: "FuturaNo2D", "Futura No2 D OT Medium", system-ui, sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #4a4a48;
-}
-
-/* The floating anchor takes the place of the hero's own anchor while it is on screen. */
-
-/* Shown before paint via the inline script in Layout, and while the intro runs. */
-html.site-loader-pending .site-loader,
-html.site-loader-pending .ldr-anchor,
-.site-loader.is-active,
-.ldr-anchor.is-active { display: block; }
-
-@media (prefers-reduced-motion: reduce) {
-  .site-loader, .ldr-anchor, .ldr-hint { display: none !important; }
 }

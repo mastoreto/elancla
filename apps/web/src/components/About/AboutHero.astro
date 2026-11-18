@@ -1,4 +1,5 @@
 ---
+import { ULINK } from 'src/styles/classes';
 import { RISE_IN } from 'src/utils/riseIn';
 import InlineText from 'src/components/ContentPage/InlineText.astro';
 import type { ContentHero } from 'src/data/contentPages';
@@ -21,7 +22,7 @@ const tones = ['bg-obra-white', 'bg-obra-red text-white', 'bg-obra-mist'];
       hero.breadcrumbs.map((crumb, i) => (
         <>
           {crumb.href ? (
-            <a href={crumb.href} class="ulink">{crumb.label}</a>
+            <a href={crumb.href} class:list={ULINK}>{crumb.label}</a>
           ) : (
             <span class="text-obra-red" aria-current="page">{crumb.label}</span>
           )}
