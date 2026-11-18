@@ -11,8 +11,9 @@ import {
   Globe,
   HandCoins,
   HeartHandshake,
-  Landmark,
+  Image as ImageIcon,
   LayoutDashboard,
+  LayoutGrid,
   Mic,
   MonitorPlay,
   Newspaper,
@@ -59,9 +60,10 @@ type NavigationLinkItem = {
 type NavigationGroupItem = {
   type: "group";
   id: string;
+  defaultOpen?: boolean;
   title: string;
   icon: NavigationIcon;
-  items: { title: string; url: string; icon: NavigationIcon }[];
+  items: { title: string; url: string | null; icon: NavigationIcon; soon?: boolean }[];
 };
 
 type NavigationItem = NavigationLinkItem | NavigationGroupItem;
@@ -70,14 +72,6 @@ type NavigationSection = {
   label: string;
   items: NavigationItem[];
 };
-
-const MONTH_CLOSE_SEGMENTS = 14;
-const MONTH_CLOSE_DONE_SEGMENTS = 11;
-const MONTH_CLOSE_PENDING_VOUCHERS = MONTH_CLOSE_SEGMENTS - MONTH_CLOSE_DONE_SEGMENTS;
-const monthCloseSegments = Array.from({ length: MONTH_CLOSE_SEGMENTS }, (_, index) => ({
-  id: `segment-${index + 1}`,
-  done: index < MONTH_CLOSE_DONE_SEGMENTS,
-}));
 
 const pendingRequestsCount = moneyRequests.filter((request) => request.status === "pending").length;
 
@@ -99,6 +93,8 @@ const navigationSections: NavigationSection[] = [
         icon: HandCoins,
         badge: pendingRequestsCount > 0 ? pendingRequestsCount : undefined,
       },
+      { type: "link", title: "Boletas", url: getChurchRoutePath("receipts"), icon: Receipt },
+      { type: "link", title: "Comprobantes", url: getChurchRoutePath("vouchers"), icon: FileText },
       { type: "link", title: "Proyectos", url: getChurchRoutePath("projects"), icon: FolderKanban },
       {
         type: "link",
@@ -106,24 +102,13 @@ const navigationSections: NavigationSection[] = [
         url: getChurchRoutePath("budgets"),
         icon: PiggyBank,
       },
-      {
-        type: "group",
-        id: "documents",
-        title: "Documentos",
-        icon: FileText,
-        items: [
-          { title: "Boletas", url: getChurchRoutePath("receipts"), icon: Receipt },
-          { title: "Comprobantes", url: getChurchRoutePath("vouchers"), icon: FileText },
-        ],
-      },
+      { type: "link", title: "Inventario", url: getChurchRoutePath("inventory"), icon: Boxes },
     ],
   },
   {
     label: "Gobierno",
     items: [
       { type: "link", title: "Votaciones", url: getChurchRoutePath("voting"), icon: Vote },
-      { type: "link", title: "Asamblea", url: getChurchRoutePath("assembly"), icon: Landmark },
-      { type: "link", title: "Inventario", url: getChurchRoutePath("inventory"), icon: Boxes },
       { type: "link", title: "Informes", url: getChurchRoutePath("reports"), icon: FileBarChart2 },
     ],
   },
@@ -131,15 +116,20 @@ const navigationSections: NavigationSection[] = [
     label: "Contenido",
     items: [
       { type: "link", title: "Sitio web", url: getChurchRoutePath("website"), icon: Globe },
-      {
-        type: "link",
-        title: "Ministerios",
-        url: getChurchRoutePath("ministries"),
-        icon: HeartHandshake,
-      },
       { type: "link", title: "Blog", url: getChurchRoutePath("blog"), icon: Newspaper },
-      { type: "link", title: "Podcasts", url: getChurchRoutePath("podcasts"), icon: Mic },
-      { type: "link", title: "Sermones", url: getChurchRoutePath("sermons"), icon: MonitorPlay },
+      {
+        type: "group",
+        id: "contents",
+        defaultOpen: true,
+        title: "Contenidos",
+        icon: LayoutGrid,
+        items: [
+          { title: "Podcasts", url: getChurchRoutePath("podcasts"), icon: Mic },
+          { title: "Sermones", url: getChurchRoutePath("sermons"), icon: MonitorPlay },
+          { title: "Ministerios", url: getChurchRoutePath("ministries"), icon: HeartHandshake },
+          { title: "Galería", url: null, icon: ImageIcon, soon: true },
+        ],
+      },
     ],
   },
   {
@@ -178,12 +168,19 @@ const appSidebarSharedPage = {
   badge: cn(
     "ml-auto inline-flex h-[22px] min-w-[22px] items-center justify-center rounded-full bg-(image:--grad-granada) px-[7px] text-[11px] font-extrabold text-white",
   ),
-  subMenu: cn("ml-6 border-white/10 py-1"),
-  subButton: cn(
-    "h-8 rounded-[10px] text-white/60 hover:bg-white/5 hover:text-white",
-    "data-[active=true]:bg-white/10 data-[active=true]:text-white",
+  subMenu: cn("mx-0 ml-[22px] gap-0 border-l-0 px-0 py-0.5"),
+  subSoon: cn(
+    "flex h-[38px] items-center gap-2.5 border-l border-white/[0.16] px-3 text-[13.5px] font-medium text-white/65",
   ),
-  footer: cn("gap-3 px-3 pb-3"),
+  soonTag: cn(
+    "ml-auto text-[9.5px] font-extrabold tracking-[0.08em] text-[var(--oro-100)] uppercase opacity-80",
+  ),
+  subButton: cn(
+    "h-[38px] gap-2.5 rounded-xl rounded-l-none border-l border-white/[0.16] px-3 text-[13.5px] font-medium text-white/65",
+    "hover:bg-white/5 hover:text-white",
+    "data-[active=true]:bg-white/[0.09] data-[active=true]:text-white",
+  ),
+  footer: cn("px-3 pb-3"),
   closeCard: cn(
     "flex flex-col gap-3 rounded-[22px] bg-white/[0.07] p-4 text-white backdrop-blur-[10px]",
     "shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14)]",
@@ -241,7 +238,10 @@ function getNavigationMatchUrls(url: string): string[] {
   return [url, `/${internalRoute}${suffix}`];
 }
 
-function isNavigationItemActive(pathname: string, url: string): boolean {
+function isNavigationItemActive(pathname: string, url: string | null): boolean {
+  if (!url) {
+    return false;
+  }
   return getNavigationMatchUrls(url).some(
     (matchUrl) => pathname === matchUrl || pathname.startsWith(`${matchUrl}/`),
   );
@@ -271,7 +271,7 @@ function NavigationLink({ item, pathname }: { item: NavigationLinkItem; pathname
 
 function NavigationGroup({ item, pathname }: { item: NavigationGroupItem; pathname: string }) {
   const isActive = isNavigationGroupActive(pathname, item);
-  const [open, setOpen] = useState(isActive);
+  const [open, setOpen] = useState(item.defaultOpen ?? isActive);
 
   return (
     <Collapsible open={open || isActive} onOpenChange={setOpen}>
@@ -289,51 +289,30 @@ function NavigationGroup({ item, pathname }: { item: NavigationGroupItem; pathna
           <SidebarMenuSub className={appSidebarSharedPage.subMenu}>
             {item.items.map((subItem) => (
               <SidebarMenuSubItem key={subItem.title}>
-                <SidebarMenuSubButton
-                  asChild={true}
-                  className={appSidebarSharedPage.subButton}
-                  isActive={isNavigationItemActive(pathname, subItem.url)}
-                >
-                  <Link href={subItem.url}>
+                {subItem.url ? (
+                  <SidebarMenuSubButton
+                    asChild={true}
+                    className={appSidebarSharedPage.subButton}
+                    isActive={isNavigationItemActive(pathname, subItem.url)}
+                  >
+                    <Link href={subItem.url}>
+                      <subItem.icon className="size-4" />
+                      <span>{subItem.title}</span>
+                    </Link>
+                  </SidebarMenuSubButton>
+                ) : (
+                  <span className={appSidebarSharedPage.subSoon}>
                     <subItem.icon className="size-4" />
                     <span>{subItem.title}</span>
-                  </Link>
-                </SidebarMenuSubButton>
+                    <span className={appSidebarSharedPage.soonTag}>Pronto</span>
+                  </span>
+                )}
               </SidebarMenuSubItem>
             ))}
           </SidebarMenuSub>
         </CollapsibleContent>
       </SidebarMenuItem>
     </Collapsible>
-  );
-}
-
-function MonthCloseCard() {
-  return (
-    <div className={appSidebarSharedPage.closeCard}>
-      <span className={appSidebarSharedPage.closeIcon}>
-        <Receipt aria-hidden="true" className="size-3.5" />
-      </span>
-      <div className={appSidebarSharedPage.closeText}>
-        <b className={appSidebarSharedPage.closeTitle}>Cierre de noviembre</b>
-        <span className={appSidebarSharedPage.closeSubtitle}>
-          Faltan {MONTH_CLOSE_PENDING_VOUCHERS} comprobantes
-        </span>
-      </div>
-      <div className={appSidebarSharedPage.segments}>
-        {monthCloseSegments.map((segment) => (
-          <span
-            className={
-              segment.done ? appSidebarSharedPage.segmentDone : appSidebarSharedPage.segmentPending
-            }
-            key={segment.id}
-          />
-        ))}
-      </div>
-      <Link className={appSidebarSharedPage.closeAction} href={getChurchRoutePath("vouchers")}>
-        Completar
-      </Link>
-    </div>
   );
 }
 
@@ -371,7 +350,6 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className={appSidebarSharedPage.footer}>
-        <MonthCloseCard />
         <div className={appSidebarSharedPage.user}>
           <span className={appSidebarSharedPage.avatar}>{getUserInitials(currentUser.name)}</span>
           <div className={appSidebarSharedPage.userText}>

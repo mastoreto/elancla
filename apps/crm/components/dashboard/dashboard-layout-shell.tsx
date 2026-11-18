@@ -1,7 +1,6 @@
 "use client";
 
-import { Bell, MessageSquare, MoreHorizontal, Plus, Search } from "lucide-react";
-import Link from "next/link";
+import { Bell, MessageSquare, MoreHorizontal, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 import type * as React from "react";
 import { AppSidebar } from "@/components/app-sidebar";
@@ -38,11 +37,6 @@ const dashboardLayoutShellDashboardPage = {
     "inline-flex h-[22px] min-w-[22px] items-center justify-center rounded-[7px] bg-secondary px-1.5 text-[11px] font-bold text-[var(--tinta-suave)]",
   ),
   actions: cn("flex flex-1 items-center justify-end gap-2"),
-  cta: cn(
-    "inline-flex h-11 items-center justify-center gap-2 rounded-full bg-(image:--grad-granada) px-5 text-sm font-bold whitespace-nowrap text-white",
-    "shadow-[0_10px_20px_-12px_rgba(194,58,78,0.9),inset_0_1px_0_rgba(255,255,255,0.25)] transition hover:-translate-y-px",
-  ),
-  ctaLabel: cn("hidden sm:inline"),
   iconButton: cn(iconButtonShared),
   iconButtonHiddenOnMobile: cn(iconButtonShared, "hidden sm:inline-flex"),
   notificationDot: cn("absolute top-2.5 right-2.5 size-2 rounded-full bg-primary ring-2 ring-card"),
@@ -75,12 +69,6 @@ export function DashboardLayoutShell({ children }: DashboardLayoutShellProps) {
           </div>
 
           <div className={dashboardLayoutShellDashboardPage.actions}>
-            <Link className={dashboardLayoutShellDashboardPage.cta} href={currentRoute.ctaHref}>
-              <Plus aria-hidden="true" className="size-[17px]" />
-              <span className={dashboardLayoutShellDashboardPage.ctaLabel}>
-                {currentRoute.ctaLabel}
-              </span>
-            </Link>
             <button
               aria-label="Mensajes"
               className={dashboardLayoutShellDashboardPage.iconButtonHiddenOnMobile}
