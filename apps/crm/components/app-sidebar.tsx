@@ -7,7 +7,10 @@ import {
   FileText,
   FileWarning,
   FolderKanban,
+  Boxes,
   Globe,
+  HeartHandshake,
+  Landmark,
   HandCoins,
   LayoutDashboard,
   Mic,
@@ -82,6 +85,12 @@ const navigationSections: NavigationSection[] = [
       },
       {
         type: "link",
+        title: "Ministerios",
+        url: getChurchRoutePath("ministries"),
+        icon: HeartHandshake,
+      },
+      {
+        type: "link",
         title: "Blog",
         url: getChurchRoutePath("blog"),
         icon: Newspaper,
@@ -108,6 +117,18 @@ const navigationSections: NavigationSection[] = [
         title: "Votaciones",
         url: getChurchRoutePath("voting"),
         icon: Vote,
+      },
+      {
+        type: "link",
+        title: "Asamblea",
+        url: getChurchRoutePath("assembly"),
+        icon: Landmark,
+      },
+      {
+        type: "link",
+        title: "Inventario",
+        url: getChurchRoutePath("inventory"),
+        icon: Boxes,
       },
       {
         type: "link",

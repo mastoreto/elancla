@@ -20,6 +20,9 @@ export const churchToDashboardRouteMap = {
   blog: "blog",
   podcasts: "podcasts",
   general: "general",
+  ministries: "ministries",
+  inventory: "inventory",
+  assembly: "assembly",
 } as const;
 
 export const dashboardToChurchRouteMap = {
@@ -37,6 +40,9 @@ export const dashboardToChurchRouteMap = {
   blog: "blog",
   podcasts: "podcasts",
   general: "general",
+  ministries: "ministries",
+  inventory: "inventory",
+  assembly: "assembly",
 } as const;
 
 export type ChurchRouteSegment = keyof typeof churchToDashboardRouteMap;

@@ -13,7 +13,7 @@ export function DashboardCard({ className, ...props }: DashboardCardProps) {
   return (
     <section
       className={cn(
-        "w-full max-w-[calc(100vw_-_2.5rem)] min-w-0 overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--card)] p-5 text-foreground shadow-[var(--sombra)] md:p-6",
+        "w-full max-w-[calc(100vw_-_2.5rem)] min-w-0 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] p-5 text-foreground shadow-[var(--sombra)] md:p-6",
         className,
       )}
       {...props}

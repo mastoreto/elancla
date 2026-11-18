@@ -26,7 +26,7 @@ export function DashboardMetricStrip({ metrics, className }: DashboardMetricStri
   return (
     <div
       className={cn(
-        "mb-7 grid w-full max-w-[calc(100vw_-_2.5rem)] min-w-0 grid-cols-1 overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--border)] shadow-[var(--sombra)] sm:grid-cols-2 xl:grid-cols-4",
+        "mb-7 grid w-full max-w-[calc(100vw_-_2.5rem)] min-w-0 grid-cols-1 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--border)] shadow-[var(--sombra)] sm:grid-cols-2 xl:grid-cols-4",
         className,
       )}
     >
@@ -79,7 +79,7 @@ export function DashboardMetricStrip({ metrics, className }: DashboardMetricStri
                 aria-hidden="true"
                 className="absolute bottom-4 right-4 hidden h-7 w-20 opacity-80 sm:block"
                 fill="none"
-                stroke={metric.accent ? "#ffbfc5" : "currentColor"}
+                stroke={metric.accent ? "var(--granada-100)" : "currentColor"}
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="1.5"
