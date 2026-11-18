@@ -269,7 +269,8 @@ Si tocas un componente o página que **no** sigue este patrón (CSS por sección
 
 ## 9. Git
 
-- Rama desde `main` con prefijo `feat/`, `fix/`, `refactor/`, `chore/`. PR hacia `main`.
+- Toda rama de trabajo sale de **`develop`** con prefijo `feat/`, `fix/`, `refactor/`, `chore/`, y su PR va hacia `develop`.
+- **`main` jamás se toca directamente**: solo recibe un PR `develop → main`, que se aprueba manualmente.
 - Commits en inglés, estilo Conventional Commits con scope: `refactor(web): rebuild the 404 page on the "obra" design`.
 - **Jamás** añadir `Co-Authored-By` ni "Generated with Claude Code" en commits o PRs.
 - No commitear ni hacer push sin que se pida. Un cambio lógico por commit.
