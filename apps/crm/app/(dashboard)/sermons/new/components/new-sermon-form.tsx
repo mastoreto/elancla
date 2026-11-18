@@ -1,24 +1,23 @@
 "use client";
 
-import { ImagePlus } from "lucide-react";
-import Link from "next/link";
+import { BookOpen, CalendarDays, Play, Upload, Video } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { DashboardPageHeader } from "@/components/dashboard";
-import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { BoardButton } from "@/components/dashboard/board/board-button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+  BoardFormCard,
+  BoardFormDivider,
+  BoardFormRow,
+  BoardFormSection,
+  BoardFormSections,
+  BoardInput,
+  BoardSelect,
+  BoardTextarea,
+} from "@/components/dashboard/board/board-form";
+import { ContentFormActions } from "@/components/dashboard/content";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
-import { sermonSeries } from "../../data/sermons";
+import { sermonPreachers, sermonSeries } from "../../data/sermons";
 import type { SermonFormValues } from "../../types";
 import { type SermonFormErrors, sermonFormSchema } from "../schema";
 
@@ -33,12 +32,20 @@ const EMPTY_VALUES: SermonFormValues = {
 };
 
 const newSermonFormSermonsPage = {
-  form: cn("space-y-6"),
-  card: cn("space-y-5 rounded-xl border border-border bg-card p-6 shadow-card"),
-  pair: cn("grid gap-5 md:grid-cols-2"),
-  thumbnail: cn("flex items-center justify-between gap-4 rounded-lg border border-dashed p-4"),
-  thumbnailHint: cn("text-sm text-muted-foreground"),
-  actions: cn("flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"),
+  icon: cn("size-[18px] shrink-0 text-[var(--tinta-apagada)]"),
+  thumbnailLabel: cn("text-[13px] font-bold text-[var(--tinta-suave)]"),
+  thumbnailRow: cn("flex flex-wrap items-center gap-4"),
+  thumbnailPreview: cn(
+    "flex h-[135px] w-[240px] items-center justify-center rounded-[20px] bg-[var(--granada-50)] ring-1 ring-black/10 ring-inset",
+    "bg-[repeating-linear-gradient(135deg,rgba(42,21,26,.035)_0_1px,transparent_1px_9px)]",
+  ),
+  playBubble: cn(
+    "inline-flex size-[52px] items-center justify-center rounded-full text-primary",
+    "bg-[linear-gradient(150deg,#ffe3e7,#f6b9c3)] shadow-[0_0_0_4px_rgba(255,255,255,.7),0_8px_18px_-6px_rgba(194,58,78,.35)]",
+  ),
+  thumbnailAside: cn("flex flex-col items-start gap-2"),
+  thumbnailHint: cn("text-[13.5px] leading-normal text-[var(--tinta-suave)]"),
+  uploadIcon: cn("size-4"),
 };
 
 export function NewSermonForm() {
@@ -49,8 +56,10 @@ export function NewSermonForm() {
   const update = (field: keyof SermonFormValues, value: string) =>
     setValues((previous) => ({ ...previous, [field]: value }));
 
+  const goToList = () => router.push(getChurchRoutePath("sermons"));
+
   // Seed-data screen: validating and returning to the list stands in for the real save.
-  const submit = () => {
+  const publish = () => {
     const result = sermonFormSchema.safeParse(values);
     if (!result.success) {
       const next: SermonFormErrors = {};
@@ -60,132 +69,124 @@ export function NewSermonForm() {
       setErrors(next);
       return;
     }
-    router.push(getChurchRoutePath("sermons"));
+    goToList();
   };
 
   return (
     <form
-      className={newSermonFormSermonsPage.form}
       noValidate={true}
       onSubmit={(event) => {
         event.preventDefault();
-        submit();
+        publish();
       }}
     >
-      <DashboardPageHeader
-        description="Completa de arriba hacia abajo y publícalo en la biblioteca."
-        emphasis="sermón"
-        kicker="Contenido · Sermones"
-        title="Nuevo"
-      />
-
-      <div className={newSermonFormSermonsPage.card}>
-        <Field>
-          <FieldLabel htmlFor="sermon-title">Título *</FieldLabel>
-          <Input
-            aria-invalid={Boolean(errors.title)}
-            id="sermon-title"
-            onChange={(event) => update("title", event.target.value)}
-            value={values.title}
-          />
-          {errors.title ? <FieldError>{errors.title}</FieldError> : null}
-        </Field>
-
-        <div className={newSermonFormSermonsPage.pair}>
-          <Field>
-            <FieldLabel htmlFor="sermon-preacher">Predicador *</FieldLabel>
-            <Input
-              aria-invalid={Boolean(errors.preacher)}
-              id="sermon-preacher"
-              onChange={(event) => update("preacher", event.target.value)}
-              value={values.preacher}
+      <BoardFormCard
+        subtitle="Completa de arriba hacia abajo y publícalo en la biblioteca"
+        title="Nuevo sermón"
+      >
+        <BoardFormSections>
+          <BoardFormSection>
+            <BoardInput
+              error={errors.title}
+              id="sermon-title"
+              label="Título *"
+              onChange={(event) => update("title", event.target.value)}
+              placeholder="La gracia que nos sostiene"
+              value={values.title}
             />
-            {errors.preacher ? <FieldError>{errors.preacher}</FieldError> : null}
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="sermon-passage">Pasaje bíblico *</FieldLabel>
-            <Input
-              aria-invalid={Boolean(errors.passage)}
-              id="sermon-passage"
-              onChange={(event) => update("passage", event.target.value)}
-              value={values.passage}
+            <BoardFormRow>
+              <BoardSelect
+                error={errors.preacher}
+                id="sermon-preacher"
+                label="Predicador *"
+                onValueChange={(value) => update("preacher", value)}
+                options={sermonPreachers.map((name) => ({ value: name, label: name }))}
+                placeholder="Elegir predicador"
+                value={values.preacher}
+              />
+              <BoardInput
+                error={errors.passage}
+                icon={<BookOpen aria-hidden="true" className={newSermonFormSermonsPage.icon} />}
+                id="sermon-passage"
+                label="Pasaje bíblico *"
+                onChange={(event) => update("passage", event.target.value)}
+                placeholder="Efesios 2:1-10"
+                value={values.passage}
+              />
+            </BoardFormRow>
+            <BoardTextarea
+              id="sermon-summary"
+              label="Resumen"
+              onChange={(event) => update("summary", event.target.value)}
+              placeholder="Una frase que invite a escucharlo"
+              value={values.summary}
             />
-            {errors.passage ? <FieldError>{errors.passage}</FieldError> : null}
-          </Field>
-        </div>
+          </BoardFormSection>
 
-        <Field>
-          <FieldLabel htmlFor="sermon-summary">Resumen</FieldLabel>
-          <Textarea
-            id="sermon-summary"
-            onChange={(event) => update("summary", event.target.value)}
-            rows={3}
-            value={values.summary}
-          />
-        </Field>
+          <BoardFormDivider />
 
-        <div className={newSermonFormSermonsPage.pair}>
-          <Field>
-            <FieldLabel>Serie</FieldLabel>
-            <Select onValueChange={(value) => update("series", value)} value={values.series}>
-              <SelectTrigger aria-label="Serie">
-                <SelectValue placeholder="Sin serie" />
-              </SelectTrigger>
-              <SelectContent>
-                {sermonSeries.map((series) => (
-                  <SelectItem key={series} value={series}>
-                    {series}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="sermon-date">Fecha del culto *</FieldLabel>
-            <Input
-              aria-invalid={Boolean(errors.date)}
-              id="sermon-date"
-              onChange={(event) => update("date", event.target.value)}
-              type="date"
-              value={values.date}
+          <BoardFormSection>
+            <BoardFormRow>
+              <BoardSelect
+                id="sermon-series"
+                label="Serie"
+                onValueChange={(value) => update("series", value)}
+                options={sermonSeries.map((name) => ({ value: name, label: name }))}
+                placeholder="Sin serie"
+                value={values.series}
+              />
+              <BoardInput
+                error={errors.date}
+                icon={<CalendarDays aria-hidden="true" className={newSermonFormSermonsPage.icon} />}
+                id="sermon-date"
+                label="Fecha del culto *"
+                onChange={(event) => update("date", event.target.value)}
+                type="date"
+                value={values.date}
+              />
+            </BoardFormRow>
+            <BoardInput
+              error={errors.youtubeUrl}
+              icon={<Video aria-hidden="true" className={newSermonFormSermonsPage.icon} />}
+              id="sermon-youtube"
+              inputMode="url"
+              label="Link de YouTube *"
+              onChange={(event) => update("youtubeUrl", event.target.value)}
+              placeholder="https://youtube.com/watch?v=…"
+              value={values.youtubeUrl}
             />
-            {errors.date ? <FieldError>{errors.date}</FieldError> : null}
-          </Field>
-        </div>
+          </BoardFormSection>
 
-        <Field>
-          <FieldLabel htmlFor="sermon-youtube">Link de YouTube *</FieldLabel>
-          <Input
-            aria-invalid={Boolean(errors.youtubeUrl)}
-            id="sermon-youtube"
-            inputMode="url"
-            onChange={(event) => update("youtubeUrl", event.target.value)}
-            placeholder="https://youtube.com/watch?v=…"
-            value={values.youtubeUrl}
-          />
-          {errors.youtubeUrl ? <FieldError>{errors.youtubeUrl}</FieldError> : null}
-        </Field>
+          <BoardFormDivider />
 
-        <div className={newSermonFormSermonsPage.thumbnail}>
-          <p className={newSermonFormSermonsPage.thumbnailHint}>
-            La tomamos del video de YouTube. Puedes subir otra si prefieres.
-          </p>
-          <Button type="button" variant="outline">
-            <ImagePlus aria-hidden="true" />
-            Subir miniatura
-          </Button>
-        </div>
-      </div>
+          <BoardFormSection>
+            <span className={newSermonFormSermonsPage.thumbnailLabel}>Miniatura</span>
+            <div className={newSermonFormSermonsPage.thumbnailRow}>
+              <div className={newSermonFormSermonsPage.thumbnailPreview}>
+                <span className={newSermonFormSermonsPage.playBubble}>
+                  <Play aria-hidden="true" className={newSermonFormSermonsPage.uploadIcon} />
+                </span>
+              </div>
+              <div className={newSermonFormSermonsPage.thumbnailAside}>
+                <span className={newSermonFormSermonsPage.thumbnailHint}>
+                  La tomamos del video de YouTube. Puedes subir otra si prefieres.
+                </span>
+                <BoardButton size="sm" variant="soft">
+                  <Upload aria-hidden="true" className={newSermonFormSermonsPage.uploadIcon} />
+                  Subir miniatura
+                </BoardButton>
+              </div>
+            </div>
+          </BoardFormSection>
+        </BoardFormSections>
 
-      <div className={newSermonFormSermonsPage.actions}>
-        <Button asChild={true} type="button" variant="ghost">
-          <Link href={getChurchRoutePath("sermons")}>Cancelar</Link>
-        </Button>
-        <Button type="button" variant="outline">
-          Guardar borrador
-        </Button>
-        <Button type="submit">Publicar sermón</Button>
-      </div>
+        <ContentFormActions
+          cancelHref={getChurchRoutePath("sermons")}
+          onPublish={publish}
+          onSaveDraft={goToList}
+          publishLabel="Publicar sermón"
+        />
+      </BoardFormCard>
     </form>
   );
 }

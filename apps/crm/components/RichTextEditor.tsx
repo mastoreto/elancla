@@ -28,9 +28,9 @@ interface ToolbarButtonProps {
 }
 
 const RichTextEditorSharedPage = {
-  toolbarButton: cn("h-8 w-8 rounded"),
-  separator: cn("w-px h-5 bg-border mx-0.5 self-center"),
-  block: cn("flex flex-wrap items-center gap-0.5 border-b border-border px-2 py-1.5 bg-muted/30"),
+  toolbarButton: cn("size-8 rounded-full bg-card shadow-[inset_0_0_0_1px_rgba(42,21,26,0.16)]"),
+  separator: cn("mx-0.5 h-5 w-px self-center bg-border"),
+  block: cn("flex flex-wrap items-center gap-1.5 bg-secondary px-3 py-2.5"),
 };
 
 function ToolbarButton({ onClick, isActive, disabled, title, children }: ToolbarButtonProps) {
@@ -134,7 +134,7 @@ export function RichTextEditor({
   return (
     <div
       className={cn(
-        "rounded-lg border bg-background overflow-hidden",
+        "rounded-[22px] border bg-card overflow-hidden",
         hasError ? "border-destructive" : "border-input",
         "focus-within:ring-1",
         hasError ? "focus-within:ring-destructive" : "focus-within:ring-ring",

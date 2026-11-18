@@ -11,6 +11,7 @@ export const sermons: Sermon[] = [
     status: "published",
     date: "2026-11-16",
     plays: 1480,
+    youtubeUrl: "https://youtube.com/watch?v=Zq3aGx1",
   },
   {
     id: "sermon-2",
@@ -21,6 +22,7 @@ export const sermons: Sermon[] = [
     status: "published",
     date: "2026-11-09",
     plays: 1120,
+    youtubeUrl: "https://youtube.com/watch?v=Hn8Rt2k",
   },
   {
     id: "sermon-3",
@@ -31,6 +33,7 @@ export const sermons: Sermon[] = [
     status: "published",
     date: "2026-11-02",
     plays: 780,
+    youtubeUrl: "https://youtube.com/watch?v=Wp5Lc9d",
   },
   {
     id: "sermon-4",
@@ -41,7 +44,10 @@ export const sermons: Sermon[] = [
     status: "draft",
     date: undefined,
     plays: undefined,
+    youtubeUrl: "https://youtube.com/watch?v=Bv7Ye4m",
   },
 ];
 
 export const sermonSeries = ["Anclados en Cristo", "Mensaje especial", "Adviento 2026"] as const;
+
+export const sermonPreachers = [...new Set(sermons.map((sermon) => sermon.preacher))];
