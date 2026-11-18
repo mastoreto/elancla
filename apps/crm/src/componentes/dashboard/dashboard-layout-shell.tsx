@@ -136,6 +136,14 @@ const routeMeta: RouteMeta[] = [
     ctaHref: getChurchRoutePath("podcasts", "new"),
   },
   {
+    route: "sermons",
+    internalRoute: churchToDashboardRouteMap.sermons,
+    section: "Contenido",
+    title: "Sermones",
+    ctaLabel: "Nuevo sermón",
+    ctaHref: getChurchRoutePath("sermons", "new"),
+  },
+  {
     route: "ministries",
     internalRoute: churchToDashboardRouteMap.ministries,
     section: "Contenido",

@@ -10,6 +10,13 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { updateSocialLinks } from "../actions";
 
+const socialLinksSectionContentPage = {
+  icon: cn(
+    "flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-muted/40",
+  ),
+  hint: cn("text-xs font-medium text-muted-foreground"),
+};
+
 const platforms = [
   {
     key: "website",
@@ -97,16 +104,11 @@ export function SocialLinksSection({ initialLinks }: { initialLinks: SocialLinks
     >
       {platforms.map(({ key, label, placeholder, icon: Icon, color }) => (
         <div key={key} className="flex items-center gap-3">
-          <div
-            className={cn(
-              "flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-muted/40",
-              color,
-            )}
-          >
+          <div className={cn(socialLinksSectionContentPage.icon, color)}>
             <Icon className="size-4" />
           </div>
           <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <span className="text-xs font-medium text-muted-foreground">{label}</span>
+            <span className={socialLinksSectionContentPage.hint}>{label}</span>
             <Input
               value={links[key]}
               onChange={(e) => handleChange(key, e.target.value)}

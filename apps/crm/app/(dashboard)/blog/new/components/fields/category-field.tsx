@@ -8,6 +8,12 @@ import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/for
 import { cn } from "@/lib/utils";
 import type { NewPostFormValues } from "../../schema";
 
+const categoryFieldContentPage = {
+  options: cn("flex flex-wrap gap-2 rounded-lg border border-input bg-background p-3"),
+  option: cn("cursor-pointer select-none transition-colors"),
+  optionActive: cn("bg-accent text-accent-foreground hover:bg-accent/80"),
+};
+
 interface CategoryFieldProps {
   control: Control<NewPostFormValues>;
   categories: BlogCategory[];
@@ -29,7 +35,7 @@ export function CategoryField({ control, categories }: CategoryFieldProps) {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Categoría *</FormLabel>
-          <div className="flex flex-wrap gap-2 rounded-lg border border-input bg-background p-3">
+          <div className={categoryFieldContentPage.options}>
             {categories.map((cat) => {
               const selected = (field.value ?? []).includes(cat.id);
               return (
@@ -37,10 +43,8 @@ export function CategoryField({ control, categories }: CategoryFieldProps) {
                   key={cat.id}
                   variant={selected ? "default" : "outline"}
                   className={cn(
-                    "cursor-pointer select-none transition-colors",
-                    selected
-                      ? "bg-accent text-accent-foreground hover:bg-accent/80"
-                      : "hover:bg-muted",
+                    categoryFieldContentPage.option,
+                    selected ? categoryFieldContentPage.optionActive : "hover:bg-muted",
                   )}
                   onClick={() => toggle(cat.id)}
                 >

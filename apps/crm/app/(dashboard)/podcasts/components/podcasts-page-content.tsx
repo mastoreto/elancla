@@ -30,6 +30,11 @@ import { DashboardMetricStrip, DashboardPageHeader } from "@/src/componentes/das
 import { type ColumnDef, DataTable, type FilterConfig } from "@/src/components/DataTable";
 import type { Podcast, PodcastHost, PodcastSeries } from "../types";
 import { PodcastStatusBadge } from "./podcast-status-badge";
+import { cn } from "@/lib/utils";
+
+const podcastsPageContentContentPage = {
+  count: cn("text-sm text-muted-foreground tabular-nums"),
+};
 
 function formatDate(dateStr: string | undefined): string {
   if (!dateStr) return "—";
@@ -123,14 +128,14 @@ function buildColumns(
       key: "duration",
       label: "Duración",
       render: (podcast) => (
-        <span className="text-sm text-muted-foreground tabular-nums">{podcast.duration}</span>
+        <span className={podcastsPageContentContentPage.count}>{podcast.duration}</span>
       ),
     },
     {
       key: "publishedAt",
       label: "Publicación",
       render: (podcast) => (
-        <span className="text-sm text-muted-foreground tabular-nums">
+        <span className={podcastsPageContentContentPage.count}>
           {formatDate(podcast.publishedAt)}
         </span>
       ),

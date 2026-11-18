@@ -19,6 +19,12 @@ import { PublicationDateField } from "./fields/publication-date-field";
 import { TagsField } from "./fields/tags-field";
 import { TitleField } from "./fields/title-field";
 import { HeroImageUploadField } from "./hero-image-upload-field";
+import { cn } from "@/lib/utils";
+
+const newPostFormContentPage = {
+  header: cn("flex items-center justify-between gap-4 mb-6"),
+  layout: cn("grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start"),
+};
 
 interface NewPostFormProps {
   author: BlogAuthor;
@@ -66,7 +72,7 @@ export function NewPostForm({ author, categories }: NewPostFormProps) {
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate={true}>
         {/* ── Page header ─────────────────────────────────────────── */}
-        <div className="flex items-center justify-between gap-4 mb-6">
+        <div className={newPostFormContentPage.header}>
           <div className="flex items-center gap-3 min-w-0">
             <Button
               type="button"
@@ -98,7 +104,7 @@ export function NewPostForm({ author, categories }: NewPostFormProps) {
         <Separator className="mb-8" />
 
         {/* ── Two-column layout ────────────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start">
+        <div className={newPostFormContentPage.layout}>
           {/* ── Main column: content ─────────────────────────────── */}
           <div className="space-y-6">
             <TitleField control={control} />
