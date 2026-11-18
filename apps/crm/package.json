@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "bun run --cwd ../../packages/db db:generate && next build",
     "start": "next start",
     "lint": "biome lint --diagnostic-level=warn .",
     "lint:fix": "biome lint --fix .",
