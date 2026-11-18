@@ -6,6 +6,7 @@ import type { Messages } from 'src/i18n/messages';
 import CalendarEventRow from './CalendarEventRow.astro';
 import CalendarFilters from './CalendarFilters.astro';
 import CalendarSectionHead from './CalendarSectionHead.astro';
+import { SECTION, SECTION_SPACING } from './styles';
 
 interface Props {
   copy: Messages['calendar'];
@@ -27,18 +28,23 @@ const groups = groupEventsByMonth(events).map(({ month, events: list }) => ({
 }));
 ---
 
-<section class="cal-wrap cal-section" id="eventos" data-cal>
+<section class:list={[SECTION, SECTION_SPACING.default]} id="eventos" data-cal>
   <CalendarSectionHead eyebrow={copy.months.eyebrow} title={copy.months.title} emphasis={copy.months.emphasis} />
   <CalendarFilters copy={copy} locale={locale} />
-  <p class="cal-notice"><b>{copy.months.noticeLabel}</b><span>{copy.months.notice}</span></p>
-  <div class="cal-months">
+  <p class="flex flex-wrap items-center gap-3 rounded-[20px] border-[1.5px] border-dashed border-obra-red bg-obra-white px-4.5 py-3.5 text-[0.875rem] leading-[1.45]">
+    <b class="tracking-[0.12em] text-obra-red uppercase">{copy.months.noticeLabel}</b><span>{copy.months.notice}</span>
+  </p>
+  <div class="mt-4 flex flex-col">
     {groups.map((group) => (
-      <section class="cal-month" data-month={group.month}>
-        <header class="cal-month__head">
-          <h3 class="cal-month__name">{group.name}</h3>
-          <span class="cal-month__count">{group.count}</span>
+      <section
+        class="flex flex-col gap-6 border-t-[1.5px] border-obra-ink py-7.5 max-md:gap-3.5 max-md:py-5.5 lg:flex-row lg:gap-10 [&[hidden]]:hidden"
+        data-month={group.month}
+      >
+        <header class="flex flex-col gap-1.5 lg:sticky lg:top-24 lg:min-w-0 lg:flex-[0_0_17rem] lg:self-start">
+          <h3 class="font-obra-serif text-[clamp(2.5rem,3.6vw,3.5rem)] leading-[0.92] tracking-[-0.02em] wrap-anywhere capitalize max-md:text-[2.5rem]">{group.name}</h3>
+          <span class="font-obra-sans-bold text-[0.8125rem] tracking-[0.12em] text-obra-red uppercase">{group.count}</span>
         </header>
-        <div class="cal-month__list">
+        <div class="flex min-w-0 flex-1 flex-col gap-2.5">
           {group.rows.map(({ event, weekday }) => (
             <CalendarEventRow event={event} weekday={weekday} copy={copy} />
           ))}

@@ -2,6 +2,7 @@
 import AnchorMark from 'src/components/AnchorMark.astro';
 import type { Messages } from 'src/i18n/messages';
 import { CALENDAR_YEAR } from 'src/data/calendar';
+import { EMPHASIS, LEAD, SECTION, SECTION_SPACING, TITLE } from './styles';
 
 interface Props {
   copy: Messages['calendar'];
@@ -10,51 +11,70 @@ const { copy } = Astro.props;
 const { print, download } = copy.take;
 // Printable views are in Spanish and shared by every locale.
 const PRINT_BASE = '/calendario-anual/imprimir';
+
+const CARD = 'flex flex-col gap-4 rounded-[40px] p-[clamp(1.5rem,3vw,2.5rem)] max-md:rounded-[32px] max-md:p-6';
+const CARD_TONE = {
+  white: 'bg-obra-white',
+  mist: 'bg-obra-mist',
+} as const;
+const CARD_TITLE = 'm-0 font-obra-serif text-[clamp(1.75rem,3vw,2.75rem)] leading-none tracking-[-0.02em] max-md:text-[2rem]';
+const FIELD_LABEL = 'font-obra-sans-bold text-[0.8125rem] text-obra-muted';
+// `py-0` and `leading-[inherit]` undo the forms plugin padding and line-height.
+const FIELD_INPUT =
+  'min-h-12.5 rounded-2xl border-[1.5px] border-obra-flax bg-obra-white px-4.5 py-0 text-[1rem] leading-[inherit] text-obra-ink focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-obra-red';
+const DOWNLOAD = 'flex flex-col gap-3.5 rounded-[28px] bg-obra-paper p-5';
+const DOWNLOAD_TITLE = 'font-obra-serif text-[1.5rem]';
+const DOWNLOAD_BODY = 'm-0 text-[0.9375rem] leading-[1.45] text-obra-ink-soft';
+const DOWNLOAD_BUTTON = 'ln-btn self-start px-6.5 text-center';
+const THUMB = 'h-32.5 overflow-hidden rounded-[14px]';
 ---
 
-<section class="cal-wrap cal-section" id="llevalo">
-  <h2 class="ln-h cal-title">{copy.take.title}<em>{copy.take.emphasis}</em></h2>
-  <div class="cal-take">
-    <form class="cal-card" action="#" method="post">
+<section class:list={[SECTION, SECTION_SPACING.default]} id="llevalo">
+  <h2 class={TITLE}>{copy.take.title}<em class={EMPHASIS}>{copy.take.emphasis}</em></h2>
+  <div class="grid gap-4 lg:grid-cols-[1fr_1fr]">
+    <form class:list={[CARD, CARD_TONE.white]} action="#" method="post">
       <span class="ln-eyebrow">{print.eyebrow}</span>
-      <h3 class="cal-card__title">{print.title}</h3>
-      <p class="cal-lead">{print.body}</p>
-      <div class="cal-field">
-        <label for="cal-name">{print.name}</label>
-        <input id="cal-name" name="name" type="text" autocomplete="name" placeholder={print.namePlaceholder} required />
+      <h3 class={CARD_TITLE}>{print.title}</h3>
+      <p class={LEAD}>{print.body}</p>
+      <div class="flex flex-col gap-1.5">
+        <label for="cal-name" class={FIELD_LABEL}>{print.name}</label>
+        <input id="cal-name" name="name" type="text" autocomplete="name" placeholder={print.namePlaceholder} required class={FIELD_INPUT} />
       </div>
-      <div class="cal-field">
-        <label for="cal-wa">{print.whatsapp}</label>
-        <input id="cal-wa" name="whatsapp" type="tel" autocomplete="tel" placeholder={print.whatsappPlaceholder} required />
+      <div class="flex flex-col gap-1.5">
+        <label for="cal-wa" class={FIELD_LABEL}>{print.whatsapp}</label>
+        <input id="cal-wa" name="whatsapp" type="tel" autocomplete="tel" placeholder={print.whatsappPlaceholder} required class={FIELD_INPUT} />
       </div>
-      <div class="cal-field">
-        <label for="cal-qty">{print.quantity}</label>
-        <input id="cal-qty" name="quantity" type="number" min="1" max="20" value="1" required />
+      <div class="flex flex-col gap-1.5">
+        <label for="cal-qty" class={FIELD_LABEL}>{print.quantity}</label>
+        <input id="cal-qty" name="quantity" type="number" min="1" max="20" value="1" required class={FIELD_INPUT} />
       </div>
-      <button type="submit" class="ln-btn">{print.submit}<span class="ln-btn__dot" aria-hidden="true">→</span></button>
+      <button type="submit" class="ln-btn cursor-pointer self-start">{print.submit}<span class="ln-btn__dot" aria-hidden="true">→</span></button>
     </form>
 
-    <div class="cal-card cal-card--mist">
+    <div class:list={[CARD, CARD_TONE.mist]}>
       <span class="ln-eyebrow">{download.eyebrow}</span>
-      <h3 class="cal-card__title">{download.title}</h3>
-      <div class="cal-dl">
-        <div class="cal-dl__item">
-          <div class="cal-dl__thumb cal-dl__thumb--paper" aria-hidden="true">
-            {Array.from({ length: 12 }, () => <span></span>)}
+      <h3 class={CARD_TITLE}>{download.title}</h3>
+      <div class="grid gap-3.5 sm:grid-cols-[1fr_1fr]">
+        <div class={DOWNLOAD}>
+          <div
+            class:list={[THUMB, 'grid grid-cols-[repeat(6,1fr)] gap-1.25 bg-obra-cream p-3 shadow-[inset_0_0_0_1.5px_var(--color-obra-flax)]']}
+            aria-hidden="true"
+          >
+            {Array.from({ length: 12 }, () => <span class="rounded-sm bg-obra-white"></span>)}
           </div>
-          <b>{download.pdf.title}</b>
-          <p>{download.pdf.body}</p>
-          <a href={`${PRINT_BASE}/a3?descargar`} class="ln-btn" style="background:var(--ln-ink)" target="_blank" rel="noopener">{download.pdf.ctaA3}</a>
-          <a href={`${PRINT_BASE}/a4?descargar`} class="ln-btn" style="background:var(--ln-ink)" target="_blank" rel="noopener">{download.pdf.ctaA4}</a>
+          <b class={DOWNLOAD_TITLE}>{download.pdf.title}</b>
+          <p class={DOWNLOAD_BODY}>{download.pdf.body}</p>
+          <a href={`${PRINT_BASE}/a3?descargar`} class:list={[DOWNLOAD_BUTTON, 'bg-obra-ink']} target="_blank" rel="noopener">{download.pdf.ctaA3}</a>
+          <a href={`${PRINT_BASE}/a4?descargar`} class:list={[DOWNLOAD_BUTTON, 'bg-obra-ink']} target="_blank" rel="noopener">{download.pdf.ctaA4}</a>
         </div>
-        <div class="cal-dl__item">
-          <div class="cal-dl__thumb cal-dl__thumb--screen" aria-hidden="true">
-            <b class="ln-h">{download.digital.cover}<br />{CALENDAR_YEAR}</b>
-            <AnchorMark id="cal-dl" outline={false} color="#ff2e34" class="w-[46px]" />
+        <div class={DOWNLOAD}>
+          <div class:list={[THUMB, 'flex items-center justify-between bg-obra-warm px-5.5 text-obra-cream']} aria-hidden="true">
+            <b class="ln-h text-[2.125rem] leading-[0.95]">{download.digital.cover}<br />{CALENDAR_YEAR}</b>
+            <AnchorMark id="cal-dl" outline={false} color="#ff2e34" class="h-auto w-[46px] fill-obra-red-live" />
           </div>
-          <b>{download.digital.title}</b>
-          <p>{download.digital.body}</p>
-          <a href={`${PRINT_BASE}/digital?descargar`} class="ln-btn ln-btn--ghost" target="_blank" rel="noopener">{download.digital.cta}</a>
+          <b class={DOWNLOAD_TITLE}>{download.digital.title}</b>
+          <p class={DOWNLOAD_BODY}>{download.digital.body}</p>
+          <a href={`${PRINT_BASE}/digital?descargar`} class:list={[DOWNLOAD_BUTTON, 'ln-btn--ghost']} target="_blank" rel="noopener">{download.digital.cta}</a>
         </div>
       </div>
     </div>

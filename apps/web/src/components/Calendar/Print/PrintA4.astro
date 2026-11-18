@@ -4,18 +4,29 @@ import { CALENDAR_YEAR, events, eventsOfMonth, monthLayout, weeklySorted } from 
 import {
   MONTHS_ES, capitalize, dayOf, ministryEs, placeEs, weekdayLong, weekdayShort, weekdayShortByIndex,
 } from './printFormat';
+import { EYEBROW, EYEBROW_TONE, SERIF, SHEET, SHEET_TONE } from './styles';
 
 const weekly = weeklySorted();
 const weeklyLine = weekly.map((a) => `${capitalize(weekdayShortByIndex(a.day))} ${a.time} ${a.title}`).join(' · ');
 const WD = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
+const SUNDAY_COLUMN = 6;
+
+const PAGE = [SHEET, 'h-[296.6mm] w-[210mm] px-13 py-14'];
+// Day numbers: regular weight; event days turn bold, bigger and red; Sundays are red.
+const CELL_DAY = {
+  plain: 'text-[22px] font-normal text-obra-ink-soft',
+  sunday: 'text-[22px] font-normal text-obra-red',
+  event: 'text-[26px] leading-none font-bold text-obra-red',
+} as const;
+const RULE = 'border-t border-obra-flax';
 ---
 
 <!-- Cover -->
-<section class="cp-sheet cp-a4 cp-a4--dark">
-  <span class="cp-a4__mark" aria-hidden="true"><AnchorMark id="cp-a4-cover" outline={false} color="#ff2e34" /></span>
-  <span class="cp-eyebrow cp-eyebrow--live">Iglesia Bautista El Ancla · Montevideo</span>
-  <b class="cp-serif cp-a4__cover">Calendario<br />{CALENDAR_YEAR}</b>
-  <span class="cp-a4__verse">Tenemos esta esperanza como firme y segura ancla del alma. <em>Heb. 6:19</em></span>
+<section class:list={[PAGE, SHEET_TONE.dark]}>
+  <span class="absolute -right-15 -bottom-10 w-130 opacity-12" aria-hidden="true"><AnchorMark id="cp-a4-cover" outline={false} color="#ff2e34" /></span>
+  <span class:list={[EYEBROW, EYEBROW_TONE.live]}>Iglesia Bautista El Ancla · Montevideo</span>
+  <b class:list={[SERIF, 'mt-auto text-[150px] leading-[0.88] tracking-[-0.03em]']}>Calendario<br />{CALENDAR_YEAR}</b>
+  <span class="mt-7 max-w-105 text-[20px] leading-[1.4] text-obra-dune">Tenemos esta esperanza como firme y segura ancla del alma. <em class="text-obra-red-live not-italic">Heb. 6:19</em></span>
 </section>
 
 {MONTHS_ES.map((name, month) => {
@@ -23,54 +34,54 @@ const WD = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
   const list = eventsOfMonth(events, month);
   const byDay = new Map(list.map((e) => [dayOf(e), e]));
   return (
-    <section class="cp-sheet cp-a4">
-      <header class="cp-a4__head">
-        <b class="cp-serif cp-a4__month">{name}</b>
-        <span class="cp-a4__year">
-          <span class="cp-eyebrow">{CALENDAR_YEAR}</span>
-          <AnchorMark id={`cp-a4-${month}`} outline={false} color="#a8141b" class="cp-a4__logo" />
+    <section class:list={[PAGE, SHEET_TONE.light]}>
+      <header class="flex items-end justify-between">
+        <b class:list={[SERIF, 'text-[110px] leading-[0.9] tracking-[-0.03em]']}>{name}</b>
+        <span class="flex flex-col items-end gap-2">
+          <span class:list={[EYEBROW, EYEBROW_TONE.red]}>{CALENDAR_YEAR}</span>
+          <AnchorMark id={`cp-a4-${month}`} outline={false} color="#a8141b" class="h-[43px] w-[34px]" />
         </span>
       </header>
-      <div class="cp-a4__cal">
-        {WD.map((d) => <span class="cp-a4__wd">{d}</span>)}
-        {Array.from({ length: lead }, () => <span class="cp-a4__cell"></span>)}
+      <div class="mt-6.5 grid grid-cols-[repeat(7,1fr)]">
+        {WD.map((d) => <span class="pb-2 text-[13px] font-bold tracking-[0.12em] text-obra-stone">{d}</span>)}
+        {Array.from({ length: lead }, () => <span class:list={[RULE, 'flex min-h-21 flex-col gap-1 px-1.5 pt-2']}></span>)}
         {Array.from({ length: days }, (_, i) => {
           const day = i + 1;
           const ev = byDay.get(day);
-          const sunday = (lead + i) % 7 === 6;
+          const tone = ev ? 'event' : (lead + i) % 7 === SUNDAY_COLUMN ? 'sunday' : 'plain';
           return (
-            <span class:list={['cp-a4__cell', ev && 'has-event', sunday && 'is-sun']}>
-              <b class="cp-serif">{day}</b>
-              {ev && <span class="cp-a4__cellev">{ev.title}</span>}
+            <span class:list={[RULE, 'flex min-h-21 flex-col gap-1 px-1.5 pt-2']}>
+              <b class:list={['font-obra-serif', CELL_DAY[tone]]}>{day}</b>
+              {ev && <span class="text-[11px] leading-[1.2] font-bold text-obra-red">{ev.title}</span>}
             </span>
           );
         })}
       </div>
       {list.length > 0 && (
-        <div class="cp-a4__list">
-          <span class="cp-eyebrow">Eventos del mes · ejemplo</span>
+        <div class="mt-5.5 flex flex-col">
+          <span class:list={[EYEBROW, EYEBROW_TONE.red, 'mb-1.5']}>Eventos del mes · ejemplo</span>
           {list.map((e) => (
-            <div class="cp-a4__row">
-              <b class="cp-serif">{dayOf(e)}</b>
-              <b class="cp-a4__rowt">{e.title}</b>
-              <span>{weekdayShort(e.date).toUpperCase()} · {e.time} h · {placeEs(e)} · {ministryEs[e.ministry]}</span>
+            <div class:list={[RULE, 'flex items-baseline gap-3.5 py-[9px]']}>
+              <b class:list={[SERIF, 'w-11 text-[24px] text-obra-red']}>{dayOf(e)}</b>
+              <b class="flex-1 text-[16px]">{e.title}</b>
+              <span class="text-[14px] text-obra-muted">{weekdayShort(e.date).toUpperCase()} · {e.time} h · {placeEs(e)} · {ministryEs[e.ministry]}</span>
             </div>
           ))}
         </div>
       )}
-      <div class="cp-a4__foot"><b>Cada semana:</b> {weeklyLine}</div>
+      <div class="mt-auto border-t-[1.5px] border-obra-ink pt-2.5 text-[11px] leading-[1.5] text-obra-muted"><b>Cada semana:</b> {weeklyLine}</div>
     </section>
   );
 })}
 
 <!-- Back cover -->
-<section class="cp-sheet cp-a4 cp-a4--dark">
-  <span class="cp-eyebrow cp-eyebrow--live">Todas las semanas</span>
-  <b class="cp-serif cp-a4__bye">Te esperamos.</b>
+<section class:list={[PAGE, SHEET_TONE.dark]}>
+  <span class:list={[EYEBROW, EYEBROW_TONE.live]}>Todas las semanas</span>
+  <b class:list={[SERIF, 'mt-2.5 mb-6 text-[64px] leading-none']}>Te esperamos.</b>
   {weekly.map((a) => (
-    <div class="cp-a4__wk"><b>{weekdayLong(a.day)}</b><span>{a.time} · {a.title}</span></div>
+    <div class="flex justify-between border-t border-obra-warm-line py-3 text-[18px]"><b>{weekdayLong(a.day)}</b><span>{a.time} · {a.title}</span></div>
   ))}
-  <div class="cp-a4__contact">
+  <div class="mt-auto flex flex-col gap-1.5 text-[16px] text-obra-dune">
     <span>Av. Luis A. de Herrera 3101, esq. Juan Arrieta — Montevideo</span>
     <span>Instagram · @iglesiaelancla</span>
     <span>YouTube · @iglesiaelanclauy</span>

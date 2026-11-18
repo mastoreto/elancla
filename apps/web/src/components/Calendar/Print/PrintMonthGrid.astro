@@ -10,13 +10,29 @@ interface Props {
 }
 const { year, month, eventDays, size = 'a3' } = Astro.props;
 const { lead, days } = monthLayout(year, month);
-const cells = Array.from({ length: days }, (_, i) => i + 1);
+const SUNDAY_COLUMN = 6;
+const cells = Array.from({ length: days }, (_, i) => ({
+  day: i + 1,
+  tone: eventDays.includes(i + 1) ? 'event' : (lead + i) % 7 === SUNDAY_COLUMN ? 'sunday' : 'plain',
+})) satisfies { day: number; tone: 'event' | 'sunday' | 'plain' }[];
+
+const GRID_GAP = { a3: 'gap-0.5', slide: 'gap-px' } as const;
+const DAY_SIZE = {
+  a3: 'text-[12px] leading-[26px]',
+  slide: 'text-[11px] leading-[21px]',
+} as const;
+const EVENT_SIZE = { a3: 'size-[26px]', slide: 'size-[21px]' } as const;
+const DAY_TONE = {
+  plain: 'text-obra-ink-soft',
+  sunday: 'text-obra-red',
+  event: ['m-auto flex items-center justify-center rounded-full bg-obra-red font-bold text-white', EVENT_SIZE[size]],
+} as const;
 ---
 
-<div class:list={['cp-grid', `cp-grid--${size}`]}>
-  {['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((letter) => <span class="cp-grid__wd">{letter}</span>)}
+<div class:list={['grid grid-cols-[repeat(7,1fr)]', GRID_GAP[size]]}>
+  {['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((letter) => <span class="text-center text-[11px] font-bold text-obra-stone">{letter}</span>)}
   {Array.from({ length: lead }, () => <span></span>)}
-  {cells.map((day, i) => (
-    <span class:list={['cp-grid__d', (lead + i) % 7 === 6 && 'is-sun', eventDays.includes(day) && 'is-event']}>{day}</span>
+  {cells.map(({ day, tone }) => (
+    <span class:list={['text-center', DAY_SIZE[size], DAY_TONE[tone]]}>{day}</span>
   ))}
 </div>

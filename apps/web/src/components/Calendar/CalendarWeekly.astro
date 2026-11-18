@@ -4,6 +4,7 @@ import type { Locale } from 'src/i18n/config';
 import { getHtmlLang } from 'src/i18n/utils';
 import type { Messages } from 'src/i18n/messages';
 import CalendarSectionHead from './CalendarSectionHead.astro';
+import { DOT, SECTION, SECTION_SPACING } from './styles';
 
 interface Props {
   copy: Messages['calendar'];
@@ -12,29 +13,47 @@ interface Props {
 const { copy, locale } = Astro.props;
 
 // 2027-01-04 is a Monday: index 0..6 maps Monday..Sunday.
+const SUNDAY = 6;
 const weekdayFormat = new Intl.DateTimeFormat(getHtmlLang(locale), { weekday: 'long', timeZone: 'UTC' });
 const days = Array.from({ length: 7 }, (_, i) => ({
   name: weekdayFormat.format(new Date(Date.UTC(2027, 0, 4 + i))),
+  tone: i === SUNDAY ? ('sunday' as const) : ('weekday' as const),
   slots: weeklyActivities.filter((a) => a.day === i),
 }));
+
+// Sunday stands out: red heading and dark slots.
+const DAY_NAME_TONE = {
+  weekday: 'border-obra-ink',
+  sunday: 'border-obra-red text-obra-red',
+} as const;
+const SLOT_TONE = {
+  weekday: 'bg-obra-white',
+  sunday: 'bg-obra-warm text-obra-cream',
+} as const;
+const SLOT_TIME_TONE = {
+  weekday: 'text-obra-red',
+  sunday: 'text-obra-red-live',
+} as const;
+const dotColor = (tone: 'weekday' | 'sunday', ministry: keyof typeof MINISTRY_COLORS): string =>
+  tone === 'sunday' ? 'var(--color-obra-white)' : MINISTRY_COLORS[ministry];
 ---
 
-<section class="cal-wrap cal-section" id="semana">
+<section class:list={[SECTION, SECTION_SPACING.default]} id="semana">
   <CalendarSectionHead eyebrow={copy.weekly.eyebrow} title={copy.weekly.title} emphasis={copy.weekly.emphasis} body={copy.weekly.body} />
-  <div class="cal-week">
-    {days.map((day, i) => (
-      <div class:list={['cal-day', i === 6 && 'cal-day--sunday']}>
-        <b class="cal-day__name">{day.name}</b>
-        {day.slots.length === 0 && <span class="cal-day__empty">{copy.weekly.empty}</span>}
+  <div class="grid grid-cols-[repeat(auto-fit,minmax(10.5rem,1fr))] gap-3.5 max-md:grid-cols-[1fr] max-md:gap-2.5 min-[1200px]:grid-cols-[repeat(7,1fr)]">
+    {days.map((day) => (
+      <div class="flex flex-col gap-2.5 max-md:gap-2 max-md:rounded-3xl max-md:bg-obra-mist max-md:p-4">
+        <b class:list={['border-b-[1.5px] pb-2.5 font-obra-serif text-[1.5rem] capitalize max-md:border-b-0 max-md:pb-0 max-md:text-[1.625rem]', DAY_NAME_TONE[day.tone]]}>{day.name}</b>
+        {day.slots.length === 0 && <span class="px-0.5 py-1.5 text-[0.875rem] text-obra-pebble">{copy.weekly.empty}</span>}
         {day.slots.map((slot) => (
-          <div class:list={['cal-slot', i === 6 && 'cal-slot--dark']}>
-            <b class="cal-slot__time">{slot.time}</b>
-            <b class="cal-slot__title">{slot.title}</b>
-            <span class="cal-slot__tag">
-              <span class="cal-dot" style={`--c:${MINISTRY_COLORS[slot.ministry]}`}></span>
+          <div class:list={['flex flex-col gap-1 rounded-[18px] px-3.5 pt-3.5 pb-[13px]', SLOT_TONE[day.tone]]}>
+            <b class:list={['font-obra-serif text-[1.5rem] leading-none max-md:text-[1.625rem]', SLOT_TIME_TONE[day.tone]]}>{slot.time}</b>
+            <b class="font-obra-sans-bold text-[0.9375rem] leading-[1.25]">{slot.title}</b>
+            <span class="flex items-center gap-1.5 text-[0.8125rem]">
+              <span class={DOT} style={`--c:${dotColor(day.tone, slot.ministry)}`}></span>
               {copy.ministries[slot.ministry]}
             </span>
-            {slot.isExample && <span class="cal-slot__example">{copy.weekly.example}</span>}
+            {slot.isExample && <span class="font-obra-sans-bold text-[0.625rem] tracking-[0.12em] text-obra-red uppercase">{copy.weekly.example}</span>}
           </div>
         ))}
       </div>

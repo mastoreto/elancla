@@ -2,7 +2,6 @@
 /* Legacy plain CSS still being migrated: layered so Tailwind utilities can override it. */
 @import "./Landing.css" layer(components);
 @import "./LandingObra.css" layer(components);
-@import "./Calendar.css" layer(components);
 @import "./loading.css" layer(components);
 @import "./PageTransitions.css" layer(components);
 @import "./ThemeTransition.css" layer(components);
@@ -160,6 +159,14 @@
   --color-obra-live: #c8141c;
   --color-obra-parchment: #e7dfd2;
   --color-obra-placeholder: #6f6b64;
+  /* Calendar: date captions on dark cards, empty-day note, input borders and outlined chips. */
+  --color-obra-dune: #d9d2c6;
+  --color-obra-pebble: #6f6a62;
+  --color-obra-flax: #d6d0c4;
+  --color-obra-fog: #c9c6c0;
+  /* Printable calendar: desk behind the sheets and the hairline under each A3 month. */
+  --color-obra-gravel: #cfcac2;
+  --color-obra-chalk: #e5e0d6;
   --color-obra-white: #ffffff; /* stays white in dark mode, unlike `white` (see the .dark overrides) */
   --color-obra-red: #a8141b;
   --color-obra-red-live: #ff2e34;

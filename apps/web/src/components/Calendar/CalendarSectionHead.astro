@@ -1,5 +1,7 @@
 ---
 // Eyebrow + two-tone title (+ optional lead) shared by every calendar section.
+import { EMPHASIS, LEAD, TITLE } from './styles';
+
 interface Props {
   eyebrow?: string;
   title: string;
@@ -9,8 +11,8 @@ interface Props {
 const { eyebrow, title, emphasis, body } = Astro.props;
 ---
 
-<div style="display:flex;flex-direction:column;gap:10px">
+<div class="flex flex-col gap-2.5">
   {eyebrow && <span class="ln-eyebrow">{eyebrow}</span>}
-  <h2 class="ln-h cal-title">{title}<em>{emphasis}</em></h2>
-  {body && <p class="cal-lead">{body}</p>}
+  <h2 class={TITLE}>{title}<em class={EMPHASIS}>{emphasis}</em></h2>
+  {body && <p class={LEAD}>{body}</p>}
 </div>

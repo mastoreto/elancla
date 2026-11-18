@@ -1,7 +1,6 @@
 ---
 // Bare document for the printable calendars: no site chrome, plus a screen-only toolbar to save as PDF.
 import 'src/styles/global.css';
-import 'src/styles/CalendarPrint.css';
 
 interface Props {
   title: string;
@@ -10,6 +9,9 @@ interface Props {
   pageSize: string;
 }
 const { title, hint, pageSize } = Astro.props;
+// Page setup for the print dialog: exact sheet size and keep every background color.
+const printSetup = `@page { size: ${pageSize}; margin: 0; } * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }`;
+const FOCUS = 'focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-obra-white';
 ---
 
 <!doctype html>
@@ -19,15 +21,19 @@ const { title, hint, pageSize } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <title>{title}</title>
-    <style set:html={`@page { size: ${pageSize}; margin: 0; }`}></style>
+    <style set:html={printSetup}></style>
   </head>
-  <body class="cp-body">
-    <div class="cp-bar">
-      <a href="/calendario-anual" class="cp-bar__back">← Volver al calendario</a>
-      <span class="cp-bar__hint">{hint}</span>
-      <button type="button" class="cp-bar__btn" data-cp-print>Guardar como PDF</button>
+  <body class="m-0 bg-obra-gravel font-obra-sans text-obra-ink print:bg-transparent">
+    <div class="sticky top-0 z-10 flex flex-wrap items-center gap-4 bg-obra-ink px-5 py-3 text-[14px] text-white print:hidden">
+      <a href="/calendario-anual" class:list={['font-bold text-white no-underline', FOCUS]}>← Volver al calendario</a>
+      <span class="min-w-48 flex-1 text-obra-dune">{hint}</span>
+      <button
+        type="button"
+        class:list={['min-h-11 cursor-pointer rounded-full bg-obra-red px-5.5 font-bold text-white', FOCUS]}
+        data-cp-print
+      >Guardar como PDF</button>
     </div>
-    <div class="ln cp-pages">
+    <div class="ln box-border flex w-max min-w-full flex-col items-center gap-6 px-4 pt-6 pb-12 print:block print:w-auto print:p-0 [&>*+*]:break-before-page">
       <slot />
     </div>
     <script>

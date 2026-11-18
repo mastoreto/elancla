@@ -8,10 +8,10 @@ export function initCalendar() {
   let ministry = 'all';
 
   const apply = () => {
-    root.querySelectorAll<HTMLElement>('.cal-month').forEach((section) => {
+    root.querySelectorAll<HTMLElement>('[data-month]').forEach((section) => {
       const inMonth = month === 'all' || section.dataset.month === month;
       let visible = 0;
-      section.querySelectorAll<HTMLElement>('.cal-row').forEach((row) => {
+      section.querySelectorAll<HTMLElement>('[data-ministry]').forEach((row) => {
         const show = inMonth && (ministry === 'all' || row.dataset.ministry === ministry);
         row.hidden = !show;
         if (show) visible += 1;

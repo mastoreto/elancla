@@ -3,11 +3,21 @@
 interface Props {
   day: number;
   label: string;
+  tone: 'hero' | 'row';
 }
-const { day, label } = Astro.props;
+const { day, label, tone } = Astro.props;
+
+const NUMBER_TONE = {
+  hero: 'text-[4rem] text-obra-red-live',
+  row: 'text-[3.25rem] text-obra-red max-md:text-[2.5rem]',
+} as const;
+const LABEL_TONE = {
+  hero: 'text-obra-dune',
+  row: 'text-obra-muted',
+} as const;
 ---
 
-<div class="cal-date">
-  <b class="cal-date__num">{day}</b>
-  <span class="cal-date__txt">{label}</span>
+<div class="flex flex-col items-center">
+  <b class:list={['font-obra-serif leading-[0.9]', NUMBER_TONE[tone]]}>{day}</b>
+  <span class:list={['mt-1 font-obra-sans-bold text-[0.75rem] tracking-[0.14em] uppercase', LABEL_TONE[tone]]}>{label}</span>
 </div>

@@ -3,44 +3,52 @@ import AnchorMark from 'src/components/AnchorMark.astro';
 import { CALENDAR_YEAR, events, eventsOfMonth, weeklySorted } from 'src/data/calendar';
 import PrintMonthGrid from './PrintMonthGrid.astro';
 import { MONTHS_ES, dayOf, weekdayLong } from './printFormat';
+import { EYEBROW, EYEBROW_TONE, SERIF, SHEET, SLIDE_TONE } from './styles';
 
 const weekly = weeklySorted();
 const halves = [
   { title: 'Enero a junio', months: [0, 1, 2, 3, 4, 5] },
   { title: 'Julio a diciembre', months: [6, 7, 8, 9, 10, 11] },
 ];
+
+const SLIDE = [SHEET, 'h-[719px] w-[1280px] rounded-3xl px-16 py-14'];
+const SLIDE_TITLE = [SERIF, 'mt-2 mb-7 text-[64px] leading-none'];
+const EVENT_LINE = 'flex gap-2.5 text-[16px] leading-[1.3]';
 ---
 
-<section class="cp-sheet cp-slide cp-slide--dark">
-  <span class="cp-slide__mark" aria-hidden="true"><AnchorMark id="cp-sl" outline={false} color="#ff2e34" /></span>
-  <span class="cp-eyebrow cp-eyebrow--live">Iglesia Bautista El Ancla · Montevideo</span>
-  <b class="cp-serif cp-slide__cover">Calendario<br />{CALENDAR_YEAR}</b>
-  <span class="cp-slide__sub">Todo el año, para caminar juntos.</span>
+<section class:list={[SLIDE, SLIDE_TONE.dark]}>
+  <span class="absolute right-14 -bottom-[30px] w-105 opacity-12" aria-hidden="true"><AnchorMark id="cp-sl" outline={false} color="#ff2e34" /></span>
+  <span class:list={[EYEBROW, EYEBROW_TONE.live]}>Iglesia Bautista El Ancla · Montevideo</span>
+  <b class:list={[SERIF, 'mt-auto text-[150px] leading-[0.9] tracking-[-0.03em]']}>Calendario<br />{CALENDAR_YEAR}</b>
+  <span class="mt-6 text-[22px] text-obra-dune">Todo el año, para caminar juntos.</span>
 </section>
 
-<section class="cp-sheet cp-slide">
-  <span class="cp-eyebrow">Todas las semanas</span>
-  <b class="cp-serif cp-slide__h">Actividades recurrentes</b>
-  <div class="cp-slide__week">
+<section class:list={[SLIDE, SLIDE_TONE.light]}>
+  <span class:list={[EYEBROW, EYEBROW_TONE.red]}>Todas las semanas</span>
+  <b class:list={SLIDE_TITLE}>Actividades recurrentes</b>
+  <div class="grid grid-cols-[repeat(7,1fr)] items-start gap-3.5">
     {Array.from({ length: 7 }, (_, day) => (
-      <div class="cp-slide__day">
-        <b class="cp-serif cp-slide__dname">{weekdayLong(day)}</b>
+      <div class="flex flex-col gap-2.5">
+        <b class:list={[SERIF, 'border-b-[1.5px] border-obra-ink pb-2.5 text-[26px]']}>{weekdayLong(day)}</b>
         {weekly.filter((a) => a.day === day).map((a) => (
-          <div class="cp-slide__slot"><b class="cp-serif">{a.time}</b><div>{a.title}</div></div>
+          <div class="rounded-[18px] bg-obra-mist p-3.5">
+            <b class:list={[SERIF, 'text-[28px] text-obra-red']}>{a.time}</b>
+            <div class="mt-1 text-[16px] leading-[1.25] font-bold">{a.title}</div>
+          </div>
         ))}
       </div>
     ))}
   </div>
-  <span class="cp-slide__note">Horarios del domingo reales; el resto, de ejemplo.</span>
+  <span class="mt-auto text-[14px] text-obra-muted">Horarios del domingo reales; el resto, de ejemplo.</span>
 </section>
 
-<section class="cp-sheet cp-slide">
-  <span class="cp-eyebrow">Calendario {CALENDAR_YEAR}</span>
-  <b class="cp-serif cp-slide__h">El año de un vistazo</b>
-  <div class="cp-slide__year">
+<section class:list={[SLIDE, SLIDE_TONE.light]}>
+  <span class:list={[EYEBROW, EYEBROW_TONE.red]}>Calendario {CALENDAR_YEAR}</span>
+  <b class:list={SLIDE_TITLE}>El año de un vistazo</b>
+  <div class="grid grid-cols-[repeat(6,1fr)] gap-3">
     {MONTHS_ES.map((name, month) => (
-      <div class="cp-slide__mini">
-        <b class="cp-serif">{name}</b>
+      <div class="flex flex-col gap-1.5 rounded-[20px] bg-obra-white px-3.5 py-3">
+        <b class:list={[SERIF, 'text-[22px]']}>{name}</b>
         <PrintMonthGrid year={CALENDAR_YEAR} month={month} eventDays={eventsOfMonth(events, month).map(dayOf)} size="slide" />
       </div>
     ))}
@@ -48,15 +56,15 @@ const halves = [
 </section>
 
 {halves.map((half) => (
-  <section class="cp-sheet cp-slide">
-    <span class="cp-eyebrow">Calendario {CALENDAR_YEAR}</span>
-    <b class="cp-serif cp-slide__h">{half.title}</b>
-    <div class="cp-slide__months">
+  <section class:list={[SLIDE, SLIDE_TONE.light]}>
+    <span class:list={[EYEBROW, EYEBROW_TONE.red]}>Calendario {CALENDAR_YEAR}</span>
+    <b class:list={SLIDE_TITLE}>{half.title}</b>
+    <div class="grid grid-cols-[repeat(3,1fr)] content-start gap-4">
       {half.months.map((month) => (
-        <div class="cp-slide__mcard">
-          <b class="cp-serif">{MONTHS_ES[month]}</b>
+        <div class="flex flex-col gap-2.5 rounded-3xl bg-obra-mist p-5">
+          <b class:list={[SERIF, 'text-[30px]']}>{MONTHS_ES[month]}</b>
           {eventsOfMonth(events, month).map((e) => (
-            <div class="cp-slide__ev"><b>{dayOf(e)}</b><span>{e.title}</span></div>
+            <div class={EVENT_LINE}><b class="w-6.5 flex-none text-obra-red">{dayOf(e)}</b><span>{e.title}</span></div>
           ))}
         </div>
       ))}

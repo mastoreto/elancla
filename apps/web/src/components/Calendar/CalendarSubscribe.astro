@@ -1,6 +1,7 @@
 ---
 import AnchorMark from 'src/components/AnchorMark.astro';
 import type { Messages } from 'src/i18n/messages';
+import { SECTION, SECTION_SPACING } from './styles';
 
 interface Props {
   copy: Messages['calendar'];
@@ -8,18 +9,26 @@ interface Props {
   icsHref: string;
 }
 const { copy, googleHref, icsHref } = Astro.props;
+
+const ACTION = 'ln-btn justify-center px-6.5';
+const ACTION_VARIANT = {
+  solid: 'bg-obra-white text-obra-red',
+  outline: 'bg-transparent text-white shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.7)]',
+} as const;
 ---
 
-<section class="cal-wrap cal-section">
-  <div class="cal-sub">
-    <span class="cal-sub__mark" aria-hidden="true"><AnchorMark id="cal-sub" outline={false} color="#fff" /></span>
-    <div class="cal-sub__body">
-      <span class="cal-sub__eyebrow">{copy.subscribe.eyebrow}</span>
-      <h3 class="ln-h cal-sub__title">{copy.subscribe.title}</h3>
+<section class:list={[SECTION, SECTION_SPACING.default]}>
+  <div class="relative flex flex-col gap-8 overflow-hidden rounded-[48px] bg-obra-red px-[clamp(1.5rem,5vw,4rem)] py-[clamp(2rem,5vw,3.5rem)] text-white max-md:rounded-[36px] min-[900px]:flex-row min-[900px]:items-center min-[900px]:gap-14">
+    <span class="pointer-events-none absolute right-10 -bottom-10 w-64 opacity-10" aria-hidden="true">
+      <AnchorMark id="cal-sub" outline={false} color="#fff" class="h-auto w-full fill-obra-white" />
+    </span>
+    <div class="relative flex flex-1 flex-col gap-3.5">
+      <span class="font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] text-obra-blush uppercase">{copy.subscribe.eyebrow}</span>
+      <h3 class="ln-h text-[clamp(1.875rem,3.6vw,3.25rem)] leading-none">{copy.subscribe.title}</h3>
     </div>
-    <div class="cal-sub__actions">
-      <a href={googleHref} class="ln-btn" target="_blank" rel="noopener">{copy.subscribe.google}</a>
-      <a href={icsHref} class="ln-btn ln-btn--outline">{copy.subscribe.ics}</a>
+    <div class="relative flex flex-[0_0_21rem] flex-col gap-3 max-md:flex-none">
+      <a href={googleHref} class:list={[ACTION, ACTION_VARIANT.solid]} target="_blank" rel="noopener">{copy.subscribe.google}</a>
+      <a href={icsHref} class:list={[ACTION, ACTION_VARIANT.outline]}>{copy.subscribe.ics}</a>
     </div>
   </div>
 </section>
