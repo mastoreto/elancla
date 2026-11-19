@@ -14,9 +14,8 @@ const SCREENSHOT_DIR = process.env.E2E_SCREENSHOT_DIR;
 type SiteStatusLabel = "En línea" | "Mantenimiento" | "Cerrado";
 
 /**
- * Picks a status in the CRM with the real controls and proves it was saved: the button leaves its
- * pending (disabled) state and the choice survives a reload. (The CRM mounts no toast container,
- * so there is no confirmation message to wait for.)
+ * Picks a status in the CRM with the real controls and proves it was saved: the confirmation toast
+ * shows, the button leaves its pending (disabled) state and the choice survives a reload.
  */
 async function chooseSiteStatus(page: Page, label: SiteStatusLabel): Promise<void> {
   await page.goto(WEBSITE_PAGE);
@@ -24,6 +23,7 @@ async function chooseSiteStatus(page: Page, label: SiteStatusLabel): Promise<voi
   await expect(option).toBeVisible();
   if ((await option.getAttribute("aria-pressed")) !== "true") {
     await option.click();
+    await expect(page.getByText("Estado del sitio actualizado")).toBeVisible();
     await expect(option).toHaveAttribute("aria-pressed", "true");
     await expect(option).toBeEnabled();
   }

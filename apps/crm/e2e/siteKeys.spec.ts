@@ -59,6 +59,7 @@ test("an admin creates site keys, hits the two-key limit and revokes one", async
 
   await page.getByRole("button", { name: `Revocar ${first}` }).click();
   await page.getByRole("button", { name: "Revocar", exact: true }).click();
+  await expect(page.getByText("Clave revocada")).toBeVisible();
   await expect(page.getByRole("listitem").filter({ hasText: first })).toContainText("Revocada");
 
   // The revoked key no longer reads the public API.
