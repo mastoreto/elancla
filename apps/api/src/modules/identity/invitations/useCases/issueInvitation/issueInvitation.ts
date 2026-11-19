@@ -1,4 +1,7 @@
-import type { Invitation } from "@ancla/db";
+import { AUDIT_ACTIONS } from "@ancla/contracts";
+import { db, type Invitation } from "@ancla/db";
+import { type AuditSource, writeAudit } from "../../../../../core/audit";
+import { withTransaction } from "../../../../../core/db";
 import { ConflictError, ValidationError } from "../../../../../core/errors";
 import {
   createInvitationRow,
@@ -12,6 +15,7 @@ import {
   hashInvitationToken,
   invitationExpiry,
 } from "../../domain";
+import { toInvitationDto } from "../../mappers";
 
 export interface IssueInvitationInput {
   organizationId: string;
@@ -19,6 +23,8 @@ export interface IssueInvitationInput {
   roleIds: string[];
   ministryIds: string[];
   invitedById: string | null;
+  /** Who is inviting, for the audit trail (an actor or the CLI). */
+  audit: AuditSource;
 }
 
 export interface IssuedInvitation {
@@ -65,14 +71,23 @@ export async function issueInvitation(
     await findExistingMinistryIds(input.organizationId, ministryIds),
   );
   const token = generateInvitationToken();
-  const invitation = await createInvitationRow({
-    organizationId: input.organizationId,
-    email,
-    tokenHash: hashInvitationToken(token),
-    roleIds,
-    ministryIds,
-    invitedById: input.invitedById,
-    expiresAt: invitationExpiry(new Date()),
+  const invitation = await withTransaction(db, async (tx) => {
+    const created = await createInvitationRow(tx, {
+      organizationId: input.organizationId,
+      email,
+      tokenHash: hashInvitationToken(token),
+      roleIds,
+      ministryIds,
+      invitedById: input.invitedById,
+      expiresAt: invitationExpiry(new Date()),
+    });
+    await writeAudit(tx, input.audit, {
+      action: AUDIT_ACTIONS.invitation.created,
+      entity: { type: "invitation", id: created.id },
+      after: toInvitationDto(created, new Date()),
+      metadata: { entityLabel: email },
+    });
+    return created;
   });
   return { invitation, token };
 }

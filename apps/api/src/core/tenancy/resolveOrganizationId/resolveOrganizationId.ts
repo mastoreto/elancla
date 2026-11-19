@@ -11,6 +11,7 @@ export async function resolveOrganizationId(): Promise<string> {
   if (cachedOrganizationId) return cachedOrganizationId;
   const organization = await db.organization.findFirst({
     select: { id: true },
+    orderBy: { createdAt: "asc" },
   });
   if (!organization) throw new ForbiddenError("No organization is configured");
   cachedOrganizationId = organization.id;

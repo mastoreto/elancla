@@ -1,5 +1,5 @@
 import { ADMIN_ROLE_KEY } from "@ancla/contracts";
-import { db } from "@ancla/db";
+import { db, type Prisma } from "@ancla/db";
 import { pendingInvitationWhere } from "../../../../core/auth";
 import { forOrganization } from "../../../../core/tenancy";
 
@@ -13,10 +13,11 @@ export interface NewInvitation {
   expiresAt: Date;
 }
 
-export function createInvitationRow(input: NewInvitation) {
-  return forOrganization(db, input.organizationId).invitation.create({
-    data: input,
-  });
+export function createInvitationRow(
+  tx: Prisma.TransactionClient,
+  input: NewInvitation,
+) {
+  return tx.invitation.create({ data: input });
 }
 
 export function listInvitationRows(
@@ -64,20 +65,25 @@ export function findInvitationAcceptedAt(id: string) {
   });
 }
 
-export function markInvitationRevoked(organizationId: string, id: string) {
-  return forOrganization(db, organizationId).invitation.update({
-    where: { id },
+export function markInvitationRevoked(
+  tx: Prisma.TransactionClient,
+  organizationId: string,
+  id: string,
+) {
+  return tx.invitation.update({
+    where: { id, organizationId },
     data: { revokedAt: new Date() },
   });
 }
 
 export function rotateInvitationToken(
+  tx: Prisma.TransactionClient,
   organizationId: string,
   id: string,
   input: { tokenHash: string; expiresAt: Date },
 ) {
-  return forOrganization(db, organizationId).invitation.update({
-    where: { id },
+  return tx.invitation.update({
+    where: { id, organizationId },
     data: input,
   });
 }

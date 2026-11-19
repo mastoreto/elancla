@@ -2,6 +2,8 @@ import { app } from "../../src/app";
 import { getApiEnv } from "../../src/core/env";
 import type { createFixtures } from "./fixtures";
 
+export const TEST_USER_AGENT = "ancla-api-test";
+
 export interface ApiCallOptions {
   cookie?: string;
   body?: unknown;
@@ -26,6 +28,7 @@ export function createApiCaller(fixtures: ReturnType<typeof createFixtures>) {
           Origin: CRM_ORIGIN,
           ...(options.cookie ? { Cookie: options.cookie } : {}),
           "X-Forwarded-For": fixtures.uniqueIp(),
+          "User-Agent": TEST_USER_AGENT,
         },
         body:
           options.body === undefined ? undefined : JSON.stringify(options.body),

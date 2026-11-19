@@ -1,5 +1,6 @@
 import { afterAll, describe, expect, test } from "bun:test";
 import { db } from "@ancla/db";
+import { auditRowsOf, requestIdOf } from "../../../test/support/auditRows";
 import { authPost } from "../../../test/support/authRequest";
 import { createFakeGoogle } from "../../../test/support/fakeGoogle";
 import {
@@ -97,7 +98,14 @@ describe("GET /api/me", () => {
 describe("POST /api/me/password", () => {
   test("a Google-only user with a fresh session creates a password and can then sign in with it", async () => {
     const { email, cookie } = await googleOnlyUser("me-password");
-    expect((await createPassword(cookie)).status).toBe(204);
+    const created = await createPassword(cookie);
+    expect(created.status).toBe(204);
+    const [row] = await auditRowsOf({ requestId: requestIdOf(created) });
+    expect(row).toMatchObject({
+      action: "auth.password.created",
+      actorLabel: email,
+    });
+    expect(JSON.stringify(row)).not.toContain(NEW_PASSWORD);
     expect((await (await get(cookie)).json()).methods).toEqual([
       "password",
       "google",

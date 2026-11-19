@@ -1,4 +1,5 @@
-import type { CreatePasswordBody } from "@ancla/contracts";
+import { AUDIT_ACTIONS, type CreatePasswordBody } from "@ancla/contracts";
+import { auditSourceFrom, writeAuditBestEffort } from "../../../../core/audit";
 import { getAuth } from "../../../../core/auth";
 import type { AuthenticatedContext } from "../../../../core/context";
 import { ConflictError, UnauthenticatedError } from "../../../../core/errors";
@@ -27,5 +28,10 @@ export async function createPassword({
   await getAuth().api.setPassword({
     body: { newPassword: body.newPassword },
     headers,
+  });
+  // The password is already set (Better Auth owns that write), so this is an auth event.
+  await writeAuditBestEffort(auditSourceFrom(ctx, ctx.organizationId), {
+    action: AUDIT_ACTIONS.auth.passwordCreated,
+    entity: { type: "user", id: ctx.user.id },
   });
 }

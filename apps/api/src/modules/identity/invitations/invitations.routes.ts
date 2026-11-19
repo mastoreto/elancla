@@ -13,7 +13,7 @@ import { requireSession } from "../../../core/auth";
 import { allowPublic, requirePermission } from "../../../core/authz";
 import type { AuthenticatedContext } from "../../../core/context";
 import { createRouter } from "../../../core/createApp";
-import { rateLimit } from "../../../core/http";
+import { rateLimit, withRequestId } from "../../../core/http";
 import { getMailer } from "../../../core/mail";
 import {
   guardedResponses,
@@ -193,6 +193,7 @@ export const invitationsRoutes = createRouter()
     await acceptInvitation({
       token: c.req.valid("param").token,
       body: c.req.valid("json"),
+      headers: withRequestId(c.req.raw.headers, c.get("requestId")),
     });
     return c.body(null, 204);
   });

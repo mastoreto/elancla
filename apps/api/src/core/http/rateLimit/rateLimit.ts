@@ -1,6 +1,7 @@
 import { db } from "@ancla/db";
 import type { MiddlewareHandler } from "hono";
 import { TooManyRequestsError } from "../../errors";
+import { clientAddress } from "../clientAddress";
 
 interface RateLimitOptions {
   /** Names the bucket; every public endpoint gets its own. */
@@ -11,11 +12,6 @@ interface RateLimitOptions {
 
 const MILLISECONDS_PER_SECOND = 1000;
 const UNKNOWN_CLIENT = "unknown";
-
-/** ponytail: trusts the first `X-Forwarded-For` hop; the production proxy (0.8) must overwrite it. */
-function clientAddress(forwardedFor: string | undefined): string {
-  return forwardedFor?.split(",")[0]?.trim() || UNKNOWN_CLIENT;
-}
 
 /**
  * Fixed-window counter in the `rate_limits` table (the one Better Auth uses), for the API's own
@@ -28,7 +24,7 @@ export function rateLimit({
   windowSeconds,
 }: RateLimitOptions): MiddlewareHandler {
   return async (c, next) => {
-    const key = `api:${name}:${clientAddress(c.req.header("x-forwarded-for"))}`;
+    const key = `api:${name}:${clientAddress(c.req.header("x-forwarded-for")) ?? UNKNOWN_CLIENT}`;
     const now = BigInt(Date.now());
     const windowStart = now - BigInt(windowSeconds * MILLISECONDS_PER_SECOND);
     const rows = await db.$queryRaw<{ count: number }[]>`

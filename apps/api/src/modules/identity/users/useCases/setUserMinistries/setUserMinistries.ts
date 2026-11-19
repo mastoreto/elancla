@@ -1,8 +1,16 @@
-import type { SetUserMinistriesBody, UserDto } from "@ancla/contracts";
+import {
+  AUDIT_ACTIONS,
+  type SetUserMinistriesBody,
+  type UserDto,
+} from "@ancla/contracts";
+import { db } from "@ancla/db";
+import { auditSourceFrom, writeAudit } from "../../../../../core/audit";
 import type { AuthenticatedContext } from "../../../../../core/context";
+import { withTransaction } from "../../../../../core/db";
 import { NotFoundError, ValidationError } from "../../../../../core/errors";
 import {
   findExistingMinistryIds,
+  findUserMinistrySummaries,
   findUserRow,
   replaceUserMinistries,
 } from "../../data";
@@ -22,8 +30,8 @@ export async function setUserMinistries({
   body,
 }: SetUserMinistriesInput): Promise<UserDto> {
   assertNotSelf(ctx.user.id, userId);
-  if (!(await findUserRow(userId)))
-    throw new NotFoundError("The user was not found");
+  const target = await findUserRow(userId);
+  if (!target) throw new NotFoundError("The user was not found");
 
   const ministryIds = [...new Set(body.ministryIds)];
   const existing = new Set(
@@ -35,8 +43,17 @@ export async function setUserMinistries({
     ]);
   }
 
-  // ponytail: 0.5 adds `writeAudit(tx, ...)` here, inside the same transaction.
-  await replaceUserMinistries(userId, ministryIds);
+  await withTransaction(db, async (tx) => {
+    const before = await findUserMinistrySummaries(tx, userId);
+    await replaceUserMinistries(tx, userId, ministryIds);
+    await writeAudit(tx, auditSourceFrom(ctx, ctx.organizationId), {
+      action: AUDIT_ACTIONS.user.ministriesChanged,
+      entity: { type: "user", id: userId },
+      before: { ministries: before },
+      after: { ministries: await findUserMinistrySummaries(tx, userId) },
+      metadata: { entityLabel: target.email },
+    });
+  });
 
   const row = await findUserRow(userId);
   if (!row) throw new NotFoundError("The user was not found");

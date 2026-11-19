@@ -36,6 +36,9 @@ export interface RequestContext {
   user: SessionUser | null;
   organizationId: string | null;
   access: Access | null;
+  /** First `X-Forwarded-For` hop; forgeable until the production proxy (0.8) overwrites it. */
+  ip: string | null;
+  userAgent: string | null;
 }
 
 /** An authenticated request: `requireSession` guarantees both fields. */

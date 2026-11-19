@@ -1,5 +1,6 @@
 import type { CreateInvitationBody } from "@ancla/contracts";
 import type { Invitation } from "@ancla/db";
+import { auditSourceFrom } from "../../../../../core/audit";
 import { assertCanAssignRoles } from "../../../../../core/authz";
 import type { AuthenticatedContext } from "../../../../../core/context";
 import { ForbiddenError } from "../../../../../core/errors";
@@ -33,6 +34,7 @@ export async function createInvitation({
     roleIds: body.roleIds,
     ministryIds: body.ministryIds,
     invitedById: ctx.user.id,
+    audit: auditSourceFrom(ctx, ctx.organizationId),
   });
   await sendInvitationEmail({
     mailer,

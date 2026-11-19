@@ -12,6 +12,8 @@ import { INVALID_INVITATION_MESSAGE } from "../previewInvitation";
 interface AcceptInvitationInput {
   token: string;
   body: AcceptInvitationBody;
+  /** Carries the request id, address and user agent down to the sign-up hook (audit). */
+  headers: Headers;
 }
 
 /**
@@ -21,6 +23,7 @@ interface AcceptInvitationInput {
 export async function acceptInvitation({
   token,
   body,
+  headers,
 }: AcceptInvitationInput): Promise<void> {
   const invitation = await findPendingInvitationRowByTokenHash(
     hashInvitationToken(token),
@@ -33,6 +36,7 @@ export async function acceptInvitation({
         password: body.password,
         name: body.name,
       },
+      headers,
     });
   } catch (error) {
     // A lost race (the address got an account meanwhile) must look like any other bad link.
