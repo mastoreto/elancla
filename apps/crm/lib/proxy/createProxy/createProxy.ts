@@ -1,6 +1,6 @@
 import { getSessionCookie } from "better-auth/cookies";
 import type { NextRequest, NextResponse } from "next/server";
-import { buildSecurityHeaders } from "@/lib/security";
+import { buildSecurityHeaders, type MediaOrigins } from "@/lib/security";
 import { applyDecision } from "../applyDecision";
 import { buildRequestHeaders } from "../buildRequestHeaders";
 import { INTERNAL_REWRITE_HEADER, INTERNAL_REWRITE_VALUE } from "../constants";
@@ -12,6 +12,8 @@ export interface ProxyDependencies {
   isDevBypass: () => boolean;
   isDevelopment: () => boolean;
   createNonce: () => string;
+  /** Origins of the storage and the media CDN for the CSP; none when storage is not configured. */
+  mediaOrigins?: () => MediaOrigins;
 }
 
 /** Builds the Next.js proxy: security headers, then the routing and authorization decision. */
@@ -24,6 +26,7 @@ export function createProxy(
       nonce,
       pathname: request.nextUrl.pathname,
       isDevelopment: dependencies.isDevelopment(),
+      ...dependencies.mediaOrigins?.(),
     });
     const requestHeaders = buildRequestHeaders({
       incoming: request.headers,

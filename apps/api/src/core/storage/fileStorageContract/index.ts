@@ -1,0 +1,1 @@
+export { runFileStorageContract } from "./fileStorageContract";

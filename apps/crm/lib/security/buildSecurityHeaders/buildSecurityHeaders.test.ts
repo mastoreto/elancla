@@ -18,6 +18,24 @@ describe("buildSecurityHeaders", () => {
     expect(imgSrc).toBe("img-src 'self' blob: data: https://lh3.googleusercontent.com");
   });
 
+  test("allows uploads to the storage origin and images from the media origin, from the environment", () => {
+    const csp = buildSecurityHeaders({
+      ...base,
+      uploadOrigin: "http://localhost:9000",
+      mediaOrigin: "https://media.example.org",
+    })["Content-Security-Policy"] as string;
+    const directive = (name: string) => csp.split("; ").find((entry) => entry.startsWith(name));
+    expect(directive("connect-src")).toBe("connect-src 'self' http://localhost:9000");
+    expect(directive("img-src")).toBe(
+      "img-src 'self' blob: data: https://lh3.googleusercontent.com https://media.example.org",
+    );
+  });
+
+  test("without storage origins connect-src stays same-origin", () => {
+    const csp = buildSecurityHeaders(base)["Content-Security-Policy"] as string;
+    expect(csp.split("; ")).toContain("connect-src 'self'");
+  });
+
   test("allows eval and skips upgrade-insecure-requests only in development", () => {
     const csp = buildSecurityHeaders({ ...base, isDevelopment: true })[
       "Content-Security-Policy"

@@ -36,6 +36,15 @@ export const AUDIT_ACTIONS = {
     revoked: "invitation.revoked",
     accepted: "invitation.accepted",
   },
+  media: {
+    uploadRequested: "media.upload.requested",
+    finalized: "media.finalized",
+    /** The bytes failed verification (type, size): object and row were deleted. */
+    rejected: "media.rejected",
+    downloadIssued: "media.download.issued",
+    /** A stale pending upload removed by the cron job. */
+    purged: "media.purged",
+  },
 } as const;
 
 type ActionGroups = typeof AUDIT_ACTIONS;

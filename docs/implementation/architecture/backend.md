@@ -54,7 +54,7 @@ use cases, no repositorios. Se verifica con una regla de lint de imports.
 | **DTO + Mapper** | Toda respuesta | El contrato no depende del schema de BD; evita filtrar campos |
 | **State machine** (tabla de transiciones) | Solicitudes, órdenes de compra, proyectos, votaciones, publicaciones | Las reglas de estado del ESRE quedan en un solo lugar, puras y testeables |
 | **Strategy** | Tipos de informe (anual, ministerial, por proyecto…), canales de notificación | Agregar un tipo es registrar una estrategia, no editar un `switch` (OCP) |
-| **Adapter + Port** (con interfaz) | `FileStorage` (B2 / local), `Mailer` (proveedor / consola) | Acá sí hay 2+ implementaciones reales: producción y desarrollo/test |
+| **Adapter + Port** (con interfaz) | `FileStorage` (un adaptador S3-compatible sobre `aws4fetch`: B2 en producción, un servidor S3 en `docker-compose` y tests), `Mailer` (proveedor / consola) | `FileStorage` tiene un solo adaptador porque B2 y el S3 local hablan el mismo protocolo; el puerto queda para que cualquier otro adaptador pase la misma suite de contrato. `Mailer` sí tiene 2 implementaciones reales |
 | **Optimistic locking** | Entidades editables de tesorería y contenido (`version`) | Dos tesoreros editando lo mismo → 409, no se pisa |
 | **Idempotency key** | Altas contables (`Idempotency-Key`) | Un doble click o reintento no crea dos movimientos |
 | **Query object** | Filtros de listados | Campos y orden filtrables en lista blanca; nada de `where` armado desde el cliente |
@@ -68,8 +68,8 @@ implementación.
 
 - **S**: un use case por archivo; `routes` solo traduce HTTP; `data` solo persiste.
 - **O**: módulos nuevos se registran en `app.ts`; informes y canales nuevos, como estrategias.
-- **L**: los adaptadores de un puerto pasan la **misma** suite de tests de contrato (B2 y local).
-- **I**: puertos chicos (`FileStorage`: `presignUpload`, `presignDownload`, `head`, `delete`); DTOs
+- **L**: los adaptadores de un puerto pasan la **misma** suite de tests de contrato (hoy el adaptador S3 contra el S3 local; un adaptador nuevo corre `runFileStorageContract`).
+- **I**: puertos chicos (`FileStorage`, **uno por bucket**, sin parámetro de bucket: `presignUpload`, `presignDownload`, `head`, `get`, `put`, `delete`); DTOs
   por caso de uso, no una entidad gigante.
 - **D**: el use case recibe sus dependencias por parámetro (`ctx`, `tx`, puertos); se componen en
   `app.ts`. Nada se importa "por la espalda" dentro de la lógica.

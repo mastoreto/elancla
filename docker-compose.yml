@@ -1,7 +1,7 @@
 # Stack local de ancla-monorepo.
 #
 # Uso típico (solo BD para desarrollo con `bun run dev`):
-#   docker compose up -d db mailpit
+#   docker compose up -d db mailpit s3 s3-init
 #   bun run db:migrate:deploy && bun run db:seed && bun run --filter @ancla/api invite <email> --role admin
 #
 # Stack completo en contenedores (BD + migración/seed + backoffice):
@@ -47,6 +47,45 @@ services:
       - "${MAILPIT_SMTP_PORT:-1025}:1025"
       - "${MAILPIT_UI_PORT:-8025}:8025"
 
+  # Storage S3-compatible para archivos y multimedia (SeaweedFS). MinIO dejó de publicar imágenes
+  # de la edición comunitaria, así que el contrato S3 lo cubre SeaweedFS con `-s3`.
+  # API en http://localhost:9000. Credenciales de desarrollo en docker/seaweedfs/s3.json.
+  s3:
+    image: chrislusf/seaweedfs:4.54
+    restart: unless-stopped
+    command:
+      - server
+      - -dir=/data
+      - -s3
+      - -s3.port=9000
+      - -s3.config=/etc/seaweedfs/s3.json
+      # Browser PUTs (presigned uploads) come from the CRM origin.
+      - -s3.allowedOrigins=${CRM_ORIGIN:-http://localhost:3000}
+    ports:
+      - "${S3_PORT:-9000}:9000"
+    volumes:
+      - ancla-s3data:/data
+      - ./docker/seaweedfs/s3.json:/etc/seaweedfs/s3.json:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:9333/cluster/status || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Crea los buckets `ancla-private` y `ancla-public` (lectura anónima) con su CORS. Corre una vez.
+  s3-init:
+    image: curlimages/curl:8.11.1
+    restart: "no"
+    entrypoint: ["/bin/sh", "/init.sh"]
+    environment:
+      S3_URL: http://s3:9000
+      CRM_ORIGIN: ${CRM_ORIGIN:-http://localhost:3000}
+    volumes:
+      - ./docker/seaweedfs/init.sh:/init.sh:ro
+    depends_on:
+      s3:
+        condition: service_healthy
+
   # Migraciones versionadas (migrate deploy) + seed. Corre una vez y sale.
   migrate:
     profiles: ["app", "migrate"]
@@ -90,10 +129,24 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
       SMTP_URL: ${SMTP_URL:?define SMTP_URL en .env}
       MAIL_FROM: ${MAIL_FROM:?define MAIL_FROM en .env}
+      # Storage: la API habla con `s3` por la red de compose; el navegador sube a localhost.
+      S3_ENDPOINT: http://s3:9000
+      S3_PRESIGN_ENDPOINT: ${S3_PRESIGN_ENDPOINT:-http://localhost:9000}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      S3_PRIVATE_BUCKET: ${S3_PRIVATE_BUCKET:-ancla-private}
+      S3_PRIVATE_KEY_ID: ${S3_PRIVATE_KEY_ID:-ancla-private-key}
+      S3_PRIVATE_SECRET: ${S3_PRIVATE_SECRET:-ancla-private-secret}
+      S3_PUBLIC_BUCKET: ${S3_PUBLIC_BUCKET:-ancla-public}
+      S3_PUBLIC_KEY_ID: ${S3_PUBLIC_KEY_ID:-ancla-public-key}
+      S3_PUBLIC_SECRET: ${S3_PUBLIC_SECRET:-ancla-public-secret}
+      MEDIA_PUBLIC_BASE_URL: ${MEDIA_PUBLIC_BASE_URL:-http://localhost:9000/ancla-public}
+      CRON_SECRET: ${CRON_SECRET:?define CRON_SECRET en .env}
     depends_on:
       db:
         condition: service_healthy
       migrate:
+        condition: service_completed_successfully
+      s3-init:
         condition: service_completed_successfully
     ports:
       - "${ADMIN_PORT:-3000}:3000"
@@ -115,3 +168,4 @@ services:
 
 volumes:
   ancla-pgdata:
+  ancla-s3data:

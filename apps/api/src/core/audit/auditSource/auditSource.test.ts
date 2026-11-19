@@ -1,5 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { auditSourceForCli, auditSourceFromHeaders } from "./auditSource";
+import {
+  auditSourceForCli,
+  auditSourceForSystem,
+  auditSourceFromHeaders,
+} from "./auditSource";
 
 const ORGANIZATION_ID = "01900000-0000-7000-8000-000000000001";
 
@@ -37,6 +41,16 @@ describe("auditSource", () => {
     expect(auditSourceForCli(ORGANIZATION_ID).actor).toEqual({
       id: null,
       label: "cli",
+    });
+  });
+
+  test("a system job names itself and has no request data", () => {
+    expect(auditSourceForSystem(ORGANIZATION_ID, "cron")).toEqual({
+      organizationId: ORGANIZATION_ID,
+      actor: { id: null, label: "cron" },
+      requestId: null,
+      ip: null,
+      userAgent: null,
     });
   });
 });
