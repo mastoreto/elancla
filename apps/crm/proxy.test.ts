@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, test } from "bun:test";
+import type { MePermissionsDto } from "@ancla/contracts";
 import { NextRequest } from "next/server";
-import { proxy } from "./proxy";
+import { ACCESS_HEADER, parseAccess, serializeAccess } from "./lib/authz/accessHeader";
+import { createProxy } from "./lib/proxy/createProxy";
 
 const ORIGIN = "http://localhost:3000";
 const SESSION_COOKIE = "better-auth.session_token=abc";
@@ -11,9 +13,18 @@ function request(path: string, headers: Record<string, string> = {}): NextReques
 }
 
 const signedIn = { cookie: SESSION_COOKIE };
+const admin: MePermissionsDto = { isAdmin: true, roles: [], grants: [], ministryIds: [] };
+
+let devBypass = false;
+const proxy = createProxy({
+  loadAccess: () => Promise.resolve(admin),
+  isDevBypass: () => devBypass,
+  isDevelopment: () => false,
+  createNonce: () => Buffer.from(crypto.randomUUID()).toString("base64"),
+});
 
 afterEach(() => {
-  delete process.env.CRM_DEV_SKIP_AUTH;
+  devBypass = false;
 });
 
 describe("proxy: routing", () => {
@@ -48,9 +59,9 @@ describe("proxy: routing", () => {
     expect(response.headers.get("x-middleware-next")).toBe("1");
   });
 
-  test("an unknown section under the church slug passes through", async () => {
+  test("an unknown section is denied (fail closed): the proxy renders the not-found page", async () => {
     const response = await proxy(request("/el-ancla/nope", signedIn));
-    expect(response.headers.get("x-middleware-next")).toBe("1");
+    expect(response.headers.get("x-middleware-rewrite")).toContain("/__not-found");
   });
 });
 
@@ -72,15 +83,49 @@ describe("proxy: session gate", () => {
   });
 
   test("the development bypass skips the cookie check", async () => {
-    process.env.CRM_DEV_SKIP_AUTH = "1";
-    const original = process.env.NODE_ENV;
-    (process.env as Record<string, string | undefined>).NODE_ENV = "development";
-    try {
-      const response = await proxy(request("/el-ancla/resume"));
-      expect(response.headers.get("x-middleware-rewrite")).toBe(`${ORIGIN}/dashboard`);
-    } finally {
-      (process.env as Record<string, string | undefined>).NODE_ENV = original;
-    }
+    devBypass = true;
+    const response = await proxy(request("/el-ancla/resume"));
+    expect(response.headers.get("x-middleware-rewrite")).toBe(`${ORIGIN}/dashboard`);
+  });
+});
+
+describe("proxy: authorization", () => {
+  const leader: MePermissionsDto = { isAdmin: false, roles: [], grants: [], ministryIds: [] };
+
+  function proxyFor(access: MePermissionsDto | null) {
+    return createProxy({
+      loadAccess: () => Promise.resolve(access),
+      isDevBypass: () => false,
+      isDevelopment: () => false,
+      createNonce: () => "n",
+    });
+  }
+
+  test("a denied section renders the not-found page instead of redirecting", async () => {
+    const response = await proxyFor(leader)(request("/el-ancla/movements", signedIn));
+    expect(response.headers.get("location")).toBeNull();
+    expect(response.headers.get("x-middleware-rewrite")).toContain("/__not-found");
+  });
+
+  test("the loaded access travels to the page in an internal header", async () => {
+    const response = await proxyFor(admin)(request("/el-ancla/movements", signedIn));
+    const value = response.headers.get(`x-middleware-request-${ACCESS_HEADER}`) as string;
+    expect(parseAccess(value)).toEqual(admin);
+  });
+
+  test("an access header sent by the client is replaced, never trusted", async () => {
+    const forged = serializeAccess({ ...admin, isAdmin: true });
+    const response = await proxyFor(leader)(
+      request("/el-ancla/settings", { ...signedIn, [ACCESS_HEADER]: forged }),
+    );
+    expect(parseAccess(response.headers.get(`x-middleware-request-${ACCESS_HEADER}`))).toEqual(
+      leader,
+    );
+  });
+
+  test("a session the API rejects goes back to login", async () => {
+    const response = await proxyFor(null)(request("/el-ancla/movements", signedIn));
+    expect(new URL(response.headers.get("location") as string).pathname).toBe("/");
   });
 });
 

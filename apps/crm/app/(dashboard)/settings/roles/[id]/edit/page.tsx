@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { createServerApiClient } from "@/lib/api/createServerApiClient";
 import { can } from "@/lib/authz/can";
-import { requirePermissions } from "@/lib/authz/requireRoutePermission";
+import { getAccess } from "@/lib/authz/getAccess";
 import { RoleForm } from "../../../components/role-form";
 
 const MEMBERS_PAGE_LIMIT = "100";
@@ -9,7 +9,11 @@ const MEMBERS_PAGE_LIMIT = "100";
 /** biome-ignore lint/style/noDefaultExport: Next.js App Router page files require default exports. */
 export default async function EditRolePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const access = await requirePermissions(["roles:view"]);
+  // The proxy already authorized this route; the access is only needed to decide what to load.
+  const access = await getAccess();
+  if (!access) {
+    notFound();
+  }
   const api = await createServerApiClient();
 
   const roleResponse = await api.roles[":id"].$get({ param: { id } });

@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { DashboardPageHeader } from "@/components/dashboard";
-import { requirePermissions } from "@/lib/authz/requireRoutePermission";
 import { cn } from "@/lib/utils";
 import { EMAIL_TEMPLATES, isEmailTemplateKey } from "../emails-registry";
 
@@ -14,7 +13,6 @@ export default async function EmailPreviewPage({
 }: {
   params: Promise<{ template: string }>;
 }) {
-  await requirePermissions(["settings:view"]);
   const { template } = await params;
 
   if (!isEmailTemplateKey(template)) {

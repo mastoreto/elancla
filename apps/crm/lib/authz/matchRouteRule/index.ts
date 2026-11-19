@@ -1,0 +1,1 @@
+export { matchRouteRule } from "./matchRouteRule";

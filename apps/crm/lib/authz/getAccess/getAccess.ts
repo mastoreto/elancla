@@ -1,23 +1,19 @@
 import type { MePermissionsDto } from "@ancla/contracts";
+import { headers } from "next/headers";
 import { cache } from "react";
-import { createServerApiClient } from "@/lib/api/createServerApiClient";
 import { isDevAuthBypassEnabled } from "@/lib/dev-auth-bypass";
-
-/** Without a session (development bypass) the screens must still render: full access, no roles. */
-const DEV_BYPASS_ACCESS: MePermissionsDto = {
-  isAdmin: true,
-  roles: [],
-  grants: [],
-  ministryIds: [],
-};
+import { ACCESS_HEADER, parseAccess } from "../accessHeader";
+import { DEV_BYPASS_ACCESS } from "../devBypassAccess";
+import { loadAccessFromApi } from "../loadAccessFromApi";
 
 /**
- * Permissions of the signed-in user, asked to the API once per request. `null` when there is no
- * valid session. The API is the authority; this only drives what the CRM shows.
+ * Permissions of the signed-in user for this request. The proxy already loaded them and passes
+ * them in an internal header, so normally there is no second API call; if the header is missing or
+ * malformed this asks the API. `null` when there is no valid session.
  */
 export const getAccess = cache(async (): Promise<MePermissionsDto | null> => {
   if (isDevAuthBypassEnabled()) return DEV_BYPASS_ACCESS;
-  const api = await createServerApiClient();
-  const response = await api.me.permissions.$get();
-  return response.ok ? await response.json() : null;
+  const requestHeaders = await headers();
+  const fromProxy = parseAccess(requestHeaders.get(ACCESS_HEADER));
+  return fromProxy ?? (await loadAccessFromApi(requestHeaders.get("cookie")));
 });

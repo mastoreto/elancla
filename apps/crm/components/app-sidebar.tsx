@@ -109,7 +109,7 @@ function filterNavigation(
 
 const pendingRequestsCount = moneyRequests.filter((request) => request.status === "pending").length;
 
-const navigationSections: NavigationSection[] = [
+export const navigationSections: NavigationSection[] = [
   {
     label: "Tesorería",
     items: [
