@@ -1,3 +1,4 @@
+import { PERMISSIONS } from "@ancla/contracts";
 import { notFound } from "next/navigation";
 import { createServerApiClient } from "@/lib/api/createServerApiClient";
 import { can } from "@/lib/authz/can";
@@ -23,7 +24,7 @@ export default async function EditRolePage({ params }: { params: Promise<{ id: s
   const role = await roleResponse.json();
 
   // Naming the members needs `users:view`; without it the form shows only the count.
-  const usersResponse = can(access, "users:view")
+  const usersResponse = can(access, PERMISSIONS.users.view)
     ? await api.users.$get({ query: { limit: MEMBERS_PAGE_LIMIT } })
     : null;
   const users = usersResponse?.ok ? (await usersResponse.json()).items : [];

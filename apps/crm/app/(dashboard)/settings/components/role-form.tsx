@@ -3,6 +3,7 @@
 import {
   ADMIN_ROLE_KEY,
   isDangerousPermission,
+  PERMISSIONS,
   type RoleDto,
   type UserDto,
 } from "@ancla/contracts";
@@ -117,10 +118,11 @@ export function RoleForm({ role, members = [] }: RoleFormProps) {
   // Managing roles is admin-only (the API enforces it too), whatever the role grants.
   const canSave =
     access.isAdmin &&
-    can(access, isEdit ? "roles:edit" : "roles:create") &&
+    can(access, isEdit ? PERMISSIONS.roles.edit : PERMISSIONS.roles.create) &&
     !isAdminRole &&
     !holdsRole;
-  const canDelete = isEdit && role.key === null && access.isAdmin && can(access, "roles:delete");
+  const canDelete =
+    isEdit && role.key === null && access.isAdmin && can(access, PERMISSIONS.roles.delete);
 
   const [name, setName] = useState(role?.name ?? "");
   const [description, setDescription] = useState(role?.description ?? "");

@@ -1,4 +1,5 @@
 import {
+  PERMISSIONS,
   pageQuerySchema,
   pageSchema,
   setUserMinistriesBody,
@@ -26,7 +27,7 @@ const listRoute = createRoute({
   path: "/users",
   tags: ["users"],
   summary: "List users with their roles, ministries and last access.",
-  middleware: [requireSession, requirePermission("users:view")],
+  middleware: [requireSession, requirePermission(PERMISSIONS.users.view)],
   request: { query: pageQuerySchema },
   responses: {
     200: jsonResponse("A page of users", pageSchema(userDto)),
@@ -39,7 +40,7 @@ const setRolesRoute = createRoute({
   path: "/users/{id}/roles",
   tags: ["users"],
   summary: "Replace the roles of a user.",
-  middleware: [requireSession, requirePermission("users:edit")],
+  middleware: [requireSession, requirePermission(PERMISSIONS.users.edit)],
   request: {
     params: idParams,
     body: {
@@ -61,7 +62,7 @@ const setMinistriesRoute = createRoute({
   path: "/users/{id}/ministries",
   tags: ["users"],
   summary: "Replace the ministries of a user.",
-  middleware: [requireSession, requirePermission("users:edit")],
+  middleware: [requireSession, requirePermission(PERMISSIONS.users.edit)],
   request: {
     params: idParams,
     body: {

@@ -1,5 +1,6 @@
 "use client";
 
+import { PERMISSIONS } from "@ancla/contracts";
 import { useMemo, useState } from "react";
 import { Can } from "@/lib/authz/Gate";
 import { projects } from "@/lib/data";
@@ -32,7 +33,7 @@ export function ProjectsPageContent() {
     <div className={projectsPageContentProjectsPage.page}>
       <div className={projectsPageContentProjectsPage.header}>
         <p className={projectsPageContentProjectsPage.description}>{DESCRIPTIONS[viewMode]}</p>
-        <Can permission="projects:create">
+        <Can permission={PERMISSIONS.projects.create}>
           <ProjectFormModal />
         </Can>
       </div>

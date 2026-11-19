@@ -1,3 +1,4 @@
+import { PERMISSIONS } from "@ancla/contracts";
 import { Download, Plus } from "lucide-react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
 import { Can } from "@/lib/authz/Gate";
@@ -31,13 +32,13 @@ export function SummaryHeader({ greeting, firstName, dateLabel, churchName }: Su
           Así está la tesorería de Iglesia {churchName} este {dateLabel}.
         </p>
       </div>
-      <Can permission="reports:view">
+      <Can permission={PERMISSIONS.reports.view}>
         <BoardButton href={getChurchRoutePath("reports")}>
           <Download aria-hidden="true" className="size-[17px]" />
           Exportar
         </BoardButton>
       </Can>
-      <Can permission="movements:create">
+      <Can permission={PERMISSIONS.movements.create}>
         <BoardButton href={getChurchRoutePath("movements")} variant="primary">
           <Plus aria-hidden="true" className="size-[17px]" />
           Nuevo movimiento

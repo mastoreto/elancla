@@ -1,5 +1,6 @@
 "use client";
 
+import { PERMISSIONS } from "@ancla/contracts";
 import { Upload } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { DateRange } from "react-day-picker";
@@ -163,7 +164,7 @@ export function ReceiptsPageContent({
         <p className={receiptsPageContentReceiptsPage.description}>
           Facturas y boletas de proveedores, vinculadas al gasto que respaldan.
         </p>
-        <Can permission="vouchers:create">
+        <Can permission={PERMISSIONS.vouchers.create}>
           <BoardButton onClick={openCreate} variant="primary">
             <Upload aria-hidden="true" className={receiptsPageContentReceiptsPage.actionIcon} />
             Subir boleta

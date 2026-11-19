@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { actionsOf, PERMISSION_RESOURCES, scopesOf } from "@ancla/contracts";
+import { actionsOf, PERMISSION_RESOURCES, PERMISSIONS, scopesOf } from "@ancla/contracts";
 import {
   applyPreset,
   countActivePermissions,
@@ -23,16 +23,16 @@ describe("permissions", () => {
   });
 
   test("a newly checked cell takes the narrowest scope its resource supports", () => {
-    expect(toggleAction({}, "requests", "view")["requests:view"]).toBe("own");
-    expect(toggleAction({}, "budgets", "view")["budgets:view"]).toBe("ministry");
-    expect(toggleAction({}, "movements", "view")["movements:view"]).toBe("all");
+    expect(toggleAction({}, "requests", "view")[PERMISSIONS.requests.view]).toBe("own");
+    expect(toggleAction({}, "budgets", "view")[PERMISSIONS.budgets.view]).toBe("ministry");
+    expect(toggleAction({}, "movements", "view")[PERMISSIONS.movements.view]).toBe("all");
   });
 
   test("toggling twice clears the cell and never mutates the grid", () => {
     const next = toggleAction(NEW_ROLE_GRID, "movements", "create");
-    expect(next["movements:create"]).toBe("all");
-    expect(NEW_ROLE_GRID["movements:create"]).toBeUndefined();
-    expect(toggleAction(next, "movements", "view")["movements:view"]).toBeUndefined();
+    expect(next[PERMISSIONS.movements.create]).toBe("all");
+    expect(NEW_ROLE_GRID[PERMISSIONS.movements.create]).toBeUndefined();
+    expect(toggleAction(next, "movements", "view")[PERMISSIONS.movements.view]).toBeUndefined();
   });
 
   test("each cell has its own scope, limited to what the resource supports", () => {
@@ -42,18 +42,18 @@ describe("permissions", () => {
       "view",
       "ministry",
     );
-    expect(grid["requests:view"]).toBe("ministry");
-    expect(grid["requests:create"]).toBe("own");
+    expect(grid[PERMISSIONS.requests.view]).toBe("ministry");
+    expect(grid[PERMISSIONS.requests.create]).toBe("own");
     // Users are global: a ministry scope is ignored.
     const users = toggleAction({}, "users", "view");
-    expect(setScope(users, "users", "view", "ministry")["users:view"]).toBe("all");
+    expect(setScope(users, "users", "view", "ministry")[PERMISSIONS.users.view]).toBe("all");
     expect(scopesOf("users")).toEqual(["all"]);
   });
 
   test("the row switch grants every action with the widest scope, then clears it", () => {
     const full = toggleResource(NEW_ROLE_GRID, "requests");
     expect(isResourceFull(full, "requests")).toBe(true);
-    expect(full["requests:approve"]).toBe("all");
+    expect(full[PERMISSIONS.requests.approve]).toBe("all");
     expect(isResourceFull(toggleResource(full, "requests"), "requests")).toBe(false);
   });
 
@@ -70,7 +70,7 @@ describe("permissions", () => {
 
   test("the read-only preset leaves out the system resources", () => {
     const readonly = applyPreset("readonly");
-    expect(readonly["movements:view"]).toBe("all");
-    expect(readonly["roles:view"]).toBeUndefined();
+    expect(readonly[PERMISSIONS.movements.view]).toBe("all");
+    expect(readonly[PERMISSIONS.roles.view]).toBeUndefined();
   });
 });

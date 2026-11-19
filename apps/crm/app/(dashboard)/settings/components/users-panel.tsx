@@ -1,6 +1,6 @@
 "use client";
 
-import { ADMIN_ROLE_KEY, type RoleDto, type UserDto } from "@ancla/contracts";
+import { ADMIN_ROLE_KEY, PERMISSIONS, type RoleDto, type UserDto } from "@ancla/contracts";
 import { PencilLine } from "lucide-react";
 import { useState } from "react";
 import { BoardCard } from "@/components/dashboard/board/board-card";
@@ -84,7 +84,7 @@ export function UsersPanel({ users, roles, pendingInvitations, onEdit }: UsersPa
   const lastAccessed = users
     .filter((user) => user.lastAccessAt)
     .sort((a, b) => (b.lastAccessAt ?? "").localeCompare(a.lastAccessAt ?? ""))[0];
-  const canEdit = can(access, "users:edit");
+  const canEdit = can(access, PERMISSIONS.users.edit);
 
   return (
     <div className={usersPanelSettingsPage.container}>

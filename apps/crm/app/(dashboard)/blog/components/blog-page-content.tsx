@@ -1,5 +1,6 @@
 "use client";
 
+import { PERMISSIONS } from "@ancla/contracts";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
@@ -68,7 +69,7 @@ export function BlogPageContent({ posts: initialPosts, config }: BlogPageContent
         <p className={blogPageContentContentPage.description}>
           Gestiona y publica el contenido editorial de la iglesia.
         </p>
-        <Can permission="content:create">
+        <Can permission={PERMISSIONS.content.create}>
           <BoardButton
             className={blogPageContentContentPage.action}
             href={getChurchRoutePath("blog", "new")}

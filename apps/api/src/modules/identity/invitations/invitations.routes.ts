@@ -3,6 +3,7 @@ import {
   createInvitationBody,
   invitationDto,
   invitationPreviewDto,
+  PERMISSIONS,
   type Permission,
   pageQuerySchema,
   pageSchema,
@@ -48,7 +49,7 @@ const createInvitationRoute = createRoute({
   path: "/invitations",
   tags: ["invitations"],
   summary: "Invite a person by email.",
-  middleware: can("invitations:create"),
+  middleware: can(PERMISSIONS.invitations.create),
   request: {
     body: {
       content: { "application/json": { schema: createInvitationBody } },
@@ -70,7 +71,7 @@ const listRoute = createRoute({
   path: "/invitations",
   tags: ["invitations"],
   summary: "List invitations.",
-  middleware: can("invitations:view"),
+  middleware: can(PERMISSIONS.invitations.view),
   request: { query: pageQuerySchema },
   responses: {
     200: jsonResponse("A page of invitations", pageSchema(invitationDto)),
@@ -83,7 +84,7 @@ const revokeRoute = createRoute({
   path: "/invitations/{id}/revoke",
   tags: ["invitations"],
   summary: "Revoke an invitation.",
-  middleware: can("invitations:delete"),
+  middleware: can(PERMISSIONS.invitations.delete),
   request: { params: idParams },
   responses: {
     200: jsonResponse("Invitation revoked", invitationDto),
@@ -98,7 +99,7 @@ const resendRoute = createRoute({
   path: "/invitations/{id}/resend",
   tags: ["invitations"],
   summary: "Send the invitation again with a new link.",
-  middleware: can("invitations:create"),
+  middleware: can(PERMISSIONS.invitations.create),
   request: { params: idParams },
   responses: {
     200: jsonResponse("Invitation re-sent", invitationDto),

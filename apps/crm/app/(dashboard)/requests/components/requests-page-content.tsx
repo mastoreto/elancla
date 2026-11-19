@@ -1,5 +1,6 @@
 "use client";
 
+import { PERMISSIONS } from "@ancla/contracts";
 import { Download } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
@@ -125,7 +126,7 @@ export function RequestsPageContent() {
             <Download aria-hidden="true" className={requestsPageContentRequestsPage.actionIcon} />
             Exportar
           </BoardButton>
-          <Can permission="requests:create">
+          <Can permission={PERMISSIONS.requests.create}>
             <RequestFormModal onSubmit={createRequest} />
           </Can>
         </div>

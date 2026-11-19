@@ -1,5 +1,4 @@
 import { expect, test } from "bun:test";
-import type { PermissionGrant } from "@ancla/contracts";
 import type { Auth } from "../../src/core/auth";
 import type { createFixtures, TestUserAccess } from "./fixtures";
 
@@ -28,15 +27,6 @@ export interface MatrixHarness {
     path: string,
     options: { cookie?: string; body?: unknown },
   ): Promise<Response>;
-}
-
-/** One grant, spelled shortly: `grant("requests", "view", "ministry")`. */
-export function grant(
-  resource: PermissionGrant["resource"],
-  action: PermissionGrant["action"],
-  scope: PermissionGrant["scope"] = "all",
-): PermissionGrant {
-  return { resource, action, scope };
 }
 
 /**

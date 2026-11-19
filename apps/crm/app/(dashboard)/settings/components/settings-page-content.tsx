@@ -1,6 +1,7 @@
 "use client";
 
 import type { InvitationDto, MeDto, MinistryDto, RoleDto, UserDto } from "@ancla/contracts";
+import { PERMISSIONS } from "@ancla/contracts";
 import { Check, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -104,7 +105,7 @@ export function SettingsPageContent({
     <div className={settingsPageContentSettingsPage.container}>
       <div className={settingsPageContentSettingsPage.intro}>
         <span className={settingsPageContentSettingsPage.description}>{INTRO[tab]}</span>
-        {tab === "users" && canAny(access, ["invitations:create"]) ? (
+        {tab === "users" && canAny(access, [PERMISSIONS.invitations.create]) ? (
           <BoardButton onClick={() => setInviteOpen(true)} variant="primary">
             <Plus aria-hidden="true" className={settingsPageContentSettingsPage.icon} />
             Invitar usuario

@@ -1,4 +1,9 @@
-import { createRoleBody, roleDto, updateRoleBody } from "@ancla/contracts";
+import {
+  createRoleBody,
+  PERMISSIONS,
+  roleDto,
+  updateRoleBody,
+} from "@ancla/contracts";
 import { createRoute, z } from "@hono/zod-openapi";
 import { requireSession } from "../../../core/auth";
 import { requirePermission } from "../../../core/authz";
@@ -26,7 +31,7 @@ const listRoute = createRoute({
   path: "/roles",
   tags: ["roles"],
   summary: "List the roles with their grid.",
-  middleware: [requireSession, requirePermission("roles:view")],
+  middleware: [requireSession, requirePermission(PERMISSIONS.roles.view)],
   responses: {
     200: jsonResponse("Every role of the organization", z.array(roleDto)),
     ...guardedResponses,
@@ -38,7 +43,7 @@ const getRoute = createRoute({
   path: "/roles/{id}",
   tags: ["roles"],
   summary: "One role with its grid.",
-  middleware: [requireSession, requirePermission("roles:view")],
+  middleware: [requireSession, requirePermission(PERMISSIONS.roles.view)],
   request: { params: idParams },
   responses: {
     200: jsonResponse("The role", roleDto),
@@ -52,7 +57,7 @@ const createRoleRoute = createRoute({
   path: "/roles",
   tags: ["roles"],
   summary: "Create a role.",
-  middleware: [requireSession, requirePermission("roles:create")],
+  middleware: [requireSession, requirePermission(PERMISSIONS.roles.create)],
   request: {
     body: {
       content: { "application/json": { schema: createRoleBody } },
@@ -72,7 +77,7 @@ const updateRoute = createRoute({
   path: "/roles/{id}",
   tags: ["roles"],
   summary: "Replace a role's name, session policy and grid.",
-  middleware: [requireSession, requirePermission("roles:edit")],
+  middleware: [requireSession, requirePermission(PERMISSIONS.roles.edit)],
   request: {
     params: idParams,
     body: {
@@ -94,7 +99,7 @@ const deleteRoute = createRoute({
   path: "/roles/{id}",
   tags: ["roles"],
   summary: "Delete a custom role without members.",
-  middleware: [requireSession, requirePermission("roles:delete")],
+  middleware: [requireSession, requirePermission(PERMISSIONS.roles.delete)],
   request: { params: idParams },
   responses: {
     204: { description: "Role deleted" },

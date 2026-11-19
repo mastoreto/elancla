@@ -1,5 +1,6 @@
 "use client";
 
+import { PERMISSIONS } from "@ancla/contracts";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
@@ -150,7 +151,7 @@ export function BudgetsPageContent({
         <p className={budgetsPageContentBudgetsPage.description}>
           Montos asignados por ministerio y proyecto, con alertas de uso.
         </p>
-        <Can permission="budgets:create">
+        <Can permission={PERMISSIONS.budgets.create}>
           <BoardButton onClick={handleCreate} variant="primary">
             <Plus aria-hidden="true" className={budgetsPageContentBudgetsPage.actionIcon} />
             Nuevo presupuesto

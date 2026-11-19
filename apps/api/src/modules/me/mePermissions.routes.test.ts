@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import type { MePermissionsDto } from "@ancla/contracts";
+import { grant, PERMISSIONS } from "@ancla/contracts";
 import { createApiCaller } from "../../../test/support/apiCaller";
-import { grant } from "../../../test/support/authzMatrix";
 import { createFixtures } from "../../../test/support/fixtures";
 import { getAuth } from "../../core/auth";
 
@@ -37,12 +37,15 @@ describe("GET /api/me/permissions", () => {
   test("merges two roles: the union, with the widest scope per permission", async () => {
     const auth = getAuth();
     const first = await fixtures.createRole("first", {
-      grants: [grant("requests", "view", "own"), grant("movements", "view")],
+      grants: [
+        grant(PERMISSIONS.requests.view, "own"),
+        grant(PERMISSIONS.movements.view),
+      ],
     });
     const second = await fixtures.createRole("second", {
       grants: [
-        grant("requests", "view", "all"),
-        grant("budgets", "view", "ministry"),
+        grant(PERMISSIONS.requests.view, "all"),
+        grant(PERMISSIONS.budgets.view, "ministry"),
       ],
     });
     const email = fixtures.uniqueEmail("me-merged");
@@ -58,9 +61,11 @@ describe("GET /api/me/permissions", () => {
     expect(me.isAdmin).toBe(false);
     expect(me.ministryIds).toEqual([ministryId]);
     expect(me.grants).toHaveLength(3);
-    expect(me.grants).toContainEqual(grant("requests", "view", "all"));
-    expect(me.grants).toContainEqual(grant("movements", "view", "all"));
-    expect(me.grants).toContainEqual(grant("budgets", "view", "ministry"));
+    expect(me.grants).toContainEqual(grant(PERMISSIONS.requests.view, "all"));
+    expect(me.grants).toContainEqual(grant(PERMISSIONS.movements.view, "all"));
+    expect(me.grants).toContainEqual(
+      grant(PERMISSIONS.budgets.view, "ministry"),
+    );
   });
 
   test("a user without roles has an empty menu", async () => {
