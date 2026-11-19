@@ -10,6 +10,7 @@ import {
   isUniqueViolation,
 } from "../../data";
 import { toRoleDto } from "../../mappers";
+import { assertCanManageRoles } from "../../policies";
 
 export const ROLE_NAME_TAKEN_MESSAGE = "A role with this name already exists";
 
@@ -22,6 +23,7 @@ export async function createRole({
   ctx,
   body,
 }: CreateRoleInput): Promise<RoleDto> {
+  assertCanManageRoles(ctx.access);
   if (await findRoleRowByName(ctx.organizationId, body.name)) {
     throw new ConflictError(ROLE_NAME_TAKEN_MESSAGE);
   }

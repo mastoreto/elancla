@@ -5,8 +5,11 @@ import { createApiCaller } from "../../../../test/support/apiCaller";
 import { grant } from "../../../../test/support/authzMatrix";
 import { createFixtures } from "../../../../test/support/fixtures";
 import { getAuth } from "../../../core/auth";
+import { lockRoles } from "../../../core/authz";
 import type { AuthenticatedContext } from "../../../core/context";
 import { ConflictError } from "../../../core/errors";
+import { resolveOrganizationId } from "../../../core/tenancy";
+import { deleteRole } from "../roles/useCases";
 import { setUserRoles } from "./useCases";
 
 const fixtures = createFixtures();
@@ -145,6 +148,103 @@ describe("PUT /api/users/:id/roles", () => {
       body: { roleIds: [] },
     });
     expect(res.status).toBe(200);
+  });
+});
+
+describe("assigning roles a non-admin does not fully hold", () => {
+  test("is a 403 unless every grant is covered with an equal or wider scope", async () => {
+    const auth = getAuth();
+    const cookie = await fixtures.signIn(
+      auth,
+      await fixtures.passwordUser(auth, "subset-editor", [
+        grant("users", "edit"),
+        grant("requests", "view", "all"),
+        grant("budgets", "view", "ministry"),
+      ]),
+    );
+    const target = await newUser("subset-target");
+    const assign = (roleId: string) =>
+      call("PUT", `/users/${target.id}/roles`, {
+        cookie,
+        body: { roleIds: [roleId] },
+      });
+
+    const covered = await fixtures.createRole("covered", {
+      grants: [
+        grant("requests", "view", "ministry"),
+        grant("budgets", "view", "ministry"),
+      ],
+    });
+    expect((await assign(covered)).status).toBe(200);
+
+    const wider = await fixtures.createRole("wider", {
+      grants: [grant("budgets", "view", "all")],
+    });
+    expect((await assign(wider)).status).toBe(403);
+
+    const notHeld = await fixtures.createRole("not-held", {
+      grants: [grant("movements", "view", "all")],
+    });
+    expect((await assign(notHeld)).status).toBe(403);
+    expect((await assign(await fixtures.roleIdByKey("treasurer"))).status).toBe(
+      403,
+    );
+  });
+
+  test("an admin may assign any role", async () => {
+    const target = await newUser("admin-assign");
+    const res = await call("PUT", `/users/${target.id}/roles`, {
+      cookie: adminCookie,
+      body: { roleIds: [await fixtures.roleIdByKey("treasurer")] },
+    });
+    expect(res.status).toBe(200);
+  });
+});
+
+describe("role locking", () => {
+  test("a role cannot be deleted while a concurrent assignment is in flight", async () => {
+    const roleId = await fixtures.createRole("race");
+    const target = await newUser("race-target");
+    const ctx = {
+      requestId: "t",
+      organizationId: await resolveOrganizationId(),
+      user: { id: adminId, name: "A", email: "a@example.test" },
+      access: {
+        isAdmin: true,
+        roles: [],
+        grants: new Map(),
+        ministryIds: [],
+        sessionPolicy: { persistent: true, maxSessionSeconds: null },
+      },
+    } satisfies AuthenticatedContext;
+
+    let release: () => void = () => undefined;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let locked: () => void = () => undefined;
+    const lockTaken = new Promise<void>((resolve) => {
+      locked = resolve;
+    });
+    // An assignment that has locked the role and added the member but not committed yet.
+    const assignment = db.$transaction(async (tx) => {
+      await lockRoles(tx, [roleId]);
+      await tx.userRole.create({ data: { userId: target.id, roleId } });
+      locked();
+      await held;
+    });
+    await lockTaken;
+    const deletion = deleteRole(ctx, roleId);
+    const outcome = deletion.then(
+      () => "deleted",
+      (error: unknown) => error,
+    );
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    release();
+    await assignment;
+
+    expect(await outcome).toBeInstanceOf(ConflictError);
+    expect(await db.role.count({ where: { id: roleId } })).toBe(1);
   });
 });
 

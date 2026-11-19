@@ -142,9 +142,18 @@ describe("admin endpoints", () => {
     expect(res.status).toBe(403);
     expect(await db.invitation.count({ where: { email } })).toBe(0);
 
+    // The leader role grants permissions the inviter does not hold.
     const leaderId = await fixtures.roleIdByKey("leader");
-    const allowed = await call("POST", "/invitations", {
+    const tooWide = await call("POST", "/invitations", {
       body: { email, roleIds: [leaderId] },
+      cookie: inviterCookie,
+    });
+    expect(tooWide.status).toBe(403);
+
+    // A role the inviter fully covers (here, one that grants nothing) is fine.
+    const harmlessId = await fixtures.createRole("harmless");
+    const allowed = await call("POST", "/invitations", {
+      body: { email, roleIds: [harmlessId] },
       cookie: inviterCookie,
     });
     expect(allowed.status).toBe(201);

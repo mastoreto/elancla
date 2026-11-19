@@ -135,11 +135,28 @@ const rows: MatrixRow[] = [
     method: "PATCH",
     path: `/roles/${UNKNOWN_ID}`,
     body: validRole,
-    expected: 404,
+    expected: 403,
   },
   {
     who: "roles:delete",
     caller: [grant("roles", "delete")],
+    method: "DELETE",
+    path: `/roles/${UNKNOWN_ID}`,
+    expected: 403,
+  },
+
+  // Managing roles is admin-only even with the permission; the admin reaches the 404.
+  {
+    who: "admin",
+    caller: ["admin"],
+    method: "PATCH",
+    path: `/roles/${UNKNOWN_ID}`,
+    body: validRole,
+    expected: 404,
+  },
+  {
+    who: "admin",
+    caller: ["admin"],
     method: "DELETE",
     path: `/roles/${UNKNOWN_ID}`,
     expected: 404,

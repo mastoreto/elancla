@@ -1,5 +1,6 @@
 import type { SetUserRolesBody, UserDto } from "@ancla/contracts";
 import { db } from "@ancla/db";
+import { assertCanAssignRoles, lockRoles } from "../../../../../core/authz";
 import type { AuthenticatedContext } from "../../../../../core/context";
 import { withTransaction } from "../../../../../core/db";
 import { NotFoundError, ValidationError } from "../../../../../core/errors";
@@ -7,9 +8,9 @@ import {
   countRoleMembers,
   findAdminRoleId,
   findExistingRoleIds,
+  findExistingRoleIdsIn,
   findUserRow,
   hasRole,
-  lockRole,
   replaceUserRoles,
 } from "../../data";
 import { toUserDto } from "../../mappers";
@@ -41,12 +42,25 @@ export async function setUserRoles({
     ]);
   }
 
+  await assertCanAssignRoles(ctx, roleIds);
+
   // ponytail: 0.5 adds `writeAudit(tx, ...)` here, inside the same transaction.
   await withTransaction(db, async (tx) => {
     const adminRoleId = await findAdminRoleId(ctx.organizationId);
+    // Without the admin lock, two admins demoting each other would both see "two admins left".
+    // Locking the assigned roles too keeps a concurrent delete of one of them from slipping in.
+    await lockRoles(tx, adminRoleId ? [adminRoleId, ...roleIds] : roleIds);
+    const stillExisting = await findExistingRoleIdsIn(
+      tx,
+      ctx.organizationId,
+      roleIds,
+    );
+    if (stillExisting.length !== roleIds.length) {
+      throw new ValidationError("The request is not valid", [
+        { path: "roleIds", message: "Contains an id that does not exist" },
+      ]);
+    }
     if (adminRoleId) {
-      // Without the lock, two admins demoting each other would both see "two admins left".
-      await lockRole(tx, adminRoleId);
       assertAdminRoleChangeAllowed({
         access: ctx.access,
         adminRoleId,

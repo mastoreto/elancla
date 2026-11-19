@@ -191,15 +191,49 @@ describe("role protections", () => {
       where: { roleId: ownRoleId },
     });
     expect(stillTheSame).toBe(1);
+  });
 
-    // The same user can edit a role they do not hold.
+  test("even an admin cannot edit a custom role they hold", async () => {
+    const auth = getAuth();
+    const heldRoleId = await fixtures.createRole("admin-held");
+    const email = fixtures.uniqueEmail("admin-holder");
+    await fixtures.invite(email, {
+      roleIds: [await fixtures.roleIdByKey("admin"), heldRoleId],
+    });
+    await auth.api.signUpEmail({
+      body: { email, password: "correct-horse-battery-staple", name: "AH" },
+    });
+    const cookie = await fixtures.signIn(auth, email);
+    const res = await call("PATCH", `/roles/${heldRoleId}`, {
+      cookie,
+      body: { name: "Renamed", grants: [] },
+    });
+    expect(res.status).toBe(403);
+  });
+
+  test("managing roles is admin-only, even with every roles:* permission", async () => {
+    const auth = getAuth();
+    const cookie = await fixtures.signIn(
+      auth,
+      await fixtures.passwordUser(auth, "roles-manager", [
+        grant("roles", "view"),
+        grant("roles", "create"),
+        grant("roles", "edit"),
+        grant("roles", "delete"),
+      ]),
+    );
     const other = (await (
       await createRole({ name: uniqueName("other"), grants: [] })
     ).json()) as RoleDto;
-    const ok = await call("PATCH", `/roles/${other.id}`, {
-      cookie,
-      body: { name: other.name, grants: [grant("movements", "view")] },
-    });
-    expect(ok.status).toBe(200);
+    const body = { name: uniqueName("by-manager"), grants: [] };
+    expect((await call("POST", "/roles", { cookie, body })).status).toBe(403);
+    expect(
+      (await call("PATCH", `/roles/${other.id}`, { cookie, body })).status,
+    ).toBe(403);
+    expect(
+      (await call("DELETE", `/roles/${other.id}`, { cookie })).status,
+    ).toBe(403);
+    // Reading stays allowed.
+    expect((await call("GET", "/roles", { cookie })).status).toBe(200);
   });
 });

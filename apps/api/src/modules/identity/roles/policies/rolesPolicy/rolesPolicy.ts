@@ -9,6 +9,15 @@ interface PolicyRole {
 }
 
 /**
+ * Managing roles is admin-only for now, even if a custom role grants `roles:create|edit|delete`:
+ * a role grid is the widest way to hand out access.
+ */
+export function assertCanManageRoles(access: Pick<Access, "isAdmin">): void {
+  if (!access.isAdmin)
+    throw new ForbiddenError("Only an admin can manage roles");
+}
+
+/**
  * The admin role is fixed (implicit full access), and nobody edits a role they hold: that would let
  * anyone grant themselves more through the grid.
  */

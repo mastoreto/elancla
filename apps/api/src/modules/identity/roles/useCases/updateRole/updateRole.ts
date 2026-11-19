@@ -5,7 +5,7 @@ import { withTransaction } from "../../../../../core/db";
 import { ConflictError, NotFoundError } from "../../../../../core/errors";
 import { findRoleRow, isUniqueViolation, replaceRoleRow } from "../../data";
 import { toRoleDto } from "../../mappers";
-import { assertRoleEditable } from "../../policies";
+import { assertCanManageRoles, assertRoleEditable } from "../../policies";
 import { ROLE_NAME_TAKEN_MESSAGE } from "../createRole";
 
 interface UpdateRoleInput {
@@ -19,6 +19,7 @@ export async function updateRole({
   id,
   body,
 }: UpdateRoleInput): Promise<RoleDto> {
+  assertCanManageRoles(ctx.access);
   const current = await findRoleRow(ctx.organizationId, id);
   if (!current) throw new NotFoundError("The role was not found");
   assertRoleEditable(ctx.access, {

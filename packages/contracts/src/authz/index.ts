@@ -1,6 +1,7 @@
 export {
   actionsOf,
   fromPermission,
+  isDangerousPermission,
   isGrantSupported,
   PERMISSION_ACTIONS,
   PERMISSION_CATALOG,

@@ -1,5 +1,6 @@
 import type { CreateInvitationBody } from "@ancla/contracts";
 import type { Invitation } from "@ancla/db";
+import { assertCanAssignRoles } from "../../../../../core/authz";
 import type { AuthenticatedContext } from "../../../../../core/context";
 import { ForbiddenError } from "../../../../../core/errors";
 import type { Mailer } from "../../../../../core/mail";
@@ -25,6 +26,7 @@ export async function createInvitation({
   ) {
     throw new ForbiddenError("Only an admin can invite with the admin role");
   }
+  await assertCanAssignRoles(ctx, body.roleIds);
   const { invitation, token } = await issueInvitation({
     organizationId: ctx.organizationId,
     email: body.email,

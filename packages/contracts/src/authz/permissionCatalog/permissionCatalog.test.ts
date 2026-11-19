@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
   actionsOf,
+  isDangerousPermission,
   isGrantSupported,
   PERMISSION_CATALOG,
   PERMISSION_RESOURCES,
@@ -51,5 +52,14 @@ describe("permission catalog", () => {
         expect(["own", "ministry", "all"]).toContain(scope);
       }
     }
+  });
+
+  test("flags the permissions that control access", () => {
+    expect(isDangerousPermission("roles", "edit")).toBe(true);
+    expect(isDangerousPermission("users", "edit")).toBe(true);
+    expect(isDangerousPermission("invitations", "create")).toBe(true);
+    expect(isDangerousPermission("settings", "edit")).toBe(true);
+    expect(isDangerousPermission("roles", "view")).toBe(false);
+    expect(isDangerousPermission("movements", "edit")).toBe(false);
   });
 });

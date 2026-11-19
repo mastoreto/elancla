@@ -1,1 +1,5 @@
-export { assertRoleDeletable, assertRoleEditable } from "./rolesPolicy";
+export {
+  assertCanManageRoles,
+  assertRoleDeletable,
+  assertRoleEditable,
+} from "./rolesPolicy";

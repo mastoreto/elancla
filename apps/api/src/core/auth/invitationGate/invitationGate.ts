@@ -1,5 +1,6 @@
 import { db, type PrismaClient } from "@ancla/db";
 import { APIError } from "better-auth/api";
+import { lockRoles } from "../../authz/lockRole";
 
 export const INVITATION_REQUIRED_CODE = "INVITATION_REQUIRED";
 export const PROVIDER_EMAIL_NOT_VERIFIED_CODE = "PROVIDER_EMAIL_NOT_VERIFIED";
@@ -55,6 +56,8 @@ export async function markInvitationAccepted(user: {
   if (!invitation) return;
   const { organizationId } = invitation;
   await db.$transaction(async (tx) => {
+    // A role being deleted meanwhile must not leave a member behind.
+    await lockRoles(tx, invitation.roleIds);
     const roles = await tx.role.findMany({
       where: { organizationId, id: { in: invitation.roleIds } },
       select: { id: true },

@@ -78,3 +78,11 @@ export function isUniqueViolation(error: unknown): boolean {
     error.code === "P2002"
   );
 }
+
+/** Member count read inside the transaction that holds the role lock. */
+export function countRoleMembersIn(
+  tx: Prisma.TransactionClient,
+  roleId: string,
+): Promise<number> {
+  return tx.userRole.count({ where: { roleId } });
+}

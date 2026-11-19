@@ -23,6 +23,8 @@ export type PermissionScope = (typeof PERMISSION_SCOPES)[number];
 interface ResourceDefinition {
   actions: readonly PermissionAction[];
   scopes: readonly PermissionScope[];
+  /** Actions that let their holder control access (grant roles, invite, change settings). */
+  dangerous?: readonly PermissionAction[];
 }
 
 const CRUD: readonly PermissionAction[] = ["view", "create", "edit", "delete"];
@@ -47,10 +49,26 @@ export const PERMISSION_CATALOG = {
   content: { actions: CRUD, scopes: ALL_ONLY },
   "ministries.profile": { actions: CRUD, scopes: MINISTRY_OR_ALL },
   "ministries.finance": { actions: CRUD, scopes: MINISTRY_OR_ALL },
-  users: { actions: CRUD, scopes: ALL_ONLY },
-  roles: { actions: CRUD, scopes: ALL_ONLY },
-  invitations: { actions: CRUD, scopes: ALL_ONLY },
-  settings: { actions: ["view", "edit"], scopes: ALL_ONLY },
+  users: {
+    actions: CRUD,
+    scopes: ALL_ONLY,
+    dangerous: ["create", "edit", "delete"],
+  },
+  roles: {
+    actions: CRUD,
+    scopes: ALL_ONLY,
+    dangerous: ["create", "edit", "delete"],
+  },
+  invitations: {
+    actions: CRUD,
+    scopes: ALL_ONLY,
+    dangerous: ["create", "delete"],
+  },
+  settings: {
+    actions: ["view", "edit"],
+    scopes: ALL_ONLY,
+    dangerous: ["edit"],
+  },
 } as const satisfies Record<string, ResourceDefinition>;
 
 export type PermissionResource = keyof typeof PERMISSION_CATALOG;
@@ -92,6 +110,15 @@ export function actionsOf(resource: PermissionResource): PermissionAction[] {
 
 export function scopesOf(resource: PermissionResource): PermissionScope[] {
   return [...PERMISSION_CATALOG[resource].scopes];
+}
+
+/** Whether holding this permission lets someone escalate or control access. */
+export function isDangerousPermission(
+  resource: PermissionResource,
+  action: PermissionAction,
+): boolean {
+  const definition: ResourceDefinition = PERMISSION_CATALOG[resource];
+  return definition.dangerous?.includes(action) ?? false;
 }
 
 /** Whether the catalog allows this exact resource, action and scope combination. */
