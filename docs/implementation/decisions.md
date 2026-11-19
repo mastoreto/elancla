@@ -145,6 +145,11 @@ días con `freshAge` de 10 min para operaciones sensibles.
 permisos efectivos; lo que no está cubierto no se renderiza ni se consulta. Los recursos son finos
 (p. ej. `ministries.profile` y `ministries.finance` por separado, ver D-20).
 
+*Implementación (0.4):* el alcance se elige **por celda** de la grilla (cada acción concedida
+tiene el suyo, limitado a los alcances que el recurso soporta). El rol `admin` es de sistema y tiene
+**todos** los permisos de forma implícita, sin filas en `RolePermission`, de modo que cubre también
+los recursos que se agreguen después; no se edita ni se borra.
+
 ## D-10 — Auditoría
 
 **Aceptada.** Tabla `AuditLog` append-only (actor, tenant, acción, entidad, antes/después, motivo,
@@ -204,6 +209,10 @@ Reemplazada por D-26: todo contenido editable debe poder cargarse traducido.
 **Aceptada.** Cada rol define si permite sesión persistente y su duración máxima. Si un usuario tiene
 varios roles, gana la política más restrictiva. Se valida en servidor en cada request (no solo al
 crear la sesión).
+
+*Implementación (0.4):* la duración máxima se verifica en `requireSession` (sesión más vieja que el
+mínimo de los roles: se revoca y responde 401); la sesión no persistente la aplica el plugin
+`roleSessionPolicy`, que emite la cookie de sesión sin `Max-Age` al iniciar sesión.
 
 ## D-17 — Descarga de informes
 

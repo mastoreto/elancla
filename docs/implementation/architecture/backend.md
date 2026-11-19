@@ -90,12 +90,41 @@ export async function voidMovement(deps: VoidMovementDeps, input: VoidMovementIn
 }
 ```
 
+## Autorización (`core/authz`)
+
+Cada ruta declara quién puede llamarla con **uno** de estos middlewares (sin declaración el test de
+introspección del router en `app.test.ts` falla):
+
+- `requirePermission("recurso:acción")`: va después de `requireSession`; 403 si ningún rol del
+  usuario lo concede. El rol `admin` tiene todos los permisos de forma implícita (sin filas en
+  `RolePermission`), incluidos los recursos futuros.
+- `allowAnySession` (= `requireSession`): cualquier usuario con sesión (p. ej. `GET /me/permissions`).
+- `allowPublic`: ruta pública a propósito (health, enlaces de invitación, Better Auth).
+
+`requireSession` carga el acceso del usuario con `loadAccess` (una consulta: roles, grilla, ministerios)
+y lo deja en `ctx.access`. Con varios roles los permisos son la unión y, para un mismo
+`recurso:acción`, gana el alcance más amplio (`all > ministry > own`). El catálogo de recursos,
+acciones y alcances vive en `packages/contracts/src/authz` y lo comparten API y CRM.
+
+Las policies de recurso (`roles/policies`, `users/policies`) aplican las protecciones: el rol `admin`
+no se edita ni se borra, los sembrados no se borran, nadie cambia sus propios roles o ministerios,
+nadie edita un rol que tiene asignado, solo un admin concede o quita el rol `admin` y nunca se quita
+al último. Las mutaciones corren en `withTransaction` para que `writeAudit` (0.5) entre en la misma
+transacción.
+
+Matriz de pruebas: `test/support/authzMatrix.ts` genera un caso por fila `{ grilla del rol, método,
+ruta, status esperado }`; cada módulo agrega sus filas.
+
 ## Consultas: estándar obligatorio
 
 1. **Tenant siempre.** El cliente Prisma por request está extendido para inyectar
    `organizationId` en los modelos de dominio. Además, cada repositorio lo pasa explícito. Un test
    recorre los modelos y falla si alguno escapa al filtro.
-2. **Alcance siempre.** `scopeWhere(ctx, resource)` agrega el filtro de `own | ministry | all`.
+2. **Alcance siempre.** `scopeWhere(ctx, permission, { ownerField?, ministryField? })`
+   (`core/authz`) devuelve el filtro del alcance que el usuario tiene sobre ese permiso: `all` →
+   `{}`, `ministry` → `{ [ministryField]: { in: ctx.access.ministryIds } }`, `own` →
+   `{ [ownerField]: ctx.user.id }`. Falla cerrado: sin permiso, o si el recurso no tiene la columna
+   que pide el alcance, el filtro no coincide con ninguna fila.
 3. **`select` explícito.** Prohibido devolver la fila entera o `include` sin `select`.
 4. **Paginación por cursor** (UUIDv7 ordenable), `limit` máximo 100, por defecto 25.
 5. **Filtros y orden en lista blanca** (query object); nada del cliente llega crudo al `where`.
