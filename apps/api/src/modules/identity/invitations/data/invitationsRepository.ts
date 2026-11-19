@@ -1,3 +1,4 @@
+import { ADMIN_ROLE_KEY } from "@ancla/contracts";
 import { db } from "@ancla/db";
 import { pendingInvitationWhere } from "../../../../core/auth";
 import { forOrganization } from "../../../../core/tenancy";
@@ -6,7 +7,8 @@ export interface NewInvitation {
   organizationId: string;
   email: string;
   tokenHash: string;
-  role: string;
+  roleIds: string[];
+  ministryIds: string[];
   invitedById: string | null;
   expiresAt: Date;
 }
@@ -89,4 +91,51 @@ export function findOrganizationName(organizationId: string) {
     where: { id: organizationId },
     select: { name: true },
   });
+}
+
+/** Ids among `ids` that exist in the organization, so an invitation never carries a foreign id. */
+export async function findExistingRoleIds(
+  organizationId: string,
+  ids: string[],
+): Promise<string[]> {
+  const rows = await forOrganization(db, organizationId).role.findMany({
+    where: { id: { in: ids } },
+    select: { id: true },
+  });
+  return rows.map((row) => row.id);
+}
+
+export async function findExistingMinistryIds(
+  organizationId: string,
+  ids: string[],
+): Promise<string[]> {
+  const rows = await forOrganization(db, organizationId).ministry.findMany({
+    where: { id: { in: ids } },
+    select: { id: true },
+  });
+  return rows.map((row) => row.id);
+}
+
+/** Names of the roles an invitation grants, for the email. */
+export async function findRoleNames(
+  organizationId: string,
+  ids: string[],
+): Promise<string[]> {
+  const rows = await forOrganization(db, organizationId).role.findMany({
+    where: { id: { in: ids } },
+    select: { name: true },
+    orderBy: { name: "asc" },
+  });
+  return rows.map((row) => row.name);
+}
+
+/** Whether the admin role (implicit full access) is among `ids`. */
+export async function includesAdminRole(
+  organizationId: string,
+  ids: string[],
+): Promise<boolean> {
+  const count = await forOrganization(db, organizationId).role.count({
+    where: { id: { in: ids }, key: ADMIN_ROLE_KEY },
+  });
+  return count > 0;
 }

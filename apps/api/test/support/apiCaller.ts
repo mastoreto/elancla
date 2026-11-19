@@ -1,0 +1,34 @@
+import { app } from "../../src/app";
+import { getApiEnv } from "../../src/core/env";
+import type { createFixtures } from "./fixtures";
+
+export interface ApiCallOptions {
+  cookie?: string;
+  body?: unknown;
+}
+
+/**
+ * Calls the API in-process as the CRM's browser would (JSON, same-origin). Every call gets its own
+ * client address so rate limits never leak between tests.
+ */
+export function createApiCaller(fixtures: ReturnType<typeof createFixtures>) {
+  const { CRM_ORIGIN } = getApiEnv();
+  return (
+    method: string,
+    path: string,
+    options: ApiCallOptions = {},
+  ): Promise<Response> =>
+    Promise.resolve(
+      app.request(`/api${path}`, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Origin: CRM_ORIGIN,
+          ...(options.cookie ? { Cookie: options.cookie } : {}),
+          "X-Forwarded-For": fixtures.uniqueIp(),
+        },
+        body:
+          options.body === undefined ? undefined : JSON.stringify(options.body),
+      }),
+    );
+}

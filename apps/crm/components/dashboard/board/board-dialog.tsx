@@ -9,6 +9,8 @@ const boardDialogDashboardPage = {
   content: cn(
     "gap-[18px] rounded-[34px] border-0 bg-card p-[30px] sm:max-w-[520px]",
     "shadow-[0_30px_60px_-30px_rgba(60,20,30,0.45)]",
+    // Tall forms (roles and ministries lists) must stay reachable on short viewports.
+    "max-h-[calc(100svh-2rem)] overflow-y-auto",
   ),
   close: cn(
     "absolute top-5 right-5 inline-flex size-9 items-center justify-center rounded-full bg-secondary text-foreground",

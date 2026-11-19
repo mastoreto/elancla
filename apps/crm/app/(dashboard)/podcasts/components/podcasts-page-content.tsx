@@ -12,6 +12,7 @@ import {
   filterContent,
   paginate,
 } from "@/components/dashboard/content";
+import { Can } from "@/lib/authz/Gate";
 import { getChurchRoutePath } from "@/lib/church";
 import { formatCompactCount } from "@/lib/format-content";
 import { cn } from "@/lib/utils";
@@ -54,14 +55,16 @@ export function PodcastsPageContent({ podcasts: initialPodcasts }: { podcasts: P
         <p className={podcastsPageContentPodcastsPage.description}>
           Gestiona y publica los episodios del podcast de la iglesia.
         </p>
-        <BoardButton
-          className={podcastsPageContentPodcastsPage.action}
-          href={getChurchRoutePath("podcasts", "new")}
-          variant="primary"
-        >
-          <Plus aria-hidden="true" className={podcastsPageContentPodcastsPage.icon} />
-          Nuevo episodio
-        </BoardButton>
+        <Can permission="content:create">
+          <BoardButton
+            className={podcastsPageContentPodcastsPage.action}
+            href={getChurchRoutePath("podcasts", "new")}
+            variant="primary"
+          >
+            <Plus aria-hidden="true" className={podcastsPageContentPodcastsPage.icon} />
+            Nuevo episodio
+          </BoardButton>
+        </Can>
       </div>
 
       <ContentSectionTabs current="podcasts" />

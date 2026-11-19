@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Can } from "@/lib/authz/Gate";
 import { projects } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import type { ProjectFilters, ProjectViewMode } from "../types";
@@ -31,7 +32,9 @@ export function ProjectsPageContent() {
     <div className={projectsPageContentProjectsPage.page}>
       <div className={projectsPageContentProjectsPage.header}>
         <p className={projectsPageContentProjectsPage.description}>{DESCRIPTIONS[viewMode]}</p>
-        <ProjectFormModal />
+        <Can permission="projects:create">
+          <ProjectFormModal />
+        </Can>
       </div>
 
       <ProjectsToolbar

@@ -6,6 +6,7 @@ import { BoardButton } from "@/components/dashboard/board/board-button";
 import { BoardTabs } from "@/components/dashboard/board/board-tabs";
 import { SearchField } from "@/components/dashboard/board/search-field";
 import { SegmentedToggle } from "@/components/dashboard/board/segmented-toggle";
+import { Can } from "@/lib/authz/Gate";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
 import { reportTemplates } from "../data/report-seeds";
@@ -52,14 +53,16 @@ export function ReportsListPageContent({ reports }: { reports: GeneratedReportLi
         <p className={reportsListPageContentReportsPage.description}>
           Reportes listos para abrir o exportar, y plantillas para crear nuevos.
         </p>
-        <BoardButton
-          className={reportsListPageContentReportsPage.action}
-          href={getChurchRoutePath("reports", "new")}
-          variant="primary"
-        >
-          <Plus aria-hidden="true" className={reportsListPageContentReportsPage.icon} />
-          Nuevo informe
-        </BoardButton>
+        <Can permission="reports:create">
+          <BoardButton
+            className={reportsListPageContentReportsPage.action}
+            href={getChurchRoutePath("reports", "new")}
+            variant="primary"
+          >
+            <Plus aria-hidden="true" className={reportsListPageContentReportsPage.icon} />
+            Nuevo informe
+          </BoardButton>
+        </Can>
       </div>
 
       <BoardTabs

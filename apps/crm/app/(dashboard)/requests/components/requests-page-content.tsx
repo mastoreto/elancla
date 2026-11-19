@@ -4,6 +4,7 @@ import { Download } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
 import { RequestFormModal } from "@/components/request-form-modal";
+import { Can } from "@/lib/authz/Gate";
 import { currentUser, moneyRequests as initialRequests } from "@/lib/data";
 import type { Currency, MoneyRequest, RequestStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -124,7 +125,9 @@ export function RequestsPageContent() {
             <Download aria-hidden="true" className={requestsPageContentRequestsPage.actionIcon} />
             Exportar
           </BoardButton>
-          <RequestFormModal onSubmit={createRequest} />
+          <Can permission="requests:create">
+            <RequestFormModal onSubmit={createRequest} />
+          </Can>
         </div>
       </div>
 

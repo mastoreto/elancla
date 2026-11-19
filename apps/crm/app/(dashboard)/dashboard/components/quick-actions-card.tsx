@@ -1,49 +1,88 @@
+"use client";
+
+import type { Permission } from "@ancla/contracts";
 import { BarChart3, CircleDollarSign, Plus, Upload } from "lucide-react";
+import type { ComponentType } from "react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
 import { BoardCard, BoardCardHeader } from "@/components/dashboard/board/board-card";
+import { useAccess } from "@/lib/authz/AccessProvider";
+import { filterByPermission } from "@/lib/authz/filterByPermission";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
 
 const quickActionsCardDashboardPage = {
-  grid: cn("grid grid-cols-2 gap-2.5"),
+  // Two columns when there is more than one button; a lone odd one spans the row.
+  grid: cn(
+    "grid grid-cols-1 gap-2.5 sm:grid-cols-2",
+    "[&>*:last-child:nth-child(odd)]:sm:col-span-2",
+  ),
+  gridSingle: cn("grid grid-cols-1 gap-2.5"),
   action: cn("w-full"),
   icon: cn("size-[17px]"),
 };
 
+interface QuickAction {
+  label: string;
+  href: string;
+  icon: ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
+  requires: readonly Permission[];
+  primary?: boolean;
+}
+
+const QUICK_ACTIONS: readonly QuickAction[] = [
+  {
+    label: "Nuevo movimiento",
+    href: getChurchRoutePath("movements"),
+    icon: Plus,
+    requires: ["movements:create"],
+    primary: true,
+  },
+  {
+    label: "Nueva solicitud",
+    href: getChurchRoutePath("requests"),
+    icon: CircleDollarSign,
+    requires: ["requests:create"],
+  },
+  {
+    label: "Subir boleta",
+    href: getChurchRoutePath("receipts"),
+    icon: Upload,
+    requires: ["vouchers:create"],
+  },
+  {
+    label: "Crear informe",
+    href: getChurchRoutePath("reports"),
+    icon: BarChart3,
+    requires: ["reports:create"],
+  },
+];
+
+/** Renders nothing when the person's roles allow none of the quick actions. */
 export function QuickActionsCard() {
+  const actions = filterByPermission(QUICK_ACTIONS, useAccess());
+  if (actions.length === 0) return null;
+
   return (
     <BoardCard>
       <BoardCardHeader title="Acciones rápidas" />
-      <div className={quickActionsCardDashboardPage.grid}>
-        <BoardButton
-          className={quickActionsCardDashboardPage.action}
-          href={getChurchRoutePath("movements")}
-          variant="primary"
-        >
-          <Plus aria-hidden="true" className={quickActionsCardDashboardPage.icon} />
-          Nuevo movimiento
-        </BoardButton>
-        <BoardButton
-          className={quickActionsCardDashboardPage.action}
-          href={getChurchRoutePath("requests")}
-        >
-          <CircleDollarSign aria-hidden="true" className={quickActionsCardDashboardPage.icon} />
-          Nueva solicitud
-        </BoardButton>
-        <BoardButton
-          className={quickActionsCardDashboardPage.action}
-          href={getChurchRoutePath("receipts")}
-        >
-          <Upload aria-hidden="true" className={quickActionsCardDashboardPage.icon} />
-          Subir boleta
-        </BoardButton>
-        <BoardButton
-          className={quickActionsCardDashboardPage.action}
-          href={getChurchRoutePath("reports")}
-        >
-          <BarChart3 aria-hidden="true" className={quickActionsCardDashboardPage.icon} />
-          Crear informe
-        </BoardButton>
+      <div
+        className={
+          actions.length === 1
+            ? quickActionsCardDashboardPage.gridSingle
+            : quickActionsCardDashboardPage.grid
+        }
+      >
+        {actions.map((action) => (
+          <BoardButton
+            className={quickActionsCardDashboardPage.action}
+            href={action.href}
+            key={action.label}
+            variant={action.primary ? "primary" : undefined}
+          >
+            <action.icon aria-hidden={true} className={quickActionsCardDashboardPage.icon} />
+            {action.label}
+          </BoardButton>
+        ))}
       </div>
     </BoardCard>
   );

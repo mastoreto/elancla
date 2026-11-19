@@ -193,10 +193,17 @@ interface BoardSwitchRowProps {
   title: string;
   hint?: string;
   checked: boolean;
+  disabled?: boolean;
   onCheckedChange: (checked: boolean) => void;
 }
 
-export function BoardSwitchRow({ title, hint, checked, onCheckedChange }: BoardSwitchRowProps) {
+export function BoardSwitchRow({
+  title,
+  hint,
+  checked,
+  disabled,
+  onCheckedChange,
+}: BoardSwitchRowProps) {
   return (
     <div className={boardFormDashboardPage.switchRow}>
       <div className={boardFormDashboardPage.switchText}>
@@ -207,6 +214,7 @@ export function BoardSwitchRow({ title, hint, checked, onCheckedChange }: BoardS
         aria-label={title}
         checked={checked}
         className={boardFormDashboardPage.switchControl}
+        disabled={disabled}
         onCheckedChange={onCheckedChange}
       />
     </div>

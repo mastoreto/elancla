@@ -1,1 +1,1 @@
-export * from "./requireSession";
+export { allowAnySession, requireSession } from "./requireSession";

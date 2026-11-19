@@ -1,5 +1,6 @@
 import { db, type PrismaClient } from "@ancla/db";
 import { APIError } from "better-auth/api";
+import { lockRoles } from "../../authz/lockRole";
 
 export const INVITATION_REQUIRED_CODE = "INVITATION_REQUIRED";
 export const PROVIDER_EMAIL_NOT_VERIFIED_CODE = "PROVIDER_EMAIL_NOT_VERIFIED";
@@ -25,7 +26,7 @@ export async function assertSignUpAllowed(input: {
   email: string;
   emailVerified: boolean;
   isCredentialSignUp: boolean;
-}): Promise<{ role: string }> {
+}): Promise<void> {
   const invitation = await findPendingInvitation(db, input.email);
   if (!invitation) {
     throw new APIError("FORBIDDEN", {
@@ -41,15 +42,44 @@ export async function assertSignUpAllowed(input: {
       message: "The provider did not verify this email address",
     });
   }
-  return { role: invitation.role };
 }
 
-/** Marks the pending invitation of a freshly created user as used. */
-export async function markInvitationAccepted(email: string): Promise<void> {
-  const invitation = await findPendingInvitation(db, email);
+/**
+ * Marks the pending invitation of a freshly created user as used and gives the user the roles and
+ * ministries it carried. Ids that no longer exist (a role deleted after inviting) are skipped.
+ */
+export async function markInvitationAccepted(user: {
+  id: string;
+  email: string;
+}): Promise<void> {
+  const invitation = await findPendingInvitation(db, user.email);
   if (!invitation) return;
-  await db.invitation.update({
-    where: { id: invitation.id },
-    data: { acceptedAt: new Date() },
+  const { organizationId } = invitation;
+  await db.$transaction(async (tx) => {
+    // A role being deleted meanwhile must not leave a member behind.
+    await lockRoles(tx, invitation.roleIds);
+    const roles = await tx.role.findMany({
+      where: { organizationId, id: { in: invitation.roleIds } },
+      select: { id: true },
+    });
+    const ministries = await tx.ministry.findMany({
+      where: { organizationId, id: { in: invitation.ministryIds } },
+      select: { id: true },
+    });
+    await tx.userRole.createMany({
+      data: roles.map((role) => ({ userId: user.id, roleId: role.id })),
+      skipDuplicates: true,
+    });
+    await tx.userMinistry.createMany({
+      data: ministries.map((ministry) => ({
+        userId: user.id,
+        ministryId: ministry.id,
+      })),
+      skipDuplicates: true,
+    });
+    await tx.invitation.update({
+      where: { id: invitation.id },
+      data: { acceptedAt: new Date() },
+    });
   });
 }

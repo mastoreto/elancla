@@ -1,5 +1,6 @@
 import { Download, Plus } from "lucide-react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
+import { Can } from "@/lib/authz/Gate";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
 
@@ -30,14 +31,18 @@ export function SummaryHeader({ greeting, firstName, dateLabel, churchName }: Su
           Así está la tesorería de Iglesia {churchName} este {dateLabel}.
         </p>
       </div>
-      <BoardButton href={getChurchRoutePath("reports")}>
-        <Download aria-hidden="true" className="size-[17px]" />
-        Exportar
-      </BoardButton>
-      <BoardButton href={getChurchRoutePath("movements")} variant="primary">
-        <Plus aria-hidden="true" className="size-[17px]" />
-        Nuevo movimiento
-      </BoardButton>
+      <Can permission="reports:view">
+        <BoardButton href={getChurchRoutePath("reports")}>
+          <Download aria-hidden="true" className="size-[17px]" />
+          Exportar
+        </BoardButton>
+      </Can>
+      <Can permission="movements:create">
+        <BoardButton href={getChurchRoutePath("movements")} variant="primary">
+          <Plus aria-hidden="true" className="size-[17px]" />
+          Nuevo movimiento
+        </BoardButton>
+      </Can>
     </header>
   );
 }

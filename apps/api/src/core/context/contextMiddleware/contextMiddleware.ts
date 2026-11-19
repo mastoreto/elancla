@@ -7,6 +7,7 @@ export const contextMiddleware: MiddlewareHandler<AppEnv> = async (c, next) => {
     requestId: c.get("requestId"),
     user: null,
     organizationId: null,
+    access: null,
   });
   await next();
 };

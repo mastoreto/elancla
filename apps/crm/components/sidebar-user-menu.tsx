@@ -19,7 +19,8 @@ export interface SidebarUser {
   name: string;
   email: string;
   image: string | null;
-  role: string;
+  /** Names of the roles the person holds. */
+  roleNames: string[];
 }
 
 interface SidebarUserMenuProps {
@@ -37,7 +38,7 @@ const sidebarUserMenuSharedPage = {
   avatarFallback: cn("bg-(image:--grad-avatar) text-sm font-extrabold text-[var(--oro-texto)]"),
   text: cn("flex min-w-0 flex-col leading-snug"),
   name: cn("truncate text-sm font-bold text-white"),
-  role: cn("text-xs text-white/55"),
+  role: cn("truncate text-xs text-white/55"),
   chevron: cn(
     "ml-auto size-4 shrink-0 text-white/60 transition-transform duration-200",
     "group-data-[state=open]/user:rotate-180 motion-reduce:transition-none",
@@ -47,16 +48,11 @@ const sidebarUserMenuSharedPage = {
   icon: cn("size-4"),
 };
 
-// ponytail: flat roles until RBAC (phase 0.4) replaces them with the roles of the organization.
-const ROLE_LABELS: Record<string, string> = {
-  admin: "Administrador",
-  viewer: "Lector",
-};
 const DEV_BYPASS_USER: SidebarUser = {
   name: "Sesión de desarrollo",
   email: "",
   image: null,
-  role: "",
+  roleNames: [],
 };
 const ACCOUNT_TAB_QUERY = "?tab=account";
 const LOGIN_PATH = "/";
@@ -95,9 +91,7 @@ export function SidebarUserMenu({ user }: SidebarUserMenuProps) {
         </Avatar>
         <span className={sidebarUserMenuSharedPage.text}>
           <b className={sidebarUserMenuSharedPage.name}>{shownUser.name}</b>
-          <span className={sidebarUserMenuSharedPage.role}>
-            {ROLE_LABELS[shownUser.role] ?? shownUser.role}
-          </span>
+          <span className={sidebarUserMenuSharedPage.role}>{shownUser.roleNames.join(", ")}</span>
         </span>
         <ChevronDown aria-hidden="true" className={sidebarUserMenuSharedPage.chevron} />
       </DropdownMenuTrigger>

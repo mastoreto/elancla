@@ -1,5 +1,5 @@
 // Creates an invitation and prints its link. Replaces the old password-based admin seed:
-//   bun run --filter @ancla/api invite <email> [--role admin|viewer]
+//   bun run --filter @ancla/api invite <email> [--role <role-key>]
 // Run it from the monorepo root; the root .env is loaded before anything touches the database.
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,7 +9,9 @@ import { readInviteArguments } from "./readInviteArguments";
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 loadEnv({ path: path.resolve(scriptDir, "../../../../../.env") });
 
-const { createInvitationBody } = await import("@ancla/contracts");
+const { ADMIN_ROLE_KEY, createInvitationBody } = await import(
+  "@ancla/contracts"
+);
 const { db } = await import("@ancla/db");
 const { resolveOrganizationId } = await import("../../core/tenancy");
 const { buildInvitationUrl, issueInvitation } = await import(
@@ -17,24 +19,41 @@ const { buildInvitationUrl, issueInvitation } = await import(
 );
 
 const USAGE =
-  "Usage: bun run --filter @ancla/api invite <email> [--role admin|viewer]";
+  "Usage: bun run --filter @ancla/api invite <email> [--role <role-key>]";
 
 async function main(): Promise<void> {
-  const { email, role } = readInviteArguments(process.argv.slice(2));
-  const parsed = createInvitationBody.safeParse({ email, role });
+  const { email, role: roleKey = ADMIN_ROLE_KEY } = readInviteArguments(
+    process.argv.slice(2),
+  );
+  // The role id is only known once it is looked up, so the body is validated with a placeholder.
+  const parsed = createInvitationBody.safeParse({
+    email,
+    roleIds: [crypto.randomUUID()],
+  });
   if (!parsed.success) {
     console.error(USAGE);
     process.exitCode = 1;
     return;
   }
+  const organizationId = await resolveOrganizationId();
+  const role = await db.role.findUnique({
+    where: { organizationId_key: { organizationId, key: roleKey } },
+    select: { id: true },
+  });
+  if (!role) {
+    console.error(`There is no seeded role "${roleKey}" (run db:seed first).`);
+    process.exitCode = 1;
+    return;
+  }
   const { token } = await issueInvitation({
-    organizationId: await resolveOrganizationId(),
+    organizationId,
     email: parsed.data.email,
-    role: parsed.data.role,
+    roleIds: [role.id],
+    ministryIds: [],
     invitedById: null,
   });
   console.info(
-    `Invitation for ${parsed.data.email} (${parsed.data.role}), valid for 7 days:`,
+    `Invitation for ${parsed.data.email} (${roleKey}), valid for 7 days:`,
   );
   console.info(buildInvitationUrl(token));
 }

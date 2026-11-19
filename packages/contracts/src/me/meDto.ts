@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { permissionGrantSchema } from "../authz";
+import { roleSummaryDto } from "../roles";
 
 export const SIGN_IN_METHODS = ["password", "google"] as const;
 
@@ -32,3 +34,14 @@ export const createPasswordBody = z.strictObject({
 });
 
 export type CreatePasswordBody = z.infer<typeof createPasswordBody>;
+
+/** What the CRM builds its menu and views from: the merged grid of every role of the user. */
+export const mePermissionsDto = z.object({
+  /** Admin holds every permission, including resources added later. */
+  isAdmin: z.boolean(),
+  roles: z.array(roleSummaryDto),
+  grants: z.array(permissionGrantSchema),
+  ministryIds: z.array(z.uuid()),
+});
+
+export type MePermissionsDto = z.infer<typeof mePermissionsDto>;

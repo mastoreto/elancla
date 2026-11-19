@@ -3,7 +3,7 @@ interface InviteArguments {
   role: string | undefined;
 }
 
-/** Parses `<email> [--role admin|viewer]` in any order. */
+/** Parses `<email> [--role <role-key>]` in any order. */
 export function readInviteArguments(argv: readonly string[]): InviteArguments {
   const roleFlag = argv.indexOf("--role");
   const roleIndex = roleFlag === -1 ? -1 : roleFlag + 1;

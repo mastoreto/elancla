@@ -12,6 +12,7 @@ import {
   filterContent,
   paginate,
 } from "@/components/dashboard/content";
+import { Can } from "@/lib/authz/Gate";
 import { getChurchRoutePath } from "@/lib/church";
 import { formatCompactCount } from "@/lib/format-content";
 import { cn } from "@/lib/utils";
@@ -55,14 +56,16 @@ export function SermonsPageContent() {
         <p className={sermonsPageContentSermonsPage.description}>
           Biblioteca de prédicas con video de YouTube, pasaje bíblico y serie.
         </p>
-        <BoardButton
-          className={sermonsPageContentSermonsPage.action}
-          href={getChurchRoutePath("sermons", "new")}
-          variant="primary"
-        >
-          <Plus aria-hidden="true" className={sermonsPageContentSermonsPage.icon} />
-          Nuevo sermón
-        </BoardButton>
+        <Can permission="content:create">
+          <BoardButton
+            className={sermonsPageContentSermonsPage.action}
+            href={getChurchRoutePath("sermons", "new")}
+            variant="primary"
+          >
+            <Plus aria-hidden="true" className={sermonsPageContentSermonsPage.icon} />
+            Nuevo sermón
+          </BoardButton>
+        </Can>
       </div>
 
       <ContentSectionTabs current="sermons" />

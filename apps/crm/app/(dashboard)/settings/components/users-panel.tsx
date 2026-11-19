@@ -1,9 +1,9 @@
 "use client";
 
-import { PencilLine, Trash2 } from "lucide-react";
+import { ADMIN_ROLE_KEY, type RoleDto, type UserDto } from "@ancla/contracts";
+import { PencilLine } from "lucide-react";
 import { useState } from "react";
 import { BoardCard } from "@/components/dashboard/board/board-card";
-import { BoardConfirmDialog } from "@/components/dashboard/board/board-confirm-dialog";
 import { BoardPagination } from "@/components/dashboard/board/board-pagination";
 import {
   BoardTableHead,
@@ -11,15 +11,15 @@ import {
   BoardTableRow,
 } from "@/components/dashboard/board/board-table";
 import { IconBubble } from "@/components/dashboard/board/icon-bubble";
-import { RowIconButton, rowIconButtonClass } from "@/components/dashboard/board/row-icon-button";
+import { RowIconButton } from "@/components/dashboard/board/row-icon-button";
 import { StatCard, StatCardGrid } from "@/components/dashboard/board/stat-card";
 import { StatusPill } from "@/components/dashboard/board/status-pill";
+import { useAccess } from "@/lib/authz/AccessProvider";
+import { can } from "@/lib/authz/can";
 import { cn } from "@/lib/utils";
-import type { SettingsUser } from "../types";
-import { RoleProfilePill } from "./role-profile-pill";
 
-const COLUMNS = "1.6fr 1fr 1fr 1fr 84px";
-const HEADERS = ["Usuario", "Rol", "Último acceso", "Estado", ""];
+const COLUMNS = "1.6fr 1.4fr 1fr 1fr 60px";
+const HEADERS = ["Usuario", "Roles", "Último acceso", "Ministerios", ""];
 const PAGE_SIZE = 8;
 
 const usersPanelSettingsPage = {
@@ -30,35 +30,67 @@ const usersPanelSettingsPage = {
   personText: cn("flex min-w-0 flex-col"),
   name: cn("font-medium"),
   email: cn("truncate text-[12.5px] text-[var(--tinta-apagada)]"),
+  chips: cn("flex flex-wrap gap-1.5"),
   muted: cn("text-[var(--tinta-suave)]"),
-  status: cn("w-fit"),
   actions: cn("flex justify-end gap-1.5"),
   icon: cn("size-3.5"),
 };
 
-interface UsersPanelProps {
-  users: SettingsUser[];
-  pendingInvitations: number;
-  onEdit: (user: SettingsUser) => void;
-  onDelete: (userId: string) => void;
+const dateTimeFormat = new Intl.DateTimeFormat("es", {
+  day: "numeric",
+  month: "short",
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
+function getInitials(name: string): string {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+}
+
+function formatLastAccess(lastAccessAt: string | null): string {
+  return lastAccessAt ? dateTimeFormat.format(new Date(lastAccessAt)) : "Nunca";
 }
 
 function pluralize(count: number, singular: string, plural: string): string {
   return `${count} ${count === 1 ? singular : plural}`;
 }
 
-export function UsersPanel({ users, pendingInvitations, onEdit, onDelete }: UsersPanelProps) {
+interface UsersPanelProps {
+  users: UserDto[];
+  /** Roles of the organization; used to count administrators. `null` without `roles:view`. */
+  roles: RoleDto[] | null;
+  pendingInvitations: number;
+  onEdit: (user: UserDto) => void;
+}
+
+export function UsersPanel({ users, roles, pendingInvitations, onEdit }: UsersPanelProps) {
+  const access = useAccess();
   const [page, setPage] = useState(1);
   const pageCount = Math.max(1, Math.ceil(users.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const visible = users.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-  const lastAccess = users[0];
+
+  const adminRoleId = roles?.find((role) => role.key === ADMIN_ROLE_KEY)?.id;
+  const adminCount = adminRoleId
+    ? users.filter((user) => user.roles.some((role) => role.id === adminRoleId)).length
+    : null;
+  const withMinistry = users.filter((user) => user.ministries.length > 0).length;
+  const lastAccessed = users
+    .filter((user) => user.lastAccessAt)
+    .sort((a, b) => (b.lastAccessAt ?? "").localeCompare(a.lastAccessAt ?? ""))[0];
+  const canEdit = can(access, "users:edit");
 
   return (
     <div className={usersPanelSettingsPage.container}>
       <StatCardGrid>
         <StatCard
-          detail={`${pluralize(pendingInvitations, "invitación pendiente", "invitaciones pendientes")}`}
+          detail={pluralize(pendingInvitations, "invitación pendiente", "invitaciones pendientes")}
           highlighted={true}
           label="Usuarios activos"
           value={String(users.length)}
@@ -66,19 +98,17 @@ export function UsersPanel({ users, pendingInvitations, onEdit, onDelete }: User
         <StatCard
           detail="Acceso completo"
           label="Administradores"
-          value={String(users.filter((user) => user.role === "admin").length)}
+          value={adminCount === null ? "—" : String(adminCount)}
         />
         <StatCard
-          detail="Aprueban solicitudes"
-          label="Tesorería"
-          value={String(users.filter((user) => user.role === "treasury").length)}
+          detail="Con ministerio asignado"
+          label="Ministerios"
+          value={String(withMinistry)}
         />
         <StatCard
-          detail={
-            lastAccess ? `${lastAccess.name} · ${lastAccess.lastAccess.split(" ").pop()}` : "—"
-          }
+          detail={lastAccessed ? lastAccessed.name : "—"}
           label="Último acceso"
-          value="hoy"
+          value={lastAccessed ? formatLastAccess(lastAccessed.lastAccessAt) : "—"}
         />
       </StatCardGrid>
 
@@ -88,37 +118,37 @@ export function UsersPanel({ users, pendingInvitations, onEdit, onDelete }: User
           {visible.map((user) => (
             <BoardTableRow columns={COLUMNS} key={user.id}>
               <div className={usersPanelSettingsPage.person}>
-                <IconBubble className={usersPanelSettingsPage.avatar} tone={user.tone}>
-                  {user.initials}
+                <IconBubble className={usersPanelSettingsPage.avatar} tone="gold">
+                  {getInitials(user.name)}
                 </IconBubble>
                 <div className={usersPanelSettingsPage.personText}>
                   <span className={usersPanelSettingsPage.name}>{user.name}</span>
                   <span className={usersPanelSettingsPage.email}>{user.email}</span>
                 </div>
               </div>
-              <RoleProfilePill profile={user.role} withDot={true} />
-              <span className={usersPanelSettingsPage.muted}>{user.lastAccess}</span>
-              <StatusPill className={usersPanelSettingsPage.status} tone="green">
-                Activo
-              </StatusPill>
+              <div className={usersPanelSettingsPage.chips}>
+                {user.roles.length === 0 ? (
+                  <span className={usersPanelSettingsPage.muted}>Sin rol</span>
+                ) : (
+                  user.roles.map((role) => (
+                    <StatusPill key={role.id} tone={role.name === "Administrador" ? "rose" : "ink"}>
+                      {role.name}
+                    </StatusPill>
+                  ))
+                )}
+              </div>
+              <span className={usersPanelSettingsPage.muted}>
+                {formatLastAccess(user.lastAccessAt)}
+              </span>
+              <span className={usersPanelSettingsPage.muted}>
+                {user.ministries.map((ministry) => ministry.name).join(", ") || "—"}
+              </span>
               <div className={usersPanelSettingsPage.actions}>
-                <RowIconButton label={`Editar ${user.name}`} onClick={() => onEdit(user)}>
-                  <PencilLine aria-hidden="true" className={usersPanelSettingsPage.icon} />
-                </RowIconButton>
-                <BoardConfirmDialog
-                  description={`${user.name} perderá el acceso a iEkklesia. Podrás invitarla de nuevo cuando quieras.`}
-                  onConfirm={() => onDelete(user.id)}
-                  title="Eliminar usuario"
-                  trigger={
-                    <button
-                      aria-label={`Eliminar ${user.name}`}
-                      className={rowIconButtonClass}
-                      type="button"
-                    >
-                      <Trash2 aria-hidden="true" className={usersPanelSettingsPage.icon} />
-                    </button>
-                  }
-                />
+                {canEdit ? (
+                  <RowIconButton label={`Editar ${user.name}`} onClick={() => onEdit(user)}>
+                    <PencilLine aria-hidden="true" className={usersPanelSettingsPage.icon} />
+                  </RowIconButton>
+                ) : null}
               </div>
             </BoardTableRow>
           ))}

@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import { db } from "@ancla/db";
+import { grant } from "../../../../test/support/authzMatrix";
 import {
   cookieHeaderFrom,
   createFixtures,
@@ -18,17 +19,28 @@ const { CRM_ORIGIN } = getApiEnv();
 
 let adminCookie = "";
 let viewerCookie = "";
+let inviterCookie = "";
+let adminRoleId = "";
 
 beforeAll(async () => {
   setMailerForTests(mailer);
   const auth = getAuth();
+  adminRoleId = await fixtures.roleIdByKey("admin");
   adminCookie = await fixtures.signIn(
     auth,
-    await fixtures.passwordUser(auth, "inv-admin", "admin"),
+    await fixtures.passwordUser(auth, "inv-admin", ["admin"]),
   );
+  // Can invite but is not an admin.
+  inviterCookie = await fixtures.signIn(
+    auth,
+    await fixtures.passwordUser(auth, "inv-inviter", [
+      grant("invitations", "create"),
+    ]),
+  );
+  // A signed-in user whose roles grant nothing.
   viewerCookie = await fixtures.signIn(
     auth,
-    await fixtures.passwordUser(auth, "inv-viewer", "viewer"),
+    await fixtures.passwordUser(auth, "inv-viewer"),
   );
 });
 
@@ -65,7 +77,10 @@ function tokenFromLastEmail(to: string): string {
 
 describe("admin endpoints", () => {
   test("without a session is a 401, a non-admin gets a 403", async () => {
-    const body = { email: fixtures.uniqueEmail("nope"), role: "viewer" };
+    const body = {
+      email: fixtures.uniqueEmail("nope"),
+      roleIds: [adminRoleId],
+    };
     expect((await call("POST", "/invitations", { body })).status).toBe(401);
     expect(
       (await call("POST", "/invitations", { body, cookie: viewerCookie }))
@@ -79,18 +94,24 @@ describe("admin endpoints", () => {
   test("create emails a link, stores only the hash and lists the invitation", async () => {
     const email = fixtures.uniqueEmail("created");
     const res = await call("POST", "/invitations", {
-      body: { email, role: "admin" },
+      body: { email, roleIds: [adminRoleId] },
       cookie: adminCookie,
     });
     expect(res.status).toBe(201);
     const dto = await res.json();
-    expect(dto).toMatchObject({ email, role: "admin", status: "pending" });
+    expect(dto).toMatchObject({
+      email,
+      roleIds: [adminRoleId],
+      ministryIds: [],
+      status: "pending",
+    });
     expect(Object.keys(dto).sort()).toEqual([
       "createdAt",
       "email",
       "expiresAt",
       "id",
-      "role",
+      "ministryIds",
+      "roleIds",
       "status",
     ]);
 
@@ -112,17 +133,65 @@ describe("admin endpoints", () => {
     expect(JSON.stringify(list)).not.toContain(row.tokenHash);
   });
 
+  test("only an admin can invite with the admin role (no escalation through invitations:create)", async () => {
+    const email = fixtures.uniqueEmail("escalation");
+    const res = await call("POST", "/invitations", {
+      body: { email, roleIds: [adminRoleId] },
+      cookie: inviterCookie,
+    });
+    expect(res.status).toBe(403);
+    expect(await db.invitation.count({ where: { email } })).toBe(0);
+
+    // The leader role grants permissions the inviter does not hold.
+    const leaderId = await fixtures.roleIdByKey("leader");
+    const tooWide = await call("POST", "/invitations", {
+      body: { email, roleIds: [leaderId] },
+      cookie: inviterCookie,
+    });
+    expect(tooWide.status).toBe(403);
+
+    // A role the inviter fully covers (here, one that grants nothing) is fine.
+    const harmlessId = await fixtures.createRole("harmless");
+    const allowed = await call("POST", "/invitations", {
+      body: { email, roleIds: [harmlessId] },
+      cookie: inviterCookie,
+    });
+    expect(allowed.status).toBe(201);
+  });
+
+  test("an invitation with an unknown role or ministry is a 400", async () => {
+    const unknown = crypto.randomUUID();
+    for (const body of [
+      { roleIds: [unknown] },
+      { roleIds: [adminRoleId], ministryIds: [unknown] },
+    ]) {
+      const res = await call("POST", "/invitations", {
+        body: { email: fixtures.uniqueEmail("unknown-ids"), ...body },
+        cookie: adminCookie,
+      });
+      expect(res.status).toBe(400);
+    }
+  });
+
+  test("an invitation needs at least one role", async () => {
+    const res = await call("POST", "/invitations", {
+      body: { email: fixtures.uniqueEmail("no-role"), roleIds: [] },
+      cookie: adminCookie,
+    });
+    expect(res.status).toBe(400);
+  });
+
   test("an address with a pending invitation or an account is a 409", async () => {
     const email = fixtures.uniqueEmail("dup");
     const first = await call("POST", "/invitations", {
-      body: { email },
+      body: { email, roleIds: [adminRoleId] },
       cookie: adminCookie,
     });
     expect(first.status).toBe(201);
     expect(
       (
         await call("POST", "/invitations", {
-          body: { email },
+          body: { email, roleIds: [adminRoleId] },
           cookie: adminCookie,
         })
       ).status,
@@ -132,7 +201,7 @@ describe("admin endpoints", () => {
     expect(
       (
         await call("POST", "/invitations", {
-          body: { email: existing },
+          body: { email: existing, roleIds: [adminRoleId] },
           cookie: adminCookie,
         })
       ).status,
@@ -143,7 +212,7 @@ describe("admin endpoints", () => {
     const email = fixtures.uniqueEmail("revoke-resend");
     const created = await (
       await call("POST", "/invitations", {
-        body: { email },
+        body: { email, roleIds: [adminRoleId] },
         cookie: adminCookie,
       })
     ).json();
@@ -231,7 +300,11 @@ describe("public endpoints", () => {
 
   test("accept creates a verified user with the invited role and consumes the invitation", async () => {
     const email = fixtures.uniqueEmail("accept");
-    const token = await fixtures.invite(email, { role: "admin" });
+    const ministryId = await fixtures.createMinistry("accept");
+    const token = await fixtures.invite(email, {
+      roleIds: [adminRoleId],
+      ministryIds: [ministryId],
+    });
     const ip = fixtures.uniqueIp();
 
     const weak = await call("POST", `/invitations/by-token/${token}/accept`, {
@@ -246,11 +319,13 @@ describe("public endpoints", () => {
     });
     expect(res.status).toBe(204);
     const user = await db.user.findUniqueOrThrow({ where: { email } });
-    expect(user).toMatchObject({
-      name: "Ana",
-      role: "admin",
-      emailVerified: true,
+    expect(user).toMatchObject({ name: "Ana", emailVerified: true });
+    const roles = await db.userRole.findMany({ where: { userId: user.id } });
+    expect(roles.map((row) => row.roleId)).toEqual([adminRoleId]);
+    const ministries = await db.userMinistry.findMany({
+      where: { userId: user.id },
     });
+    expect(ministries.map((row) => row.ministryId)).toEqual([ministryId]);
     const invitation = await db.invitation.findFirstOrThrow({
       where: { email },
     });

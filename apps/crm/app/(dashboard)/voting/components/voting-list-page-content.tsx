@@ -10,6 +10,7 @@ import { IconBubble, type IconBubbleTone } from "@/components/dashboard/board/ic
 import { ProgressBar } from "@/components/dashboard/board/progress-bar";
 import { SearchField } from "@/components/dashboard/board/search-field";
 import { StatCard, StatCardGrid } from "@/components/dashboard/board/stat-card";
+import { Can } from "@/lib/authz/Gate";
 import { cn } from "@/lib/utils";
 import type { VotingStatus } from "../types";
 import { useVotingCollection } from "../use-voting-data";
@@ -79,14 +80,16 @@ export function VotingListPageContent() {
         <p className={votingListPageContentVotingPage.description}>
           Decisiones de la iglesia con quórum, mayoría y voto anónimo.
         </p>
-        <BoardButton
-          className={votingListPageContentVotingPage.action}
-          href={getVotingCreatePath()}
-          variant="primary"
-        >
-          <Plus aria-hidden="true" className={votingListPageContentVotingPage.icon} />
-          Crear nueva votación
-        </BoardButton>
+        <Can permission="voting:create">
+          <BoardButton
+            className={votingListPageContentVotingPage.action}
+            href={getVotingCreatePath()}
+            variant="primary"
+          >
+            <Plus aria-hidden="true" className={votingListPageContentVotingPage.icon} />
+            Crear nueva votación
+          </BoardButton>
+        </Can>
       </div>
 
       <StatCardGrid>

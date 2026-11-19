@@ -39,6 +39,8 @@ model Organization {
   siteSettings      SiteSettings?
   documentSequences DocumentSequence[]
   invitations       Invitation[]
+  roles             Role[]
+  ministries        Ministry[]
 
   @@map("organizations")
 }
@@ -118,7 +120,7 @@ model SiteSettingsTranslation {
 }
 
 // ─── Authentication (Better Auth core schema) ────────────────────────────────
-// `role` is a temporary flat role (admin|viewer) used by the CRM guards; phase 0.4 (RBAC) removes it.
+// Authorization lives in the RBAC models below (roles, permissions, ministries).
 
 model User {
   id               String       @id @default(uuid(7)) @db.Uuid
@@ -126,7 +128,6 @@ model User {
   email            String       @unique
   emailVerified    Boolean      @default(false)
   image            String?
-  role             String       @default("viewer")
   /// Better Auth two-factor plugin flag.
   twoFactorEnabled Boolean      @default(false)
   createdAt        DateTime     @default(now()) @db.Timestamptz(3)
@@ -135,6 +136,8 @@ model User {
   accounts         Account[]
   twoFactors       TwoFactor[]
   invitationsSent  Invitation[]
+  userRoles        UserRole[]
+  userMinistries   UserMinistry[]
 
   @@map("users")
 }
@@ -225,8 +228,10 @@ model Invitation {
   /// Lowercase.
   email          String
   tokenHash      String       @unique
-  /// Temporary flat role (admin|viewer) copied to User.role until phase 0.4.
-  role           String       @default("viewer")
+  /// Roles and ministries assigned on acceptance. ponytail: validated when the invitation is
+  /// created; on acceptance only the ones that still exist are assigned.
+  roleIds        String[]     @default([]) @db.Uuid
+  ministryIds    String[]     @default([]) @db.Uuid
   invitedById    String?      @db.Uuid
   invitedBy      User?        @relation(fields: [invitedById], references: [id], onDelete: SetNull)
   expiresAt      DateTime     @db.Timestamptz(3)
@@ -237,4 +242,78 @@ model Invitation {
 
   @@index([organizationId, email])
   @@map("invitations")
+}
+
+// ─── Authorization (RBAC) ────────────────────────────────────────────────────
+
+/// Minimal ministry (phase 0.4) so the `ministry` scope has something to point at; phase 1.5 extends it.
+model Ministry {
+  id             String         @id @default(uuid(7)) @db.Uuid
+  organizationId String         @db.Uuid
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  slug           String
+  createdAt      DateTime       @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime       @updatedAt @db.Timestamptz(3)
+  members        UserMinistry[]
+
+  @@unique([organizationId, slug])
+  @@map("ministries")
+}
+
+/// `key` is set only for seeded roles (`admin` has implicit full access and no permission rows).
+model Role {
+  id                String           @id @default(uuid(7)) @db.Uuid
+  organizationId    String           @db.Uuid
+  organization      Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  key               String?
+  name              String
+  description       String           @default("")
+  /// When false, the session cookie is dropped when the browser closes.
+  persistentSession Boolean          @default(true)
+  /// Longest a session may live; null means the default.
+  maxSessionSeconds Int?
+  permissions       RolePermission[]
+  members           UserRole[]
+  createdAt         DateTime         @default(now()) @db.Timestamptz(3)
+  updatedAt         DateTime         @updatedAt @db.Timestamptz(3)
+
+  @@unique([organizationId, key])
+  @@unique([organizationId, name])
+  @@map("roles")
+}
+
+/// One cell of the grid. Validated against the code catalog (packages/contracts) on write.
+model RolePermission {
+  roleId   String @db.Uuid
+  role     Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  resource String
+  action   String
+  /// own | ministry | all
+  scope    String
+
+  @@id([roleId, resource, action])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roleId String @db.Uuid
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@index([roleId])
+  @@map("user_roles")
+}
+
+model UserMinistry {
+  userId     String   @db.Uuid
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ministryId String   @db.Uuid
+  ministry   Ministry @relation(fields: [ministryId], references: [id], onDelete: Cascade)
+
+  @@id([userId, ministryId])
+  @@index([ministryId])
+  @@map("user_ministries")
 }

@@ -41,6 +41,8 @@ interface BoardConfirmDialogProps {
   trigger: React.ReactNode;
   confirmLabel?: string;
   onConfirm: () => void;
+  /** Icon inside the header bubble; defaults to the trash can of the delete dialogs. */
+  icon?: React.ReactNode;
   /** Safer alternative shown between "Cancelar" and the destructive action. */
   alternative?: { label: string; onSelect: () => void };
 }
@@ -52,6 +54,7 @@ export function BoardConfirmDialog({
   notice,
   trigger,
   confirmLabel = "Eliminar",
+  icon,
   onConfirm,
   alternative,
 }: BoardConfirmDialogProps) {
@@ -68,7 +71,9 @@ export function BoardConfirmDialog({
       <DialogContent className={boardConfirmDialogDashboardPage.content} showCloseButton={false}>
         <div className={boardConfirmDialogDashboardPage.header}>
           <IconBubble className={boardConfirmDialogDashboardPage.bubble} tone="rose">
-            <Trash2 aria-hidden="true" className={boardConfirmDialogDashboardPage.bubbleIcon} />
+            {icon ?? (
+              <Trash2 aria-hidden="true" className={boardConfirmDialogDashboardPage.bubbleIcon} />
+            )}
           </IconBubble>
           <DialogTitle className={boardConfirmDialogDashboardPage.title}>{title}</DialogTitle>
         </div>

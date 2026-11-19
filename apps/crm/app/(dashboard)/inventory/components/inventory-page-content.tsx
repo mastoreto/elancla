@@ -3,6 +3,7 @@
 import { Download, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
+import { Can } from "@/lib/authz/Gate";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
 import type { InventoryFilters, InventoryItem, InventoryViewMode } from "../types";
@@ -40,10 +41,12 @@ export function InventoryPageContent({ items }: InventoryPageContentProps) {
             <Download aria-hidden="true" className={inventoryPageContentInventoryPage.actionIcon} />
             Exportar
           </BoardButton>
-          <BoardButton href={getChurchRoutePath("inventory", "new")} size="md" variant="primary">
-            <Plus aria-hidden="true" className={inventoryPageContentInventoryPage.actionIcon} />
-            Nuevo ítem
-          </BoardButton>
+          <Can permission="movements:create">
+            <BoardButton href={getChurchRoutePath("inventory", "new")} size="md" variant="primary">
+              <Plus aria-hidden="true" className={inventoryPageContentInventoryPage.actionIcon} />
+              Nuevo ítem
+            </BoardButton>
+          </Can>
         </div>
       </div>
 

@@ -11,7 +11,6 @@ export {
   INVITATION_REQUIRED_CODE,
   pendingInvitationWhere,
 } from "./invitationGate";
-export { requireAdmin } from "./requireAdmin";
 export { requireFreshSession } from "./requireFreshSession";
-export { requireSession } from "./requireSession";
+export { allowAnySession, requireSession } from "./requireSession";
 export { SESSION_FRESH_SECONDS } from "./sessionPolicy";

@@ -1,22 +1,21 @@
 "use client";
 
-import type { InvitationDto, MeDto } from "@ancla/contracts";
+import type { InvitationDto, MeDto, MinistryDto, RoleDto, UserDto } from "@ancla/contracts";
 import { Check, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { BoardButton } from "@/components/dashboard/board/board-button";
 import { BoardTabs } from "@/components/dashboard/board/board-tabs";
+import { useAccess } from "@/lib/authz/AccessProvider";
+import { canAny } from "@/lib/authz/can";
 import { cn } from "@/lib/utils";
-import type { UserInviteValues } from "../schema";
+import { SETTINGS_TAB_PERMISSIONS } from "../data/settings-tabs";
 import type {
   BankAccountSetting,
   CurrencySetting,
   NotificationSettings,
-  SettingsRole,
-  SettingsSelectOption,
   SettingsTabValue,
-  SettingsUser,
 } from "../types";
 import { AccountPanel } from "./account-panel";
 import { BankAccountsCard } from "./bank-accounts-card";
@@ -51,35 +50,35 @@ interface SettingsPageContentProps {
   initialTab: SettingsTabValue;
   churchName: string;
   churchSubtitle: string;
-  users: SettingsUser[];
+  /** `null` for each list the caller may not see (the API answered 403). */
+  users: UserDto[] | null;
   invitations: InvitationDto[] | null;
   me: MeDto | null;
-  roles: SettingsRole[];
+  roles: RoleDto[] | null;
+  ministries: MinistryDto[] | null;
   bankAccounts: BankAccountSetting[];
   currencies: CurrencySetting[];
   notifications: NotificationSettings;
-  ministryOptions: SettingsSelectOption[];
 }
 
 export function SettingsPageContent({
   initialTab,
   churchName,
   churchSubtitle,
-  users: initialUsers,
+  users,
   invitations,
   me,
-  roles: initialRoles,
+  roles,
+  ministries,
   bankAccounts,
   currencies,
   notifications: initialNotifications,
-  ministryOptions,
 }: SettingsPageContentProps) {
   const [tab, setTab] = useState<SettingsTabValue>(initialTab);
-  const [users, setUsers] = useState(initialUsers);
+  const access = useAccess();
   const router = useRouter();
-  const [roles, setRoles] = useState(initialRoles);
   const [notifications, setNotifications] = useState(initialNotifications);
-  const [dialogUser, setDialogUser] = useState<SettingsUser | undefined>(undefined);
+  const [dialogUser, setDialogUser] = useState<UserDto | undefined>(undefined);
   const [inviteOpen, setInviteOpen] = useState(false);
   const pendingInvitations = invitations?.filter((item) => item.status === "pending").length ?? 0;
 
@@ -88,24 +87,15 @@ export function SettingsPageContent({
     label: `${currency.code} · ${currency.symbol}`,
   }));
 
-  const submitUser = (values: UserInviteValues) => {
-    if (!dialogUser) return;
-    setUsers((previous) =>
-      previous.map((user) =>
-        user.id === dialogUser.id
-          ? {
-              ...user,
-              name: values.name,
-              email: values.email,
-              role: values.role as SettingsUser["role"],
-            }
-          : user,
-      ),
-    );
-    toast.success("Usuario actualizado");
-    setDialogUser(undefined);
-  };
-
+  const tabs: { value: SettingsTabValue; label: string; count?: number }[] = [
+    { value: "users", label: "Usuarios", count: users?.length },
+    { value: "church", label: "Iglesia" },
+    { value: "bankAccounts", label: "Cuentas bancarias", count: bankAccounts.length },
+    { value: "currencies", label: "Monedas", count: currencies.length },
+    { value: "roles", label: "Roles y permisos" },
+    { value: "notifications", label: "Notificaciones" },
+    { value: "account", label: "Mi cuenta" },
+  ];
   const showIdentity = tab === "church";
   const showBankAccounts = tab === "church" || tab === "bankAccounts";
   const showCurrencies = tab === "church" || tab === "currencies";
@@ -114,7 +104,7 @@ export function SettingsPageContent({
     <div className={settingsPageContentSettingsPage.container}>
       <div className={settingsPageContentSettingsPage.intro}>
         <span className={settingsPageContentSettingsPage.description}>{INTRO[tab]}</span>
-        {tab === "users" ? (
+        {tab === "users" && canAny(access, ["invitations:create"]) ? (
           <BoardButton onClick={() => setInviteOpen(true)} variant="primary">
             <Plus aria-hidden="true" className={settingsPageContentSettingsPage.icon} />
             Invitar usuario
@@ -132,31 +122,21 @@ export function SettingsPageContent({
       </div>
 
       <BoardTabs
-        items={[
-          { value: "users", label: "Usuarios", count: users.length },
-          { value: "church", label: "Iglesia" },
-          { value: "bankAccounts", label: "Cuentas bancarias", count: bankAccounts.length },
-          { value: "currencies", label: "Monedas", count: currencies.length },
-          { value: "roles", label: "Roles y permisos" },
-          { value: "notifications", label: "Notificaciones" },
-          { value: "account", label: "Mi cuenta" },
-        ]}
+        items={tabs.filter((item) => canAny(access, SETTINGS_TAB_PERMISSIONS[item.value]))}
         label="Secciones de configuración"
         onValueChange={setTab}
         value={tab}
       />
 
-      {tab === "users" ? (
+      {tab === "users" && users ? (
         <>
           <UsersPanel
-            onDelete={(userId) =>
-              setUsers((previous) => previous.filter((user) => user.id !== userId))
-            }
             onEdit={setDialogUser}
             pendingInvitations={pendingInvitations}
+            roles={roles}
             users={users}
           />
-          <InvitationsPanel invitations={invitations} />
+          <InvitationsPanel invitations={invitations} roles={roles} />
         </>
       ) : null}
 
@@ -172,14 +152,7 @@ export function SettingsPageContent({
         </div>
       ) : null}
 
-      {tab === "roles" ? (
-        <RolesPanel
-          onDelete={(roleId) =>
-            setRoles((previous) => previous.filter((role) => role.id !== roleId))
-          }
-          roles={roles}
-        />
-      ) : null}
+      {tab === "roles" && roles ? <RolesPanel roles={roles} /> : null}
 
       {tab === "notifications" ? (
         <NotificationsPanel
@@ -190,12 +163,14 @@ export function SettingsPageContent({
       ) : null}
 
       <UserDialog
-        ministryOptions={ministryOptions}
+        ministries={ministries}
         onOpenChange={(open) => !open && setDialogUser(undefined)}
-        onSubmit={submitUser}
+        roles={roles}
         user={dialogUser}
       />
       <InviteDialog
+        ministries={ministries}
+        roles={roles}
         onInvited={(email) => {
           toast.success(`Invitación enviada a ${email}`);
           setInviteOpen(false);

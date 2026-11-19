@@ -78,15 +78,17 @@ describe("sign-up is invitation only", () => {
 
   test("Google with an invited, verified email creates the user with picture and role", async () => {
     const email = fixtures.uniqueEmail("google-ok");
-    await fixtures.invite(email, { role: "admin" });
+    const adminRoleId = await fixtures.roleIdByKey("admin");
+    await fixtures.invite(email, { roleIds: [adminRoleId] });
     const res = await googleSignIn(email, { picture: PICTURE });
     expect(res.status).toBe(200);
     const user = await db.user.findUniqueOrThrow({ where: { email } });
     expect(user).toMatchObject({
       image: PICTURE,
-      role: "admin",
       emailVerified: true,
     });
+    const assigned = await db.userRole.findMany({ where: { userId: user.id } });
+    expect(assigned.map((row) => row.roleId)).toEqual([adminRoleId]);
     const invitation = await db.invitation.findFirstOrThrow({
       where: { email },
     });
