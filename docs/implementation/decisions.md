@@ -119,6 +119,20 @@ Subida directa desde el navegador con URL prefirmada (las funciones de Vercel li
 ~4,5 MB). El servidor verifica tamaño y tipo real y registra el archivo en una tabla `File`.
 Requisito: el DNS del dominio tiene que estar en Cloudflare.
 
+**Detalles fijados al implementar la 0.6** (plan: [`plans/0.6-storage.md`](./plans/0.6-storage.md)):
+
+- **Cuarentena**: toda subida entra al bucket privado y nada sin verificar llega nunca a
+  `media.<dominio>`. Las variantes se generan en `finalize`; el original queda privado.
+- **Propósitos en vez de `media:*`**: `MEDIA_PURPOSES` (contratos) decide bucket, tipos, tamaño máximo y
+  permisos (`contentImage` con `content:create`; `voucherDocument` con `vouchers:create`/`view`). No hay
+  recurso `media` en el catálogo: sería una segunda llave para la misma puerta.
+- **`MediaFile`** (tabla `media_files`), no `File`: el tipo generado por Prisma taparía el `File` global
+  que usa el código de subida. El bucket no se guarda: se deriva del propósito.
+- **Claves con `fileId`** (UUIDv7, nunca reutilizado, contenido inmutable) en lugar de un hash:
+  cumplen el caché inmutable sin calcular un hash en la clave.
+- Un solo adaptador S3-compatible (`aws4fetch`); en local un servidor S3 en `docker-compose`
+  (SeaweedFS: la edición comunitaria de MinIO dejó de publicar imágenes).
+
 ## D-07 — Dónde se controla la seguridad
 
 **Aceptada.** `proxy.ts` (reemplaza `middleware.ts` en Next 16) solo hace redirect sin cookie,

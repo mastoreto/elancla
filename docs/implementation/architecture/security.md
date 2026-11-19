@@ -85,20 +85,37 @@ Decisiones de origen: D-07, D-08, D-10, D-11, D-16, D-21, D-24, D-25.
 
 **Subida de archivos** (D-06):
 
-1. El CRM pide `POST /api/media/uploads` (autenticado y con permiso) con tipo y tamaño declarados.
-2. La API genera la clave del objeto (el cliente nunca elige la ruta) y una URL prefirmada de PUT
-   que vence en 5 min, atada a tipo y tamaño.
-3. El navegador sube directo a B2.
-4. `POST /api/media/uploads/:id/finalize`: la API verifica el objeto (tamaño, tipo real por magic
-   bytes) y recién ahí lo registra como `File` utilizable. Lo no finalizado se borra por cron.
-5. Descargas privadas: URL firmada de 60 s emitida tras autorizar y auditar.
+1. El CRM pide `POST /api/media/uploads` (autenticado y con el permiso del **propósito**, p. ej.
+   `content:create` o `vouchers:create`) con tipo y tamaño declarados. Fuera de lo que permite el
+   propósito → 400.
+2. La API genera la clave del objeto (`<organizationId>/<fileId>`; el cliente nunca elige la ruta) y
+   una URL prefirmada de PUT que vence en 5 min. **Toda subida va al bucket privado (cuarentena)**: un
+   PUT directo al público serviría HTML o SVG arbitrario desde nuestro dominio antes de `finalize`.
+   La URL firma `content-type` y `content-length`: el storage rechaza otro tipo o tamaño.
+3. El navegador sube directo al storage (CORS limitado al origen del CRM).
+4. `POST /api/media/uploads/:id/finalize` (solo quien subió; si no, 404; doble `finalize`, 409): la API
+   verifica el objeto con `head` (tamaño = declarado ≤ máximo), lo lee, comprueba el **tipo real por
+   magic bytes** (`detectContentType`, tabla de firmas solo de la allowlist: sin dependencia) y calcula
+   SHA-256. Si algo falla borra objeto y fila, audita `media.rejected` y responde 422. Si pasa, las
+   imágenes públicas generan variantes `webp`/`avif` en el bucket público; el original **queda
+   privado** (permite regenerar y no publica el EXIF).
+5. Variantes con `sharp`: `limitInputPixels: 40_000_000` (bombas de descompresión), sin metadatos
+   (EXIF/GPS fuera) y con la orientación ya aplicada. Claves con el `fileId` (UUIDv7, nunca se reutiliza)
+   y contenido inmutable: caché largo en el CDN sin hash en la clave.
+6. Descargas privadas (`GET /api/media/:id/download`): URL firmada de **60 s** con
+   `response-content-disposition=attachment`, emitida solo después de autorizar y de escribir la
+   auditoría de forma **estricta** (si el insert de auditoría falla, no hay URL). Alcance `all` ve
+   todo; `own` y `ministry` solo lo que subió el usuario (hasta que 2.3 enlace archivos a su orden).
+7. Limpieza: un cron diario (`GET /api/internal/media/purge` con `Authorization: Bearer CRON_SECRET`,
+   comparación en tiempo constante, sin sesión) borra las subidas pendientes de más de 1 h
+   (auditadas como `media.purged`, actor `cron`). También se corre a mano con `media:purge`.
 
 ## 4. Cabeceras
 
 | Cabecera | CRM | Web |
 |---|---|---|
 | `Strict-Transport-Security` | sí | sí |
-| `Content-Security-Policy` | estricta con nonce (generado en `proxy.ts`), `frame-ancestors 'none'` | estricta; orígenes de YouTube/Spotify/media explícitos |
+| `Content-Security-Policy` | estricta con nonce (generado en `proxy.ts`), `frame-ancestors 'none'`; `connect-src` suma el origen de subida (`S3_PRESIGN_ENDPOINT`) e `img-src` el de `MEDIA_PUBLIC_BASE_URL`, ambos desde env | estricta; orígenes de YouTube/Spotify/media explícitos |
 | `X-Content-Type-Options: nosniff` | sí | sí |
 | `Referrer-Policy: strict-origin-when-cross-origin` | sí | sí |
 | `Permissions-Policy` | todo deshabilitado salvo geolocalización en `/informe` | ya existe en `vercel.json` |
@@ -114,7 +131,7 @@ Decisiones de origen: D-07, D-08, D-10, D-11, D-16, D-21, D-24, D-25.
   `audit_logs`: la inmutabilidad es por **privilegio**, porque RLS sin policy de `UPDATE` actualizaría
   0 filas en silencio) por el pooler; las migraciones usan `app_migrator` por conexión directa, solo en el pipeline de deploy.
 - RLS activado en todas las tablas sin políticas para roles de la Data API (D-21).
-- B2: una key de aplicación por bucket con permisos mínimos.
+- Storage: una key de aplicación **por bucket** con permisos mínimos (B2 restringe una key a un bucket; el puerto `FileStorage` es por bucket por eso). La API valida su esquema `S3_*` y `CRON_SECRET` (≥ 32) de forma perezosa en `core/storage`.
 - Rotación documentada de: `BETTER_AUTH_SECRET`, credenciales de Postgres, keys de B2, site keys.
 
 ## 6. Logs
