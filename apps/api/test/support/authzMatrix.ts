@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import type { Auth } from "../../src/core/auth";
+import type { MatrixCall } from "../../src/core/authz/routeCoverage";
 import type { createFixtures, TestUserAccess } from "./fixtures";
 
 type Fixtures = ReturnType<typeof createFixtures>;
@@ -32,12 +33,15 @@ export interface MatrixHarness {
 /**
  * Registers one test per row: role grants x route -> expected status. Every module adds its own
  * rows; the callers (users with a throwaway role) are created once per distinct grid.
+ * Returns the calls the rows resolved to (filled as the tests run) so a final test can check that
+ * every route has a denied row.
  */
 export function defineAuthzMatrix(
   title: string,
   rows: readonly MatrixRow[],
   harness: MatrixHarness,
-): void {
+): MatrixCall[] {
+  const executed: MatrixCall[] = [];
   const cookies = new Map<string, Promise<string>>();
 
   function cookieFor(caller: MatrixCaller): Promise<string> {
@@ -66,6 +70,12 @@ export function defineAuthzMatrix(
         body: row.body,
       });
       expect(res.status).toBe(row.expected);
+      executed.push({
+        method: row.method,
+        path: `/api${path}`,
+        expected: row.expected,
+      });
     });
   }
+  return executed;
 }
