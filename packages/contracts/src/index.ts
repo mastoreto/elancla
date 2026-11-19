@@ -4,6 +4,7 @@ export * from "./common";
 export * from "./health";
 export * from "./invitations";
 export * from "./me";
+export * from "./media";
 export * from "./ministries";
 export * from "./roles";
 export * from "./users";
