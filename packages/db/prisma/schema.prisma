@@ -43,6 +43,7 @@ model Organization {
   ministries        Ministry[]
   auditLogs         AuditLog[]
   mediaFiles        MediaFile[]
+  siteApiKeys       SiteApiKey[]
 
   @@map("organizations")
 }
@@ -125,22 +126,23 @@ model SiteSettingsTranslation {
 // Authorization lives in the RBAC models below (roles, permissions, ministries).
 
 model User {
-  id               String       @id @default(uuid(7)) @db.Uuid
-  name             String
-  email            String       @unique
-  emailVerified    Boolean      @default(false)
-  image            String?
+  id                 String         @id @default(uuid(7)) @db.Uuid
+  name               String
+  email              String         @unique
+  emailVerified      Boolean        @default(false)
+  image              String?
   /// Better Auth two-factor plugin flag.
-  twoFactorEnabled Boolean      @default(false)
-  createdAt        DateTime     @default(now()) @db.Timestamptz(3)
-  updatedAt        DateTime     @updatedAt @db.Timestamptz(3)
-  sessions         Session[]
-  accounts         Account[]
-  twoFactors       TwoFactor[]
-  invitationsSent  Invitation[]
-  userRoles        UserRole[]
-  userMinistries   UserMinistry[]
-  mediaFiles       MediaFile[]
+  twoFactorEnabled   Boolean        @default(false)
+  createdAt          DateTime       @default(now()) @db.Timestamptz(3)
+  updatedAt          DateTime       @updatedAt @db.Timestamptz(3)
+  sessions           Session[]
+  accounts           Account[]
+  twoFactors         TwoFactor[]
+  invitationsSent    Invitation[]
+  siteApiKeysCreated SiteApiKey[]
+  userRoles          UserRole[]
+  userMinistries     UserMinistry[]
+  mediaFiles         MediaFile[]
 
   @@map("users")
 }
@@ -396,4 +398,21 @@ model MediaFile {
 
   @@index([organizationId, status, createdAt])
   @@map("media_files")
+}
+
+/// Read-only credential the public site uses against `/api/public/v1`. The secret is shown once
+/// at creation; only its SHA-256 is stored. Revoked keys are kept (soft revoke) so they stay audited.
+model SiteApiKey {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  secretHash     String
+  createdById    String?      @db.Uuid
+  createdBy      User?        @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+  revokedAt      DateTime?    @db.Timestamptz(3)
+
+  @@index([organizationId, revokedAt])
+  @@map("site_api_keys")
 }

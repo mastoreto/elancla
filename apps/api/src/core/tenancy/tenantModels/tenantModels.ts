@@ -10,4 +10,5 @@ export const TENANT_MODELS: ReadonlySet<string> = new Set([
   "Ministry",
   "AuditLog",
   "MediaFile",
+  "SiteApiKey",
 ]);
