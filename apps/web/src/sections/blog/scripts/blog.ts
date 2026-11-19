@@ -19,7 +19,9 @@ function initScrollReveal(): void {
   const elements = document.querySelectorAll('[data-reveal]');
 
   if (!('IntersectionObserver' in window)) {
-    elements.forEach((element) => element.classList.add('in'));
+    elements.forEach((element) => {
+      element.classList.add('in');
+    });
     return;
   }
 
@@ -35,7 +37,9 @@ function initScrollReveal(): void {
     { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
   );
 
-  elements.forEach((element) => observer.observe(element));
+  elements.forEach((element) => {
+    observer.observe(element);
+  });
 }
 
 function initReadProgress(signal: AbortSignal): void {
@@ -185,7 +189,9 @@ function initTocActiveState(): void {
     { rootMargin: '-30% 0px -60% 0px', threshold: 0 }
   );
 
-  targets.forEach((target) => observer.observe(target));
+  targets.forEach((target) => {
+    observer.observe(target);
+  });
   setActive(targets[0].id);
 }
 

@@ -12,9 +12,9 @@ function init(): void {
   if (!sections.length) return;
 
   const setActive = (id: string) =>
-    links.forEach((link) =>
-      link.classList.toggle('is-active', link.dataset.target === id)
-    );
+    links.forEach((link) => {
+      link.classList.toggle('is-active', link.dataset.target === id);
+    });
 
   spy = new IntersectionObserver(
     (entries) => {
@@ -23,7 +23,9 @@ function init(): void {
     },
     { rootMargin: '-30% 0px -60% 0px' }
   );
-  sections.forEach((s) => spy?.observe(s));
+  sections.forEach((s) => {
+    spy?.observe(s);
+  });
 }
 
 document.addEventListener('astro:page-load', init);

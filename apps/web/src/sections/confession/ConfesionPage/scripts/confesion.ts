@@ -92,14 +92,16 @@ function init(): void {
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
         const id = (entry.target as HTMLElement).dataset.id;
-        idxLinks.forEach((link) =>
-          link.classList.toggle('is-active', link.dataset.id === id)
-        );
+        idxLinks.forEach((link) => {
+          link.classList.toggle('is-active', link.dataset.id === id);
+        });
       }
     },
     { rootMargin: '-30% 0px -60% 0px' }
   );
-  cards.forEach((card) => spy.observe(card));
+  cards.forEach((card) => {
+    spy.observe(card);
+  });
   signal.addEventListener('abort', () => spy.disconnect());
 
   // Reading progress bar (shared #readprog from the layout).

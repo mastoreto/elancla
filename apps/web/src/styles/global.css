@@ -347,9 +347,7 @@
   ));
 
 /* Enable class-based dark mode */
-@variant dark 
-(
-&:where(.dark, .dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @font-face {
   font-family: "FuturaNo2D";

@@ -31,15 +31,15 @@ export function initCalendar() {
     const buttons = root.querySelectorAll<HTMLButtonElement>(
       `[data-${attr === 'calMonth' ? 'cal-month' : 'cal-ministry'}]`
     );
-    buttons.forEach((button) =>
+    buttons.forEach((button) => {
       button.addEventListener('click', () => {
         set(button.dataset[attr] ?? 'all');
-        buttons.forEach((b) =>
-          b.setAttribute('aria-pressed', String(b === button))
-        );
+        buttons.forEach((b) => {
+          b.setAttribute('aria-pressed', String(b === button));
+        });
         apply();
-      })
-    );
+      });
+    });
   };
 
   bind('calMonth', (value) => (month = value));
