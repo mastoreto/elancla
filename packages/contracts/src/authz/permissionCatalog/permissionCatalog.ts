@@ -97,6 +97,13 @@ export const PERMISSION_CATALOG = {
     scopes: ALL_ONLY,
     dangerous: ["create", "delete"],
   },
+  // Rotating a key is create-new + revoke-old, so there is no `edit`.
+  siteKeys: {
+    resource: "site.keys",
+    actions: ["view", "create", "delete"],
+    scopes: ALL_ONLY,
+    dangerous: ["create", "delete"],
+  },
   // Reading the trail is a power of its own: it shows who did what, and to whom.
   audit: { resource: "audit", actions: ["view"], scopes: ALL_ONLY },
   settings: {
