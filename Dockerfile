@@ -11,9 +11,11 @@ ENV NEXT_TELEMETRY_DISABLED=1
 FROM base AS deps
 COPY package.json bun.lock turbo.json ./
 COPY apps/crm/package.json apps/crm/
+COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
 COPY packages/emails/package.json packages/emails/
 COPY packages/db/package.json packages/db/
+COPY packages/contracts/package.json packages/contracts/
 COPY packages/content/package.json packages/content/
 COPY packages/env/package.json packages/env/
 COPY packages/utils/package.json packages/utils/
