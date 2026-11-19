@@ -19,5 +19,7 @@ export default defineConfig({
   datasource: {
     // Optional so `prisma generate` works without a database.
     url: process.env.DATABASE_MIGRATION_URL,
+    // Only used by `prisma migrate diff --from-migrations` (db:drift); empty elsewhere.
+    shadowDatabaseUrl: process.env.DATABASE_SHADOW_URL,
   },
 });

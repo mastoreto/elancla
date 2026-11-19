@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "bun run --cwd ../../packages/db db:generate && next build",
     "start": "next start",
+    "test": "bun test --path-ignore-patterns 'e2e/**'",
+    "test:e2e": "playwright test",
     "lint": "biome lint --diagnostic-level=warn .",
     "lint:fix": "biome lint --fix .",
     "format": "biome format --write .",
@@ -50,6 +52,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.8",
+    "@playwright/test": "1.65.1",
     "@tailwindcss/postcss": "4.3.5",
     "@types/node": "^22",
     "@types/react": "19.3.0",

@@ -50,6 +50,8 @@ packages/db/prisma/*.db
 .codex
 
 # Browser test artifacts
+apps/crm/playwright-report/
+apps/crm/test-results/
 .playwright-mcp/
 
 # Videos

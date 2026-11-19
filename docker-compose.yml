@@ -4,6 +4,11 @@
 #   docker compose up -d db mailpit s3 s3-init
 #   bun run db:migrate:deploy && bun run db:seed && bun run --filter @ancla/api invite <email> --role admin
 #
+# Tests (BD efímera en tmpfs, aislada de la de desarrollo; puerto POSTGRES_TEST_PORT, default 5434):
+#   bun run test:infra      # db-test + mailpit + s3 (+ buckets)
+#   bun run test:db         # migraciones + seed sobre db-test (variables de .env.test)
+#   bun run test            # unit + integración;  bun run test:e2e  # Playwright
+#
 # Stack completo en contenedores (BD + migración/seed + backoffice):
 #   docker compose --profile app up --build
 #
@@ -38,6 +43,29 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  # BD de test: mismos roles e init que `db`, pero efímera (tmpfs, se pierde al bajar el servicio)
+  # y en otro puerto, así los tests nunca tocan la BD de desarrollo. Solo con `--profile test`.
+  db-test:
+    profiles: ["test"]
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ancla
+      POSTGRES_PASSWORD: ancla
+      POSTGRES_DB: ancla
+      APP_MIGRATOR_PASSWORD: ancla_migrator
+      APP_RUNTIME_PASSWORD: ancla_runtime
+    ports:
+      - "${POSTGRES_TEST_PORT:-5434}:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    volumes:
+      - ./packages/db/docker/init-roles.sh:/docker-entrypoint-initdb.d/init-roles.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ancla -d ancla"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
 
   # Correo de desarrollo (Mailpit): SMTP en 1025, interfaz y API en http://localhost:8025.
   mailpit:
