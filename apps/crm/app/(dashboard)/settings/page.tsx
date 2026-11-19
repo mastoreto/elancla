@@ -16,6 +16,7 @@ const SETTINGS_TABS: readonly SettingsTabValue[] = [
   "bankAccounts",
   "currencies",
   "roles",
+  "website",
   "notifications",
   "account",
 ];
@@ -45,19 +46,27 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
   const api = await createServerApiClient();
   const query = { query: { limit: LIST_LIMIT } };
   // Each list is asked only when the role allows it; `null` tells the panel it is not available.
-  const [meResponse, invitationsResponse, usersResponse, rolesResponse, ministriesResponse] =
-    await Promise.all([
-      api.me.$get(),
-      can(access, PERMISSIONS.invitations.view) ? api.invitations.$get(query) : null,
-      can(access, PERMISSIONS.users.view) ? api.users.$get(query) : null,
-      can(access, PERMISSIONS.roles.view) ? api.roles.$get() : null,
-      can(access, PERMISSIONS.ministryProfile.view) ? api.ministries.$get(query) : null,
-    ]);
+  const [
+    meResponse,
+    invitationsResponse,
+    usersResponse,
+    rolesResponse,
+    ministriesResponse,
+    siteKeysResponse,
+  ] = await Promise.all([
+    api.me.$get(),
+    can(access, PERMISSIONS.invitations.view) ? api.invitations.$get(query) : null,
+    can(access, PERMISSIONS.users.view) ? api.users.$get(query) : null,
+    can(access, PERMISSIONS.roles.view) ? api.roles.$get() : null,
+    can(access, PERMISSIONS.ministryProfile.view) ? api.ministries.$get(query) : null,
+    can(access, PERMISSIONS.siteKeys.view) ? api["site-keys"].$get() : null,
+  ]);
   const me = meResponse.ok ? await meResponse.json() : null;
   const invitations = invitationsResponse?.ok ? (await invitationsResponse.json()).items : null;
   const users = usersResponse?.ok ? (await usersResponse.json()).items : null;
   const roles = rolesResponse?.ok ? await rolesResponse.json() : null;
   const ministries = ministriesResponse?.ok ? (await ministriesResponse.json()).items : null;
+  const siteKeys = siteKeysResponse?.ok ? await siteKeysResponse.json() : null;
   const tab = initialTab ?? defaultTab;
 
   return (
@@ -74,6 +83,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
       ministries={ministries}
       notifications={settingsNotifications}
       roles={roles}
+      siteKeys={siteKeys}
       users={users}
     />
   );

@@ -14,6 +14,7 @@ import {
   CircleDollarSign,
   Folder,
   HeartHandshake,
+  KeyRound,
   type LucideIcon,
   Mail,
   Newspaper,
@@ -53,6 +54,7 @@ const RESOURCE_ICONS: Record<PermissionResource, LucideIcon> = {
   users: Users,
   roles: Shield,
   invitations: Mail,
+  "site.keys": KeyRound,
   audit: ScrollText,
   settings: Sun,
 };
