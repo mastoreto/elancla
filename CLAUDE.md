@@ -274,6 +274,7 @@ Si tocas un componente o página que **no** sigue este patrón (CSS por sección
 - Commits en inglés, estilo Conventional Commits con scope: `refactor(web): rebuild the 404 page on the "obra" design`.
 - **Jamás** añadir `Co-Authored-By` ni "Generated with Claude Code" en commits o PRs.
 - No commitear ni hacer push sin que se pida. Un cambio lógico por commit.
+- Antes del PR `develop → main`: `bun run release` en `develop` (SemVer + `CHANGELOG.md` + tag, ver D-55) y `git push --follow-tags`. Los hooks de Husky no se saltean (`HUSKY=0` / `--no-verify`) salvo emergencia.
 
 ## 10. Checklist antes de dar algo por terminado
 
