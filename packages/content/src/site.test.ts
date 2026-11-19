@@ -4,6 +4,7 @@ import type { PublicClient } from "./publicClient";
 import {
   createPublicClientFromEnv,
   createSiteConfigLoader,
+  readCacheTtlMs,
   SITE_FALLBACK,
   toSiteConfig,
 } from "./site";
@@ -148,9 +149,13 @@ describe("createSiteConfigLoader", () => {
 
 describe("createPublicClientFromEnv", () => {
   test("is null unless the three variables are present", () => {
-    expect(createPublicClientFromEnv({})).toBeNull();
+    const silent = () => {};
+    expect(createPublicClientFromEnv({}, silent)).toBeNull();
     expect(
-      createPublicClientFromEnv({ API_URL: "http://x", SITE_API_KEY: "k" }),
+      createPublicClientFromEnv(
+        { API_URL: "http://x", SITE_API_KEY: "k" },
+        silent,
+      ),
     ).toBeNull();
     expect(
       createPublicClientFromEnv({
@@ -159,5 +164,36 @@ describe("createPublicClientFromEnv", () => {
         SITE_CHURCH_SLUG: "el-ancla",
       }),
     ).not.toBeNull();
+  });
+});
+
+describe("misconfiguration is visible", () => {
+  test("warns naming only the missing variables and the fix command", () => {
+    const warnings: string[] = [];
+    const client = createPublicClientFromEnv(
+      { API_URL: "http://x", SITE_API_KEY: "k" },
+      (message) => warnings.push(message),
+    );
+    expect(client).toBeNull();
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toContain("SITE_CHURCH_SLUG");
+    expect(warnings[0]).not.toContain("API_URL");
+    expect(warnings[0]).toContain("site-key:create");
+  });
+
+  test("does not warn when everything is set", () => {
+    const warnings: string[] = [];
+    createPublicClientFromEnv(
+      { API_URL: "http://x", SITE_API_KEY: "k", SITE_CHURCH_SLUG: "s" },
+      (message) => warnings.push(message),
+    );
+    expect(warnings).toEqual([]);
+  });
+
+  test("reads the cache TTL from the environment with a safe default", () => {
+    expect(readCacheTtlMs({})).toBe(60_000);
+    expect(readCacheTtlMs({ SITE_CONFIG_TTL_MS: "500" })).toBe(500);
+    expect(readCacheTtlMs({ SITE_CONFIG_TTL_MS: "abc" })).toBe(60_000);
+    expect(readCacheTtlMs({ SITE_CONFIG_TTL_MS: "-5" })).toBe(60_000);
   });
 });

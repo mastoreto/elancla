@@ -166,17 +166,45 @@ export function createSiteConfigLoader(
   };
 }
 
-/** `null` unless the three variables are set: a site without them just uses the fallback. */
+export const SITE_ENV_VARS = [
+  "API_URL",
+  "SITE_API_KEY",
+  "SITE_CHURCH_SLUG",
+] as const;
+
+export const SITE_KEY_SETUP_COMMAND =
+  'bun run --filter @ancla/api site-key:create -- --name "web local" --write-env';
+
+/**
+ * `null` unless the three variables are set: a site without them just uses the fallback. The
+ * fallback is silent from the visitor's side, so `warn` names what is missing and how to fix it
+ * (otherwise a status change made in iEkklesia seems to "do nothing").
+ */
 export function createPublicClientFromEnv(
   env: Readonly<Record<string, string | undefined>>,
+  warn: (message: string) => void = (message) => console.warn(message),
 ): PublicClient | null {
-  const { API_URL, SITE_API_KEY, SITE_CHURCH_SLUG } = env;
-  if (!API_URL || !SITE_API_KEY || !SITE_CHURCH_SLUG) return null;
+  const missing = SITE_ENV_VARS.filter((name) => !env[name]);
+  if (missing.length > 0) {
+    warn(
+      `[@ancla/content] ${missing.join(", ")} not set: the site serves its built-in defaults and ` +
+        `ignores iEkklesia (status, contact, hours). Create a key with: ${SITE_KEY_SETUP_COMMAND}`,
+    );
+    return null;
+  }
   return createPublicClient({
-    baseUrl: API_URL,
-    apiKey: SITE_API_KEY,
-    churchSlug: SITE_CHURCH_SLUG,
+    baseUrl: env.API_URL as string,
+    apiKey: env.SITE_API_KEY as string,
+    churchSlug: env.SITE_CHURCH_SLUG as string,
   });
+}
+
+/** `SITE_CONFIG_TTL_MS` (positive integer) shortens the cache, e.g. for E2E; invalid means default. */
+export function readCacheTtlMs(
+  env: Readonly<Record<string, string | undefined>>,
+): number {
+  const parsed = Number(env.SITE_CONFIG_TTL_MS);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : CACHE_TTL_MS;
 }
 
 let defaultLoader: (() => Promise<SiteConfig>) | null = null;
@@ -184,11 +212,13 @@ let defaultLoader: (() => Promise<SiteConfig>) | null = null;
 /**
  * Site configuration merged over SITE_FALLBACK. Fields the API does not provide (lang, title
  * templates, twitter handle, default image) keep the default value. Server side only: it reads
- * `API_URL`, `SITE_API_KEY` and `SITE_CHURCH_SLUG` from the environment.
+ * `API_URL`, `SITE_API_KEY` and `SITE_CHURCH_SLUG` (and optionally `SITE_CONFIG_TTL_MS`) from
+ * the environment; when the first three are missing it warns once per process.
  */
 export function getSiteConfig(): Promise<SiteConfig> {
   defaultLoader ??= createSiteConfigLoader({
     client: createPublicClientFromEnv(process.env),
+    ttlMs: readCacheTtlMs(process.env),
   });
   return defaultLoader();
 }
