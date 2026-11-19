@@ -8,7 +8,23 @@
       "!**/.next",
       "!**/.astro",
       "!**/node_modules",
-      "!packages/contracts/openapi"
+      "!packages/contracts/openapi",
+      "!video",
+      "!.codegraph",
+      "!.impeccable"
     ]
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.astro"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off"
+          }
+        }
+      }
+    }
+  ]
 }

@@ -5,6 +5,11 @@
   "formatter": {
     "lineWidth": 80
   },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
   "javascript": {
     "formatter": {
       "quoteStyle": "single",
