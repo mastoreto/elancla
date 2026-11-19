@@ -126,7 +126,10 @@
       "name": "@ancla/content",
       "version": "1.0.0",
       "dependencies": {
-        "@ancla/db": "*",
+        "@ancla/contracts": "*",
+      },
+      "devDependencies": {
+        "@types/bun": "1.4.4",
       },
     },
     "packages/contracts": {

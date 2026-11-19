@@ -3,4 +3,9 @@
 
 export * from "./access";
 export * from "./blog";
+export {
+  createPublicClient,
+  PublicApiError,
+  type PublicClient,
+} from "./publicClient";
 export * from "./site";

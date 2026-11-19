@@ -10,7 +10,14 @@
     }
   },
   "private": true,
+  "scripts": {
+    "test": "bun test",
+    "check-types": "tsc --noEmit -p tsconfig.json"
+  },
   "dependencies": {
-    "@ancla/db": "*"
+    "@ancla/contracts": "*"
+  },
+  "devDependencies": {
+    "@types/bun": "1.4.4"
   }
 }
