@@ -9,6 +9,8 @@
       "@ancla/utils": ["../../packages/utils/src"],
       "@ancla/content": ["../../packages/content/src"],
       "@ancla/db": ["../../packages/db/src"],
+      "@ancla/api": ["../../apps/api/src"],
+      "@ancla/contracts": ["../../packages/contracts/src"],
       "@ancla/auth": ["../../packages/auth/src/server.ts"],
       "@ancla/auth/client": ["../../packages/auth/src/client.ts"]
     }

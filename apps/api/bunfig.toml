@@ -1,0 +1,2 @@
+[test]
+preload = ["./test/setup/loadEnv.ts", "./test/setup/silenceLogs.ts"]

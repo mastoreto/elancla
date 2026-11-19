@@ -1,0 +1,1 @@
+export { openApiConfig } from "./openApiConfig";
