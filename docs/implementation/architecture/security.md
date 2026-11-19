@@ -39,7 +39,7 @@ Decisiones de origen: D-07, D-08, D-10, D-11, D-16, D-21, D-24, D-25.
 | Autorización | `requirePermission()` / `allowAnySession` / `allowPublic` declarado en cada ruta + policy de recurso en el use case + `scopeWhere` en las consultas. Una ruta sin declaración hace fallar el test de introspección del router (`app.test.ts`); no es un chequeo de arranque. El CRM oculta menú y secciones con `GET /me/permissions`, pero la API es la autoridad |
 | Entrada | Zod `.strict()`; tamaño máximo de body; fechas y montos con formato estricto |
 | Salida | Solo DTOs; `Cache-Control: private, no-store` en toda respuesta autenticada |
-| Rate limit | Better Auth (login, 2FA) con almacenamiento en BD; los endpoints públicos propios (vista previa y aceptación de invitación) usan `core/http/rateLimit` sobre la misma tabla; reglas de Vercel Firewall por ruta sensible. Ambos se llavean por la IP de `X-Forwarded-For`: el proxy de producción debe sobrescribirla (0.8) |
+| Rate limit | Better Auth (login, 2FA) con almacenamiento en BD; los endpoints públicos propios (vista previa y aceptación de invitación) usan `core/http/rateLimit` sobre la misma tabla; reglas de Vercel Firewall por ruta sensible. Ambos se llavean por la IP de `X-Forwarded-For`: el proxy de producción debe sobrescribirla (1.10) |
 | 2FA en login social | El plugin `twoFactor` oficial solo intercepta login por credencial. `socialTwoFactorGuard` (`core/auth`) hace lo mismo tras `/callback/:id` y `/sign-in/social`: borra la sesión recién creada y emite la cookie `two_factor`, de modo que `verifyTotp`/`verifyBackupCode` terminan el login. Replica comportamiento de Better Auth 1.7.25; un test lo cubre de punta a punta |
 | Alta de usuarios | `POST /api/auth/sign-up/email` público responde 404. El único alta es una invitación pendiente: `databaseHooks.user.create.before` rechaza cualquier otro caso (email o Google). Vínculo de cuentas solo explícito |
 | Operaciones sensibles | `freshAge` de 10 min: vincular proveedor, configurar 2FA y crear contraseña exigen sesión reciente (`freshSessionGuard`, `requireFreshSession`) |
@@ -143,7 +143,7 @@ Decisiones de origen: D-07, D-08, D-10, D-11, D-16, D-21, D-24, D-25.
   - `organizationId` es `ON DELETE RESTRICT`: un cascade borraría el log, porque las acciones
     referenciales corren con los privilegios del dueño de la tabla.
   - `ip` es el primer salto de `X-Forwarded-For` y **se puede falsificar** hasta que el proxy de
-    producción (0.8) lo sobrescriba: es una pista, no una prueba. `requestId` sirve para correlacionar,
+    producción (1.10) lo sobrescriba: es una pista, no una prueba. `requestId` sirve para correlacionar,
     no es dato de confianza (el cliente puede mandar el suyo; los hooks reciben el generado por la API).
   - `actorLabel` (email) y el email de los logins fallidos quedan sin poder borrarse: la retención y la
     supresión de datos personales se deciden antes de producción.
