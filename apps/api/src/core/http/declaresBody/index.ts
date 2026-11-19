@@ -1,0 +1,1 @@
+export { declaresBody } from "./declaresBody";
