@@ -8,7 +8,14 @@
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO app_runtime;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO app_runtime;
-REVOKE ALL ON TABLE public._prisma_migrations FROM app_runtime;
+-- Conditional: Prisma's shadow database replays migrations without creating _prisma_migrations.
+DO $$
+BEGIN
+  IF to_regclass('public._prisma_migrations') IS NOT NULL THEN
+    REVOKE ALL ON TABLE public._prisma_migrations FROM app_runtime;
+  END IF;
+END
+$$;
 
 ALTER DEFAULT PRIVILEGES IN SCHEMA public
   GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO app_runtime;

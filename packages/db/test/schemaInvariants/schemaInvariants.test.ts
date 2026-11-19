@@ -4,7 +4,7 @@ import { afterAll, describe, expect, test } from "bun:test";
 import { db } from "../../src";
 
 const MIGRATIONS_TABLE = "_prisma_migrations";
-/** Tables that are not tenant data: Better Auth core, the tenant itself, Prisma bookkeeping. */
+/** Tables that are not tenant data: Better Auth core and plugin tables, the tenant itself, Prisma bookkeeping. */
 const TABLES_WITHOUT_TENANT = new Set([
   MIGRATIONS_TABLE,
   "organizations",
@@ -12,6 +12,8 @@ const TABLES_WITHOUT_TENANT = new Set([
   "sessions",
   "accounts",
   "verifications",
+  "two_factors",
+  "rate_limits",
   // Children reach the tenant through their parent row.
   "site_settings_translations",
 ]);

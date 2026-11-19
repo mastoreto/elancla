@@ -15,7 +15,7 @@ el resumen con el enlace.
 | D-05 | Migraciones versionadas (`prisma migrate`) | aceptada |
 | D-06 | Archivos: Backblaze B2 + CDN de Cloudflare | aceptada |
 | D-07 | Autorización en la capa de servicios; `proxy.ts` solo optimista | aceptada |
-| D-08 | Auth: Google + invitación obligatoria + MFA opcional para todos | aceptada (spike MFA + Google pendiente) |
+| D-08 | Auth: Google y email/contraseña, ambos solo por invitación + MFA opcional para todos | aceptada (implementada en 0.3) |
 | D-09 | RBAC: permisos módulo × acción + alcance | aceptada |
 | D-10 | Auditoría append-only en la misma transacción | aceptada |
 | D-11 | Informes de tesorería para presentar: acceso sin usuario, geocerca en servidor, modalidad virtual | aceptada |
@@ -128,9 +128,15 @@ pero nunca son la única barrera.
 
 ## D-08 — Auth
 
-**Aceptada.** Better Auth con Google como único proveedor; alta solo con invitación pendiente
-(rechazo en el hook de creación de usuario); `twoFactor` (TOTP + códigos de respaldo) **opcional para
-todos**; rate limit activado. Spike pendiente: cómo aplica `twoFactor` sobre login social.
+**Aceptada, implementada en 0.3.** Better Auth con **dos métodos: Google y email/contraseña**, ambos
+**solo por invitación** (hook `databaseHooks.user.create.before`, puerta única de alta; el endpoint
+público `sign-up/email` responde 404). Quien entra por un método puede habilitar el otro desde "Mi
+cuenta": el vínculo es **solo explícito** (`disableImplicitLinking`, mismo email), nunca por
+coincidencia de email al iniciar sesión. Con Google se guarda la foto de perfil (`user.image`).
+`twoFactor` (TOTP + códigos de respaldo) **opcional para todos** y aplica a los dos métodos: el plugin
+oficial solo intercepta login por credencial, por eso un plugin propio (`socialTwoFactorGuard`) cierra
+el login social. Contraseña mínima de 12 caracteres; rate limit con almacenamiento en BD; sesión de 30
+días con `freshAge` de 10 min para operaciones sensibles.
 
 ## D-09 — RBAC
 

@@ -1,24 +1,18 @@
-import { cn } from "@/lib/utils";
-import { LoginForm, LoginHero } from "./components";
+import { AuthFrame, LoginForm } from "./components";
 
-const loginPage = {
-  main: cn("min-h-svh bg-[var(--canvas)] p-0 md:p-8"),
-  frame: cn(
-    "flex min-h-svh gap-2.5 bg-background p-0 md:min-h-[calc(100svh-4rem)] md:rounded-[40px] md:p-2.5",
-    "md:shadow-(--sombra-flotante)",
-  ),
-  formPane: cn("flex flex-[0.8] items-center justify-center p-6 md:p-[30px]"),
-};
+interface LoginPageProps {
+  searchParams: Promise<{ error?: string; invited?: string; reset?: string }>;
+}
 
-export default function LoginPage() {
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const { error, invited, reset } = await searchParams;
   return (
-    <main className={loginPage.main}>
-      <div className={loginPage.frame}>
-        <LoginHero />
-        <div className={loginPage.formPane}>
-          <LoginForm />
-        </div>
-      </div>
-    </main>
+    <AuthFrame>
+      <LoginForm
+        errorCode={error}
+        invitationAccepted={invited === "1"}
+        passwordReset={reset === "1"}
+      />
+    </AuthFrame>
   );
 }

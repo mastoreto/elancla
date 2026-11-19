@@ -6,6 +6,11 @@ const apiEnvSchema = z.object({
   BETTER_AUTH_URL: z.url(),
   // Normalized to a bare origin so it compares equal to the browser's `Origin` header.
   CRM_ORIGIN: z.url().transform((value) => new URL(value).origin),
+  // Empty or missing disables Google sign-in, so local work and tests do not need credentials.
+  GOOGLE_CLIENT_ID: z.string().default(""),
+  GOOGLE_CLIENT_SECRET: z.string().default(""),
+  SMTP_URL: z.string().min(1),
+  MAIL_FROM: z.string().min(1),
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),

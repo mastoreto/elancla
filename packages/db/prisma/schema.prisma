@@ -38,6 +38,7 @@ model Organization {
 
   siteSettings      SiteSettings?
   documentSequences DocumentSequence[]
+  invitations       Invitation[]
 
   @@map("organizations")
 }
@@ -120,16 +121,20 @@ model SiteSettingsTranslation {
 // `role` is a temporary flat role (admin|viewer) used by the CRM guards; phase 0.4 (RBAC) removes it.
 
 model User {
-  id            String    @id @default(uuid(7)) @db.Uuid
-  name          String
-  email         String    @unique
-  emailVerified Boolean   @default(false)
-  image         String?
-  role          String    @default("viewer")
-  createdAt     DateTime  @default(now()) @db.Timestamptz(3)
-  updatedAt     DateTime  @updatedAt @db.Timestamptz(3)
-  sessions      Session[]
-  accounts      Account[]
+  id               String       @id @default(uuid(7)) @db.Uuid
+  name             String
+  email            String       @unique
+  emailVerified    Boolean      @default(false)
+  image            String?
+  role             String       @default("viewer")
+  /// Better Auth two-factor plugin flag.
+  twoFactorEnabled Boolean      @default(false)
+  createdAt        DateTime     @default(now()) @db.Timestamptz(3)
+  updatedAt        DateTime     @updatedAt @db.Timestamptz(3)
+  sessions         Session[]
+  accounts         Account[]
+  twoFactors       TwoFactor[]
+  invitationsSent  Invitation[]
 
   @@map("users")
 }
@@ -179,4 +184,57 @@ model Verification {
 
   @@index([identifier])
   @@map("verifications")
+}
+
+/// Better Auth two-factor plugin table (dist/plugins/two-factor/schema.mjs, v1.7.25).
+model TwoFactor {
+  id                      String    @id @default(uuid(7)) @db.Uuid
+  userId                  String    @db.Uuid
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Encrypted TOTP secret.
+  secret                  String
+  /// Encrypted backup codes.
+  backupCodes             String
+  verified                Boolean   @default(true)
+  failedVerificationCount Int       @default(0)
+  lockedUntil             DateTime? @db.Timestamptz(3)
+
+  @@index([secret])
+  @@index([userId])
+  @@map("two_factors")
+}
+
+/// Better Auth rate limiter storage (core dist/db/get-tables.mjs, v1.7.25).
+model RateLimit {
+  id          String @id @default(uuid(7)) @db.Uuid
+  key         String @unique
+  count       Int
+  /// Milliseconds since epoch.
+  lastRequest BigInt
+
+  @@map("rate_limits")
+}
+
+// ─── Invitations ─────────────────────────────────────────────────────────────
+
+/// Sign-up is invitation-only. Only the SHA-256 of the token is stored.
+model Invitation {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  /// Lowercase.
+  email          String
+  tokenHash      String       @unique
+  /// Temporary flat role (admin|viewer) copied to User.role until phase 0.4.
+  role           String       @default("viewer")
+  invitedById    String?      @db.Uuid
+  invitedBy      User?        @relation(fields: [invitedById], references: [id], onDelete: SetNull)
+  expiresAt      DateTime     @db.Timestamptz(3)
+  acceptedAt     DateTime?    @db.Timestamptz(3)
+  revokedAt      DateTime?    @db.Timestamptz(3)
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime     @updatedAt @db.Timestamptz(3)
+
+  @@index([organizationId, email])
+  @@map("invitations")
 }

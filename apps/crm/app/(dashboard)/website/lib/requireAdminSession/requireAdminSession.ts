@@ -1,4 +1,4 @@
-import { auth } from "@ancla/auth";
+import { getAuth } from "@ancla/api";
 import { headers } from "next/headers";
 import { isDevAuthBypassEnabled } from "@/lib/dev-auth-bypass";
 import { assertAdminSession } from "./assertAdminSession";
@@ -12,6 +12,6 @@ export async function requireAdminSession(): Promise<void> {
   if (isDevAuthBypassEnabled()) {
     return;
   }
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getAuth().api.getSession({ headers: await headers() });
   assertAdminSession(session);
 }

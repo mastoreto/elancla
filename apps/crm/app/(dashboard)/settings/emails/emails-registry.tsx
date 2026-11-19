@@ -1,11 +1,5 @@
+import { InvitationEmail, NoticeEmail, noticeVariants, PasswordResetEmail } from "@ancla/emails";
 import { render } from "@react-email/render";
-import {
-  InvitationEmail,
-  NoticeEmail,
-  noticeVariants,
-  PasswordResetEmail,
-  ReportEmail,
-} from "@/emails";
 
 export const EMAIL_TEMPLATES = {
   invitation: {
@@ -16,7 +10,6 @@ export const EMAIL_TEMPLATES = {
     label: "Contraseña",
     render: () => render(<PasswordResetEmail {...PasswordResetEmail.PreviewProps} />),
   },
-  report: { label: "Informe", render: () => render(<ReportEmail {...ReportEmail.PreviewProps} />) },
   notice: { label: "Avisos", render: () => render(<NoticeEmail {...noticeVariants.approvals} />) },
   budget: {
     label: "Presupuesto",

@@ -1,5 +1,6 @@
 const ONE_YEAR_IN_SECONDS = 31_536_000;
 const HSTS_MAX_AGE = ONE_YEAR_IN_SECONDS * 2;
+const GOOGLE_AVATAR_ORIGIN = "https://lh3.googleusercontent.com";
 const ASSEMBLY_REPORT_PATH_PREFIX = "/informe";
 /** Features the CRM never uses; denied everywhere. Geolocation is re-enabled only for /informe. */
 const DENIED_FEATURES = [
@@ -29,7 +30,8 @@ function buildContentSecurityPolicy({
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDevelopment ? " 'unsafe-eval'" : ""}`,
     // Radix UI positions popovers with inline styles, so styles cannot be nonce-only.
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' blob: data:",
+    // Google profile pictures (copied to our own storage in phase 0.6).
+    `img-src 'self' blob: data: ${GOOGLE_AVATAR_ORIGIN}`,
     "font-src 'self'",
     "connect-src 'self'",
     "object-src 'none'",

@@ -4,7 +4,8 @@ export type SettingsTabValue =
   | "bankAccounts"
   | "currencies"
   | "roles"
-  | "notifications";
+  | "notifications"
+  | "account";
 
 export interface SettingsSelectOption {
   value: string;

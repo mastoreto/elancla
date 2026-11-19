@@ -1,4 +1,4 @@
-import { auth } from "@ancla/auth";
+import { getAuth } from "@ancla/api";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DashboardLayoutShell } from "@/components/dashboard";
@@ -10,7 +10,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     return <DashboardLayoutShell>{children}</DashboardLayoutShell>;
   }
 
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getAuth().api.getSession({ headers: await headers() });
 
   if (!session) {
     redirect("/");

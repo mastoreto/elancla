@@ -39,5 +39,3 @@ export const settingsUsers: SettingsUser[] = [
     lastAccess: "hace 1 semana",
   },
 ];
-
-export const PENDING_INVITATIONS = 1;

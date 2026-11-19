@@ -39,7 +39,10 @@ Decisiones de origen: D-07, D-08, D-10, D-11, D-16, D-21, D-24, D-25.
 | Autorización | `requirePermission()` declarado en cada ruta + policy de recurso en el use case. Ruta sin permiso declarado no arranca (test) |
 | Entrada | Zod `.strict()`; tamaño máximo de body; fechas y montos con formato estricto |
 | Salida | Solo DTOs; `Cache-Control: private, no-store` en toda respuesta autenticada |
-| Rate limit | Better Auth (login, 2FA) con almacenamiento en BD; reglas de Vercel Firewall por ruta sensible |
+| Rate limit | Better Auth (login, 2FA) con almacenamiento en BD; los endpoints públicos propios (vista previa y aceptación de invitación) usan `core/http/rateLimit` sobre la misma tabla; reglas de Vercel Firewall por ruta sensible. Ambos se llavean por la IP de `X-Forwarded-For`: el proxy de producción debe sobrescribirla (0.8) |
+| 2FA en login social | El plugin `twoFactor` oficial solo intercepta login por credencial. `socialTwoFactorGuard` (`core/auth`) hace lo mismo tras `/callback/:id` y `/sign-in/social`: borra la sesión recién creada y emite la cookie `two_factor`, de modo que `verifyTotp`/`verifyBackupCode` terminan el login. Replica comportamiento de Better Auth 1.7.25; un test lo cubre de punta a punta |
+| Alta de usuarios | `POST /api/auth/sign-up/email` público responde 404. El único alta es una invitación pendiente: `databaseHooks.user.create.before` rechaza cualquier otro caso (email o Google). Vínculo de cuentas solo explícito |
+| Operaciones sensibles | `freshAge` de 10 min: vincular proveedor, configurar 2FA y crear contraseña exigen sesión reciente (`freshSessionGuard`, `requireFreshSession`) |
 | Errores | Problem Details sin detalles internos; `requestId` para correlacionar |
 
 ## 2. Web ↔ API (contenido público)

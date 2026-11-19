@@ -13,8 +13,14 @@ import {
 import { isDevAuthBypassEnabled } from "./lib/dev-auth-bypass";
 import { buildSecurityHeaders } from "./lib/security";
 
-// Pages reachable without a session (attendee-facing assembly reports).
-const PUBLIC_ROUTE_SEGMENTS: readonly string[] = ["informe"];
+// Pages reachable without a session: attendee-facing assembly reports and the account flows
+// (accept an invitation, finish a two-factor login, recover a password).
+const PUBLIC_ROUTE_SEGMENTS: readonly string[] = [
+  "informe",
+  "invitation",
+  "two-factor",
+  "reset-password",
+];
 
 function routeRequest(request: NextRequest, requestHeaders: Headers): NextResponse {
   const { pathname } = request.nextUrl;

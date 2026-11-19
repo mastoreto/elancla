@@ -12,6 +12,12 @@ describe("buildSecurityHeaders", () => {
     expect(csp).toContain("upgrade-insecure-requests");
   });
 
+  test("allows Google profile pictures and nothing else remote in img-src", () => {
+    const csp = buildSecurityHeaders(base)["Content-Security-Policy"] as string;
+    const imgSrc = csp.split("; ").find((directive) => directive.startsWith("img-src"));
+    expect(imgSrc).toBe("img-src 'self' blob: data: https://lh3.googleusercontent.com");
+  });
+
   test("allows eval and skips upgrade-insecure-requests only in development", () => {
     const csp = buildSecurityHeaders({ ...base, isDevelopment: true })[
       "Content-Security-Policy"
