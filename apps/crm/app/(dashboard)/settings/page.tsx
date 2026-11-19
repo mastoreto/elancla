@@ -1,9 +1,10 @@
+import { notFound } from "next/navigation";
 import { createServerApiClient } from "@/lib/api/createServerApiClient";
-import { ministries } from "@/lib/data";
+import { can, canAny } from "@/lib/authz/can";
+import { getAccess } from "@/lib/authz/getAccess";
 import { SettingsPageContent } from "./components/settings-page-content";
 import { settingsBankAccounts, settingsCurrencies, settingsNotifications } from "./data/finance";
-import { settingsRoles } from "./data/roles";
-import { settingsUsers } from "./data/users";
+import { SETTINGS_TAB_PERMISSIONS } from "./data/settings-tabs";
 import type { SettingsTabValue } from "./types";
 
 const CHURCH_NAME = "Iglesia El Ancla";
@@ -17,45 +18,62 @@ const SETTINGS_TABS: readonly SettingsTabValue[] = [
   "notifications",
   "account",
 ];
+const LIST_LIMIT = "100";
+const FALLBACK_TAB: SettingsTabValue = "account";
 
 interface SettingsPageProps {
   searchParams: Promise<{ tab?: string | string[] }>;
 }
 
-function toSettingsTab(value: string | string[] | undefined): SettingsTabValue {
-  return SETTINGS_TABS.find((tab) => tab === value) ?? "users";
+function toSettingsTab(value: string | string[] | undefined): SettingsTabValue | undefined {
+  return SETTINGS_TABS.find((tab) => tab === value);
 }
 
 /** biome-ignore lint/style/noDefaultExport: Next.js App Router page files require default exports. */
 export default async function SettingsPage({ searchParams }: SettingsPageProps) {
-  const initialTab = toSettingsTab((await searchParams).tab);
+  const access = await getAccess();
+  if (!access) notFound();
+
+  // A person without settings permissions still reaches "Mi cuenta" (their own profile).
+  const requested = toSettingsTab((await searchParams).tab);
+  const initialTab =
+    requested && canAny(access, SETTINGS_TAB_PERMISSIONS[requested]) ? requested : undefined;
+  const defaultTab =
+    SETTINGS_TABS.find((tab) => canAny(access, SETTINGS_TAB_PERMISSIONS[tab])) ?? FALLBACK_TAB;
+
   const api = await createServerApiClient();
-  const [meResponse, invitationsResponse] = await Promise.all([
-    api.me.$get(),
-    api.invitations.$get({ query: {} }),
-  ]);
+  const query = { query: { limit: LIST_LIMIT } };
+  // Each list is asked only when the role allows it; `null` tells the panel it is not available.
+  const [meResponse, invitationsResponse, usersResponse, rolesResponse, ministriesResponse] =
+    await Promise.all([
+      api.me.$get(),
+      can(access, "invitations:view") ? api.invitations.$get(query) : null,
+      can(access, "users:view") ? api.users.$get(query) : null,
+      can(access, "roles:view") ? api.roles.$get() : null,
+      can(access, "ministries.profile:view") ? api.ministries.$get(query) : null,
+    ]);
   const me = meResponse.ok ? await meResponse.json() : null;
-  // A non-admin gets a 403: the panel then explains that only administrators invite.
-  const invitations = invitationsResponse.ok ? (await invitationsResponse.json()).items : null;
+  const invitations = invitationsResponse?.ok ? (await invitationsResponse.json()).items : null;
+  const users = usersResponse?.ok ? (await usersResponse.json()).items : null;
+  const roles = rolesResponse?.ok ? await rolesResponse.json() : null;
+  const ministries = ministriesResponse?.ok ? (await ministriesResponse.json()).items : null;
+  const tab = initialTab ?? defaultTab;
 
   return (
     <SettingsPageContent
       // A new ?tab= (e.g. "Mi cuenta" from the sidebar menu) remounts the content on that tab.
-      key={initialTab}
-      initialTab={initialTab}
+      key={tab}
+      initialTab={tab}
       invitations={invitations}
       me={me}
       bankAccounts={settingsBankAccounts}
       churchName={CHURCH_NAME}
       churchSubtitle={CHURCH_SUBTITLE}
       currencies={settingsCurrencies}
-      ministryOptions={ministries.map((ministry) => ({
-        value: ministry.name,
-        label: ministry.name,
-      }))}
+      ministries={ministries}
       notifications={settingsNotifications}
-      roles={settingsRoles}
-      users={settingsUsers}
+      roles={roles}
+      users={users}
     />
   );
 }

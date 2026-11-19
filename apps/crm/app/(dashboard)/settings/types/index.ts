@@ -1,3 +1,5 @@
+import type { Permission, PermissionScope } from "@ancla/contracts";
+
 export type SettingsTabValue =
   | "users"
   | "church"
@@ -12,48 +14,10 @@ export interface SettingsSelectOption {
   label: string;
 }
 
-export type RoleProfile = "admin" | "treasury" | "leader" | "reader";
-
-export type PermissionModuleId =
-  | "movements"
-  | "requests"
-  | "vouchers"
-  | "projects"
-  | "budgets"
-  | "voting"
-  | "reports"
-  | "content"
-  | "settings";
-
-export type PermissionActionId = "view" | "create" | "edit" | "approve" | "delete";
-
-/** Actions granted on each module. */
-export type PermissionGrid = Record<PermissionModuleId, PermissionActionId[]>;
+/** The cells a role grants: permission to its scope. A missing key means "not granted". */
+export type PermissionGrid = Partial<Record<Permission, PermissionScope>>;
 
 export type PermissionPresetId = "readonly" | "operational" | "full";
-
-export interface SettingsRole {
-  id: string;
-  name: string;
-  profile: RoleProfile;
-  description: string;
-  /** Short chips describing where the role can act. */
-  scope: string[];
-  membersCount: number;
-  permissions: PermissionGrid;
-}
-
-export type SettingsAvatarTone = "gold" | "rose" | "green" | "ink";
-
-export interface SettingsUser {
-  id: string;
-  name: string;
-  email: string;
-  initials: string;
-  tone: SettingsAvatarTone;
-  role: RoleProfile;
-  lastAccess: string;
-}
 
 export interface BankAccountSetting {
   id: string;

@@ -1,7 +1,9 @@
 import { cn } from "@/lib/utils";
 
 const settingsToggleSettingsPage = {
-  label: cn("relative inline-flex shrink-0 cursor-pointer"),
+  label: cn(
+    "relative inline-flex shrink-0 cursor-pointer has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60",
+  ),
   input: cn("peer sr-only"),
   track: cn(
     "relative inline-block rounded-full bg-secondary transition",
@@ -17,6 +19,7 @@ const settingsToggleSettingsPage = {
 interface SettingsToggleProps {
   checked: boolean;
   label: string;
+  disabled?: boolean;
   size?: "small" | "large";
   onCheckedChange: (checked: boolean) => void;
 }
@@ -25,6 +28,7 @@ interface SettingsToggleProps {
 export function SettingsToggle({
   checked,
   label,
+  disabled,
   size = "small",
   onCheckedChange,
 }: SettingsToggleProps) {
@@ -34,6 +38,7 @@ export function SettingsToggle({
         aria-label={label}
         checked={checked}
         className={settingsToggleSettingsPage.input}
+        disabled={disabled}
         onChange={(event) => onCheckedChange(event.target.checked)}
         type="checkbox"
       />

@@ -1,7 +1,10 @@
 "use client";
 
+import { ADMIN_ROLE_KEY, PERMISSION_RESOURCES, type RoleDto } from "@ancla/contracts";
 import { PencilLine, Plus, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 import { BoardButton } from "@/components/dashboard/board/board-button";
 import { BoardCard, BoardCardHeader } from "@/components/dashboard/board/board-card";
 import { BoardConfirmDialog } from "@/components/dashboard/board/board-confirm-dialog";
@@ -12,18 +15,24 @@ import {
   BoardTableRow,
 } from "@/components/dashboard/board/board-table";
 import { RowIconButton, rowIconButtonClass } from "@/components/dashboard/board/row-icon-button";
+import { StatusPill } from "@/components/dashboard/board/status-pill";
+import { apiClient } from "@/lib/api/apiClient";
+import { useAccess } from "@/lib/authz/AccessProvider";
+import { can } from "@/lib/authz/can";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
-import type { SettingsRole } from "../types";
-import { RoleProfilePill } from "./role-profile-pill";
+import { PERMISSION_RESOURCE_INFO } from "../data/permission-labels";
+import { describeApiFailure } from "../utils";
 
-const COLUMNS = "1fr 110px 1.5fr 2.4fr 70px 84px";
-const HEADERS = ["Rol", "Perfil", "Descripción", "Alcance", "Usuarios", ""];
+const COLUMNS = "1fr 1.5fr 2.4fr 70px 84px";
+const HEADERS = ["Rol", "Descripción", "Alcance", "Usuarios", ""];
 const PAGE_SIZE = 8;
+const MAX_SCOPE_CHIPS = 5;
 
 const rolesPanelSettingsPage = {
   card: cn("flex flex-col gap-1 p-5"),
   header: cn("[&>div:first-child]:flex-1"),
+  nameCell: cn("flex min-w-0 flex-col items-start gap-1"),
   name: cn("font-bold"),
   description: cn("text-[13.5px] leading-normal text-[var(--tinta-suave)]"),
   scope: cn("flex flex-wrap gap-1.5"),
@@ -37,72 +46,105 @@ const rolesPanelSettingsPage = {
   buttonIcon: cn("size-4"),
 };
 
-interface RolesPanelProps {
-  roles: SettingsRole[];
-  onDelete: (roleId: string) => void;
+/** Resource names a role touches, in catalog order; the admin role touches everything. */
+function summarizeScope(role: RoleDto): string[] {
+  if (role.key === ADMIN_ROLE_KEY) return ["Todo el sistema"];
+  const touched = PERMISSION_RESOURCES.filter((resource) =>
+    role.grants.some((grant) => grant.resource === resource),
+  ).map((resource) => PERMISSION_RESOURCE_INFO[resource].label);
+  if (touched.length <= MAX_SCOPE_CHIPS) return touched;
+  return [...touched.slice(0, MAX_SCOPE_CHIPS), `+${touched.length - MAX_SCOPE_CHIPS}`];
 }
 
-export function RolesPanel({ roles, onDelete }: RolesPanelProps) {
+interface RolesPanelProps {
+  roles: RoleDto[];
+}
+
+export function RolesPanel({ roles }: RolesPanelProps) {
+  const router = useRouter();
+  const access = useAccess();
   const [page, setPage] = useState(1);
   const pageCount = Math.max(1, Math.ceil(roles.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const visible = roles.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
+  async function remove(role: RoleDto): Promise<void> {
+    const response = await apiClient.roles[":id"].$delete({ param: { id: role.id } });
+    if (!response.ok) {
+      toast.error(describeApiFailure(response.status, "El rol todavía tiene personas asignadas."));
+      return;
+    }
+    toast.success("Rol eliminado");
+    router.refresh();
+  }
+
   return (
     <BoardCard className={rolesPanelSettingsPage.card}>
       <BoardCardHeader
         action={
-          <BoardButton
-            href={getChurchRoutePath("settings", "roles", "new")}
-            size="sm"
-            variant="soft"
-          >
-            <Plus aria-hidden="true" className={rolesPanelSettingsPage.buttonIcon} />
-            Nuevo rol
-          </BoardButton>
+          can(access, "roles:create") ? (
+            <BoardButton
+              href={getChurchRoutePath("settings", "roles", "new")}
+              size="sm"
+              variant="soft"
+            >
+              <Plus aria-hidden="true" className={rolesPanelSettingsPage.buttonIcon} />
+              Nuevo rol
+            </BoardButton>
+          ) : null
         }
         subtitle="Organiza perfiles operativos para limitar alcance, aprobaciones y auditoría"
         title="Roles y permisos"
       />
       <BoardTableHead columns={COLUMNS} labels={HEADERS} />
       <BoardTableList>
-        {visible.map((role) => (
-          <BoardTableRow columns={COLUMNS} key={role.id}>
-            <span className={rolesPanelSettingsPage.name}>{role.name}</span>
-            <RoleProfilePill profile={role.profile} />
-            <span className={rolesPanelSettingsPage.description}>{role.description}</span>
-            <div className={rolesPanelSettingsPage.scope}>
-              {role.scope.map((item) => (
-                <span className={rolesPanelSettingsPage.scopeChip} key={item}>
-                  {item}
-                </span>
-              ))}
-            </div>
-            <b className={rolesPanelSettingsPage.count}>{role.membersCount}</b>
-            <div className={rolesPanelSettingsPage.actions}>
-              <RowIconButton
-                href={getChurchRoutePath("settings", "roles", role.id, "edit")}
-                label={`Editar ${role.name}`}
-              >
-                <PencilLine aria-hidden="true" className={rolesPanelSettingsPage.icon} />
-              </RowIconButton>
-              <BoardConfirmDialog
-                description={`El rol ${role.name} se eliminará. Las personas que lo tienen deberán asignarse a otro rol.`}
-                onConfirm={() => onDelete(role.id)}
-                title="Eliminar rol"
-                trigger={
-                  <button
-                    aria-label={`Eliminar ${role.name}`}
-                    className={rowIconButtonClass}
-                    type="button"
-                  >
-                    <Trash2 aria-hidden="true" className={rolesPanelSettingsPage.icon} />
-                  </button>
-                }
-              />
-            </div>
-          </BoardTableRow>
-        ))}
+        {visible.map((role) => {
+          const isSeeded = role.key !== null;
+          const canDelete = !isSeeded && role.memberCount === 0 && can(access, "roles:delete");
+          return (
+            <BoardTableRow columns={COLUMNS} key={role.id}>
+              <div className={rolesPanelSettingsPage.nameCell}>
+                <span className={rolesPanelSettingsPage.name}>{role.name}</span>
+                {role.key === ADMIN_ROLE_KEY ? (
+                  <StatusPill tone="ink">Acceso total</StatusPill>
+                ) : null}
+              </div>
+              <span className={rolesPanelSettingsPage.description}>{role.description}</span>
+              <div className={rolesPanelSettingsPage.scope}>
+                {summarizeScope(role).map((item) => (
+                  <span className={rolesPanelSettingsPage.scopeChip} key={item}>
+                    {item}
+                  </span>
+                ))}
+              </div>
+              <b className={rolesPanelSettingsPage.count}>{role.memberCount}</b>
+              <div className={rolesPanelSettingsPage.actions}>
+                <RowIconButton
+                  href={getChurchRoutePath("settings", "roles", role.id, "edit")}
+                  label={`Editar ${role.name}`}
+                >
+                  <PencilLine aria-hidden="true" className={rolesPanelSettingsPage.icon} />
+                </RowIconButton>
+                {canDelete ? (
+                  <BoardConfirmDialog
+                    description={`El rol ${role.name} se eliminará. Solo se puede eliminar si nadie lo tiene asignado.`}
+                    onConfirm={() => void remove(role)}
+                    title="Eliminar rol"
+                    trigger={
+                      <button
+                        aria-label={`Eliminar ${role.name}`}
+                        className={rowIconButtonClass}
+                        type="button"
+                      >
+                        <Trash2 aria-hidden="true" className={rolesPanelSettingsPage.icon} />
+                      </button>
+                    }
+                  />
+                ) : null}
+              </div>
+            </BoardTableRow>
+          );
+        })}
       </BoardTableList>
       <BoardPagination
         onPageChange={setPage}

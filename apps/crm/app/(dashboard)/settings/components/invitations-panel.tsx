@@ -1,6 +1,6 @@
 "use client";
 
-import type { InvitationDto, InvitationStatus } from "@ancla/contracts";
+import type { InvitationDto, InvitationStatus, RoleDto } from "@ancla/contracts";
 import { Send, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -14,11 +14,13 @@ import {
 import { RowIconButton, rowIconButtonClass } from "@/components/dashboard/board/row-icon-button";
 import { StatusPill, type StatusPillTone } from "@/components/dashboard/board/status-pill";
 import { apiClient } from "@/lib/api/apiClient";
+import { useAccess } from "@/lib/authz/AccessProvider";
+import { can } from "@/lib/authz/can";
 import { cn } from "@/lib/utils";
-import { INVITATION_ROLE_LABELS, INVITATION_STATUS_LABELS } from "../data/invitation-roles";
+import { INVITATION_STATUS_LABELS } from "../data/invitation-status";
 
 const COLUMNS = "1.6fr 1fr 1fr 1fr 84px";
-const HEADERS = ["Correo", "Rol", "Vence", "Estado", ""];
+const HEADERS = ["Correo", "Roles", "Vence", "Estado", ""];
 
 const STATUS_TONES = {
   pending: "gold",
@@ -41,12 +43,25 @@ const invitationsPanelSettingsPage = {
 const dateFormat = new Intl.DateTimeFormat("es", { day: "numeric", month: "short" });
 
 interface InvitationsPanelProps {
-  /** `null` when the caller is not an administrator (the API answered 403). */
+  /** `null` when the caller may not see invitations (the API answered 403). */
   invitations: InvitationDto[] | null;
+  /** To name the roles an invitation carries; `null` without `roles:view`. */
+  roles: RoleDto[] | null;
 }
 
-export function InvitationsPanel({ invitations }: InvitationsPanelProps) {
+function describeRoles(invitation: InvitationDto, roles: RoleDto[] | null): string {
+  if (!roles) return `${invitation.roleIds.length}`;
+  const names = invitation.roleIds
+    .map((id) => roles.find((role) => role.id === id)?.name)
+    .filter(Boolean);
+  return names.join(", ") || "—";
+}
+
+export function InvitationsPanel({ invitations, roles }: InvitationsPanelProps) {
   const router = useRouter();
+  const access = useAccess();
+  const canResend = can(access, "invitations:create");
+  const canRevoke = can(access, "invitations:delete");
 
   async function run(action: () => Promise<Response>, success: string) {
     const response = await action();
@@ -63,7 +78,7 @@ export function InvitationsPanel({ invitations }: InvitationsPanelProps) {
       <h2 className={invitationsPanelSettingsPage.title}>Invitaciones</h2>
       {invitations === null ? (
         <p className={invitationsPanelSettingsPage.empty}>
-          Solo los administradores pueden ver y enviar invitaciones.
+          Tu rol no permite ver ni enviar invitaciones.
         </p>
       ) : invitations.length === 0 ? (
         <p className={invitationsPanelSettingsPage.empty}>Todavía no hay invitaciones.</p>
@@ -77,7 +92,7 @@ export function InvitationsPanel({ invitations }: InvitationsPanelProps) {
                 <BoardTableRow columns={COLUMNS} key={invitation.id}>
                   <span className={invitationsPanelSettingsPage.email}>{invitation.email}</span>
                   <span className={invitationsPanelSettingsPage.muted}>
-                    {INVITATION_ROLE_LABELS[invitation.role]}
+                    {describeRoles(invitation, roles)}
                   </span>
                   <span className={invitationsPanelSettingsPage.muted}>
                     {dateFormat.format(new Date(invitation.expiresAt))}
@@ -89,49 +104,49 @@ export function InvitationsPanel({ invitations }: InvitationsPanelProps) {
                     {INVITATION_STATUS_LABELS[invitation.status]}
                   </StatusPill>
                   <div className={invitationsPanelSettingsPage.actions}>
-                    {canAct ? (
-                      <>
-                        <RowIconButton
-                          label={`Reenviar a ${invitation.email}`}
-                          onClick={() =>
-                            run(
-                              () =>
-                                apiClient.invitations[":id"].resend.$post({
-                                  param: { id: invitation.id },
-                                }),
-                              "Invitación reenviada",
-                            )
-                          }
-                        >
-                          <Send aria-hidden="true" className={invitationsPanelSettingsPage.icon} />
-                        </RowIconButton>
-                        <BoardConfirmDialog
-                          confirmLabel="Revocar"
-                          description={`El enlace enviado a ${invitation.email} dejará de funcionar.`}
-                          onConfirm={() =>
-                            run(
-                              () =>
-                                apiClient.invitations[":id"].revoke.$post({
-                                  param: { id: invitation.id },
-                                }),
-                              "Invitación revocada",
-                            )
-                          }
-                          title="Revocar invitación"
-                          trigger={
-                            <button
-                              aria-label={`Revocar ${invitation.email}`}
-                              className={rowIconButtonClass}
-                              type="button"
-                            >
-                              <Trash2
-                                aria-hidden="true"
-                                className={invitationsPanelSettingsPage.icon}
-                              />
-                            </button>
-                          }
-                        />
-                      </>
+                    {canAct && canResend ? (
+                      <RowIconButton
+                        label={`Reenviar a ${invitation.email}`}
+                        onClick={() =>
+                          run(
+                            () =>
+                              apiClient.invitations[":id"].resend.$post({
+                                param: { id: invitation.id },
+                              }),
+                            "Invitación reenviada",
+                          )
+                        }
+                      >
+                        <Send aria-hidden="true" className={invitationsPanelSettingsPage.icon} />
+                      </RowIconButton>
+                    ) : null}
+                    {canAct && canRevoke ? (
+                      <BoardConfirmDialog
+                        confirmLabel="Revocar"
+                        description={`El enlace enviado a ${invitation.email} dejará de funcionar.`}
+                        onConfirm={() =>
+                          run(
+                            () =>
+                              apiClient.invitations[":id"].revoke.$post({
+                                param: { id: invitation.id },
+                              }),
+                            "Invitación revocada",
+                          )
+                        }
+                        title="Revocar invitación"
+                        trigger={
+                          <button
+                            aria-label={`Revocar ${invitation.email}`}
+                            className={rowIconButtonClass}
+                            type="button"
+                          >
+                            <Trash2
+                              aria-hidden="true"
+                              className={invitationsPanelSettingsPage.icon}
+                            />
+                          </button>
+                        }
+                      />
                     ) : null}
                   </div>
                 </BoardTableRow>

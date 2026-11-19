@@ -2,7 +2,9 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const settingsCheckSettingsPage = {
-  label: cn("relative inline-flex cursor-pointer items-center"),
+  label: cn(
+    "relative inline-flex cursor-pointer items-center has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60",
+  ),
   input: cn("peer sr-only"),
   box: cn(
     "inline-flex size-[22px] items-center justify-center rounded-[7px] text-white transition",
@@ -17,17 +19,19 @@ const settingsCheckSettingsPage = {
 interface SettingsCheckProps {
   checked: boolean;
   label: string;
+  disabled?: boolean;
   onCheckedChange: (checked: boolean) => void;
 }
 
 /** 22 px rose checkbox used by the permission matrix and the notification rules. */
-export function SettingsCheck({ checked, label, onCheckedChange }: SettingsCheckProps) {
+export function SettingsCheck({ checked, label, disabled, onCheckedChange }: SettingsCheckProps) {
   return (
     <label className={settingsCheckSettingsPage.label}>
       <input
         aria-label={label}
         checked={checked}
         className={settingsCheckSettingsPage.input}
+        disabled={disabled}
         onChange={(event) => onCheckedChange(event.target.checked)}
         type="checkbox"
       />

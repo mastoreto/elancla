@@ -1,10 +1,17 @@
+export { describeApiFailure } from "./api-errors";
 export {
   applyPreset,
   countActivePermissions,
   detectPreset,
-  hasAction,
-  isModuleFull,
+  EMPTY_GRID,
+  isResourceFull,
+  NEW_ROLE_GRID,
+  PERMISSION_PRESETS,
+  scopeOfCell,
+  setScope,
   TOTAL_PERMISSIONS,
+  toGrants,
+  toGrid,
   toggleAction,
-  toggleModule,
+  toggleResource,
 } from "./permissions";

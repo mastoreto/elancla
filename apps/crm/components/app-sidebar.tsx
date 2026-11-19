@@ -1,5 +1,6 @@
 "use client";
 
+import type { Permission } from "@ancla/contracts";
 import {
   ArrowLeftRight,
   Boxes,
@@ -42,6 +43,9 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { useAccess } from "@/lib/authz/AccessProvider";
+import { type AccessSnapshot, canAny } from "@/lib/authz/can";
+import { ROUTE_PERMISSIONS } from "@/lib/authz/routePermissions";
 import { churchToDashboardRouteMap, getChurchRoutePath } from "@/lib/church";
 import { moneyRequests } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -49,11 +53,15 @@ import { type SidebarUser, SidebarUserMenu } from "./sidebar-user-menu";
 
 type NavigationIcon = React.ComponentType<{ className?: string }>;
 
+/** Any one of these shows the item; an empty list shows it to every signed-in user. */
+type Requires = readonly Permission[];
+
 type NavigationLinkItem = {
   type: "link";
   title: string;
   url: string;
   icon: NavigationIcon;
+  requires: Requires;
   badge?: number;
 };
 
@@ -63,7 +71,13 @@ type NavigationGroupItem = {
   defaultOpen?: boolean;
   title: string;
   icon: NavigationIcon;
-  items: { title: string; url: string | null; icon: NavigationIcon; soon?: boolean }[];
+  items: {
+    title: string;
+    url: string | null;
+    icon: NavigationIcon;
+    requires: Requires;
+    soon?: boolean;
+  }[];
 };
 
 type NavigationItem = NavigationLinkItem | NavigationGroupItem;
@@ -73,50 +87,127 @@ type NavigationSection = {
   items: NavigationItem[];
 };
 
+/**
+ * The menu the person may see: items without permission disappear, and so do groups and sections
+ * left empty. The server guards each route as well, so hiding is a convenience, not security.
+ */
+function filterNavigation(
+  sections: NavigationSection[],
+  access: AccessSnapshot,
+): NavigationSection[] {
+  return sections
+    .map((section) => ({
+      ...section,
+      items: section.items.flatMap((item): NavigationItem[] => {
+        if (item.type === "link") return canAny(access, item.requires) ? [item] : [];
+        const items = item.items.filter((subItem) => canAny(access, subItem.requires));
+        return items.length > 0 ? [{ ...item, items }] : [];
+      }),
+    }))
+    .filter((section) => section.items.length > 0);
+}
+
 const pendingRequestsCount = moneyRequests.filter((request) => request.status === "pending").length;
 
 const navigationSections: NavigationSection[] = [
   {
     label: "Tesorería",
     items: [
-      { type: "link", title: "Resumen", url: getChurchRoutePath("resume"), icon: LayoutDashboard },
+      {
+        type: "link",
+        title: "Resumen",
+        url: getChurchRoutePath("resume"),
+        icon: LayoutDashboard,
+        requires: ROUTE_PERMISSIONS.resume,
+      },
       {
         type: "link",
         title: "Movimientos",
         url: getChurchRoutePath("movements"),
         icon: ArrowLeftRight,
+        requires: ROUTE_PERMISSIONS.movements,
       },
       {
         type: "link",
         title: "Solicitudes",
         url: getChurchRoutePath("requests"),
         icon: HandCoins,
+        requires: ROUTE_PERMISSIONS.requests,
         badge: pendingRequestsCount > 0 ? pendingRequestsCount : undefined,
       },
-      { type: "link", title: "Boletas", url: getChurchRoutePath("receipts"), icon: Receipt },
-      { type: "link", title: "Comprobantes", url: getChurchRoutePath("vouchers"), icon: FileText },
-      { type: "link", title: "Proyectos", url: getChurchRoutePath("projects"), icon: FolderKanban },
+      {
+        type: "link",
+        title: "Boletas",
+        url: getChurchRoutePath("receipts"),
+        icon: Receipt,
+        requires: ROUTE_PERMISSIONS.receipts,
+      },
+      {
+        type: "link",
+        title: "Comprobantes",
+        url: getChurchRoutePath("vouchers"),
+        icon: FileText,
+        requires: ROUTE_PERMISSIONS.vouchers,
+      },
+      {
+        type: "link",
+        title: "Proyectos",
+        url: getChurchRoutePath("projects"),
+        icon: FolderKanban,
+        requires: ROUTE_PERMISSIONS.projects,
+      },
       {
         type: "link",
         title: "Presupuestos",
         url: getChurchRoutePath("budgets"),
         icon: PiggyBank,
+        requires: ROUTE_PERMISSIONS.budgets,
       },
-      { type: "link", title: "Inventario", url: getChurchRoutePath("inventory"), icon: Boxes },
+      {
+        type: "link",
+        title: "Inventario",
+        url: getChurchRoutePath("inventory"),
+        icon: Boxes,
+        requires: ROUTE_PERMISSIONS.inventory,
+      },
     ],
   },
   {
     label: "Gobierno",
     items: [
-      { type: "link", title: "Votaciones", url: getChurchRoutePath("voting"), icon: Vote },
-      { type: "link", title: "Informes", url: getChurchRoutePath("reports"), icon: FileBarChart2 },
+      {
+        type: "link",
+        title: "Votaciones",
+        url: getChurchRoutePath("voting"),
+        icon: Vote,
+        requires: ROUTE_PERMISSIONS.voting,
+      },
+      {
+        type: "link",
+        title: "Informes",
+        url: getChurchRoutePath("reports"),
+        icon: FileBarChart2,
+        requires: ROUTE_PERMISSIONS.reports,
+      },
     ],
   },
   {
     label: "Contenido",
     items: [
-      { type: "link", title: "Sitio web", url: getChurchRoutePath("website"), icon: Globe },
-      { type: "link", title: "Blog", url: getChurchRoutePath("blog"), icon: Newspaper },
+      {
+        type: "link",
+        title: "Sitio web",
+        url: getChurchRoutePath("website"),
+        icon: Globe,
+        requires: ROUTE_PERMISSIONS.website,
+      },
+      {
+        type: "link",
+        title: "Blog",
+        url: getChurchRoutePath("blog"),
+        icon: Newspaper,
+        requires: ROUTE_PERMISSIONS.blog,
+      },
       {
         type: "group",
         id: "contents",
@@ -124,10 +215,31 @@ const navigationSections: NavigationSection[] = [
         title: "Contenidos",
         icon: LayoutGrid,
         items: [
-          { title: "Podcasts", url: getChurchRoutePath("podcasts"), icon: Mic },
-          { title: "Sermones", url: getChurchRoutePath("sermons"), icon: MonitorPlay },
-          { title: "Ministerios", url: getChurchRoutePath("ministries"), icon: HeartHandshake },
-          { title: "Galería", url: null, icon: ImageIcon, soon: true },
+          {
+            title: "Podcasts",
+            url: getChurchRoutePath("podcasts"),
+            icon: Mic,
+            requires: ROUTE_PERMISSIONS.podcasts,
+          },
+          {
+            title: "Sermones",
+            url: getChurchRoutePath("sermons"),
+            icon: MonitorPlay,
+            requires: ROUTE_PERMISSIONS.sermons,
+          },
+          {
+            title: "Ministerios",
+            url: getChurchRoutePath("ministries"),
+            icon: HeartHandshake,
+            requires: ROUTE_PERMISSIONS.ministries,
+          },
+          {
+            title: "Galería",
+            url: null,
+            icon: ImageIcon,
+            requires: ROUTE_PERMISSIONS.blog,
+            soon: true,
+          },
         ],
       },
     ],
@@ -135,7 +247,13 @@ const navigationSections: NavigationSection[] = [
   {
     label: "Sistema",
     items: [
-      { type: "link", title: "Configuración", url: getChurchRoutePath("settings"), icon: Settings },
+      {
+        type: "link",
+        title: "Configuración",
+        url: getChurchRoutePath("settings"),
+        icon: Settings,
+        requires: ROUTE_PERMISSIONS.settings,
+      },
     ],
   },
 ];
@@ -314,6 +432,8 @@ interface AppSidebarProps {
 
 export function AppSidebar({ user }: AppSidebarProps) {
   const pathname = usePathname();
+  const access = useAccess();
+  const visibleSections = filterNavigation(navigationSections, access);
 
   return (
     <Sidebar className={appSidebarSharedPage.sidebar} collapsible="offcanvas" variant="inset">
@@ -325,7 +445,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
       </SidebarHeader>
 
       <SidebarContent className={appSidebarSharedPage.content}>
-        {navigationSections.map((section) => (
+        {visibleSections.map((section) => (
           <SidebarGroup className={appSidebarSharedPage.group} key={section.label}>
             <SidebarGroupLabel className={appSidebarSharedPage.groupLabel}>
               {section.label}
