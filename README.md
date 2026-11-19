@@ -41,8 +41,7 @@ bun run db:generate  # genera el cliente Prisma de @ancla/db
 # Tests (BD efímera `db-test` en :5434, variables de .env.test)
 bun run test:infra   # levanta db-test + mailpit + s3
 bun run test:db      # migraciones + seed sobre db-test
-bun run test         # unitarios + integración (api, db, contracts, crm)
-bun run test:scripts # tests de scripts/ (hooks, release)
+bun run test         # unitarios + integración (api, db, contracts, crm) y scripts/ (hooks, release)
 bun run test:e2e     # Playwright (antes: build del CRM con .env.test, ver backend.md)
 
 # Versionado (SemVer único, ver D-55)

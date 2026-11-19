@@ -41,12 +41,8 @@ export const HOOK_PLANS: Record<
         command: ["bun", "run", "test:db"],
       },
       {
-        label: "Tests (api, db, contracts, crm)",
+        label: "Tests (api, db, contracts, crm, scripts)",
         command: ["bun", "run", "test"],
-      },
-      {
-        label: "Tests de scripts (hooks, release)",
-        command: ["bun", "test", "scripts"],
       },
       {
         label: "Build del CRM",

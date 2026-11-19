@@ -6,7 +6,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "check-types": "turbo run check-types && tsc -p scripts/tsconfig.json",
+    "check-types": "turbo run check-types",
     "format": "biome format --write .",
     "check": "biome check --write .",
     "clean": "turbo run clean && rm -rf node_modules .turbo",
@@ -16,7 +16,6 @@
     "test": "turbo run test",
     "test:infra": "docker compose --env-file .env.test --profile test up -d --wait db-test mailpit s3 && docker compose --env-file .env.test up s3-init",
     "test:db": "bun --env-file=.env.test run --filter @ancla/db db:migrate:deploy && bun --env-file=.env.test run --filter @ancla/db db:seed",
-    "test:scripts": "bun test scripts",
     "test:e2e": "bun run --filter crm test:e2e",
     "release": "commit-and-tag-version",
     "release:first": "commit-and-tag-version --release-as 0.1.0",
@@ -26,7 +25,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.8",
-    "@types/bun": "1.4.4",
     "commit-and-tag-version": "13.3.0",
     "husky": "9.1.7",
     "turbo": "^2.11.11",
@@ -38,6 +36,7 @@
   "packageManager": "bun@1.4.3",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "scripts"
   ]
 }

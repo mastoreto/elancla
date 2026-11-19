@@ -200,8 +200,7 @@ La BD de test es efímera (`db-test` de compose, tmpfs, puerto 5434) y las varia
 ```bash
 bun run test:infra   # db-test + mailpit + s3 (+ buckets)
 bun run test:db      # migrate deploy + seed sobre db-test
-bun run test         # unitarios + integración (api, db, contracts, crm)
-bun run test:scripts # hooks y release
+bun run test         # unitarios + integración (api, db, contracts, crm) y scripts/ (hooks, release)
 # E2E (Playwright, apps/crm/e2e): build contra la BD de test y luego correr
 bun --env-file=.env.test run --filter crm build && bun run test:e2e
 ```

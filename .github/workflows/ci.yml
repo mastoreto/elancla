@@ -66,10 +66,8 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run test:infra
       - run: bun run test:db
-      - name: Unit and integration tests (api, db, contracts, crm)
+      - name: Unit and integration tests (api, db, contracts, crm, scripts)
         run: bun run test
-      - name: Script tests (hooks, release)
-        run: bun run test:scripts
 
   e2e:
     if: github.event_name == 'workflow_dispatch' || github.head_ref == 'develop'
