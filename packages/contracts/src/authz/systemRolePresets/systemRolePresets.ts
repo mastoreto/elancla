@@ -54,9 +54,12 @@ export const SYSTEM_ROLE_PRESETS: readonly SystemRolePreset[] = [
     key: "auditor",
     name: "Síndico",
     description: "Revisa toda la tesorería y los informes, sin modificar nada.",
-    grants: [...TREASURY, PERMISSIONS.reports].map((resource) =>
-      grant(resource.view, "all"),
-    ),
+    grants: [
+      ...[...TREASURY, PERMISSIONS.reports].map((resource) =>
+        grant(resource.view, "all"),
+      ),
+      grant(PERMISSIONS.audit.view, "all"),
+    ],
   },
   {
     key: "board",
