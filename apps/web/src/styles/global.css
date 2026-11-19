@@ -203,6 +203,8 @@
   --animate-anchor-forge: anchor-forge 2s 2.2s cubic-bezier(0.65, 0, 0.35, 1)
     forwards;
   --animate-float: float 7s 4s ease-in-out infinite;
+  /* Site status screens: the tag beside the anchor shows for a moment, then fades out. */
+  --animate-status-tag: status-tag 5.2s 0.8s ease forwards;
   --animate-pulse-soft: pulse-soft 2.2s ease-in-out infinite;
   --animate-ring: ring 2.6s ease-out infinite;
   --animate-dialog-in: dialog-in 0.6s var(--ease-obra);
@@ -249,6 +251,19 @@
   @keyframes anchor-forge {
     to {
       transform: scaleY(1);
+    }
+  }
+  @keyframes status-tag {
+    0% {
+      opacity: 0;
+    }
+    12%,
+    70% {
+      opacity: 1;
+    }
+    85%,
+    100% {
+      opacity: 0;
     }
   }
   @keyframes float {

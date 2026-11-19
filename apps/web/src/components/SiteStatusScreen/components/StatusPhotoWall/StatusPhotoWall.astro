@@ -1,0 +1,72 @@
+---
+// Drifting photo columns behind the status screens (the same wall as the landing hero). When
+// `paused` the columns stand still and a veil mutes them: the site is offline.
+import { cn } from '@ancla/utils';
+import { HERO_PHOTO_COLUMNS } from 'src/data/heroPhotoColumns';
+import { PHOTO } from 'src/styles/classes';
+
+interface Props {
+  paused: boolean;
+}
+
+const { paused } = Astro.props;
+
+const DRIFT_ANIMATION = {
+  up: 'animate-drift-up',
+  down: 'animate-drift-down',
+} as const;
+
+const statusPhotoWall = {
+  columns: cn(
+    'absolute -top-75 left-[42.4%] z-1 flex h-[1500px] -rotate-8 gap-(--gap)',
+    'w-[calc(4*var(--colw)+3*var(--gap))] [--colw:290px] [--gap:16px] [--k:1]',
+    'animate-rise opacity-0 [--d:0.2s] motion-reduce:animate-none motion-reduce:opacity-100',
+    'max-md:top-[-130px] max-md:left-[-250px] max-md:h-172.5',
+    'max-md:[--colw:133px] max-md:[--gap:7px] max-md:[--k:0.46]'
+  ),
+  column: cn('w-(--colw) flex-none'),
+  track: cn(
+    'flex flex-col will-change-transform motion-reduce:animate-none',
+    paused ? '[animation-play-state:paused]' : ''
+  ),
+  tile: cn(
+    'mb-(--gap) h-[calc(var(--h)*var(--k))] flex-none overflow-hidden',
+    'rounded-[calc(36px*var(--k))]'
+  ),
+  image: cn(PHOTO),
+  veil: cn('pointer-events-none absolute inset-0 z-2 bg-obra-mist/50'),
+  fade: cn(
+    'pointer-events-none absolute inset-0 z-3',
+    'bg-[linear-gradient(90deg,rgba(232,230,226,0.97)_0%,rgba(232,230,226,0.9)_34%,rgba(232,230,226,0.35)_58%,rgba(232,230,226,0.05)_100%)]',
+    'max-md:bg-[linear-gradient(180deg,rgba(232,230,226,0.2)_0%,rgba(232,230,226,0.55)_28%,rgba(232,230,226,0.96)_52%,var(--color-obra-mist)_70%)]'
+  ),
+};
+---
+
+<div class={statusPhotoWall.columns} aria-hidden="true">
+  {HERO_PHOTO_COLUMNS.map((column) => (
+    <div class={statusPhotoWall.column} style={`margin-top: calc(${column.offset}px * var(--k))`}>
+      <div class={cn(statusPhotoWall.track, DRIFT_ANIMATION[column.dir])} style={`--t: ${column.secs}s`}>
+        {[0, 1].map((copyIndex) => (
+          <div>
+            {column.tiles.map((tile) => (
+              <div class={statusPhotoWall.tile} style={`--h: ${tile.h}px`}>
+                <img
+                  src={`/images/hero/hero${tile.n}-md.webp`}
+                  alt=""
+                  class={statusPhotoWall.image}
+                  style={`object-position: ${tile.pos}`}
+                  loading={copyIndex === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  draggable="false"
+                />
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>
+{paused && <div class={statusPhotoWall.veil} aria-hidden="true" />}
+<div class={statusPhotoWall.fade} aria-hidden="true" />

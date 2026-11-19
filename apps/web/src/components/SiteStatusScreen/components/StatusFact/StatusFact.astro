@@ -1,0 +1,38 @@
+---
+// White info card of the status screens: small caps label over a value.
+import { cn } from '@ancla/utils';
+
+interface Props {
+  label: string;
+  /** Serif display value ("11:15 – 13:00") instead of the bold sans one. */
+  display?: boolean;
+  class?: string;
+  [attr: string]: unknown;
+}
+
+const { label, display = false, class: className, ...rest } = Astro.props;
+
+const statusFact = {
+  container: cn(
+    'flex flex-col gap-0.5 rounded-[24px] bg-obra-white px-5 py-3.5 shadow-obra-float',
+    'max-md:flex-1 max-md:px-4 max-md:py-3',
+    className
+  ),
+  label: cn(
+    'font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-muted uppercase'
+  ),
+  value: cn(
+    'flex items-center gap-2 text-[1.0625rem] leading-[1.3] font-bold',
+    'font-obra-sans-bold'
+  ),
+  valueDisplay: cn(
+    'font-obra-serif text-[1.875rem] leading-none font-bold',
+    'max-md:text-[1.625rem]'
+  ),
+};
+---
+
+<div class={statusFact.container} {...rest}>
+  <span class={statusFact.label}>{label}</span>
+  <b class={display ? statusFact.valueDisplay : statusFact.value}><slot /></b>
+</div>

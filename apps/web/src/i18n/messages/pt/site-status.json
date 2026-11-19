@@ -1,16 +1,25 @@
 {
   "maintenance": {
-    "icon": "construction",
-    "kicker": "Voltamos logo",
-    "title": "Estamos em manutenção",
-    "description": "Estamos fazendo algumas melhorias no site. Voltaremos a ficar online em breve. Obrigado pela paciência.",
-    "note": "Enquanto isso, você pode nos escrever para"
+    "kicker": "Manutenção programada",
+    "title": "Site em manutenção",
+    "titleEmphasis": "manutenção",
+    "description": "O site está em manutenção para melhorar a sua experiência. Voltamos em breve. Os cultos não são suspensos: os horários estão logo abaixo.",
+    "tag": "Em manutenção",
+    "statusValue": "Em manutenção",
+    "servicesCta": "Ver horários de culto",
+    "contactCta": "Escrever por e-mail"
   },
   "closed": {
-    "icon": "event_busy",
-    "kicker": "Até breve",
-    "title": "Site temporariamente fechado",
-    "description": "No momento o site não está disponível. Volte a nos visitar mais tarde.",
-    "note": "Para qualquer dúvida, escreva para"
+    "kicker": "Site indisponível",
+    "title": "Site fora do ar",
+    "titleEmphasis": "fora do ar",
+    "description": "O site não está disponível neste momento. Tente novamente em alguns minutos. Enquanto isso, aqui está o essencial.",
+    "tag": "Fora do ar",
+    "retryCta": "Tentar novamente"
+  },
+  "facts": {
+    "status": "Estado",
+    "services": "Cultos",
+    "where": "Onde"
   }
 }

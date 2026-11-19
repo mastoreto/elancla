@@ -1,93 +1,143 @@
 ---
+// Replaces the whole page while the site is in maintenance ("obra" design, palette B) or closed.
+// Maintenance: forged red anchor, link to the service times below, email contact.
+// Closed (offline): grey anchor hanging from a rope, a retry link, frozen photo wall.
 import type { SiteStatus } from '@ancla/content';
+import { cn } from '@ancla/utils';
+import Button from 'src/components/ui/Button';
 import type { Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
-import cn from 'src/utils/cn';
+import { RISE_IN } from 'src/utils/riseIn';
+import StatusAnchor from './components/StatusAnchor';
+import StatusFact from './components/StatusFact';
+import StatusPhotoWall from './components/StatusPhotoWall';
+import { formatServiceTimes } from './utils/formatServiceTimes';
 
 interface Props {
   status: Exclude<SiteStatus, 'online'>;
   locale: Locale;
   contactEmail?: string;
+  /** `SiteConfig.serviceTimes`, e.g. "Su 11:15-13:00". */
+  serviceTimes: string;
+  /** Street line of the church, shown on the offline screen. */
+  street: string;
 }
 
-const { status, locale, contactEmail } = Astro.props;
-const copy = getMessages(locale).siteStatus[status];
+const { status, locale, contactEmail, serviceTimes, street } = Astro.props;
+const messages = getMessages(locale).siteStatus;
+const isMaintenance = status === 'maintenance';
+const copy = messages[status];
+const services = formatServiceTimes(serviceTimes, locale);
+// The title ends with the emphasized word, picked out in red (same trick as the 404 page).
+const titleBefore = copy.title.slice(
+  0,
+  copy.title.lastIndexOf(copy.titleEmphasis)
+);
+
+// Reload for real (no client router): the point of retrying is a fresh server render.
+const retryHref = `${Astro.url.pathname}${Astro.url.search}`;
+
+const SERVICES_ID = 'horarios';
 
 const siteStatusScreen = {
   container: cn(
-    'relative flex min-h-screen items-center justify-center overflow-hidden bg-paper px-6',
-    'pb-20 pt-32 text-ink'
+    'ln relative isolate flex min-h-svh flex-col justify-end gap-4 overflow-hidden bg-obra-mist',
+    'px-5 pt-[24rem] pb-7',
+    'md:justify-between md:gap-10 md:px-[5%] md:pt-[clamp(7rem,19svh,10.5rem)] md:pb-14'
   ),
-  glowPrimary: cn(
-    'pointer-events-none absolute -right-24 -top-32 h-72 w-72 rounded-full bg-primary/10',
-    'blur-3xl'
+  copy: cn(
+    'relative z-7 flex flex-col items-start gap-4 md:w-[min(35rem,38vw)] md:gap-6'
   ),
-  glowSecondary: cn(
-    'pointer-events-none absolute -bottom-32 -left-24 h-72 w-72 rounded-full bg-ink/5',
-    'blur-3xl'
-  ),
-  content: cn('relative z-10 mx-auto w-full max-w-xl text-center'),
-  icon: cn('material-symbols-outlined mb-6 inline-block text-5xl text-primary'),
   kicker: cn(
-    'font-ui text-[11px] font-semibold uppercase tracking-[0.35em] text-primary'
+    'inline-flex items-center gap-2.5 font-obra-sans-bold text-[0.75rem] tracking-[0.16em] uppercase',
+    'md:text-[0.8125rem]',
+    isMaintenance ? 'text-obra-red' : 'text-obra-muted',
+    RISE_IN
+  ),
+  dot: cn(
+    'size-2 flex-none rounded-full',
+    isMaintenance ? 'bg-obra-red' : 'bg-obra-stone'
   ),
   title: cn(
-    'mt-4 font-display text-4xl font-semibold tracking-tight text-ink',
-    'md:text-5xl'
+    'ln-h text-[2.625rem] leading-none tracking-[-0.025em] text-obra-ink',
+    'md:text-[clamp(2.6rem,5vw,4.5rem)]',
+    RISE_IN
   ),
+  titleEmphasis: cn('text-obra-red'),
   description: cn(
-    'mt-5 font-ui text-base leading-relaxed text-ink/60',
-    'md:text-lg'
+    'm-0 max-w-[27rem] text-[1rem] leading-normal text-obra-ink-soft',
+    'md:text-[1.1875rem] md:leading-[1.55]',
+    RISE_IN
   ),
-  note: cn('mt-8 font-ui text-sm text-ink/50'),
-  contactEmail: cn(
-    'font-medium text-primary underline-offset-4',
-    'hover:underline'
+  actions: cn('flex flex-wrap items-center gap-2.5 md:gap-3', RISE_IN),
+  secondary: cn('bg-obra-paper/70'),
+  facts: cn('relative z-7 flex flex-wrap gap-2.5', RISE_IN),
+  factTarget: cn(
+    'scroll-mt-24 transition-shadow duration-500 target:ring-2 target:ring-obra-red',
+    'motion-reduce:transition-none'
   ),
-  image: cn('mx-auto mt-12 h-10 w-auto opacity-80'),
+  statusDot: cn('size-2 flex-none rounded-full bg-obra-live'),
 };
 ---
 
-<section
-  class={siteStatusScreen.container}
->
-  <div
-    class={siteStatusScreen.glowPrimary}
-    aria-hidden="true"
-  >
-  </div>
-  <div
-    class={siteStatusScreen.glowSecondary}
-    aria-hidden="true"
-  >
+<section class={siteStatusScreen.container} data-site-status={status}>
+  <StatusPhotoWall paused={!isMaintenance} />
+  <StatusAnchor variant={isMaintenance ? 'forged' : 'adrift'} tag={copy.tag} />
+
+  <div class={siteStatusScreen.copy}>
+    <span class={siteStatusScreen.kicker} style="--d: 0.1s">
+      <span class={siteStatusScreen.dot} aria-hidden="true"></span>{copy.kicker}
+    </span>
+    <h1 class={siteStatusScreen.title} style="--d: 0.25s">
+      {titleBefore}<span class={siteStatusScreen.titleEmphasis}>{copy.titleEmphasis}.</span>
+    </h1>
+    <p class={siteStatusScreen.description} style="--d: 0.45s">{copy.description}</p>
+    <div class={siteStatusScreen.actions} style="--d: 0.6s">
+      {isMaintenance ? (
+        <>
+          <Button href={`#${SERVICES_ID}`} arrow data-status-action="services">
+            {messages.maintenance.servicesCta}
+          </Button>
+          {contactEmail && (
+            <Button
+              href={`mailto:${contactEmail}`}
+              variant="ghost"
+              class={siteStatusScreen.secondary}
+              data-status-action="contact"
+            >
+              {messages.maintenance.contactCta}
+            </Button>
+          )}
+        </>
+      ) : (
+        <Button
+          href={retryHref}
+          arrow
+          arrowGlyph="↻"
+          data-astro-reload
+          data-status-action="retry"
+        >
+          {messages.closed.retryCta}
+        </Button>
+      )}
+    </div>
   </div>
 
-  <div class={siteStatusScreen.content}>
-    <span class={siteStatusScreen.icon} aria-hidden="true">
-      {copy.icon}
-    </span>
-    <p class={siteStatusScreen.kicker}>
-      {copy.kicker}
-    </p>
-    <h1 class={siteStatusScreen.title}>
-      {copy.title}
-    </h1>
-    <p class={siteStatusScreen.description}>
-      {copy.description}
-    </p>
-    {
-      contactEmail && (
-        <p class={siteStatusScreen.note}>
-          {copy.note}{' '}
-          <a
-            href={`mailto:${contactEmail}`}
-            class={siteStatusScreen.contactEmail}
-          >
-            {contactEmail}
-          </a>
-        </p>
-      )
-    }
-    <img src="/images/anclarojo.png" alt="" class={siteStatusScreen.image} />
+  <div class={siteStatusScreen.facts} style="--d: 1s">
+    {isMaintenance && (
+      <StatusFact label={messages.facts.status}>
+        <span class={siteStatusScreen.statusDot} aria-hidden="true"></span>
+        {messages.maintenance.statusValue}
+      </StatusFact>
+    )}
+    <StatusFact
+      id={SERVICES_ID}
+      label={services.label ?? messages.facts.services}
+      display
+      class={siteStatusScreen.factTarget}
+    >
+      {services.value}
+    </StatusFact>
+    {!isMaintenance && <StatusFact label={messages.facts.where}>{street}</StatusFact>}
   </div>
 </section>

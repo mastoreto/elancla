@@ -17,5 +17,5 @@
       "@ancla/content": ["../../packages/content/src"]
     }
   },
-  "exclude": ["dist"]
+  "exclude": ["dist", "src/**/*.test.ts"]
 }

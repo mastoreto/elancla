@@ -1,6 +1,6 @@
 ---
 // Pill button of the "obra" system. Renders an <a> when `href` is given, a <button> otherwise.
-// `arrow` adds the white dot with →. Extra classes merge over the variant (later wins).
+// `arrow` adds the white dot with → (`arrowGlyph` swaps the character, e.g. ↻). Extra classes merge over the variant (later wins).
 import cn from 'src/utils/cn';
 
 type Variant = 'primary' | 'ghost' | 'dark' | 'light';
@@ -11,6 +11,7 @@ interface Props {
   as?: 'span';
   variant?: Variant;
   arrow?: boolean;
+  arrowGlyph?: string;
   /** Extra classes for the arrow dot. */
   dotClass?: string;
   type?: 'button' | 'submit';
@@ -23,6 +24,7 @@ const {
   href,
   variant = 'primary',
   arrow = false,
+  arrowGlyph = '→',
   dotClass,
   type = 'button',
   class: className,
@@ -56,5 +58,5 @@ const button = {
 
 <Tag href={href} type={href || as ? undefined : type} class={button.container} {...rest}>
   <slot />
-  {arrow && <span class={button.arrow} aria-hidden="true">→</span>}
+  {arrow && <span class={button.arrow} aria-hidden="true">{arrowGlyph}</span>}
 </Tag>
