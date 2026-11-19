@@ -293,7 +293,8 @@ ve las finanzas y no edita el perfil.
 - **Desactivar la Data API (PostgREST)** del proyecto o activar RLS que niegue todo en el schema
   `public`: si no, las tablas quedan expuestas a cualquiera que tenga la clave anónima.
 - El plan gratis pausa el proyecto tras 7 días sin actividad y no ofrece backups descargables:
-  backup propio diario (`pg_dump` cifrado a B2 desde un cron de GitHub Actions) con restauración
+  backup propio diario (`pg_dump` cifrado con `age` a una clave pública, la privada offline con el
+  administrador del sistema, a B2 desde un cron de GitHub Actions) con restauración
   probada.
 - No se usan Supabase Auth ni Storage (Better Auth y B2 cubren eso).
 - RLS activado en todas las tablas (sin políticas = nadie entra por la Data API). Prisma conecta con
@@ -652,7 +653,7 @@ generados de los Conventional Commits con `commit-and-tag-version`.
 - Mientras sea `0.x`: `feat` → minor, `fix` y demás → patch, breaking → minor (`preMajor`).
 - **`v0.1.0` = base técnica** (cierre de la fase 0.7).
 - Cada `develop → main` con features sube el minor (0.2.0…), con solo fixes sube el patch (0.2.1).
-- **`1.0.0`** recién con producción (0.8) y tesorería (fase 2) en uso real.
+- **`1.0.0`** recién con producción (1.10) y tesorería (fase 2) en uso real.
 - Flujo: en `develop`, con todo mergeado, `bun run release` (bump + changelog + commit + tag) →
   `git push --follow-tags` → PR `develop → main`. El job `version` del CI falla si el `package.json`
   del PR no supera el último tag de `main`.
