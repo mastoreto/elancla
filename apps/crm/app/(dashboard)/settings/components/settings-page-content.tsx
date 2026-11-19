@@ -48,6 +48,7 @@ const settingsPageContentSettingsPage = {
 };
 
 interface SettingsPageContentProps {
+  initialTab: SettingsTabValue;
   churchName: string;
   churchSubtitle: string;
   users: SettingsUser[];
@@ -61,6 +62,7 @@ interface SettingsPageContentProps {
 }
 
 export function SettingsPageContent({
+  initialTab,
   churchName,
   churchSubtitle,
   users: initialUsers,
@@ -72,7 +74,7 @@ export function SettingsPageContent({
   notifications: initialNotifications,
   ministryOptions,
 }: SettingsPageContentProps) {
-  const [tab, setTab] = useState<SettingsTabValue>("users");
+  const [tab, setTab] = useState<SettingsTabValue>(initialTab);
   const [users, setUsers] = useState(initialUsers);
   const router = useRouter();
   const [roles, setRoles] = useState(initialRoles);

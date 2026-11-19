@@ -3,7 +3,6 @@
 import {
   ArrowLeftRight,
   Boxes,
-  ChevronDown,
   ChevronRight,
   FileBarChart2,
   FileText,
@@ -44,8 +43,9 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { churchToDashboardRouteMap, getChurchRoutePath } from "@/lib/church";
-import { currentUser, moneyRequests } from "@/lib/data";
+import { moneyRequests } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { type SidebarUser, SidebarUserMenu } from "./sidebar-user-menu";
 
 type NavigationIcon = React.ComponentType<{ className?: string }>;
 
@@ -199,27 +199,7 @@ const appSidebarSharedPage = {
     "inline-flex h-9 items-center self-start rounded-full bg-white/10 px-4 text-[13px] font-bold text-white",
     "shadow-[inset_0_0_0_1px_rgba(255,255,255,0.2)] transition hover:-translate-y-px",
   ),
-  user: cn("flex items-center gap-2.5 px-1.5 pt-2"),
-  avatar: cn(
-    "inline-flex size-[38px] shrink-0 items-center justify-center rounded-full bg-(image:--grad-avatar)",
-    "text-sm font-extrabold text-[var(--oro-texto)] ring-2 ring-white",
-  ),
-  userText: cn("flex min-w-0 flex-col leading-snug"),
-  userName: cn("truncate text-sm font-bold text-white"),
-  userRole: cn("text-xs text-white/55"),
-  userChevron: cn("ml-auto size-4 shrink-0 text-white/60"),
 };
-
-const ROLE_LABELS: Record<string, string> = { treasurer: "Tesorera" };
-
-function getUserInitials(name: string): string {
-  return name
-    .split(" ")
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
-}
 
 function getNavigationMatchUrls(url: string): string[] {
   const matchingRoute = Object.entries(churchToDashboardRouteMap).find(([route]) => {
@@ -316,7 +296,11 @@ function NavigationGroup({ item, pathname }: { item: NavigationGroupItem; pathna
   );
 }
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  user: SidebarUser | null;
+}
+
+export function AppSidebar({ user }: AppSidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -350,16 +334,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className={appSidebarSharedPage.footer}>
-        <div className={appSidebarSharedPage.user}>
-          <span className={appSidebarSharedPage.avatar}>{getUserInitials(currentUser.name)}</span>
-          <div className={appSidebarSharedPage.userText}>
-            <b className={appSidebarSharedPage.userName}>{currentUser.name}</b>
-            <span className={appSidebarSharedPage.userRole}>
-              {ROLE_LABELS[currentUser.role] ?? currentUser.role}
-            </span>
-          </div>
-          <ChevronDown aria-hidden="true" className={appSidebarSharedPage.userChevron} />
-        </div>
+        <SidebarUserMenu user={user} />
       </SidebarFooter>
     </Sidebar>
   );
