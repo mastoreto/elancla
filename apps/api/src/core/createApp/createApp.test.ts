@@ -176,6 +176,20 @@ describe("HTTP security", () => {
     expect(res.status).toBe(415);
   });
 
+  test("an empty-bodied mutation (Content-Length: 0) is not a 415", async () => {
+    const res = await app.request("/api/echo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=UTF-8",
+        "Content-Length": "0",
+        Origin: CRM_ORIGIN,
+        "Sec-Fetch-Site": "same-origin",
+      },
+      body: "",
+    });
+    expect(res.status).not.toBe(415);
+  });
+
   test("a foreign form submission is a 403", async () => {
     const res = await app.request("/api/echo", {
       method: "POST",
