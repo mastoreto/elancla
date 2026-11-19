@@ -8,6 +8,7 @@ import { BoardPagination } from "@/components/dashboard/board/board-pagination";
 import { FilterChip } from "@/components/dashboard/board/filter-chip";
 import { SearchField } from "@/components/dashboard/board/search-field";
 import { StatCard, StatCardGrid } from "@/components/dashboard/board/stat-card";
+import { Can } from "@/lib/authz/Gate";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
 import type { AssemblyReport } from "../types";
@@ -65,14 +66,16 @@ export function AssemblyListPageContent({ reports }: { reports: readonly Assembl
           Comparte informes completos con los asistentes mediante un código, solo durante la sesión
           y en el lugar.
         </p>
-        <BoardButton
-          className={assemblyListPageContentAssemblyPage.action}
-          href={getChurchRoutePath("assembly", "new")}
-          variant="primary"
-        >
-          <Plus aria-hidden="true" className={assemblyListPageContentAssemblyPage.icon} />
-          Publicar informe
-        </BoardButton>
+        <Can permission="voting:create">
+          <BoardButton
+            className={assemblyListPageContentAssemblyPage.action}
+            href={getChurchRoutePath("assembly", "new")}
+            variant="primary"
+          >
+            <Plus aria-hidden="true" className={assemblyListPageContentAssemblyPage.icon} />
+            Publicar informe
+          </BoardButton>
+        </Can>
       </div>
 
       <StatCardGrid>

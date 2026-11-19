@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { CreateMovementDialog } from "@/components/create-movement-dialog";
 import { BoardButton } from "@/components/dashboard/board/board-button";
+import { Can } from "@/lib/authz/Gate";
 import { movements as seedMovements } from "@/lib/data";
 import type { Movement } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -71,10 +72,12 @@ export function MovementsPageContent() {
             <Download aria-hidden="true" className={movementsPageContentMovementsPage.actionIcon} />
             Exportar
           </BoardButton>
-          <BoardButton onClick={() => setIsCreateOpen(true)} variant="primary">
-            <Plus aria-hidden="true" className={movementsPageContentMovementsPage.actionIcon} />
-            Nuevo movimiento
-          </BoardButton>
+          <Can permission="movements:create">
+            <BoardButton onClick={() => setIsCreateOpen(true)} variant="primary">
+              <Plus aria-hidden="true" className={movementsPageContentMovementsPage.actionIcon} />
+              Nuevo movimiento
+            </BoardButton>
+          </Can>
         </div>
       </div>
 

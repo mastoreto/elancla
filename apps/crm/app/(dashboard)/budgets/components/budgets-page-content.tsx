@@ -3,6 +3,7 @@
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
+import { Can } from "@/lib/authz/Gate";
 import { cn } from "@/lib/utils";
 import type {
   Budget,
@@ -149,10 +150,12 @@ export function BudgetsPageContent({
         <p className={budgetsPageContentBudgetsPage.description}>
           Montos asignados por ministerio y proyecto, con alertas de uso.
         </p>
-        <BoardButton onClick={handleCreate} variant="primary">
-          <Plus aria-hidden="true" className={budgetsPageContentBudgetsPage.actionIcon} />
-          Nuevo presupuesto
-        </BoardButton>
+        <Can permission="budgets:create">
+          <BoardButton onClick={handleCreate} variant="primary">
+            <Plus aria-hidden="true" className={budgetsPageContentBudgetsPage.actionIcon} />
+            Nuevo presupuesto
+          </BoardButton>
+        </Can>
       </div>
 
       <BudgetsSummary summary={summary} />

@@ -4,6 +4,7 @@ import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
 import { BoardPagination } from "@/components/dashboard/board/board-pagination";
+import { Can } from "@/lib/authz/Gate";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
 import type { MinistryFilters, MinistrySummary, MinistryViewMode } from "../types";
@@ -51,14 +52,16 @@ export function MinistriesPageContent({ ministries }: MinistriesPageContentProps
           Contenido del sitio web: cada ministerio con su descripción, líder y horarios. El
           presupuesto se gestiona aparte.
         </p>
-        <BoardButton
-          className={ministriesPageContentMinistriesPage.action}
-          href={getChurchRoutePath("ministries", "new")}
-          variant="primary"
-        >
-          <Plus aria-hidden="true" className={ministriesPageContentMinistriesPage.actionIcon} />
-          Nuevo ministerio
-        </BoardButton>
+        <Can permission="ministries.profile:create">
+          <BoardButton
+            className={ministriesPageContentMinistriesPage.action}
+            href={getChurchRoutePath("ministries", "new")}
+            variant="primary"
+          >
+            <Plus aria-hidden="true" className={ministriesPageContentMinistriesPage.actionIcon} />
+            Nuevo ministerio
+          </BoardButton>
+        </Can>
       </div>
 
       <MinistriesSummary totals={totals} />

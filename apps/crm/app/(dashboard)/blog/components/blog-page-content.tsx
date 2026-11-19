@@ -11,6 +11,7 @@ import {
   filterContent,
   paginate,
 } from "@/components/dashboard/content";
+import { Can } from "@/lib/authz/Gate";
 import { getChurchRoutePath } from "@/lib/church";
 import { formatCompactCount } from "@/lib/format-content";
 import { cn } from "@/lib/utils";
@@ -67,14 +68,16 @@ export function BlogPageContent({ posts: initialPosts, config }: BlogPageContent
         <p className={blogPageContentContentPage.description}>
           Gestiona y publica el contenido editorial de la iglesia.
         </p>
-        <BoardButton
-          className={blogPageContentContentPage.action}
-          href={getChurchRoutePath("blog", "new")}
-          variant="primary"
-        >
-          <Plus aria-hidden="true" className={blogPageContentContentPage.icon} />
-          Nuevo artículo
-        </BoardButton>
+        <Can permission="content:create">
+          <BoardButton
+            className={blogPageContentContentPage.action}
+            href={getChurchRoutePath("blog", "new")}
+            variant="primary"
+          >
+            <Plus aria-hidden="true" className={blogPageContentContentPage.icon} />
+            Nuevo artículo
+          </BoardButton>
+        </Can>
       </div>
 
       <StatCardGrid>

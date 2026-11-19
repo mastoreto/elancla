@@ -4,6 +4,7 @@ import { Upload } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { BoardButton } from "@/components/dashboard/board/board-button";
+import { Can } from "@/lib/authz/Gate";
 import { cn } from "@/lib/utils";
 import type {
   Receipt,
@@ -162,10 +163,12 @@ export function ReceiptsPageContent({
         <p className={receiptsPageContentReceiptsPage.description}>
           Facturas y boletas de proveedores, vinculadas al gasto que respaldan.
         </p>
-        <BoardButton onClick={openCreate} variant="primary">
-          <Upload aria-hidden="true" className={receiptsPageContentReceiptsPage.actionIcon} />
-          Subir boleta
-        </BoardButton>
+        <Can permission="vouchers:create">
+          <BoardButton onClick={openCreate} variant="primary">
+            <Upload aria-hidden="true" className={receiptsPageContentReceiptsPage.actionIcon} />
+            Subir boleta
+          </BoardButton>
+        </Can>
       </div>
 
       <ReceiptsToolbar
