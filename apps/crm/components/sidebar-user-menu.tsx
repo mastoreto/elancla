@@ -29,15 +29,19 @@ interface SidebarUserMenuProps {
 
 const sidebarUserMenuSharedPage = {
   trigger: cn(
-    "flex w-full items-center gap-2.5 rounded-xl px-1.5 pt-2 pb-1 text-left outline-none",
-    "transition hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-white/60",
+    "group/user flex w-full items-center gap-2.5 rounded-xl p-1.5 text-left outline-none",
+    "transition hover:bg-white/5 data-[state=open]:bg-white/5",
+    "focus-visible:ring-2 focus-visible:ring-white/40",
   ),
   avatar: cn("size-[38px] ring-2 ring-white"),
   avatarFallback: cn("bg-(image:--grad-avatar) text-sm font-extrabold text-[var(--oro-texto)]"),
   text: cn("flex min-w-0 flex-col leading-snug"),
   name: cn("truncate text-sm font-bold text-white"),
   role: cn("text-xs text-white/55"),
-  chevron: cn("ml-auto size-4 shrink-0 text-white/60"),
+  chevron: cn(
+    "ml-auto size-4 shrink-0 text-white/60 transition-transform duration-200",
+    "group-data-[state=open]/user:rotate-180 motion-reduce:transition-none",
+  ),
   content: cn("w-(--radix-dropdown-menu-trigger-width) min-w-56"),
   email: cn("truncate px-2 py-1.5 text-xs text-muted-foreground"),
   icon: cn("size-4"),

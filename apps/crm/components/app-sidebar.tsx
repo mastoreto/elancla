@@ -157,14 +157,26 @@ const appSidebarSharedPage = {
   brandLink: cn("inline-flex items-center gap-2.5 px-2.5"),
   brandMark: cn("shadow-[0_8px_18px_-8px_rgba(194,58,78,0.9)]"),
   brandName: cn("font-display text-[21px] font-semibold tracking-tight text-white"),
-  content: cn("gap-0 px-3"),
+  content: cn(
+    "gap-0 px-3",
+    // Thin translucent scrollbar that blends with the dark sidebar instead of the system one.
+    "[scrollbar-width:thin] [scrollbar-color:rgb(255_255_255/0.14)_transparent]",
+    "hover:[scrollbar-color:rgb(255_255_255/0.3)_transparent]",
+  ),
   group: cn("gap-0.5 p-0"),
   groupLabel: cn(
     "h-auto px-3 pt-4 pb-1.5 text-[11px] font-bold tracking-[0.14em] text-white/[0.42] uppercase",
   ),
   menu: cn("gap-0.5"),
   menuButton: cn(menuButtonShared),
-  chevron: cn("ml-auto size-4 transition-transform"),
+  chevron: cn(
+    "ml-auto size-4 transition-transform duration-200 ease-out motion-reduce:transition-none",
+  ),
+  subMenuContent: cn(
+    "overflow-hidden",
+    "data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up",
+    "motion-reduce:animate-none",
+  ),
   badge: cn(
     "ml-auto inline-flex h-[22px] min-w-[22px] items-center justify-center rounded-full bg-(image:--grad-granada) px-[7px] text-[11px] font-extrabold text-white",
   ),
@@ -265,7 +277,7 @@ function NavigationGroup({ item, pathname }: { item: NavigationGroupItem; pathna
             />
           </SidebarMenuButton>
         </CollapsibleTrigger>
-        <CollapsibleContent>
+        <CollapsibleContent className={appSidebarSharedPage.subMenuContent}>
           <SidebarMenuSub className={appSidebarSharedPage.subMenu}>
             {item.items.map((subItem) => (
               <SidebarMenuSubItem key={subItem.title}>
