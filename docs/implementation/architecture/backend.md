@@ -106,6 +106,15 @@ y lo deja en `ctx.access`. Con varios roles los permisos son la unión y, para u
 `recurso:acción`, gana el alcance más amplio (`all > ministry > own`). El catálogo de recursos,
 acciones y alcances vive en `packages/contracts/src/authz` y lo comparten API y CRM.
 
+**Los permisos se referencian solo mediante `PERMISSIONS`** (`PERMISSIONS.movements.view`,
+`PERMISSIONS.ministryProfile.edit`), nunca escribiendo el string a mano. Se derivan del catálogo
+(`PERMISSION_CATALOG`, cuyas claves son identificadores de código y cuyo `resource` es el valor que se
+guarda y viaja en los DTOs, sin cambios), con tipos: solo existen las acciones que el catálogo permite
+(`PERMISSIONS.settings.create` no compila) y `Permission` es la unión de esos pares. Las grillas se
+arman con `grant(PERMISSIONS.requests.view, "ministry")`. Un test en `packages/contracts`
+(`noHandWrittenPermissions`) recorre `apps/api`, `apps/crm` y `packages` y falla con `archivo:línea`
+ante cualquier `"recurso:acción"` escrito a mano fuera del catálogo.
+
 Las policies de recurso (`roles/policies`, `users/policies`) aplican las protecciones: el rol `admin`
 no se edita ni se borra, los sembrados no se borran, nadie cambia sus propios roles o ministerios,
 nadie edita un rol que tiene asignado, solo un admin concede o quita el rol `admin` y nunca se quita

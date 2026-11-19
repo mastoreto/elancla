@@ -21,63 +21,142 @@ export type PermissionAction = (typeof PERMISSION_ACTIONS)[number];
 export type PermissionScope = (typeof PERMISSION_SCOPES)[number];
 
 interface ResourceDefinition {
+  /** The resource as stored in `RolePermission` rows and sent in DTOs (never changes). */
+  resource: string;
   actions: readonly PermissionAction[];
   scopes: readonly PermissionScope[];
   /** Actions that let their holder control access (grant roles, invite, change settings). */
   dangerous?: readonly PermissionAction[];
 }
 
-const CRUD: readonly PermissionAction[] = ["view", "create", "edit", "delete"];
-const WITH_APPROVAL: readonly PermissionAction[] = PERMISSION_ACTIONS;
-const ALL_ONLY: readonly PermissionScope[] = ["all"];
-const MINISTRY_OR_ALL: readonly PermissionScope[] = ["ministry", "all"];
-const OWN_MINISTRY_OR_ALL: readonly PermissionScope[] = [
-  "own",
-  "ministry",
-  "all",
-];
+const CRUD = ["view", "create", "edit", "delete"] as const;
+const WITH_APPROVAL = PERMISSION_ACTIONS;
+const ALL_ONLY = ["all"] as const;
+const MINISTRY_OR_ALL = ["ministry", "all"] as const;
+const OWN_MINISTRY_OR_ALL = ["own", "ministry", "all"] as const;
 
+/**
+ * Keys are code identifiers (`ministryProfile`); `resource` is the wire value. Reference a
+ * permission only through `PERMISSIONS`, never by writing its string.
+ */
 export const PERMISSION_CATALOG = {
-  movements: { actions: WITH_APPROVAL, scopes: ALL_ONLY },
-  requests: { actions: WITH_APPROVAL, scopes: OWN_MINISTRY_OR_ALL },
-  vouchers: { actions: WITH_APPROVAL, scopes: OWN_MINISTRY_OR_ALL },
-  projects: { actions: WITH_APPROVAL, scopes: OWN_MINISTRY_OR_ALL },
+  movements: {
+    resource: "movements",
+    actions: WITH_APPROVAL,
+    scopes: ALL_ONLY,
+  },
+  requests: {
+    resource: "requests",
+    actions: WITH_APPROVAL,
+    scopes: OWN_MINISTRY_OR_ALL,
+  },
+  vouchers: {
+    resource: "vouchers",
+    actions: WITH_APPROVAL,
+    scopes: OWN_MINISTRY_OR_ALL,
+  },
+  projects: {
+    resource: "projects",
+    actions: WITH_APPROVAL,
+    scopes: OWN_MINISTRY_OR_ALL,
+  },
   // A budget belongs to a ministry, so the leader of one can see its own.
-  budgets: { actions: WITH_APPROVAL, scopes: MINISTRY_OR_ALL },
-  voting: { actions: CRUD, scopes: ALL_ONLY },
-  reports: { actions: CRUD, scopes: ALL_ONLY },
-  content: { actions: CRUD, scopes: ALL_ONLY },
-  "ministries.profile": { actions: CRUD, scopes: MINISTRY_OR_ALL },
-  "ministries.finance": { actions: CRUD, scopes: MINISTRY_OR_ALL },
+  budgets: {
+    resource: "budgets",
+    actions: WITH_APPROVAL,
+    scopes: MINISTRY_OR_ALL,
+  },
+  voting: { resource: "voting", actions: CRUD, scopes: ALL_ONLY },
+  reports: { resource: "reports", actions: CRUD, scopes: ALL_ONLY },
+  content: { resource: "content", actions: CRUD, scopes: ALL_ONLY },
+  ministryProfile: {
+    resource: "ministries.profile",
+    actions: CRUD,
+    scopes: MINISTRY_OR_ALL,
+  },
+  ministryFinance: {
+    resource: "ministries.finance",
+    actions: CRUD,
+    scopes: MINISTRY_OR_ALL,
+  },
   users: {
+    resource: "users",
     actions: CRUD,
     scopes: ALL_ONLY,
     dangerous: ["create", "edit", "delete"],
   },
   roles: {
+    resource: "roles",
     actions: CRUD,
     scopes: ALL_ONLY,
     dangerous: ["create", "edit", "delete"],
   },
   invitations: {
+    resource: "invitations",
     actions: CRUD,
     scopes: ALL_ONLY,
     dangerous: ["create", "delete"],
   },
   settings: {
+    resource: "settings",
     actions: ["view", "edit"],
     scopes: ALL_ONLY,
     dangerous: ["edit"],
   },
 } as const satisfies Record<string, ResourceDefinition>;
 
-export type PermissionResource = keyof typeof PERMISSION_CATALOG;
+type Catalog = typeof PERMISSION_CATALOG;
 
-export const PERMISSION_RESOURCES = Object.keys(
+/** Code identifier of a catalog entry (`movements`, `ministryProfile`...). */
+export type PermissionKey = keyof Catalog;
+
+/** The wire resource (`"ministries.profile"`), as stored and sent in DTOs. */
+export type PermissionResource = Catalog[PermissionKey]["resource"];
+
+type PermissionsOf = {
+  readonly [Key in PermissionKey]: {
+    readonly [Action in Catalog[Key]["actions"][number]]: `${Catalog[Key]["resource"]}:${Action}`;
+  };
+};
+
+/** Every real `resource:action` pair; `"settings:create"` is not one of them. */
+export type Permission = {
+  [Key in PermissionKey]: PermissionsOf[Key][keyof PermissionsOf[Key]];
+}[PermissionKey];
+
+function buildPermissions(): PermissionsOf {
+  const entries = Object.entries(PERMISSION_CATALOG).map(
+    ([key, definition]) => [
+      key,
+      Object.freeze(
+        Object.fromEntries(
+          definition.actions.map((action) => [
+            action,
+            `${definition.resource}:${action}`,
+          ]),
+        ),
+      ),
+    ],
+  );
+  return Object.freeze(Object.fromEntries(entries)) as PermissionsOf;
+}
+
+/**
+ * The only way to name a permission in code: `PERMISSIONS.movements.view`,
+ * `PERMISSIONS.ministryProfile.edit`. Only the actions the catalog allows exist.
+ */
+export const PERMISSIONS: PermissionsOf = buildPermissions();
+
+const DEFINITION_BY_RESOURCE = Object.fromEntries(
+  Object.values(PERMISSION_CATALOG).map((definition) => [
+    definition.resource,
+    definition,
+  ]),
+) as unknown as Record<PermissionResource, ResourceDefinition>;
+
+export const PERMISSION_RESOURCES: PermissionResource[] = Object.values(
   PERMISSION_CATALOG,
-) as PermissionResource[];
-
-export type Permission = `${PermissionResource}:${PermissionAction}`;
+).map((definition) => definition.resource);
 
 export interface PermissionGrant {
   resource: PermissionResource;
@@ -89,7 +168,16 @@ export function toPermission(
   resource: PermissionResource,
   action: PermissionAction,
 ): Permission {
-  return `${resource}:${action}`;
+  // Callers pass a pair taken from the catalog; arbitrary pairs are not permissions.
+  return `${resource}:${action}` as Permission;
+}
+
+/** A grant of one catalog permission with its scope: `grant(PERMISSIONS.requests.view, "ministry")`. */
+export function grant(
+  permission: Permission,
+  scope: PermissionScope = "all",
+): PermissionGrant {
+  return { ...fromPermission(permission), scope };
 }
 
 /** Inverse of `toPermission`. A `Permission` is always built from a valid resource and action. */
@@ -105,11 +193,11 @@ export function fromPermission(permission: Permission): {
 }
 
 export function actionsOf(resource: PermissionResource): PermissionAction[] {
-  return [...PERMISSION_CATALOG[resource].actions];
+  return [...DEFINITION_BY_RESOURCE[resource].actions];
 }
 
 export function scopesOf(resource: PermissionResource): PermissionScope[] {
-  return [...PERMISSION_CATALOG[resource].scopes];
+  return [...DEFINITION_BY_RESOURCE[resource].scopes];
 }
 
 /** Whether holding this permission lets someone escalate or control access. */
@@ -117,14 +205,14 @@ export function isDangerousPermission(
   resource: PermissionResource,
   action: PermissionAction,
 ): boolean {
-  const definition: ResourceDefinition = PERMISSION_CATALOG[resource];
+  const definition: ResourceDefinition = DEFINITION_BY_RESOURCE[resource];
   return definition.dangerous?.includes(action) ?? false;
 }
 
 /** Whether the catalog allows this exact resource, action and scope combination. */
 export function isGrantSupported(grant: PermissionGrant): boolean {
   const definition: ResourceDefinition | undefined =
-    PERMISSION_CATALOG[grant.resource];
+    DEFINITION_BY_RESOURCE[grant.resource];
   if (!definition) return false;
   return (
     definition.actions.includes(grant.action) &&
