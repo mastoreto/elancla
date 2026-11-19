@@ -5,14 +5,18 @@ import cn from 'src/utils/cn';
 
 // Hidden until the inline script in Layout marks the page `site-loader-pending`, or while
 // scripts/loading.ts (next to this file) runs the intro (`is-active`). Reduced motion never shows it.
-const SHOWN_WHEN_ACTIVE = 'hidden in-[.site-loader-pending]:block [&.is-active]:block motion-reduce:hidden!';
+const SHOWN_WHEN_ACTIVE =
+  'hidden in-[.site-loader-pending]:block [&.is-active]:block motion-reduce:hidden!';
 const LOADER_WIDTH = '[--ldr-w:clamp(130px,21vw,300px)]';
 
 const loadingOverlay = {
-  container: cn('pointer-events-none fixed inset-0 z-9999 bg-obra-warm', SHOWN_WHEN_ACTIVE),
+  container: cn(
+    'pointer-events-none fixed inset-0 z-9999 bg-obra-warm',
+    SHOWN_WHEN_ACTIVE
+  ),
   ldrCap: cn(
     'absolute inset-x-0 top-[calc(50%+clamp(130px,21vw,300px)*0.635+24px)] flex flex-col',
-    'items-center font-obra-sans-bold font-bold text-obra-cream opacity-0',
+    'items-center font-obra-sans-bold font-bold text-obra-cream opacity-0'
   ),
   logoText: cn('text-[26px]'),
   ldrAnchor: cn(
@@ -20,7 +24,7 @@ const loadingOverlay = {
     'left-[calc(50%-var(--ldr-w)/2)] z-10000 w-(--ldr-w) text-obra-cream opacity-0',
     '[filter:drop-shadow(0_22px_36px_rgba(21,21,21,0.25))]',
     LOADER_WIDTH,
-    SHOWN_WHEN_ACTIVE,
+    SHOWN_WHEN_ACTIVE
   ),
   ldr: cn('block h-auto w-full overflow-visible'),
   ldrHint: cn(
@@ -28,7 +32,7 @@ const loadingOverlay = {
     'font-obra-sans-bold text-[12px] font-bold tracking-[0.16em] text-obra-muted uppercase',
     'opacity-0',
     '[transform:translateX(-50%)]',
-    'motion-reduce:hidden!',
+    'motion-reduce:hidden!'
   ),
 };
 ---

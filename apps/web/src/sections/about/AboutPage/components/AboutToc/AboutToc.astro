@@ -1,6 +1,6 @@
 ---
-import { ULINK } from 'src/styles/classes';
 import type { ContentSection } from 'src/data/contentPages';
+import { ULINK } from 'src/styles/classes';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -13,14 +13,16 @@ const { title, sections } = Astro.props;
 const aboutToc = {
   container: cn(
     'sticky top-28 flex flex-[0_0_14.375rem] flex-col gap-3.5 self-start',
-    'max-lg:hidden',
+    'max-lg:hidden'
   ),
-  label: cn('font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] uppercase text-obra-muted'),
+  label: cn(
+    'font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] uppercase text-obra-muted'
+  ),
   sections: cn('flex flex-col gap-3.5'),
   tocLabel: cn(
     ULINK,
     'w-fit font-obra-sans-bold text-[0.9375rem] text-obra-muted no-underline',
-    '[transition:color_0.3s] [&.is-active]:text-obra-red',
+    '[transition:color_0.3s] [&.is-active]:text-obra-red'
   ),
 };
 ---

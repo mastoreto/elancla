@@ -45,7 +45,10 @@
         "id": "identidad",
         "eyebrow": "01 — Identity",
         "tocLabel": "Who we are",
-        "title": { "before": "Thank you for wanting to ", "emphasis": "know us." },
+        "title": {
+          "before": "Thank you for wanting to ",
+          "emphasis": "know us."
+        },
         "blocks": [
           {
             "type": "prose",
@@ -54,24 +57,46 @@
               "Our name comes from <strong>Hebrews 6:19</strong>: \"we have this hope as an anchor for the soul, firm and secure.\" That image says a lot about us: ordinary people holding on to what sustains us when circumstances move."
             ]
           },
-          { "type": "verse", "reference": "Hebrews 6 · 19", "text": "We have this hope as an anchor for the soul, firm and secure, entering the inner sanctuary behind the curtain." }
+          {
+            "type": "verse",
+            "reference": "Hebrews 6 · 19",
+            "text": "We have this hope as an anchor for the soul, firm and secure, entering the inner sanctuary behind the curtain."
+          }
         ]
       },
       {
         "id": "valores",
         "eyebrow": "02 — Confession",
         "tocLabel": "What we believe",
-        "title": { "before": "Three convictions that ", "emphasis": "order us." },
+        "title": {
+          "before": "Three convictions that ",
+          "emphasis": "order us."
+        },
         "description": "A church is not defined only by what it says it believes, but by what orders its life. These are the three convictions that shape almost everything we do in practice.",
         "blocks": [
           {
             "type": "values",
             "values": [
-              { "number": "I.", "title": "Centered on Christ", "description": "The cross and resurrection are not topics among others: they are the center of our preaching, singing, and pastoral care." },
-              { "number": "II.", "title": "Faithful to the Word", "description": "The Scriptures are our final authority for doctrine and practice. That is why we preach whole texts, not isolated verses." },
-              { "number": "III.", "title": "Family of faith", "description": "We grow together in hospitality, service, and prayer. Faith is learned by walking with others, not alone." }
+              {
+                "number": "I.",
+                "title": "Centered on Christ",
+                "description": "The cross and resurrection are not topics among others: they are the center of our preaching, singing, and pastoral care."
+              },
+              {
+                "number": "II.",
+                "title": "Faithful to the Word",
+                "description": "The Scriptures are our final authority for doctrine and practice. That is why we preach whole texts, not isolated verses."
+              },
+              {
+                "number": "III.",
+                "title": "Family of faith",
+                "description": "We grow together in hospitality, service, and prayer. Faith is learned by walking with others, not alone."
+              }
             ],
-            "note": { "label": "Note · Confession", "html": "If you want to read in detail what we believe, we wrote a <a href=\"/confesion-de-fe\">Statement of Faith</a> organized in twelve articles. It is the longer and more careful version of what we summarize here in three words." }
+            "note": {
+              "label": "Note · Confession",
+              "html": "If you want to read in detail what we believe, we wrote a <a href=\"/confesion-de-fe\">Statement of Faith</a> organized in twelve articles. It is the longer and more careful version of what we summarize here in three words."
+            }
           }
         ]
       },
@@ -79,19 +104,50 @@
         "id": "historia",
         "eyebrow": "03 — Journey",
         "tocLabel": "Our story",
-        "title": { "before": "From Misión Distrito Este ", "emphasis": "to El Ancla." },
+        "title": {
+          "before": "From Misión Distrito Este ",
+          "emphasis": "to El Ancla."
+        },
         "description": "The first stage of our story: the road from the mission that gave rise to the congregation to the property in La Blanqueada and the name that would, in time, come to identify us.",
         "blocks": [
           {
             "type": "timeline",
             "items": [
-              { "year": "1945", "title": "Iglesia Bautista Distrito Este", "description": "On December 23 the congregation adopts that name and becomes an independent church." },
-              { "year": "1946", "title": "Juan Antonio Louise", "description": "He takes the pastorate; several short pastorates follow over the next years." },
-              { "year": "1969", "title": "Donato Ferranty arrives", "description": "Nearly twenty years leading the congregation: stability and continuity." },
-              { "year": "1984", "title": "Misión El Ancla begins", "description": "The new mission starts working at the property in the La Blanqueada neighbourhood." },
-              { "year": "1989", "title": "Pr. Ferranty passes away", "description": "A key stage for the consolidation and growth of the church comes to a close." },
-              { "year": "1990", "title": "Ernesto Dianessi", "description": "The work continues, with an emphasis on JEBU and walking alongside young people." },
-              { "year": "1991", "title": "61 members", "description": "Plus a Bible Club of some 30 participants and a discipleship program with another 10." }
+              {
+                "year": "1945",
+                "title": "Iglesia Bautista Distrito Este",
+                "description": "On December 23 the congregation adopts that name and becomes an independent church."
+              },
+              {
+                "year": "1946",
+                "title": "Juan Antonio Louise",
+                "description": "He takes the pastorate; several short pastorates follow over the next years."
+              },
+              {
+                "year": "1969",
+                "title": "Donato Ferranty arrives",
+                "description": "Nearly twenty years leading the congregation: stability and continuity."
+              },
+              {
+                "year": "1984",
+                "title": "Misión El Ancla begins",
+                "description": "The new mission starts working at the property in the La Blanqueada neighbourhood."
+              },
+              {
+                "year": "1989",
+                "title": "Pr. Ferranty passes away",
+                "description": "A key stage for the consolidation and growth of the church comes to a close."
+              },
+              {
+                "year": "1990",
+                "title": "Ernesto Dianessi",
+                "description": "The work continues, with an emphasis on JEBU and walking alongside young people."
+              },
+              {
+                "year": "1991",
+                "title": "61 members",
+                "description": "Plus a Bible Club of some 30 participants and a discipleship program with another 10."
+              }
             ]
           },
           {
@@ -119,12 +175,47 @@
           {
             "type": "team",
             "people": [
-              { "initials": "JO", "role": "Lead pastor", "name": "Pr. Juan Olivera", "bio": "Pastoring since 2007. Leads Sunday preaching and the expository series in Hebrews." },
-              { "initials": "MR", "role": "Associate pastor", "name": "Pr. Martín Recalde", "bio": "Coordinates teaching, growth groups, and discipleship for new believers.", "tint": "#e6e2d6" },
-              { "initials": "SP", "role": "Elder", "name": "Sebastián Pérez", "bio": "Supports pastoral care for men and oversees local missions.", "tint": "#ece6da" },
-              { "initials": "CV", "role": "Deaconess", "name": "Carolina Vidal", "bio": "Leads Women's Space and the congregation's hospitality and care network.", "tint": "#efe9dc" },
-              { "initials": "DA", "role": "Deacon", "name": "Diego Acosta", "bio": "Coordinates logistics, finances, and Sunday service operations.", "tint": "#e9e4d6" },
-              { "initials": "LN", "role": "Youth leader", "name": "Lucía Núñez", "bio": "Walks with teens and young adults in biblical formation for those under 25.", "tint": "#ece5d4" }
+              {
+                "initials": "JO",
+                "role": "Lead pastor",
+                "name": "Pr. Juan Olivera",
+                "bio": "Pastoring since 2007. Leads Sunday preaching and the expository series in Hebrews."
+              },
+              {
+                "initials": "MR",
+                "role": "Associate pastor",
+                "name": "Pr. Martín Recalde",
+                "bio": "Coordinates teaching, growth groups, and discipleship for new believers.",
+                "tint": "#e6e2d6"
+              },
+              {
+                "initials": "SP",
+                "role": "Elder",
+                "name": "Sebastián Pérez",
+                "bio": "Supports pastoral care for men and oversees local missions.",
+                "tint": "#ece6da"
+              },
+              {
+                "initials": "CV",
+                "role": "Deaconess",
+                "name": "Carolina Vidal",
+                "bio": "Leads Women's Space and the congregation's hospitality and care network.",
+                "tint": "#efe9dc"
+              },
+              {
+                "initials": "DA",
+                "role": "Deacon",
+                "name": "Diego Acosta",
+                "bio": "Coordinates logistics, finances, and Sunday service operations.",
+                "tint": "#e9e4d6"
+              },
+              {
+                "initials": "LN",
+                "role": "Youth leader",
+                "name": "Lucía Núñez",
+                "bio": "Walks with teens and young adults in biblical formation for those under 25.",
+                "tint": "#ece5d4"
+              }
             ]
           }
         ]
@@ -133,16 +224,51 @@
         "id": "enlaces",
         "eyebrow": "05 — Keep going",
         "tocLabel": "Keep going",
-        "title": { "before": "If you want to ", "emphasis": "keep getting to know us." },
+        "title": {
+          "before": "If you want to ",
+          "emphasis": "keep getting to know us."
+        },
         "description": "A few internal links and resources to go deeper into who we are, what we believe, and what happens during the week.",
         "blocks": [
           {
             "type": "linkGrid",
             "links": [
-              { "href": "/confesion-de-fe", "sourceLabel": "elancla.uy / confession", "title": "Statement of Faith — twelve articles", "description": "The longer detail of our doctrinal convictions about God, Scripture, the gospel, and the church.", "meta": "Read · 12 articles", "glyph": "C" },
-              { "href": "/#juntos", "sourceLabel": "elancla.uy / ministries", "title": "Ten ministries where you can serve", "description": "Every ministry is an invitation: a place to grow, use your gifts, and serve others in the name of Christ.", "meta": "See full list", "glyph": "M", "tint": "#e6e2d4" },
-              { "href": "/blog", "sourceLabel": "elancla.uy / blog", "title": "Blog · reflections and pastoral notes", "description": "A weekly journal with sermons, guided readings, and brief notes about church life.", "meta": "Every Tuesday · 7 min", "glyph": "B", "tint": "#ece5d2" },
-              { "href": "https://youtube.com/@iglesiaelanclauy", "sourceLabel": "youtube · @iglesiaelanclauy", "title": "Sermons on video", "description": "The full archive of Sunday sermons and special events, streamed live every Sunday.", "meta": "Open channel", "glyph": "Y", "external": true, "tint": "#efe7d4" }
+              {
+                "href": "/confesion-de-fe",
+                "sourceLabel": "elancla.uy / confession",
+                "title": "Statement of Faith — twelve articles",
+                "description": "The longer detail of our doctrinal convictions about God, Scripture, the gospel, and the church.",
+                "meta": "Read · 12 articles",
+                "glyph": "C"
+              },
+              {
+                "href": "/#juntos",
+                "sourceLabel": "elancla.uy / ministries",
+                "title": "Ten ministries where you can serve",
+                "description": "Every ministry is an invitation: a place to grow, use your gifts, and serve others in the name of Christ.",
+                "meta": "See full list",
+                "glyph": "M",
+                "tint": "#e6e2d4"
+              },
+              {
+                "href": "/blog",
+                "sourceLabel": "elancla.uy / blog",
+                "title": "Blog · reflections and pastoral notes",
+                "description": "A weekly journal with sermons, guided readings, and brief notes about church life.",
+                "meta": "Every Tuesday · 7 min",
+                "glyph": "B",
+                "tint": "#ece5d2"
+              },
+              {
+                "href": "https://youtube.com/@iglesiaelanclauy",
+                "sourceLabel": "youtube · @iglesiaelanclauy",
+                "title": "Sermons on video",
+                "description": "The full archive of Sunday sermons and special events, streamed live every Sunday.",
+                "meta": "Open channel",
+                "glyph": "Y",
+                "external": true,
+                "tint": "#efe7d4"
+              }
             ]
           }
         ]
@@ -179,7 +305,11 @@
     "standfirst": "Every ministry is an invitation: a place to grow, use your gifts, and serve others in the name of Christ.",
     "figureLabel": "[ MINISTRY ]",
     "figureMeta": "— Montevideo · UY",
-    "shortcuts": { "all": "All ministries", "visit": "How to visit", "confession": "Statement of faith" },
+    "shortcuts": {
+      "all": "All ministries",
+      "visit": "How to visit",
+      "confession": "Statement of faith"
+    },
     "ui": {
       "toc": "On this page",
       "shortcuts": "Shortcuts",
@@ -188,13 +318,16 @@
       "factsTitleBefore": "When, where and ",
       "factsTitleEmphasis": "with whom.",
       "facts": [
-      { "label": "Service", "value": "Sunday · 11:15" },
-      { "label": "Place", "value": "Sanctuary · Av. L. A. de Herrera 3101" },
-      { "label": "How to join", "value": "Visit us on a Sunday and let's talk after the service." }
+        { "label": "Service", "value": "Sunday · 11:15" },
+        { "label": "Place", "value": "Sanctuary · Av. L. A. de Herrera 3101" },
+        {
+          "label": "How to join",
+          "value": "Visit us on a Sunday and let's talk after the service."
+        }
       ],
       "stats": [
-      { "value": "Sun 11:15", "label": "Service" },
-      { "value": "Montevideo", "label": "Uruguay" }
+        { "value": "Sun 11:15", "label": "Service" },
+        { "value": "Montevideo", "label": "Uruguay" }
       ]
     },
     "sections": {
@@ -206,19 +339,52 @@
         "The intention is that every ministry page can evolve from typed data: content is added to the record and the template handles the design, index, images, links, and mobile experience."
       ],
       "values": [
-        { "number": "I.", "title": "Grow", "description": "Form people rooted in Christ and in the Word." },
-        { "number": "II.", "title": "Serve", "description": "Use concrete gifts to care for and build up the church." },
-        { "number": "III.", "title": "Walk with others", "description": "Walk with others in hospitality, prayer, and perseverance." }
+        {
+          "number": "I.",
+          "title": "Grow",
+          "description": "Form people rooted in Christ and in the Word."
+        },
+        {
+          "number": "II.",
+          "title": "Serve",
+          "description": "Use concrete gifts to care for and build up the church."
+        },
+        {
+          "number": "III.",
+          "title": "Walk with others",
+          "description": "Walk with others in hospitality, prayer, and perseverance."
+        }
       ],
       "nextEyebrow": "03 — Next step",
       "nextToc": "Connect",
       "nextTitleBefore": "A place to ",
       "nextTitleEmphasis": "serve together.",
       "links": [
-        { "href": "/#juntos", "sourceLabel": "elancla.uy / ministries", "title": "Return to the ministry list", "description": "Explore the other spaces for service and growth in the church.", "meta": "See ministries", "glyph": "M" },
-        { "href": "/#visitanos", "sourceLabel": "elancla.uy / visit", "title": "Meet us on a Sunday", "description": "The best way to connect with a ministry is to come and talk after worship.", "meta": "Sundays · 11:15", "glyph": "V", "tint": "#e6e2d4" }
+        {
+          "href": "/#juntos",
+          "sourceLabel": "elancla.uy / ministries",
+          "title": "Return to the ministry list",
+          "description": "Explore the other spaces for service and growth in the church.",
+          "meta": "See ministries",
+          "glyph": "M"
+        },
+        {
+          "href": "/#visitanos",
+          "sourceLabel": "elancla.uy / visit",
+          "title": "Meet us on a Sunday",
+          "description": "The best way to connect with a ministry is to come and talk after worship.",
+          "meta": "Sundays · 11:15",
+          "glyph": "V",
+          "tint": "#e6e2d4"
+        }
       ]
     },
-    "cta": { "eyebrow": "[ Connect ]", "titleBefore": "Join ", "body": "If you want to know more about this ministry, visit us on a Sunday or write through the church contact channels.", "primary": "How to get there", "secondary": "See ministries" }
+    "cta": {
+      "eyebrow": "[ Connect ]",
+      "titleBefore": "Join ",
+      "body": "If you want to know more about this ministry, visit us on a Sunday or write through the church contact channels.",
+      "primary": "How to get there",
+      "secondary": "See ministries"
+    }
   }
 }

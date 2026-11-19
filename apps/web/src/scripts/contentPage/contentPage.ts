@@ -49,10 +49,12 @@ function initReadProgress(signal: AbortSignal): void {
 
     if (nav) {
       if (window.scrollY > 40) {
-        nav.style.background = 'color-mix(in srgb, var(--color-paper) 92%, transparent)';
+        nav.style.background =
+          'color-mix(in srgb, var(--color-paper) 92%, transparent)';
         nav.style.boxShadow = '0 8px 30px -10px rgba(0,0,0,0.18)';
       } else {
-        nav.style.background = 'color-mix(in srgb, var(--color-paper) 72%, transparent)';
+        nav.style.background =
+          'color-mix(in srgb, var(--color-paper) 72%, transparent)';
         nav.style.boxShadow = 'none';
       }
     }
@@ -63,7 +65,9 @@ function initReadProgress(signal: AbortSignal): void {
 }
 
 function initTocActiveState(): void {
-  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-content-toc]'));
+  const tocLinks = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>('[data-content-toc]')
+  );
   const targets = tocLinks
     .map((link) => {
       const targetId = link.dataset.target;
@@ -98,20 +102,26 @@ function initTocActiveState(): void {
 }
 
 function initTocSmoothScroll(signal: AbortSignal): void {
-  document.querySelectorAll<HTMLAnchorElement>('[data-content-toc][href^="#"]').forEach((link) => {
-    link.addEventListener('click', (event) => {
-      const href = link.getAttribute('href');
-      if (!href || href.length <= 1) return;
+  document
+    .querySelectorAll<HTMLAnchorElement>('[data-content-toc][href^="#"]')
+    .forEach((link) => {
+      link.addEventListener(
+        'click',
+        (event) => {
+          const href = link.getAttribute('href');
+          if (!href || href.length <= 1) return;
 
-      const target = document.querySelector<HTMLElement>(href);
-      if (!target) return;
+          const target = document.querySelector<HTMLElement>(href);
+          if (!target) return;
 
-      event.preventDefault();
-      window.history.pushState(null, '', href);
-      window.scrollTo({
-        top: target.offsetTop - 92,
-        behavior: 'smooth',
-      });
-    }, { signal });
-  });
+          event.preventDefault();
+          window.history.pushState(null, '', href);
+          window.scrollTo({
+            top: target.offsetTop - 92,
+            behavior: 'smooth',
+          });
+        },
+        { signal }
+      );
+    });
 }

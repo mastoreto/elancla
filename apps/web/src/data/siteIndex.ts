@@ -1,6 +1,6 @@
 import { getAllPostsFull, isSeedArticle } from '@ancla/content';
 import { getContentPages } from 'src/data/contentPages';
-import { defaultLocale, locales, type Locale } from 'src/i18n/config';
+import { defaultLocale, type Locale, locales } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
 
 export interface SiteIndexEntry {

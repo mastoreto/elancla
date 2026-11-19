@@ -1,12 +1,12 @@
 ---
-import Button from 'src/components/ui/Button';
 import AnchorMark from 'src/components/AnchorMark';
+import Button from 'src/components/ui/Button';
 import { doctrineIcons } from 'src/data/doctrineIcons';
-import { LandingSection } from 'src/sections/landing/components/LandingSection';
-import { localizePath } from 'src/i18n/utils';
-import { getMessages } from 'src/i18n/messages';
 import type { Locale } from 'src/i18n/config';
 import type { Messages } from 'src/i18n/messages';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+import { LandingSection } from 'src/sections/landing/components/LandingSection';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -24,7 +24,8 @@ const STACKED_GEOMETRY = [
   'max-sm:[--big:104px] max-sm:[--anc-w:84px] max-sm:[--cap-top:348px] max-sm:[--cap-h:104px]',
 ];
 // Without motion (`.is-static` on the landing root) the pinned layout falls back to a plain flow.
-const STATIC_FLOW = 'in-[.is-static]:relative! in-[.is-static]:inset-auto! in-[.is-static]:w-auto! in-[.is-static]:p-0!';
+const STATIC_FLOW =
+  'in-[.is-static]:relative! in-[.is-static]:inset-auto! in-[.is-static]:w-auto! in-[.is-static]:p-0!';
 
 const doctrinesSection = {
   container: cn(
@@ -35,54 +36,56 @@ const doctrinesSection = {
     'max-lg:pb-17',
     'max-sm:gap-7 max-sm:px-6 max-sm:pt-18 max-sm:pb-12',
     STACKED_GEOMETRY,
-    'in-[.is-static]:min-h-auto! in-[.is-static]:px-gutter! in-[.is-static]:py-20!',
+    'in-[.is-static]:min-h-auto! in-[.is-static]:px-gutter! in-[.is-static]:py-20!'
   ),
   docSide: cn(
     'absolute top-[clamp(5.5rem,15vh,9.5rem)] left-gutter flex w-[min(270px,22vw)] flex-col',
     'gap-[1.4rem]',
     'max-lg:contents short-desktop:top-24 short-desktop:gap-4',
-    STATIC_FLOW,
+    STATIC_FLOW
   ),
   sideCopy: cn('flex flex-col gap-[1.4rem]', 'max-lg:max-w-130 max-lg:gap-4.5'),
   title: cn(
     'm-0 font-obra-brand text-[clamp(1.9rem,3.05vw,2.75rem)] leading-[0.95] font-black',
-    'max-lg:text-[3.5rem] max-sm:text-[2.5rem]',
+    'max-lg:text-[3.5rem] max-sm:text-[2.5rem]'
   ),
   intro: cn(
     'm-0 text-[1.0625rem] leading-[1.5] text-obra-sand',
-    'max-lg:text-[1.125rem] max-sm:text-[1rem] short-desktop:text-[0.9375rem]',
+    'max-lg:text-[1.125rem] max-sm:text-[1rem] short-desktop:text-[0.9375rem]'
   ),
   quote: cn(
     'm-0 flex flex-col gap-3 border-t border-obra-warm-line pt-[1.4rem]',
-    'max-lg:order-3 max-lg:pt-6 short-desktop:gap-2 short-desktop:pt-4',
+    'max-lg:order-3 max-lg:pt-6 short-desktop:gap-2 short-desktop:pt-4'
   ),
   quoteText: cn(
     'm-0 font-obra-serif text-[1.5rem] leading-[1.2]',
     'max-lg:text-[1.75rem] max-lg:leading-[1.22] max-sm:text-[1.375rem]',
-    'short-desktop:text-[1.2rem]',
+    'short-desktop:text-[1.2rem]'
   ),
   cite: cn(
     'font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] text-obra-red-live not-italic',
-    'uppercase',
+    'uppercase'
   ),
   docStage: cn(
     'absolute top-[max(9rem,15vh)] right-[12.5vw] left-[24vw] h-[min(540px,60vh)]',
     'max-lg:relative max-lg:inset-auto max-lg:order-2 max-lg:m-0 max-lg:h-(--stage-h)',
-    'in-[.is-static]:hidden!',
+    'in-[.is-static]:hidden!'
   ),
   stageLabel: cn(
     'absolute top-1/2 left-1/2 -mt-[calc(var(--orbit-r)*1.21)]',
     '-ml-[calc(var(--orbit-r)*0.79)] box-border size-[calc(var(--orbit-r)*1.58)] rounded-full',
     'border border-obra-red-live/35',
     'max-lg:top-(--cy) max-lg:-mt-[calc(var(--ring)/2)] max-lg:-ml-[calc(var(--ring)/2)]',
-    'max-lg:size-(--ring)',
+    'max-lg:size-(--ring)'
   ),
   wheel: cn(
     'absolute top-1/2 left-1/2 -mt-[calc(var(--orbit-r)*0.42)] size-0',
-    'max-lg:top-(--cy) max-lg:mt-0',
+    'max-lg:top-(--cy) max-lg:mt-0'
   ),
   wheelSpin: cn('size-0 will-change-transform'),
-  wheelItem: cn('absolute top-[calc(var(--dot)/-2)] left-[calc(var(--dot)/-2)]'),
+  wheelItem: cn(
+    'absolute top-[calc(var(--dot)/-2)] left-[calc(var(--dot)/-2)]'
+  ),
   wheelCenter: cn('size-(--dot) will-change-transform'),
   wheelDot: cn(
     'box-border flex size-(--dot) cursor-pointer items-center justify-center rounded-full',
@@ -91,7 +94,7 @@ const doctrinesSection = {
     'focus-visible:outline-2 focus-visible:outline-offset-3',
     'focus-visible:outline-obra-red-live',
     '[&.is-active]:scale-118 [&.is-active]:border-obra-red-live',
-    '[&.is-active]:text-obra-red-live',
+    '[&.is-active]:text-obra-red-live'
   ),
   wheelIcon: cn('size-[46%]'),
   docAnchor: cn(
@@ -99,43 +102,43 @@ const doctrinesSection = {
     '-ml-[calc(var(--orbit-r)*0.42)] w-[calc(var(--orbit-r)*0.84)]',
     'drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)]',
     'max-lg:top-(--cy) max-lg:-mt-[calc(var(--anc-w)*0.638)]',
-    'max-lg:-ml-[calc(var(--anc-w)*0.5)] max-lg:w-(--anc-w)',
+    'max-lg:-ml-[calc(var(--anc-w)*0.5)] max-lg:w-(--anc-w)'
   ),
   anchorMark: cn('block h-auto w-full'),
   iconStage: cn(
     'absolute top-1/2 left-1/2 -mt-[calc(var(--orbit-r)*0.92)] -ml-[calc(var(--orbit-r)*0.5)]',
     'size-(--orbit-r) drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)]',
     'max-lg:top-(--cy) max-lg:-mt-[calc(var(--big)/2)] max-lg:-ml-[calc(var(--big)/2)]',
-    'max-lg:size-(--big)',
+    'max-lg:size-(--big)'
   ),
   iconSvg: cn('size-full overflow-visible'),
   iconGroup: cn('opacity-0'),
   captions: cn(
     'absolute right-0 bottom-0 left-0 h-[clamp(90px,13.3vh,120px)]',
-    'max-lg:top-(--cap-top) max-lg:bottom-auto max-lg:h-(--cap-h)',
+    'max-lg:top-(--cap-top) max-lg:bottom-auto max-lg:h-(--cap-h)'
   ),
   caption: cn(
-    'absolute top-0 right-0 left-0 flex flex-col items-center gap-2.5 text-center opacity-0',
+    'absolute top-0 right-0 left-0 flex flex-col items-center gap-2.5 text-center opacity-0'
   ),
   captionTitle: cn(
     'font-obra-brand text-[clamp(1.5rem,3.6vw,3.25rem)] leading-none font-black',
     'text-obra-red-live',
-    'max-lg:text-[2.875rem] max-sm:text-[1.75rem]',
+    'max-lg:text-[2.875rem] max-sm:text-[1.75rem]'
   ),
   captionSubtitle: cn(
     'font-obra-serif text-[clamp(1.0625rem,1.95vw,1.75rem)] leading-[1.1]',
-    'max-lg:text-[1.625rem] max-sm:text-[1.25rem]',
+    'max-lg:text-[1.625rem] max-sm:text-[1.25rem]'
   ),
   seal: cn(
     'absolute top-32.5 right-[4.8vw] flex w-16 flex-col items-center gap-4.5',
     'text-obra-warm-line',
     'in-[.is-static]:hidden!',
-    'max-lg:hidden short-desktop:top-27.5',
+    'max-lg:hidden short-desktop:top-27.5'
   ),
   sealMark: cn('h-auto w-11'),
   mark: cn(
     'rotate-180 font-obra-brand text-[clamp(2rem,5.4vh,4rem)] leading-none font-black',
-    '[writing-mode:vertical-rl]',
+    '[writing-mode:vertical-rl]'
   ),
   docFoot: cn(
     'absolute right-gutter bottom-[clamp(1.5rem,8vh,4.5rem)] left-gutter flex items-center',
@@ -144,24 +147,26 @@ const doctrinesSection = {
     'max-lg:gap-6 max-lg:pt-7',
     'max-sm:gap-5.5 short-desktop:bottom-5 short-desktop:pt-[1.1rem]',
     STATIC_FLOW,
-    'in-[.is-static]:mt-8!',
+    'in-[.is-static]:mt-8!'
   ),
   closing: cn(
     'm-0 max-w-188 font-obra-serif text-[clamp(1.25rem,2.6vw,2.375rem)] leading-[1.15]',
     'max-lg:text-[2.25rem] max-sm:text-[1.75rem]',
-    'short-desktop:text-[clamp(1.15rem,2.2vw,1.6rem)]',
+    'short-desktop:text-[clamp(1.15rem,2.2vw,1.6rem)]'
   ),
   list: cn(
     'absolute size-px overflow-hidden',
     '[clip-path:inset(50%)]',
     'in-[.is-static]:static! in-[.is-static]:my-8! in-[.is-static]:grid!',
     'in-[.is-static]:size-auto! in-[.is-static]:list-none!',
-    'in-[.is-static]:gap-3! in-[.is-static]:p-0! in-[.is-static]:[clip-path:none]!',
+    'in-[.is-static]:gap-3! in-[.is-static]:p-0! in-[.is-static]:[clip-path:none]!'
   ),
-  listItem: cn('in-[.is-static]:flex in-[.is-static]:flex-col in-[.is-static]:gap-0.5'),
+  listItem: cn(
+    'in-[.is-static]:flex in-[.is-static]:flex-col in-[.is-static]:gap-0.5'
+  ),
   listTitle: cn(
     'in-[.is-static]:font-obra-brand in-[.is-static]:font-black',
-    'in-[.is-static]:text-obra-red-live',
+    'in-[.is-static]:text-obra-red-live'
   ),
 };
 ---

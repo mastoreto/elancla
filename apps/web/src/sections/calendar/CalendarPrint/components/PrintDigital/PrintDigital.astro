@@ -1,9 +1,24 @@
 ---
 import AnchorMark from 'src/components/AnchorMark';
-import { CALENDAR_YEAR, events, eventsOfMonth, weeklySorted } from 'src/data/calendar';
+import {
+  CALENDAR_YEAR,
+  events,
+  eventsOfMonth,
+  weeklySorted,
+} from 'src/data/calendar';
 import PrintMonthGrid from 'src/sections/calendar/CalendarPrint/components/PrintMonthGrid';
-import { MONTHS_ES, dayOf, weekdayLong } from 'src/sections/calendar/CalendarPrint/utils/printFormat';
-import { EYEBROW, EYEBROW_TONE, SERIF, SHEET, SLIDE_TONE } from 'src/sections/calendar/CalendarPrint/styles';
+import {
+  EYEBROW,
+  EYEBROW_TONE,
+  SERIF,
+  SHEET,
+  SLIDE_TONE,
+} from 'src/sections/calendar/CalendarPrint/styles';
+import {
+  dayOf,
+  MONTHS_ES,
+  weekdayLong,
+} from 'src/sections/calendar/CalendarPrint/utils/printFormat';
 import cn from 'src/utils/cn';
 
 const weekly = weeklySorted();
@@ -20,7 +35,10 @@ const printDigital = {
   cover: cn(SLIDE, SLIDE_TONE.dark),
   coverMark: cn('absolute right-14 -bottom-[30px] w-105 opacity-12'),
   coverChurch: cn(EYEBROW, EYEBROW_TONE.live),
-  coverTitle: cn(SERIF, 'mt-auto text-[150px] leading-[0.9] tracking-[-0.03em]'),
+  coverTitle: cn(
+    SERIF,
+    'mt-auto text-[150px] leading-[0.9] tracking-[-0.03em]'
+  ),
   coverTagline: cn('mt-6 text-[22px] text-obra-dune'),
   weekly: cn(SLIDE, SLIDE_TONE.light),
   weeklyEyebrow: cn(EYEBROW, EYEBROW_TONE.red),
@@ -36,7 +54,9 @@ const printDigital = {
   yearEyebrow: cn(EYEBROW, EYEBROW_TONE.red),
   yearTitle: cn(SLIDE_TITLE),
   yearGrid: cn('grid grid-cols-[repeat(6,1fr)] gap-3'),
-  yearMonth: cn('flex flex-col gap-1.5 rounded-[20px] bg-obra-white px-3.5 py-3'),
+  yearMonth: cn(
+    'flex flex-col gap-1.5 rounded-[20px] bg-obra-white px-3.5 py-3'
+  ),
   yearMonthName: cn(SERIF, 'text-[22px]'),
   half: cn(SLIDE, SLIDE_TONE.light),
   halfLabel: cn(EYEBROW, EYEBROW_TONE.red),

@@ -1,10 +1,10 @@
 ---
 import Button from 'src/components/ui/Button';
 import { doctrineIcons } from 'src/data/doctrineIcons';
-import { LandingSection } from 'src/sections/landing/components/LandingSection';
-import { localizePath } from 'src/i18n/utils';
 import type { Locale } from 'src/i18n/config';
 import type { Messages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+import { LandingSection } from 'src/sections/landing/components/LandingSection';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -24,23 +24,29 @@ const godSection = {
     'flex min-h-svh flex-col items-center justify-center gap-[clamp(1.5rem,4vh,2.5rem)]',
     'bg-obra-paper px-gutter py-24 text-center',
     'max-lg:gap-11 max-lg:px-11 max-lg:py-30',
-    'max-sm:gap-8 max-sm:px-6 max-sm:py-22',
+    'max-sm:gap-8 max-sm:px-6 max-sm:py-22'
   ),
   eyebrow: cn('ln-eyebrow'),
   lines: cn(
     'm-0 font-obra-serif text-[clamp(2rem,5.55vw,5rem)] leading-[1.08] font-bold',
     'tracking-[-0.022em]',
-    'max-lg:text-[4rem] max-lg:leading-[1.1] max-sm:text-[2.5rem]',
+    'max-lg:text-[4rem] max-lg:leading-[1.1] max-sm:text-[2.5rem]'
   ),
   line: cn('block', 'max-lg:not-first:mt-[0.15em]'),
   lineAccent: cn('text-obra-red'),
   godPic: cn(
     'inline-flex h-[0.8em] w-[1.3em] items-center justify-center rounded-[22px] bg-obra-red',
-    'align-[-0.06em]',
+    'align-[-0.06em]'
   ),
-  tokenIcon: cn('size-[56%] fill-obra-paper stroke-obra-paper stroke-6', '[stroke-linejoin:round]'),
+  tokenIcon: cn(
+    'size-[56%] fill-obra-paper stroke-obra-paper stroke-6',
+    '[stroke-linejoin:round]'
+  ),
   token: cn('inline-block'),
-  godFoot: cn('flex flex-wrap items-center justify-center gap-6', 'max-lg:flex-col max-lg:gap-4.5'),
+  godFoot: cn(
+    'flex flex-wrap items-center justify-center gap-6',
+    'max-lg:flex-col max-lg:gap-4.5'
+  ),
   refs: cn('text-[0.875rem] text-obra-muted'),
 };
 ---

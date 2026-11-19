@@ -12,7 +12,10 @@ interface Props {
 const { categories, copy } = Astro.props;
 const filters = [
   { label: copy.all, value: 'todos' },
-  ...categories.map((category) => ({ label: category.name.replace(' bíblico', ''), value: category.filter })),
+  ...categories.map((category) => ({
+    label: category.name.replace(' bíblico', ''),
+    value: category.filter,
+  })),
 ];
 
 const blogCategories = {

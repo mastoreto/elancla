@@ -1,6 +1,6 @@
 ---
-import { PHOTO } from 'src/styles/classes';
 import type { ContentFigureData } from 'src/data/contentPages';
+import { PHOTO } from 'src/styles/classes';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -16,7 +16,7 @@ const aboutFigure = {
   container: cn('px-gutter-sm pt-[clamp(1.75rem,3vw,2.75rem)]'),
   figure: cn(
     'relative m-0 h-[clamp(14.375rem,36vw,32.5rem)] overflow-hidden',
-    'rounded-[clamp(1.75rem,3.3vw,3rem)]',
+    'rounded-[clamp(1.75rem,3.3vw,3rem)]'
   ),
   image: cn(PHOTO, 'object-[50%_60%]'),
   figureLabel: cn(PILL, 'top-4.5'),

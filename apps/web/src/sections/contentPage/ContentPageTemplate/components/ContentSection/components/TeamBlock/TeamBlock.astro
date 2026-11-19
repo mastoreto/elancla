@@ -9,16 +9,23 @@ interface Props {
 const { block } = Astro.props;
 
 const teamBlock = {
-  container: cn('grid grid-cols-1 gap-x-6 gap-y-12 mt-12', 'sm:grid-cols-2 lg:grid-cols-3'),
+  container: cn(
+    'grid grid-cols-1 gap-x-6 gap-y-12 mt-12',
+    'sm:grid-cols-2 lg:grid-cols-3'
+  ),
   person: cn('group flex flex-col'),
   personInner: cn(
     'relative aspect-[4/5] flex w-full items-center justify-center',
     '[background:repeating-linear-gradient(135deg,rgba(20,20,20,0.06)_0_1px,transparent_1px_14px),var(--tint,#efebe3)]',
     '[filter:grayscale(1)_contrast(1.05)] [transition:filter_0.6s_ease]',
-    'group-hover:[filter:grayscale(0)_contrast(1.02)]',
+    'group-hover:[filter:grayscale(0)_contrast(1.02)]'
   ),
-  initials: cn('font-display text-[clamp(3rem,8vw,6rem)] font-light text-charcoal/18 italic'),
-  role: cn('mt-5 font-mono text-[10px] tracking-[0.22em] uppercase text-primary'),
+  initials: cn(
+    'font-display text-[clamp(3rem,8vw,6rem)] font-light text-charcoal/18 italic'
+  ),
+  role: cn(
+    'mt-5 font-mono text-[10px] tracking-[0.22em] uppercase text-primary'
+  ),
   personName: cn('font-display text-2xl mt-2 font-medium'),
   bio: cn('font-ui text-[13.5px] text-ink/65 leading-relaxed mt-2'),
 };

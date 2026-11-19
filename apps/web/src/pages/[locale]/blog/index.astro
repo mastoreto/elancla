@@ -1,15 +1,15 @@
 ---
-import BlogPageTemplate from 'src/sections/blog/BlogPageTemplate';
-import { defaultLocale, isLocale } from 'src/i18n/config';
-import { getMessages } from 'src/i18n/messages';
-import { localizePath } from 'src/i18n/utils';
-import Layout from 'src/layouts/Layout';
 import {
   buildBlogPageData,
   getAllCategories,
   getAllPostCards,
   getAllSeriesWithPosts,
 } from '@ancla/content';
+import { defaultLocale, isLocale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+import Layout from 'src/layouts/Layout';
+import BlogPageTemplate from 'src/sections/blog/BlogPageTemplate';
 
 const { locale: localeParam } = Astro.params;
 if (!isLocale(localeParam) || localeParam === defaultLocale) {
@@ -22,8 +22,13 @@ const [posts, categories, allSeries] = await Promise.all([
   getAllSeriesWithPosts(),
 ]);
 
-const { articles, featured, marqueeItems, series, categories: blogCategories } =
-  buildBlogPageData(posts, categories, allSeries);
+const {
+  articles,
+  featured,
+  marqueeItems,
+  series,
+  categories: blogCategories,
+} = buildBlogPageData(posts, categories, allSeries);
 const copy = getMessages(locale).blog;
 ---
 

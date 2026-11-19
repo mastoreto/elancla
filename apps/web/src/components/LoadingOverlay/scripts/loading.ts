@@ -21,7 +21,9 @@ export function initLoadingOverlay(): void {
   const ground = document.querySelector<HTMLElement>('[data-site-loader]');
   const anchor = document.querySelector<HTMLElement>('[data-ldr-anchor]');
   const cap = document.querySelector<HTMLElement>('[data-ldr-cap]');
-  const outline = anchor?.querySelector<SVGPathElement>('[data-anchor-outline]');
+  const outline = anchor?.querySelector<SVGPathElement>(
+    '[data-anchor-outline]'
+  );
   const clip = anchor?.querySelector<SVGRectElement>('[data-anchor-clip]');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -54,10 +56,12 @@ export function initLoadingOverlay(): void {
   }
   const hint = document.querySelector<HTMLElement>('[data-ldr-hint]');
   const els = { ground, anchor, cap, outline, clip, hint: hint ?? ground };
-  const navLogo = () => document.querySelector<HTMLElement>('[data-nav-anchor]');
+  const navLogo = () =>
+    document.querySelector<HTMLElement>('[data-nav-anchor]');
   // Only the home has a hero anchor for the intro anchor to replace and carry to the header.
   const isHome = () => !!document.querySelector('[data-hero-anchor] svg');
-  const release = () => root.classList.remove('site-loader-lock', 'site-loader-pending');
+  const release = () =>
+    root.classList.remove('site-loader-lock', 'site-loader-pending');
 
   let flight: gsap.core.Tween | undefined;
   let settle: gsap.core.Tween | undefined;
@@ -91,10 +95,12 @@ export function initLoadingOverlay(): void {
       const arrived = progress >= 0.999;
       gsap.set(els.anchor, { opacity: arrived ? 0 : 1 });
       gsap.set(logo, { opacity: arrived ? 1 : 0 });
-      if (progress > 0.02) gsap.to(els.hint, { opacity: 0, duration: 0.3, overwrite: true });
+      if (progress > 0.02)
+        gsap.to(els.hint, { opacity: 0, duration: 0.3, overwrite: true });
     };
     const startFlight = () => {
-      if (!instant) gsap.to(els.hint, { opacity: 1, duration: 0.8, delay: 0.3 });
+      if (!instant)
+        gsap.to(els.hint, { opacity: 1, duration: 0.8, delay: 0.3 });
       flight = gsap.to(els.anchor, {
         x: target.left - from.left,
         y: target.top - from.top,
@@ -111,7 +117,9 @@ export function initLoadingOverlay(): void {
       sync(flight.scrollTrigger?.progress ?? 0); // honours a restored scroll position
     };
     // The anchor first settles where the hero's own anchor sits, then travels to the nav on scroll.
-    const heroSvg = document.querySelector<SVGElement>('[data-hero-anchor] svg');
+    const heroSvg = document.querySelector<SVGElement>(
+      '[data-hero-anchor] svg'
+    );
     const spot = heroSvg?.getBoundingClientRect();
     if (spot && spot.width > 0) {
       settle = gsap.to(els.anchor, {
@@ -146,7 +154,14 @@ export function initLoadingOverlay(): void {
     gsap.set(els.outline, { strokeDashoffset: 1 });
     gsap.set(els.clip, { attr: { y: 254 } });
     gsap.set(els.cap, { opacity: 0, y: 8 });
-    gsap.set(els.anchor, { x: 0, y: 0, scale: 1, opacity: 1, color: CREAM, transformOrigin: '0 0' });
+    gsap.set(els.anchor, {
+      x: 0,
+      y: 0,
+      scale: 1,
+      opacity: 1,
+      color: CREAM,
+      transformOrigin: '0 0',
+    });
   };
 
   const playFirstVisit = () => {
@@ -159,8 +174,16 @@ export function initLoadingOverlay(): void {
         remember();
       },
     });
-    tl.to(els.outline, { strokeDashoffset: 0, duration: 2.4, ease: 'power2.inOut' }, 0.4)
-      .to(els.clip, { attr: { y: 0 }, duration: 1.3, ease: 'power2.inOut' }, 1.5)
+    tl.to(
+      els.outline,
+      { strokeDashoffset: 0, duration: 2.4, ease: 'power2.inOut' },
+      0.4
+    )
+      .to(
+        els.clip,
+        { attr: { y: 0 }, duration: 1.3, ease: 'power2.inOut' },
+        1.5
+      )
       .to(els.cap, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.4)
       .to(els.cap, { opacity: 0, duration: 0.6, ease: 'power2.in' }, 2.2);
     reveal(tl, 3.0);
@@ -194,9 +217,21 @@ export function initLoadingOverlay(): void {
         },
       })
       .to(els.ground, { opacity: 1, duration: 0.35, ease: 'power2.out' }, 0)
-      .to(els.outline, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, 0.15)
-      .to(els.clip, { attr: { y: 0 }, duration: 0.6, ease: 'power2.inOut' }, 0.5)
-      .to(els.cap, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0.3);
+      .to(
+        els.outline,
+        { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' },
+        0.15
+      )
+      .to(
+        els.clip,
+        { attr: { y: 0 }, duration: 0.6, ease: 'power2.inOut' },
+        0.5
+      )
+      .to(
+        els.cap,
+        { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' },
+        0.3
+      );
     // Never leave the page covered if the navigation stalls or fails.
     routeTimeout = window.setTimeout(() => {
       pageReady = true;
@@ -218,11 +253,21 @@ export function initLoadingOverlay(): void {
       els.anchor.classList.add('is-active');
       gsap.set(els.outline, { strokeDashoffset: 0 });
       gsap.set(els.clip, { attr: { y: 0 } });
-      gsap.set(els.anchor, { x: 0, y: 0, scale: 1, opacity: 1, color: RED, transformOrigin: '0 0' });
+      gsap.set(els.anchor, {
+        x: 0,
+        y: 0,
+        scale: 1,
+        opacity: 1,
+        color: RED,
+        transformOrigin: '0 0',
+      });
       armFlight(navLogo(), true);
     };
     if (document.readyState === 'complete') requestAnimationFrame(run);
-    else window.addEventListener('load', () => requestAnimationFrame(run), { once: true });
+    else
+      window.addEventListener('load', () => requestAnimationFrame(run), {
+        once: true,
+      });
   };
 
   if (seen) playSeenVisit();

@@ -1,10 +1,14 @@
 ---
 import { MINISTRY_COLORS, weeklyActivities } from 'src/data/calendar';
 import type { Locale } from 'src/i18n/config';
-import { getHtmlLang } from 'src/i18n/utils';
 import type { Messages } from 'src/i18n/messages';
+import { getHtmlLang } from 'src/i18n/utils';
 import CalendarSectionHead from 'src/sections/calendar/CalendarPage/components/CalendarSectionHead';
-import { DOT, SECTION, SECTION_SPACING } from 'src/sections/calendar/CalendarPage/styles';
+import {
+  DOT,
+  SECTION,
+  SECTION_SPACING,
+} from 'src/sections/calendar/CalendarPage/styles';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -15,7 +19,10 @@ const { copy, locale } = Astro.props;
 
 // 2027-01-04 is a Monday: index 0..6 maps Monday..Sunday.
 const SUNDAY = 6;
-const weekdayFormat = new Intl.DateTimeFormat(getHtmlLang(locale), { weekday: 'long', timeZone: 'UTC' });
+const weekdayFormat = new Intl.DateTimeFormat(getHtmlLang(locale), {
+  weekday: 'long',
+  timeZone: 'UTC',
+});
 const days = Array.from({ length: 7 }, (_, i) => ({
   name: weekdayFormat.format(new Date(Date.UTC(2027, 0, 4 + i))),
   tone: i === SUNDAY ? ('sunday' as const) : ('weekday' as const),
@@ -35,30 +42,38 @@ const SLOT_TIME_TONE = {
   weekday: 'text-obra-red',
   sunday: 'text-obra-red-live',
 } as const;
-const dotColor = (tone: 'weekday' | 'sunday', ministry: keyof typeof MINISTRY_COLORS): string =>
+const dotColor = (
+  tone: 'weekday' | 'sunday',
+  ministry: keyof typeof MINISTRY_COLORS
+): string =>
   tone === 'sunday' ? 'var(--color-obra-white)' : MINISTRY_COLORS[ministry];
 
 const calendarWeekly = {
   container: cn(SECTION, SECTION_SPACING.default),
   days: cn(
     'grid grid-cols-[repeat(auto-fit,minmax(10.5rem,1fr))] gap-3.5',
-    'max-md:grid-cols-[1fr] max-md:gap-2.5 min-[1200px]:grid-cols-[repeat(7,1fr)]',
+    'max-md:grid-cols-[1fr] max-md:gap-2.5 min-[1200px]:grid-cols-[repeat(7,1fr)]'
   ),
   day: cn(
     'flex flex-col gap-2.5',
-    'max-md:gap-2 max-md:rounded-3xl max-md:bg-obra-mist max-md:p-4',
+    'max-md:gap-2 max-md:rounded-3xl max-md:bg-obra-mist max-md:p-4'
   ),
   dayName: cn(
     'border-b-[1.5px] pb-2.5 font-obra-serif text-[1.5rem] capitalize',
-    'max-md:border-b-0 max-md:pb-0 max-md:text-[1.625rem]',
+    'max-md:border-b-0 max-md:pb-0 max-md:text-[1.625rem]'
   ),
   empty: cn('px-0.5 py-1.5 text-[0.875rem] text-obra-pebble'),
   slot: cn('flex flex-col gap-1 rounded-[18px] px-3.5 pt-3.5 pb-[13px]'),
-  time: cn('font-obra-serif text-[1.5rem] leading-none', 'max-md:text-[1.625rem]'),
+  time: cn(
+    'font-obra-serif text-[1.5rem] leading-none',
+    'max-md:text-[1.625rem]'
+  ),
   slotTitle: cn('font-obra-sans-bold text-[0.9375rem] leading-[1.25]'),
   slotLabel: cn('flex items-center gap-1.5 text-[0.8125rem]'),
   slotLabelInner: cn(DOT),
-  example: cn('font-obra-sans-bold text-[0.625rem] tracking-[0.12em] text-obra-red uppercase'),
+  example: cn(
+    'font-obra-sans-bold text-[0.625rem] tracking-[0.12em] text-obra-red uppercase'
+  ),
 };
 ---
 

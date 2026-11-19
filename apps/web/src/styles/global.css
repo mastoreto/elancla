@@ -82,8 +82,8 @@
   --font-script: var(--font-boston-angel);
   --font-script-strong: var(--font-boston-angel-bold);
 
-  --background-image-home-banner: url('/images/homebanner-web.jpg');
-  --background-image-aboutus: url('/images/aboutus.jpg');
+  --background-image-home-banner: url("/images/homebanner-web.jpg");
+  --background-image-aboutus: url("/images/aboutus.jpg");
 
   --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
   --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
@@ -174,7 +174,8 @@
   --font-obra-serif: "Boston Angel Bold", Georgia, serif;
   --font-obra-serif-regular: "Boston Angel Regular", Georgia, serif;
   --font-obra-sans: "Futura No2 D OT Medium", system-ui, sans-serif;
-  --font-obra-sans-bold: "FuturaNo2D", "Futura No2 D OT Medium", system-ui, sans-serif;
+  --font-obra-sans-bold:
+    "FuturaNo2D", "Futura No2 D OT Medium", system-ui, sans-serif;
   --font-obra-brand: "Barastika", "Boston Angel Bold", serif;
   /* Older editorial template (ContentPage) */
   --font-label-mono: "JetBrains Mono", monospace;
@@ -197,8 +198,10 @@
   --animate-marquee: marquee 34s linear infinite;
   --animate-seal-spin: spin 36s linear infinite;
   /* 404 anchor: the outline draws itself, then the fill rises and the mark floats. */
-  --animate-anchor-draw: anchor-draw 2.4s 0.4s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-  --animate-anchor-forge: anchor-forge 2s 2.2s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  --animate-anchor-draw: anchor-draw 2.4s 0.4s cubic-bezier(0.65, 0, 0.35, 1)
+    forwards;
+  --animate-anchor-forge: anchor-forge 2s 2.2s cubic-bezier(0.65, 0, 0.35, 1)
+    forwards;
   --animate-float: float 7s 4s ease-in-out infinite;
   --animate-pulse-soft: pulse-soft 2.2s ease-in-out infinite;
   --animate-ring: ring 2.6s ease-out infinite;
@@ -212,57 +215,112 @@
   --animate-hero-rise: hero-rise 1s var(--ease-obra) var(--d, 0s) forwards;
 
   @keyframes drift-up {
-    from { transform: translateY(0); }
-    to { transform: translateY(-50%); }
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-50%);
+    }
   }
   @keyframes drift-down {
-    from { transform: translateY(-50%); }
-    to { transform: translateY(0); }
+    from {
+      transform: translateY(-50%);
+    }
+    to {
+      transform: translateY(0);
+    }
   }
   @keyframes rise {
-    to { opacity: 1; translate: none; }
+    to {
+      opacity: 1;
+      translate: none;
+    }
   }
   @keyframes marquee {
-    to { transform: translateX(-50%); }
+    to {
+      transform: translateX(-50%);
+    }
   }
   @keyframes anchor-draw {
-    to { stroke-dashoffset: 0; }
+    to {
+      stroke-dashoffset: 0;
+    }
   }
   @keyframes anchor-forge {
-    to { transform: scaleY(1); }
+    to {
+      transform: scaleY(1);
+    }
   }
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
   }
   @keyframes pulse-soft {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.35; }
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
   }
   @keyframes ring {
-    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5); }
-    70%, 100% { box-shadow: 0 0 0 22px rgba(255, 255, 255, 0); }
+    0% {
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
+    }
+    70%,
+    100% {
+      box-shadow: 0 0 0 22px rgba(255, 255, 255, 0);
+    }
   }
   @keyframes dialog-in {
-    from { opacity: 0; transform: translateY(18px) scale(0.97); }
+    from {
+      opacity: 0;
+      transform: translateY(18px) scale(0.97);
+    }
   }
   @keyframes fade-in {
-    from { opacity: 0; }
+    from {
+      opacity: 0;
+    }
   }
   @keyframes pulse-ring {
-    0% { transform: scale(0.6); opacity: 1; }
-    100% { transform: scale(2.2); opacity: 0; }
+    0% {
+      transform: scale(0.6);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(2.2);
+      opacity: 0;
+    }
   }
   @keyframes fill-fade {
-    from { fill-opacity: 0; }
-    to { fill-opacity: 1; }
+    from {
+      fill-opacity: 0;
+    }
+    to {
+      fill-opacity: 1;
+    }
   }
   @keyframes hero-rise {
-    to { transform: translate3d(0, 0, 0); }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
   }
   @keyframes halo {
-    0% { opacity: 0.5; transform: scale(0.6); }
-    100% { opacity: 0; transform: scale(2.4); }
+    0% {
+      opacity: 0.5;
+      transform: scale(0.6);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(2.4);
+    }
   }
 }
 
@@ -284,10 +342,14 @@
 }
 
 /* Short desktop screens: the pinned landing sections need a tighter layout so nothing collides. */
-@custom-variant short-desktop (@media (min-width: 1024px) and (max-height: 820px));
+@custom-variant short-desktop (@media (min-width: 1024px) and (
+    max-height: 820px
+  ));
 
 /* Enable class-based dark mode */
-@variant dark (&:where(.dark, .dark *));
+@variant dark 
+(
+&:where(.dark, .dark *));
 
 @font-face {
   font-family: "FuturaNo2D";

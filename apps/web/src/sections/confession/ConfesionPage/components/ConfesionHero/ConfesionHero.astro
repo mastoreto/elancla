@@ -1,12 +1,12 @@
 ---
-import Button from 'src/components/ui/Button';
-import { ULINK } from 'src/styles/classes';
-import { RISE_IN } from 'src/utils/riseIn';
 import AnchorMark from 'src/components/AnchorMark';
-import { localizePath } from 'src/i18n/utils';
+import Button from 'src/components/ui/Button';
 import type { Locale } from 'src/i18n/config';
 import type { Messages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+import { ULINK } from 'src/styles/classes';
 import cn from 'src/utils/cn';
+import { RISE_IN } from 'src/utils/riseIn';
 
 interface Props {
   copy: Messages['confession']['hero'];
@@ -15,35 +15,44 @@ interface Props {
 
 const { copy, locale } = Astro.props;
 // "We believe doctrine matters." with the emphasised word picked out in red.
-const [titleBefore, titleAfter = ''] = copy.titleLines.join(' ').split(copy.emphasis);
+const [titleBefore, titleAfter = ''] = copy.titleLines
+  .join(' ')
+  .split(copy.emphasis);
 
 const confesionHero = {
   container: cn(
     'flex flex-col gap-7 px-gutter-sm pt-[clamp(7.5rem,11vw,9.5rem)]',
-    'max-sm:gap-5.5',
+    'max-sm:gap-5.5'
   ),
-  nav: cn('flex items-center gap-2 font-obra-sans-bold text-[0.875rem] text-obra-muted'),
+  nav: cn(
+    'flex items-center gap-2 font-obra-sans-bold text-[0.875rem] text-obra-muted'
+  ),
   homeLink: cn(ULINK),
   current: cn('text-obra-red'),
   body: cn(
     'flex items-end justify-between gap-14',
-    'max-md:flex-col max-md:items-start max-md:gap-7',
+    'max-md:flex-col max-md:items-start max-md:gap-7'
   ),
   intro: cn('flex flex-1 flex-col gap-[1.6rem]', 'max-md:gap-5'),
   counter: cn('ln-eyebrow', RISE_IN),
   title: cn(
     'ln-h text-[clamp(3.25rem,7.8vw,7rem)] leading-[0.94] tracking-[-0.03em]',
-    RISE_IN,
+    RISE_IN
   ),
   emphasis: cn('text-obra-red'),
   text: cn(
     'm-0 max-w-150 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft',
-    RISE_IN,
+    RISE_IN
   ),
   actions: cn('flex flex-wrap gap-3', RISE_IN),
   expandAll: cn('cursor-pointer'),
-  seal: cn('relative aspect-square w-[clamp(11.875rem,20.8vw,18.75rem)] flex-none'),
-  sealIcon: cn('size-full animate-seal-spin font-obra-sans-bold', 'motion-reduce:animate-none'),
+  seal: cn(
+    'relative aspect-square w-[clamp(11.875rem,20.8vw,18.75rem)] flex-none'
+  ),
+  sealIcon: cn(
+    'size-full animate-seal-spin font-obra-sans-bold',
+    'motion-reduce:animate-none'
+  ),
   sealMark: cn('absolute inset-0 m-auto h-auto w-[22%]'),
 };
 ---

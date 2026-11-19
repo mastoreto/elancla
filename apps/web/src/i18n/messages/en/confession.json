@@ -2,7 +2,13 @@
   "seo": {
     "title": "Baptist statement of faith: what we believe",
     "description": "Statement of faith of El Ancla Baptist Church: nine Bible-based doctrines and the five solas of the Reformation that guide our life and teaching.",
-    "keywords": ["statement of faith", "Baptist doctrine", "five solas", "Protestant Reformation", "El Ancla Baptist Church"]
+    "keywords": [
+      "statement of faith",
+      "Baptist doctrine",
+      "five solas",
+      "Protestant Reformation",
+      "El Ancla Baptist Church"
+    ]
   },
   "breadcrumbs": [
     { "name": "Home", "url": "/" },
@@ -22,7 +28,13 @@
     "collapseAll": "Collapse all",
     "scroll": "Scroll"
   },
-  "solas": ["Sola Scriptura", "Solus Christus", "Sola Gratia", "Sola Fide", "Soli Deo Gloria"],
+  "solas": [
+    "Sola Scriptura",
+    "Solus Christus",
+    "Sola Gratia",
+    "Sola Fide",
+    "Soli Deo Gloria"
+  ],
   "quote": {
     "textBefore": "All Scripture is breathed out by God and profitable for teaching, for",
     "emphasis": "reproof",
@@ -70,10 +82,27 @@
       "verse": "Hear, O Israel: The Lord our God, the Lord is one.",
       "verseRef": "Deuteronomy 6:4",
       "sections": [
-        { "h": "Nature", "body": "<p>This one God exists eternally in three Persons: Father, Son, and Holy Spirit, equal in essence, power, and glory, yet distinct in their functions.</p>" },
-        { "h": "Relationship among the persons", "body": "<p>The three share the same divine nature and act in perfect unity.</p>" }
+        {
+          "h": "Nature",
+          "body": "<p>This one God exists eternally in three Persons: Father, Son, and Holy Spirit, equal in essence, power, and glory, yet distinct in their functions.</p>"
+        },
+        {
+          "h": "Relationship among the persons",
+          "body": "<p>The three share the same divine nature and act in perfect unity.</p>"
+        }
       ],
-      "refs": ["Deut 6:4", "Gen 1:1-2", "Ps 104:24", "Ps 33:6", "Heb 1:3", "Mt 3:16-17", "Mt 28:19", "2 Co 13:14", "1 Co 8:4-6", "Jn 10:30"]
+      "refs": [
+        "Deut 6:4",
+        "Gen 1:1-2",
+        "Ps 104:24",
+        "Ps 33:6",
+        "Heb 1:3",
+        "Mt 3:16-17",
+        "Mt 28:19",
+        "2 Co 13:14",
+        "1 Co 8:4-6",
+        "Jn 10:30"
+      ]
     },
     {
       "id": "jesucristo",
@@ -86,13 +115,46 @@
       "verse": "For there is one God, and there is one mediator between God and men, the man Christ Jesus.",
       "verseRef": "1 Timothy 2:5",
       "sections": [
-        { "h": "Identity", "body": "<p>Jesus Christ is the eternal Son of God, consubstantial with the Father and the Holy Spirit.</p>" },
-        { "h": "Life", "body": "<p>Born of the virgin Mary by the work of the Holy Spirit, he lived a perfect and sinless human life.</p>" },
-        { "h": "Death", "body": "<p>He gave his life on the cross as the perfect and sufficient sacrifice for the atonement of his people's sins.</p>" },
-        { "h": "Resurrection", "body": "<p>He rose bodily on the third day, demonstrating his victory over sin and death.</p>" },
-        { "h": "Ascension and return", "body": "<p>He ascended to heaven, sat at the right hand of the Father, and will return in glory as King and Lord of lords.</p>" }
+        {
+          "h": "Identity",
+          "body": "<p>Jesus Christ is the eternal Son of God, consubstantial with the Father and the Holy Spirit.</p>"
+        },
+        {
+          "h": "Life",
+          "body": "<p>Born of the virgin Mary by the work of the Holy Spirit, he lived a perfect and sinless human life.</p>"
+        },
+        {
+          "h": "Death",
+          "body": "<p>He gave his life on the cross as the perfect and sufficient sacrifice for the atonement of his people's sins.</p>"
+        },
+        {
+          "h": "Resurrection",
+          "body": "<p>He rose bodily on the third day, demonstrating his victory over sin and death.</p>"
+        },
+        {
+          "h": "Ascension and return",
+          "body": "<p>He ascended to heaven, sat at the right hand of the Father, and will return in glory as King and Lord of lords.</p>"
+        }
       ],
-      "refs": ["Jn 1:1,14", "Col 2:9", "Mt 1:18-23", "Lk 1:35", "1 Pe 2:22-24", "2 Co 5:21", "Heb 4:15", "1 Pe 3:18", "Col 2:13-14", "Is 53:4-6", "1 Co 15:3-4", "Mt 28:5-7", "Ro 4:25", "Mk 16:19", "Acts 1:9-11", "Rev 1:7", "Tit 2:13"]
+      "refs": [
+        "Jn 1:1,14",
+        "Col 2:9",
+        "Mt 1:18-23",
+        "Lk 1:35",
+        "1 Pe 2:22-24",
+        "2 Co 5:21",
+        "Heb 4:15",
+        "1 Pe 3:18",
+        "Col 2:13-14",
+        "Is 53:4-6",
+        "1 Co 15:3-4",
+        "Mt 28:5-7",
+        "Ro 4:25",
+        "Mk 16:19",
+        "Acts 1:9-11",
+        "Rev 1:7",
+        "Tit 2:13"
+      ]
     },
     {
       "id": "espiritu",
@@ -104,11 +166,30 @@
       "verse": "But the Helper, the Holy Spirit, whom the Father will send in my name, he will teach you all things.",
       "verseRef": "John 14:26",
       "sections": [
-        { "h": "Identity", "body": "<p>The Holy Spirit is the third Person of the Trinity, fully God, with the same divine attributes as the Father and the Son.</p>" },
-        { "h": "Work", "body": "<ul><li>He convicts the world of sin, righteousness, and judgment.</li><li>He regenerates and gives new life to the believer.</li><li>He permanently dwells in every Christian from conversion.</li><li>He teaches and guides into all truth.</li><li>He grants spiritual gifts for the building up of the Church.</li></ul>" },
-        { "h": "Christian life", "body": "<p>The believer should live under the Spirit's control, bearing spiritual fruit.</p>" }
+        {
+          "h": "Identity",
+          "body": "<p>The Holy Spirit is the third Person of the Trinity, fully God, with the same divine attributes as the Father and the Son.</p>"
+        },
+        {
+          "h": "Work",
+          "body": "<ul><li>He convicts the world of sin, righteousness, and judgment.</li><li>He regenerates and gives new life to the believer.</li><li>He permanently dwells in every Christian from conversion.</li><li>He teaches and guides into all truth.</li><li>He grants spiritual gifts for the building up of the Church.</li></ul>"
+        },
+        {
+          "h": "Christian life",
+          "body": "<p>The believer should live under the Spirit's control, bearing spiritual fruit.</p>"
+        }
       ],
-      "refs": ["Acts 5:3-4", "Jn 16:8-11", "Jn 3:5-8", "Tit 3:5", "Ef 1:13-14", "Jn 14:26", "Jn 16:13", "1 Co 12:4-11", "Gal 5:16-25"]
+      "refs": [
+        "Acts 5:3-4",
+        "Jn 16:8-11",
+        "Jn 3:5-8",
+        "Tit 3:5",
+        "Ef 1:13-14",
+        "Jn 14:26",
+        "Jn 16:13",
+        "1 Co 12:4-11",
+        "Gal 5:16-25"
+      ]
     },
     {
       "id": "biblia",
@@ -120,10 +201,22 @@
       "verse": "All Scripture is breathed out by God and profitable for teaching, for reproof, for correction, and for training in righteousness.",
       "verseRef": "2 Timothy 3:16",
       "sections": [
-        { "h": "Nature", "body": "<p>The Bible, composed of the Old and New Testaments, is the inspired Word of God, inerrant in its original writings and infallible in all it affirms.</p>" },
-        { "h": "Authority", "body": "<p>It is God's final and sufficient revelation to guide faith and practice, and it cannot be added to or taken away from.</p>" }
+        {
+          "h": "Nature",
+          "body": "<p>The Bible, composed of the Old and New Testaments, is the inspired Word of God, inerrant in its original writings and infallible in all it affirms.</p>"
+        },
+        {
+          "h": "Authority",
+          "body": "<p>It is God's final and sufficient revelation to guide faith and practice, and it cannot be added to or taken away from.</p>"
+        }
       ],
-      "refs": ["2 Tim 3:16", "2 Pe 1:20-21", "Ps 19:7-11", "Mt 4:4", "Rev 22:18-19"]
+      "refs": [
+        "2 Tim 3:16",
+        "2 Pe 1:20-21",
+        "Ps 19:7-11",
+        "Mt 4:4",
+        "Rev 22:18-19"
+      ]
     },
     {
       "id": "iglesia",
@@ -135,11 +228,31 @@
       "verse": "And he put all things under his feet and gave him as head over all things to the church.",
       "verseRef": "Ephesians 1:22",
       "sections": [
-        { "h": "Identity", "body": "<p>The Church is the body of Christ, composed of all true believers (<b>universal church</b>) and expressed locally in congregations that gather to worship, teach, serve, and fulfill Christ's mission (<b>local church</b>).</p>" },
-        { "h": "Purpose and function", "body": "<ol><li>Glorify God.</li><li>Build up the believer.</li><li>Proclaim the gospel.</li></ol>" },
-        { "h": "Internal life", "body": "<ul><li><b>Relationship:</b> Every believer should cultivate a deep and active bond with their local church.</li><li><b>Dependence:</b> The members of the body depend on one another to fulfill the mission.</li><li><b>Service:</b> Spiritual gifts should be exercised for mutual edification.</li><li><b>Work:</b> The Christian life involves intentional and active participation in the work of the Church.</li></ul>" }
+        {
+          "h": "Identity",
+          "body": "<p>The Church is the body of Christ, composed of all true believers (<b>universal church</b>) and expressed locally in congregations that gather to worship, teach, serve, and fulfill Christ's mission (<b>local church</b>).</p>"
+        },
+        {
+          "h": "Purpose and function",
+          "body": "<ol><li>Glorify God.</li><li>Build up the believer.</li><li>Proclaim the gospel.</li></ol>"
+        },
+        {
+          "h": "Internal life",
+          "body": "<ul><li><b>Relationship:</b> Every believer should cultivate a deep and active bond with their local church.</li><li><b>Dependence:</b> The members of the body depend on one another to fulfill the mission.</li><li><b>Service:</b> Spiritual gifts should be exercised for mutual edification.</li><li><b>Work:</b> The Christian life involves intentional and active participation in the work of the Church.</li></ul>"
+        }
       ],
-      "refs": ["Ef 1:22-23", "Acts 2:42", "Ef 3:21", "1 Pe 2:9", "Ef 4:11-13", "Mt 28:19-20", "Heb 10:24-25", "Ro 12:4-5", "1 Pe 4:10", "1 Co 15:58"]
+      "refs": [
+        "Ef 1:22-23",
+        "Acts 2:42",
+        "Ef 3:21",
+        "1 Pe 2:9",
+        "Ef 4:11-13",
+        "Mt 28:19-20",
+        "Heb 10:24-25",
+        "Ro 12:4-5",
+        "1 Pe 4:10",
+        "1 Co 15:58"
+      ]
     },
     {
       "id": "hombre",
@@ -151,10 +264,25 @@
       "verse": "So God created man in his own image, in the image of God he created him; male and female he created them.",
       "verseRef": "Genesis 1:27",
       "sections": [
-        { "h": "Origin", "body": "<p>Created in the image and likeness of God to reflect his glory.</p>" },
-        { "h": "Current condition", "body": "<p>Because of Adam's sin, all humanity is under condemnation, corrupted in every area of its being (<b>total depravity</b>).</p><ul><li>Enemy of God.</li><li>Unwilling and unable to please God.</li><li>Spiritually dead and enslaved to sin.</li></ul>" }
+        {
+          "h": "Origin",
+          "body": "<p>Created in the image and likeness of God to reflect his glory.</p>"
+        },
+        {
+          "h": "Current condition",
+          "body": "<p>Because of Adam's sin, all humanity is under condemnation, corrupted in every area of its being (<b>total depravity</b>).</p><ul><li>Enemy of God.</li><li>Unwilling and unable to please God.</li><li>Spiritually dead and enslaved to sin.</li></ul>"
+        }
       ],
-      "refs": ["Gen 1:26-27", "Ro 5:10", "Col 1:21", "Ro 8:7-8", "Jer 17:9", "Gen 6:5", "Ef 2:1-3", "Jn 8:34"]
+      "refs": [
+        "Gen 1:26-27",
+        "Ro 5:10",
+        "Col 1:21",
+        "Ro 8:7-8",
+        "Jer 17:9",
+        "Gen 6:5",
+        "Ef 2:1-3",
+        "Jn 8:34"
+      ]
     },
     {
       "id": "salvacion",
@@ -166,11 +294,30 @@
       "verse": "For by grace you have been saved through faith. And this is not your own doing; it is the gift of God.",
       "verseRef": "Ephesians 2:8",
       "sections": [
-        { "h": "Definition", "body": "<p>The sovereign work of God that rescues the sinner by grace, through faith in Jesus Christ.</p>" },
-        { "h": "Aspects", "body": "<ul><li>Election</li><li>Justification</li><li>Regeneration</li><li>Sanctification</li><li>Glorification</li></ul>" },
-        { "h": "Security", "body": "<p>The believer is kept by the power of God until the end.</p>" }
+        {
+          "h": "Definition",
+          "body": "<p>The sovereign work of God that rescues the sinner by grace, through faith in Jesus Christ.</p>"
+        },
+        {
+          "h": "Aspects",
+          "body": "<ul><li>Election</li><li>Justification</li><li>Regeneration</li><li>Sanctification</li><li>Glorification</li></ul>"
+        },
+        {
+          "h": "Security",
+          "body": "<p>The believer is kept by the power of God until the end.</p>"
+        }
       ],
-      "refs": ["Ef 2:8-9", "Tit 3:5", "Ef 1:4-5", "Ro 3:24-26", "Jn 3:5-8", "1 Th 4:3", "Ro 8:30", "Jn 10:28", "Phil 1:6"]
+      "refs": [
+        "Ef 2:8-9",
+        "Tit 3:5",
+        "Ef 1:4-5",
+        "Ro 3:24-26",
+        "Jn 3:5-8",
+        "1 Th 4:3",
+        "Ro 8:30",
+        "Jn 10:28",
+        "Phil 1:6"
+      ]
     },
     {
       "id": "ordenanzas",
@@ -182,8 +329,14 @@
       "verse": "Go therefore and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit.",
       "verseRef": "Matthew 28:19",
       "sections": [
-        { "h": "a) Baptism by immersion", "body": "<p>A symbol of union with Christ in his death, burial, and resurrection.</p>" },
-        { "h": "b) The Lord's Supper", "body": "<p>A memorial of Christ's work and proclamation of his return.</p>" }
+        {
+          "h": "a) Baptism by immersion",
+          "body": "<p>A symbol of union with Christ in his death, burial, and resurrection.</p>"
+        },
+        {
+          "h": "b) The Lord's Supper",
+          "body": "<p>A memorial of Christ's work and proclamation of his return.</p>"
+        }
       ],
       "refs": ["Mt 3:13-16", "Acts 8:36-38", "Ro 6:4", "1 Co 11:23-26"]
     },
@@ -197,10 +350,24 @@
       "verse": "Behold, I am coming soon, bringing my recompense with me, to repay each one for what he has done.",
       "verseRef": "Revelation 22:12",
       "sections": [
-        { "h": "Glorious return", "body": "<p>Christ will return personally, visibly, and gloriously to consummate history and establish new heavens and a new earth.</p>" },
-        { "h": "For the Church, this hope is", "body": "<ul><li>A living hope.</li><li>A reason for comfort.</li><li>An encouragement toward holiness and service.</li></ul>" }
+        {
+          "h": "Glorious return",
+          "body": "<p>Christ will return personally, visibly, and gloriously to consummate history and establish new heavens and a new earth.</p>"
+        },
+        {
+          "h": "For the Church, this hope is",
+          "body": "<ul><li>A living hope.</li><li>A reason for comfort.</li><li>An encouragement toward holiness and service.</li></ul>"
+        }
       ],
-      "refs": ["Acts 1:9-11", "Mt 24:30", "Rev 22:12", "Tit 2:13", "1 Pe 1:13", "1 Th 4:18", "1 Jn 3:2-3"]
+      "refs": [
+        "Acts 1:9-11",
+        "Mt 24:30",
+        "Rev 22:12",
+        "Tit 2:13",
+        "1 Pe 1:13",
+        "1 Th 4:18",
+        "1 Jn 3:2-3"
+      ]
     }
   ]
 }

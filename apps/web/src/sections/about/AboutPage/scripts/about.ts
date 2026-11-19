@@ -1,4 +1,5 @@
 export {};
+
 // /nosotros: highlight in the index the section crossing a band near the top of the viewport.
 let spy: IntersectionObserver | undefined;
 
@@ -11,11 +12,14 @@ function init(): void {
   if (!sections.length) return;
 
   const setActive = (id: string) =>
-    links.forEach((link) => link.classList.toggle('is-active', link.dataset.target === id));
+    links.forEach((link) =>
+      link.classList.toggle('is-active', link.dataset.target === id)
+    );
 
   spy = new IntersectionObserver(
     (entries) => {
-      for (const entry of entries) if (entry.isIntersecting) setActive(entry.target.id);
+      for (const entry of entries)
+        if (entry.isIntersecting) setActive(entry.target.id);
     },
     { rootMargin: '-30% 0px -60% 0px' }
   );

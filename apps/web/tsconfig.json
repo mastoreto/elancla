@@ -1,10 +1,6 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [
-    ".astro/types.d.ts",
-    "**/*",
-    "./node_modules/@types"
-  ],
+  "include": [".astro/types.d.ts", "**/*", "./node_modules/@types"],
   "compilerOptions": {
     "baseUrl": ".",
     "plugins": [

@@ -1,4 +1,4 @@
-import { defaultLocale, nonDefaultLocales, type Locale } from 'src/i18n/config';
+import { defaultLocale, type Locale, nonDefaultLocales } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
 import ministriesData from 'src/utils/ministriesData.json';
@@ -264,7 +264,9 @@ function localizeHtmlLinks(html: string, locale: Locale) {
 }
 
 function localizeHref(href: string, locale: Locale) {
-  return /^(https?:|mailto:|tel:)/i.test(href) ? href : localizePath(href, locale);
+  return /^(https?:|mailto:|tel:)/i.test(href)
+    ? href
+    : localizePath(href, locale);
 }
 
 function localizeCta(cta: ContentCta, locale: Locale): ContentCta {
@@ -323,7 +325,9 @@ function localizeContentPage(page: ContentPage, locale: Locale): ContentPage {
       ...page.hero,
       breadcrumbs: page.hero.breadcrumbs.map((breadcrumb) => ({
         ...breadcrumb,
-        href: breadcrumb.href ? localizeHref(breadcrumb.href, locale) : undefined,
+        href: breadcrumb.href
+          ? localizeHref(breadcrumb.href, locale)
+          : undefined,
       })),
     },
     shortcuts: page.shortcuts?.map((shortcut) => ({
@@ -348,7 +352,8 @@ function getMinistryCopy(locale: Locale, slug: string) {
 }
 
 function buildMinistryPages(locale: Locale): ContentPage[] {
-  const template = getMessages(locale).contentPages.ministryTemplate as MinistryTemplate;
+  const template = getMessages(locale).contentPages
+    .ministryTemplate as MinistryTemplate;
 
   return ministriesData
     .filter((ministry) => ministry.url.startsWith('/ministerios/'))
@@ -357,7 +362,10 @@ function buildMinistryPages(locale: Locale): ContentPage[] {
       const slug = normalizeSlug(rawSlug);
       const copy = getMinistryCopy(locale, slug);
       const name = copy?.name ?? ministry.name;
-      const summary = template.summaries[slug] ?? copy?.description ?? template.fallbackSummary;
+      const summary =
+        template.summaries[slug] ??
+        copy?.description ??
+        template.fallbackSummary;
       const sectionNumber = String(index + 1).padStart(2, '0');
 
       const page: ContentPage = {
@@ -407,7 +415,9 @@ function buildMinistryPages(locale: Locale): ContentPage[] {
             eyebrow: template.sections.identityEyebrow,
             tocLabel: template.sections.identityToc,
             title: {
-              before: interpolate(template.sections.identityTitleBefore, { name }),
+              before: interpolate(template.sections.identityTitleBefore, {
+                name,
+              }),
               emphasis: summary.toLowerCase(),
             },
             blocks: [
@@ -427,7 +437,10 @@ function buildMinistryPages(locale: Locale): ContentPage[] {
             id: 'datos',
             eyebrow: template.ui.factsEyebrow,
             tocLabel: template.ui.factsToc,
-            title: { before: template.ui.factsTitleBefore, emphasis: template.ui.factsTitleEmphasis },
+            title: {
+              before: template.ui.factsTitleBefore,
+              emphasis: template.ui.factsTitleEmphasis,
+            },
             blocks: [{ type: 'facts', facts: template.ui.facts }],
           },
           {
@@ -477,7 +490,9 @@ export function getContentPagesByRouteGroup(
   routeGroup: ContentPageRouteGroup,
   locale: Locale = defaultLocale
 ): ContentPage[] {
-  return getContentPages(locale).filter((page) => page.routeGroup === routeGroup);
+  return getContentPages(locale).filter(
+    (page) => page.routeGroup === routeGroup
+  );
 }
 
 export function getContentPageStaticPaths(
@@ -509,7 +524,9 @@ export function getContentPageBySlug(
   return null;
 }
 
-export function getLocalizedContentPageStaticPaths(routeGroup: ContentPageRouteGroup) {
+export function getLocalizedContentPageStaticPaths(
+  routeGroup: ContentPageRouteGroup
+) {
   return nonDefaultLocales.flatMap((locale) =>
     getContentPageStaticPaths(routeGroup, locale).map((path) => ({
       ...path,

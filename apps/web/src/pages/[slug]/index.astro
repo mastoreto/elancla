@@ -1,11 +1,11 @@
 ---
-import AboutPage from 'src/sections/about/AboutPage';
-import ContentPageTemplate from 'src/sections/contentPage/ContentPageTemplate';
-import LandingPage from 'src/sections/landing/LandingPage';
 import { getContentPageBySlug } from 'src/data/contentPages';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout';
+import AboutPage from 'src/sections/about/AboutPage';
+import ContentPageTemplate from 'src/sections/contentPage/ContentPageTemplate';
+import LandingPage from 'src/sections/landing/LandingPage';
 
 // En SSR, `/pt` y `/en` (home localizada) comparten forma con `/nosotros`
 // (página de contenido de raíz). Este único punto de entrada decide cuál es.
@@ -13,7 +13,8 @@ const { slug } = Astro.params;
 const localeHome = isLocale(slug) && slug !== defaultLocale ? slug : null;
 
 const locale = defaultLocale;
-const result = !localeHome && slug ? getContentPageBySlug('root', slug, locale) : null;
+const result =
+  !localeHome && slug ? getContentPageBySlug('root', slug, locale) : null;
 if (!localeHome && !result) {
   return Astro.rewrite('/404');
 }

@@ -1,14 +1,35 @@
 ---
 import AnchorMark from 'src/components/AnchorMark';
-import { CALENDAR_YEAR, events, eventsOfMonth, monthLayout, weeklySorted } from 'src/data/calendar';
 import {
-  MONTHS_ES, capitalize, dayOf, ministryEs, placeEs, weekdayLong, weekdayShort, weekdayShortByIndex,
+  CALENDAR_YEAR,
+  events,
+  eventsOfMonth,
+  monthLayout,
+  weeklySorted,
+} from 'src/data/calendar';
+import {
+  EYEBROW,
+  EYEBROW_TONE,
+  SERIF,
+  SHEET,
+  SHEET_TONE,
+} from 'src/sections/calendar/CalendarPrint/styles';
+import {
+  capitalize,
+  dayOf,
+  MONTHS_ES,
+  ministryEs,
+  placeEs,
+  weekdayLong,
+  weekdayShort,
+  weekdayShortByIndex,
 } from 'src/sections/calendar/CalendarPrint/utils/printFormat';
-import { EYEBROW, EYEBROW_TONE, SERIF, SHEET, SHEET_TONE } from 'src/sections/calendar/CalendarPrint/styles';
 import cn from 'src/utils/cn';
 
 const weekly = weeklySorted();
-const weeklyLine = weekly.map((a) => `${capitalize(weekdayShortByIndex(a.day))} ${a.time} ${a.title}`).join(' · ');
+const weeklyLine = weekly
+  .map((a) => `${capitalize(weekdayShortByIndex(a.day))} ${a.time} ${a.title}`)
+  .join(' · ');
 const WD = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
 const SUNDAY_COLUMN = 6;
 
@@ -25,7 +46,10 @@ const printA4 = {
   cover: cn(PAGE, SHEET_TONE.dark),
   coverMark: cn('absolute -right-15 -bottom-10 w-130 opacity-12'),
   coverChurch: cn(EYEBROW, EYEBROW_TONE.live),
-  coverTitle: cn(SERIF, 'mt-auto text-[150px] leading-[0.88] tracking-[-0.03em]'),
+  coverTitle: cn(
+    SERIF,
+    'mt-auto text-[150px] leading-[0.88] tracking-[-0.03em]'
+  ),
   coverVerse: cn('mt-7 max-w-105 text-[20px] leading-[1.4] text-obra-dune'),
   emphasis: cn('text-obra-red-live not-italic'),
   month: cn(PAGE, SHEET_TONE.light),
@@ -35,7 +59,9 @@ const printA4 = {
   monthYearText: cn(EYEBROW, EYEBROW_TONE.red),
   monthMark: cn('h-[43px] w-[34px]'),
   monthGrid: cn('mt-6.5 grid grid-cols-[repeat(7,1fr)]'),
-  weekdayCell: cn('pb-2 text-[13px] font-bold tracking-[0.12em] text-obra-stone'),
+  weekdayCell: cn(
+    'pb-2 text-[13px] font-bold tracking-[0.12em] text-obra-stone'
+  ),
   blankCell: cn(RULE, 'flex min-h-21 flex-col gap-1 px-1.5 pt-2'),
   dayCell: cn(RULE, 'flex min-h-21 flex-col gap-1 px-1.5 pt-2'),
   day: cn('font-obra-serif'),
@@ -48,12 +74,14 @@ const printA4 = {
   eventMeta: cn('text-[14px] text-obra-muted'),
   monthWeekly: cn(
     'mt-auto border-t-[1.5px] border-obra-ink pt-2.5 text-[11px] leading-[1.5]',
-    'text-obra-muted',
+    'text-obra-muted'
   ),
   weekly: cn(PAGE, SHEET_TONE.dark),
   weeklyEyebrow: cn(EYEBROW, EYEBROW_TONE.live),
   weeklyTitle: cn(SERIF, 'mt-2.5 mb-6 text-[64px] leading-none'),
-  weeklyRow: cn('flex justify-between border-t border-obra-warm-line py-3 text-[18px]'),
+  weeklyRow: cn(
+    'flex justify-between border-t border-obra-warm-line py-3 text-[18px]'
+  ),
   weeklyFooter: cn('mt-auto flex flex-col gap-1.5 text-[16px] text-obra-dune'),
 };
 ---

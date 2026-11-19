@@ -12,25 +12,29 @@ interface Props {
 const { title, hint, pageSize } = Astro.props;
 // Page setup for the print dialog: exact sheet size and keep every background color.
 const printSetup = `@page { size: ${pageSize}; margin: 0; } * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }`;
-const FOCUS = 'focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-obra-white';
+const FOCUS =
+  'focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-obra-white';
 
 const printLayout = {
-  container: cn('m-0 bg-obra-gravel font-obra-sans text-obra-ink', 'print:bg-transparent'),
+  container: cn(
+    'm-0 bg-obra-gravel font-obra-sans text-obra-ink',
+    'print:bg-transparent'
+  ),
   row: cn(
     'sticky top-0 z-10 flex flex-wrap items-center gap-4 bg-obra-ink px-5 py-3 text-[14px]',
     'text-white',
-    'print:hidden',
+    'print:hidden'
   ),
   link: cn('font-bold text-white no-underline', FOCUS),
   hint: cn('min-w-48 flex-1 text-obra-dune'),
   cpPrint: cn(
     'min-h-11 cursor-pointer rounded-full bg-obra-red px-5.5 font-bold text-white',
-    FOCUS,
+    FOCUS
   ),
   stack: cn(
     'ln box-border flex w-max min-w-full flex-col items-center gap-6 px-4 pt-6 pb-12',
     '[&>*+*]:break-before-page',
-    'print:block print:w-auto print:p-0',
+    'print:block print:w-auto print:p-0'
   ),
 };
 ---

@@ -11,9 +11,16 @@ interface Props {
 }
 
 const { series, copy, locale } = Astro.props;
-const statusLabel = { published: copy.published, current: copy.current, next: copy.upcoming };
+const statusLabel = {
+  published: copy.published,
+  current: copy.current,
+  next: copy.upcoming,
+};
 // Row look per status; the current one is highlighted and the upcoming ones are faded.
-const STATUS_TONE: Record<BlogSeriesItem['status'], { row: string; number: string; badge: string }> = {
+const STATUS_TONE: Record<
+  BlogSeriesItem['status'],
+  { row: string; number: string; badge: string }
+> = {
   published: {
     row: '',
     number: 'text-obra-taupe',
@@ -35,9 +42,13 @@ const blogSeries = {
   container: cn('pt-[clamp(3.5rem,7vw,5rem)] px-gutter'),
   panel: cn(
     'rounded-[48px] bg-obra-warm p-[clamp(2rem,5vw,4rem)] text-obra-cream',
-    'max-lg:rounded-[32px]',
+    'max-lg:rounded-[32px]'
   ),
-  header: cn('mb-8 flex gap-16', '*:min-w-0 *:flex-1', 'max-lg:flex-col max-lg:gap-5'),
+  header: cn(
+    'mb-8 flex gap-16',
+    '*:min-w-0 *:flex-1',
+    'max-lg:flex-col max-lg:gap-5'
+  ),
   counter: cn('ln-eyebrow text-obra-red-live'),
   headlineBefore: cn('ln-h mt-4 text-[clamp(2.5rem,4.4vw,4rem)] leading-none'),
   headlineEmphasis: cn('text-obra-red-live not-italic'),
@@ -46,17 +57,20 @@ const blogSeries = {
     'grid grid-cols-[54px_1fr_110px_110px_110px] items-center gap-5 border-t',
     'border-obra-warm-line py-5 text-inherit no-underline',
     '[transition:background-color_0.4s]',
-    'max-sm:grid-cols-[40px_1fr_auto] max-sm:gap-x-3.5 max-sm:gap-y-1',
+    'max-sm:grid-cols-[40px_1fr_auto] max-sm:gap-x-3.5 max-sm:gap-y-1'
   ),
   itemLink: cn('hover:bg-obra-white/3'),
   itemNumber: cn('font-obra-serif text-[1.75rem]'),
-  itemTitle: cn('font-obra-serif text-[1.625rem] leading-[1.1] font-bold', 'max-sm:text-[1.25rem]'),
+  itemTitle: cn(
+    'font-obra-serif text-[1.625rem] leading-[1.1] font-bold',
+    'max-sm:text-[1.25rem]'
+  ),
   itemReference: cn('text-[0.875rem] text-obra-sand', 'max-sm:hidden'),
   itemDate: cn('text-[0.875rem] text-obra-sand', 'max-sm:hidden'),
   itemStatus: cn(
     'inline-flex justify-self-start rounded-full border px-3.5 py-1.5 font-obra-sans-bold',
     'text-[0.75rem]',
-    'max-sm:col-start-3 max-sm:row-start-1',
+    'max-sm:col-start-3 max-sm:row-start-1'
   ),
 };
 ---

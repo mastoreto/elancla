@@ -1,4 +1,7 @@
 ---
+import { getSiteConfig } from '@ancla/content';
+import type { Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
 import Layout from 'src/layouts/Layout';
 import Closing from 'src/sections/landing/Closing';
 import Doctrines from 'src/sections/landing/Doctrines';
@@ -6,9 +9,6 @@ import God from 'src/sections/landing/God';
 import Hero from 'src/sections/landing/Hero';
 import Sunday from 'src/sections/landing/Sunday';
 import Together from 'src/sections/landing/Together';
-import type { Locale } from 'src/i18n/config';
-import { getMessages } from 'src/i18n/messages';
-import { getSiteConfig } from '@ancla/content';
 import cn from 'src/utils/cn';
 
 interface Props {

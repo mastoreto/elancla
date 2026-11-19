@@ -1,9 +1,9 @@
 ---
-import { ULINK, ULINK_LINE } from 'src/styles/classes';
-import { CAPTION } from 'src/sections/confession/ConfesionPage/styles';
 import type { Doctrine } from 'src/data/doctrines';
 import type { Messages } from 'src/i18n/messages';
 import DoctrineRow from 'src/sections/confession/ConfesionPage/components/DoctrineList/components/DoctrineRow';
+import { CAPTION } from 'src/sections/confession/ConfesionPage/styles';
+import { ULINK, ULINK_LINE } from 'src/styles/classes';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -14,7 +14,9 @@ interface Props {
 const { doctrines, copy } = Astro.props;
 
 const doctrineList = {
-  container: cn('flex scroll-mt-24 gap-14 px-gutter-sm pt-[clamp(3.5rem,6.7vw,6rem)]'),
+  container: cn(
+    'flex scroll-mt-24 gap-14 px-gutter-sm pt-[clamp(3.5rem,6.7vw,6rem)]'
+  ),
   main: cn('flex min-w-0 flex-1 flex-col gap-7'),
   header: cn('flex flex-col gap-3'),
   counter: cn('ln-eyebrow'),
@@ -22,18 +24,21 @@ const doctrineList = {
   doctrines: cn('flex flex-col gap-3'),
   index: cn(
     'sticky top-28 flex flex-[0_0_15.625rem] flex-col gap-[1.6rem] self-start',
-    'max-lg:hidden',
+    'max-lg:hidden'
   ),
   indexPanel: cn('flex flex-col gap-3'),
   indexTitle: cn(CAPTION, 'text-obra-muted'),
   indexLink: cn(
     ULINK_LINE,
     'flex gap-3 w-fit font-obra-sans-bold text-[0.9375rem] no-underline text-obra-muted',
-    '[transition:color_0.3s] [&.is-active]:text-obra-red',
+    '[transition:color_0.3s] [&.is-active]:text-obra-red'
   ),
   resourcesGroup: cn('flex flex-col gap-3'),
   resourcesTitle: cn(CAPTION, 'text-obra-muted'),
-  resourceLink: cn(ULINK, 'w-fit font-obra-sans-bold text-[0.9375rem] no-underline text-obra-ink'),
+  resourceLink: cn(
+    ULINK,
+    'w-fit font-obra-sans-bold text-[0.9375rem] no-underline text-obra-ink'
+  ),
 };
 ---
 

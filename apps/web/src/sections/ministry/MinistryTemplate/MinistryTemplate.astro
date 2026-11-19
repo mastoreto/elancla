@@ -1,12 +1,12 @@
 ---
-import Button from 'src/components/ui/Button';
-import { ULINK } from 'src/styles/classes';
-import type { ContentPage } from 'src/data/contentPages';
 import AnchorMark from 'src/components/AnchorMark';
-import Pill from 'src/components/ui/Pill';
 import InlineText from 'src/components/InlineText';
-import { RISE_IN } from 'src/utils/riseIn';
+import Button from 'src/components/ui/Button';
+import Pill from 'src/components/ui/Pill';
+import type { ContentPage } from 'src/data/contentPages';
+import { ULINK } from 'src/styles/classes';
 import cn from 'src/utils/cn';
+import { RISE_IN } from 'src/utils/riseIn';
 
 interface Props {
   page: ContentPage;
@@ -28,43 +28,65 @@ const CARD =
   'flex flex-col gap-3 rounded-[28px] bg-(--tint,var(--color-obra-mist)) text-inherit no-underline [transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s,background-color_0.4s] hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift';
 const CARD_TITLE = 'font-obra-serif text-[1.625rem] leading-[1.1] font-bold';
 const BOX = 'flex flex-col rounded-[28px] p-6';
-const BOX_LABEL = 'font-obra-sans-bold text-[0.75rem] tracking-[0.16em] text-obra-muted uppercase';
+const BOX_LABEL =
+  'font-obra-sans-bold text-[0.75rem] tracking-[0.16em] text-obra-muted uppercase';
 
 const ministryTemplate = {
   container: cn('ln bg-obra-paper pb-24'),
   header: cn('flex flex-col gap-9 px-gutter-sm pt-[clamp(7.5rem,11vw,9.5rem)]'),
   breadcrumbs: cn(
-    'flex flex-wrap items-center gap-2 font-obra-sans-bold text-[0.875rem] text-obra-muted',
+    'flex flex-wrap items-center gap-2 font-obra-sans-bold text-[0.875rem] text-obra-muted'
   ),
   crumbLink: cn(ULINK),
   current: cn('text-obra-red'),
-  heroBody: cn('flex items-end gap-16', 'max-lg:flex-col max-lg:items-start max-lg:gap-6'),
+  heroBody: cn(
+    'flex items-end gap-16',
+    'max-lg:flex-col max-lg:items-start max-lg:gap-6'
+  ),
   heroCopy: cn('flex min-w-0 flex-1 flex-col gap-[1.4rem]'),
-  heroMeta: cn('ln-eyebrow inline-flex flex-wrap items-center gap-2.5 tracking-[0.16em]', RISE_IN),
-  heroChip: cn('rounded-full bg-obra-red px-3 py-1.5 tracking-[0.08em] text-white'),
-  heroTitle: cn('ln-h text-[clamp(3.25rem,7.2vw,6.5rem)] wrap-anywhere', RISE_IN),
+  heroMeta: cn(
+    'ln-eyebrow inline-flex flex-wrap items-center gap-2.5 tracking-[0.16em]',
+    RISE_IN
+  ),
+  heroChip: cn(
+    'rounded-full bg-obra-red px-3 py-1.5 tracking-[0.08em] text-white'
+  ),
+  heroTitle: cn(
+    'ln-h text-[clamp(3.25rem,7.2vw,6.5rem)] wrap-anywhere',
+    RISE_IN
+  ),
   standfirst: cn(
     'm-0 flex-[0_0_min(26.25rem,100%)] text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55]',
     'text-obra-ink-soft',
     'max-lg:w-full max-lg:basis-auto',
-    RISE_IN,
+    RISE_IN
   ),
-  stats: cn('grid grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] gap-2.5', RISE_IN),
+  stats: cn(
+    'grid grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] gap-2.5',
+    RISE_IN
+  ),
   stat: cn('flex flex-col gap-1 rounded-[32px] p-6'),
-  statStrong: cn('font-obra-serif text-[clamp(2rem,3.6vw,3.25rem)] leading-none font-bold'),
-  statLabel: cn('font-obra-sans-bold text-[0.8125rem] tracking-[0.12em] uppercase opacity-80'),
+  statStrong: cn(
+    'font-obra-serif text-[clamp(2rem,3.6vw,3.25rem)] leading-none font-bold'
+  ),
+  statLabel: cn(
+    'font-obra-sans-bold text-[0.8125rem] tracking-[0.12em] uppercase opacity-80'
+  ),
   featured: cn('px-gutter-sm pt-11'),
   featuredFrame: cn(
     'relative h-[clamp(15rem,36vw,32.5rem)] overflow-hidden rounded-[clamp(28px,3.3vw,48px)]',
-    'bg-obra-warm',
+    'bg-obra-warm'
   ),
   featuredImage: cn(
     'size-full object-cover object-[50%_60%]',
-    '[filter:grayscale(1)_sepia(0.14)_contrast(1.06)]',
+    '[filter:grayscale(1)_sepia(0.14)_contrast(1.06)]'
   ),
   featuredLabel: cn('absolute top-4.5 left-4.5'),
   featuredBadge: cn('absolute bottom-4.5 left-4.5'),
-  body: cn('flex gap-14 px-gutter-sm pt-[clamp(3.5rem,6vw,5.5rem)]', 'max-lg:flex-col'),
+  body: cn(
+    'flex gap-14 px-gutter-sm pt-[clamp(3.5rem,6vw,5.5rem)]',
+    'max-lg:flex-col'
+  ),
   sections: cn('flex min-w-0 flex-1 flex-col gap-[clamp(4rem,7vw,6.875rem)]'),
   section: cn('flex scroll-mt-28 flex-col gap-7'),
   sectionHead: cn('flex flex-col gap-3.5'),
@@ -73,34 +95,46 @@ const ministryTemplate = {
   paragraph: cn('m-0 text-[clamp(1.0625rem,1.4vw,1.25rem)] leading-[1.7]'),
   values: cn('grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-3.5'),
   value: cn(CARD, 'p-6.5'),
-  valueNumber: cn('font-obra-serif text-[2.75rem] leading-none font-bold text-obra-red'),
+  valueNumber: cn(
+    'font-obra-serif text-[2.75rem] leading-none font-bold text-obra-red'
+  ),
   valueTitle: cn(CARD_TITLE),
   valueDescription: cn('text-[1rem] leading-[1.55] text-obra-ink-soft'),
-  facts: cn('m-0 grid grid-cols-[1fr_1fr] gap-x-10', 'max-[640px]:grid-cols-[1fr]'),
+  facts: cn(
+    'm-0 grid grid-cols-[1fr_1fr] gap-x-10',
+    'max-[640px]:grid-cols-[1fr]'
+  ),
   fact: cn('flex flex-col gap-1 border-t border-obra-ink/14 py-4'),
-  factLabel: cn('font-obra-sans-bold text-[0.75rem] tracking-[0.14em] text-obra-muted uppercase'),
+  factLabel: cn(
+    'font-obra-sans-bold text-[0.75rem] tracking-[0.14em] text-obra-muted uppercase'
+  ),
   factValue: cn('m-0 font-obra-sans-bold text-[1.125rem] leading-[1.35]'),
   links: cn('grid grid-cols-[repeat(auto-fit,minmax(19rem,1fr))] gap-3.5'),
   linkCard: cn(CARD, 'flex-row items-start gap-4.5 p-6'),
   linkGlyph: cn(
     'inline-flex size-14 flex-none items-center justify-center rounded-[18px] bg-obra-red',
-    'font-obra-serif text-[1.625rem] font-bold text-white',
+    'font-obra-serif text-[1.625rem] font-bold text-white'
   ),
-  linkCopy: cn('flex flex-col gap-2 text-[1rem] leading-[1.55] text-obra-ink-soft'),
+  linkCopy: cn(
+    'flex flex-col gap-2 text-[1rem] leading-[1.55] text-obra-ink-soft'
+  ),
   linkSource: cn(
-    'font-obra-sans-bold text-[0.6875rem] tracking-[0.14em] text-obra-muted uppercase',
+    'font-obra-sans-bold text-[0.6875rem] tracking-[0.14em] text-obra-muted uppercase'
   ),
   linkTitle: cn(CARD_TITLE),
   linkDescription: cn('text-[0.9375rem] leading-normal text-obra-ink-soft'),
   linkMeta: cn('font-obra-sans-bold text-[0.8125rem] text-obra-red not-italic'),
-  toc: cn('sticky top-28 flex flex-[0_0_17.5rem] flex-col gap-5 self-start', 'max-lg:hidden'),
+  toc: cn(
+    'sticky top-28 flex flex-[0_0_17.5rem] flex-col gap-5 self-start',
+    'max-lg:hidden'
+  ),
   tocPanel: cn(BOX, 'gap-3.5 bg-obra-white'),
   tocTitle: cn(BOX_LABEL),
   tocNav: cn('flex flex-col gap-3.5'),
   tocLink: cn(
     'relative m-0 flex gap-3 border-0 p-0 font-obra-sans-bold text-[0.9375rem] leading-[1.4]',
     'font-normal text-obra-ink',
-    '[transition:color_0.3s] hover:text-obra-red [&.active]:text-obra-red',
+    '[transition:color_0.3s] hover:text-obra-red [&.active]:text-obra-red'
   ),
   tocNumber: cn('text-obra-red'),
   shortcuts: cn(BOX, 'gap-3 bg-obra-mist'),
@@ -110,21 +144,25 @@ const ministryTemplate = {
   ctaPanel: cn(
     'relative flex items-center gap-14 overflow-hidden rounded-[clamp(28px,3.3vw,48px)]',
     'bg-obra-red p-[clamp(2rem,4.4vw,4rem)] text-white',
-    'max-lg:flex-col max-lg:items-start max-lg:gap-6',
+    'max-lg:flex-col max-lg:items-start max-lg:gap-6'
   ),
-  ctaMark: cn('pointer-events-none absolute right-8 -bottom-8 h-auto w-64 opacity-10'),
+  ctaMark: cn(
+    'pointer-events-none absolute right-8 -bottom-8 h-auto w-64 opacity-10'
+  ),
   ctaCopy: cn('relative flex flex-1 flex-col gap-3.5'),
   ctaEyebrow: cn(
-    'font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] text-obra-blush uppercase',
+    'font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] text-obra-blush uppercase'
   ),
   ctaTitle: cn('ln-h text-[clamp(2.25rem,3.9vw,3.5rem)] leading-none'),
   ctaBody: cn('m-0 max-w-120 text-[1.125rem] leading-normal'),
   ctaActions: cn(
     'relative flex flex-[0_0_min(22.5rem,100%)] flex-col gap-3',
-    'max-lg:w-full max-lg:basis-auto',
+    'max-lg:w-full max-lg:basis-auto'
   ),
   ctaPrimary: cn('justify-center px-6.5'),
-  ctaSecondary: cn('justify-center border-[1.5px] border-white px-6.5 text-white'),
+  ctaSecondary: cn(
+    'justify-center border-[1.5px] border-white px-6.5 text-white'
+  ),
 };
 ---
 

@@ -29,16 +29,19 @@ const newsletterCard = {
   row: cn(
     'relative flex items-center gap-14 overflow-hidden rounded-[48px] bg-obra-red',
     'p-[clamp(2rem,5vw,4rem)] text-white',
-    'max-lg:flex-col max-lg:items-stretch max-lg:gap-7 max-lg:rounded-[32px]',
+    'max-lg:flex-col max-lg:items-stretch max-lg:gap-7 max-lg:rounded-[32px]'
   ),
   newsAnchor: cn(
-    'pointer-events-none absolute -right-7.5 -bottom-10 h-auto w-65 text-white opacity-10',
+    'pointer-events-none absolute -right-7.5 -bottom-10 h-auto w-65 text-white opacity-10'
   ),
   stack: cn('relative flex flex-1 flex-col gap-3.5'),
   eyebrow: cn('ln-eyebrow text-obra-blush'),
   title: cn('ln-h text-[clamp(2.25rem,3.9vw,3.5rem)] leading-none'),
   description: cn('m-0 max-w-120 text-[1.125rem] leading-normal'),
-  newsletterForm: cn('relative flex flex-[0_0_min(460px,100%)] flex-col gap-3', 'max-lg:flex-none'),
+  newsletterForm: cn(
+    'relative flex flex-[0_0_min(460px,100%)] flex-col gap-3',
+    'max-lg:flex-none'
+  ),
   name: cn('sr-only'),
   input: cn(FIELD),
   email: cn('sr-only'),

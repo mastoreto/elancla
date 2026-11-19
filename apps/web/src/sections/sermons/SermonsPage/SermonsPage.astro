@@ -1,22 +1,22 @@
 ---
-import Chip from 'src/components/ui/Chip';
-import { PHOTO } from 'src/styles/classes';
+import { getSiteConfig } from '@ancla/content';
 import AnchorMark from 'src/components/AnchorMark';
 import Button from 'src/components/ui/Button';
+import Chip from 'src/components/ui/Chip';
 import {
   embedUrl,
   getLiveStream,
-  getSermons,
   getSeries,
+  getSermons,
   watchUrl,
 } from 'src/data/youtube';
 import type { Locale } from 'src/i18n/config';
-import { getHtmlLang, localizePath } from 'src/i18n/utils';
 import { getMessages } from 'src/i18n/messages';
+import { getHtmlLang, localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout';
-import { getSiteConfig } from '@ancla/content';
-import { RISE_IN } from 'src/utils/riseIn';
+import { PHOTO } from 'src/styles/classes';
 import cn from 'src/utils/cn';
+import { RISE_IN } from 'src/utils/riseIn';
 
 interface Props {
   locale: Locale;
@@ -27,8 +27,14 @@ const site = Astro.locals.site ?? (await getSiteConfig());
 const path = localizePath('/sermones', locale);
 
 // ?serie=<playlistId> filters the list; only ids of the channel's own playlists are accepted.
-const [live, latestList, series] = await Promise.all([getLiveStream(), getSermons(), getSeries()]);
-const selected = series.find((serie) => serie.id === Astro.url.searchParams.get('serie'));
+const [live, latestList, series] = await Promise.all([
+  getLiveStream(),
+  getSermons(),
+  getSeries(),
+]);
+const selected = series.find(
+  (serie) => serie.id === Astro.url.searchParams.get('serie')
+);
 const sermons = selected ? await getSermons(selected.id) : latestList;
 const latest = latestList[0];
 
@@ -48,11 +54,14 @@ const subscribeUrl = `${site.social.youtube ?? 'https://youtube.com'}?sub_confir
 // The server sets `data-live` on the hero and ./scripts/sermons.ts flips it when the stream starts or ends.
 const LIVE_ONLY = 'group-data-[live=false]/hero:hidden';
 const IDLE_ONLY = 'group-data-[live=true]/hero:hidden';
-const DOT = 'inline-block rounded-full bg-obra-white animate-pulse-soft motion-reduce:animate-none';
+const DOT =
+  'inline-block rounded-full bg-obra-white animate-pulse-soft motion-reduce:animate-none';
 const SECTION = 'flex flex-col gap-5 px-gutter pt-[clamp(3.5rem,7vw,5rem)]';
 const HERO_BLOCK = 'flex flex-col gap-6.5';
-const HERO_TITLE = 'ln-h text-[clamp(2.875rem,7.5vw,6.75rem)] leading-[0.94] tracking-[-0.03em] text-balance';
-const LEAD = 'm-0 max-w-140 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft';
+const HERO_TITLE =
+  'ln-h text-[clamp(2.875rem,7.5vw,6.75rem)] leading-[0.94] tracking-[-0.03em] text-balance';
+const LEAD =
+  'm-0 max-w-140 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft';
 const SCREEN_CHIP =
   'pointer-events-none absolute top-4 left-4 z-1 inline-flex items-center gap-2 rounded-full px-3.25 py-1.75 font-obra-sans-bold text-[0.75rem]';
 const RED_EM = 'text-obra-red not-italic';
@@ -69,14 +78,14 @@ const sermonsPage = {
   container: cn('ln overflow-x-clip bg-obra-paper', '[&_[hidden]]:hidden!'),
   sermonsHero: cn(
     'group/hero flex items-center gap-14 px-gutter pt-[clamp(7rem,12vh,8.5rem)]',
-    'max-lg:flex-col max-lg:items-stretch max-lg:gap-8',
+    'max-lg:flex-col max-lg:items-stretch max-lg:gap-8'
   ),
   heroCopy: cn('min-w-0 flex-1'),
   liveOnly: cn(HERO_BLOCK, LIVE_ONLY),
   liveBadge: cn(
     'inline-flex items-center gap-2.5 self-start rounded-full bg-obra-live px-4 py-2.25',
     'font-obra-sans-bold text-[0.8125rem] tracking-[0.14em] text-white uppercase',
-    RISE_IN,
+    RISE_IN
   ),
   liveBadgeDot: cn(DOT, 'size-2'),
   liveTitle: cn(HERO_TITLE, RISE_IN),
@@ -92,16 +101,16 @@ const sermonsPage = {
   sermonsPlayer: cn(
     'flex flex-[0_0_min(640px,46%)] flex-col gap-5 rounded-[48px] bg-obra-mist p-5',
     'max-lg:flex-none max-lg:rounded-[32px] max-lg:p-3',
-    RISE_IN,
+    RISE_IN
   ),
   playerFrame: cn(
     'relative aspect-video overflow-hidden rounded-[36px] bg-obra-warm',
-    'max-lg:rounded-[22px]',
+    'max-lg:rounded-[22px]'
   ),
   player: cn('absolute inset-0 size-full border-0'),
   playerEmpty: cn(
     'absolute inset-0 flex flex-col items-center justify-center gap-2 p-6 text-center',
-    'text-obra-cream',
+    'text-obra-cream'
   ),
   playerEmptyMark: cn('mb-2 h-auto w-12 text-obra-red-live opacity-60'),
   emptyTitle: cn('font-obra-serif text-[1.5rem]'),
@@ -109,19 +118,25 @@ const sermonsPage = {
   playerLiveChip: cn(
     SCREEN_CHIP,
     'bg-obra-live tracking-[0.08em] text-white uppercase',
-    LIVE_ONLY,
+    LIVE_ONLY
   ),
   playerLiveDot: cn(DOT, 'size-1.75'),
-  latestChip: cn(SCREEN_CHIP, 'bg-obra-white tracking-[0.04em] text-obra-ink', IDLE_ONLY),
+  latestChip: cn(
+    SCREEN_CHIP,
+    'bg-obra-white tracking-[0.04em] text-obra-ink',
+    IDLE_ONLY
+  ),
   playerInfo: cn('flex flex-col gap-2.5 px-4 pb-3', 'max-sm:px-2 max-sm:pb-2'),
-  playerEyebrow: cn('font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-red uppercase'),
+  playerEyebrow: cn(
+    'font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-red uppercase'
+  ),
   initialTitle: cn(
     'font-obra-serif text-[clamp(1.625rem,2.4vw,2.125rem)] leading-[1.05] font-bold',
-    'wrap-anywhere',
+    'wrap-anywhere'
   ),
   nextService: cn(
     "inline-flex items-center gap-2.5 font-obra-sans-bold text-[0.875rem] before:size-2 before:rounded-full before:bg-obra-stone before:content-['']",
-    IDLE_ONLY,
+    IDLE_ONLY
   ),
   sermonsList: cn(SECTION),
   listEyebrow: cn('ln-eyebrow'),
@@ -129,78 +144,96 @@ const sermonsPage = {
   listTitleEmphasis: cn(RED_EM),
   listToolbar: cn(
     'flex items-center justify-between gap-4',
-    'max-lg:flex-col max-lg:items-stretch',
+    'max-lg:flex-col max-lg:items-stretch'
   ),
   chips: cn('flex flex-wrap gap-2.5'),
   fieldLabel: cn(
     'flex min-h-13 flex-[0_0_340px] items-center gap-3 rounded-full bg-obra-white px-5.5',
     'text-obra-muted',
     'focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-obra-red',
-    'max-lg:flex-none',
+    'max-lg:flex-none'
   ),
   searchLabel: cn('sr-only'),
   sermonsSearch: cn(
     'min-w-0 flex-1 border-0 bg-transparent text-[0.9375rem] leading-[inherit] text-obra-ink',
     'placeholder:text-obra-placeholder',
-    '[outline:0]',
+    '[outline:0]'
   ),
   empty: cn('mx-0 my-6 text-[1.0625rem] text-obra-ink-soft'),
   noResults: cn('mx-0 my-6 text-[1.0625rem] text-obra-ink-soft'),
-  sermons: cn('mt-3 grid grid-cols-3 gap-5', 'max-lg:grid-cols-2 max-sm:grid-cols-[1fr]'),
+  sermons: cn(
+    'mt-3 grid grid-cols-3 gap-5',
+    'max-lg:grid-cols-2 max-sm:grid-cols-[1fr]'
+  ),
   sermonCard: cn(
     'group flex flex-col gap-4 rounded-[32px] bg-obra-mist px-4 pt-4 pb-6 text-inherit',
     'no-underline',
     '[transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s,background-color_0.4s]',
     'hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift focus-visible:outline-2',
-    'focus-visible:outline-offset-3 focus-visible:outline-obra-red',
+    'focus-visible:outline-offset-3 focus-visible:outline-obra-red'
   ),
-  sermonThumb: cn('relative aspect-video overflow-hidden rounded-[22px] bg-obra-linen'),
+  sermonThumb: cn(
+    'relative aspect-video overflow-hidden rounded-[22px] bg-obra-linen'
+  ),
   sermonThumbImage: cn(PHOTO),
   sermonPlay: cn(
     'absolute top-1/2 left-1/2 flex size-14 -translate-1/2 items-center justify-center',
     'rounded-full bg-obra-white text-obra-red shadow-[0_12px_28px_-12px_rgba(21,21,21,0.6)]',
-    '[transition:scale_0.5s_var(--ease-obra)] group-hover:scale-108',
+    '[transition:scale_0.5s_var(--ease-obra)] group-hover:scale-108'
   ),
   duration: cn(
     'absolute bottom-3.5 left-3.5 rounded-full bg-obra-ink/82 px-2.75 py-1.25',
-    'font-obra-sans-bold text-[0.75rem] text-white',
+    'font-obra-sans-bold text-[0.75rem] text-white'
   ),
   sermonBody: cn('flex flex-col gap-2.5 px-2'),
   sermonDate: cn(
-    'font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-muted uppercase',
+    'font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-muted uppercase'
   ),
   sermonTitle: cn(
     'm-0 font-obra-serif text-[1.5625rem] leading-[1.1] font-bold wrap-anywhere',
-    'max-sm:text-[1.375rem]',
+    'max-sm:text-[1.375rem]'
   ),
   watch: cn('font-obra-sans-bold text-[0.8125rem] text-obra-red'),
   listMore: cn('mt-4 flex justify-center'),
   seriesSection: cn(SECTION),
   seriesPanel: cn(
     'rounded-[48px] bg-obra-warm p-[clamp(2rem,5vw,4rem)] text-obra-cream',
-    'max-lg:rounded-[32px]',
+    'max-lg:rounded-[32px]'
   ),
-  seriesHeader: cn('mb-10 flex gap-16', '*:min-w-0 *:flex-1', 'max-lg:flex-col max-lg:gap-5'),
+  seriesHeader: cn(
+    'mb-10 flex gap-16',
+    '*:min-w-0 *:flex-1',
+    'max-lg:flex-col max-lg:gap-5'
+  ),
   seriesEyebrow: cn('ln-eyebrow text-obra-red-live'),
   seriesTitle: cn('ln-h mt-4 text-[clamp(2.5rem,4.4vw,4rem)] leading-none'),
   seriesTitleEmphasis: cn('text-obra-red-live not-italic'),
   seriesBody: cn('m-0 text-[1.125rem] leading-[1.55] text-obra-sand'),
-  seriesGrid: cn('grid grid-cols-3 gap-4', 'max-lg:grid-cols-2 max-sm:grid-cols-[1fr]'),
+  seriesGrid: cn(
+    'grid grid-cols-3 gap-4',
+    'max-lg:grid-cols-2 max-sm:grid-cols-[1fr]'
+  ),
   seriesCard: cn(
     'flex flex-col gap-3 rounded-[28px] border border-obra-warm-line bg-obra-warm-card p-6',
     'text-obra-cream no-underline',
     '[transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s] hover:-translate-y-0.5',
-    'hover:shadow-[0_14px_28px_-14px_rgba(0,0,0,0.6)]',
+    'hover:shadow-[0_14px_28px_-14px_rgba(0,0,0,0.6)]'
   ),
-  seriesCount: cn('font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-sand uppercase'),
-  seriesCardTitle: cn('font-obra-serif text-[1.875rem] leading-[1.05] wrap-anywhere'),
+  seriesCount: cn(
+    'font-obra-sans-bold text-[0.75rem] tracking-[0.12em] text-obra-sand uppercase'
+  ),
+  seriesCardTitle: cn(
+    'font-obra-serif text-[1.875rem] leading-[1.05] wrap-anywhere'
+  ),
   ctaSection: cn(SECTION),
   ctaPanel: cn(
     'relative flex items-center gap-14 overflow-hidden rounded-[48px] bg-obra-red',
     'p-[clamp(2rem,5vw,4rem)] text-white',
-    'max-lg:flex-col max-lg:items-stretch max-lg:gap-7 max-lg:rounded-[32px]',
+    'max-lg:flex-col max-lg:items-stretch max-lg:gap-7 max-lg:rounded-[32px]'
   ),
-  ctaMark: cn('pointer-events-none absolute -right-7.5 -bottom-10 h-auto w-65 text-white opacity-10'),
+  ctaMark: cn(
+    'pointer-events-none absolute -right-7.5 -bottom-10 h-auto w-65 text-white opacity-10'
+  ),
   ctaCopy: cn('relative flex flex-1 flex-col gap-3.5'),
   ctaEyebrow: cn('ln-eyebrow text-obra-blush'),
   ctaTitle: cn('ln-h text-[clamp(2.25rem,3.9vw,3.5rem)] leading-none'),

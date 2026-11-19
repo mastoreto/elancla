@@ -1,7 +1,7 @@
 ---
 import Button from 'src/components/ui/Button';
-import { CAPTION } from 'src/sections/confession/ConfesionPage/styles';
 import type { Messages } from 'src/i18n/messages';
+import { CAPTION } from 'src/sections/confession/ConfesionPage/styles';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -14,29 +14,33 @@ const confesionChristus = {
   container: cn('px-gutter-sm pt-[clamp(3.5rem,6.7vw,6rem)]'),
   stack: cn(
     'relative flex flex-col gap-5.5 overflow-hidden rounded-[clamp(2rem,3.3vw,3rem)]',
-    'bg-obra-red px-[clamp(1.5rem,5vw,4.5rem)] py-[clamp(2rem,5vw,4.5rem)] text-white',
+    'bg-obra-red px-[clamp(1.5rem,5vw,4.5rem)] py-[clamp(2rem,5vw,4.5rem)] text-white'
   ),
   sideLabel: cn(
     'pointer-events-none absolute top-5 right-5 font-obra-brand',
     'text-[clamp(5.625rem,13.9vw,12.5rem)] leading-none font-black text-obra-white/8',
-    'uppercase',
+    'uppercase'
   ),
   counter: cn(
     'relative font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] text-obra-blush',
-    'uppercase',
+    'uppercase'
   ),
   headlineBefore: cn(
     'ln-h relative max-w-224 text-[clamp(2.25rem,5.3vw,4.75rem)] leading-[0.98]',
-    'tracking-[-0.03em]',
+    'tracking-[-0.03em]'
   ),
-  text: cn('relative m-0 max-w-160 text-[clamp(1rem,1.3vw,1.1875rem)] leading-[1.55]'),
+  text: cn(
+    'relative m-0 max-w-160 text-[clamp(1rem,1.3vw,1.1875rem)] leading-[1.55]'
+  ),
   quote: cn('relative m-0 max-w-160 border-l-3 border-white pl-5'),
-  quoteText: cn('mx-0 mt-0 mb-2 font-obra-serif text-[clamp(1.375rem,2vw,1.75rem)] leading-[1.2]'),
+  quoteText: cn(
+    'mx-0 mt-0 mb-2 font-obra-serif text-[clamp(1.375rem,2vw,1.75rem)] leading-[1.2]'
+  ),
   reference: cn(CAPTION, 'text-obra-blush'),
   wrapper: cn('relative'),
   cta: cn(
     'bg-obra-white px-6.5 text-obra-red',
-    'hover:shadow-[0_14px_28px_-14px_rgba(21,21,21,0.45)]',
+    'hover:shadow-[0_14px_28px_-14px_rgba(21,21,21,0.45)]'
   ),
 };
 ---

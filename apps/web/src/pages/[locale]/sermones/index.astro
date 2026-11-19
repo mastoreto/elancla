@@ -1,6 +1,6 @@
 ---
-import SermonsPage from 'src/sections/sermons/SermonsPage';
 import { defaultLocale, isLocale } from 'src/i18n/config';
+import SermonsPage from 'src/sections/sermons/SermonsPage';
 
 const { locale } = Astro.params;
 if (!isLocale(locale) || locale === defaultLocale) {

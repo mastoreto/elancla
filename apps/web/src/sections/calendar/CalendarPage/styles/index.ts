@@ -9,7 +9,8 @@ export const SECTION_SPACING = {
 } as const;
 
 /** Section title; its emphasised tail uses `EMPHASIS`. */
-export const TITLE = 'ln-h text-[clamp(2.5rem,5vw,4.5rem)] max-md:text-[2.375rem]';
+export const TITLE =
+  'ln-h text-[clamp(2.5rem,5vw,4.5rem)] max-md:text-[2.375rem]';
 export const EMPHASIS = 'text-obra-red not-italic';
 
 export const LEAD =

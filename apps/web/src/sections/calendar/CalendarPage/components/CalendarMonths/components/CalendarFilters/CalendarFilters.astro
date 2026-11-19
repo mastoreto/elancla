@@ -1,8 +1,8 @@
 ---
 import { MINISTRY_COLORS, MINISTRY_KEYS } from 'src/data/calendar';
 import type { Locale } from 'src/i18n/config';
-import { getHtmlLang } from 'src/i18n/utils';
 import type { Messages } from 'src/i18n/messages';
+import { getHtmlLang } from 'src/i18n/utils';
 import { DOT, FOCUS_RING } from 'src/sections/calendar/CalendarPage/styles';
 import cn from 'src/utils/cn';
 
@@ -12,8 +12,13 @@ interface Props {
 }
 const { copy, locale } = Astro.props;
 
-const monthFormat = new Intl.DateTimeFormat(getHtmlLang(locale), { month: 'short', timeZone: 'UTC' });
-const months = Array.from({ length: 12 }, (_, i) => monthFormat.format(new Date(Date.UTC(2027, i, 1))).replace('.', ''));
+const monthFormat = new Intl.DateTimeFormat(getHtmlLang(locale), {
+  month: 'short',
+  timeZone: 'UTC',
+});
+const months = Array.from({ length: 12 }, (_, i) =>
+  monthFormat.format(new Date(Date.UTC(2027, i, 1))).replace('.', '')
+);
 
 // On phones each chip row is one swipeable line bleeding to the screen edge.
 const CHIP_ROW =
@@ -28,7 +33,8 @@ const CHIP = [
 ];
 const CHIP_VARIANT = {
   month: 'min-h-11 bg-obra-mist px-4 text-[0.9375rem]',
-  ministry: 'min-h-10 bg-transparent px-3.5 text-[0.875rem] shadow-[inset_0_0_0_1.5px_var(--color-obra-fog)] aria-pressed:shadow-none',
+  ministry:
+    'min-h-10 bg-transparent px-3.5 text-[0.875rem] shadow-[inset_0_0_0_1.5px_var(--color-obra-fog)] aria-pressed:shadow-none',
 } as const;
 // A pressed ministry chip turns ink, so its dot turns white.
 const CHIP_DOT = [DOT, 'group-aria-pressed:bg-obra-white'];

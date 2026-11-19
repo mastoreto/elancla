@@ -1,10 +1,10 @@
 ---
+import LogoText from 'src/components/LogoText';
+import type { Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
 import { ULINK } from 'src/styles/classes';
 import cn from 'src/utils/cn';
-import type { Locale } from 'src/i18n/config';
-import { localizePath } from 'src/i18n/utils';
-import LogoText from 'src/components/LogoText';
-import { getMessages } from 'src/i18n/messages';
 
 interface Props {
   locale: Locale;
@@ -15,7 +15,13 @@ interface Props {
 
 const { locale, variant = 'red', social = {} } = Astro.props;
 // Link targets, in the same order as the labels in footer.json.
-const churchHrefs = ['/nosotros#identidad', '/nosotros#historia', '/#doctrinas', '/confesion-de-fe', '/visitanos'];
+const churchHrefs = [
+  '/nosotros#identidad',
+  '/nosotros#historia',
+  '/#doctrinas',
+  '/confesion-de-fe',
+  '/visitanos',
+];
 const socialHrefs = [social.youtube, social.instagram, social.facebook];
 const copy = getMessages(locale).footer;
 
@@ -23,7 +29,9 @@ const footer = {
   footer: cn(
     'relative text-white overflow-hidden',
     // Dark: overlaps the red closing by its corner radius so the corners show red, not the page.
-    variant === 'dark' ? 'bg-[#151515] -mt-10 rounded-t-[40px] z-10 pt-24 pb-20' : 'bg-primary py-20'
+    variant === 'dark'
+      ? 'bg-[#151515] -mt-10 rounded-t-[40px] z-10 pt-24 pb-20'
+      : 'bg-primary py-20'
   ),
   watermark: cn(
     'absolute bottom-[-4vw] left-0 right-0 pointer-events-none select-none'
@@ -36,11 +44,15 @@ const footer = {
   topGrid: cn('grid grid-cols-1 md:grid-cols-12 gap-10 pb-14'),
   colBrand: cn('md:col-span-4'),
   brandRow: cn('flex items-center gap-3'),
-  brandTagline: cn('mt-6 font-ui text-[14px] leading-relaxed opacity-85 max-w-xs'),
+  brandTagline: cn(
+    'mt-6 font-ui text-[14px] leading-relaxed opacity-85 max-w-xs'
+  ),
   colLinks: cn('md:col-span-2'),
   colMinis: cn('md:col-span-3'),
   colSocial: cn('md:col-span-3'),
-  colLabel: cn('font-ui text-[10px] tracking-[0.25em] uppercase opacity-70 mb-4'),
+  colLabel: cn(
+    'font-ui text-[10px] tracking-[0.25em] uppercase opacity-70 mb-4'
+  ),
   linkList: cn('space-y-2 font-ui text-[13.5px]'),
   minisGrid: cn('grid grid-cols-2 gap-y-2 font-ui text-[13.5px]'),
   bottom: cn(

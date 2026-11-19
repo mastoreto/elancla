@@ -15,14 +15,22 @@ interface Props {
 const SIZE: Record<CoverSize, { box: string; pills: string; ghost: string }> = {
   sm: { box: 'rounded-[22px] p-4', pills: 'top-3.5 left-3.5', ghost: 'w-14' },
   lg: { box: 'rounded-[36px] p-7', pills: 'top-4 left-4', ghost: 'w-30' },
-  hero: { box: 'rounded-[clamp(28px,3.3vw,48px)] p-7', pills: 'top-4 left-4', ghost: 'w-[clamp(90px,10vw,150px)]' },
+  hero: {
+    box: 'rounded-[clamp(28px,3.3vw,48px)] p-7',
+    pills: 'top-4 left-4',
+    ghost: 'w-[clamp(90px,10vw,150px)]',
+  },
 };
 
 const { tint, size = 'sm', class: className } = Astro.props;
 const { box, pills, ghost } = SIZE[size];
 
 const blogCover = {
-  container: cn('relative flex items-end justify-end overflow-hidden bg-(--tint)', box, className),
+  container: cn(
+    'relative flex items-end justify-end overflow-hidden bg-(--tint)',
+    box,
+    className
+  ),
   category: cn('absolute flex gap-2', pills),
   markBox: cn('block text-obra-red opacity-16', ghost),
   mark: cn('block h-auto w-full'),

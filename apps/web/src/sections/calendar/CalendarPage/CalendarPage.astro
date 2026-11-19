@@ -1,8 +1,8 @@
 ---
 import { CALENDAR_YEAR, events } from 'src/data/calendar';
 import type { Locale } from 'src/i18n/config';
-import { getHtmlLang, localizePath } from 'src/i18n/utils';
 import { getMessages } from 'src/i18n/messages';
+import { getHtmlLang, localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout';
 import CalendarHero from 'src/sections/calendar/CalendarPage/components/CalendarHero';
 import CalendarMonths from 'src/sections/calendar/CalendarPage/components/CalendarMonths';
@@ -22,8 +22,12 @@ const first = [...events].sort((a, b) => a.date.localeCompare(b.date))[0];
 const firstDate = new Date(`${first.date}T00:00:00Z`);
 const next = {
   day: firstDate.getUTCDate(),
-  weekday: new Intl.DateTimeFormat(lang, { weekday: 'short', timeZone: 'UTC' }).format(firstDate).replace('.', ''),
-  month: new Intl.DateTimeFormat(lang, { month: 'short', timeZone: 'UTC' }).format(firstDate).replace('.', ''),
+  weekday: new Intl.DateTimeFormat(lang, { weekday: 'short', timeZone: 'UTC' })
+    .format(firstDate)
+    .replace('.', ''),
+  month: new Intl.DateTimeFormat(lang, { month: 'short', timeZone: 'UTC' })
+    .format(firstDate)
+    .replace('.', ''),
   title: first.title,
 };
 
