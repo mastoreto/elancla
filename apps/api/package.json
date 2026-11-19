@@ -15,16 +15,19 @@
     "check-types": "tsc --noEmit -p tsconfig.json",
     "openapi": "bun run src/scripts/generateOpenApi/generateOpenApi.ts",
     "clean": "rm -rf .turbo node_modules",
-    "invite": "bun run src/scripts/invite/invite.ts"
+    "invite": "bun run src/scripts/invite/invite.ts",
+    "media:purge": "bun run src/scripts/purgeMedia/purgeMedia.ts"
   },
   "dependencies": {
     "@ancla/contracts": "*",
     "@ancla/db": "*",
     "@ancla/emails": "*",
     "@hono/zod-openapi": "1.6.3",
+    "aws4fetch": "1.0.20",
     "better-auth": "1.7.25",
     "hono": "4.13.19",
     "nodemailer": "10.6.0",
+    "sharp": "0.35.5",
     "zod": "4.6.7"
   },
   "devDependencies": {

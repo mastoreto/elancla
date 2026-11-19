@@ -1,0 +1,23 @@
+{
+  "identities": [
+    {
+      "name": "ancla-private",
+      "credentials": [{ "accessKey": "ancla-private-key", "secretKey": "ancla-private-secret" }],
+      "actions": ["Read:ancla-private", "Write:ancla-private", "List:ancla-private"]
+    },
+    {
+      "name": "ancla-public",
+      "credentials": [{ "accessKey": "ancla-public-key", "secretKey": "ancla-public-secret" }],
+      "actions": ["Read:ancla-public", "Write:ancla-public", "List:ancla-public"]
+    },
+    {
+      "name": "ancla-bootstrap",
+      "credentials": [{ "accessKey": "ancla-bootstrap-key", "secretKey": "ancla-bootstrap-secret" }],
+      "actions": ["Admin", "Read", "Write", "List", "Tagging"]
+    },
+    {
+      "name": "anonymous",
+      "actions": ["Read:ancla-public"]
+    }
+  ]
+}

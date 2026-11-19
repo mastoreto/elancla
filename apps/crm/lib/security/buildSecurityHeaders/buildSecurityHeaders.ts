@@ -18,22 +18,33 @@ interface SecurityHeadersInput {
   nonce: string;
   pathname: string;
   isDevelopment: boolean;
+  /** Origin the browser PUTs uploads to (the storage), from the environment. */
+  uploadOrigin?: string;
+  /** Origin the public media variants are served from (the CDN), from the environment. */
+  mediaOrigin?: string;
 }
 
 function buildContentSecurityPolicy({
   nonce,
   isDevelopment,
-}: Pick<SecurityHeadersInput, "nonce" | "isDevelopment">): string {
+  uploadOrigin,
+  mediaOrigin,
+}: Pick<SecurityHeadersInput, "nonce" | "isDevelopment" | "uploadOrigin" | "mediaOrigin">): string {
+  const imageSources = ["'self'", "blob:", "data:", GOOGLE_AVATAR_ORIGIN];
+  if (mediaOrigin) imageSources.push(mediaOrigin);
+  const connectSources = ["'self'"];
+  if (uploadOrigin) connectSources.push(uploadOrigin);
   const directives = [
     "default-src 'self'",
     // 'strict-dynamic' lets the nonce'd bootstrap load Next's chunks; React dev needs eval.
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDevelopment ? " 'unsafe-eval'" : ""}`,
     // Radix UI positions popovers with inline styles, so styles cannot be nonce-only.
     "style-src 'self' 'unsafe-inline'",
-    // Google profile pictures (copied to our own storage in phase 0.6).
-    `img-src 'self' blob: data: ${GOOGLE_AVATAR_ORIGIN}`,
+    // Google profile pictures stay remote (copying them to our storage is out of scope for 0.6),
+    // plus the public media origin.
+    `img-src ${imageSources.join(" ")}`,
     "font-src 'self'",
-    "connect-src 'self'",
+    `connect-src ${connectSources.join(" ")}`,
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

@@ -1,0 +1,1 @@
+export { detectContentType } from "./detectContentType";

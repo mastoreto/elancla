@@ -42,7 +42,8 @@ apps/api/
     │   ├── http/                        # middlewares: cabeceras, CSRF, rate limit, idempotencia, paginación
     │   ├── db/                          # cliente por request y transacción (unit of work)
     │   ├── sequences/                   # correlativos MOV-2026-000123
-    │   ├── storage/                     # interfaz FileStorage + adaptadores B2 y local
+    │   ├── storage/                     # puerto FileStorage (uno por bucket), adaptador S3 (createS3Storage), getStorage, getStorageEnv y suite de contrato
+    │   ├── ids/                         # uuidV7 (cuando la clave del objeto se deriva del id antes del insert)
     │   ├── mail/                        # interfaz Mailer + adaptador SMTP (Mailpit en dev); plantillas en packages/emails
     │   └── platforms/                   # interfaces VideoPlatform/PodcastPlatform + adaptadores (YouTube, Spotify…)
     │
@@ -78,7 +79,7 @@ apps/api/
     │   │   ├── reports/
     │   │   ├── assembly/
     │   │   └── voting/
-    │   ├── media/                       # subidas firmadas, finalize, variantes de imagen
+    │   ├── media/                       # subidas firmadas, finalize, variantes de imagen, descarga privada, purga (data/ domain/ lib/ mappers/ policies/ useCases/ guards/)
     │   ├── audit/                       # consulta del log (solo lectura)
     │   └── public/                      # API pública v1 para sitios (solo contenido publicado)
     │
@@ -129,3 +130,21 @@ packages/contracts/   schemas Zod por módulo (inputs y DTOs); la API valida con
 ```
 
 `packages/auth` se eliminó (0.3): el server de Better Auth está en `src/core/auth` (`createAuth()` fábrica, `getAuth()` instancia perezosa) y el cliente en `apps/crm/lib/auth`.
+
+## Archivos y multimedia (`core/storage` + `modules/media`)
+
+- `core/storage`: `FileStorage` (puerto por bucket), `createS3Storage` (único adaptador, `aws4fetch`:
+  `fetch` + SigV4, corre en Node, Vercel y Bun), `getStorage("public" | "private")` (memoizado, cada
+  bucket con su propia key) y `getStorageEnv()` (esquema propio y perezoso: el CLI `invite` y el resto
+  de la API no necesitan credenciales de S3). `fileStorageContract` exporta la suite de contrato.
+- `modules/media`: `requestUpload`, `finalizeUpload`, `issueDownload` y `purgeStaleUploads`.
+  `media.routes.ts` solo exige sesión (`requireSession`, que también es su declaración de acceso): el
+  permiso real lo decide el **propósito** del archivo dentro del use case. `internal.routes.ts`
+  (`GET /internal/media/purge`) se protege con `requireCronSecret`, sin sesión.
+- **Cuándo agregar un propósito**: cuando un módulo nuevo necesita archivos (acta en Word, comprobante
+  de otra orden, imagen de otro contenido). Se agrega una entrada a `MEDIA_PURPOSES`
+  (`packages/contracts/src/media`) con visibilidad, tipos, tamaño máximo y permisos, y se agrega al enum
+  `MediaPurpose` de Prisma con su migración. Si el tipo es nuevo, se agrega su firma a
+  `detectContentType`. No hace falta un recurso `media` en el catálogo de permisos.
+- Las claves siguen `<organizationId>/<fileId>` (original, bucket privado) y
+  `<organizationId>/<fileId>/<ancho>.<formato>` (variantes, bucket público).

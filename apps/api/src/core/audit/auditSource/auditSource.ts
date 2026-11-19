@@ -5,9 +5,9 @@ import { REQUEST_ID_HEADER } from "../../http/requestId";
 export const CLI_ACTOR_LABEL = "cli";
 
 export interface AuditActor {
-  /** `null` for actors that are not users (the CLI). */
+  /** `null` for actors that are not users (the CLI, the cron job). */
   id: string | null;
-  /** Email (or "cli") frozen at the time of the event. */
+  /** Email (or "cli", "cron") frozen at the time of the event. */
   label: string;
 }
 
@@ -49,13 +49,20 @@ export function auditSourceFromHeaders(
   };
 }
 
-/** For work that runs outside any request (scripts). */
-export function auditSourceForCli(organizationId: string): AuditSource {
+/** For work that runs outside any request and has no user behind it (scripts, cron jobs). */
+export function auditSourceForSystem(
+  organizationId: string,
+  label: string,
+): AuditSource {
   return {
     organizationId,
-    actor: { id: null, label: CLI_ACTOR_LABEL },
+    actor: { id: null, label },
     requestId: null,
     ip: null,
     userAgent: null,
   };
+}
+
+export function auditSourceForCli(organizationId: string): AuditSource {
+  return auditSourceForSystem(organizationId, CLI_ACTOR_LABEL);
 }

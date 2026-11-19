@@ -1,0 +1,1 @@
+export { requireCronSecret } from "./requireCronSecret";
