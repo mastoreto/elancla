@@ -1,0 +1,1 @@
+export { generateSecret } from "./generateSecret";

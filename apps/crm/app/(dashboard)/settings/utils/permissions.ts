@@ -130,6 +130,7 @@ const SYSTEM_RESOURCES: readonly PermissionResource[] = [
   "users",
   "roles",
   "invitations",
+  "site.keys",
   "settings",
 ];
 

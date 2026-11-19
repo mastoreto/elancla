@@ -348,6 +348,75 @@ const rows: MatrixRow[] = [
     expected: 403,
   },
 
+  // site keys: view, create and delete are separate permissions.
+  ...(
+    [
+      ["GET", "/site-keys"],
+      ["POST", "/site-keys"],
+      ["DELETE", `/site-keys/${UNKNOWN_ID}`],
+    ] as const
+  ).map(
+    ([method, path]): MatrixRow => ({
+      who: "anonymous",
+      caller: "anonymous",
+      method,
+      path,
+      body: method === "POST" ? { name: "web" } : undefined,
+      expected: 401,
+    }),
+  ),
+  {
+    who: "no role",
+    caller: NOTHING,
+    method: "GET",
+    path: "/site-keys",
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.siteKeys.view,
+    caller: [grant(PERMISSIONS.siteKeys.view)],
+    method: "GET",
+    path: "/site-keys",
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.siteKeys.view,
+    caller: [grant(PERMISSIONS.siteKeys.view)],
+    method: "POST",
+    path: "/site-keys",
+    body: { name: "web" },
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.siteKeys.view,
+    caller: [grant(PERMISSIONS.siteKeys.view)],
+    method: "DELETE",
+    path: `/site-keys/${UNKNOWN_ID}`,
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.siteKeys.create,
+    caller: [grant(PERMISSIONS.siteKeys.create)],
+    method: "POST",
+    path: "/site-keys",
+    body: {},
+    expected: 400,
+  },
+  {
+    who: PERMISSIONS.siteKeys.create,
+    caller: [grant(PERMISSIONS.siteKeys.create)],
+    method: "GET",
+    path: "/site-keys",
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.siteKeys.delete,
+    caller: [grant(PERMISSIONS.siteKeys.delete)],
+    method: "DELETE",
+    path: `/site-keys/${UNKNOWN_ID}`,
+    expected: 404,
+  },
+
   // media: the permission is the one of the file's purpose (content:create, vouchers:create...).
   {
     who: "anonymous",
@@ -492,8 +561,11 @@ const PUBLIC_ROUTES = [
   // The invitation link is the credential: lookup and acceptance by token.
   "/api/invitations/by-token/:token",
   "/api/invitations/by-token/:token/accept",
-  // The public OpenAPI document (only registered outside production).
+  // The private OpenAPI document (only registered outside production).
   "/api/openapi.json",
+  // The public content API: the site key is the credential. `public.routes.test.ts` covers its 401.
+  "/api/public/v1/openapi.json",
+  "/api/public/v1/:churchSlug/*",
 ];
 
 describe("authorization matrix", () => {

@@ -38,7 +38,7 @@ Decisiones de origen: D-07, D-08, D-10, D-11, D-16, D-21, D-24, D-25.
 | CORS | Fase 1: no hay (mismo origen). Nunca `*`, nunca credenciales a orígenes no listados |
 | Autorización | `requirePermission()` / `allowAnySession` / `allowPublic` declarado en cada ruta + policy de recurso en el use case + `scopeWhere` en las consultas. Una ruta sin declaración hace fallar el test de introspección del router (`app.test.ts`); no es un chequeo de arranque. El CRM oculta menú y secciones con `GET /me/permissions`, pero la API es la autoridad |
 | Entrada | Zod `.strict()`; tamaño máximo de body; fechas y montos con formato estricto |
-| Salida | Solo DTOs; `Cache-Control: private, no-store` en toda respuesta autenticada |
+| Salida | Solo DTOs; `Cache-Control: private, no-store` en toda respuesta salvo la de una ruta que declara el suyo (la API pública, §2) |
 | Rate limit | Better Auth (login, 2FA) con almacenamiento en BD; los endpoints públicos propios (vista previa y aceptación de invitación) usan `core/http/rateLimit` sobre la misma tabla; reglas de Vercel Firewall por ruta sensible. Ambos se llavean por la IP de `X-Forwarded-For`: el proxy de producción debe sobrescribirla (1.10) |
 | 2FA en login social | El plugin `twoFactor` oficial solo intercepta login por credencial. `socialTwoFactorGuard` (`core/auth`) hace lo mismo tras `/callback/:id` y `/sign-in/social`: borra la sesión recién creada y emite la cookie `two_factor`, de modo que `verifyTotp`/`verifyBackupCode` terminan el login. Replica comportamiento de Better Auth 1.7.25; un test lo cubre de punta a punta |
 | Alta de usuarios | `POST /api/auth/sign-up/email` público responde 404. El único alta es una invitación pendiente: `databaseHooks.user.create.before` rechaza cualquier otro caso (email o Google). Vínculo de cuentas solo explícito |
@@ -47,18 +47,23 @@ Decisiones de origen: D-07, D-08, D-10, D-11, D-16, D-21, D-24, D-25.
 
 ## 2. Web ↔ API (contenido público)
 
-- La web llama a `/public/v1/...` **desde el servidor** (SSR), nunca desde el navegador del
+- La web llama a `/api/public/v1/...` **desde el servidor** (SSR), nunca desde el navegador del
   visitante.
-- Se identifica con una **site key** por sitio: `Authorization: Bearer sk_<siteId>_<secreto>`.
+- Se identifica con una **site key** por sitio: `Authorization: Bearer sk_<keyId>_<secreto>` (`keyId` = UUID del registro, `secreto` = 32 bytes aleatorios en base64url). El guard busca la key por id y compara `sha256(secreto)` en tiempo constante; sin key, mal formada, inexistente, revocada, secreto incorrecto o de otra iglesia → el **mismo** 401.
   - Se guarda solo el hash (SHA-256) en BD; el secreto se muestra una vez al crearla.
   - Alcance mínimo: leer contenido **publicado** de su organización. No puede escribir ni ver
     borradores.
-  - Rotable sin downtime (dos claves activas durante la rotación) y revocable.
+  - Rotable sin downtime (máximo dos claves activas por organización; la tercera es 409) y revocable (`revokedAt`, la fila queda y la revocación se audita).
   - Vive en variables de entorno del servidor del sitio (`SITE_API_KEY`, nunca `PUBLIC_`).
 - El contenido publicado es público por naturaleza: la key no protege un secreto, sirve para
   **identificar el sitio** (qué organización, qué secciones), limitar abuso y poder cortar el acceso.
 - Respuestas con `Cache-Control: public, s-maxage=60, stale-while-revalidate=300`. Variación por
-  iglesia incluida en la URL (`/public/v1/:churchSlug/...`), así el caché nunca mezcla iglesias.
+  iglesia incluida en la URL (`/api/public/v1/:churchSlug/...`), así el caché nunca mezcla iglesias.
+  Consecuencia aceptada: una key revocada puede seguir sirviendo desde el CDN hasta ~6 minutos
+  (el contenido es público por naturaleza). Los errores (401, 404) no se cachean.
+- **Sin rate limit propio hasta 1.10**: `rateLimit` se llavea por IP y aquí la IP es la del
+  servidor web, así que limitaría a todo el sitio. En 1.10: regla de Vercel Firewall por ruta, o un
+  límite por `keyId` si hay abuso.
 - Los DTOs públicos son un subconjunto explícito: nunca incluyen IDs de usuarios, emails, notas
   internas ni datos de tesorería.
 

@@ -90,6 +90,13 @@ export async function voidMovement(deps: VoidMovementDeps, input: VoidMovementIn
 }
 ```
 
+## Cabeceras de caché
+
+`securityHeaders` pone `Cache-Control: private, no-store` en toda respuesta **salvo** la de una ruta
+que ya declaró el suyo: solo la API pública (`modules/public`), cuyo contenido es público y lo cachea
+el CDN (`public, s-maxage=60, stale-while-revalidate=300`). Sus errores no declaran nada y siguen
+siendo `no-store`.
+
 ## Autorización (`core/authz`)
 
 Cada ruta declara quién puede llamarla con **uno** de estos middlewares (sin declaración el test de
@@ -100,6 +107,8 @@ introspección del router en `app.test.ts` falla):
   `RolePermission`), incluidos los recursos futuros.
 - `allowAnySession` (= `requireSession`): cualquier usuario con sesión (p. ej. `GET /me/permissions`).
 - `allowPublic`: ruta pública a propósito (health, enlaces de invitación, Better Auth).
+- `requireSiteKey` (`modules/public/guards`): la API pública. Está registrado con `declareAccess`, así
+  que cuenta como declaración; autentica por site key y deja `ctx.organizationId` desde la key.
 
 `requireSession` carga el acceso del usuario con `loadAccess` (una consulta: roles, grilla, ministerios)
 y lo deja en `ctx.access`. Con varios roles los permisos son la unión y, para un mismo

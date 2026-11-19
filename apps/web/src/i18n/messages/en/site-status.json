@@ -1,16 +1,25 @@
 {
   "maintenance": {
-    "icon": "construction",
-    "kicker": "Back soon",
-    "title": "We're under maintenance",
-    "description": "We're making some improvements to the site. We'll be back online shortly. Thanks for your patience.",
-    "note": "In the meantime, you can reach us at"
+    "kicker": "Scheduled maintenance",
+    "title": "Site under maintenance",
+    "titleEmphasis": "maintenance",
+    "description": "The site is down for maintenance to improve your experience. We'll be back soon. Our services carry on: the times are right below.",
+    "tag": "Under maintenance",
+    "statusValue": "Under maintenance",
+    "servicesCta": "See service times",
+    "contactCta": "Email us"
   },
   "closed": {
-    "icon": "event_busy",
-    "kicker": "See you soon",
-    "title": "Site temporarily closed",
-    "description": "The site isn't available right now. Please check back later.",
-    "note": "For any inquiries, email us at"
+    "kicker": "Site unavailable",
+    "title": "Site offline",
+    "titleEmphasis": "offline",
+    "description": "The site isn't available right now. Please try again in a few minutes. In the meantime, here's what you need most.",
+    "tag": "Offline",
+    "retryCta": "Try again"
+  },
+  "facts": {
+    "status": "Status",
+    "services": "Services",
+    "where": "Where"
   }
 }

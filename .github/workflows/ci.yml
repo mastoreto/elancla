@@ -78,8 +78,13 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run test:infra
       - run: bun run test:db
-      - name: Unit and integration tests (api, db, contracts, crm, scripts)
+      - name: Unit and integration tests (api, db, contracts, content, crm, scripts)
         run: bun run test
+      # The web talks to the public API only: it must build with no database and no Prisma.
+      - name: The web builds without DATABASE_URL and ships no Prisma client
+        run: |
+          env -u DATABASE_URL bun run --filter web build
+          ! grep -rq PrismaClient apps/web/dist
 
   e2e:
     if: github.event_name == 'workflow_dispatch' || github.head_ref == 'develop'
@@ -98,6 +103,9 @@ jobs:
         run: bunx playwright install --with-deps chromium
       - name: Build the CRM against the test database
         run: bun --env-file=.env.test run --filter crm build
+      # Playwright serves the public site too (status screens): it needs the built server.
+      - name: Build the web
+        run: env -u DATABASE_URL bun run --filter web build
       - name: Playwright
         run: bun run test:e2e
       - uses: actions/upload-artifact@v4

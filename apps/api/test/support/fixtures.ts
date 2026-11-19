@@ -1,11 +1,16 @@
 import type { PermissionGrant } from "@ancla/contracts";
 import { db } from "@ancla/db";
 import type { Auth } from "../../src/core/auth";
+import { sha256Hex } from "../../src/core/crypto";
 import { resolveOrganizationId } from "../../src/core/tenancy";
 import {
   generateInvitationToken,
   hashInvitationToken,
 } from "../../src/modules/identity/invitations/domain";
+import {
+  formatSiteKey,
+  generateSiteKeySecret,
+} from "../../src/modules/siteKeys/domain";
 
 export const TEST_PASSWORD = "correct-horse-battery-staple";
 const TEST_IP_PREFIX = "10.250";
@@ -42,6 +47,8 @@ export function createFixtures() {
   const emails: string[] = [];
   const roleIds: string[] = [];
   const ministryIds: string[] = [];
+  const organizationIds: string[] = [];
+  const siteKeyIds: string[] = [];
   let ipCounter = 0;
   const ipBlock = Math.floor(Math.random() * 250);
 
@@ -118,6 +125,53 @@ export function createFixtures() {
       return ministry.id;
     },
 
+    /** A second church, for the cases where a credential of one must not open another. */
+    async createOrganization(
+      label: string,
+    ): Promise<{ id: string; slug: string }> {
+      const organization = await db.organization.create({
+        data: {
+          slug: `${label}-${crypto.randomUUID()}`,
+          name: `Test ${label}`,
+          country: "UY",
+          timezone: "America/Montevideo",
+          defaultLocale: "es",
+          locales: ["es"],
+          currencies: ["UYU"],
+        },
+        select: { id: true, slug: true },
+      });
+      organizationIds.push(organization.id);
+      return organization;
+    },
+
+    /**
+     * Inserts a site key directly (so the active-key limit does not apply) and returns it in its
+     * plain form. Keys cannot be deleted by the runtime role: `cleanup()` revokes them.
+     */
+    async createSiteKey(
+      organizationId: string,
+      options: { revoked?: boolean } = {},
+    ): Promise<{ id: string; key: string }> {
+      const secret = generateSiteKeySecret();
+      const row = await db.siteApiKey.create({
+        data: {
+          organizationId,
+          name: "test key",
+          secretHash: sha256Hex(secret),
+          revokedAt: options.revoked ? new Date() : null,
+        },
+        select: { id: true },
+      });
+      siteKeyIds.push(row.id);
+      return { id: row.id, key: formatSiteKey(row.id, secret) };
+    },
+
+    /** Keeps a key made through the API in the list `cleanup()` revokes. */
+    trackSiteKey(id: string): void {
+      siteKeyIds.push(id);
+    },
+
     async resolveAccessRoleIds(access: TestUserAccess): Promise<string[]> {
       if (access.length === 0) return [];
       if (isRoleKeyList(access)) {
@@ -161,6 +215,13 @@ export function createFixtures() {
       await db.user.deleteMany({ where: { email: { in: emails } } });
       await db.role.deleteMany({ where: { id: { in: roleIds } } });
       await db.ministry.deleteMany({ where: { id: { in: ministryIds } } });
+      await db.siteApiKey.updateMany({
+        where: { id: { in: siteKeyIds }, revokedAt: null },
+        data: { revokedAt: new Date() },
+      });
+      await db.organization.deleteMany({
+        where: { id: { in: organizationIds } },
+      });
       await db.verification.deleteMany({
         where: {
           createdAt: { gte: startedAt },

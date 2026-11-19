@@ -6,6 +6,7 @@ import { getAuth } from "../../core/auth";
 import { resolveOrganizationId } from "../../core/tenancy";
 import { issueInvitation } from "../../modules/identity/invitations/useCases";
 import { E2E_PASSWORD, E2E_USERS, type E2eUser } from "./e2eUsers";
+import { ensureE2eSiteKey } from "./ensureE2eSiteKey";
 
 async function resolveRoleIds(
   organizationId: string,
@@ -59,8 +60,9 @@ async function main(): Promise<void> {
   for (const user of E2E_USERS) {
     await ensureUser(organizationId, user);
   }
+  await ensureE2eSiteKey(organizationId, process.env.SITE_API_KEY);
   console.info(
-    `E2E users ready: ${E2E_USERS.map((user) => user.email).join(", ")}`,
+    `E2E users and web site key ready: ${E2E_USERS.map((user) => user.email).join(", ")}`,
   );
 }
 

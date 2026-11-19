@@ -1,0 +1,91 @@
+---
+// Anchor of the status screens. `forged`: the red outline draws itself and the fill rises (the
+// site is being worked on). `adrift`: a grey outline hanging tilted from a dashed rope (offline).
+import { cn } from '@ancla/utils';
+import { ANCHOR_PATH } from 'src/data/anchorPath';
+
+interface Props {
+  variant: 'forged' | 'adrift';
+  tag: string;
+}
+
+const { variant, tag } = Astro.props;
+const isForged = variant === 'forged';
+
+const statusAnchor = {
+  rope: cn(
+    'absolute top-[-20px] left-[55%] z-6 h-[330px] w-0.5 opacity-55',
+    'bg-[repeating-linear-gradient(var(--color-obra-muted)_0_10px,transparent_10px_20px)]',
+    'max-md:left-1/2 max-md:h-40',
+    'max-md:bg-[repeating-linear-gradient(var(--color-obra-muted)_0_8px,transparent_8px_16px)]'
+  ),
+  container: cn(
+    'absolute z-6 w-[clamp(11.25rem,20.8vw,18.75rem)]',
+    'drop-shadow-[0_22px_36px_rgba(21,21,21,0.3)] animate-float motion-reduce:animate-none',
+    'max-md:w-50',
+    isForged
+      ? 'top-[33%] left-[44%] max-md:top-[14%] max-md:left-[24%]'
+      : 'top-[36.7%] left-[44%] rotate-14 max-md:top-[16.5%] max-md:left-[24%]'
+  ),
+  svg: cn('block h-auto w-full overflow-visible'),
+  outline: cn(
+    isForged
+      ? 'animate-anchor-draw [stroke-dasharray:1] [stroke-dashoffset:1] motion-reduce:animate-none motion-reduce:[stroke-dashoffset:0]'
+      : ''
+  ),
+  forge: cn(
+    'origin-[50%_100%] animate-anchor-forge [transform-box:fill-box] [transform:scaleY(0)]',
+    'motion-reduce:animate-none motion-reduce:transform-none'
+  ),
+  tag: cn(
+    'absolute top-[10.5%] left-[70%] rounded-full bg-obra-white px-3.5 py-2 opacity-0',
+    'font-obra-sans-bold text-[0.875rem] whitespace-nowrap shadow-obra-float',
+    'animate-status-tag motion-reduce:hidden',
+    'max-md:top-[8%] max-md:left-[70%] max-md:px-3 max-md:py-1.5 max-md:text-[0.75rem]'
+  ),
+};
+---
+
+{!isForged && <div class={statusAnchor.rope} aria-hidden="true" />}
+<div class={statusAnchor.container} aria-hidden="true">
+  <svg viewBox="0 0 200 254" class={statusAnchor.svg} focusable="false">
+    {isForged && (
+      <defs>
+        <clipPath id="status-forge">
+          <rect class={statusAnchor.forge} x="0" y="0" width="200" height="254" />
+        </clipPath>
+      </defs>
+    )}
+    <g transform="translate(0,254) scale(0.10101,-0.10101)">
+      {isForged ? (
+        <path
+          class={statusAnchor.outline}
+          pathLength="1"
+          d={ANCHOR_PATH}
+          fill="none"
+          stroke="var(--color-obra-red)"
+          stroke-width="28"
+          stroke-linejoin="round"
+        />
+      ) : (
+        <path
+          d={ANCHOR_PATH}
+          fill="none"
+          stroke="var(--color-obra-muted)"
+          stroke-width="22"
+          stroke-linejoin="round"
+        />
+      )}
+    </g>
+    {isForged && (
+      <g clip-path="url(#status-forge)">
+        <path
+          transform="translate(0,254) scale(0.10101,-0.10101)"
+          d={ANCHOR_PATH}
+          fill="var(--color-obra-red)"
+        />
+      </g>
+    )}
+  </svg>
+  <span class={statusAnchor.tag}>{tag}</span>
+</div>

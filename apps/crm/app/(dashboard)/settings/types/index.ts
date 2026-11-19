@@ -6,6 +6,7 @@ export type SettingsTabValue =
   | "bankAccounts"
   | "currencies"
   | "roles"
+  | "website"
   | "notifications"
   | "audit"
   | "account";

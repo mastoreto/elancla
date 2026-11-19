@@ -26,6 +26,8 @@ export const AUDIT_ACTION_LABELS: Record<AuditAction, string> = {
   [AUDIT_ACTIONS.invitation.resent]: "Invitación reenviada",
   [AUDIT_ACTIONS.invitation.revoked]: "Invitación revocada",
   [AUDIT_ACTIONS.invitation.accepted]: "Invitación aceptada",
+  [AUDIT_ACTIONS.siteApiKey.created]: "Clave del sitio creada",
+  [AUDIT_ACTIONS.siteApiKey.revoked]: "Clave del sitio revocada",
   [AUDIT_ACTIONS.media.uploadRequested]: "Subida de archivo solicitada",
   [AUDIT_ACTIONS.media.finalized]: "Archivo verificado",
   [AUDIT_ACTIONS.media.rejected]: "Archivo rechazado",

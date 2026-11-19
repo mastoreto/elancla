@@ -1,6 +1,13 @@
 "use client";
 
-import type { InvitationDto, MeDto, MinistryDto, RoleDto, UserDto } from "@ancla/contracts";
+import type {
+  InvitationDto,
+  MeDto,
+  MinistryDto,
+  RoleDto,
+  SiteKeyDto,
+  UserDto,
+} from "@ancla/contracts";
 import { PERMISSIONS } from "@ancla/contracts";
 import { Check, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -22,11 +29,13 @@ import type {
 import { AccountPanel } from "./account-panel";
 import { BankAccountsCard } from "./bank-accounts-card";
 import { ChurchIdentityCard } from "./church-identity-card";
+import { CreateSiteKeyDialog } from "./create-site-key-dialog";
 import { CurrenciesCard } from "./currencies-card";
 import { InvitationsPanel } from "./invitations-panel";
 import { InviteDialog } from "./invite-dialog";
 import { NotificationsPanel } from "./notifications-panel";
 import { RolesPanel } from "./roles-panel";
+import { SiteKeysCard } from "./site-keys-card";
 import { UserDialog } from "./user-dialog";
 import { UsersPanel } from "./users-panel";
 
@@ -36,6 +45,7 @@ const INTRO: Record<SettingsTabValue, string> = {
   bankAccounts: "Identidad de la iglesia, cuentas bancarias y monedas.",
   currencies: "Identidad de la iglesia, cuentas bancarias y monedas.",
   roles: "Roles con permisos claros para limitar alcance, aprobaciones y auditoría.",
+  website: "Claves con las que el sitio público lee el contenido de la iglesia.",
   notifications: "Elige qué avisos recibe tu equipo y por qué canal.",
   audit: "Registro inalterable de lo que ocurre en el sistema.",
   account: "Tu perfil, tus métodos de acceso y la verificación en dos pasos.",
@@ -59,6 +69,7 @@ interface SettingsPageContentProps {
   me: MeDto | null;
   roles: RoleDto[] | null;
   ministries: MinistryDto[] | null;
+  siteKeys: SiteKeyDto[] | null;
   bankAccounts: BankAccountSetting[];
   currencies: CurrencySetting[];
   notifications: NotificationSettings;
@@ -73,6 +84,7 @@ export function SettingsPageContent({
   me,
   roles,
   ministries,
+  siteKeys,
   bankAccounts,
   currencies,
   notifications: initialNotifications,
@@ -83,6 +95,7 @@ export function SettingsPageContent({
   const [notifications, setNotifications] = useState(initialNotifications);
   const [dialogUser, setDialogUser] = useState<UserDto | undefined>(undefined);
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [siteKeyDialogOpen, setSiteKeyDialogOpen] = useState(false);
   const pendingInvitations = invitations?.filter((item) => item.status === "pending").length ?? 0;
 
   const currencyOptions = currencies.map((currency) => ({
@@ -96,6 +109,7 @@ export function SettingsPageContent({
     { value: "bankAccounts", label: "Cuentas bancarias", count: bankAccounts.length },
     { value: "currencies", label: "Monedas", count: currencies.length },
     { value: "roles", label: "Roles y permisos" },
+    { value: "website", label: "Sitio web" },
     { value: "notifications", label: "Notificaciones" },
     { value: "audit", label: "Auditoría" },
     { value: "account", label: "Mi cuenta" },
@@ -112,6 +126,12 @@ export function SettingsPageContent({
           <BoardButton onClick={() => setInviteOpen(true)} variant="primary">
             <Plus aria-hidden="true" className={settingsPageContentSettingsPage.icon} />
             Invitar usuario
+          </BoardButton>
+        ) : null}
+        {tab === "website" && canAny(access, [PERMISSIONS.siteKeys.create]) ? (
+          <BoardButton onClick={() => setSiteKeyDialogOpen(true)} variant="primary">
+            <Plus aria-hidden="true" className={settingsPageContentSettingsPage.icon} />
+            Crear clave
           </BoardButton>
         ) : null}
         {tab === "notifications" ? (
@@ -161,6 +181,8 @@ export function SettingsPageContent({
 
       {tab === "roles" && roles ? <RolesPanel roles={roles} /> : null}
 
+      {tab === "website" ? <SiteKeysCard siteKeys={siteKeys} /> : null}
+
       {tab === "notifications" ? (
         <NotificationsPanel
           currencyOptions={currencyOptions}
@@ -174,6 +196,11 @@ export function SettingsPageContent({
         onOpenChange={(open) => !open && setDialogUser(undefined)}
         roles={roles}
         user={dialogUser}
+      />
+      <CreateSiteKeyDialog
+        onFinished={() => router.refresh()}
+        onOpenChange={setSiteKeyDialogOpen}
+        open={siteKeyDialogOpen}
       />
       <InviteDialog
         ministries={ministries}

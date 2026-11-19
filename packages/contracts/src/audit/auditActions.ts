@@ -36,6 +36,10 @@ export const AUDIT_ACTIONS = {
     revoked: "invitation.revoked",
     accepted: "invitation.accepted",
   },
+  siteApiKey: {
+    created: "siteApiKey.created",
+    revoked: "siteApiKey.revoked",
+  },
   media: {
     uploadRequested: "media.upload.requested",
     finalized: "media.finalized",

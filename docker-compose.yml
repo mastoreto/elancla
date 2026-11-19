@@ -181,18 +181,21 @@ services:
       - "${ADMIN_PORT:-3000}:3000"
     restart: unless-stopped
 
-  # Sitio público "el ancla" (Astro estático servido con nginx).
-  # El sitio lee la config en build-time: para hornear los valores de la BD,
-  # construí con DATABASE_URL accesible (build arg); por defecto usa el fallback.
+  # Sitio público "el ancla" (Astro SSR en un servidor Node).
+  # El sitio no usa la BD: lee la config de la API pública del CRM con una site key
+  # (`bun run --filter @ancla/api site-key:create -- --name "web local"` y pegarla en SITE_API_KEY).
+  # Sin la key usa los valores por defecto.
   web:
     profiles: ["app", "web"]
     build:
       context: .
       dockerfile: Dockerfile.web
-      args:
-        DATABASE_URL: ${WEB_BUILD_DATABASE_URL:-}
+    environment:
+      API_URL: ${WEB_API_URL:-http://admin:3000}
+      SITE_API_KEY: ${SITE_API_KEY:-}
+      SITE_CHURCH_SLUG: ${SITE_CHURCH_SLUG:-el-ancla}
     ports:
-      - "${WEB_PORT:-8080}:80"
+      - "${WEB_PORT:-8080}:4321"
     restart: unless-stopped
 
 volumes:

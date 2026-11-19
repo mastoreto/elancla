@@ -32,6 +32,7 @@ export const PERMISSION_RESOURCE_INFO: Record<PermissionResource, { label: strin
     users: { label: "Usuarios", hint: "Personas con acceso" },
     roles: { label: "Roles", hint: "Perfiles y permisos" },
     invitations: { label: "Invitaciones", hint: "Altas por correo" },
+    "site.keys": { label: "Claves del sitio", hint: "Acceso del sitio público al contenido" },
     audit: { label: "Auditoría", hint: "Registro de lo que ocurre en el sistema" },
     settings: { label: "Configuración", hint: "Iglesia, cuentas y monedas" },
   };

@@ -1,1 +1,1 @@
-export * from "./openApiConfig";
+export { openApiConfig, publicOpenApiConfig } from "./openApiConfig";

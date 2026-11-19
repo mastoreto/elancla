@@ -57,7 +57,7 @@ const {
   pageType = 'website',
   image = site.defaultImage,
   imageAlt = 'Iglesia Bautista El Ancla — Montevideo, Uruguay',
-  noindex = false,
+  noindex: noindexProp = false,
   canonical,
   keywords,
   breadcrumbs,
@@ -68,6 +68,8 @@ const {
 } = Astro.props;
 
 const locale = localeProp ?? getLocaleFromUrl(Astro.url);
+// The maintenance/closed notice must not be indexed in place of the real page.
+const noindex = noindexProp || site.status !== 'online';
 const localeSeo = getLocaleSeo(locale);
 const canonicalPath = stripLocaleFromPath(Astro.url.pathname);
 const localizedPath = localizePath(canonicalPath, locale);
@@ -354,7 +356,13 @@ const layout = {
           {footer && <Footer locale={locale} variant={footer === 'dark' ? 'dark' : 'red'} social={site.social} />}
         </>
       ) : (
-        <SiteStatusScreen status={site.status} locale={locale} contactEmail={site.contactEmail} />
+        <SiteStatusScreen
+          status={site.status}
+          locale={locale}
+          contactEmail={site.contactEmail}
+          serviceTimes={site.serviceTimes}
+          street={site.address.street}
+        />
       )
     }
   </body>
