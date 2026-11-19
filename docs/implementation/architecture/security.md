@@ -34,7 +34,7 @@ Decisiones de origen: D-07, D-08, D-10, D-11, D-16, D-21, D-24, D-25.
 | Validación de sesión | En **cada** request de la API contra BD (con caché de cookie corta de Better Auth, ≤ 5 min) |
 | Política por rol | Duración máxima / sesión persistente según D-16, verificada en cada request |
 | Re-autenticación | `freshAge` para operaciones sensibles: aprobar, exportar, cambiar roles, configurar MFA |
-| CSRF | Mutaciones solo con `Content-Type: application/json`; middleware que exige `Origin` en lista blanca y `Sec-Fetch-Site: same-origin`; Better Auth valida `trustedOrigins` en sus rutas |
+| CSRF | Mutaciones solo con `Content-Type: application/json` (si no, 415); toda mutación con `Origin` distinto de `CRM_ORIGIN` o con `Sec-Fetch-Site` distinto de `same-origin`/`none` → 403. `hono/csrf` solo mira tipos de formulario y acepta si pasa *cualquiera* de los dos chequeos, por eso hay un chequeo propio previo (`core/http/csrf`). Requests sin ninguno de los dos headers (clientes no navegador, llamadas en proceso) pasan: no llevan cookies ambientales. Better Auth valida `trustedOrigins` en sus rutas |
 | CORS | Fase 1: no hay (mismo origen). Nunca `*`, nunca credenciales a orígenes no listados |
 | Autorización | `requirePermission()` declarado en cada ruta + policy de recurso en el use case. Ruta sin permiso declarado no arranca (test) |
 | Entrada | Zod `.strict()`; tamaño máximo de body; fechas y montos con formato estricto |

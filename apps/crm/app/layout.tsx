@@ -21,6 +21,10 @@ const jetBrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+// Every page renders per request: the CSP nonce (proxy.ts) can only be stamped on dynamic HTML,
+// and a prerendered page would ship scripts that the nonce-based CSP blocks.
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "iEkklesia CMS",
   description: "Panel de gestión para la iglesia local",

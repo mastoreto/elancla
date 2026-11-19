@@ -12,7 +12,9 @@
     "check": "biome check --fix ."
   },
   "dependencies": {
+    "@ancla/api": "*",
     "@ancla/auth": "*",
+    "@ancla/contracts": "*",
     "@ancla/db": "*",
     "@ancla/utils": "*",
     "better-auth": "1.7.25",
@@ -29,6 +31,7 @@
     "cmdk": "1.1.1",
     "date-fns": "4.4.0",
     "embla-carousel-react": "8.6.0",
+    "hono": "4.13.19",
     "input-otp": "1.5.0",
     "lucide-react": "1.74.0",
     "next": "16.4.6",
