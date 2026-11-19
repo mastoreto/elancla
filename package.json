@@ -14,7 +14,7 @@
     "db:migrate:deploy": "turbo run db:migrate:deploy",
     "db:seed": "turbo run db:seed",
     "test": "turbo run test",
-    "test:infra": "docker compose --profile test up -d --wait db-test mailpit s3 && docker compose up s3-init",
+    "test:infra": "docker compose --env-file .env.test --profile test up -d --wait db-test mailpit s3 && docker compose --env-file .env.test up s3-init",
     "test:db": "bun --env-file=.env.test run --filter @ancla/db db:migrate:deploy && bun --env-file=.env.test run --filter @ancla/db db:seed",
     "test:scripts": "bun test scripts",
     "test:e2e": "bun run --filter crm test:e2e",

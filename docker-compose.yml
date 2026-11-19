@@ -95,7 +95,8 @@ services:
       - ancla-s3data:/data
       - ./docker/seaweedfs/s3.json:/etc/seaweedfs/s3.json:ro
     healthcheck:
-      test: ["CMD-SHELL", "wget -q --spider http://localhost:9333/cluster/status || exit 1"]
+      # The master binds the container IP, not localhost, so probe it through `hostname -i`.
+      test: ["CMD-SHELL", "wget -q --spider http://$$(hostname -i):9333/cluster/status || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 20
