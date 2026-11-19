@@ -1,5 +1,6 @@
 import {
   actionsOf,
+  isDangerousPermission,
   PERMISSION_ACTIONS,
   PERMISSION_RESOURCES,
   type PermissionAction,
@@ -21,6 +22,7 @@ import {
   Shield,
   SquareCheck,
   Sun,
+  TriangleAlert,
   Users,
   Wallet,
 } from "lucide-react";
@@ -78,7 +80,11 @@ const permissionMatrixSettingsPage = {
     "shadow-[inset_0_0_0_1px_rgba(42,21,26,0.12)] focus-visible:ring-2 focus-visible:ring-ring",
     "disabled:cursor-not-allowed disabled:opacity-70",
   ),
-  scopeFixed: cn("text-[11px] font-semibold text-[var(--tinta-apagada)]"),
+  danger: cn("size-3.5 text-[var(--oro-texto)]"),
+  dangerBadge: cn("inline-flex"),
+  dangerCell: cn(
+    "rounded-[10px] bg-[var(--oro-50)] px-1.5 py-1 shadow-[inset_0_0_0_1px_var(--oro-100)]",
+  ),
 };
 
 interface PermissionMatrixProps {
@@ -141,14 +147,33 @@ export function PermissionMatrix({
                 }
                 const scope = scopeOfCell(grid, resource, action);
                 const cellLabel = `${info.label}: ${PERMISSION_ACTION_LABELS[action]}`;
+                const dangerous = isDangerousPermission(resource, action);
                 return (
-                  <div className={permissionMatrixSettingsPage.cell} key={action}>
+                  <div
+                    className={cn(
+                      permissionMatrixSettingsPage.cell,
+                      dangerous && scope && permissionMatrixSettingsPage.dangerCell,
+                    )}
+                    key={action}
+                  >
                     <SettingsCheck
                       checked={scope !== undefined}
                       disabled={readOnly}
                       label={cellLabel}
                       onCheckedChange={() => onToggleAction(resource, action)}
                     />
+                    {dangerous && scope ? (
+                      <span
+                        className={permissionMatrixSettingsPage.dangerBadge}
+                        title="Permiso peligroso: permite controlar accesos"
+                      >
+                        <TriangleAlert
+                          aria-hidden="true"
+                          className={permissionMatrixSettingsPage.danger}
+                        />
+                        <span className="sr-only">Permiso peligroso</span>
+                      </span>
+                    ) : null}
                     {scope && scopes.length > 1 ? (
                       <select
                         aria-label={`Alcance de ${cellLabel}`}

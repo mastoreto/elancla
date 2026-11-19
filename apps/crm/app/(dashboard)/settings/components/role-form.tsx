@@ -1,7 +1,12 @@
 "use client";
 
-import { ADMIN_ROLE_KEY, type RoleDto, type UserDto } from "@ancla/contracts";
-import { Check, ChevronRight, Trash2 } from "lucide-react";
+import {
+  ADMIN_ROLE_KEY,
+  isDangerousPermission,
+  type RoleDto,
+  type UserDto,
+} from "@ancla/contracts";
+import { Check, ChevronRight, Trash2, TriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -22,7 +27,11 @@ import { useAccess } from "@/lib/authz/AccessProvider";
 import { can } from "@/lib/authz/can";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
-import { SESSION_DURATION_OPTIONS } from "../data/permission-labels";
+import {
+  PERMISSION_ACTION_LABELS,
+  PERMISSION_RESOURCE_INFO,
+  SESSION_DURATION_OPTIONS,
+} from "../data/permission-labels";
 import type { PermissionGrid } from "../types";
 import {
   applyPreset,
@@ -62,6 +71,10 @@ const roleFormSettingsPage = {
   countValue: cn("font-bold text-foreground"),
   error: cn("text-xs font-semibold text-primary"),
   session: cn("grid grid-cols-1 items-start gap-3.5 md:grid-cols-2"),
+  danger: cn(
+    "flex items-start gap-2.5 rounded-[18px] bg-[var(--granada-50)] px-4 py-3.5 text-[13px] leading-normal text-foreground",
+    "shadow-[inset_0_0_0_1px_rgba(194,58,78,0.25)] [&>svg]:mt-0.5 [&>svg]:shrink-0 [&>svg]:text-primary",
+  ),
   notice: cn(
     "rounded-[18px] bg-[var(--oro-50)] px-4 py-3.5 text-[13px] leading-normal text-[var(--tinta-suave)]",
   ),
@@ -70,6 +83,7 @@ const roleFormSettingsPage = {
   peopleTitle: cn("text-sm font-bold"),
   peopleHint: cn("text-[13.5px] text-[var(--tinta-suave)]"),
   icon: cn("size-4"),
+  confirmIcon: cn("size-6"),
 };
 
 const SECONDS_TO_OPTION = new Map(
@@ -100,8 +114,13 @@ export function RoleForm({ role, members = [] }: RoleFormProps) {
   const isEdit = role !== undefined;
   const isAdminRole = role?.key === ADMIN_ROLE_KEY;
   const holdsRole = role ? access.roles.some((held) => held.id === role.id) : false;
-  const canSave = can(access, isEdit ? "roles:edit" : "roles:create") && !isAdminRole && !holdsRole;
-  const canDelete = isEdit && role.key === null && can(access, "roles:delete");
+  // Managing roles is admin-only (the API enforces it too), whatever the role grants.
+  const canSave =
+    access.isAdmin &&
+    can(access, isEdit ? "roles:edit" : "roles:create") &&
+    !isAdminRole &&
+    !holdsRole;
+  const canDelete = isEdit && role.key === null && access.isAdmin && can(access, "roles:delete");
 
   const [name, setName] = useState(role?.name ?? "");
   const [description, setDescription] = useState(role?.description ?? "");
@@ -111,6 +130,9 @@ export function RoleForm({ role, members = [] }: RoleFormProps) {
   const [errors, setErrors] = useState<{ name?: string; permissions?: string; form?: string }>({});
   const [isSaving, setIsSaving] = useState(false);
 
+  const dangerousGrants = toGrants(grid).filter((grant) =>
+    isDangerousPermission(grant.resource, grant.action),
+  );
   const activePreset = detectPreset(grid);
   const settingsPath = getChurchRoutePath("settings");
   const title = isEdit ? `Editar rol: ${role.name}` : "Nuevo rol";
@@ -159,11 +181,13 @@ export function RoleForm({ role, members = [] }: RoleFormProps) {
     router.refresh();
   }
 
-  const lockedReason = isAdminRole
-    ? "El rol Administrador tiene acceso total y no se puede modificar."
-    : holdsRole
-      ? "No puedes editar un rol que tienes asignado: pídele a otra persona que lo haga."
-      : null;
+  const lockedReason = access.isAdmin
+    ? isAdminRole
+      ? "El rol Administrador tiene acceso total y no se puede modificar."
+      : holdsRole
+        ? "No puedes editar un rol que tienes asignado: pídele a otra persona que lo haga."
+        : null
+    : "Solo un administrador puede crear o modificar roles.";
 
   return (
     <>
@@ -257,6 +281,17 @@ export function RoleForm({ role, members = [] }: RoleFormProps) {
               }
               readOnly={!canSave}
             />
+            {dangerousGrants.length > 0 && canSave ? (
+              <p className={roleFormSettingsPage.danger} role="alert">
+                <TriangleAlert aria-hidden="true" className={roleFormSettingsPage.icon} />
+                <span>
+                  <b>Permisos peligrosos activos ({dangerousGrants.length}).</b> Permiten controlar
+                  accesos: quien tenga este rol podrá invitar personas, asignar roles o cambiar la
+                  configuración, y así ganar más poder del previsto. Actívalos solo para personas de
+                  máxima confianza.
+                </span>
+              </p>
+            ) : null}
             {errors.permissions ? (
               <span className={roleFormSettingsPage.error}>{errors.permissions}</span>
             ) : null}
@@ -320,14 +355,38 @@ export function RoleForm({ role, members = [] }: RoleFormProps) {
           <BoardButton href={settingsPath} variant="ghost">
             Cancelar
           </BoardButton>
-          <BoardButton
-            disabled={!canSave || isSaving}
-            onClick={() => void save()}
-            variant="primary"
-          >
-            <Check aria-hidden="true" className={roleFormSettingsPage.icon} />
-            {isEdit ? "Guardar cambios" : "Crear rol"}
-          </BoardButton>
+          {dangerousGrants.length > 0 ? (
+            <BoardConfirmDialog
+              confirmLabel={isEdit ? "Guardar de todos modos" : "Crear de todos modos"}
+              description="Este rol incluye permisos que permiten controlar accesos (invitar, asignar roles o cambiar la configuración)."
+              icon={
+                <TriangleAlert aria-hidden="true" className={roleFormSettingsPage.confirmIcon} />
+              }
+              notice={dangerousGrants
+                .map(
+                  (grant) =>
+                    `${PERMISSION_RESOURCE_INFO[grant.resource].label}: ${PERMISSION_ACTION_LABELS[grant.action]}`,
+                )
+                .join(" · ")}
+              onConfirm={() => void save()}
+              title="Guardar permisos peligrosos"
+              trigger={
+                <BoardButton disabled={!canSave || isSaving} variant="primary">
+                  <Check aria-hidden="true" className={roleFormSettingsPage.icon} />
+                  {isEdit ? "Guardar cambios" : "Crear rol"}
+                </BoardButton>
+              }
+            />
+          ) : (
+            <BoardButton
+              disabled={!canSave || isSaving}
+              onClick={() => void save()}
+              variant="primary"
+            >
+              <Check aria-hidden="true" className={roleFormSettingsPage.icon} />
+              {isEdit ? "Guardar cambios" : "Crear rol"}
+            </BoardButton>
+          )}
         </BoardFormFooter>
       </form>
     </>

@@ -16,6 +16,7 @@ import {
 } from "@/components/dashboard/board/board-table";
 import { RowIconButton, rowIconButtonClass } from "@/components/dashboard/board/row-icon-button";
 import { StatusPill } from "@/components/dashboard/board/status-pill";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { apiClient } from "@/lib/api/apiClient";
 import { useAccess } from "@/lib/authz/AccessProvider";
 import { can } from "@/lib/authz/can";
@@ -43,6 +44,7 @@ const rolesPanelSettingsPage = {
   count: cn("tabular-nums"),
   actions: cn("flex justify-end gap-1.5"),
   icon: cn("size-3.5"),
+  disabled: cn("cursor-not-allowed opacity-50 hover:bg-secondary hover:text-foreground"),
   buttonIcon: cn("size-4"),
 };
 
@@ -82,7 +84,7 @@ export function RolesPanel({ roles }: RolesPanelProps) {
     <BoardCard className={rolesPanelSettingsPage.card}>
       <BoardCardHeader
         action={
-          can(access, "roles:create") ? (
+          access.isAdmin && can(access, "roles:create") ? (
             <BoardButton
               href={getChurchRoutePath("settings", "roles", "new")}
               size="sm"
@@ -100,7 +102,9 @@ export function RolesPanel({ roles }: RolesPanelProps) {
       <BoardTableList>
         {visible.map((role) => {
           const isSeeded = role.key !== null;
-          const canDelete = !isSeeded && role.memberCount === 0 && can(access, "roles:delete");
+          // Only an admin manages roles; seeded roles are never deletable.
+          const canManage = access.isAdmin && !isSeeded && can(access, "roles:delete");
+          const hasMembers = role.memberCount > 0;
           return (
             <BoardTableRow columns={COLUMNS} key={role.id}>
               <div className={rolesPanelSettingsPage.nameCell}>
@@ -125,7 +129,26 @@ export function RolesPanel({ roles }: RolesPanelProps) {
                 >
                   <PencilLine aria-hidden="true" className={rolesPanelSettingsPage.icon} />
                 </RowIconButton>
-                {canDelete ? (
+                {canManage && hasMembers ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild={true}>
+                      <button
+                        aria-disabled={true}
+                        aria-label={`Eliminar ${role.name} (no disponible)`}
+                        className={cn(rowIconButtonClass, rolesPanelSettingsPage.disabled)}
+                        type="button"
+                      >
+                        <Trash2 aria-hidden="true" className={rolesPanelSettingsPage.icon} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Tiene {role.memberCount}{" "}
+                      {role.memberCount === 1 ? "usuario vinculado" : "usuarios vinculados"};
+                      reasígnalos antes de borrar.
+                    </TooltipContent>
+                  </Tooltip>
+                ) : null}
+                {canManage && !hasMembers ? (
                   <BoardConfirmDialog
                     description={`El rol ${role.name} se eliminará. Solo se puede eliminar si nadie lo tiene asignado.`}
                     onConfirm={() => void remove(role)}
