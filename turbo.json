@@ -44,6 +44,10 @@
       "dependsOn": ["^db:generate"],
       "cache": false
     },
+    "test:e2e": {
+      "dependsOn": ["^db:generate"],
+      "cache": false
+    },
     "db:migrate": {
       "inputs": ["prisma/schema.prisma"],
       "cache": false

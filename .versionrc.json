@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/absolute-version/commit-and-tag-version/master/schema.json",
+  "tagPrefix": "v",
+  "releaseCommitMessageFormat": "chore(release): {{currentTag}}",
+  "packageFiles": [{ "filename": "package.json", "type": "json" }],
+  "bumpFiles": [{ "filename": "package.json", "type": "json" }],
+  "preMajor": true,
+  "types": [
+    { "type": "feat", "section": "Features" },
+    { "type": "fix", "section": "Bug Fixes" },
+    { "type": "perf", "section": "Performance" },
+    { "type": "refactor", "section": "Refactors" },
+    { "type": "chore", "hidden": true },
+    { "type": "style", "hidden": true },
+    { "type": "test", "hidden": true },
+    { "type": "ci", "hidden": true },
+    { "type": "docs", "hidden": true },
+    { "type": "build", "hidden": true }
+  ]
+}

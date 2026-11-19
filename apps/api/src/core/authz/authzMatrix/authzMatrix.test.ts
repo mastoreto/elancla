@@ -1,4 +1,4 @@
-import { afterAll, describe } from "bun:test";
+import { afterAll, describe, expect, test } from "bun:test";
 import { grant, PERMISSIONS } from "@ancla/contracts";
 import { createApiCaller } from "../../../../test/support/apiCaller";
 import {
@@ -6,7 +6,9 @@ import {
   type MatrixRow,
 } from "../../../../test/support/authzMatrix";
 import { createFixtures } from "../../../../test/support/fixtures";
+import { app } from "../../../app";
 import { getAuth } from "../../auth";
+import { findUnguardedRoutes } from "../routeCoverage";
 
 const fixtures = createFixtures();
 const call = createApiCaller(fixtures);
@@ -31,6 +33,38 @@ const voucherUpload = {
 
 /** Each row proves the guard: 401/403 when stopped, anything else (200/400/404) when let through. */
 const rows: MatrixRow[] = [
+  // Any session reaches /me; no session does not.
+  {
+    who: "anonymous",
+    caller: "anonymous",
+    method: "GET",
+    path: "/me",
+    expected: 401,
+  },
+  {
+    who: "anonymous",
+    caller: "anonymous",
+    method: "POST",
+    path: "/me/password",
+    body: {},
+    expected: 401,
+  },
+  {
+    who: "no role",
+    caller: NOTHING,
+    method: "POST",
+    path: `/invitations/${UNKNOWN_ID}/resend`,
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.users.view,
+    caller: [grant(PERMISSIONS.users.view)],
+    method: "PUT",
+    path: `/users/${UNKNOWN_ID}/ministries`,
+    body: { ministryIds: [] },
+    expected: 403,
+  },
+
   // Not signed in.
   ...(
     [
@@ -120,6 +154,13 @@ const rows: MatrixRow[] = [
   },
 
   // roles:*, one action at a time.
+  {
+    who: "no role",
+    caller: NOTHING,
+    method: "GET",
+    path: `/roles/${UNKNOWN_ID}`,
+    expected: 403,
+  },
   {
     who: PERMISSIONS.roles.view,
     caller: [grant(PERMISSIONS.roles.view)],
@@ -440,6 +481,30 @@ const rows: MatrixRow[] = [
   },
 ];
 
+/**
+ * Public on purpose: they have no permission guard and are covered by their own tests.
+ * A new route belongs here only if anyone may call it; otherwise add matrix rows.
+ */
+const PUBLIC_ROUTES = [
+  // Better Auth (sign-in, sign-up, OAuth callbacks, 2FA...) enforces its own rules.
+  "/api/auth/*",
+  "/api/health",
+  // The invitation link is the credential: lookup and acceptance by token.
+  "/api/invitations/by-token/:token",
+  "/api/invitations/by-token/:token/accept",
+  // The public OpenAPI document (only registered outside production).
+  "/api/openapi.json",
+];
+
 describe("authorization matrix", () => {
-  defineAuthzMatrix("identity", rows, { auth: getAuth(), fixtures, call });
+  const calls = defineAuthzMatrix("identity", rows, {
+    auth: getAuth(),
+    fixtures,
+    call,
+  });
+
+  // Runs last (tests in a file are sequential): every route must have a row that expects 401/403.
+  test("every route has a denied row or is explicitly public", () => {
+    expect(findUnguardedRoutes(app.routes, calls, PUBLIC_ROUTES)).toEqual([]);
+  });
 });

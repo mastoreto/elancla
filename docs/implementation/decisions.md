@@ -62,6 +62,7 @@ el resumen con el enlace.
 | D-52 | Sin envío de informes por email (se depreca ESRE 2.1.4 para informes) | aceptada |
 | D-53 | Gobierno: bases de padrón, acreditación y votaciones (implementación posterior) | aceptada (bases) |
 | D-54 | Acta de asamblea: redacción en vivo con guardado automático y offline, o carga de archivo | aceptada |
+| D-55 | Versionado: SemVer único del monorepo con commit-and-tag-version | aceptada |
 
 ---
 
@@ -208,12 +209,24 @@ Quien ve un informe para presentar **no necesita ser usuario**. Requisitos:
 **Aceptada.**
 
 - **Unitarios** (`bun test`): reglas de dominio puras (máquinas de estado, cálculos, validaciones).
-- **Integración**: cada comando y consulta contra Postgres real (contenedor local / CI), con rollback
-  por test. Sin mocks de Prisma.
+- **Integración**: cada comando y consulta contra Postgres real, sin mocks de Prisma. La BD de test es
+  el servicio `db-test` de compose (Postgres 16 efímero en tmpfs, puerto 5434, mismos roles, RLS y
+  grants que dev) y es **la misma** en local y en CI; los tests cargan `.env.test` (versionado, solo
+  valores no secretos) y nunca tocan la BD de desarrollo.
+- **Aislamiento**: datos únicos por test (email, UUID, IP) + `cleanup()` al final. **No** hay rollback
+  por test (desvío del plan original): los use cases abren sus propias transacciones y envolverlas
+  en otra es invasivo y frágil.
 - **Matriz de autorización**: tabla rol × recurso × acción × alcance → permitido o denegado, recorrida
-  automáticamente contra los comandos reales. Si alguien agrega un comando sin permiso, falla.
-- **E2E** (Playwright): login, invitación, MFA, acceso denegado, informe de asamblea.
-- Todo corre en CI y bloquea el merge.
+  automáticamente contra los endpoints reales. Un test de cobertura exige que **toda ruta registrada**
+  tenga al menos una fila que espere 401/403, salvo las de `PUBLIC_ROUTES` (lista explícita y
+  comentada). Ruta nueva sin fila → CI rojo.
+- **E2E** (Playwright, solo Chromium) en `apps/crm/e2e/`, contra `next build && next start` con la
+  BD de test: login, invitación (correo leído de Mailpit), MFA, acceso denegado. El informe de
+  asamblea entra cuando exista el módulo.
+- **Dónde corre**: el CI (`source-branch`, `quality`, `db`, `test`, `e2e`, `version`) corre **solo en el PR
+  `develop → main`** (y `workflow_dispatch`); la primera barrera en cada commit/push son los hooks de
+  Husky (Biome + tipos, mensaje de commit, tests + build). `main` tiene protección de rama: PR
+  obligatorio con esos cinco checks, sin force-push ni borrado; `develop` sin force-push ni borrado.
 
 ## D-13 — Backend con Server Actions (reemplazada)
 
@@ -629,3 +642,17 @@ un Word o texto para asentarla.
 - Word subido: se guarda como archivo privado y se extrae su texto.
 - Impresión o descarga (p. ej. para el libro de actas) solo con autorización, con marca de agua y
   registro según D-17.
+
+## D-55 — Versionado
+
+**Aceptada.** Un **único SemVer para todo el monorepo**, en el `version` del `package.json` raíz
+(las apps y paquetes son privados y no se versionan por separado). Tags `vX.Y.Z` y `CHANGELOG.md`
+generados de los Conventional Commits con `commit-and-tag-version`.
+
+- Mientras sea `0.x`: `feat` → minor, `fix` y demás → patch, breaking → minor (`preMajor`).
+- **`v0.1.0` = base técnica** (cierre de la fase 0.7).
+- Cada `develop → main` con features sube el minor (0.2.0…), con solo fixes sube el patch (0.2.1).
+- **`1.0.0`** recién con producción (0.8) y tesorería (fase 2) en uso real.
+- Flujo: en `develop`, con todo mergeado, `bun run release` (bump + changelog + commit + tag) →
+  `git push --follow-tags` → PR `develop → main`. El job `version` del CI falla si el `package.json`
+  del PR no supera el último tag de `main`.

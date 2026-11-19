@@ -10,6 +10,11 @@ export { lockRole, lockRoles } from "./lockRole";
 export { mergeGrants } from "./mergeGrants";
 export { mergeSessionPolicy } from "./mergeSessionPolicy";
 export { requirePermission } from "./requirePermission";
+export {
+  findUnguardedRoutes,
+  type MatrixCall,
+  type RegisteredRoute,
+} from "./routeCoverage";
 export { scopeOf } from "./scopeOf";
 export { scopeWhere } from "./scopeWhere";
 export { toPermissionGrants } from "./toPermissionGrants";

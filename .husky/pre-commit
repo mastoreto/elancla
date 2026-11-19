@@ -1,0 +1,1 @@
+bun scripts/hooks/runHook/runHook.ts pre-commit "$@"

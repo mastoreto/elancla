@@ -191,3 +191,27 @@ ruta, status esperado }`; cada módulo agrega sus filas.
 - El correo de una invitación sale **después** del commit.
 - Eventos de auth sin clasificar (anotados con `ponytail:` en `classifyAuthEvent`): el callback social
   y el actor de un segundo paso fallido.
+
+## Tests
+
+La BD de test es efímera (`db-test` de compose, tmpfs, puerto 5434) y las variables salen de
+`.env.test` (versionado, sin secretos); los tests nunca usan la BD de desarrollo.
+
+```bash
+bun run test:infra   # db-test + mailpit + s3 (+ buckets)
+bun run test:db      # migrate deploy + seed sobre db-test
+bun run test         # unitarios + integración (api, db, contracts, crm) y scripts/ (hooks, release)
+# E2E (Playwright, apps/crm/e2e): build contra la BD de test y luego correr
+bun --env-file=.env.test run --filter crm build && bun run test:e2e
+```
+
+- Aislamiento: cada test usa datos únicos (`fixtures.uniqueEmail()`, `uniqueIp()`, UUID) y limpia al
+  final con `fixtures.cleanup()`; no hay rollback por test (D-12).
+- **Matriz de autorización** (`core/authz/authzMatrix/authzMatrix.test.ts`): al agregar un endpoint,
+  agregá filas `MatrixRow` (quién llama, método, ruta, estado esperado). Hace falta al menos una fila
+  que espere **401/403** para esa ruta; si no, el último test (`findUnguardedRoutes`) falla nombrando
+  `METHOD /api/ruta`.
+- **`PUBLIC_ROUTES`**: solo para rutas que cualquiera puede llamar a propósito (Better Auth, health,
+  el token de invitación, el documento OpenAPI) y que tienen su propio test. Una ruta con permiso,
+  sesión o bearer **no** va ahí: lleva filas en la matriz.
+- `bun run --filter @ancla/db db:drift` falla si cambiaste `schema.prisma` sin crear la migración.

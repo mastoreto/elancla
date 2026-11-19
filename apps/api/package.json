@@ -16,6 +16,7 @@
     "openapi": "bun run src/scripts/generateOpenApi/generateOpenApi.ts",
     "clean": "rm -rf .turbo node_modules",
     "invite": "bun run src/scripts/invite/invite.ts",
+    "seed:e2e": "bun run src/scripts/seedE2eUsers/seedE2eUsers.ts",
     "media:purge": "bun run src/scripts/purgeMedia/purgeMedia.ts"
   },
   "dependencies": {

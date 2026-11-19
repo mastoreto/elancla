@@ -37,11 +37,21 @@ bun run build        # turbo: build de ambas apps (cacheado)
 bun run lint         # turbo: lint por app
 bun run check-types  # turbo: typecheck
 bun run db:generate  # genera el cliente Prisma de @ancla/db
+
+# Tests (BD efímera `db-test` en :5434, variables de .env.test)
+bun run test:infra   # levanta db-test + mailpit + s3
+bun run test:db      # migraciones + seed sobre db-test
+bun run test         # unitarios + integración (api, db, contracts, crm) y scripts/ (hooks, release)
+bun run test:e2e     # Playwright (antes: build del CRM con .env.test, ver backend.md)
+
+# Versionado (SemVer único, ver D-55)
+bun run release      # bump + CHANGELOG.md + commit + tag, antes del PR develop → main
 ```
 
 ## Notas
 
-- Gestor de paquetes: **Bun** (`packageManager: bun@1.2.4`).
+- Git hooks (Husky): `pre-commit` Biome + tipos, `commit-msg` Conventional Commits, `pre-push` tests + build. Escape de emergencia: `HUSKY=0 git …`.
+- Gestor de paquetes: **Bun** (`packageManager: bun@1.4.3`).
 - `web` consume `@ancla/*` vía alias de Vite en `apps/web/astro.config.mjs`.
 - `admin` fija `turbopack.root` a la raíz del monorepo en `apps/admin/next.config.mjs`.
 - Sanity fue **removido** de `web` y reemplazado por `@ancla/content` (CMS custom).

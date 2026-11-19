@@ -15,6 +15,7 @@
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
+    "db:drift": "bun run scripts/checkDrift/checkDrift.ts",
     "db:reset": "prisma migrate reset --force",
     "test": "bun test",
     "dev": "prisma studio --port 5556",

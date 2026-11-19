@@ -1,6 +1,7 @@
 {
   "name": "ancla-monorepo",
   "private": true,
+  "version": "0.0.0",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -13,20 +14,29 @@
     "db:migrate:deploy": "turbo run db:migrate:deploy",
     "db:seed": "turbo run db:seed",
     "test": "turbo run test",
+    "test:infra": "docker compose --env-file .env.test --profile test up -d --wait db-test mailpit s3 && docker compose --env-file .env.test up s3-init",
+    "test:db": "bun --env-file=.env.test run --filter @ancla/db db:migrate:deploy && bun --env-file=.env.test run --filter @ancla/db db:seed",
+    "test:e2e": "bun run --filter crm test:e2e",
+    "release": "commit-and-tag-version",
+    "release:first": "commit-and-tag-version --release-as 0.1.0",
+    "prepare": "husky",
     "db:migrate": "turbo run db:migrate",
     "db:reset": "turbo run db:reset"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.8",
+    "commit-and-tag-version": "13.3.0",
+    "husky": "9.1.7",
     "turbo": "^2.11.11",
     "typescript": "5.7.3"
   },
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "bun@1.2.4",
+  "packageManager": "bun@1.4.3",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "scripts"
   ]
 }
