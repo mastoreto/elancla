@@ -1,0 +1,1 @@
+export { listMinistries } from "./listMinistries";
