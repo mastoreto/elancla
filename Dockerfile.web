@@ -3,7 +3,7 @@
 # Build con Bun desde el monorepo → dist/ → imagen Node.
 
 # ─── Base ────────────────────────────────────────────────────────────────────
-FROM oven/bun:1.2.4-debian AS base
+FROM oven/bun:1.4.3-debian AS base
 WORKDIR /app
 
 # ─── deps: dependencias del workspace (capa cacheable) ───────────────────────
@@ -20,13 +20,13 @@ COPY packages/env/package.json packages/env/
 COPY packages/utils/package.json packages/utils/
 COPY packages/biome-config/package.json packages/biome-config/
 COPY packages/typescript-config/package.json packages/typescript-config/
+COPY scripts/package.json scripts/
 RUN bun install --frozen-lockfile
 
 # ─── builder: compila el sitio ───────────────────────────────────────────────
-FROM base AS builder
+FROM deps AS builder
 # La web no usa la BD ni Prisma: lee la config de la API pública en runtime
 # (API_URL, SITE_API_KEY, SITE_CHURCH_SLUG); sin ellas usa los valores de fallback.
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN bun run --filter web build
 
