@@ -9,6 +9,7 @@ import {
   findExistingRoleIds,
   findUserRow,
   hasRole,
+  lockRole,
   replaceUserRoles,
 } from "../../data";
 import { toUserDto } from "../../mappers";
@@ -44,6 +45,8 @@ export async function setUserRoles({
   await withTransaction(db, async (tx) => {
     const adminRoleId = await findAdminRoleId(ctx.organizationId);
     if (adminRoleId) {
+      // Without the lock, two admins demoting each other would both see "two admins left".
+      await lockRole(tx, adminRoleId);
       assertAdminRoleChangeAllowed({
         access: ctx.access,
         adminRoleId,

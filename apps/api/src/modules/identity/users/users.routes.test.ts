@@ -208,6 +208,62 @@ describe("the last admin", () => {
   });
 });
 
+describe("the last admin under concurrency", () => {
+  test("two admins demoted at the same time never leave the organization without one", async () => {
+    const organization = await db.organization.create({
+      data: {
+        slug: `last-admin-race-${crypto.randomUUID()}`,
+        name: "Last admin race test",
+        country: "UY",
+        timezone: "America/Montevideo",
+        defaultLocale: "es",
+        locales: ["es"],
+        currencies: ["UYU"],
+      },
+    });
+    organizationsToRemove.push(organization.id);
+    const adminRole = await db.role.create({
+      data: {
+        organizationId: organization.id,
+        key: "admin",
+        name: "Administrador",
+      },
+    });
+    const first = await newUser("race-first");
+    const second = await newUser("race-second");
+    const actor = await newUser("race-actor");
+    const ctx: AuthenticatedContext = {
+      requestId: "test",
+      organizationId: organization.id,
+      user: { id: actor.id, name: "Actor", email: actor.email },
+      access: {
+        isAdmin: true,
+        roles: [],
+        grants: new Map(),
+        ministryIds: [],
+        sessionPolicy: { persistent: true, maxSessionSeconds: null },
+      },
+    };
+
+    for (let attempt = 0; attempt < 10; attempt += 1) {
+      await db.userRole.deleteMany({ where: { roleId: adminRole.id } });
+      await db.userRole.createMany({
+        data: [first.id, second.id].map((userId) => ({
+          userId,
+          roleId: adminRole.id,
+        })),
+      });
+      await Promise.allSettled([
+        setUserRoles({ ctx, userId: first.id, body: { roleIds: [] } }),
+        setUserRoles({ ctx, userId: second.id, body: { roleIds: [] } }),
+      ]);
+      expect(
+        await db.userRole.count({ where: { roleId: adminRole.id } }),
+      ).toBeGreaterThanOrEqual(1);
+    }
+  });
+});
+
 describe("PUT /api/users/:id/ministries", () => {
   test("replaces the ministries of another user", async () => {
     const target = await newUser("ministries");

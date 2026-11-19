@@ -73,6 +73,17 @@ export async function findAdminRoleId(
   return role?.id ?? null;
 }
 
+/**
+ * Serializes the transactions that change who holds a role: the second one waits here until the
+ * first commits, so its member count is read after the first one's change, not before.
+ */
+export async function lockRole(
+  tx: Prisma.TransactionClient,
+  roleId: string,
+): Promise<void> {
+  await tx.$queryRaw`SELECT "id" FROM "roles" WHERE "id" = ${roleId}::uuid FOR UPDATE`;
+}
+
 export function countRoleMembers(
   tx: Prisma.TransactionClient,
   roleId: string,
