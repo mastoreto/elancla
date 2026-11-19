@@ -3,7 +3,12 @@ import { Hono } from "hono";
 import { createInProcessApiClient } from "./createInProcessApiClient";
 
 const echoCookie = new Hono().all("/api/health", (c) =>
-  c.json({ cookie: c.req.header("cookie") ?? null, url: c.req.url }),
+  c.json({
+    cookie: c.req.header("cookie") ?? null,
+    userAgent: c.req.header("user-agent") ?? null,
+    forwardedFor: c.req.header("x-forwarded-for") ?? null,
+    url: c.req.url,
+  }),
 );
 
 describe("createInProcessApiClient", () => {
@@ -27,5 +32,19 @@ describe("createInProcessApiClient", () => {
       cookie: string | null;
     };
     expect(body.cookie).toBeNull();
+  });
+
+  test("forwards the browser's agent and address for the audit trail", async () => {
+    const client = createInProcessApiClient({
+      dispatch: (request) => echoCookie.fetch(request),
+      cookie: null,
+      userAgent: "Mozilla/5.0 test",
+      forwardedFor: "203.0.113.7",
+    });
+    const body = (await (await client.health.$get()).json()) as unknown as {
+      userAgent: string | null;
+      forwardedFor: string | null;
+    };
+    expect(body).toMatchObject({ userAgent: "Mozilla/5.0 test", forwardedFor: "203.0.113.7" });
   });
 });

@@ -7,6 +7,7 @@ export type SettingsTabValue =
   | "currencies"
   | "roles"
   | "notifications"
+  | "audit"
   | "account";
 
 export interface SettingsSelectOption {

@@ -8,6 +8,7 @@ export const SETTINGS_PERMISSIONS = [
   PERMISSIONS.users.view,
   PERMISSIONS.roles.view,
   PERMISSIONS.invitations.view,
+  PERMISSIONS.audit.view,
 ] as const satisfies readonly Permission[];
 
 /**

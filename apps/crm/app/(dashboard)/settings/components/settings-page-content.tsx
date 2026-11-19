@@ -10,6 +10,7 @@ import { BoardButton } from "@/components/dashboard/board/board-button";
 import { BoardTabs } from "@/components/dashboard/board/board-tabs";
 import { useAccess } from "@/lib/authz/AccessProvider";
 import { canAny } from "@/lib/authz/can";
+import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
 import { SETTINGS_TAB_PERMISSIONS } from "../data/settings-tabs";
 import type {
@@ -36,6 +37,7 @@ const INTRO: Record<SettingsTabValue, string> = {
   currencies: "Identidad de la iglesia, cuentas bancarias y monedas.",
   roles: "Roles con permisos claros para limitar alcance, aprobaciones y auditoría.",
   notifications: "Elige qué avisos recibe tu equipo y por qué canal.",
+  audit: "Registro inalterable de lo que ocurre en el sistema.",
   account: "Tu perfil, tus métodos de acceso y la verificación en dos pasos.",
 };
 
@@ -95,6 +97,7 @@ export function SettingsPageContent({
     { value: "currencies", label: "Monedas", count: currencies.length },
     { value: "roles", label: "Roles y permisos" },
     { value: "notifications", label: "Notificaciones" },
+    { value: "audit", label: "Auditoría" },
     { value: "account", label: "Mi cuenta" },
   ];
   const showIdentity = tab === "church";
@@ -125,7 +128,10 @@ export function SettingsPageContent({
       <BoardTabs
         items={tabs.filter((item) => canAny(access, SETTINGS_TAB_PERMISSIONS[item.value]))}
         label="Secciones de configuración"
-        onValueChange={setTab}
+        onValueChange={(next) =>
+          // Auditoría is a page of its own (filters live in the URL), not a panel of this one.
+          next === "audit" ? router.push(getChurchRoutePath("settings", "audit")) : setTab(next)
+        }
         value={tab}
       />
 

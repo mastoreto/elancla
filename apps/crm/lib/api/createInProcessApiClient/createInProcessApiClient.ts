@@ -9,14 +9,24 @@ export interface InProcessApiClientOptions {
   dispatch: (request: Request) => Response | Promise<Response>;
   /** Raw `Cookie` header of the incoming CRM request, forwarded as-is. */
   cookie: string | null;
+  /** The browser's address and agent, so the API's audit trail records who really asked. */
+  userAgent?: string | null;
+  forwardedFor?: string | null;
 }
 
 /** Typed client that calls the API in the same process, forwarding the caller's cookie. */
-export function createInProcessApiClient({ dispatch, cookie }: InProcessApiClientOptions) {
+export function createInProcessApiClient({
+  dispatch,
+  cookie,
+  userAgent,
+  forwardedFor,
+}: InProcessApiClientOptions) {
   return hc<AppType>(IN_PROCESS_BASE_URL, {
     fetch: (input: RequestInfo | URL, init?: RequestInit) => {
       const request = new Request(input, init);
       if (cookie) request.headers.set("cookie", cookie);
+      if (userAgent) request.headers.set("user-agent", userAgent);
+      if (forwardedFor) request.headers.set("x-forwarded-for", forwardedFor);
       return dispatch(request);
     },
   });
