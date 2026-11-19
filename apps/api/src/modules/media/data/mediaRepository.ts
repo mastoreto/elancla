@@ -63,3 +63,30 @@ export async function deleteMediaFileRow(
 ): Promise<void> {
   await tx.mediaFile.deleteMany({ where: { id, organizationId } });
 }
+
+/**
+ * Stale pending uploads of EVERY organization. The unscoped client is deliberate: the purge is a
+ * system job with no tenant, and each row is then handled under its own organization.
+ */
+export function listStalePendingRows(
+  cutoff: Date,
+  limit: number,
+): Promise<MediaFile[]> {
+  return db.mediaFile.findMany({
+    where: { status: "pending", createdAt: { lt: cutoff } },
+    orderBy: { createdAt: "asc" },
+    take: limit,
+  });
+}
+
+/** Deletes the row only if it is still pending (a `finalize` may have won the race). */
+export async function deletePendingMediaFileRow(
+  tx: Prisma.TransactionClient,
+  organizationId: string,
+  id: string,
+): Promise<boolean> {
+  const { count } = await tx.mediaFile.deleteMany({
+    where: { id, organizationId, status: "pending" },
+  });
+  return count > 0;
+}

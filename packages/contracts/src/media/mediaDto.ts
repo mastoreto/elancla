@@ -65,8 +65,14 @@ export const downloadLinkDto = z.object({
   expiresAt: z.iso.datetime(),
 });
 
+/** What the cron job reports: how many stale pending uploads it removed. */
+export const purgeMediaResultDto = z.object({
+  purged: z.number().int().nonnegative(),
+});
+
 export type CreateUploadBody = z.infer<typeof createUploadBody>;
 export type UploadTicketDto = z.infer<typeof uploadTicketDto>;
 export type MediaVariantDto = z.infer<typeof mediaVariantDto>;
 export type MediaFileDto = z.infer<typeof mediaFileDto>;
 export type DownloadLinkDto = z.infer<typeof downloadLinkDto>;
+export type PurgeMediaResultDto = z.infer<typeof purgeMediaResultDto>;

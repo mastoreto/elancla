@@ -393,6 +393,22 @@ const rows: MatrixRow[] = [
     expected: 404,
   },
 
+  // The cron route has no session: only the bearer opens it, not even the admin role.
+  {
+    who: "anonymous",
+    caller: "anonymous",
+    method: "GET",
+    path: "/internal/media/purge",
+    expected: 401,
+  },
+  {
+    who: "admin (a session is not the cron secret)",
+    caller: ["admin"],
+    method: "GET",
+    path: "/internal/media/purge",
+    expected: 401,
+  },
+
   // The seeded admin holds everything, resources added later included.
   {
     who: "admin",

@@ -7,7 +7,7 @@ import { invitationsRoutes } from "./modules/identity/invitations";
 import { rolesRoutes } from "./modules/identity/roles";
 import { usersRoutes } from "./modules/identity/users";
 import { meRoutes } from "./modules/me";
-import { mediaRoutes } from "./modules/media";
+import { mediaInternalRoutes, mediaRoutes } from "./modules/media";
 import { ministriesRoutes } from "./modules/ministries";
 
 /** Module routes without the `/api` prefix: this is what the typed client mirrors. */
@@ -19,7 +19,8 @@ const routes = createRouter()
   .route("/", usersRoutes)
   .route("/", ministriesRoutes)
   .route("/", auditRoutes)
-  .route("/", mediaRoutes);
+  .route("/", mediaRoutes)
+  .route("/", mediaInternalRoutes);
 
 // Better Auth is mounted next to the typed routes but kept out of `AppType`: it has its own client.
 export const app = createApp()
