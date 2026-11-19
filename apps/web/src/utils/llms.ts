@@ -70,14 +70,14 @@ function sections(entries: SiteIndexEntry[], site: SiteConfig) {
   ];
 }
 
-export async function buildLlmsTxt() {
-  const site = await getSiteConfig();
+export async function buildLlmsTxt(knownSite?: SiteConfig) {
+  const site = knownSite ?? (await getSiteConfig());
   const entries = await getSiteIndex();
   return [...header(site), ...sections(entries, site).slice(1), ''].join('\n');
 }
 
-export async function buildLlmsFullTxt() {
-  const site = await getSiteConfig();
+export async function buildLlmsFullTxt(knownSite?: SiteConfig) {
+  const site = knownSite ?? (await getSiteConfig());
   const entries = await getSiteIndex();
   const visit = getMessages('es').visit;
   const doctrines = getDoctrines('es').flatMap((d) => [
