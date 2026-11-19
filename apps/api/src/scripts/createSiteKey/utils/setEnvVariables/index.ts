@@ -1,0 +1,1 @@
+export { setEnvVariables } from "./setEnvVariables";
