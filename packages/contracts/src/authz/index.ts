@@ -1,5 +1,6 @@
 export {
   actionsOf,
+  fromPermission,
   isGrantSupported,
   PERMISSION_ACTIONS,
   PERMISSION_CATALOG,
@@ -15,7 +16,10 @@ export {
   toPermission,
   widerScope,
 } from "./permissionCatalog";
-export { permissionGrantSchema, permissionGrantsSchema } from "./permissionGrant";
+export {
+  permissionGrantSchema,
+  permissionGrantsSchema,
+} from "./permissionGrant";
 export {
   ADMIN_ROLE,
   ADMIN_ROLE_KEY,

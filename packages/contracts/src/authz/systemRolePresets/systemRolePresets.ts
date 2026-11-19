@@ -60,7 +60,8 @@ export const SYSTEM_ROLE_PRESETS: readonly SystemRolePreset[] = [
   {
     key: "treasurer",
     name: "Tesorero",
-    description: "Gestiona movimientos, comprobantes, solicitudes y presupuestos.",
+    description:
+      "Gestiona movimientos, comprobantes, solicitudes y presupuestos.",
     grants: TREASURY_AND_REPORTS.flatMap((resource) => every(resource, "all")),
   },
   {
@@ -72,7 +73,8 @@ export const SYSTEM_ROLE_PRESETS: readonly SystemRolePreset[] = [
   {
     key: "board",
     name: "Directiva",
-    description: "Supervisa la tesorería, aprueba solicitudes y gestiona proyectos.",
+    description:
+      "Supervisa la tesorería, aprueba solicitudes y gestiona proyectos.",
     grants: [
       ...only(TREASURY_AND_REPORTS, ["view"], "all"),
       ...only(["projects"], ["create", "edit"], "all"),
@@ -82,7 +84,8 @@ export const SYSTEM_ROLE_PRESETS: readonly SystemRolePreset[] = [
   {
     key: "pastoral",
     name: "Pastoral",
-    description: "Acompaña a los ministerios y consulta solicitudes e informes.",
+    description:
+      "Acompaña a los ministerios y consulta solicitudes e informes.",
     grants: [
       ...only(["ministries.profile"], ["view"], "all"),
       ...only(["requests", "reports"], ["view"], "all"),

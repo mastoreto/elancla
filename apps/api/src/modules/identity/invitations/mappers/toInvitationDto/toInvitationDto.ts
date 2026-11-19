@@ -10,7 +10,8 @@ export function toInvitationDto(
   return {
     id: invitation.id,
     email: invitation.email,
-    role: invitation.role === "admin" ? "admin" : "viewer",
+    roleIds: invitation.roleIds,
+    ministryIds: invitation.ministryIds,
     status: resolveInvitationStatus(invitation, now),
     expiresAt: invitation.expiresAt.toISOString(),
     createdAt: invitation.createdAt.toISOString(),

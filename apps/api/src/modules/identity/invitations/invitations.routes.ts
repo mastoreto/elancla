@@ -3,16 +3,22 @@ import {
   createInvitationBody,
   invitationDto,
   invitationPreviewDto,
+  type Permission,
   pageQuerySchema,
   pageSchema,
-  problemSchema,
 } from "@ancla/contracts";
 import { createRoute, z } from "@hono/zod-openapi";
-import { requireAdmin, requireSession } from "../../../core/auth";
+import { requireSession } from "../../../core/auth";
+import { allowPublic, requirePermission } from "../../../core/authz";
 import type { AuthenticatedContext } from "../../../core/context";
 import { createRouter } from "../../../core/createApp";
 import { rateLimit } from "../../../core/http";
 import { getMailer } from "../../../core/mail";
+import {
+  guardedResponses,
+  jsonResponse,
+  problemResponse,
+} from "../../../core/openapi";
 import { toInvitationDto } from "./mappers";
 import {
   acceptInvitation,
@@ -23,7 +29,10 @@ import {
   revokeInvitation,
 } from "./useCases";
 
-const ADMIN_ONLY = [requireSession, requireAdmin];
+const can = (permission: Permission) => [
+  requireSession,
+  requirePermission(permission),
+];
 const PREVIEW_LIMIT = {
   name: "invitation-preview",
   max: 30,
@@ -31,31 +40,15 @@ const PREVIEW_LIMIT = {
 };
 const ACCEPT_LIMIT = { name: "invitation-accept", max: 10, windowSeconds: 60 };
 
-const problem = (description: string) => ({
-  description,
-  content: { "application/problem+json": { schema: problemSchema } },
-});
-const json = <Schema extends z.ZodType>(
-  description: string,
-  schema: Schema,
-) => ({
-  description,
-  content: { "application/json": { schema } },
-});
-
 const idParams = z.object({ id: z.uuid() });
 const tokenParams = z.object({ token: z.string().min(20).max(100) });
-const adminErrors = {
-  401: problem("No valid session"),
-  403: problem("Admin only"),
-};
 
 const createInvitationRoute = createRoute({
   method: "post",
   path: "/invitations",
   tags: ["invitations"],
   summary: "Invite a person by email.",
-  middleware: ADMIN_ONLY,
+  middleware: can("invitations:create"),
   request: {
     body: {
       content: { "application/json": { schema: createInvitationBody } },
@@ -63,10 +56,12 @@ const createInvitationRoute = createRoute({
     },
   },
   responses: {
-    201: json("Invitation created and emailed", invitationDto),
-    400: problem("The request is not valid"),
-    409: problem("The email already has an account or a pending invitation"),
-    ...adminErrors,
+    201: jsonResponse("Invitation created and emailed", invitationDto),
+    400: problemResponse("The request is not valid"),
+    409: problemResponse(
+      "The email already has an account or a pending invitation",
+    ),
+    ...guardedResponses,
   },
 });
 
@@ -75,11 +70,11 @@ const listRoute = createRoute({
   path: "/invitations",
   tags: ["invitations"],
   summary: "List invitations.",
-  middleware: ADMIN_ONLY,
+  middleware: can("invitations:view"),
   request: { query: pageQuerySchema },
   responses: {
-    200: json("A page of invitations", pageSchema(invitationDto)),
-    ...adminErrors,
+    200: jsonResponse("A page of invitations", pageSchema(invitationDto)),
+    ...guardedResponses,
   },
 });
 
@@ -88,13 +83,13 @@ const revokeRoute = createRoute({
   path: "/invitations/{id}/revoke",
   tags: ["invitations"],
   summary: "Revoke an invitation.",
-  middleware: ADMIN_ONLY,
+  middleware: can("invitations:delete"),
   request: { params: idParams },
   responses: {
-    200: json("Invitation revoked", invitationDto),
-    404: problem("Not found"),
-    409: problem("Already accepted"),
-    ...adminErrors,
+    200: jsonResponse("Invitation revoked", invitationDto),
+    404: problemResponse("Not found"),
+    409: problemResponse("Already accepted"),
+    ...guardedResponses,
   },
 });
 
@@ -103,13 +98,13 @@ const resendRoute = createRoute({
   path: "/invitations/{id}/resend",
   tags: ["invitations"],
   summary: "Send the invitation again with a new link.",
-  middleware: ADMIN_ONLY,
+  middleware: can("invitations:create"),
   request: { params: idParams },
   responses: {
-    200: json("Invitation re-sent", invitationDto),
-    404: problem("Not found"),
-    409: problem("Accepted or revoked"),
-    ...adminErrors,
+    200: jsonResponse("Invitation re-sent", invitationDto),
+    404: problemResponse("Not found"),
+    409: problemResponse("Accepted or revoked"),
+    ...guardedResponses,
   },
 });
 
@@ -118,12 +113,15 @@ const previewRoute = createRoute({
   path: "/invitations/by-token/{token}",
   tags: ["invitations"],
   summary: "Public: what an invitation link is for.",
-  middleware: [rateLimit(PREVIEW_LIMIT)],
+  middleware: [allowPublic, rateLimit(PREVIEW_LIMIT)],
   request: { params: tokenParams },
   responses: {
-    200: json("Masked email, organization and validity", invitationPreviewDto),
-    404: problem("The link is not valid"),
-    429: problem("Too many requests"),
+    200: jsonResponse(
+      "Masked email, organization and validity",
+      invitationPreviewDto,
+    ),
+    404: problemResponse("The link is not valid"),
+    429: problemResponse("Too many requests"),
   },
 });
 
@@ -132,7 +130,7 @@ const acceptRoute = createRoute({
   path: "/invitations/by-token/{token}/accept",
   tags: ["invitations"],
   summary: "Public: create the account with a password.",
-  middleware: [rateLimit(ACCEPT_LIMIT)],
+  middleware: [allowPublic, rateLimit(ACCEPT_LIMIT)],
   request: {
     params: tokenParams,
     body: {
@@ -142,8 +140,8 @@ const acceptRoute = createRoute({
   },
   responses: {
     204: { description: "Account created" },
-    404: problem("The link is not valid"),
-    429: problem("Too many requests"),
+    404: problemResponse("The link is not valid"),
+    429: problemResponse("Too many requests"),
   },
 });
 

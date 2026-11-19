@@ -22,6 +22,8 @@ describe("system role presets", () => {
 
   test("the leader acts on the ministry, never on everything", () => {
     const leader = SYSTEM_ROLE_PRESETS.find((p) => p.key === "leader");
-    expect(leader?.grants.every((grant) => grant.scope === "ministry")).toBe(true);
+    expect(leader?.grants.every((grant) => grant.scope === "ministry")).toBe(
+      true,
+    );
   });
 });

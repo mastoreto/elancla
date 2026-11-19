@@ -6,7 +6,8 @@ export interface NewInvitation {
   organizationId: string;
   email: string;
   tokenHash: string;
-  role: string;
+  roleIds: string[];
+  ministryIds: string[];
   invitedById: string | null;
   expiresAt: Date;
 }
@@ -89,4 +90,40 @@ export function findOrganizationName(organizationId: string) {
     where: { id: organizationId },
     select: { name: true },
   });
+}
+
+/** Ids among `ids` that exist in the organization, so an invitation never carries a foreign id. */
+export async function findExistingRoleIds(
+  organizationId: string,
+  ids: string[],
+): Promise<string[]> {
+  const rows = await forOrganization(db, organizationId).role.findMany({
+    where: { id: { in: ids } },
+    select: { id: true },
+  });
+  return rows.map((row) => row.id);
+}
+
+export async function findExistingMinistryIds(
+  organizationId: string,
+  ids: string[],
+): Promise<string[]> {
+  const rows = await forOrganization(db, organizationId).ministry.findMany({
+    where: { id: { in: ids } },
+    select: { id: true },
+  });
+  return rows.map((row) => row.id);
+}
+
+/** Names of the roles an invitation grants, for the email. */
+export async function findRoleNames(
+  organizationId: string,
+  ids: string[],
+): Promise<string[]> {
+  const rows = await forOrganization(db, organizationId).role.findMany({
+    where: { id: { in: ids } },
+    select: { name: true },
+    orderBy: { name: "asc" },
+  });
+  return rows.map((row) => row.name);
 }

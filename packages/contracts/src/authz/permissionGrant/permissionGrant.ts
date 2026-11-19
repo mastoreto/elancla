@@ -19,7 +19,8 @@ export const permissionGrantSchema = z
     scope: z.enum(PERMISSION_SCOPES),
   })
   .refine(isGrantSupported, {
-    message: "The catalog does not support this action or scope on the resource",
+    message:
+      "The catalog does not support this action or scope on the resource",
   });
 
 /** A role's grid. A resource and action pair can appear only once. */

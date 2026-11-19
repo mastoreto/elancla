@@ -19,7 +19,8 @@ export async function createInvitation({
   const { invitation, token } = await issueInvitation({
     organizationId: ctx.organizationId,
     email: body.email,
-    role: body.role,
+    roleIds: body.roleIds,
+    ministryIds: body.ministryIds,
     invitedById: ctx.user.id,
   });
   await sendInvitationEmail({

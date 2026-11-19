@@ -6,4 +6,6 @@ export const TENANT_MODELS: ReadonlySet<string> = new Set([
   "SiteSettings",
   "DocumentSequence",
   "Invitation",
+  "Role",
+  "Ministry",
 ]);

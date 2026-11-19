@@ -23,11 +23,19 @@ describe("permission catalog", () => {
     ).toBe(true);
     // Users are global: no ministry scope.
     expect(
-      isGrantSupported({ resource: "users", action: "view", scope: "ministry" }),
+      isGrantSupported({
+        resource: "users",
+        action: "view",
+        scope: "ministry",
+      }),
     ).toBe(false);
     // Settings cannot be approved.
     expect(
-      isGrantSupported({ resource: "settings", action: "approve", scope: "all" }),
+      isGrantSupported({
+        resource: "settings",
+        action: "approve",
+        scope: "all",
+      }),
     ).toBe(false);
   });
 

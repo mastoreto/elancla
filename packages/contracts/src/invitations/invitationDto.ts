@@ -25,10 +25,7 @@ export const invitationDto = z.object({
 export const createInvitationBody = z.strictObject({
   email: z.email().max(254),
   roleIds: z.array(z.uuid()).min(1).max(MAX_INVITATION_ASSIGNMENTS),
-  ministryIds: z
-    .array(z.uuid())
-    .max(MAX_INVITATION_ASSIGNMENTS)
-    .default([]),
+  ministryIds: z.array(z.uuid()).max(MAX_INVITATION_ASSIGNMENTS).default([]),
 });
 
 /** What the public link page may know: a masked email, never the full address. */

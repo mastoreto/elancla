@@ -7,6 +7,7 @@ import type { Mailer } from "../../mail";
 import { freshSessionGuard } from "../freshSessionGuard";
 import { readGooglePicture } from "../googlePicture";
 import { assertSignUpAllowed, markInvitationAccepted } from "../invitationGate";
+import { roleSessionPolicy } from "../roleSessionPolicy";
 import {
   SESSION_FRESH_SECONDS,
   SESSION_MAX_AGE_SECONDS,
@@ -95,31 +96,20 @@ export function createAuth(options: CreateAuthOptions) {
         allowUnlinkingAll: false,
       },
     },
-    user: {
-      additionalFields: {
-        // Temporary flat role (admin|viewer), copied from the invitation until phase 0.4.
-        role: {
-          type: "string",
-          required: false,
-          input: false,
-          defaultValue: "viewer",
-        },
-      },
-    },
     databaseHooks: {
       user: {
         create: {
           before: async (user, context) => {
             const email = user.email.toLowerCase();
-            const { role } = await assertSignUpAllowed({
+            await assertSignUpAllowed({
               email,
               emailVerified: user.emailVerified === true,
               isCredentialSignUp: context?.path === CREDENTIAL_SIGN_UP_PATH,
             });
-            return { data: { ...user, email, role, emailVerified: true } };
+            return { data: { ...user, email, emailVerified: true } };
           },
           after: async (user) => {
-            await markInvitationAccepted(user.email);
+            await markInvitationAccepted(user);
           },
         },
       },
@@ -142,6 +132,7 @@ export function createAuth(options: CreateAuthOptions) {
       // Passwordless: a Google-only user has no password to confirm; anyone with one must send it.
       twoFactor({ issuer: TOTP_ISSUER, allowPasswordless: true }),
       socialTwoFactorGuard({ crmOrigin }),
+      roleSessionPolicy(),
       freshSessionGuard(),
     ],
   });

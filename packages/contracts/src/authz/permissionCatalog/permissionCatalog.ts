@@ -74,6 +74,18 @@ export function toPermission(
   return `${resource}:${action}`;
 }
 
+/** Inverse of `toPermission`. A `Permission` is always built from a valid resource and action. */
+export function fromPermission(permission: Permission): {
+  resource: PermissionResource;
+  action: PermissionAction;
+} {
+  const [resource, action] = permission.split(":") as [
+    PermissionResource,
+    PermissionAction,
+  ];
+  return { resource, action };
+}
+
 export function actionsOf(resource: PermissionResource): PermissionAction[] {
   return [...PERMISSION_CATALOG[resource].actions];
 }

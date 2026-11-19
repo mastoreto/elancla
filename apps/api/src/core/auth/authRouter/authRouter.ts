@@ -1,3 +1,4 @@
+import { allowPublic } from "../../authz";
 import { createRouter } from "../../createApp";
 import { NotFoundError } from "../../errors";
 import { getAuth } from "../getAuth";
@@ -9,9 +10,11 @@ import { getAuth } from "../getAuth";
  */
 export function createAuthRouter() {
   const router = createRouter();
-  router.on("POST", "/auth/sign-up/email", () => {
+  router.on("POST", "/auth/sign-up/email", allowPublic, () => {
     throw new NotFoundError("Route not found");
   });
-  router.on(["GET", "POST"], "/auth/*", (c) => getAuth().handler(c.req.raw));
+  router.on(["GET", "POST"], "/auth/*", allowPublic, (c) =>
+    getAuth().handler(c.req.raw),
+  );
   return router;
 }

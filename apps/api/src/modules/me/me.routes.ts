@@ -1,14 +1,14 @@
-import { createPasswordBody, meDto, problemSchema } from "@ancla/contracts";
+import { createPasswordBody, meDto, mePermissionsDto } from "@ancla/contracts";
 import { createRoute } from "@hono/zod-openapi";
-import { requireFreshSession, requireSession } from "../../core/auth";
+import {
+  allowAnySession,
+  requireFreshSession,
+  requireSession,
+} from "../../core/auth";
 import type { AuthenticatedContext } from "../../core/context";
 import { createRouter } from "../../core/createApp";
-import { createPassword, getMe } from "./useCases";
-
-const problemResponse = (description: string) => ({
-  description,
-  content: { "application/problem+json": { schema: problemSchema } },
-});
+import { jsonResponse, problemResponse } from "../../core/openapi";
+import { createPassword, getMe, getMyPermissions } from "./useCases";
 
 const getMeRoute = createRoute({
   method: "get",
@@ -21,6 +21,18 @@ const getMeRoute = createRoute({
       description: "Current user",
       content: { "application/json": { schema: meDto } },
     },
+    401: problemResponse("No valid session"),
+  },
+});
+
+const getMyPermissionsRoute = createRoute({
+  method: "get",
+  path: "/me/permissions",
+  tags: ["me"],
+  summary: "What the authenticated user may do, merged across their roles.",
+  middleware: [allowAnySession],
+  responses: {
+    200: jsonResponse("Roles, grants and ministries", mePermissionsDto),
     401: problemResponse("No valid session"),
   },
 });
@@ -50,6 +62,9 @@ export const meRoutes = createRouter()
   // requireSession guarantees user and organization.
   .openapi(getMeRoute, async (c) =>
     c.json(await getMe(c.get("ctx") as AuthenticatedContext), 200),
+  )
+  .openapi(getMyPermissionsRoute, (c) =>
+    c.json(getMyPermissions(c.get("ctx") as AuthenticatedContext), 200),
   )
   .openapi(createPasswordRoute, async (c) => {
     await createPassword({

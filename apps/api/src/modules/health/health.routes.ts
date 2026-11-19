@@ -1,6 +1,7 @@
 import { healthDto } from "@ancla/contracts";
 import { db } from "@ancla/db";
 import { createRoute } from "@hono/zod-openapi";
+import { allowPublic } from "../../core/authz";
 import { createRouter } from "../../core/createApp";
 import { checkHealth } from "./useCases";
 
@@ -9,6 +10,7 @@ const getHealthRoute = createRoute({
   path: "/health",
   tags: ["health"],
   summary: "Liveness and database reachability. Public.",
+  middleware: [allowPublic],
   responses: {
     200: {
       description: "Service status",
