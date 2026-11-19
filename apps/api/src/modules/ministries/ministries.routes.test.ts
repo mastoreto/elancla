@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
+import { grant, PERMISSIONS } from "@ancla/contracts";
 import { createApiCaller } from "../../../test/support/apiCaller";
-import { grant } from "../../../test/support/authzMatrix";
 import { createFixtures } from "../../../test/support/fixtures";
 import { getAuth } from "../../core/auth";
 
@@ -23,14 +23,14 @@ beforeAll(async () => {
     await fixtures.passwordUser(
       auth,
       "leader-a",
-      [grant("ministries.profile", "view", "ministry")],
+      [grant(PERMISSIONS.ministryProfile.view, "ministry")],
       { ministryIds: [ministryA] },
     ),
   );
   allScopeCookie = await fixtures.signIn(
     auth,
     await fixtures.passwordUser(auth, "all-ministries", [
-      grant("ministries.profile", "view", "all"),
+      grant(PERMISSIONS.ministryProfile.view, "all"),
     ]),
   );
 });
@@ -60,7 +60,7 @@ describe("GET /api/ministries scope", () => {
     const cookie = await fixtures.signIn(
       auth,
       await fixtures.passwordUser(auth, "leader-none", [
-        grant("ministries.profile", "view", "ministry"),
+        grant(PERMISSIONS.ministryProfile.view, "ministry"),
       ]),
     );
     expect(await visibleMinistryIds(cookie)).toEqual([]);

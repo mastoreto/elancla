@@ -1,15 +1,16 @@
 import { describe, expect, test } from "bun:test";
+import { grant, PERMISSIONS } from "@ancla/contracts";
 import { filterByPermission } from "./filterByPermission";
 
 const actions = [
-  { id: "movement", requires: ["movements:create"] },
-  { id: "request", requires: ["requests:create"] },
+  { id: "movement", requires: [PERMISSIONS.movements.create] },
+  { id: "request", requires: [PERMISSIONS.requests.create] },
   { id: "open" },
 ] as const;
 
 const leader = {
   isAdmin: false,
-  grants: [{ resource: "requests", action: "create", scope: "ministry" }],
+  grants: [grant(PERMISSIONS.requests.create, "ministry")],
 } as const;
 
 describe("filterByPermission", () => {

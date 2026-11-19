@@ -1,5 +1,6 @@
 "use client";
 
+import { PERMISSIONS } from "@ancla/contracts";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
@@ -52,7 +53,7 @@ export function MinistriesPageContent({ ministries }: MinistriesPageContentProps
           Contenido del sitio web: cada ministerio con su descripción, líder y horarios. El
           presupuesto se gestiona aparte.
         </p>
-        <Can permission="ministries.profile:create">
+        <Can permission={PERMISSIONS.ministryProfile.create}>
           <BoardButton
             className={ministriesPageContentMinistriesPage.action}
             href={getChurchRoutePath("ministries", "new")}

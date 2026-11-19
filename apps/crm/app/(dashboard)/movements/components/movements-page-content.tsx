@@ -1,5 +1,6 @@
 "use client";
 
+import { PERMISSIONS } from "@ancla/contracts";
 import { Download, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { DateRange } from "react-day-picker";
@@ -72,7 +73,7 @@ export function MovementsPageContent() {
             <Download aria-hidden="true" className={movementsPageContentMovementsPage.actionIcon} />
             Exportar
           </BoardButton>
-          <Can permission="movements:create">
+          <Can permission={PERMISSIONS.movements.create}>
             <BoardButton onClick={() => setIsCreateOpen(true)} variant="primary">
               <Plus aria-hidden="true" className={movementsPageContentMovementsPage.actionIcon} />
               Nuevo movimiento

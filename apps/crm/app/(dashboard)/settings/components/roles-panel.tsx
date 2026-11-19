@@ -1,6 +1,6 @@
 "use client";
 
-import { ADMIN_ROLE_KEY, PERMISSION_RESOURCES, type RoleDto } from "@ancla/contracts";
+import { ADMIN_ROLE_KEY, PERMISSION_RESOURCES, PERMISSIONS, type RoleDto } from "@ancla/contracts";
 import { PencilLine, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -84,7 +84,7 @@ export function RolesPanel({ roles }: RolesPanelProps) {
     <BoardCard className={rolesPanelSettingsPage.card}>
       <BoardCardHeader
         action={
-          access.isAdmin && can(access, "roles:create") ? (
+          access.isAdmin && can(access, PERMISSIONS.roles.create) ? (
             <BoardButton
               href={getChurchRoutePath("settings", "roles", "new")}
               size="sm"
@@ -103,7 +103,7 @@ export function RolesPanel({ roles }: RolesPanelProps) {
         {visible.map((role) => {
           const isSeeded = role.key !== null;
           // Only an admin manages roles; seeded roles are never deletable.
-          const canManage = access.isAdmin && !isSeeded && can(access, "roles:delete");
+          const canManage = access.isAdmin && !isSeeded && can(access, PERMISSIONS.roles.delete);
           const hasMembers = role.memberCount > 0;
           return (
             <BoardTableRow columns={COLUMNS} key={role.id}>

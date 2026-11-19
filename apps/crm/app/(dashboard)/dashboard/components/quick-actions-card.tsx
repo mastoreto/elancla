@@ -1,6 +1,7 @@
 "use client";
 
 import type { Permission } from "@ancla/contracts";
+import { PERMISSIONS } from "@ancla/contracts";
 import { BarChart3, CircleDollarSign, Plus, Upload } from "lucide-react";
 import type { ComponentType } from "react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
@@ -34,26 +35,26 @@ const QUICK_ACTIONS: readonly QuickAction[] = [
     label: "Nuevo movimiento",
     href: getChurchRoutePath("movements"),
     icon: Plus,
-    requires: ["movements:create"],
+    requires: [PERMISSIONS.movements.create],
     primary: true,
   },
   {
     label: "Nueva solicitud",
     href: getChurchRoutePath("requests"),
     icon: CircleDollarSign,
-    requires: ["requests:create"],
+    requires: [PERMISSIONS.requests.create],
   },
   {
     label: "Subir boleta",
     href: getChurchRoutePath("receipts"),
     icon: Upload,
-    requires: ["vouchers:create"],
+    requires: [PERMISSIONS.vouchers.create],
   },
   {
     label: "Crear informe",
     href: getChurchRoutePath("reports"),
     icon: BarChart3,
-    requires: ["reports:create"],
+    requires: [PERMISSIONS.reports.create],
   },
 ];
 

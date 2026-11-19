@@ -1,5 +1,6 @@
 "use server";
 
+import { PERMISSIONS } from "@ancla/contracts";
 import { db } from "@ancla/db";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -25,7 +26,7 @@ const STATUS_TO_ENUM = {
 } as const;
 
 export async function updateSiteStatus(input: unknown) {
-  await requireActionPermission("content:edit");
+  await requireActionPermission(PERMISSIONS.content.edit);
   const status = statusSchema.parse(input);
   const settings = await getSettings();
   await db.siteSettings.update({
@@ -49,7 +50,7 @@ const socialSchema = z.object({
 });
 
 export async function updateSocialLinks(input: unknown) {
-  await requireActionPermission("content:edit");
+  await requireActionPermission(PERMISSIONS.content.edit);
   const links = socialSchema.parse(input);
   // Cadena vacía → null en la BD.
   const data = Object.fromEntries(Object.entries(links).map(([k, v]) => [k, v === "" ? null : v]));
@@ -61,7 +62,7 @@ export async function updateSocialLinks(input: unknown) {
 // ─── Sección «Sobre nosotros» (ES en esta iteración) ─────────────────────────
 
 export async function updateAbout(input: unknown) {
-  await requireActionPermission("content:edit");
+  await requireActionPermission(PERMISSIONS.content.edit);
   // RichTextEditor produce HTML (string); se guarda en el campo Json como string.
   const aboutRichText = z.string().parse(input);
   const settings = await getSettings();

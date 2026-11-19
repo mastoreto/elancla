@@ -1,5 +1,6 @@
 "use client";
 
+import { PERMISSIONS } from "@ancla/contracts";
 import { LayoutGrid, List, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
@@ -53,7 +54,7 @@ export function ReportsListPageContent({ reports }: { reports: GeneratedReportLi
         <p className={reportsListPageContentReportsPage.description}>
           Reportes listos para abrir o exportar, y plantillas para crear nuevos.
         </p>
-        <Can permission="reports:create">
+        <Can permission={PERMISSIONS.reports.create}>
           <BoardButton
             className={reportsListPageContentReportsPage.action}
             href={getChurchRoutePath("reports", "new")}

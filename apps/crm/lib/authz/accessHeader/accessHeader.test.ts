@@ -1,10 +1,11 @@
 import { describe, expect, test } from "bun:test";
+import { grant, PERMISSIONS } from "@ancla/contracts";
 import { parseAccess, serializeAccess } from "./accessHeader";
 
 const access = {
   isAdmin: false,
   roles: [{ id: "01900000-0000-7000-8000-000000000001", name: "Líder" }],
-  grants: [{ resource: "requests", action: "view", scope: "ministry" }],
+  grants: [grant(PERMISSIONS.requests.view, "ministry")],
   ministryIds: [],
 } as const;
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { PERMISSIONS } from "@ancla/contracts";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
@@ -56,7 +57,7 @@ export function SermonsPageContent() {
         <p className={sermonsPageContentSermonsPage.description}>
           Biblioteca de prédicas con video de YouTube, pasaje bíblico y serie.
         </p>
-        <Can permission="content:create">
+        <Can permission={PERMISSIONS.content.create}>
           <BoardButton
             className={sermonsPageContentSermonsPage.action}
             href={getChurchRoutePath("sermons", "new")}

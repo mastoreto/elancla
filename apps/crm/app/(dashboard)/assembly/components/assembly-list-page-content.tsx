@@ -1,5 +1,6 @@
 "use client";
 
+import { PERMISSIONS } from "@ancla/contracts";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
@@ -66,7 +67,7 @@ export function AssemblyListPageContent({ reports }: { reports: readonly Assembl
           Comparte informes completos con los asistentes mediante un código, solo durante la sesión
           y en el lugar.
         </p>
-        <Can permission="voting:create">
+        <Can permission={PERMISSIONS.voting.create}>
           <BoardButton
             className={assemblyListPageContentAssemblyPage.action}
             href={getChurchRoutePath("assembly", "new")}

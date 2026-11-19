@@ -1,3 +1,4 @@
+import { PERMISSIONS } from "@ancla/contracts";
 import { notFound } from "next/navigation";
 import { createServerApiClient } from "@/lib/api/createServerApiClient";
 import { can, canAny } from "@/lib/authz/can";
@@ -47,10 +48,10 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
   const [meResponse, invitationsResponse, usersResponse, rolesResponse, ministriesResponse] =
     await Promise.all([
       api.me.$get(),
-      can(access, "invitations:view") ? api.invitations.$get(query) : null,
-      can(access, "users:view") ? api.users.$get(query) : null,
-      can(access, "roles:view") ? api.roles.$get() : null,
-      can(access, "ministries.profile:view") ? api.ministries.$get(query) : null,
+      can(access, PERMISSIONS.invitations.view) ? api.invitations.$get(query) : null,
+      can(access, PERMISSIONS.users.view) ? api.users.$get(query) : null,
+      can(access, PERMISSIONS.roles.view) ? api.roles.$get() : null,
+      can(access, PERMISSIONS.ministryProfile.view) ? api.ministries.$get(query) : null,
     ]);
   const me = meResponse.ok ? await meResponse.json() : null;
   const invitations = invitationsResponse?.ok ? (await invitationsResponse.json()).items : null;

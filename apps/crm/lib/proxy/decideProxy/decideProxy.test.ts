@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type { MePermissionsDto } from "@ancla/contracts";
+import { grant, PERMISSIONS } from "@ancla/contracts";
 import type { ProxyRequestFacts } from "../types";
 import { decideProxy } from "./decideProxy";
 
@@ -8,8 +9,8 @@ const leader: MePermissionsDto = {
   isAdmin: false,
   roles: [],
   grants: [
-    { resource: "requests", action: "view", scope: "ministry" },
-    { resource: "ministries.profile", action: "view", scope: "ministry" },
+    grant(PERMISSIONS.requests.view, "ministry"),
+    grant(PERMISSIONS.ministryProfile.view, "ministry"),
   ],
   ministryIds: [],
 };
@@ -67,7 +68,7 @@ describe("decideProxy", () => {
     expect(adminDecision.type).toBe("rewrite");
     const holder: MePermissionsDto = {
       ...leader,
-      grants: [{ resource: "roles", action: "create", scope: "all" }],
+      grants: [grant(PERMISSIONS.roles.create, "all")],
     };
     const denied = await decideProxy(facts("/el-ancla/settings/roles/new"), loaderOf(holder).load);
     expect(denied).toEqual({ type: "notFound" });

@@ -1,4 +1,5 @@
 import type { MinistryDto, Page, PageQuery } from "@ancla/contracts";
+import { PERMISSIONS } from "@ancla/contracts";
 import { scopeWhere } from "../../../../core/authz";
 import type { AuthenticatedContext } from "../../../../core/context";
 import { toPage } from "../../../../core/http";
@@ -10,7 +11,7 @@ export async function listMinistries(
   ctx: AuthenticatedContext,
   query: PageQuery,
 ): Promise<Page<MinistryDto>> {
-  const scope = scopeWhere(ctx, "ministries.profile:view", {
+  const scope = scopeWhere(ctx, PERMISSIONS.ministryProfile.view, {
     ministryField: "id",
   });
   const page = toPage(

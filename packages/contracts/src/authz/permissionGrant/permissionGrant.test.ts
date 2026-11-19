@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { grant, PERMISSIONS } from "../permissionCatalog";
 import {
   permissionGrantSchema,
   permissionGrantsSchema,
@@ -7,11 +8,9 @@ import {
 describe("permission grant validation", () => {
   test("accepts a catalog-supported grant", () => {
     expect(
-      permissionGrantSchema.safeParse({
-        resource: "ministries.finance",
-        action: "view",
-        scope: "ministry",
-      }).success,
+      permissionGrantSchema.safeParse(
+        grant(PERMISSIONS.ministryFinance.view, "ministry"),
+      ).success,
     ).toBe(true);
   });
 
@@ -29,8 +28,8 @@ describe("permission grant validation", () => {
   });
 
   test("rejects a repeated permission", () => {
-    const grant = { resource: "movements", action: "view", scope: "all" };
-    expect(permissionGrantsSchema.safeParse([grant, grant]).success).toBe(
+    const repeated = grant(PERMISSIONS.movements.view, "all");
+    expect(permissionGrantsSchema.safeParse([repeated, repeated]).success).toBe(
       false,
     );
   });

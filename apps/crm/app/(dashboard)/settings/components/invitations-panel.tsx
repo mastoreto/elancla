@@ -1,6 +1,7 @@
 "use client";
 
 import type { InvitationDto, InvitationStatus, RoleDto } from "@ancla/contracts";
+import { PERMISSIONS } from "@ancla/contracts";
 import { Send, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -60,8 +61,8 @@ function describeRoles(invitation: InvitationDto, roles: RoleDto[] | null): stri
 export function InvitationsPanel({ invitations, roles }: InvitationsPanelProps) {
   const router = useRouter();
   const access = useAccess();
-  const canResend = can(access, "invitations:create");
-  const canRevoke = can(access, "invitations:delete");
+  const canResend = can(access, PERMISSIONS.invitations.create);
+  const canRevoke = can(access, PERMISSIONS.invitations.delete);
 
   async function run(action: () => Promise<Response>, success: string) {
     const response = await action();

@@ -1,5 +1,6 @@
 "use client";
 
+import { PERMISSIONS } from "@ancla/contracts";
 import { ArrowUpRight, CircleCheck, Plus } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -80,7 +81,7 @@ export function VotingListPageContent() {
         <p className={votingListPageContentVotingPage.description}>
           Decisiones de la iglesia con quórum, mayoría y voto anónimo.
         </p>
-        <Can permission="voting:create">
+        <Can permission={PERMISSIONS.voting.create}>
           <BoardButton
             className={votingListPageContentVotingPage.action}
             href={getVotingCreatePath()}

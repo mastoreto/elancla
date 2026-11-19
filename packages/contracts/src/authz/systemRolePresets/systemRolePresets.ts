@@ -1,8 +1,8 @@
 import {
-  actionsOf,
-  type PermissionAction,
+  grant,
+  PERMISSIONS,
+  type Permission,
   type PermissionGrant,
-  type PermissionResource,
   type PermissionScope,
 } from "../permissionCatalog";
 
@@ -22,38 +22,22 @@ export interface SystemRolePreset {
   grants: PermissionGrant[];
 }
 
-function every(
-  resource: PermissionResource,
+/** Every action a resource allows, all with the same scope ("todo"). */
+function everyAction(
+  actions: Readonly<Record<string, Permission>>,
   scope: PermissionScope,
 ): PermissionGrant[] {
-  return actionsOf(resource).map((action) => ({ resource, action, scope }));
+  return Object.values(actions).map((permission) => grant(permission, scope));
 }
 
-function only(
-  resources: readonly PermissionResource[],
-  actions: readonly PermissionAction[],
-  scope: PermissionScope,
-): PermissionGrant[] {
-  return resources.flatMap((resource) =>
-    actions
-      .filter((action) => actionsOf(resource).includes(action))
-      .map((action) => ({ resource, action, scope })),
-  );
-}
-
-const TREASURY_RESOURCES = [
-  "movements",
-  "requests",
-  "vouchers",
-  "budgets",
-  "projects",
-  "ministries.finance",
-] as const satisfies readonly PermissionResource[];
-
-const TREASURY_AND_REPORTS = [
-  ...TREASURY_RESOURCES,
-  "reports",
-] as const satisfies readonly PermissionResource[];
+const TREASURY = [
+  PERMISSIONS.movements,
+  PERMISSIONS.requests,
+  PERMISSIONS.vouchers,
+  PERMISSIONS.budgets,
+  PERMISSIONS.projects,
+  PERMISSIONS.ministryFinance,
+];
 
 /** The ESRE roles (plus the content editor) the seed creates. All remain editable afterwards. */
 export const SYSTEM_ROLE_PRESETS: readonly SystemRolePreset[] = [
@@ -62,13 +46,17 @@ export const SYSTEM_ROLE_PRESETS: readonly SystemRolePreset[] = [
     name: "Tesorero",
     description:
       "Gestiona movimientos, comprobantes, solicitudes y presupuestos.",
-    grants: TREASURY_AND_REPORTS.flatMap((resource) => every(resource, "all")),
+    grants: [...TREASURY, PERMISSIONS.reports].flatMap((resource) =>
+      everyAction(resource, "all"),
+    ),
   },
   {
     key: "auditor",
     name: "Síndico",
     description: "Revisa toda la tesorería y los informes, sin modificar nada.",
-    grants: only(TREASURY_AND_REPORTS, ["view"], "all"),
+    grants: [...TREASURY, PERMISSIONS.reports].map((resource) =>
+      grant(resource.view, "all"),
+    ),
   },
   {
     key: "board",
@@ -76,9 +64,12 @@ export const SYSTEM_ROLE_PRESETS: readonly SystemRolePreset[] = [
     description:
       "Supervisa la tesorería, aprueba solicitudes y gestiona proyectos.",
     grants: [
-      ...only(TREASURY_AND_REPORTS, ["view"], "all"),
-      ...only(["projects"], ["create", "edit"], "all"),
-      ...only(["requests"], ["approve"], "all"),
+      ...[...TREASURY, PERMISSIONS.reports].map((resource) =>
+        grant(resource.view, "all"),
+      ),
+      grant(PERMISSIONS.projects.create, "all"),
+      grant(PERMISSIONS.projects.edit, "all"),
+      grant(PERMISSIONS.requests.approve, "all"),
     ],
   },
   {
@@ -87,8 +78,9 @@ export const SYSTEM_ROLE_PRESETS: readonly SystemRolePreset[] = [
     description:
       "Acompaña a los ministerios y consulta solicitudes e informes.",
     grants: [
-      ...only(["ministries.profile"], ["view"], "all"),
-      ...only(["requests", "reports"], ["view"], "all"),
+      grant(PERMISSIONS.ministryProfile.view, "all"),
+      grant(PERMISSIONS.requests.view, "all"),
+      grant(PERMISSIONS.reports.view, "all"),
     ],
   },
   {
@@ -96,24 +88,32 @@ export const SYSTEM_ROLE_PRESETS: readonly SystemRolePreset[] = [
     name: "Líder",
     description: "Pide fondos y consulta el presupuesto de su ministerio.",
     grants: [
-      ...only(["requests"], ["view", "create", "edit"], "ministry"),
-      ...only(["budgets", "ministries.finance"], ["view"], "ministry"),
-      ...only(["ministries.profile"], ["view", "edit"], "ministry"),
+      grant(PERMISSIONS.requests.view, "ministry"),
+      grant(PERMISSIONS.requests.create, "ministry"),
+      grant(PERMISSIONS.requests.edit, "ministry"),
+      grant(PERMISSIONS.budgets.view, "ministry"),
+      grant(PERMISSIONS.ministryFinance.view, "ministry"),
+      grant(PERMISSIONS.ministryProfile.view, "ministry"),
+      grant(PERMISSIONS.ministryProfile.edit, "ministry"),
     ],
   },
   {
     key: "assembly",
     name: "Asamblea",
     description: "Consulta informes y participa de las votaciones.",
-    grants: only(["reports", "voting"], ["view"], "all"),
+    grants: [
+      grant(PERMISSIONS.reports.view, "all"),
+      grant(PERMISSIONS.voting.view, "all"),
+    ],
   },
   {
     key: "office",
     name: "Oficina",
     description: "Carga comprobantes y consulta movimientos.",
     grants: [
-      ...only(["vouchers"], ["view", "create"], "all"),
-      ...only(["movements"], ["view"], "all"),
+      grant(PERMISSIONS.vouchers.view, "all"),
+      grant(PERMISSIONS.vouchers.create, "all"),
+      grant(PERMISSIONS.movements.view, "all"),
     ],
   },
   {
@@ -121,8 +121,9 @@ export const SYSTEM_ROLE_PRESETS: readonly SystemRolePreset[] = [
     name: "Editor de contenido",
     description: "Edita el sitio público y los perfiles de ministerio.",
     grants: [
-      ...every("content", "all"),
-      ...only(["ministries.profile"], ["view", "edit"], "all"),
+      ...everyAction(PERMISSIONS.content, "all"),
+      grant(PERMISSIONS.ministryProfile.view, "all"),
+      grant(PERMISSIONS.ministryProfile.edit, "all"),
     ],
   },
 ];

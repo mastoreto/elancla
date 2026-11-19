@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { PERMISSIONS } from "@ancla/contracts";
 import { Hono } from "hono";
 import { app } from "./app";
 import { allowPublic, declaresAccess, requirePermission } from "./core/authz";
@@ -38,7 +39,9 @@ describe("router introspection", () => {
   test("a route without a declaration is reported", () => {
     const sample = new Hono()
       .get("/open", allowPublic, (c) => c.text("ok"))
-      .get("/guarded", requirePermission("roles:view"), (c) => c.text("ok"))
+      .get("/guarded", requirePermission(PERMISSIONS.roles.view), (c) =>
+        c.text("ok"),
+      )
       .get("/forgotten", (c) => c.text("ok"));
     expect(findUndeclaredRoutes(sample.routes)).toEqual(["GET /forgotten"]);
   });

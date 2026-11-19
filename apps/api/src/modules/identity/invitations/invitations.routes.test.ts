@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
+import { grant, PERMISSIONS } from "@ancla/contracts";
 import { db } from "@ancla/db";
-import { grant } from "../../../../test/support/authzMatrix";
 import {
   cookieHeaderFrom,
   createFixtures,
@@ -34,7 +34,7 @@ beforeAll(async () => {
   inviterCookie = await fixtures.signIn(
     auth,
     await fixtures.passwordUser(auth, "inv-inviter", [
-      grant("invitations", "create"),
+      grant(PERMISSIONS.invitations.create),
     ]),
   );
   // A signed-in user whose roles grant nothing.

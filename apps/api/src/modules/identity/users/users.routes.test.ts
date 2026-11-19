@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import type { UserDto } from "@ancla/contracts";
+import { grant, PERMISSIONS } from "@ancla/contracts";
 import { db } from "@ancla/db";
 import { createApiCaller } from "../../../../test/support/apiCaller";
-import { grant } from "../../../../test/support/authzMatrix";
 import { createFixtures } from "../../../../test/support/fixtures";
 import { getAuth } from "../../../core/auth";
 import { lockRoles } from "../../../core/authz";
@@ -43,7 +43,9 @@ beforeAll(async () => {
   // Can edit users but is not an admin.
   editorCookie = await fixtures.signIn(
     auth,
-    await fixtures.passwordUser(auth, "users-editor", [grant("users", "edit")]),
+    await fixtures.passwordUser(auth, "users-editor", [
+      grant(PERMISSIONS.users.edit),
+    ]),
   );
 });
 
@@ -157,9 +159,9 @@ describe("assigning roles a non-admin does not fully hold", () => {
     const cookie = await fixtures.signIn(
       auth,
       await fixtures.passwordUser(auth, "subset-editor", [
-        grant("users", "edit"),
-        grant("requests", "view", "all"),
-        grant("budgets", "view", "ministry"),
+        grant(PERMISSIONS.users.edit),
+        grant(PERMISSIONS.requests.view, "all"),
+        grant(PERMISSIONS.budgets.view, "ministry"),
       ]),
     );
     const target = await newUser("subset-target");
@@ -171,19 +173,19 @@ describe("assigning roles a non-admin does not fully hold", () => {
 
     const covered = await fixtures.createRole("covered", {
       grants: [
-        grant("requests", "view", "ministry"),
-        grant("budgets", "view", "ministry"),
+        grant(PERMISSIONS.requests.view, "ministry"),
+        grant(PERMISSIONS.budgets.view, "ministry"),
       ],
     });
     expect((await assign(covered)).status).toBe(200);
 
     const wider = await fixtures.createRole("wider", {
-      grants: [grant("budgets", "view", "all")],
+      grants: [grant(PERMISSIONS.budgets.view, "all")],
     });
     expect((await assign(wider)).status).toBe(403);
 
     const notHeld = await fixtures.createRole("not-held", {
-      grants: [grant("movements", "view", "all")],
+      grants: [grant(PERMISSIONS.movements.view, "all")],
     });
     expect((await assign(notHeld)).status).toBe(403);
     expect((await assign(await fixtures.roleIdByKey("treasurer"))).status).toBe(

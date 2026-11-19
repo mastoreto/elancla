@@ -1,6 +1,7 @@
 import {
   actionsOf,
   PERMISSION_RESOURCES,
+  PERMISSIONS,
   type Permission,
   type PermissionAction,
   type PermissionGrant,
@@ -21,8 +22,8 @@ export const EMPTY_GRID: PermissionGrid = {};
 
 /** Starting point for a new role: it can see movements and reports. */
 export const NEW_ROLE_GRID: PermissionGrid = {
-  "movements:view": "all",
-  "reports:view": "all",
+  [PERMISSIONS.movements.view]: "all",
+  [PERMISSIONS.reports.view]: "all",
 };
 
 const byBreadth = (left: PermissionScope, right: PermissionScope) =>

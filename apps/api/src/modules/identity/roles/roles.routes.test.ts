@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import type { RoleDto } from "@ancla/contracts";
+import { grant, PERMISSIONS } from "@ancla/contracts";
 import { db } from "@ancla/db";
 import { createApiCaller } from "../../../../test/support/apiCaller";
-import { grant } from "../../../../test/support/authzMatrix";
 import { createFixtures } from "../../../../test/support/fixtures";
 import { getAuth } from "../../../core/auth";
 
@@ -43,9 +43,9 @@ describe("roles CRUD", () => {
       persistentSession: false,
       maxSessionSeconds: 3600,
       grants: [
-        grant("requests", "view", "ministry"),
-        grant("requests", "create", "own"),
-        grant("movements", "view", "all"),
+        grant(PERMISSIONS.requests.view, "ministry"),
+        grant(PERMISSIONS.requests.create, "own"),
+        grant(PERMISSIONS.movements.view, "all"),
       ],
     });
     expect(res.status).toBe(201);
@@ -57,7 +57,9 @@ describe("roles CRUD", () => {
       memberCount: 0,
     });
     expect(role.grants).toHaveLength(3);
-    expect(role.grants).toContainEqual(grant("requests", "create", "own"));
+    expect(role.grants).toContainEqual(
+      grant(PERMISSIONS.requests.create, "own"),
+    );
 
     const listed = (await (
       await call("GET", "/roles", { cookie: adminCookie })
@@ -71,8 +73,9 @@ describe("roles CRUD", () => {
 
   test("rejects a grid the catalog does not support with a 400", async () => {
     for (const bad of [
-      grant("users", "view", "own"),
-      grant("settings", "approve", "all"),
+      grant(PERMISSIONS.users.view, "own"),
+      // Settings has no approve action: only a hand-built grant can say so.
+      { ...grant(PERMISSIONS.settings.view, "all"), action: "approve" },
       { resource: "nope", action: "view", scope: "all" },
     ]) {
       const res = await createRole({ name: uniqueName("bad"), grants: [bad] });
@@ -80,7 +83,10 @@ describe("roles CRUD", () => {
     }
     const duplicated = await createRole({
       name: uniqueName("dup-grant"),
-      grants: [grant("movements", "view"), grant("movements", "view")],
+      grants: [
+        grant(PERMISSIONS.movements.view),
+        grant(PERMISSIONS.movements.view),
+      ],
     });
     expect(duplicated.status).toBe(400);
   });
@@ -95,7 +101,10 @@ describe("roles CRUD", () => {
     const created = (await (
       await createRole({
         name: uniqueName("patch"),
-        grants: [grant("movements", "view"), grant("reports", "view")],
+        grants: [
+          grant(PERMISSIONS.movements.view),
+          grant(PERMISSIONS.reports.view),
+        ],
       })
     ).json()) as RoleDto;
 
@@ -105,13 +114,15 @@ describe("roles CRUD", () => {
         name: `${created.name} v2`,
         persistentSession: false,
         maxSessionSeconds: 600,
-        grants: [grant("budgets", "view", "ministry")],
+        grants: [grant(PERMISSIONS.budgets.view, "ministry")],
       },
     });
     expect(res.status).toBe(200);
     const updated = (await res.json()) as RoleDto;
     expect(updated.name).toBe(`${created.name} v2`);
-    expect(updated.grants).toEqual([grant("budgets", "view", "ministry")]);
+    expect(updated.grants).toEqual([
+      grant(PERMISSIONS.budgets.view, "ministry"),
+    ]);
     expect(updated.maxSessionSeconds).toBe(600);
   });
 
@@ -170,7 +181,7 @@ describe("role protections", () => {
   test("nobody edits a role they hold (no self-elevation through the grid)", async () => {
     const auth = getAuth();
     const ownRoleId = await fixtures.createRole("own", {
-      grants: [grant("roles", "edit")],
+      grants: [grant(PERMISSIONS.roles.edit)],
     });
     const email = fixtures.uniqueEmail("holder");
     await fixtures.invite(email, { roleIds: [ownRoleId] });
@@ -183,7 +194,7 @@ describe("role protections", () => {
       cookie,
       body: {
         name: "Elevated",
-        grants: [grant("roles", "edit"), grant("users", "edit")],
+        grants: [grant(PERMISSIONS.roles.edit), grant(PERMISSIONS.users.edit)],
       },
     });
     expect(own.status).toBe(403);
@@ -216,10 +227,10 @@ describe("role protections", () => {
     const cookie = await fixtures.signIn(
       auth,
       await fixtures.passwordUser(auth, "roles-manager", [
-        grant("roles", "view"),
-        grant("roles", "create"),
-        grant("roles", "edit"),
-        grant("roles", "delete"),
+        grant(PERMISSIONS.roles.view),
+        grant(PERMISSIONS.roles.create),
+        grant(PERMISSIONS.roles.edit),
+        grant(PERMISSIONS.roles.delete),
       ]),
     );
     const other = (await (

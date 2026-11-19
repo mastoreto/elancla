@@ -1,10 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import {
   actionsOf,
+  grant,
   isDangerousPermission,
   isGrantSupported,
   PERMISSION_CATALOG,
   PERMISSION_RESOURCES,
+  PERMISSIONS,
   scopesOf,
   widerScope,
 } from "./permissionCatalog";
@@ -19,9 +21,9 @@ describe("permission catalog", () => {
   });
 
   test("accepts a supported combination and rejects the rest", () => {
-    expect(
-      isGrantSupported({ resource: "requests", action: "view", scope: "own" }),
-    ).toBe(true);
+    expect(isGrantSupported(grant(PERMISSIONS.requests.view, "own"))).toBe(
+      true,
+    );
     // Users are global: no ministry scope.
     expect(
       isGrantSupported({
@@ -61,5 +63,15 @@ describe("permission catalog", () => {
     expect(isDangerousPermission("settings", "edit")).toBe(true);
     expect(isDangerousPermission("roles", "view")).toBe(false);
     expect(isDangerousPermission("movements", "edit")).toBe(false);
+  });
+
+  test("PERMISSIONS names every catalog pair and nothing else", () => {
+    expect(PERMISSIONS.movements.view).toBe("movements:view");
+    expect(PERMISSIONS.ministryProfile.edit).toBe("ministries.profile:edit");
+    expect(Object.keys(PERMISSIONS.settings)).toEqual(["view", "edit"]);
+    expect(Object.isFrozen(PERMISSIONS)).toBe(true);
+    expect(Object.isFrozen(PERMISSIONS.roles)).toBe(true);
+    // @ts-expect-error settings has no create action
+    expect(PERMISSIONS.settings.create).toBeUndefined();
   });
 });

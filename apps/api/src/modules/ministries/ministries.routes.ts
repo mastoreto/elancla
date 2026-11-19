@@ -1,4 +1,9 @@
-import { ministryDto, pageQuerySchema, pageSchema } from "@ancla/contracts";
+import {
+  ministryDto,
+  PERMISSIONS,
+  pageQuerySchema,
+  pageSchema,
+} from "@ancla/contracts";
 import { createRoute } from "@hono/zod-openapi";
 import { requireSession } from "../../core/auth";
 import { requirePermission } from "../../core/authz";
@@ -13,7 +18,10 @@ const listRoute = createRoute({
   tags: ["ministries"],
   summary:
     "List the ministries the user's scope allows. Read-only until phase 1.5.",
-  middleware: [requireSession, requirePermission("ministries.profile:view")],
+  middleware: [
+    requireSession,
+    requirePermission(PERMISSIONS.ministryProfile.view),
+  ],
   request: { query: pageQuerySchema },
   responses: {
     200: jsonResponse("A page of ministries", pageSchema(ministryDto)),

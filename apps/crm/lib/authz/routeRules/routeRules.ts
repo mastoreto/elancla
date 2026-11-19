@@ -1,4 +1,5 @@
 import type { Permission } from "@ancla/contracts";
+import { PERMISSIONS } from "@ancla/contracts";
 import { churchToDashboardRouteMap } from "@/lib/church";
 import { ROUTE_PERMISSIONS } from "../routePermissions";
 
@@ -26,7 +27,7 @@ const SECTION_RULES: RouteRule[] = Object.entries(ROUTE_PERMISSIONS)
 export const ROUTE_RULES: readonly RouteRule[] = [
   ...SECTION_RULES,
   { path: "/settings", requires: [] },
-  { path: "/settings/emails", requires: ["settings:view"] },
-  { path: "/settings/roles/new", requires: ["roles:create"], adminOnly: true },
-  { path: "/settings/roles/*/edit", requires: ["roles:view"], adminOnly: true },
+  { path: "/settings/emails", requires: [PERMISSIONS.settings.view] },
+  { path: "/settings/roles/new", requires: [PERMISSIONS.roles.create], adminOnly: true },
+  { path: "/settings/roles/*/edit", requires: [PERMISSIONS.roles.view], adminOnly: true },
 ];

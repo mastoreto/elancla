@@ -1,5 +1,6 @@
 "use client";
 
+import { PERMISSIONS } from "@ancla/contracts";
 import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { DateRange } from "react-day-picker";
@@ -133,7 +134,7 @@ export function VouchersPageContent({
         <p className={vouchersPageContentVouchersPage.description}>
           Respaldo interno para gastos sin boleta, con justificación y responsable.
         </p>
-        <Can permission="vouchers:create">
+        <Can permission={PERMISSIONS.vouchers.create}>
           <BoardButton onClick={openCreate} variant="primary">
             <Plus aria-hidden="true" className={vouchersPageContentVouchersPage.actionIcon} />
             Nuevo comprobante

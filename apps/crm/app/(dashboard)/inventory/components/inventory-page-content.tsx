@@ -1,5 +1,6 @@
 "use client";
 
+import { PERMISSIONS } from "@ancla/contracts";
 import { Download, Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BoardButton } from "@/components/dashboard/board/board-button";
@@ -41,7 +42,7 @@ export function InventoryPageContent({ items }: InventoryPageContentProps) {
             <Download aria-hidden="true" className={inventoryPageContentInventoryPage.actionIcon} />
             Exportar
           </BoardButton>
-          <Can permission="movements:create">
+          <Can permission={PERMISSIONS.movements.create}>
             <BoardButton href={getChurchRoutePath("inventory", "new")} size="md" variant="primary">
               <Plus aria-hidden="true" className={inventoryPageContentInventoryPage.actionIcon} />
               Nuevo ítem
