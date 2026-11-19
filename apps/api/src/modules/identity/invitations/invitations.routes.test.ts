@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import { db } from "@ancla/db";
+import { grant } from "../../../../test/support/authzMatrix";
 import {
   cookieHeaderFrom,
   createFixtures,
@@ -18,6 +19,7 @@ const { CRM_ORIGIN } = getApiEnv();
 
 let adminCookie = "";
 let viewerCookie = "";
+let inviterCookie = "";
 let adminRoleId = "";
 
 beforeAll(async () => {
@@ -27,6 +29,13 @@ beforeAll(async () => {
   adminCookie = await fixtures.signIn(
     auth,
     await fixtures.passwordUser(auth, "inv-admin", ["admin"]),
+  );
+  // Can invite but is not an admin.
+  inviterCookie = await fixtures.signIn(
+    auth,
+    await fixtures.passwordUser(auth, "inv-inviter", [
+      grant("invitations", "create"),
+    ]),
   );
   // A signed-in user whose roles grant nothing.
   viewerCookie = await fixtures.signIn(
@@ -122,6 +131,23 @@ describe("admin endpoints", () => {
       true,
     );
     expect(JSON.stringify(list)).not.toContain(row.tokenHash);
+  });
+
+  test("only an admin can invite with the admin role (no escalation through invitations:create)", async () => {
+    const email = fixtures.uniqueEmail("escalation");
+    const res = await call("POST", "/invitations", {
+      body: { email, roleIds: [adminRoleId] },
+      cookie: inviterCookie,
+    });
+    expect(res.status).toBe(403);
+    expect(await db.invitation.count({ where: { email } })).toBe(0);
+
+    const leaderId = await fixtures.roleIdByKey("leader");
+    const allowed = await call("POST", "/invitations", {
+      body: { email, roleIds: [leaderId] },
+      cookie: inviterCookie,
+    });
+    expect(allowed.status).toBe(201);
   });
 
   test("an invitation with an unknown role or ministry is a 400", async () => {

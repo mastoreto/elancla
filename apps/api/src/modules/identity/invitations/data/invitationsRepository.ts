@@ -1,3 +1,4 @@
+import { ADMIN_ROLE_KEY } from "@ancla/contracts";
 import { db } from "@ancla/db";
 import { pendingInvitationWhere } from "../../../../core/auth";
 import { forOrganization } from "../../../../core/tenancy";
@@ -126,4 +127,15 @@ export async function findRoleNames(
     orderBy: { name: "asc" },
   });
   return rows.map((row) => row.name);
+}
+
+/** Whether the admin role (implicit full access) is among `ids`. */
+export async function includesAdminRole(
+  organizationId: string,
+  ids: string[],
+): Promise<boolean> {
+  const count = await forOrganization(db, organizationId).role.count({
+    where: { id: { in: ids }, key: ADMIN_ROLE_KEY },
+  });
+  return count > 0;
 }

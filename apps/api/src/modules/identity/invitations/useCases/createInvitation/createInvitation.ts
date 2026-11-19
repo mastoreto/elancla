@@ -1,7 +1,9 @@
 import type { CreateInvitationBody } from "@ancla/contracts";
 import type { Invitation } from "@ancla/db";
 import type { AuthenticatedContext } from "../../../../../core/context";
+import { ForbiddenError } from "../../../../../core/errors";
 import type { Mailer } from "../../../../../core/mail";
+import { includesAdminRole } from "../../data";
 import { issueInvitation } from "../issueInvitation";
 import { sendInvitationEmail } from "../sendInvitationEmail";
 
@@ -16,6 +18,13 @@ export async function createInvitation({
   body,
   mailer,
 }: CreateInvitationInput): Promise<Invitation> {
+  // Same rule as `PUT /users/:id/roles`: an invitation must not be a way around it.
+  if (
+    !ctx.access.isAdmin &&
+    (await includesAdminRole(ctx.organizationId, body.roleIds))
+  ) {
+    throw new ForbiddenError("Only an admin can invite with the admin role");
+  }
   const { invitation, token } = await issueInvitation({
     organizationId: ctx.organizationId,
     email: body.email,
