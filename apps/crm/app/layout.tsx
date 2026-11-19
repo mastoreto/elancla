@@ -1,6 +1,7 @@
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { JetBrains_Mono, Outfit, Plus_Jakarta_Sans } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -59,6 +60,7 @@ export default function RootLayout({
         className={`${plusJakartaSans.variable} ${outfit.variable} ${jetBrainsMono.variable} font-sans antialiased`}
       >
         {children}
+        <Toaster />
         <Analytics />
       </body>
     </html>
