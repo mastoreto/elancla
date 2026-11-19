@@ -223,7 +223,7 @@ Quien ve un informe para presentar **no necesita ser usuario**. Requisitos:
 - **E2E** (Playwright, solo Chromium) en `apps/crm/e2e/`, contra `next build && next start` con la
   BD de test: login, invitación (correo leído de Mailpit), MFA, acceso denegado. El informe de
   asamblea entra cuando exista el módulo.
-- **Dónde corre**: el CI (`quality`, `db`, `test`, `e2e`, `version`) corre **solo en el PR
+- **Dónde corre**: el CI (`source-branch`, `quality`, `db`, `test`, `e2e`, `version`) corre **solo en el PR
   `develop → main`** (y `workflow_dispatch`); la primera barrera en cada commit/push son los hooks de
   Husky (Biome + tipos, mensaje de commit, tests + build). `main` tiene protección de rama: PR
   obligatorio con esos cinco checks, sin force-push ni borrado; `develop` sin force-push ni borrado.

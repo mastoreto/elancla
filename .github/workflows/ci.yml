@@ -15,6 +15,18 @@ permissions:
   contents: read
 
 jobs:
+  # Skipped jobs count as passing required checks, so a PR into main from any branch other than
+  # develop must fail here (this job is a required check too).
+  source-branch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Only develop may open a PR into main
+        if: github.event_name == 'pull_request' && github.head_ref != 'develop'
+        run: |
+          echo "::error::PRs into main must come from develop (got '${{ github.head_ref }}')."
+          exit 1
+
   quality:
     if: github.event_name == 'workflow_dispatch' || github.head_ref == 'develop'
     runs-on: ubuntu-latest
