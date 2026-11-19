@@ -81,7 +81,8 @@ apps/api/
     │   │   └── voting/
     │   ├── media/                       # subidas firmadas, finalize, variantes de imagen, descarga privada, purga (data/ domain/ lib/ mappers/ policies/ useCases/ guards/)
     │   ├── audit/                       # consulta del log (solo lectura)
-    │   └── public/                      # API pública v1 para sitios (solo contenido publicado)
+    │   ├── siteKeys/                    # alta, listado y revocación de site keys (domain/ data/ mappers/ useCases/)
+    │   └── public/                      # API pública v1 para sitios (solo contenido publicado): guards/requireSiteKey, useCases, mappers
     │
     └── test/                            # helpers: BD de test, factories, cliente HTTP, matriz de permisos
 ```
