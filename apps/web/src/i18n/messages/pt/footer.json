@@ -6,9 +6,33 @@
   "churchLabel": "Igreja",
   "ministryLabel": "Ministérios",
   "socialLabel": "Redes",
-  "churchLinks": ["Missão e valores", "História", "O que cremos?", "Confissão de fé", "Visite-nos"],
-  "ministryLinks": ["Pregação", "Homens", "Ensino", "Jovens", "Missões", "Adolescentes", "Louvor", "Multimídia", "Oração", "Espaço Mulher", "Serviço", "Espaço Cuidado", "Espaço Ancladitos"],
-  "socialLinks": ["YouTube · @iglesiaelanclauy", "Instagram · @iglesiaelancla", "Facebook · @iglesiabautistaelancla"],
+  "churchLinks": [
+    "Missão e valores",
+    "História",
+    "O que cremos?",
+    "Confissão de fé",
+    "Visite-nos"
+  ],
+  "ministryLinks": [
+    "Pregação",
+    "Homens",
+    "Ensino",
+    "Jovens",
+    "Missões",
+    "Adolescentes",
+    "Louvor",
+    "Multimídia",
+    "Oração",
+    "Espaço Mulher",
+    "Serviço",
+    "Espaço Cuidado",
+    "Espaço Ancladitos"
+  ],
+  "socialLinks": [
+    "YouTube · @iglesiaelanclauy",
+    "Instagram · @iglesiaelancla",
+    "Facebook · @iglesiabautistaelancla"
+  ],
   "address": "Av. Luis A. de Herrera 3101, esq. Juan Arrieta — Montevidéu, Uruguai",
   "copyright": "Igreja Batista El Ancla. Todos os direitos reservados."
 }

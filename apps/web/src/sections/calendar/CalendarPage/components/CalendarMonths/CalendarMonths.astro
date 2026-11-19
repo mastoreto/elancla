@@ -1,12 +1,15 @@
 ---
 import { events, groupEventsByMonth } from 'src/data/calendar';
 import type { Locale } from 'src/i18n/config';
-import { getHtmlLang } from 'src/i18n/utils';
 import type { Messages } from 'src/i18n/messages';
+import { getHtmlLang } from 'src/i18n/utils';
 import CalendarEventRow from 'src/sections/calendar/CalendarPage/components/CalendarMonths/components/CalendarEventRow';
 import CalendarFilters from 'src/sections/calendar/CalendarPage/components/CalendarMonths/components/CalendarFilters';
 import CalendarSectionHead from 'src/sections/calendar/CalendarPage/components/CalendarSectionHead';
-import { SECTION, SECTION_SPACING } from 'src/sections/calendar/CalendarPage/styles';
+import {
+  SECTION,
+  SECTION_SPACING,
+} from 'src/sections/calendar/CalendarPage/styles';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -16,15 +19,26 @@ interface Props {
 const { copy, locale } = Astro.props;
 
 const lang = getHtmlLang(locale);
-const monthFormat = new Intl.DateTimeFormat(lang, { month: 'long', timeZone: 'UTC' });
-const weekdayFormat = new Intl.DateTimeFormat(lang, { weekday: 'short', timeZone: 'UTC' });
+const monthFormat = new Intl.DateTimeFormat(lang, {
+  month: 'long',
+  timeZone: 'UTC',
+});
+const weekdayFormat = new Intl.DateTimeFormat(lang, {
+  weekday: 'short',
+  timeZone: 'UTC',
+});
 const groups = groupEventsByMonth(events).map(({ month, events: list }) => ({
   month,
   name: monthFormat.format(new Date(Date.UTC(2027, month, 1))),
-  count: list.length === 1 ? copy.months.countOne : copy.months.countMany.replace('{n}', String(list.length)),
+  count:
+    list.length === 1
+      ? copy.months.countOne
+      : copy.months.countMany.replace('{n}', String(list.length)),
   rows: list.map((event) => ({
     event,
-    weekday: weekdayFormat.format(new Date(`${event.date}T00:00:00Z`)).replace('.', ''),
+    weekday: weekdayFormat
+      .format(new Date(`${event.date}T00:00:00Z`))
+      .replace('.', ''),
   })),
 }));
 
@@ -32,25 +46,27 @@ const calendarMonths = {
   container: cn(SECTION, SECTION_SPACING.default),
   text: cn(
     'flex flex-wrap items-center gap-3 rounded-[20px] border-[1.5px] border-dashed',
-    'border-obra-red bg-obra-white px-4.5 py-3.5 text-[0.875rem] leading-[1.45]',
+    'border-obra-red bg-obra-white px-4.5 py-3.5 text-[0.875rem] leading-[1.45]'
   ),
   noticeLabel: cn('tracking-[0.12em] text-obra-red uppercase'),
   groups: cn('mt-4 flex flex-col'),
   month: cn(
     'flex flex-col gap-6 border-t-[1.5px] border-obra-ink py-7.5',
     '[&[hidden]]:hidden',
-    'max-md:gap-3.5 max-md:py-5.5 lg:flex-row lg:gap-10',
+    'max-md:gap-3.5 max-md:py-5.5 lg:flex-row lg:gap-10'
   ),
   groupHeader: cn(
     'flex flex-col gap-1.5',
-    'lg:sticky lg:top-24 lg:min-w-0 lg:flex-[0_0_17rem] lg:self-start',
+    'lg:sticky lg:top-24 lg:min-w-0 lg:flex-[0_0_17rem] lg:self-start'
   ),
   groupName: cn(
     'font-obra-serif text-[clamp(2.5rem,3.6vw,3.5rem)] leading-[0.92] tracking-[-0.02em]',
     'wrap-anywhere capitalize',
-    'max-md:text-[2.5rem]',
+    'max-md:text-[2.5rem]'
   ),
-  count: cn('font-obra-sans-bold text-[0.8125rem] tracking-[0.12em] text-obra-red uppercase'),
+  count: cn(
+    'font-obra-sans-bold text-[0.8125rem] tracking-[0.12em] text-obra-red uppercase'
+  ),
   rows: cn('flex min-w-0 flex-1 flex-col gap-2.5'),
 };
 ---

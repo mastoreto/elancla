@@ -1,9 +1,9 @@
 ---
-import { CTA_ARROW, CTA_FILL, LIVE_DOT } from 'src/styles/classes';
+import LogoText from 'src/components/LogoText';
 import type { Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
-import LogoText from 'src/components/LogoText';
+import { CTA_ARROW, CTA_FILL, LIVE_DOT } from 'src/styles/classes';
 import cn from 'src/utils/cn';
 
 interface ResourceItem {
@@ -47,7 +47,7 @@ const mobileMenu = {
   closeButton: cn(
     'flex items-center justify-center w-9 h-9 rounded-full border border-ink/10 bg-ink/5',
     'text-ink transition-colors',
-    'hover:bg-ink/10',
+    'hover:bg-ink/10'
   ),
   nav: cn('flex-1 py-2'),
   links: cn('flex flex-col'),
@@ -56,12 +56,14 @@ const mobileMenu = {
   resourcesItem: cn('border-b border-ink/8'),
   resourcesToggle: cn(
     NAV_LINK,
-    'items-center justify-between text-left font-ui font-medium text-ink/80',
+    'items-center justify-between text-left font-ui font-medium text-ink/80'
   ),
-  resourcesChevron: cn('w-3.5 h-3.5 transition-transform duration-200 text-ink/40 flex-shrink-0'),
+  resourcesChevron: cn(
+    'w-3.5 h-3.5 transition-transform duration-200 text-ink/40 flex-shrink-0'
+  ),
   resourcesList: cn(
     'ml-1 flex flex-col overflow-hidden border-l-2 border-primary/30 pl-4',
-    '[transition:max-height_0.25s_ease]',
+    '[transition:max-height_0.25s_ease]'
   ),
   resourceLink: cn('flex flex-col gap-0.5 py-3 menu-close-trigger'),
   resourceLabel: cn('font-ui text-[14px] font-medium text-ink/80'),
@@ -70,29 +72,29 @@ const mobileMenu = {
   footerGrid: cn('mb-4 grid grid-cols-[1fr_auto] gap-3'),
   localeGroup: cn('rounded-2xl border border-ink/10 p-2'),
   languageLabel: cn(
-    'px-2 pb-2 font-ui text-[10px] font-semibold uppercase tracking-[0.22em] text-ink/50',
+    'px-2 pb-2 font-ui text-[10px] font-semibold uppercase tracking-[0.22em] text-ink/50'
   ),
   localeList: cn('flex flex-wrap gap-2'),
   localeLink: cn(
     'menu-close-trigger inline-flex items-center gap-1.5 rounded-full border px-3 py-2',
-    'font-ui text-[11px] font-semibold uppercase tracking-wide',
+    'font-ui text-[11px] font-semibold uppercase tracking-wide'
   ),
   localeLinkCurrent: cn('border-primary bg-primary text-white'),
   localeLinkIdle: cn('border-ink/10 bg-ink/5 text-ink'),
   themeToggle: cn(
     'flex h-full min-h-[4.25rem] w-16 items-center justify-center rounded-2xl border',
     'border-ink/10 bg-ink/5 text-ink transition-colors',
-    'hover:bg-ink/10',
+    'hover:bg-ink/10'
   ),
   cta: cn(
     'menu-close-trigger inline-flex w-full items-center justify-center gap-2 rounded-full',
     'bg-ink px-5 py-3.5 font-ui text-[13px] font-semibold tracking-wide text-paper uppercase',
-    CTA_FILL,
+    CTA_FILL
   ),
   ctaArrow: cn(CTA_ARROW),
   liveStatus: cn(
     'mt-5 flex items-center gap-2 text-[11px] font-ui font-medium text-ink/50 uppercase',
-    'tracking-wider',
+    'tracking-wider'
   ),
   liveDot: cn('h-1.5 w-1.5 rounded-full bg-primary', LIVE_DOT),
 };

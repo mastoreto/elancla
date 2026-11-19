@@ -22,10 +22,26 @@
     "secondaryCta": "Últimos sermones",
     "scroll": "Descubre",
     "schedule": [
-      { "label": "01 · Domingos", "time": "11:15", "description": "Culto de celebración" },
-      { "label": "02 · Domingos", "time": "10:00", "description": "Escuela bíblica" },
-      { "label": "03 · Miércoles", "time": "19:00", "description": "Reunión de oración" },
-      { "label": "En vivo", "time": "YouTube", "description": "Transmisión dominical" }
+      {
+        "label": "01 · Domingos",
+        "time": "11:15",
+        "description": "Culto de celebración"
+      },
+      {
+        "label": "02 · Domingos",
+        "time": "10:00",
+        "description": "Escuela bíblica"
+      },
+      {
+        "label": "03 · Miércoles",
+        "time": "19:00",
+        "description": "Reunión de oración"
+      },
+      {
+        "label": "En vivo",
+        "time": "YouTube",
+        "description": "Transmisión dominical"
+      }
     ]
   },
   "marquee": {

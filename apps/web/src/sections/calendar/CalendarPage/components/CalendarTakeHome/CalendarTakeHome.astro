@@ -1,9 +1,15 @@
 ---
-import Button from 'src/components/ui/Button';
 import AnchorMark from 'src/components/AnchorMark';
-import type { Messages } from 'src/i18n/messages';
+import Button from 'src/components/ui/Button';
 import { CALENDAR_YEAR } from 'src/data/calendar';
-import { EMPHASIS, LEAD, SECTION, SECTION_SPACING, TITLE } from 'src/sections/calendar/CalendarPage/styles';
+import type { Messages } from 'src/i18n/messages';
+import {
+  EMPHASIS,
+  LEAD,
+  SECTION,
+  SECTION_SPACING,
+  TITLE,
+} from 'src/sections/calendar/CalendarPage/styles';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -14,12 +20,14 @@ const { print, download } = copy.take;
 // Printable views are in Spanish and shared by every locale.
 const PRINT_BASE = '/calendario-anual/imprimir';
 
-const CARD = 'flex flex-col gap-4 rounded-[40px] p-[clamp(1.5rem,3vw,2.5rem)] max-md:rounded-[32px] max-md:p-6';
+const CARD =
+  'flex flex-col gap-4 rounded-[40px] p-[clamp(1.5rem,3vw,2.5rem)] max-md:rounded-[32px] max-md:p-6';
 const CARD_TONE = {
   white: 'bg-obra-white',
   mist: 'bg-obra-mist',
 } as const;
-const CARD_TITLE = 'm-0 font-obra-serif text-[clamp(1.75rem,3vw,2.75rem)] leading-none tracking-[-0.02em] max-md:text-[2rem]';
+const CARD_TITLE =
+  'm-0 font-obra-serif text-[clamp(1.75rem,3vw,2.75rem)] leading-none tracking-[-0.02em] max-md:text-[2rem]';
 const FIELD_LABEL = 'font-obra-sans-bold text-[0.8125rem] text-obra-muted';
 // `py-0` and `leading-[inherit]` undo the forms plugin padding and line-height.
 const FIELD_INPUT =
@@ -59,7 +67,7 @@ const calendarTakeHome = {
   pdfPreview: cn(
     THUMB,
     'grid grid-cols-[repeat(6,1fr)] gap-1.25 bg-obra-cream p-3',
-    'shadow-[inset_0_0_0_1.5px_var(--color-obra-flax)]',
+    'shadow-[inset_0_0_0_1.5px_var(--color-obra-flax)]'
   ),
   pdfPreviewMonth: cn('rounded-sm bg-obra-white'),
   pdfTitle: cn(DOWNLOAD_TITLE),
@@ -67,7 +75,10 @@ const calendarTakeHome = {
   ctaA3: cn(DOWNLOAD_BUTTON_INK),
   ctaA4: cn(DOWNLOAD_BUTTON_INK),
   digitalCard: cn(DOWNLOAD),
-  digitalPreview: cn(THUMB, 'flex items-center justify-between bg-obra-warm px-5.5 text-obra-cream'),
+  digitalPreview: cn(
+    THUMB,
+    'flex items-center justify-between bg-obra-warm px-5.5 text-obra-cream'
+  ),
   digitalCover: cn('ln-h text-[2.125rem] leading-[0.95]'),
   digitalMark: cn('h-auto w-[46px] fill-obra-red-live'),
   digitalTitle: cn(DOWNLOAD_TITLE),

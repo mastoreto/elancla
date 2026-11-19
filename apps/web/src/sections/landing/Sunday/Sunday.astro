@@ -1,8 +1,8 @@
 ---
-import { PHOTO } from 'src/styles/classes';
 import Button from 'src/components/ui/Button';
 import type { Messages } from 'src/i18n/messages';
 import { LandingSection } from 'src/sections/landing/components/LandingSection';
+import { PHOTO } from 'src/styles/classes';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -19,34 +19,34 @@ const sundaySection = {
     'pb-[clamp(1rem,6vh,3.5rem)]',
     'max-lg:min-h-auto max-lg:px-8 max-lg:pt-8 max-lg:pb-11',
     'max-sm:px-3 max-sm:pt-4 max-sm:pb-6',
-    'short-desktop:pt-22 short-desktop:pb-4',
+    'short-desktop:pt-22 short-desktop:pb-4'
   ),
   photoColumn: cn(
     'flex flex-1 gap-[clamp(1.5rem,2.8vw,2.5rem)] rounded-[48px] bg-obra-mist p-5',
-    'max-lg:flex-col max-lg:gap-9 max-lg:p-6 max-sm:gap-7 max-sm:rounded-[32px] max-sm:p-4',
+    'max-lg:flex-col max-lg:gap-9 max-lg:p-6 max-sm:gap-7 max-sm:rounded-[32px] max-sm:p-4'
   ),
   photo: cn(
     'relative flex-[0_0_39%] overflow-hidden rounded-[40px]',
-    'max-lg:h-85 max-lg:flex-none max-lg:rounded-[32px] max-sm:h-57.5',
+    'max-lg:h-85 max-lg:flex-none max-lg:rounded-[32px] max-sm:h-57.5'
   ),
   photoImage: cn(PHOTO, 'object-[50%_40%]'),
   photoCaption: cn(
     'absolute top-5 left-5 rounded-full bg-obra-white px-3.5 py-2 font-obra-sans-bold',
     'text-[0.875rem]',
-    'max-lg:top-3.5 max-lg:left-3.5',
+    'max-lg:top-3.5 max-lg:left-3.5'
   ),
   copy: cn(
     'flex flex-1 flex-col justify-center gap-6 py-5 pr-10 pl-0',
     'max-lg:gap-6.5 max-lg:px-4 max-lg:pt-0 max-lg:pb-3',
     'max-sm:gap-5.5 max-sm:px-1 max-sm:pb-1',
-    'short-desktop:gap-[0.9rem] short-desktop:py-2 short-desktop:pr-8',
+    'short-desktop:gap-[0.9rem] short-desktop:py-2 short-desktop:pr-8'
   ),
   intro: cn('flex flex-col gap-3'),
   eyebrow: cn('ln-eyebrow'),
   title: cn(
     'ln-h text-[clamp(2rem,3.9vw,3.5rem)] leading-none',
     'max-lg:text-[3.25rem] max-sm:text-[2.375rem]',
-    'short-desktop:text-[clamp(1.9rem,3.2vw,2.75rem)]',
+    'short-desktop:text-[clamp(1.9rem,3.2vw,2.75rem)]'
   ),
   rows: cn('flex flex-col gap-1.5'),
   row: cn(
@@ -55,20 +55,20 @@ const sundaySection = {
     'transition-[background-color,box-shadow] duration-600 ease-obra',
     '[&.is-active]:bg-obra-white [&.is-active]:shadow-[0_16px_32px_-22px_rgba(21,21,21,0.45)]',
     'max-lg:grid-cols-[110px_1fr] max-sm:grid-cols-[78px_1fr] max-sm:gap-x-3.5 max-sm:p-4',
-    'short-desktop:px-5 short-desktop:py-3',
+    'short-desktop:px-5 short-desktop:py-3'
   ),
   time: cn(
     'font-obra-serif text-[clamp(1.75rem,2.8vw,2.5rem)] leading-none text-obra-ash',
     'transition-[color] duration-600 ease-obra',
     'group-[.is-active]:text-obra-red',
-    'max-lg:text-[2.375rem] max-sm:text-[1.875rem]',
+    'max-lg:text-[2.375rem] max-sm:text-[1.875rem]'
   ),
   rowTitle: cn('font-obra-sans-bold text-[1.25rem]', 'max-sm:text-[1.125rem]'),
   rowText: cn(
     'col-[2] text-[1rem] leading-[1.5] text-obra-ink-soft opacity-35 transition-opacity',
     'duration-600 ease-obra',
     'group-[.is-active]:opacity-100 in-[.is-static]:opacity-100',
-    'max-sm:text-[0.9375rem] short-desktop:text-[0.9375rem] short-desktop:leading-[1.4]',
+    'max-sm:text-[0.9375rem] short-desktop:text-[0.9375rem] short-desktop:leading-[1.4]'
   ),
   actions: cn('flex flex-wrap gap-3'),
 };

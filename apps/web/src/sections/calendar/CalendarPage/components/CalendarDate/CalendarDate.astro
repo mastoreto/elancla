@@ -1,6 +1,7 @@
 ---
 // Big day number with weekday (and optionally month) underneath. Used by the hero card and every event row.
 import cn from 'src/utils/cn';
+
 interface Props {
   day: number;
   label: string;
@@ -23,7 +24,7 @@ const calendarDate = {
   day: cn('font-obra-serif', NUMBER_TONE[tone]),
   label: cn(
     'mt-1 font-obra-sans-bold text-[0.75rem] tracking-[0.14em] uppercase',
-    LABEL_TONE[tone],
+    LABEL_TONE[tone]
   ),
 };
 ---

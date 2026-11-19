@@ -1,5 +1,10 @@
 ---
-import { MINISTRY_COLORS, PLACE_TBC, googleCalendarUrl, type CalendarEvent } from 'src/data/calendar';
+import {
+  type CalendarEvent,
+  googleCalendarUrl,
+  MINISTRY_COLORS,
+  PLACE_TBC,
+} from 'src/data/calendar';
 import type { Messages } from 'src/i18n/messages';
 import CalendarDate from 'src/sections/calendar/CalendarPage/components/CalendarDate';
 import { DOT, FOCUS_RING } from 'src/sections/calendar/CalendarPage/styles';
@@ -29,15 +34,15 @@ const calendarEventRow = {
   eventTitle: cn(
     'font-obra-serif text-[1.5rem] leading-[1.05]',
     'max-md:[grid-area:title] max-md:text-[1.3125rem] max-md:leading-[1.08]',
-    'lg:text-[1.6875rem]',
+    'lg:text-[1.6875rem]'
   ),
   meta: cn(
     'col-start-2 flex flex-wrap gap-x-6 gap-y-1',
-    'max-md:[grid-area:meta] max-md:flex-col-reverse max-md:gap-1.25 lg:contents',
+    'max-md:[grid-area:meta] max-md:flex-col-reverse max-md:gap-1.25 lg:contents'
   ),
   ministry: cn(
     'flex items-center gap-2 font-obra-sans-bold text-[0.9375rem]',
-    'max-md:text-[0.8125rem]',
+    'max-md:text-[0.8125rem]'
   ),
   ministryDot: cn(DOT),
   time: cn('text-[0.9375rem] text-obra-ink-soft', 'max-md:text-[0.875rem]'),
@@ -46,7 +51,7 @@ const calendarEventRow = {
     'border-obra-ink text-obra-ink',
     '[transition:background-color_0.3s,color_0.3s] hover:bg-obra-ink hover:text-white',
     'max-md:[grid-area:add]',
-    FOCUS_RING,
+    FOCUS_RING
   ),
 };
 ---

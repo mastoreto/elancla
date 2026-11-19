@@ -1,7 +1,7 @@
 ---
-import { CTA_ARROW, CTA_FILL } from 'src/styles/classes';
-import type { ContentCta } from 'src/data/contentPages';
 import InlineText from 'src/components/InlineText';
+import type { ContentCta } from 'src/data/contentPages';
+import { CTA_ARROW, CTA_FILL } from 'src/styles/classes';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -15,22 +15,27 @@ const contentCTA = {
   panel: cn('mx-auto max-w-[1280px] px-6', 'md:px-10'),
   grid: cn('grid grid-cols-1 gap-10 items-center', 'lg:grid-cols-12'),
   copy: cn('lg:col-span-7'),
-  eyebrow: cn('font-mono text-[11px] tracking-[0.2em] uppercase text-primary mb-4'),
-  title: cn(
-    'font-display text-[clamp(2.2rem,6vw,4.6rem)] leading-[0.96] tracking-tight font-light',
+  eyebrow: cn(
+    'font-mono text-[11px] tracking-[0.2em] uppercase text-primary mb-4'
   ),
-  body: cn('mt-6 font-ui text-[16px] leading-relaxed text-ink/70 max-w-xl', 'md:text-[17px]'),
+  title: cn(
+    'font-display text-[clamp(2.2rem,6vw,4.6rem)] leading-[0.96] tracking-tight font-light'
+  ),
+  body: cn(
+    'mt-6 font-ui text-[16px] leading-relaxed text-ink/70 max-w-xl',
+    'md:text-[17px]'
+  ),
   actions: cn('flex flex-col gap-3', 'lg:col-span-5'),
   primary: cn(
     CTA_FILL,
     'inline-flex items-center justify-between gap-3 rounded-full bg-ink text-paper px-7 py-5',
-    'font-ui text-[13px] font-semibold tracking-wide uppercase',
+    'font-ui text-[13px] font-semibold tracking-wide uppercase'
   ),
   primaryArrow: cn(CTA_ARROW),
   secondary: cn(
     'inline-flex items-center justify-between gap-3 rounded-full border border-ink/20 px-7',
     'py-5 font-ui text-[13px] font-semibold tracking-wide uppercase transition-colors',
-    'hover:bg-ink hover:text-paper',
+    'hover:bg-ink hover:text-paper'
   ),
 };
 ---

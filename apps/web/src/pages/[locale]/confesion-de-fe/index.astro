@@ -1,13 +1,16 @@
 ---
-import ConfesionPage from 'src/sections/confession/ConfesionPage';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
+import ConfesionPage from 'src/sections/confession/ConfesionPage';
 
 const { locale: localeParam } = Astro.params;
 if (!isLocale(localeParam) || localeParam === defaultLocale) {
   return Astro.rewrite('/404');
 }
-const canonical = new URL(localizePath('/confesion-de-fe', localeParam), Astro.site).toString();
+const canonical = new URL(
+  localizePath('/confesion-de-fe', localeParam),
+  Astro.site
+).toString();
 ---
 
 <ConfesionPage locale={localeParam} canonical={canonical} />

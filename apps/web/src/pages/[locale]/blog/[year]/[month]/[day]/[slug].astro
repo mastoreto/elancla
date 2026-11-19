@@ -1,12 +1,12 @@
 ---
-import BlogArticleTemplate from 'src/sections/blog/BlogArticleTemplate';
+import { getAllPostsFull, isSeedArticle } from '@ancla/content';
 import type { BlogArticle } from 'src/data/blog';
+import { getBlogNeighbours } from 'src/data/blogNeighbours';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
-import { getBlogNeighbours } from 'src/data/blogNeighbours';
 import Layout from 'src/layouts/Layout';
-import { getAllPostsFull, isSeedArticle } from '@ancla/content';
+import BlogArticleTemplate from 'src/sections/blog/BlogArticleTemplate';
 
 const { locale: localeParam, year, month, day, slug } = Astro.params;
 if (!isLocale(localeParam) || localeParam === defaultLocale) {
@@ -15,13 +15,17 @@ if (!isLocale(localeParam) || localeParam === defaultLocale) {
 const locale = localeParam;
 const posts = await getAllPostsFull();
 const article = posts.find(
-  (a) => a.year === year && a.month === month && a.day === day && a.slug === slug
+  (a) =>
+    a.year === year && a.month === month && a.day === day && a.slug === slug
 ) as BlogArticle | undefined;
 if (!article) {
   return Astro.rewrite('/404');
 }
 const copy = getMessages(locale).blog;
-const { related, previous, next } = getBlogNeighbours(posts as BlogArticle[], article);
+const { related, previous, next } = getBlogNeighbours(
+  posts as BlogArticle[],
+  article
+);
 const articleUrl = `/blog/${article.year}/${article.month}/${article.day}/${article.slug}`;
 const breadcrumbs = [
   { name: copy.breadcrumbs.home, url: localizePath('/', locale) },

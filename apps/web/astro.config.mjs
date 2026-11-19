@@ -40,10 +40,7 @@ export default defineConfig({
     resolve: {
       alias: {
         '@ancla/utils': resolve(__dirname, '../../packages/utils/src'),
-        '@ancla/content': resolve(
-          __dirname,
-          '../../packages/content/src'
-        ),
+        '@ancla/content': resolve(__dirname, '../../packages/content/src'),
         '@ancla/db': resolve(__dirname, '../../packages/db/src'),
       },
     },

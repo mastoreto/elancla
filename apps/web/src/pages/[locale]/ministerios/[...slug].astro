@@ -1,9 +1,9 @@
 ---
-import MinistryTemplate from 'src/sections/ministry/MinistryTemplate';
 import { getContentPageBySlug } from 'src/data/contentPages';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout';
+import MinistryTemplate from 'src/sections/ministry/MinistryTemplate';
 
 const { locale: localeParam, slug } = Astro.params;
 if (!isLocale(localeParam) || localeParam === defaultLocale) {
@@ -17,7 +17,10 @@ if (!result) {
 const { page, isAlias } = result;
 
 const canonicalPath = `/ministerios/${page.slug}`;
-const canonical = new URL(localizePath(canonicalPath, locale), Astro.site).toString();
+const canonical = new URL(
+  localizePath(canonicalPath, locale),
+  Astro.site
+).toString();
 const breadcrumbs = page.hero.breadcrumbs.map((item) => ({
   name: item.label,
   url: item.href ?? localizePath(canonicalPath, locale),

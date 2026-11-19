@@ -1,8 +1,14 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.4.8/schema.json",
-  "extends": ["../../packages/biome-config/biome.json"],
+  "root": false,
+  "extends": "//",
   "formatter": {
     "lineWidth": 80
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
   },
   "javascript": {
     "formatter": {

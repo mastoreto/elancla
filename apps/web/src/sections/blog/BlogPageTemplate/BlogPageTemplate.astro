@@ -1,13 +1,13 @@
 ---
 import type { BlogArticle, BlogCategory, BlogSeriesItem } from 'src/data/blog';
 import type { Locale } from 'src/i18n/config';
-import NewsletterCard from 'src/sections/blog/components/NewsletterCard';
 import BlogArticleGrid from 'src/sections/blog/BlogPageTemplate/components/BlogArticleGrid';
 import BlogCategories from 'src/sections/blog/BlogPageTemplate/components/BlogCategories';
 import BlogFeatured from 'src/sections/blog/BlogPageTemplate/components/BlogFeatured';
 import BlogHero from 'src/sections/blog/BlogPageTemplate/components/BlogHero';
 import BlogMarquee from 'src/sections/blog/BlogPageTemplate/components/BlogMarquee';
 import BlogSeries from 'src/sections/blog/BlogPageTemplate/components/BlogSeries';
+import NewsletterCard from 'src/sections/blog/components/NewsletterCard';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -20,7 +20,8 @@ interface Props {
   locale: Locale;
 }
 
-const { articles, categories, featured, marqueeItems, series, copy, locale } = Astro.props;
+const { articles, categories, featured, marqueeItems, series, copy, locale } =
+  Astro.props;
 
 const blogPageTemplate = {
   container: cn('ln overflow-x-clip bg-obra-paper'),

@@ -1,8 +1,8 @@
 ---
-import { localizePath } from 'src/i18n/utils';
-import { LandingSection } from 'src/sections/landing/components/LandingSection';
 import type { Locale } from 'src/i18n/config';
 import type { Messages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+import { LandingSection } from 'src/sections/landing/components/LandingSection';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -27,7 +27,14 @@ const ministryHref: Record<string, string> = {
 };
 const EXTERNAL_WOMEN = 'https://emujer.elancla.uy/';
 type Tile =
-  | { kind: 'link'; key: keyof Props['copy']['tiles']; w: number; om: number; ot: number; tone?: 'dark' | 'red' }
+  | {
+      kind: 'link';
+      key: keyof Props['copy']['tiles'];
+      w: number;
+      om: number;
+      ot: number;
+      tone?: 'dark' | 'red';
+    }
   | {
       kind: 'photo';
       key: keyof Props['copy']['photos'];
@@ -44,13 +51,31 @@ type Tile =
 const rows: Tile[][] = [
   [
     { kind: 'link', key: 'preaching', w: 260, om: 1, ot: 1 },
-    { kind: 'photo', key: 'youth', src: '/images/comunidad.jpg', w: 300, om: 3, ot: 5, crop: 'width:240%;left:-110%;top:-150%', pos: '55% 70%' },
+    {
+      kind: 'photo',
+      key: 'youth',
+      src: '/images/comunidad.jpg',
+      w: 300,
+      om: 3,
+      ot: 5,
+      crop: 'width:240%;left:-110%;top:-150%',
+      pos: '55% 70%',
+    },
     { kind: 'link', key: 'teaching', w: 220, om: 2, ot: 2 },
     { kind: 'link', key: 'worship', w: 240, om: 4, ot: 3 },
     { kind: 'link', key: 'prayer', w: 228, om: 5, ot: 4 },
   ],
   [
-    { kind: 'photo', key: 'women', src: '/images/salon.jpg', w: 292, om: 8, ot: 9, crop: 'width:260%;left:-60%;top:-210%', pos: '50% 40%' },
+    {
+      kind: 'photo',
+      key: 'women',
+      src: '/images/salon.jpg',
+      w: 292,
+      om: 8,
+      ot: 9,
+      crop: 'width:260%;left:-60%;top:-210%',
+      pos: '50% 40%',
+    },
     { kind: 'link', key: 'youth', w: 300, om: 6, ot: 6, tone: 'dark' },
     { kind: 'link', key: 'teens', w: 360, om: 7, ot: 7 },
     { kind: 'link', key: 'missions', w: 308, om: 9, ot: 8 },
@@ -58,7 +83,17 @@ const rows: Tile[][] = [
   [
     { kind: 'link', key: 'men', w: 240, om: 10, ot: 10 },
     { kind: 'link', key: 'women', w: 300, om: 11, ot: 11, tone: 'red' },
-    { kind: 'photo', key: 'kids', src: '/images/comunidad.jpg', w: 360, om: 13, ot: 13, crop: 'width:200%;left:-50%;top:-200%', pos: '50% 72%', wide: true },
+    {
+      kind: 'photo',
+      key: 'kids',
+      src: '/images/comunidad.jpg',
+      w: 360,
+      om: 13,
+      ot: 13,
+      crop: 'width:200%;left:-50%;top:-200%',
+      pos: '50% 72%',
+      wide: true,
+    },
     { kind: 'link', key: 'media', w: 360, om: 12, ot: 12 },
   ],
   [
@@ -67,7 +102,8 @@ const rows: Tile[][] = [
     { kind: 'link', key: 'kids', w: 340, om: 16, ot: 16 },
   ],
 ];
-const orderOf = (r: number, c: number) => (r === 3 ? -4 : r === 2 ? 0 : r === 1 ? 4 : 8) + c;
+const orderOf = (r: number, c: number) =>
+  (r === 3 ? -4 : r === 2 ? 0 : r === 1 ? 4 : 8) + c;
 
 // Desktop rows flex by `--grow`; stacked layouts become a grid ordered by `--ot` / `--om`.
 const TILE_LAYOUT = [
@@ -93,30 +129,33 @@ const togetherSection = {
   container: cn(
     'flex min-h-svh flex-col justify-center gap-11 bg-obra-paper px-gutter pt-30 pb-18',
     'max-lg:min-h-auto max-lg:justify-start max-lg:px-10 max-lg:py-24',
-    'max-sm:gap-8 max-sm:px-5 max-sm:py-18',
+    'max-sm:gap-8 max-sm:px-5 max-sm:py-18'
   ),
   togHead: cn(
     'flex items-end justify-between gap-12',
-    'max-lg:flex-col max-lg:items-start max-lg:gap-4',
+    'max-lg:flex-col max-lg:items-start max-lg:gap-4'
   ),
   stack: cn('flex max-w-180 flex-col gap-3.5', 'max-lg:gap-4'),
   eyebrow: cn('ln-eyebrow'),
   title: cn(
     'ln-h text-[clamp(2.1rem,4.45vw,4rem)]',
-    'max-lg:text-[3.375rem] max-lg:leading-none max-sm:text-[2.375rem]',
+    'max-lg:text-[3.375rem] max-lg:leading-none max-sm:text-[2.375rem]'
   ),
-  togHeadStack: cn('flex max-w-180 flex-col items-start gap-3.5', 'max-lg:gap-4'),
+  togHeadStack: cn(
+    'flex max-w-180 flex-col items-start gap-3.5',
+    'max-lg:gap-4'
+  ),
   text: cn(
     'm-0 max-w-96 text-[1.0625rem] leading-[1.55] text-obra-ink-soft',
-    'max-lg:max-w-130 max-sm:text-[1rem]',
+    'max-lg:max-w-130 max-sm:text-[1rem]'
   ),
   aboutLink: cn(
     'font-obra-sans-bold text-obra-red underline underline-offset-4',
-    'hover:decoration-2',
+    'hover:decoration-2'
   ),
   rows: cn(
     'flex flex-col gap-3',
-    'max-lg:grid max-lg:grid-cols-3 max-lg:gap-2.5 max-sm:grid-cols-2',
+    'max-lg:grid max-lg:grid-cols-3 max-lg:gap-2.5 max-sm:grid-cols-2'
   ),
   row: cn('flex gap-3', 'max-lg:contents'),
   tile: cn(LINK_TILE),
@@ -124,16 +163,22 @@ const togetherSection = {
     '-translate-x-1.5 opacity-0',
     '[transition:opacity_0.4s,translate_0.5s_var(--ease-obra)] group-hover:translate-none',
     'group-hover:opacity-100 group-focus-visible:translate-none',
-    'group-focus-visible:opacity-100',
+    'group-focus-visible:opacity-100'
   ),
-  rowsTile: cn(TILE_LAYOUT, 'group relative overflow-hidden bg-obra-mist p-0', 'max-sm:col-span-2'),
-  rowsTileWide: cn('max-lg:col-span-3 max-lg:h-40 max-sm:col-span-2 max-sm:h-23'),
+  rowsTile: cn(
+    TILE_LAYOUT,
+    'group relative overflow-hidden bg-obra-mist p-0',
+    'max-sm:col-span-2'
+  ),
+  rowsTileWide: cn(
+    'max-lg:col-span-3 max-lg:h-40 max-sm:col-span-2 max-sm:h-23'
+  ),
   // The inline crop only applies to the desktop rows.
   image: cn(
     'absolute max-w-none transition-transform duration-1400 ease-obra',
     '[filter:grayscale(1)_sepia(0.14)_contrast(1.06)] group-hover:scale-104',
     'max-lg:static max-lg:top-auto! max-lg:left-auto! max-lg:h-full max-lg:w-full! max-lg:max-w-full',
-    'max-lg:object-cover max-lg:object-(--pos)',
+    'max-lg:object-cover max-lg:object-(--pos)'
   ),
 };
 ---

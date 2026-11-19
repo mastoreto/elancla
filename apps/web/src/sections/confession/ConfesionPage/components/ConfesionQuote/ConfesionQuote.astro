@@ -1,6 +1,6 @@
 ---
-import { CAPTION } from 'src/sections/confession/ConfesionPage/styles';
 import type { Messages } from 'src/i18n/messages';
+import { CAPTION } from 'src/sections/confession/ConfesionPage/styles';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -14,7 +14,7 @@ const confesionQuote = {
   quote: cn('mx-auto my-0 flex max-w-250 flex-col items-center gap-6'),
   textBefore: cn(
     'm-0 font-obra-serif text-[clamp(1.875rem,4.2vw,3.75rem)] leading-[1.08]',
-    'tracking-[-0.02em]',
+    'tracking-[-0.02em]'
   ),
   emphasis: cn('text-obra-red'),
   reference: cn(CAPTION, 'text-obra-muted'),

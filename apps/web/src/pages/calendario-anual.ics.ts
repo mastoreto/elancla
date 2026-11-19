@@ -3,7 +3,8 @@ import { events } from 'src/data/calendar';
 
 // Subscription feed built from the same data as the page. Times are floating local (America/Montevideo).
 const pad = (n: number) => String(n).padStart(2, '0');
-const escapeText = (s: string) => s.replace(/[\;,]/g, (c) => `\\${c}`).replace(/\n/g, '\\n');
+const escapeText = (s: string) =>
+  s.replace(/[;,]/g, (c) => `\\${c}`).replace(/\n/g, '\\n');
 
 export const GET: APIRoute = () => {
   const lines = [
@@ -16,7 +17,8 @@ export const GET: APIRoute = () => {
     ...events.flatMap((e) => {
       const [y, m, d] = e.date.split('-').map(Number);
       const [h, min] = e.time.split(':').map(Number);
-      const stamp = (hours: number) => `${y}${pad(m)}${pad(d)}T${pad(hours)}${pad(min)}00`;
+      const stamp = (hours: number) =>
+        `${y}${pad(m)}${pad(d)}T${pad(hours)}${pad(min)}00`;
       return [
         'BEGIN:VEVENT',
         `UID:${e.date}-${e.time.replace(':', '')}-${e.ministry}@elancla.uy`,

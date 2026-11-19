@@ -19,7 +19,9 @@ function initScrollReveal(): void {
   const elements = document.querySelectorAll('[data-reveal]');
 
   if (!('IntersectionObserver' in window)) {
-    elements.forEach((element) => element.classList.add('in'));
+    elements.forEach((element) => {
+      element.classList.add('in');
+    });
     return;
   }
 
@@ -35,7 +37,9 @@ function initScrollReveal(): void {
     { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
   );
 
-  elements.forEach((element) => observer.observe(element));
+  elements.forEach((element) => {
+    observer.observe(element);
+  });
 }
 
 function initReadProgress(signal: AbortSignal): void {
@@ -52,10 +56,12 @@ function initReadProgress(signal: AbortSignal): void {
 
     if (nav) {
       if (window.scrollY > 40) {
-        nav.style.background = 'color-mix(in srgb, var(--color-paper) 92%, transparent)';
+        nav.style.background =
+          'color-mix(in srgb, var(--color-paper) 92%, transparent)';
         nav.style.boxShadow = '0 8px 30px -10px rgba(0,0,0,0.18)';
       } else {
-        nav.style.background = 'color-mix(in srgb, var(--color-paper) 72%, transparent)';
+        nav.style.background =
+          'color-mix(in srgb, var(--color-paper) 72%, transparent)';
         nav.style.boxShadow = 'none';
       }
     }
@@ -72,21 +78,30 @@ function initFilters(signal: AbortSignal): void {
     document.querySelectorAll<HTMLButtonElement>('[data-blog-filter-button]')
   );
   const cards = Array.from(
-    document.querySelectorAll<HTMLElement>('#blogArticleGrid [data-blog-article-card]')
+    document.querySelectorAll<HTMLElement>(
+      '#blogArticleGrid [data-blog-article-card]'
+    )
   );
   const more = document.querySelector<HTMLElement>('[data-blog-more]');
-  const moreButton = document.querySelector<HTMLButtonElement>('[data-blog-more-button]');
+  const moreButton = document.querySelector<HTMLButtonElement>(
+    '[data-blog-more-button]'
+  );
 
   if (cards.length === 0) return;
 
   let visible = PAGE_SIZE;
 
   const apply = () => {
-    const active = buttons.find((button) => button.dataset.on === 'true')?.dataset.filter ?? 'todos';
-    const matching = cards.filter((card) => active === 'todos' || card.dataset.blogFilter === active);
+    const active =
+      buttons.find((button) => button.dataset.on === 'true')?.dataset.filter ??
+      'todos';
+    const matching = cards.filter(
+      (card) => active === 'todos' || card.dataset.blogFilter === active
+    );
 
     cards.forEach((card) => {
-      card.hidden = matching.indexOf(card) < 0 || matching.indexOf(card) >= visible;
+      card.hidden =
+        matching.indexOf(card) < 0 || matching.indexOf(card) >= visible;
     });
     if (more) more.hidden = matching.length <= visible;
   };
@@ -174,7 +189,9 @@ function initTocActiveState(): void {
     { rootMargin: '-30% 0px -60% 0px', threshold: 0 }
   );
 
-  targets.forEach((target) => observer.observe(target));
+  targets.forEach((target) => {
+    observer.observe(target);
+  });
   setActive(targets[0].id);
 }
 
@@ -204,13 +221,16 @@ function initTocSmoothScroll(signal: AbortSignal): void {
 }
 
 function initReactions(signal: AbortSignal): void {
-  document.querySelectorAll<HTMLButtonElement>('[data-blog-reaction]').forEach(
-    (button) => {
+  document
+    .querySelectorAll<HTMLButtonElement>('[data-blog-reaction]')
+    .forEach((button) => {
       button.addEventListener(
         'click',
         () => {
           const isActive = button.dataset.active === 'true';
-          const count = button.querySelector<HTMLElement>('[data-reaction-count]');
+          const count = button.querySelector<HTMLElement>(
+            '[data-reaction-count]'
+          );
           const current = Number.parseInt(count?.textContent ?? '0', 10);
 
           button.dataset.active = isActive ? 'false' : 'true';
@@ -218,6 +238,5 @@ function initReactions(signal: AbortSignal): void {
         },
         { signal }
       );
-    }
-  );
+    });
 }

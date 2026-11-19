@@ -1,11 +1,11 @@
 ---
-import { RISE_IN } from 'src/utils/riseIn';
+import Pill from 'src/components/ui/Pill';
 import type { BlogArticle } from 'src/data/blog';
 import type { Locale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
-import Pill from 'src/components/ui/Pill';
 import BlogCover from 'src/sections/blog/components/BlogCover';
 import cn from 'src/utils/cn';
+import { RISE_IN } from 'src/utils/riseIn';
 
 interface Props {
   article: BlogArticle;
@@ -16,22 +16,26 @@ interface Props {
 const { article, copy, locale } = Astro.props;
 
 const blogArticleHero = {
-  container: cn('flex max-w-275 flex-col gap-6.5 px-gutter pt-[clamp(6.5rem,11vh,8rem)]'),
-  nav: cn('flex items-center gap-2 font-obra-sans-bold text-[0.875rem] text-obra-muted'),
+  container: cn(
+    'flex max-w-275 flex-col gap-6.5 px-gutter pt-[clamp(6.5rem,11vh,8rem)]'
+  ),
+  nav: cn(
+    'flex items-center gap-2 font-obra-sans-bold text-[0.875rem] text-obra-muted'
+  ),
   link: cn('no-underline', 'hover:text-obra-red'),
   category: cn('text-obra-red', '[font-weight:inherit]'),
   articleTitle: cn(
     'ln-h text-[clamp(2.5rem,5.8vw,5.25rem)] leading-[0.97] tracking-[-0.03em] text-balance',
-    RISE_IN,
+    RISE_IN
   ),
   description: cn(
     'm-0 max-w-180 text-[clamp(1.1875rem,1.6vw,1.375rem)] leading-normal text-obra-ink-soft',
-    RISE_IN,
+    RISE_IN
   ),
   row: cn('flex flex-wrap items-center gap-3.5', RISE_IN),
   initials: cn(
     'flex size-12 flex-none items-center justify-center rounded-full bg-obra-red',
-    'font-obra-sans-bold text-white',
+    'font-obra-sans-bold text-white'
   ),
   label: cn('flex flex-col gap-0.5'),
   displayDate: cn('text-[0.875rem] text-obra-muted'),

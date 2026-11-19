@@ -1,31 +1,4 @@
-import esBlog from './messages/es/blog.json';
-import esCalendar from './messages/es/calendar.json';
-import esConfession from './messages/es/confession.json';
-import esContentPages from './messages/es/content-pages.json';
-import esFooter from './messages/es/footer.json';
-import esHome from './messages/es/home.json';
-import esLanding from './messages/es/landing.json';
-import esMinistries from './messages/es/ministries.json';
-import esNav from './messages/es/nav.json';
-import esNotFound from './messages/es/not-found.json';
-import esSermonsPage from './messages/es/sermons-page.json';
-import esVisit from './messages/es/visit.json';
-import esSiteStatus from './messages/es/site-status.json';
-
-import ptBlog from './messages/pt/blog.json';
-import ptCalendar from './messages/pt/calendar.json';
-import ptConfession from './messages/pt/confession.json';
-import ptContentPages from './messages/pt/content-pages.json';
-import ptFooter from './messages/pt/footer.json';
-import ptHome from './messages/pt/home.json';
-import ptLanding from './messages/pt/landing.json';
-import ptMinistries from './messages/pt/ministries.json';
-import ptNav from './messages/pt/nav.json';
-import ptNotFound from './messages/pt/not-found.json';
-import ptSermonsPage from './messages/pt/sermons-page.json';
-import ptVisit from './messages/pt/visit.json';
-import ptSiteStatus from './messages/pt/site-status.json';
-
+import { defaultLocale, type Locale } from './config';
 import enBlog from './messages/en/blog.json';
 import enCalendar from './messages/en/calendar.json';
 import enConfession from './messages/en/confession.json';
@@ -37,10 +10,34 @@ import enMinistries from './messages/en/ministries.json';
 import enNav from './messages/en/nav.json';
 import enNotFound from './messages/en/not-found.json';
 import enSermonsPage from './messages/en/sermons-page.json';
-import enVisit from './messages/en/visit.json';
 import enSiteStatus from './messages/en/site-status.json';
-
-import { defaultLocale, type Locale } from './config';
+import enVisit from './messages/en/visit.json';
+import esBlog from './messages/es/blog.json';
+import esCalendar from './messages/es/calendar.json';
+import esConfession from './messages/es/confession.json';
+import esContentPages from './messages/es/content-pages.json';
+import esFooter from './messages/es/footer.json';
+import esHome from './messages/es/home.json';
+import esLanding from './messages/es/landing.json';
+import esMinistries from './messages/es/ministries.json';
+import esNav from './messages/es/nav.json';
+import esNotFound from './messages/es/not-found.json';
+import esSermonsPage from './messages/es/sermons-page.json';
+import esSiteStatus from './messages/es/site-status.json';
+import esVisit from './messages/es/visit.json';
+import ptBlog from './messages/pt/blog.json';
+import ptCalendar from './messages/pt/calendar.json';
+import ptConfession from './messages/pt/confession.json';
+import ptContentPages from './messages/pt/content-pages.json';
+import ptFooter from './messages/pt/footer.json';
+import ptHome from './messages/pt/home.json';
+import ptLanding from './messages/pt/landing.json';
+import ptMinistries from './messages/pt/ministries.json';
+import ptNav from './messages/pt/nav.json';
+import ptNotFound from './messages/pt/not-found.json';
+import ptSermonsPage from './messages/pt/sermons-page.json';
+import ptSiteStatus from './messages/pt/site-status.json';
+import ptVisit from './messages/pt/visit.json';
 
 export const messages = {
   es: {

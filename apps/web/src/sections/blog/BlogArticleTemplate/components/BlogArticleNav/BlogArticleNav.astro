@@ -15,20 +15,34 @@ interface Props {
 const { previous, next, copy, locale } = Astro.props;
 // With no neighbour the card falls back to the blog index / the newsletter.
 const prev = previous
-  ? { href: getBlogArticlePath(previous), label: `← ${copy.previous}`, title: previous.title }
+  ? {
+      href: getBlogArticlePath(previous),
+      label: `← ${copy.previous}`,
+      title: previous.title,
+    }
   : { href: '/blog', label: `← ${copy.back}`, title: copy.allArticles };
 const nxt = next
-  ? { href: getBlogArticlePath(next), label: `${copy.next} →`, title: next.title }
-  : { href: '/blog#newsletter', label: `${copy.next} →`, title: copy.nextDelivery };
+  ? {
+      href: getBlogArticlePath(next),
+      label: `${copy.next} →`,
+      title: next.title,
+    }
+  : {
+      href: '/blog#newsletter',
+      label: `${copy.next} →`,
+      title: copy.nextDelivery,
+    };
 const CARD =
   'flex flex-col gap-2.5 rounded-[32px] bg-obra-mist p-7 text-inherit no-underline [transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s,background-color_0.4s] hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift max-sm:rounded-[28px] max-sm:p-5.5';
-const LABEL = 'font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] uppercase text-obra-muted';
-const TITLE = 'font-obra-serif text-[1.625rem] leading-[1.1] max-sm:text-[1.375rem]';
+const LABEL =
+  'font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] uppercase text-obra-muted';
+const TITLE =
+  'font-obra-serif text-[1.625rem] leading-[1.1] max-sm:text-[1.375rem]';
 
 const blogArticleNav = {
   container: cn(
     'grid grid-cols-[1fr_1fr] gap-4 px-gutter pt-[clamp(3.5rem,6vw,4.5rem)]',
-    'max-sm:grid-cols-[1fr]',
+    'max-sm:grid-cols-[1fr]'
   ),
   prev: cn(CARD),
   prevLabel: cn(LABEL),

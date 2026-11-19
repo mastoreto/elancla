@@ -1,6 +1,6 @@
 ---
-import VisitPage from 'src/sections/visit/VisitPage';
 import { defaultLocale, isLocale } from 'src/i18n/config';
+import VisitPage from 'src/sections/visit/VisitPage';
 
 const { locale } = Astro.params;
 if (!isLocale(locale) || locale === defaultLocale) {

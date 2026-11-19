@@ -1,9 +1,12 @@
+import { getLenis, gsap, ScrollTrigger, startLenis } from 'src/scripts/lenis';
 import { initClosing } from 'src/sections/landing/Closing/scripts/closing';
 import { initDoctrines } from 'src/sections/landing/Doctrines/scripts/doctrines';
 import { initGod } from 'src/sections/landing/God/scripts/god';
 import { initHero } from 'src/sections/landing/Hero/scripts/hero';
-import { getLenis, gsap, ScrollTrigger, startLenis } from 'src/scripts/lenis';
-import { initActiveNav, initNavAnchor } from 'src/sections/landing/LandingPage/scripts/navAnchor';
+import {
+  initActiveNav,
+  initNavAnchor,
+} from 'src/sections/landing/LandingPage/scripts/navAnchor';
 import { initSunday } from 'src/sections/landing/Sunday/scripts/sunday';
 import { initTogether } from 'src/sections/landing/Together/scripts/together';
 

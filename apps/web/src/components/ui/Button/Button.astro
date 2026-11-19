@@ -35,13 +35,16 @@ const BASE = [
   'hover:[transform:translateY(-2px)] active:[transform:scale(0.98)] active:[transition-duration:0.12s]',
 ];
 const VARIANT: Record<Variant, string> = {
-  primary: 'bg-obra-red text-white hover:shadow-[0_14px_28px_-14px_rgba(168,20,27,0.55)]',
+  primary:
+    'bg-obra-red text-white hover:shadow-[0_14px_28px_-14px_rgba(168,20,27,0.55)]',
   ghost:
     'border-[1.5px] border-obra-ink bg-transparent px-6 text-obra-ink hover:shadow-[0_14px_28px_-14px_rgba(21,21,21,0.45)]',
-  light: 'bg-obra-cream pr-5.5 pl-6.5 text-obra-ink hover:shadow-[0_14px_28px_-14px_rgba(0,0,0,0.6)]',
+  light:
+    'bg-obra-cream pr-5.5 pl-6.5 text-obra-ink hover:shadow-[0_14px_28px_-14px_rgba(0,0,0,0.6)]',
   dark: 'bg-obra-ink px-6.5 text-white hover:shadow-[0_14px_28px_-14px_rgba(21,21,21,0.6)]',
 };
-const DOT = 'inline-flex size-9.5 items-center justify-center rounded-full bg-obra-white text-obra-red';
+const DOT =
+  'inline-flex size-9.5 items-center justify-center rounded-full bg-obra-white text-obra-red';
 
 const Tag = href ? 'a' : (as ?? 'button');
 

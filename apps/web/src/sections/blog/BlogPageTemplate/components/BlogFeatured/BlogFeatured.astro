@@ -1,10 +1,10 @@
 ---
+import Button from 'src/components/ui/Button';
+import Pill from 'src/components/ui/Pill';
 import type { BlogArticle } from 'src/data/blog';
 import { getBlogArticlePath } from 'src/data/blog';
 import type { Locale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
-import Button from 'src/components/ui/Button';
-import Pill from 'src/components/ui/Pill';
 import BlogCover from 'src/sections/blog/components/BlogCover';
 import cn from 'src/utils/cn';
 
@@ -24,19 +24,21 @@ const blogFeatured = {
     'mt-5 flex gap-10 rounded-[48px] bg-obra-mist p-5 text-inherit no-underline',
     '[transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s,background-color_0.4s]',
     'hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift',
-    'max-lg:flex-col max-lg:gap-5 max-lg:rounded-[32px] max-lg:p-4',
+    'max-lg:flex-col max-lg:gap-5 max-lg:rounded-[32px] max-lg:p-4'
   ),
   blogCover: cn(
     'min-h-105 flex-[0_0_min(640px,46%)]',
-    'max-lg:h-70 max-lg:min-h-0 max-lg:flex-none',
+    'max-lg:h-70 max-lg:min-h-0 max-lg:flex-none'
   ),
   stack: cn(
     'flex min-w-0 flex-1 flex-col justify-center gap-4.5 py-5 pr-9',
-    'max-lg:px-2 max-lg:pt-2 max-lg:pb-4',
+    'max-lg:px-2 max-lg:pt-2 max-lg:pb-4'
   ),
   category: cn('ln-eyebrow'),
   articleTitle: cn('ln-h text-[clamp(2rem,3.6vw,3.25rem)] leading-none'),
-  excerpt: cn('m-0 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft'),
+  excerpt: cn(
+    'm-0 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft'
+  ),
   row: cn('flex flex-wrap items-center gap-4'),
   small: cn('text-[0.875rem] text-obra-muted'),
 };

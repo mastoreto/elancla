@@ -5,7 +5,11 @@
     "affectedUsingTaskInputs": true,
     "watchUsingTaskInputs": true
   },
-  "globalDependencies": ["**/.env.production", "**/.env.development", "**/.env.local"],
+  "globalDependencies": [
+    "**/.env.production",
+    "**/.env.development",
+    "**/.env.local"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

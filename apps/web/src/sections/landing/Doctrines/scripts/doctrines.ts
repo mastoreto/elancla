@@ -91,7 +91,9 @@ export function initDoctrines(root: HTMLElement, isDesktop: boolean): void {
     start: isDesktop ? 'top top' : 'center center',
     end: isDesktop ? '+=560%' : '+=480%', // ~55vh of scroll per doctrine
     pin: true,
-    toggleClass: isDesktop ? { targets: sec, className: 'is-pinned' } : undefined,
+    toggleClass: isDesktop
+      ? { targets: sec, className: 'is-pinned' }
+      : undefined,
     pinSpacing: true, // the stacked layout's parent is flex, where GSAP would otherwise skip the spacing
     scrub: 0.5,
     anticipatePin: 1,

@@ -1,10 +1,10 @@
 ---
 import type { ContentPage } from 'src/data/contentPages';
-import ContentHero from 'src/sections/contentPage/ContentPageTemplate/components/ContentHero';
-import ContentFigure from 'src/sections/contentPage/ContentPageTemplate/components/ContentFigure';
-import StickyToc from 'src/sections/contentPage/ContentPageTemplate/components/StickyToc';
-import ContentSection from 'src/sections/contentPage/ContentPageTemplate/components/ContentSection';
 import ContentCTA from 'src/sections/contentPage/ContentPageTemplate/components/ContentCTA';
+import ContentFigure from 'src/sections/contentPage/ContentPageTemplate/components/ContentFigure';
+import ContentHero from 'src/sections/contentPage/ContentPageTemplate/components/ContentHero';
+import ContentSection from 'src/sections/contentPage/ContentPageTemplate/components/ContentSection';
+import StickyToc from 'src/sections/contentPage/ContentPageTemplate/components/StickyToc';
 import cn from 'src/utils/cn';
 
 interface Props {
@@ -20,7 +20,10 @@ const contentPageTemplate = {
   body: cn('relative py-20', 'md:py-28'),
   bodyInner: cn('mx-auto max-w-[1280px] px-6', 'md:px-10'),
   grid: cn('grid grid-cols-1 gap-12', 'lg:grid-cols-12 lg:gap-16'),
-  sections: cn('order-1 flex flex-col gap-24', 'lg:col-span-9 lg:order-2 md:gap-32'),
+  sections: cn(
+    'order-1 flex flex-col gap-24',
+    'lg:col-span-9 lg:order-2 md:gap-32'
+  ),
 };
 ---
 

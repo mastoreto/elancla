@@ -1,6 +1,6 @@
 ---
-import CalendarPage from 'src/sections/calendar/CalendarPage';
 import { defaultLocale, isLocale } from 'src/i18n/config';
+import CalendarPage from 'src/sections/calendar/CalendarPage';
 
 const { locale } = Astro.params;
 if (!isLocale(locale) || locale === defaultLocale) {

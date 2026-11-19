@@ -8,7 +8,7 @@ import {
   blogCategories,
   blogSeries,
   featuredArticle,
-} from './blog';
+} from "./blog";
 
 export interface BlogPageData {
   articles: BlogArticle[];
@@ -54,9 +54,9 @@ function buildArchive(articles: BlogArticle[]): BlogArchiveItem[] {
   const map = new Map<string, number>();
   for (const a of articles) {
     const d = new Date(a.publishedAt);
-    const key = d.toLocaleDateString('es-UY', {
-      year: 'numeric',
-      month: 'long',
+    const key = d.toLocaleDateString("es-UY", {
+      year: "numeric",
+      month: "long",
     });
     map.set(key, (map.get(key) ?? 0) + 1);
   }
@@ -70,7 +70,7 @@ function buildArchive(articles: BlogArticle[]): BlogArchiveItem[] {
 export function buildBlogPageData(
   posts: BlogArticle[],
   categories: BlogCategory[],
-  allSeries: BlogSeriesItem[]
+  allSeries: BlogSeriesItem[],
 ): BlogPageData {
   const articles = posts;
 
@@ -92,7 +92,7 @@ export function buildBlogPageData(
     featured,
     marqueeItems: categories.map((c) => c.name),
     series: allSeries,
-    popular: articles.slice(0, 5).map((article) => ({ article, reads: '—' })),
+    popular: articles.slice(0, 5).map((article) => ({ article, reads: "—" })),
     tags: [...new Set(articles.flatMap((a) => a.tags ?? []))],
     archive: buildArchive(articles),
   };

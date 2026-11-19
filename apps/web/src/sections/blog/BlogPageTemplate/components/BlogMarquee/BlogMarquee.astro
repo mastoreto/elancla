@@ -1,5 +1,6 @@
 ---
 import cn from 'src/utils/cn';
+
 interface Props {
   items: string[];
 }
@@ -9,11 +10,13 @@ const { items } = Astro.props;
 const repeated = [...items, ...items, ...items, ...items];
 
 const blogMarquee = {
-  container: cn('mt-[clamp(3rem,6vw,4.5rem)] overflow-hidden bg-obra-warm py-6 text-obra-cream'),
+  container: cn(
+    'mt-[clamp(3rem,6vw,4.5rem)] overflow-hidden bg-obra-warm py-6 text-obra-cream'
+  ),
   repeated: cn('flex w-max animate-marquee', 'motion-reduce:animate-none'),
   item: cn(
     'inline-flex items-center gap-7 pr-7 font-obra-serif',
-    'text-[clamp(1.625rem,2.4vw,2.125rem)] font-bold whitespace-nowrap',
+    'text-[clamp(1.625rem,2.4vw,2.125rem)] font-bold whitespace-nowrap'
   ),
   repeatedIcon: cn('text-[0.6em] text-obra-red-live not-italic'),
 };

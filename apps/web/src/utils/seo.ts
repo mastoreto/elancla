@@ -29,12 +29,20 @@ export function absoluteUrl(path: string | URL, site = SITE.url): string {
 }
 
 const WEEKDAYS: Record<string, string> = {
-  Mo: 'Monday', Tu: 'Tuesday', We: 'Wednesday', Th: 'Thursday', Fr: 'Friday', Sa: 'Saturday', Su: 'Sunday',
+  Mo: 'Monday',
+  Tu: 'Tuesday',
+  We: 'Wednesday',
+  Th: 'Thursday',
+  Fr: 'Friday',
+  Sa: 'Saturday',
+  Su: 'Sunday',
 };
 
 /** Parses "Su 11:15-12:30" (SiteConfig.serviceTimes); falls back to the Sunday service. */
 function parseServiceTimes(summary: string) {
-  const match = summary.match(/^(Mo|Tu|We|Th|Fr|Sa|Su)\s+(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/);
+  const match = summary.match(
+    /^(Mo|Tu|We|Th|Fr|Sa|Su)\s+(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/
+  );
   return {
     dayOfWeek: WEEKDAYS[match?.[1] ?? 'Su'],
     opens: match?.[2] ?? '11:15',

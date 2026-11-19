@@ -1,8 +1,8 @@
 ---
-import { RISE_IN } from 'src/utils/riseIn';
-import Button from 'src/components/ui/Button';
 import AnchorMark from 'src/components/AnchorMark';
+import Button from 'src/components/ui/Button';
 import cn from 'src/utils/cn';
+import { RISE_IN } from 'src/utils/riseIn';
 
 interface Props {
   copy: any;
@@ -10,38 +10,45 @@ interface Props {
 
 const { copy } = Astro.props;
 const { frequency, now, categories } = copy.facts;
-const FACT_LABEL = 'font-obra-sans-bold text-[0.75rem] tracking-[0.12em] uppercase';
+const FACT_LABEL =
+  'font-obra-sans-bold text-[0.75rem] tracking-[0.12em] uppercase';
 const FACT_VALUE = 'font-obra-serif text-[1.875rem] leading-none';
 
 const blogHero = {
   container: cn(
     'flex items-end gap-16 px-gutter pt-[clamp(7rem,12vh,8.5rem)]',
-    'max-lg:flex-col max-lg:items-stretch max-lg:gap-8',
+    'max-lg:flex-col max-lg:items-stretch max-lg:gap-8'
   ),
   intro: cn('flex min-w-0 flex-1 flex-col gap-6.5'),
   eyebrow: cn('ln-eyebrow', RISE_IN),
   title: cn(
     'ln-h text-[clamp(2.875rem,7.5vw,6.75rem)] leading-[0.94] tracking-[-0.03em] text-balance',
-    RISE_IN,
+    RISE_IN
   ),
   titleEmphasis: cn('text-obra-red not-italic'),
   text: cn(
     'm-0 text-[clamp(1.0625rem,1.3vw,1.1875rem)] leading-[1.55] text-obra-ink-soft max-w-140',
-    RISE_IN,
+    RISE_IN
   ),
   actions: cn('flex flex-wrap gap-3', RISE_IN),
-  facts: cn('grid flex-[0_0_min(440px,34vw)] grid-cols-2 gap-2.5', 'max-lg:flex-none', RISE_IN),
+  facts: cn(
+    'grid flex-[0_0_min(440px,34vw)] grid-cols-2 gap-2.5',
+    'max-lg:flex-none',
+    RISE_IN
+  ),
   frequencyFact: cn('flex flex-col gap-1.5 rounded-[28px] p-5 bg-obra-white'),
   frequencyLabel: cn(FACT_LABEL, 'text-obra-muted'),
   frequencyValue: cn(FACT_VALUE),
   frequencyDescription: cn('text-[0.875rem] text-obra-muted'),
-  nowFact: cn('flex flex-col gap-1.5 rounded-[28px] p-5 bg-obra-red text-white'),
+  nowFact: cn(
+    'flex flex-col gap-1.5 rounded-[28px] p-5 bg-obra-red text-white'
+  ),
   nowLabel: cn(FACT_LABEL, 'text-obra-blush'),
   nowValue: cn(FACT_VALUE),
   nowDescription: cn('text-[0.875rem] text-obra-blush'),
   categoriesFact: cn(
     'flex flex-col gap-1.5 rounded-[28px] p-5 col-span-2 flex-row items-center',
-    'justify-between bg-obra-mist',
+    'justify-between bg-obra-mist'
   ),
   categoriesCopy: cn('flex flex-col gap-1.5'),
   categoriesLabel: cn(FACT_LABEL, 'text-obra-muted'),

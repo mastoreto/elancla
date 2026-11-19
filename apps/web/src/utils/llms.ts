@@ -1,10 +1,10 @@
 import { getSiteConfig, type SiteConfig } from '@ancla/content';
+import { getDoctrines } from 'src/data/doctrines';
 import {
   entryUrls,
   getSiteIndex,
   type SiteIndexEntry,
 } from 'src/data/siteIndex';
-import { getDoctrines } from 'src/data/doctrines';
 import { getMessages } from 'src/i18n/messages';
 
 const stripHtml = (html: string) =>

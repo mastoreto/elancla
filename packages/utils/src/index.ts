@@ -1,5 +1,5 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 /**
  * Merge Tailwind classes, resolving conflicts. Shared by both apps.
@@ -14,6 +14,6 @@ export default cn;
 
 /** Parses an ISO date string (YYYY-MM-DD) in local time to avoid UTC offset issues. */
 export function parseLocalDate(dateStr: string): Date {
-  const [year, month, day] = dateStr.split('-').map(Number);
+  const [year, month, day] = dateStr.split("-").map(Number);
   return new Date(year, month - 1, day);
 }

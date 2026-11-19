@@ -1,5 +1,6 @@
 ---
 import cn from 'src/utils/cn';
+
 interface Props {
   solas: string[];
 }
@@ -13,7 +14,7 @@ const ITEM =
 const confesionMarquee = {
   container: cn(
     'mt-[clamp(2.75rem,5vw,4.5rem)] overflow-hidden bg-obra-warm',
-    'py-[clamp(1.1rem,1.8vw,1.6rem)] text-obra-cream',
+    'py-[clamp(1.1rem,1.8vw,1.6rem)] text-obra-cream'
   ),
   track: cn('flex w-max animate-marquee', 'motion-reduce:animate-none'),
   group: cn('m-0 flex list-none p-0'),

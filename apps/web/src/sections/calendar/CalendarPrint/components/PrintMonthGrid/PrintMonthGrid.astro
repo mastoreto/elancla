@@ -14,7 +14,11 @@ const { lead, days } = monthLayout(year, month);
 const SUNDAY_COLUMN = 6;
 const cells = Array.from({ length: days }, (_, i) => ({
   day: i + 1,
-  tone: eventDays.includes(i + 1) ? 'event' : (lead + i) % 7 === SUNDAY_COLUMN ? 'sunday' : 'plain',
+  tone: eventDays.includes(i + 1)
+    ? 'event'
+    : (lead + i) % 7 === SUNDAY_COLUMN
+      ? 'sunday'
+      : 'plain',
 })) satisfies { day: number; tone: 'event' | 'sunday' | 'plain' }[];
 
 const GRID_GAP = { a3: 'gap-0.5', slide: 'gap-px' } as const;
@@ -26,7 +30,10 @@ const EVENT_SIZE = { a3: 'size-[26px]', slide: 'size-[21px]' } as const;
 const DAY_TONE = {
   plain: 'text-obra-ink-soft',
   sunday: 'text-obra-red',
-  event: ['m-auto flex items-center justify-center rounded-full bg-obra-red font-bold text-white', EVENT_SIZE[size]],
+  event: [
+    'm-auto flex items-center justify-center rounded-full bg-obra-red font-bold text-white',
+    EVENT_SIZE[size],
+  ],
 } as const;
 
 const printMonthGrid = {

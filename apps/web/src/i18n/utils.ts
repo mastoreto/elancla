@@ -1,9 +1,9 @@
 import {
   defaultLocale,
   isLocale,
+  type Locale,
   localeMeta,
   locales,
-  type Locale,
 } from './config';
 
 type PathInput = string | URL;
@@ -14,13 +14,15 @@ function splitPath(path: string) {
   const withoutHash = hashIndex >= 0 ? path.slice(0, hashIndex) : path;
   const queryIndex = withoutHash.indexOf('?');
   const query = queryIndex >= 0 ? withoutHash.slice(queryIndex) : '';
-  const pathname = queryIndex >= 0 ? withoutHash.slice(0, queryIndex) : withoutHash;
+  const pathname =
+    queryIndex >= 0 ? withoutHash.slice(0, queryIndex) : withoutHash;
 
   return { pathname: pathname || '/', query, hash };
 }
 
 export function getLocaleFromUrl(input: PathInput): Locale {
-  const pathname = input instanceof URL ? input.pathname : splitPath(input).pathname;
+  const pathname =
+    input instanceof URL ? input.pathname : splitPath(input).pathname;
   const segment = pathname.split('/').filter(Boolean)[0];
   return isLocale(segment) ? segment : defaultLocale;
 }
@@ -72,7 +74,10 @@ export function getLanguageAlternates(path: string, siteUrl: string) {
     ...alternates,
     {
       hrefLang: 'x-default',
-      href: new URL(localizePath(canonicalPath, defaultLocale), siteUrl).toString(),
+      href: new URL(
+        localizePath(canonicalPath, defaultLocale),
+        siteUrl
+      ).toString(),
     },
   ];
 }
