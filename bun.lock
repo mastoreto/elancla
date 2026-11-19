@@ -44,6 +44,7 @@
         "@ancla/emails": "*",
         "@ancla/utils": "*",
         "@hookform/resolvers": "7.0.7",
+        "@react-email/render": "2.3.1",
         "@tiptap/extension-placeholder": "3.34.0",
         "@tiptap/react": "3.34.0",
         "@tiptap/starter-kit": "3.34.0",
