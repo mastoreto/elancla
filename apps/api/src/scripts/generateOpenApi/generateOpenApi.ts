@@ -1,4 +1,5 @@
-// Writes the private OpenAPI contract to packages/contracts/openapi/private.json.
+// Writes the OpenAPI contracts to packages/contracts/openapi/: private.json (the whole API) and
+// public-v1.json (the public content API, the contract any church site consumes).
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,16 +10,25 @@ const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 loadEnv({ path: path.resolve(scriptDir, "../../../../../.env") });
 
 const { app } = await import("../../app");
-const { openApiConfig } = await import("../../core/openapi");
+const { publicRoutes } = await import("../../modules/public");
+const { openApiConfig, publicOpenApiConfig } = await import(
+  "../../core/openapi"
+);
 
-const outputFile = path.resolve(
+const outputDirectory = path.resolve(
   scriptDir,
-  "../../../../../packages/contracts/openapi/private.json",
+  "../../../../../packages/contracts/openapi",
 );
 
-mkdirSync(path.dirname(outputFile), { recursive: true });
-writeFileSync(
-  outputFile,
-  `${JSON.stringify(app.getOpenAPI31Document(openApiConfig), null, 2)}\n`,
+function writeDocument(fileName: string, document: unknown): void {
+  const outputFile = path.join(outputDirectory, fileName);
+  writeFileSync(outputFile, `${JSON.stringify(document, null, 2)}\n`);
+  console.info(`OpenAPI written to ${outputFile}`);
+}
+
+mkdirSync(outputDirectory, { recursive: true });
+writeDocument("private.json", app.getOpenAPI31Document(openApiConfig));
+writeDocument(
+  "public-v1.json",
+  publicRoutes.getOpenAPI31Document(publicOpenApiConfig),
 );
-console.info(`OpenAPI written to ${outputFile}`);

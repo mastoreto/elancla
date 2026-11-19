@@ -7,6 +7,8 @@ export const TEST_USER_AGENT = "ancla-api-test";
 export interface ApiCallOptions {
   cookie?: string;
   body?: unknown;
+  /** Extra request headers, e.g. `Authorization` for the public API. */
+  headers?: Record<string, string>;
 }
 
 /**
@@ -29,6 +31,7 @@ export function createApiCaller(fixtures: ReturnType<typeof createFixtures>) {
           ...(options.cookie ? { Cookie: options.cookie } : {}),
           "X-Forwarded-For": fixtures.uniqueIp(),
           "User-Agent": TEST_USER_AGENT,
+          ...options.headers,
         },
         body:
           options.body === undefined ? undefined : JSON.stringify(options.body),
