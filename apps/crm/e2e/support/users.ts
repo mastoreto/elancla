@@ -8,3 +8,6 @@ export const E2E_USERS = {
   noRole: "e2e-norole@example.test",
   twoFactor: "e2e-twofactor@example.test",
 } as const;
+
+/** Name of the site key seeded from `.env.test` for the public web (see seed:e2e). */
+export const E2E_SITE_KEY_NAME = "e2e-seeded-web";

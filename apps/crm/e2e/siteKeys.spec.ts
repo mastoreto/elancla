@@ -1,11 +1,17 @@
 import type { Page } from "@playwright/test";
-import { E2E_USERS, expect, login, test } from "./support";
+import { E2E_SITE_KEY_NAME, E2E_USERS, expect, login, test } from "./support";
 
 const SITE_KEY_PATTERN = /^sk_[0-9a-f-]{36}_[\w-]+$/;
 const LIMIT_MESSAGE = "Ya hay 2 claves activas. Revoca una antes de crear otra.";
 
-async function revokeEveryActiveKey(page: Page): Promise<void> {
-  const revokeButtons = page.getByRole("button", { name: /^Revocar / });
+/**
+ * Frees the two slots except for the key the web server of this suite reads the API with
+ * (seeded from .env.test): revoking it would turn the public site off for every other spec.
+ */
+async function revokeEveryActiveKeyButSeeded(page: Page): Promise<void> {
+  const revokeButtons = page.getByRole("button", {
+    name: new RegExp(`^Revocar (?!${E2E_SITE_KEY_NAME}$)`),
+  });
   // Toasts are transient: the shrinking list of revoke buttons is what proves each revocation.
   for (let active = await revokeButtons.count(); active > 0; active -= 1) {
     await revokeButtons.first().click();
@@ -36,7 +42,7 @@ test("an admin creates site keys, hits the two-key limit and revokes one", async
   await login(page, E2E_USERS.admin);
   await page.goto("/el-ancla/settings?tab=website");
   await expect(page.getByText("Claves del sitio")).toBeVisible();
-  await revokeEveryActiveKey(page);
+  await revokeEveryActiveKeyButSeeded(page);
 
   const suffix = crypto.randomUUID().slice(0, 8);
   const first = `e2e web ${suffix} A`;
@@ -45,9 +51,9 @@ test("an admin creates site keys, hits the two-key limit and revokes one", async
   // Shown once: after closing the dialog the secret is nowhere on the page.
   await expect(page.getByText(firstKey)).toHaveCount(0);
 
-  await createKey(page, `e2e web ${suffix} B`);
-
-  const third = await submitNewKey(page, `e2e web ${suffix} C`);
+  // The seeded key holds the other slot, so the limit is already reached.
+  await expect(page.getByText(E2E_SITE_KEY_NAME)).toBeVisible();
+  const third = await submitNewKey(page, `e2e web ${suffix} B`);
   await expect(third.getByText(LIMIT_MESSAGE)).toBeVisible();
   await third.getByRole("button", { name: "Cancelar" }).click();
 
@@ -60,6 +66,11 @@ test("an admin creates site keys, hits the two-key limit and revokes one", async
     headers: { Authorization: `Bearer ${firstKey}` },
   });
   expect(response.status()).toBe(401);
+
+  // The seeded key was left alone and still reads it.
+  await expect(page.getByRole("listitem").filter({ hasText: E2E_SITE_KEY_NAME })).not.toContainText(
+    "Revocada",
+  );
 });
 
 test("a treasurer does not see the website tab", async ({ page }) => {

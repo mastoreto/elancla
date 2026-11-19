@@ -103,6 +103,9 @@ jobs:
         run: bunx playwright install --with-deps chromium
       - name: Build the CRM against the test database
         run: bun --env-file=.env.test run --filter crm build
+      # Playwright serves the public site too (status screens): it needs the built server.
+      - name: Build the web
+        run: env -u DATABASE_URL bun run --filter web build
       - name: Playwright
         run: bun run test:e2e
       - uses: actions/upload-artifact@v4
