@@ -14,15 +14,18 @@
       "name": "@ancla/api",
       "version": "1.0.0",
       "dependencies": {
-        "@ancla/auth": "*",
         "@ancla/contracts": "*",
         "@ancla/db": "*",
+        "@ancla/emails": "*",
         "@hono/zod-openapi": "1.6.3",
+        "better-auth": "1.7.25",
         "hono": "4.13.19",
+        "nodemailer": "10.6.0",
         "zod": "4.6.7",
       },
       "devDependencies": {
         "@types/bun": "1.4.4",
+        "@types/nodemailer": "8.0.2",
         "dotenv": "^16.6.1",
         "typescript": "5.7.3",
       },
@@ -32,13 +35,11 @@
       "version": "0.1.0",
       "dependencies": {
         "@ancla/api": "*",
-        "@ancla/auth": "*",
         "@ancla/contracts": "*",
         "@ancla/db": "*",
+        "@ancla/emails": "*",
         "@ancla/utils": "*",
         "@hookform/resolvers": "7.0.7",
-        "@react-email/components": "1.0.12",
-        "@react-email/render": "2.3.1",
         "@tiptap/extension-placeholder": "3.34.0",
         "@tiptap/react": "3.34.0",
         "@tiptap/starter-kit": "3.34.0",
@@ -55,6 +56,7 @@
         "lucide-react": "1.74.0",
         "next": "16.4.6",
         "next-themes": "^0.4.6",
+        "qrcode.react": "4.2.0",
         "radix-ui": "1.8.1",
         "react": "19.3.1",
         "react-day-picker": "10.0.2",
@@ -111,15 +113,6 @@
         "typescript-eslint": "^8.24.1",
       },
     },
-    "packages/auth": {
-      "name": "@ancla/auth",
-      "version": "1.0.0",
-      "dependencies": {
-        "@ancla/db": "*",
-        "better-auth": "1.7.25",
-        "dotenv": "^16.6.1",
-      },
-    },
     "packages/biome-config": {
       "name": "@ancla/biome-config",
       "version": "0.0.0",
@@ -151,6 +144,19 @@
         "typescript": "5.7.3",
       },
     },
+    "packages/emails": {
+      "name": "@ancla/emails",
+      "version": "1.0.0",
+      "dependencies": {
+        "@react-email/components": "1.0.12",
+        "@react-email/render": "2.3.1",
+        "react": "19.3.1",
+      },
+      "devDependencies": {
+        "@types/react": "19.3.0",
+        "typescript": "5.7.3",
+      },
+    },
     "packages/env": {
       "name": "@ancla/env",
       "version": "1.0.0",
@@ -177,8 +183,6 @@
 
     "@ancla/api": ["@ancla/api@workspace:apps/api"],
 
-    "@ancla/auth": ["@ancla/auth@workspace:packages/auth"],
-
     "@ancla/biome-config": ["@ancla/biome-config@workspace:packages/biome-config"],
 
     "@ancla/content": ["@ancla/content@workspace:packages/content"],
@@ -186,6 +190,8 @@
     "@ancla/contracts": ["@ancla/contracts@workspace:packages/contracts"],
 
     "@ancla/db": ["@ancla/db@workspace:packages/db"],
+
+    "@ancla/emails": ["@ancla/emails@workspace:packages/emails"],
 
     "@ancla/env": ["@ancla/env@workspace:packages/env"],
 
@@ -903,6 +909,8 @@
 
     "@types/node": ["@types/node@22.20.5", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-U2+DNr+wSjpsTS/wZGYHq7GcwfuSmKiKvoPvK22zwTlRhU91yOniN4qRR5KhIjvif7ysw/dz/hKmfDH0Ris4aA=="],
 
+    "@types/nodemailer": ["@types/nodemailer@8.0.2", "", { "dependencies": { "@types/node": "*" } }, "sha512-c7M5ox8p0nEOfbJ2E9Qcmt8/QCu/VzsiAhzBiZbvky2PhKZDHpKB3sQHBM5MEZNkCfBOaS6S9//AGPRTNB7IaA=="],
+
     "@types/pg": ["@types/pg@8.23.1", "", { "dependencies": { "@types/node": "*", "pg-protocol": "*", "pg-types": "^2.2.0" } }, "sha512-fKVHpikPdg4GKks3JuLEhvwSyvwzF23hnabPy6DD8ljVbC7+6J5dQzdv4arV6jqq57djnMgs1HKBxX4P8aBI3A=="],
 
     "@types/react": ["@types/react@19.3.0", "", { "dependencies": { "csstype": "^3.2.2" } }, "sha512-N0rFCuH9YoxG9/m61l9MfpJKfmLOVU0em7ipIz6TRgSSkvReLB9vL85GB+yr8Bs5leqpvg96JSwF4ZS1s4viQg=="],
@@ -1559,6 +1567,8 @@
 
     "node-releases": ["node-releases@2.0.65", "", {}, "sha512-PfvofsGQ+MiOQIPkX9fU8ELUWmy5zL74CdQaph/ismKszfFkfwXaw0cGiwbwym2hT9k5+mdyl8O5WQ1MD8EHmA=="],
 
+    "nodemailer": ["nodemailer@10.6.0", "", {}, "sha512-jWanL7D9GD3jvUDYKmoC5rWTiG8MnBgnN2yV68bgMKip1zUJhiSTyz7Eg+18y8sk5OvdVDzws5nZK5arSI4f5Q=="],
+
     "nopt": ["nopt@8.1.0", "", { "dependencies": { "abbrev": "^3.0.0" }, "bin": { "nopt": "bin/nopt.js" } }, "sha512-ieGu42u/Qsa4TFktmaKEwM6MQH0pOWnaB3htzh0JRtx84+Mebc0cbZYN5bC+6WTZ4+77xrL9Pn5m7CV6VIkV7A=="],
 
     "normalize-path": ["normalize-path@3.0.0", "", {}, "sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA=="],
@@ -1702,6 +1712,8 @@
     "punycode": ["punycode@2.3.1", "", {}, "sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg=="],
 
     "pure-rand": ["pure-rand@6.1.0", "", {}, "sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA=="],
+
+    "qrcode.react": ["qrcode.react@4.2.0", "", { "peerDependencies": { "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0" } }, "sha512-QpgqWi8rD9DsS9EP3z7BT+5lY5SFhsqGjpgW5DY/i3mK4M9DTBNz3ErMi8BWYEfI3L0d8GIbGmcdFAS1uIRGjA=="],
 
     "queue-microtask": ["queue-microtask@1.2.3", "", {}, "sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A=="],
 

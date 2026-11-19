@@ -11,7 +11,7 @@ FROM base AS deps
 COPY package.json bun.lock turbo.json ./
 COPY apps/crm/package.json apps/crm/
 COPY apps/web/package.json apps/web/
-COPY packages/auth/package.json packages/auth/
+COPY packages/emails/package.json packages/emails/
 COPY packages/db/package.json packages/db/
 COPY packages/content/package.json packages/content/
 COPY packages/env/package.json packages/env/

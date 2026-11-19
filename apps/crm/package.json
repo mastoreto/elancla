@@ -13,14 +13,11 @@
   },
   "dependencies": {
     "@ancla/api": "*",
-    "@ancla/auth": "*",
     "@ancla/contracts": "*",
     "@ancla/db": "*",
     "@ancla/utils": "*",
     "better-auth": "1.7.25",
     "@hookform/resolvers": "7.0.7",
-    "@react-email/components": "1.0.12",
-    "@react-email/render": "2.3.1",
     "@tiptap/extension-placeholder": "3.34.0",
     "@tiptap/react": "3.34.0",
     "@tiptap/starter-kit": "3.34.0",
@@ -47,7 +44,9 @@
     "sonner": "2.0.8",
     "tailwind-merge": "3.7.0",
     "vaul": "^1.1.2",
-    "zod": "4.6.7"
+    "zod": "4.6.7",
+    "@ancla/emails": "*",
+    "qrcode.react": "4.2.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.8",

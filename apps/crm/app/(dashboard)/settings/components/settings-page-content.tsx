@@ -1,6 +1,8 @@
 "use client";
 
+import type { InvitationDto, MeDto } from "@ancla/contracts";
 import { Check, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { BoardButton } from "@/components/dashboard/board/board-button";
@@ -16,9 +18,12 @@ import type {
   SettingsTabValue,
   SettingsUser,
 } from "../types";
+import { AccountPanel } from "./account-panel";
 import { BankAccountsCard } from "./bank-accounts-card";
 import { ChurchIdentityCard } from "./church-identity-card";
 import { CurrenciesCard } from "./currencies-card";
+import { InvitationsPanel } from "./invitations-panel";
+import { InviteDialog } from "./invite-dialog";
 import { NotificationsPanel } from "./notifications-panel";
 import { RolesPanel } from "./roles-panel";
 import { UserDialog } from "./user-dialog";
@@ -31,6 +36,7 @@ const INTRO: Record<SettingsTabValue, string> = {
   currencies: "Identidad de la iglesia, cuentas bancarias y monedas.",
   roles: "Roles con permisos claros para limitar alcance, aprobaciones y auditoría.",
   notifications: "Elige qué avisos recibe tu equipo y por qué canal.",
+  account: "Tu perfil, tus métodos de acceso y la verificación en dos pasos.",
 };
 
 const settingsPageContentSettingsPage = {
@@ -42,10 +48,12 @@ const settingsPageContentSettingsPage = {
 };
 
 interface SettingsPageContentProps {
+  initialTab: SettingsTabValue;
   churchName: string;
   churchSubtitle: string;
   users: SettingsUser[];
-  pendingInvitations: number;
+  invitations: InvitationDto[] | null;
+  me: MeDto | null;
   roles: SettingsRole[];
   bankAccounts: BankAccountSetting[];
   currencies: CurrencySetting[];
@@ -54,23 +62,26 @@ interface SettingsPageContentProps {
 }
 
 export function SettingsPageContent({
+  initialTab,
   churchName,
   churchSubtitle,
   users: initialUsers,
-  pendingInvitations: initialPending,
+  invitations,
+  me,
   roles: initialRoles,
   bankAccounts,
   currencies,
   notifications: initialNotifications,
   ministryOptions,
 }: SettingsPageContentProps) {
-  const [tab, setTab] = useState<SettingsTabValue>("users");
+  const [tab, setTab] = useState<SettingsTabValue>(initialTab);
   const [users, setUsers] = useState(initialUsers);
-  const [pending, setPending] = useState(initialPending);
+  const router = useRouter();
   const [roles, setRoles] = useState(initialRoles);
   const [notifications, setNotifications] = useState(initialNotifications);
-  // `undefined` = closed, `null` = inviting, otherwise the user being edited.
-  const [dialogUser, setDialogUser] = useState<SettingsUser | null | undefined>(undefined);
+  const [dialogUser, setDialogUser] = useState<SettingsUser | undefined>(undefined);
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const pendingInvitations = invitations?.filter((item) => item.status === "pending").length ?? 0;
 
   const currencyOptions = currencies.map((currency) => ({
     value: currency.code,
@@ -78,24 +89,20 @@ export function SettingsPageContent({
   }));
 
   const submitUser = (values: UserInviteValues) => {
-    if (dialogUser) {
-      setUsers((previous) =>
-        previous.map((user) =>
-          user.id === dialogUser.id
-            ? {
-                ...user,
-                name: values.name,
-                email: values.email,
-                role: values.role as SettingsUser["role"],
-              }
-            : user,
-        ),
-      );
-      toast.success("Usuario actualizado");
-    } else {
-      setPending((previous) => previous + 1);
-      toast.success(`Invitación enviada a ${values.email}`);
-    }
+    if (!dialogUser) return;
+    setUsers((previous) =>
+      previous.map((user) =>
+        user.id === dialogUser.id
+          ? {
+              ...user,
+              name: values.name,
+              email: values.email,
+              role: values.role as SettingsUser["role"],
+            }
+          : user,
+      ),
+    );
+    toast.success("Usuario actualizado");
     setDialogUser(undefined);
   };
 
@@ -108,9 +115,9 @@ export function SettingsPageContent({
       <div className={settingsPageContentSettingsPage.intro}>
         <span className={settingsPageContentSettingsPage.description}>{INTRO[tab]}</span>
         {tab === "users" ? (
-          <BoardButton onClick={() => setDialogUser(null)} variant="primary">
+          <BoardButton onClick={() => setInviteOpen(true)} variant="primary">
             <Plus aria-hidden="true" className={settingsPageContentSettingsPage.icon} />
-            Crear usuario
+            Invitar usuario
           </BoardButton>
         ) : null}
         {tab === "notifications" ? (
@@ -132,6 +139,7 @@ export function SettingsPageContent({
           { value: "currencies", label: "Monedas", count: currencies.length },
           { value: "roles", label: "Roles y permisos" },
           { value: "notifications", label: "Notificaciones" },
+          { value: "account", label: "Mi cuenta" },
         ]}
         label="Secciones de configuración"
         onValueChange={setTab}
@@ -139,15 +147,20 @@ export function SettingsPageContent({
       />
 
       {tab === "users" ? (
-        <UsersPanel
-          onDelete={(userId) =>
-            setUsers((previous) => previous.filter((user) => user.id !== userId))
-          }
-          onEdit={setDialogUser}
-          pendingInvitations={pending}
-          users={users}
-        />
+        <>
+          <UsersPanel
+            onDelete={(userId) =>
+              setUsers((previous) => previous.filter((user) => user.id !== userId))
+            }
+            onEdit={setDialogUser}
+            pendingInvitations={pendingInvitations}
+            users={users}
+          />
+          <InvitationsPanel invitations={invitations} />
+        </>
       ) : null}
+
+      {tab === "account" ? <AccountPanel me={me} /> : null}
 
       {showIdentity || showBankAccounts || showCurrencies ? (
         <div className={settingsPageContentSettingsPage.panel}>
@@ -180,8 +193,16 @@ export function SettingsPageContent({
         ministryOptions={ministryOptions}
         onOpenChange={(open) => !open && setDialogUser(undefined)}
         onSubmit={submitUser}
-        open={dialogUser !== undefined}
-        user={dialogUser ?? null}
+        user={dialogUser}
+      />
+      <InviteDialog
+        onInvited={(email) => {
+          toast.success(`Invitación enviada a ${email}`);
+          setInviteOpen(false);
+          router.refresh();
+        }}
+        onOpenChange={setInviteOpen}
+        open={inviteOpen}
       />
     </div>
   );

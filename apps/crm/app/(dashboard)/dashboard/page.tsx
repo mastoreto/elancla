@@ -1,5 +1,5 @@
+import { createServerApiClient } from "@/lib/api/createServerApiClient";
 import { churchConfig } from "@/lib/church";
-import { currentUser } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import {
   BalanceCards,
@@ -25,9 +25,19 @@ const dashboardPage = {
   aside: cn("flex flex-col gap-[18px]"),
 };
 
-export default function DashboardPage() {
+async function getFirstName(): Promise<string | null> {
+  const api = await createServerApiClient();
+  const response = await api.me.$get();
+  if (!response.ok) {
+    return null;
+  }
+  const { name } = await response.json();
+  return name.split(" ")[0] || null;
+}
+
+export default async function DashboardPage() {
   const now = new Date();
-  const firstName = currentUser.name.split(" ")[0] ?? currentUser.name;
+  const firstName = await getFirstName();
 
   return (
     <div className={dashboardPage.stack}>

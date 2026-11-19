@@ -14,18 +14,22 @@
     "test": "bun test",
     "check-types": "tsc --noEmit -p tsconfig.json",
     "openapi": "bun run src/scripts/generateOpenApi/generateOpenApi.ts",
-    "clean": "rm -rf .turbo node_modules"
+    "clean": "rm -rf .turbo node_modules",
+    "invite": "bun run src/scripts/invite/invite.ts"
   },
   "dependencies": {
-    "@ancla/auth": "*",
     "@ancla/contracts": "*",
     "@ancla/db": "*",
+    "@ancla/emails": "*",
     "@hono/zod-openapi": "1.6.3",
+    "better-auth": "1.7.25",
     "hono": "4.13.19",
+    "nodemailer": "10.6.0",
     "zod": "4.6.7"
   },
   "devDependencies": {
     "@types/bun": "1.4.4",
+    "@types/nodemailer": "8.0.2",
     "dotenv": "^16.6.1",
     "typescript": "5.7.3"
   }

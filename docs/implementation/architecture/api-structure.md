@@ -11,11 +11,11 @@ comentarios de este documento están en español solo como explicación.
 No existe como tal; está repartido:
 
 ```
-packages/auth/src/server.ts                  instancia de Better Auth (email + contraseña)
-packages/auth/scripts/seed-admin.ts          alta del primer admin
+apps/api/src/core/auth/                      Better Auth (Google + email/contraseña, 2FA, rate limit)
+apps/api/src/scripts/invite/                 alta del primer admin (crea su invitación)
 packages/db/prisma/schema.prisma             schema (sin migraciones)
 packages/db/src/index.ts                     cliente Prisma
-apps/crm/app/api/auth/[...all]/route.ts      único endpoint real (Better Auth)
+apps/crm/app/api/[[...route]]/route.ts       monta Hono, incluido /api/auth/* (Better Auth)
 apps/crm/app/(dashboard)/layout.tsx          chequeo de sesión
 apps/crm/app/informe/[code]/utils/           geocerca y vigencia (corren en el cliente)
 apps/crm/app/(dashboard)/*/data/             datos de ejemplo en lugar de API
@@ -33,7 +33,7 @@ apps/api/
     ├── server.ts                        # entrypoint standalone (fase 2, deploy propio)
     │
     ├── core/                            # transversal; sin lógica de negocio
-    │   ├── auth/                        # Better Auth: Google, invitaciones, 2FA, rate limit
+    │   ├── auth/                        # Better Auth: createAuth/getAuth, socialTwoFactorGuard, puerta de invitaciones, requireSession/Admin
     │   ├── context/                     # request → ctx { user, organization, permissions, requestId }
     │   ├── authz/                       # catálogo de permisos, requirePermission(), scopeWhere()
     │   ├── tenancy/                     # resolución de tenant + filtro automático por organización
@@ -43,13 +43,13 @@ apps/api/
     │   ├── db/                          # cliente por request y transacción (unit of work)
     │   ├── sequences/                   # correlativos MOV-2026-000123
     │   ├── storage/                     # interfaz FileStorage + adaptadores B2 y local
-    │   ├── mail/                        # interfaz Mailer + adaptadores
+    │   ├── mail/                        # interfaz Mailer + adaptador SMTP (Mailpit en dev); plantillas en packages/emails
     │   └── platforms/                   # interfaces VideoPlatform/PodcastPlatform + adaptadores (YouTube, Spotify…)
     │
     ├── modules/
     │   ├── identity/
     │   │   ├── users/
-    │   │   ├── invitations/
+    │   │   ├── invitations/                 # crear, listar, reenviar, revocar, vista previa y aceptar
     │   │   ├── roles/                   # roles, permisos y política de sesión por rol
     │   │   └── mfa/
     │   ├── content/
@@ -128,4 +128,4 @@ packages/contracts/   schemas Zod por módulo (inputs y DTOs); la API valida con
                       el CRM los usa en formularios y de ellos sale el OpenAPI
 ```
 
-`packages/auth` se elimina: el server de Better Auth pasa a `src/core/auth` y el cliente al CRM.
+`packages/auth` se eliminó (0.3): el server de Better Auth está en `src/core/auth` (`createAuth()` fábrica, `getAuth()` instancia perezosa) y el cliente en `apps/crm/lib/auth`.

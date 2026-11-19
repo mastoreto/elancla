@@ -12,7 +12,8 @@ const summaryHeaderDashboardPage = {
 
 interface SummaryHeaderProps {
   greeting: string;
-  firstName: string;
+  /** Null when there is no session (development auth bypass). */
+  firstName: string | null;
   dateLabel: string;
   churchName: string;
 }
@@ -22,7 +23,8 @@ export function SummaryHeader({ greeting, firstName, dateLabel, churchName }: Su
     <header className={summaryHeaderDashboardPage.container}>
       <div className={summaryHeaderDashboardPage.text}>
         <h2 className={summaryHeaderDashboardPage.title}>
-          {greeting}, {firstName}.
+          {greeting}
+          {firstName ? `, ${firstName}` : ""}.
         </h2>
         <p className={summaryHeaderDashboardPage.subtitle}>
           Así está la tesorería de Iglesia {churchName} este {dateLabel}.

@@ -1,8 +1,8 @@
 # Stack local de ancla-monorepo.
 #
 # Uso típico (solo BD para desarrollo con `bun run dev`):
-#   docker compose up -d db
-#   bun run db:migrate:deploy && bun run db:seed && bun run --filter @ancla/auth seed:admin <email> <pass>
+#   docker compose up -d db mailpit
+#   bun run db:migrate:deploy && bun run db:seed && bun run --filter @ancla/api invite <email> --role admin
 #
 # Stack completo en contenedores (BD + migración/seed + backoffice):
 #   docker compose --profile app up --build
@@ -12,8 +12,8 @@
 # contenedores siempre usan `db:5432` (no afectado por el puerto externo).
 # Desde el HOST conectate con localhost:${POSTGRES_PORT} (ver DATABASE_URL en .env).
 #
-# Variables: copiá .env.example a .env y completá BETTER_AUTH_SECRET (y, si querés
-# sembrar un admin automáticamente, SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD).
+# Variables: copiá .env.example a .env y completá BETTER_AUTH_SECRET. El primer admin se
+# crea con la invitación (script `invite`), no hay seed con contraseña.
 
 services:
   db:
@@ -39,7 +39,15 @@ services:
       timeout: 5s
       retries: 10
 
-  # Migraciones versionadas (migrate deploy) + seed + admin opcional. Corre una vez y sale.
+  # Correo de desarrollo (Mailpit): SMTP en 1025, interfaz y API en http://localhost:8025.
+  mailpit:
+    image: axllent/mailpit:v1.21
+    restart: unless-stopped
+    ports:
+      - "${MAILPIT_SMTP_PORT:-1025}:1025"
+      - "${MAILPIT_UI_PORT:-8025}:8025"
+
+  # Migraciones versionadas (migrate deploy) + seed. Corre una vez y sale.
   migrate:
     profiles: ["app", "migrate"]
     build:
@@ -52,9 +60,6 @@ services:
       DATABASE_MIGRATION_URL: postgresql://app_migrator:${APP_MIGRATOR_PASSWORD:-ancla_migrator}@db:5432/${POSTGRES_DB:-ancla}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?define BETTER_AUTH_SECRET en .env}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
-      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-}
-      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
-      SEED_ADMIN_NAME: ${SEED_ADMIN_NAME:-Administrador}
     depends_on:
       db:
         condition: service_healthy
@@ -64,11 +69,6 @@ services:
       - |
         bun run --filter @ancla/db db:migrate:deploy
         bun run --filter @ancla/db db:seed
-        if [ -n "$$SEED_ADMIN_EMAIL" ] && [ -n "$$SEED_ADMIN_PASSWORD" ]; then
-          bun run --filter @ancla/auth seed:admin
-        else
-          echo "SEED_ADMIN_* no definidos; omito el seed del admin."
-        fi
     restart: "no"
 
   # Backoffice iEkklesia (Next.js, salida standalone).
@@ -85,6 +85,11 @@ services:
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?define BETTER_AUTH_SECRET en .env}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
       NEXT_PUBLIC_BETTER_AUTH_URL: ${NEXT_PUBLIC_BETTER_AUTH_URL:-http://localhost:3000}
+      CRM_ORIGIN: ${CRM_ORIGIN:-http://localhost:3000}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      SMTP_URL: ${SMTP_URL:?define SMTP_URL en .env}
+      MAIL_FROM: ${MAIL_FROM:?define MAIL_FROM en .env}
     depends_on:
       db:
         condition: service_healthy

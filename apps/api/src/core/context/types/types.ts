@@ -4,6 +4,8 @@ export interface SessionUser {
   id: string;
   name: string;
   email: string;
+  /** Temporary flat role (admin|viewer); phase 0.4 replaces it with permissions. */
+  role: string;
 }
 
 /** What every use case may know about the request. Built per request, never shared. */

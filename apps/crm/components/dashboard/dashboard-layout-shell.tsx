@@ -4,12 +4,14 @@ import { Bell, MessageSquare, MoreHorizontal, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 import type * as React from "react";
 import { AppSidebar } from "@/components/app-sidebar";
+import type { SidebarUser } from "@/components/sidebar-user-menu";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { getCurrentRouteMeta } from "./route-meta";
 
 type DashboardLayoutShellProps = {
   children: React.ReactNode;
+  user: SidebarUser | null;
 };
 
 const iconButtonShared = cn(
@@ -44,7 +46,7 @@ const dashboardLayoutShellDashboardPage = {
   content: cn("mx-auto w-full max-w-[1480px] px-4 py-5 pb-20 md:px-7 md:py-6"),
 };
 
-export function DashboardLayoutShell({ children }: DashboardLayoutShellProps) {
+export function DashboardLayoutShell({ children, user }: DashboardLayoutShellProps) {
   const pathname = usePathname();
   const currentRoute = getCurrentRouteMeta(pathname);
 
@@ -53,7 +55,7 @@ export function DashboardLayoutShell({ children }: DashboardLayoutShellProps) {
       className={dashboardLayoutShellDashboardPage.sidebarProvider}
       style={{ "--sidebar-width": "15rem" } as React.CSSProperties}
     >
-      <AppSidebar />
+      <AppSidebar user={user} />
       <SidebarInset className={dashboardLayoutShellDashboardPage.sidebarInset}>
         <header className={dashboardLayoutShellDashboardPage.header}>
           <SidebarTrigger className={dashboardLayoutShellDashboardPage.sidebarTrigger} />
