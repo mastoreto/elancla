@@ -1,0 +1,1 @@
+export { getStorage } from "./getStorage";

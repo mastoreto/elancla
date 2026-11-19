@@ -22,9 +22,11 @@
     "@ancla/db": "*",
     "@ancla/emails": "*",
     "@hono/zod-openapi": "1.6.3",
+    "aws4fetch": "1.0.20",
     "better-auth": "1.7.25",
     "hono": "4.13.19",
     "nodemailer": "10.6.0",
+    "sharp": "0.35.5",
     "zod": "4.6.7"
   },
   "devDependencies": {
