@@ -1,6 +1,8 @@
 // Idempotent seed: `bun run db:seed` (Prisma runs it via prisma.config.ts).
 import { db } from "../../src";
 import { EL_ANCLA_ORGANIZATION, EL_ANCLA_SITE_SETTINGS } from "./elAncla";
+import { seedMinistries } from "./seedMinistries";
+import { seedRoles } from "./seedRoles";
 
 async function seed(): Promise<void> {
   const organization = await db.organization.upsert({
@@ -18,6 +20,9 @@ async function seed(): Promise<void> {
     create: { organizationId: organization.id, ...EL_ANCLA_SITE_SETTINGS },
     update: {},
   });
+
+  await seedRoles(db, organization.id);
+  await seedMinistries(db, organization.id);
 
   console.info(`Seeded organization "${organization.slug}".`);
 }

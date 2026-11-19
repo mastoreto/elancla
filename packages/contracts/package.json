@@ -11,6 +11,7 @@
   },
   "private": true,
   "scripts": {
+    "test": "bun test",
     "check-types": "tsc --noEmit -p tsconfig.json",
     "clean": "rm -rf .turbo node_modules"
   },

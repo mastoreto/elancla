@@ -16,6 +16,9 @@ const TABLES_WITHOUT_TENANT = new Set([
   "rate_limits",
   // Children reach the tenant through their parent row.
   "site_settings_translations",
+  "role_permissions",
+  "user_roles",
+  "user_ministries",
 ]);
 /** Float columns that are not money. */
 const ALLOWED_FLOAT_COLUMNS = new Set([
@@ -23,7 +26,13 @@ const ALLOWED_FLOAT_COLUMNS = new Set([
   "site_settings.geoLng",
 ]);
 /** Tables whose primary key is composite by design. */
-const COMPOSITE_PK_TABLES = new Set([MIGRATIONS_TABLE, "document_sequences"]);
+const COMPOSITE_PK_TABLES = new Set([
+  MIGRATIONS_TABLE,
+  "document_sequences",
+  "role_permissions",
+  "user_roles",
+  "user_ministries",
+]);
 
 async function applicationTables(): Promise<string[]> {
   const rows = await db.$queryRaw<{ name: string }[]>`
