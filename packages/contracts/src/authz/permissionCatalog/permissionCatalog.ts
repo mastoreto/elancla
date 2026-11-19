@@ -97,6 +97,8 @@ export const PERMISSION_CATALOG = {
     scopes: ALL_ONLY,
     dangerous: ["create", "delete"],
   },
+  // Reading the trail is a power of its own: it shows who did what, and to whom.
+  audit: { resource: "audit", actions: ["view"], scopes: ALL_ONLY },
   settings: {
     resource: "settings",
     actions: ["view", "edit"],

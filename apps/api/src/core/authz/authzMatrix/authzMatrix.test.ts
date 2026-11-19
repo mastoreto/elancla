@@ -26,6 +26,7 @@ const rows: MatrixRow[] = [
       "/users",
       "/ministries",
       "/invitations",
+      "/audit",
       "/me/permissions",
     ] as const
   ).map(
@@ -80,6 +81,29 @@ const rows: MatrixRow[] = [
     method: "POST",
     path: "/roles",
     body: validRole,
+    expected: 403,
+  },
+
+  // audit:view is the only door to the trail, and it has no write endpoints.
+  {
+    who: "no role",
+    caller: NOTHING,
+    method: "GET",
+    path: "/audit",
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.audit.view,
+    caller: [grant(PERMISSIONS.audit.view)],
+    method: "GET",
+    path: "/audit",
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.roles.view,
+    caller: [grant(PERMISSIONS.roles.view)],
+    method: "GET",
+    path: "/audit",
     expected: 403,
   },
 

@@ -118,7 +118,7 @@ ante cualquier `"recurso:acción"` escrito a mano fuera del catálogo.
 Las policies de recurso (`roles/policies`, `users/policies`) aplican las protecciones: el rol `admin`
 no se edita ni se borra, los sembrados no se borran, nadie cambia sus propios roles o ministerios,
 nadie edita un rol que tiene asignado, solo un admin concede o quita el rol `admin` y nunca se quita
-al último. Las mutaciones corren en `withTransaction` para que `writeAudit` (0.5) entre en la misma
+al último. Las mutaciones corren en `withTransaction` y llaman a `writeAudit` dentro de la misma
 transacción.
 
 Matriz de pruebas: `test/support/authzMatrix.ts` genera un caso por fila `{ grilla del rol, método,
@@ -166,3 +166,28 @@ ruta, status esperado }`; cada módulo agrega sus filas.
 | `Conflict` / versión vieja / estado inválido | 409 |
 | `RateLimited` | 429 |
 | cualquier otro | 500 con `requestId`, detalle solo en logs |
+
+## Auditoría (`core/audit`)
+
+`writeAudit(client, source, event)` agrega una fila a `audit_logs` (D-10). Reglas:
+
+- **Mutación ⇒ estricta y en su transacción.** Se le pasa el `tx` del use case: si la mutación hace
+  rollback no queda registro, y si la auditoría falla, falla toda la mutación. Los repositorios que
+  participan reciben `tx`; el `before` se lee **dentro** de la transacción (y con `lockRole` cuando
+  corresponde) y el `after` también, para que refleje lo escrito.
+- **Eventos sin mutación ⇒ best-effort.** Denegaciones (se registran en `errorHandler` para todo
+  `ForbiddenError`, tras el rollback) y eventos de Better Auth (`auditHooks`, `onPasswordReset`,
+  `sendResetPassword`) usan `writeAuditBestEffort`: un log caído no convierte un 403 en 500 ni rompe
+  un login ya hecho; se reporta con `console.error` y `requestId`.
+- **`AuditSource`** dice quién y desde dónde: `auditSourceFrom(ctx, organizationId)` en rutas y use
+  cases; `auditSourceFromHeaders(headers, …)` en hooks de Better Auth (sin `RequestContext`; por eso
+  `authRouter` y `acceptInvitation` reenvían el `X-Request-Id` generado con `withRequestId`);
+  `auditSourceForCli` para scripts (`invite` ⇒ actor `cli`).
+- **`before`/`after` son DTOs** (`toRoleDto`, `toInvitationDto`…, sin `tokenHash`); `redact()` es
+  defensa en profundidad con una lista exacta de claves secretas.
+- Las acciones se nombran solo con `AUDIT_ACTIONS` (`packages/contracts/src/audit`).
+- **Lecturas sensibles** (documentos privados, informes, exportaciones): el mecanismo ya sirve
+  (`*.read`, `*.exported`); cada módulo las cablea cuando exista. Leer `GET /audit` no se audita.
+- El correo de una invitación sale **después** del commit.
+- Eventos de auth sin clasificar (anotados con `ponytail:` en `classifyAuthEvent`): el callback social
+  y el actor de un segundo paso fallido.

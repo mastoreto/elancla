@@ -110,8 +110,9 @@ Decisiones de origen: D-07, D-08, D-10, D-11, D-16, D-21, D-24, D-25.
 - Variables validadas al arrancar por `packages/env`, con un schema **por app** (la web no conoce los
   secretos de la API y viceversa). Faltante = la app no arranca.
 - Ningún secreto con prefijo `NEXT_PUBLIC_` / `PUBLIC_`.
-- Postgres: la API usa el rol `app_runtime` (sin DDL, sin `UPDATE`/`DELETE` en `AuditLog`) por el
-  pooler; las migraciones usan `app_migrator` por conexión directa, solo en el pipeline de deploy.
+- Postgres: la API usa el rol `app_runtime` (sin DDL, sin `UPDATE`/`DELETE`/`TRUNCATE` en
+  `audit_logs`: la inmutabilidad es por **privilegio**, porque RLS sin policy de `UPDATE` actualizaría
+  0 filas en silencio) por el pooler; las migraciones usan `app_migrator` por conexión directa, solo en el pipeline de deploy.
 - RLS activado en todas las tablas sin políticas para roles de la Data API (D-21).
 - B2: una key de aplicación por bucket con permisos mínimos.
 - Rotación documentada de: `BETTER_AUTH_SECRET`, credenciales de Postgres, keys de B2, site keys.
@@ -119,6 +120,17 @@ Decisiones de origen: D-07, D-08, D-10, D-11, D-16, D-21, D-24, D-25.
 ## 6. Logs
 
 - **Auditoría** (D-10): en BD, durable, append-only. Es la fuente de verdad de "quién hizo qué".
+  - `audit_logs` queda fuera de la policy genérica de `app_secure_tables()` (tiene solo `SELECT` e
+    `INSERT`); un test lee el catálogo (`has_table_privilege`, `pg_policy`) y falla si una migración
+    devuelve `UPDATE`/`DELETE` o la policy `app_runtime_all`.
+  - `organizationId` es `ON DELETE RESTRICT`: un cascade borraría el log, porque las acciones
+    referenciales corren con los privilegios del dueño de la tabla.
+  - `ip` es el primer salto de `X-Forwarded-For` y **se puede falsificar** hasta que el proxy de
+    producción (0.8) lo sobrescriba: es una pista, no una prueba. `requestId` sirve para correlacionar,
+    no es dato de confianza (el cliente puede mandar el suyo; los hooks reciben el generado por la API).
+  - `actorLabel` (email) y el email de los logins fallidos quedan sin poder borrarse: la retención y la
+    supresión de datos personales se deciden antes de producción.
+  - Un 429 de login no se registra, para que un atacante no pueda llenar el log.
 - **Logs de aplicación**: JSON estructurado con `requestId`, ruta, status, duración y usuario
   (ID, no email). Redacción automática de cookies, `Authorization`, tokens y montos de cuerpos. Sirven
   para depurar, no como registro legal (la retención de Vercel es corta).

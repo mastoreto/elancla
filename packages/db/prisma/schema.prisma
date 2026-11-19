@@ -41,6 +41,7 @@ model Organization {
   invitations       Invitation[]
   roles             Role[]
   ministries        Ministry[]
+  auditLogs         AuditLog[]
 
   @@map("organizations")
 }
@@ -316,4 +317,39 @@ model UserMinistry {
   @@id([userId, ministryId])
   @@index([ministryId])
   @@map("user_ministries")
+}
+
+enum AuditOutcome {
+  success
+  denied
+  failure
+}
+
+/// Append-only: `app_runtime` can only INSERT and SELECT (see the audit_log migration).
+/// `actorId` has no FK on purpose: the record outlives the user and test cleanup keeps working.
+/// `organizationId` is `Restrict`: a cascade would let an organization delete erase its log.
+model AuditLog {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+  actorId        String?      @db.Uuid
+  /// Email (or "cli") at the time of the event.
+  actorLabel     String?
+  action         String
+  entityType     String?
+  entityId       String?
+  before         Json?
+  after          Json?
+  reason         String?
+  outcome        AuditOutcome @default(success)
+  ip             String?
+  userAgent      String?
+  requestId      String?
+  metadata       Json?
+
+  @@index([organizationId, createdAt])
+  @@index([organizationId, entityType, entityId])
+  @@index([organizationId, actorId])
+  @@map("audit_logs")
 }

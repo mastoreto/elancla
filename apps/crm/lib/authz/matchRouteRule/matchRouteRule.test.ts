@@ -15,6 +15,7 @@ describe("matchRouteRule", () => {
     expect(matchRouteRule("/settings/emails/invitation")?.requires).toEqual([
       PERMISSIONS.settings.view,
     ]);
+    expect(matchRouteRule("/settings/audit")?.requires).toEqual([PERMISSIONS.audit.view]);
     expect(matchRouteRule("/settings/roles/new")).toMatchObject({ adminOnly: true });
     expect(matchRouteRule("/settings/roles/01900000/edit")).toMatchObject({
       path: "/settings/roles/*/edit",

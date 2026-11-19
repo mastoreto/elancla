@@ -115,13 +115,37 @@ export async function replaceUserRoles(
 }
 
 export async function replaceUserMinistries(
+  tx: Prisma.TransactionClient,
   userId: string,
   ministryIds: string[],
 ): Promise<void> {
-  await db.$transaction([
-    db.userMinistry.deleteMany({ where: { userId } }),
-    db.userMinistry.createMany({
-      data: ministryIds.map((ministryId) => ({ userId, ministryId })),
-    }),
-  ]);
+  await tx.userMinistry.deleteMany({ where: { userId } });
+  await tx.userMinistry.createMany({
+    data: ministryIds.map((ministryId) => ({ userId, ministryId })),
+  });
+}
+
+/** What the audit trail records as "the roles of a user" (sorted, so before/after compare). */
+export async function findUserRoleSummaries(
+  tx: Prisma.TransactionClient,
+  userId: string,
+): Promise<{ id: string; name: string }[]> {
+  const rows = await tx.userRole.findMany({
+    where: { userId },
+    select: { role: { select: { id: true, name: true } } },
+  });
+  return rows.map((row) => row.role).sort((a, b) => a.id.localeCompare(b.id));
+}
+
+export async function findUserMinistrySummaries(
+  tx: Prisma.TransactionClient,
+  userId: string,
+): Promise<{ id: string; name: string }[]> {
+  const rows = await tx.userMinistry.findMany({
+    where: { userId },
+    select: { ministry: { select: { id: true, name: true } } },
+  });
+  return rows
+    .map((row) => row.ministry)
+    .sort((a, b) => a.id.localeCompare(b.id));
 }

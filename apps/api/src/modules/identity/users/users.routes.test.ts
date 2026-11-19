@@ -22,9 +22,11 @@ let editorCookie = "";
 let adminRoleId = "";
 
 afterAll(async () => {
-  await db.organization.deleteMany({
-    where: { id: { in: organizationsToRemove } },
-  });
+  // The audit trail pins an organization that has events (FK Restrict, on purpose: the log must
+  // outlive everything), so a throwaway organization that audited something stays until db:reset.
+  for (const id of organizationsToRemove) {
+    await db.organization.delete({ where: { id } }).catch(() => undefined);
+  }
   await fixtures.cleanup();
 });
 
@@ -209,6 +211,8 @@ describe("role locking", () => {
     const target = await newUser("race-target");
     const ctx = {
       requestId: "t",
+      ip: null,
+      userAgent: null,
       organizationId: await resolveOrganizationId(),
       user: { id: adminId, name: "A", email: "a@example.test" },
       access: {
@@ -280,6 +284,8 @@ describe("the last admin", () => {
     const actor = await newUser("actor");
     const ctx: AuthenticatedContext = {
       requestId: "test",
+      ip: null,
+      userAgent: null,
       organizationId: organization.id,
       user: { id: actor.id, name: "Actor", email: actor.email },
       access: {
@@ -336,6 +342,8 @@ describe("the last admin under concurrency", () => {
     const actor = await newUser("race-actor");
     const ctx: AuthenticatedContext = {
       requestId: "test",
+      ip: null,
+      userAgent: null,
       organizationId: organization.id,
       user: { id: actor.id, name: "Actor", email: actor.email },
       access: {

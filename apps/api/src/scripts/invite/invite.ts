@@ -13,6 +13,7 @@ const { ADMIN_ROLE_KEY, createInvitationBody } = await import(
   "@ancla/contracts"
 );
 const { db } = await import("@ancla/db");
+const { auditSourceForCli } = await import("../../core/audit");
 const { resolveOrganizationId } = await import("../../core/tenancy");
 const { buildInvitationUrl, issueInvitation } = await import(
   "../../modules/identity/invitations/useCases"
@@ -51,6 +52,7 @@ async function main(): Promise<void> {
     roleIds: [role.id],
     ministryIds: [],
     invitedById: null,
+    audit: auditSourceForCli(organizationId),
   });
   console.info(
     `Invitation for ${parsed.data.email} (${roleKey}), valid for 7 days:`,

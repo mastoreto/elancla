@@ -26,6 +26,18 @@ export function findRoleRow(
   });
 }
 
+/** Same as `findRoleRow`, inside a transaction (so it sees the transaction's own writes). */
+export function findRoleRowIn(
+  tx: Prisma.TransactionClient,
+  organizationId: string,
+  id: string,
+): Promise<RoleRow | null> {
+  return tx.role.findFirst({
+    where: { id, organizationId },
+    include: roleInclude,
+  });
+}
+
 export function findRoleRowByName(
   organizationId: string,
   name: string,

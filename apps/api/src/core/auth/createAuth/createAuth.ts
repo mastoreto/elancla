@@ -1,9 +1,12 @@
+import { AUDIT_ACTIONS } from "@ancla/contracts";
 import { db } from "@ancla/db";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { twoFactor } from "better-auth/plugins/two-factor";
 import type { GoogleOptions } from "better-auth/social-providers";
 import type { Mailer } from "../../mail";
+import { auditAuthEvent } from "../auditAuthEvent";
+import { auditHooks } from "../auditHooks";
 import { freshSessionGuard } from "../freshSessionGuard";
 import { readGooglePicture } from "../googlePicture";
 import { assertSignUpAllowed, markInvitationAccepted } from "../invitationGate";
@@ -38,6 +41,22 @@ export interface CreateAuthOptions {
   google?: GoogleCredentials;
   /** Enabled by default; the HTTP-level tests of the shared instance switch it off. */
   rateLimitEnabled?: boolean;
+}
+
+type PasswordResetAction =
+  | typeof AUDIT_ACTIONS.auth.passwordResetRequested
+  | typeof AUDIT_ACTIONS.auth.passwordResetCompleted;
+
+function auditPasswordReset(
+  action: PasswordResetAction,
+  user: { id: string; email: string },
+  request: Request | undefined,
+): Promise<void> {
+  return auditAuthEvent(
+    request?.headers,
+    { id: user.id, label: user.email },
+    { action, entity: { type: "user", id: user.id } },
+  );
 }
 
 /** Better Auth for El Ancla. A factory so tests can inject a fake mailer and fake Google. */
@@ -77,6 +96,18 @@ export function createAuth(options: CreateAuthOptions) {
         await mailer.send(
           await buildPasswordResetMessage({ email: user.email, url, request }),
         );
+        await auditPasswordReset(
+          AUDIT_ACTIONS.auth.passwordResetRequested,
+          user,
+          request,
+        );
+      },
+      onPasswordReset: async ({ user }, request) => {
+        await auditPasswordReset(
+          AUDIT_ACTIONS.auth.passwordResetCompleted,
+          user,
+          request,
+        );
       },
     },
     socialProviders: google
@@ -108,16 +139,21 @@ export function createAuth(options: CreateAuthOptions) {
             });
             return { data: { ...user, email, emailVerified: true } };
           },
-          after: async (user) => {
-            await markInvitationAccepted(user);
+          after: async (user, context) => {
+            await markInvitationAccepted(user, context?.headers);
           },
         },
       },
       account: {
         create: {
           // Google's profile picture is kept when linking, unless the user already has one.
-          after: async (account) => {
+          after: async (account, context) => {
             if (account.providerId !== GOOGLE_PROVIDER_ID) return;
+            await auditAuthEvent(context?.headers, null, {
+              action: AUDIT_ACTIONS.auth.accountLinked,
+              entity: { type: "user", id: account.userId },
+              metadata: { provider: account.providerId },
+            });
             const picture = readGooglePicture(account.idToken);
             if (!picture) return;
             await db.user.updateMany({
@@ -134,6 +170,8 @@ export function createAuth(options: CreateAuthOptions) {
       socialTwoFactorGuard({ crmOrigin }),
       roleSessionPolicy(),
       freshSessionGuard(),
+      // Last: it must see the session the other plugins' hooks left behind.
+      auditHooks(),
     ],
   });
 }

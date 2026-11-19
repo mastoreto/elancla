@@ -28,6 +28,7 @@ export const ROUTE_RULES: readonly RouteRule[] = [
   ...SECTION_RULES,
   { path: "/settings", requires: [] },
   { path: "/settings/emails", requires: [PERMISSIONS.settings.view] },
+  { path: "/settings/audit", requires: [PERMISSIONS.audit.view] },
   { path: "/settings/roles/new", requires: [PERMISSIONS.roles.create], adminOnly: true },
   { path: "/settings/roles/*/edit", requires: [PERMISSIONS.roles.view], adminOnly: true },
 ];

@@ -19,6 +19,7 @@ import {
   Newspaper,
   PiggyBank,
   Receipt,
+  ScrollText,
   Shield,
   SquareCheck,
   Sun,
@@ -52,6 +53,7 @@ const RESOURCE_ICONS: Record<PermissionResource, LucideIcon> = {
   users: Users,
   roles: Shield,
   invitations: Mail,
+  audit: ScrollText,
   settings: Sun,
 };
 

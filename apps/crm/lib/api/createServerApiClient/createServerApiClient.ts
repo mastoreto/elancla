@@ -12,5 +12,7 @@ export async function createServerApiClient(): Promise<ServerApiClient> {
   return createInProcessApiClient({
     dispatch: (request) => app.request(request),
     cookie: requestHeaders.get("cookie"),
+    userAgent: requestHeaders.get("user-agent"),
+    forwardedFor: requestHeaders.get("x-forwarded-for"),
   });
 }

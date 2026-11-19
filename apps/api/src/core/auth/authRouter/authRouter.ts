@@ -1,6 +1,7 @@
 import { allowPublic } from "../../authz";
 import { createRouter } from "../../createApp";
 import { NotFoundError } from "../../errors";
+import { REQUEST_ID_HEADER, withRequestId } from "../../http";
 import { getAuth } from "../getAuth";
 
 /**
@@ -13,8 +14,18 @@ export function createAuthRouter() {
   router.on("POST", "/auth/sign-up/email", allowPublic, () => {
     throw new NotFoundError("Route not found");
   });
-  router.on(["GET", "POST"], "/auth/*", allowPublic, (c) =>
-    getAuth().handler(c.req.raw),
-  );
+  // Better Auth's hooks only see the raw request: hand them the id this API generated, and put
+  // it on the answer too (a raw Response returned from a handler loses the header set earlier).
+  router.on(["GET", "POST"], "/auth/*", allowPublic, async (c) => {
+    const requestId = c.get("requestId");
+    // Not `new Request(raw, …)`: under Next the raw request is a NextRequest and cloning it throws.
+    c.req.raw.headers.set(REQUEST_ID_HEADER, requestId);
+    const response = await getAuth().handler(c.req.raw);
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: withRequestId(response.headers, requestId),
+    });
+  });
   return router;
 }

@@ -37,7 +37,7 @@ apps/api/
     │   ├── context/                     # request → ctx { user, organization, permissions, requestId }
     │   ├── authz/                       # catálogo de permisos, requirePermission(), scopeWhere()
     │   ├── tenancy/                     # resolución de tenant + filtro automático por organización
-    │   ├── audit/                       # writeAudit(tx, ctx, event)
+    │   ├── audit/                       # writeAudit(client, source, event), auditSource, redact
     │   ├── errors/                      # errores de dominio → Problem Details (HTTP)
     │   ├── http/                        # middlewares: cabeceras, CSRF, rate limit, idempotencia, paginación
     │   ├── db/                          # cliente por request y transacción (unit of work)

@@ -1,5 +1,10 @@
-import type { SetUserRolesBody, UserDto } from "@ancla/contracts";
+import {
+  AUDIT_ACTIONS,
+  type SetUserRolesBody,
+  type UserDto,
+} from "@ancla/contracts";
 import { db } from "@ancla/db";
+import { auditSourceFrom, writeAudit } from "../../../../../core/audit";
 import { assertCanAssignRoles, lockRoles } from "../../../../../core/authz";
 import type { AuthenticatedContext } from "../../../../../core/context";
 import { withTransaction } from "../../../../../core/db";
@@ -9,6 +14,7 @@ import {
   findAdminRoleId,
   findExistingRoleIds,
   findExistingRoleIdsIn,
+  findUserRoleSummaries,
   findUserRow,
   hasRole,
   replaceUserRoles,
@@ -29,8 +35,8 @@ export async function setUserRoles({
   body,
 }: SetUserRolesInput): Promise<UserDto> {
   assertNotSelf(ctx.user.id, userId);
-  if (!(await findUserRow(userId)))
-    throw new NotFoundError("The user was not found");
+  const target = await findUserRow(userId);
+  if (!target) throw new NotFoundError("The user was not found");
 
   const roleIds = [...new Set(body.roleIds)];
   const existing = new Set(
@@ -44,7 +50,6 @@ export async function setUserRoles({
 
   await assertCanAssignRoles(ctx, roleIds);
 
-  // ponytail: 0.5 adds `writeAudit(tx, ...)` here, inside the same transaction.
   await withTransaction(db, async (tx) => {
     const adminRoleId = await findAdminRoleId(ctx.organizationId);
     // Without the admin lock, two admins demoting each other would both see "two admins left".
@@ -69,7 +74,15 @@ export async function setUserRoles({
         adminCount: await countRoleMembers(tx, adminRoleId),
       });
     }
+    const before = await findUserRoleSummaries(tx, userId);
     await replaceUserRoles(tx, userId, roleIds);
+    await writeAudit(tx, auditSourceFrom(ctx, ctx.organizationId), {
+      action: AUDIT_ACTIONS.user.rolesChanged,
+      entity: { type: "user", id: userId },
+      before: { roles: before },
+      after: { roles: await findUserRoleSummaries(tx, userId) },
+      metadata: { entityLabel: target.email },
+    });
   });
 
   const row = await findUserRow(userId);

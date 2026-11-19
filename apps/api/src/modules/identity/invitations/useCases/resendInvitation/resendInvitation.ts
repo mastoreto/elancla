@@ -1,5 +1,8 @@
-import type { InvitationDto } from "@ancla/contracts";
+import { AUDIT_ACTIONS, type InvitationDto } from "@ancla/contracts";
+import { db } from "@ancla/db";
+import { auditSourceFrom, writeAudit } from "../../../../../core/audit";
 import type { AuthenticatedContext } from "../../../../../core/context";
+import { withTransaction } from "../../../../../core/db";
 import { ConflictError, NotFoundError } from "../../../../../core/errors";
 import type { Mailer } from "../../../../../core/mail";
 import { findInvitationRow, rotateInvitationToken } from "../../data";
@@ -19,7 +22,8 @@ interface ResendInvitationInput {
 
 /**
  * Only the token hash is stored, so a resend cannot repeat the old link: it rotates the token
- * (the previous link stops working) and restarts the validity window.
+ * (the previous link stops working) and restarts the validity window. The email goes out after
+ * the commit, so a rolled-back rotation never mails a dead link.
  */
 export async function resendInvitation({
   ctx,
@@ -34,9 +38,20 @@ export async function resendInvitation({
     );
   }
   const token = generateInvitationToken();
-  const rotated = await rotateInvitationToken(ctx.organizationId, id, {
-    tokenHash: hashInvitationToken(token),
-    expiresAt: invitationExpiry(new Date()),
+  const now = new Date();
+  const rotated = await withTransaction(db, async (tx) => {
+    const updated = await rotateInvitationToken(tx, ctx.organizationId, id, {
+      tokenHash: hashInvitationToken(token),
+      expiresAt: invitationExpiry(now),
+    });
+    await writeAudit(tx, auditSourceFrom(ctx, ctx.organizationId), {
+      action: AUDIT_ACTIONS.invitation.resent,
+      entity: { type: "invitation", id },
+      before: toInvitationDto(invitation, now),
+      after: toInvitationDto(updated, now),
+      metadata: { entityLabel: updated.email },
+    });
+    return updated;
   });
   await sendInvitationEmail({
     mailer,
@@ -44,5 +59,5 @@ export async function resendInvitation({
     token,
     inviterName: ctx.user.name,
   });
-  return toInvitationDto(rotated, new Date());
+  return toInvitationDto(rotated, now);
 }

@@ -66,6 +66,39 @@ describe("schema invariants", () => {
     }
   });
 
+  test("the audit trail is append-only for the runtime role and survives organization deletes", async () => {
+    const privileges = await db.$queryRaw<
+      { privilege: string; allowed: boolean }[]
+    >`
+      SELECT p AS privilege, has_table_privilege('app_runtime', 'audit_logs', p) AS allowed
+      FROM unnest(ARRAY['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'TRUNCATE']) AS p
+    `;
+    expect(
+      Object.fromEntries(privileges.map((row) => [row.privilege, row.allowed])),
+    ).toEqual({
+      SELECT: true,
+      INSERT: true,
+      UPDATE: false,
+      DELETE: false,
+      TRUNCATE: false,
+    });
+    // A blanket "all commands" policy would sneak UPDATE/DELETE back in if the privilege returned.
+    const policies = await db.$queryRaw<{ name: string }[]>`
+      SELECT polname AS name FROM pg_policy WHERE polrelid = 'audit_logs'::regclass
+    `;
+    expect(policies.map((policy) => policy.name).sort()).toEqual([
+      "app_runtime_insert",
+      "app_runtime_select",
+    ]);
+    // 'r' = RESTRICT. A cascade would erase the log when an organization is deleted, because
+    // referential actions run with the table owner's privileges.
+    const [fk] = await db.$queryRaw<{ onDelete: string }[]>`
+      SELECT confdeltype::text AS "onDelete" FROM pg_constraint
+      WHERE conname = 'audit_logs_organizationId_fkey'
+    `;
+    expect(fk?.onDelete).toBe("r");
+  });
+
   test("the runtime role cannot change the schema", async () => {
     // PrismaPromise is lazy and not a native Promise; wrap it so the call actually runs.
     await expect(

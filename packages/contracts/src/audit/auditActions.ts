@@ -1,0 +1,47 @@
+/**
+ * Every event the audit trail can hold. Reference an action only through `AUDIT_ACTIONS`
+ * (`AUDIT_ACTIONS.role.created`), never by writing its string.
+ */
+export const AUDIT_ACTIONS = {
+  auth: {
+    loginSucceeded: "auth.login.succeeded",
+    loginFailed: "auth.login.failed",
+    /** Right password, second factor still pending (no session yet). */
+    loginTwoFactorRequired: "auth.login.twoFactorRequired",
+    twoFactorVerified: "auth.twoFactor.verified",
+    twoFactorFailed: "auth.twoFactor.failed",
+    twoFactorEnabled: "auth.twoFactor.enabled",
+    twoFactorDisabled: "auth.twoFactor.disabled",
+    backupCodeUsed: "auth.backupCode.used",
+    backupCodeFailed: "auth.backupCode.failed",
+    passwordResetRequested: "auth.password.reset.requested",
+    passwordResetCompleted: "auth.password.reset.completed",
+    passwordChanged: "auth.password.changed",
+    passwordCreated: "auth.password.created",
+    accountLinked: "auth.account.linked",
+  },
+  permission: { denied: "permission.denied" },
+  role: {
+    created: "role.created",
+    updated: "role.updated",
+    deleted: "role.deleted",
+  },
+  user: {
+    rolesChanged: "user.roles.changed",
+    ministriesChanged: "user.ministries.changed",
+  },
+  invitation: {
+    created: "invitation.created",
+    resent: "invitation.resent",
+    revoked: "invitation.revoked",
+    accepted: "invitation.accepted",
+  },
+} as const;
+
+type ActionGroups = typeof AUDIT_ACTIONS;
+export type AuditAction = {
+  [Group in keyof ActionGroups]: ActionGroups[Group][keyof ActionGroups[Group]];
+}[keyof ActionGroups];
+
+export const AUDIT_OUTCOMES = ["success", "denied", "failure"] as const;
+export type AuditOutcome = (typeof AUDIT_OUTCOMES)[number];

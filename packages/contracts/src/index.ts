@@ -1,3 +1,4 @@
+export * from "./audit";
 export * from "./authz";
 export * from "./common";
 export * from "./health";

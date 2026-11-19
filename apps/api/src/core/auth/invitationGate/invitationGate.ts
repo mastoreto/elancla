@@ -1,5 +1,7 @@
+import { AUDIT_ACTIONS } from "@ancla/contracts";
 import { db, type PrismaClient } from "@ancla/db";
 import { APIError } from "better-auth/api";
+import { auditSourceFromHeaders, writeAudit } from "../../audit";
 import { lockRoles } from "../../authz/lockRole";
 
 export const INVITATION_REQUIRED_CODE = "INVITATION_REQUIRED";
@@ -48,10 +50,10 @@ export async function assertSignUpAllowed(input: {
  * Marks the pending invitation of a freshly created user as used and gives the user the roles and
  * ministries it carried. Ids that no longer exist (a role deleted after inviting) are skipped.
  */
-export async function markInvitationAccepted(user: {
-  id: string;
-  email: string;
-}): Promise<void> {
+export async function markInvitationAccepted(
+  user: { id: string; email: string },
+  headers?: Headers,
+): Promise<void> {
   const invitation = await findPendingInvitation(db, user.email);
   if (!invitation) return;
   const { organizationId } = invitation;
@@ -81,5 +83,22 @@ export async function markInvitationAccepted(user: {
       where: { id: invitation.id },
       data: { acceptedAt: new Date() },
     });
+    // The new account is the actor: nobody else was involved in this step.
+    await writeAudit(
+      tx,
+      auditSourceFromHeaders(headers, organizationId, {
+        id: user.id,
+        label: user.email,
+      }),
+      {
+        action: AUDIT_ACTIONS.invitation.accepted,
+        entity: { type: "invitation", id: invitation.id },
+        after: {
+          roleIds: roles.map((role) => role.id),
+          ministryIds: ministries.map((ministry) => ministry.id),
+        },
+        metadata: { entityLabel: user.email },
+      },
+    );
   });
 }
