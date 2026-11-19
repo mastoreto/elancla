@@ -1,4 +1,12 @@
-import { afterAll, beforeAll, describe, expect, spyOn, test } from "bun:test";
+import {
+  afterAll,
+  beforeAll,
+  describe,
+  expect,
+  setDefaultTimeout,
+  spyOn,
+  test,
+} from "bun:test";
 import {
   type DownloadLinkDto,
   grant,
@@ -25,6 +33,11 @@ import { originalKey, variantKey } from "./domain";
 
 const fixtures = createFixtures();
 const call = createApiCaller(fixtures);
+// Finalizing encodes real images (sharp, 3 widths x webp/avif): ~3s alone, over 5s when the whole
+// suite runs in parallel under turbo.
+const IMAGE_PROCESSING_TIMEOUT_MS = 30_000;
+setDefaultTimeout(IMAGE_PROCESSING_TIMEOUT_MS);
+
 const createdIds: string[] = [];
 const VARIANT_WIDTHS = [480, 960, 1600];
 const VARIANT_FORMATS = ["webp", "avif"] as const;
