@@ -135,10 +135,18 @@ export function createS3Storage(config: S3StorageConfig): FileStorage {
       return new Uint8Array(await response.arrayBuffer());
     },
 
-    async put({ key, body, contentType }: PutObjectOptions): Promise<void> {
+    async put({
+      key,
+      body,
+      contentType,
+      cacheControl,
+    }: PutObjectOptions): Promise<void> {
       const response = await client.fetch(objectUrl(endpoint, bucket, key), {
         method: "PUT",
-        headers: { "Content-Type": contentType },
+        headers: {
+          "Content-Type": contentType,
+          ...(cacheControl ? { "Cache-Control": cacheControl } : {}),
+        },
         body,
       });
       if (!response.ok) throw await failure("put", response);

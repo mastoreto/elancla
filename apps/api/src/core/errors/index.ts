@@ -6,4 +6,5 @@ export { NotFoundError } from "./NotFoundError";
 export { TooManyRequestsError } from "./TooManyRequestsError";
 export { toProblem } from "./toProblem";
 export { UnauthenticatedError } from "./UnauthenticatedError";
+export { UnprocessableError } from "./UnprocessableError";
 export { ValidationError, type ValidationIssue } from "./ValidationError";

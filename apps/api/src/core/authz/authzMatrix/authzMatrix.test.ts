@@ -16,6 +16,18 @@ afterAll(() => fixtures.cleanup());
 
 const NOTHING = [] as const;
 const validRole = { name: "x", grants: [] };
+const imageUpload = {
+  purpose: "contentImage",
+  contentType: "image/png",
+  size: 10,
+  fileName: "a.png",
+};
+const voucherUpload = {
+  purpose: "voucherDocument",
+  contentType: "application/pdf",
+  size: 10,
+  fileName: "a.pdf",
+};
 
 /** Each row proves the guard: 401/403 when stopped, anything else (200/400/404) when let through. */
 const rows: MatrixRow[] = [
@@ -293,6 +305,92 @@ const rows: MatrixRow[] = [
     method: "POST",
     path: `/invitations/${UNKNOWN_ID}/revoke`,
     expected: 403,
+  },
+
+  // media: the permission is the one of the file's purpose (content:create, vouchers:create...).
+  {
+    who: "anonymous",
+    caller: "anonymous",
+    method: "POST",
+    path: "/media/uploads",
+    body: imageUpload,
+    expected: 401,
+  },
+  {
+    who: "anonymous",
+    caller: "anonymous",
+    method: "POST",
+    path: `/media/uploads/${UNKNOWN_ID}/finalize`,
+    expected: 401,
+  },
+  {
+    who: "anonymous",
+    caller: "anonymous",
+    method: "GET",
+    path: `/media/${UNKNOWN_ID}/download`,
+    expected: 401,
+  },
+  {
+    who: "no role",
+    caller: NOTHING,
+    method: "POST",
+    path: "/media/uploads",
+    body: imageUpload,
+    expected: 403,
+  },
+  {
+    who: "no role",
+    caller: NOTHING,
+    method: "POST",
+    path: "/media/uploads",
+    body: voucherUpload,
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.content.create,
+    caller: [grant(PERMISSIONS.content.create)],
+    method: "POST",
+    path: "/media/uploads",
+    body: {},
+    expected: 400,
+  },
+  {
+    who: PERMISSIONS.content.create,
+    caller: [grant(PERMISSIONS.content.create)],
+    method: "POST",
+    path: "/media/uploads",
+    body: voucherUpload,
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.vouchers.create,
+    caller: [grant(PERMISSIONS.vouchers.create, "own")],
+    method: "POST",
+    path: "/media/uploads",
+    body: imageUpload,
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.vouchers.create,
+    caller: [grant(PERMISSIONS.vouchers.create, "own")],
+    method: "POST",
+    path: "/media/uploads",
+    body: {},
+    expected: 400,
+  },
+  {
+    who: "no role (any session reaches the owner check)",
+    caller: NOTHING,
+    method: "POST",
+    path: `/media/uploads/${UNKNOWN_ID}/finalize`,
+    expected: 404,
+  },
+  {
+    who: "no role (any session reaches the owner check)",
+    caller: NOTHING,
+    method: "GET",
+    path: `/media/${UNKNOWN_ID}/download`,
+    expected: 404,
   },
 
   // The seeded admin holds everything, resources added later included.

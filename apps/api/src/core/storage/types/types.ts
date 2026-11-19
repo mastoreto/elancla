@@ -35,6 +35,8 @@ export interface PutObjectOptions {
   key: string;
   body: Uint8Array;
   contentType: string;
+  /** Sent as `Cache-Control` and served back by the bucket (public variants are immutable). */
+  cacheControl?: string;
 }
 
 /**
