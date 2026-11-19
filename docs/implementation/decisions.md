@@ -158,6 +158,17 @@ registran lecturas sensibles (informes, documentos privados, exportaciones), log
 denegaciones. La app se conecta con un rol de Postgres propio sin `UPDATE`/`DELETE` sobre la tabla;
 las migraciones usan otro rol.
 
+Detalles fijados al implementar la 0.5:
+
+- `actorId` **sin FK** + `actorLabel` (email o `cli`): el registro sobrevive al borrado del usuario.
+  `organizationId` con `ON DELETE RESTRICT` (un cascade borraría el log).
+- **Mutaciones: auditoría estricta** en la misma transacción. **Denegaciones y eventos de auth:
+  best-effort** (un log caído no cambia la respuesta ni rompe un login ya hecho).
+- Las denegaciones se registran en el `errorHandler` (todo `ForbiddenError`), no en cada guard.
+- Inmutabilidad por privilegio (`REVOKE UPDATE, DELETE, TRUNCATE`) y policies solo `SELECT`/`INSERT`.
+- Pendiente: encadenado de hashes (solo si los síndicos necesitan verificar integridad) y política de
+  retención/supresión de datos personales del log.
+
 ## D-11 — Informes para presentar
 
 **Aceptada.** Los informes son de tesorería y se generan con uno de dos propósitos:
