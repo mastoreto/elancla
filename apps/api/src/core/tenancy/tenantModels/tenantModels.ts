@@ -15,4 +15,5 @@ export const TENANT_MODELS: ReadonlySet<string> = new Set([
   "EditorialSettings",
   "PersonProfile",
   "VisitFaq",
+  "SimplePage",
 ]);

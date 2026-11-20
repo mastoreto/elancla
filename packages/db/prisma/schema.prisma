@@ -48,6 +48,7 @@ model Organization {
   editorialSettings EditorialSettings[]
   personProfiles    PersonProfile[]
   visitFaqs         VisitFaq[]
+  simplePages       SimplePage[]
 
   @@map("organizations")
 }
@@ -160,6 +161,20 @@ model VisitFaqTranslation {
 
   @@unique([visitFaqId, locale])
   @@map("visit_faq_translations")
+}
+
+// ─── Simple pages ────────────────────────────────────────────────────────────
+
+/// A page at the site root (/privacidad). Only the identity lives here: title, slug and body are
+/// in the snapshot of its ContentRevision (editorial workflow), so there is no translation table.
+model SimplePage {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  organizationId String       @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+
+  @@index([organizationId])
+  @@map("simple_pages")
 }
 
 // ─── People (public profiles) ────────────────────────────────────────────────
@@ -536,6 +551,7 @@ model SiteApiKey {
 enum EditorialContentType {
   BLOG_POST
   MINISTRY
+  SIMPLE_PAGE
 }
 
 /// SUPERSEDED is internal: the live revision that a newer one replaced. History is never deleted.
