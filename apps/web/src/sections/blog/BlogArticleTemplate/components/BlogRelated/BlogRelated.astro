@@ -1,17 +1,18 @@
 ---
-import type { BlogArticle } from 'src/data/blog';
+import type { PublicPostSummary } from '@ancla/content';
 import type { Locale } from 'src/i18n/config';
 import BlogArticleCard from 'src/sections/blog/components/BlogArticleCard';
 import cn from 'src/utils/cn';
 
 interface Props {
-  articles: BlogArticle[];
+  articles: PublicPostSummary[];
   copy: any;
   by: string;
+  minutes: string;
   locale: Locale;
 }
 
-const { articles, copy, by, locale } = Astro.props;
+const { articles, copy, by, minutes, locale } = Astro.props;
 
 const blogRelated = {
   container: cn('flex flex-col gap-6 pt-[clamp(3.5rem,7vw,5rem)] px-gutter'),
@@ -27,7 +28,7 @@ const blogRelated = {
   <section class={blogRelated.container}>
     <span class={blogRelated.related}>{copy.related}</span>
     <div class={blogRelated.articles}>
-      {articles.map((article) => <BlogArticleCard article={article} by={by} locale={locale} />)}
+      {articles.map((article) => <BlogArticleCard article={article} by={by} minutes={minutes} locale={locale} />)}
     </div>
   </section>
 )}

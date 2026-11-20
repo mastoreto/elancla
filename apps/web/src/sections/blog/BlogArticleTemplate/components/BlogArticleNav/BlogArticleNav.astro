@@ -1,13 +1,13 @@
 ---
-import type { BlogArticle } from 'src/data/blog';
-import { getBlogArticlePath } from 'src/data/blog';
+import type { PublicPostSummary } from '@ancla/content';
 import type { Locale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
+import { getBlogArticlePath } from 'src/sections/blog/utils/getBlogArticlePath';
 import cn from 'src/utils/cn';
 
 interface Props {
-  previous: BlogArticle | null;
-  next: BlogArticle | null;
+  previous: PublicPostSummary | null;
+  next: PublicPostSummary | null;
   copy: any;
   locale: Locale;
 }

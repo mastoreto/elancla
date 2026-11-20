@@ -1,10 +1,5 @@
 ---
-import {
-  buildBlogPageData,
-  getAllCategories,
-  getAllPostCards,
-  getAllSeriesWithPosts,
-} from '@ancla/content';
+import { getBlogIndex } from '@ancla/content';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
@@ -16,19 +11,7 @@ if (!isLocale(localeParam) || localeParam === defaultLocale) {
   return Astro.rewrite('/404');
 }
 const locale = localeParam;
-const [posts, categories, allSeries] = await Promise.all([
-  getAllPostCards(),
-  getAllCategories(),
-  getAllSeriesWithPosts(),
-]);
-
-const {
-  articles,
-  featured,
-  marqueeItems,
-  series,
-  categories: blogCategories,
-} = buildBlogPageData(posts, categories, allSeries);
+const index = await getBlogIndex(locale);
 const copy = getMessages(locale).blog;
 ---
 
@@ -44,15 +27,7 @@ const copy = getMessages(locale).blog;
   canonical={new URL(localizePath('/blog', locale), Astro.site).toString()}
   locale={locale}
 >
-  <BlogPageTemplate
-    articles={articles}
-    categories={blogCategories}
-    featured={featured}
-    marqueeItems={marqueeItems}
-    series={series}
-    copy={copy}
-    locale={locale}
-  />
+  <BlogPageTemplate index={index} copy={copy} locale={locale} />
 </Layout>
 
 <script>

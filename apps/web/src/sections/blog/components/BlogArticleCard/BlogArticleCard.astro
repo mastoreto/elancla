@@ -1,20 +1,23 @@
 ---
+import type { PublicPostSummary } from '@ancla/content';
 import Pill from 'src/components/ui/Pill';
-import type { BlogArticle } from 'src/data/blog';
-import { getBlogArticlePath } from 'src/data/blog';
 import type { Locale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
 import BlogCover from 'src/sections/blog/components/BlogCover';
+import { formatBlogDate } from 'src/sections/blog/utils/formatBlogDate';
+import { getBlogArticlePath } from 'src/sections/blog/utils/getBlogArticlePath';
 import { REVEAL_STATE } from 'src/styles/classes';
 import cn from 'src/utils/cn';
 
 interface Props {
-  article: BlogArticle;
+  article: PublicPostSummary;
   by: string;
+  /** Unit of the reading time ("min"). */
+  minutes: string;
   locale: Locale;
 }
 
-const { article, by, locale } = Astro.props;
+const { article, by, minutes, locale } = Astro.props;
 const href = localizePath(getBlogArticlePath(article), locale);
 
 const blogArticleCard = {
@@ -45,13 +48,13 @@ const blogArticleCard = {
   class={blogArticleCard.container}
   data-reveal
   data-blog-article-card
-  data-blog-filter={article.filter}
+  data-blog-filter={article.category.slug}
 >
-  <BlogCover tint={article.tint} class={blogArticleCard.blogCover}><Pill>{article.category}</Pill></BlogCover>
+  <BlogCover cover={article.cover} class={blogArticleCard.blogCover}><Pill>{article.category.name}</Pill></BlogCover>
   <div class={blogArticleCard.stack}>
-    <span class={blogArticleCard.compactDate}>{article.compactDate} · {article.readTime}</span>
+    <span class={blogArticleCard.compactDate}>{formatBlogDate(article.urlDate, locale, 'compact')} · {article.readingMinutes} {minutes}</span>
     <h3 class={blogArticleCard.articleTitle}>{article.title}</h3>
     <span class={blogArticleCard.excerpt}>{article.excerpt}</span>
-    <span class={blogArticleCard.label}>{by} {article.author.name}</span>
+    <span class={blogArticleCard.label}>{by} {article.authorName}</span>
   </div>
 </a>

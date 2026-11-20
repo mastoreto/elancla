@@ -1,20 +1,23 @@
 ---
+import type { PublicPostSummary } from '@ancla/content';
 import Button from 'src/components/ui/Button';
 import Pill from 'src/components/ui/Pill';
-import type { BlogArticle } from 'src/data/blog';
-import { getBlogArticlePath } from 'src/data/blog';
 import type { Locale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
 import BlogCover from 'src/sections/blog/components/BlogCover';
+import { formatBlogDate } from 'src/sections/blog/utils/formatBlogDate';
+import { getBlogArticlePath } from 'src/sections/blog/utils/getBlogArticlePath';
 import cn from 'src/utils/cn';
 
 interface Props {
-  article: BlogArticle | null;
+  article: PublicPostSummary | null;
   copy: any;
+  /** Unit of the reading time ("min"). */
+  minutes: string;
   locale: Locale;
 }
 
-const { article, copy, locale } = Astro.props;
+const { article, copy, minutes, locale } = Astro.props;
 const href = article ? localizePath(getBlogArticlePath(article), locale) : '';
 
 const blogFeatured = {
@@ -51,16 +54,16 @@ const blogFeatured = {
     href={href}
     class={blogFeatured.link}
   >
-      <BlogCover tint={article.tint} size="lg" class={blogFeatured.blogCover}>
+      <BlogCover cover={article.cover} size="lg" class={blogFeatured.blogCover}>
         <Pill tone="red">{copy.featured}</Pill>
       </BlogCover>
       <div class={blogFeatured.stack}>
-        <span class={blogFeatured.category}>{article.category} · {article.displayDate}</span>
+        <span class={blogFeatured.category}>{article.category.name} · {formatBlogDate(article.urlDate, locale)}</span>
         <h2 class={blogFeatured.articleTitle}>{article.title}</h2>
         <p class={blogFeatured.excerpt}>{article.excerpt}</p>
         <div class={blogFeatured.row}>
           <Button as="span" arrow>{copy.read}</Button>
-          <small class={blogFeatured.small}>{copy.by} {article.author.name} · {article.readTime}</small>
+          <small class={blogFeatured.small}>{copy.by} {article.authorName} · {article.readingMinutes} {minutes}</small>
         </div>
       </div>
     </a>

@@ -1,16 +1,22 @@
 ---
-import type { BlogSeriesItem } from 'src/data/blog';
+import type { PublicSeries } from '@ancla/content';
 import type { Locale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
+import { formatBlogDate } from 'src/sections/blog/utils/formatBlogDate';
+import { getBlogArticlePath } from 'src/sections/blog/utils/getBlogArticlePath';
 import cn from 'src/utils/cn';
 
+type SeriesItem = PublicSeries['items'][number];
+
 interface Props {
-  series: BlogSeriesItem[];
+  series: PublicSeries | null;
   copy: any;
+  /** Unit of the reading time ("min"). */
+  minutes: string;
   locale: Locale;
 }
 
-const { series, copy, locale } = Astro.props;
+const { series, copy, minutes, locale } = Astro.props;
 const statusLabel = {
   published: copy.published,
   current: copy.current,
@@ -18,7 +24,7 @@ const statusLabel = {
 };
 // Row look per status; the current one is highlighted and the upcoming ones are faded.
 const STATUS_TONE: Record<
-  BlogSeriesItem['status'],
+  SeriesItem['state'],
   { row: string; number: string; badge: string }
 > = {
   published: {
@@ -75,35 +81,43 @@ const blogSeries = {
 };
 ---
 
+{series && (
 <section class={blogSeries.container}>
   <div class={blogSeries.panel}>
     <div class={blogSeries.header}>
       <div>
-        <span class={blogSeries.counter}>{copy.counter} · {copy.eyebrow}</span>
+        <span class={blogSeries.counter}>{copy.counter} · {series.name}</span>
         <h3 class={blogSeries.headlineBefore}>
           {copy.headlineBefore}<em class={blogSeries.headlineEmphasis}>{copy.headlineEmphasis}</em></h3>
       </div>
-      <p class={blogSeries.body}>{copy.body}</p>
+      <p class={blogSeries.body}>{series.description ?? copy.body}</p>
     </div>
     {
-      series.map((item) => {
-        const Tag = item.status === 'next' ? 'div' : 'a';
-        const tone = STATUS_TONE[item.status];
+      series.items.map((item) => {
+        // A scheduled post has no page yet: only its title and date are shown.
+        const href = item.slug && item.urlDate
+          ? localizePath(getBlogArticlePath({ urlDate: item.urlDate, slug: item.slug }), locale)
+          : undefined;
+        const Tag = href ? 'a' : 'div';
+        const tone = STATUS_TONE[item.state];
         return (
           <Tag
-            href={item.status === 'next' ? undefined : localizePath(item.href, locale)}
-            class={cn(blogSeries.item, Tag === 'a' && blogSeries.itemLink, tone.row)}
+            href={href}
+            class={cn(blogSeries.item, href && blogSeries.itemLink, tone.row)}
           >
-            <span class={cn(blogSeries.itemNumber, tone.number)}>{item.number}</span>
+            <span class={cn(blogSeries.itemNumber, tone.number)}>{String(item.order).padStart(2, '0')}</span>
             <b class={blogSeries.itemTitle}>{item.title}</b>
-            <span class={blogSeries.itemReference}>{item.reference}</span>
-            <span class={blogSeries.itemDate}>{item.date}</span>
+            <span class={blogSeries.itemReference}>
+              {item.readingMinutes ? `${item.readingMinutes} ${minutes}` : ''}
+            </span>
+            <span class={blogSeries.itemDate}>{formatBlogDate(item.urlDate ?? item.publishedAt, locale, 'compact')}</span>
             <span
               class={cn(blogSeries.itemStatus, tone.badge)}
-            >{statusLabel[item.status]}</span>
+            >{statusLabel[item.state]}</span>
           </Tag>
         );
       })
     }
   </div>
 </section>
+)}

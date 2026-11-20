@@ -168,6 +168,11 @@
   --color-obra-white: #ffffff; /* stays white in dark mode, unlike `white` (see the .dark overrides) */
   --color-obra-red: #a8141b;
   --color-obra-red-live: #ff2e34;
+  /* Blog design covers: the four tones of the editorial seeds (`BLOG_COVER_TINTS` keys). */
+  --color-cover-paper: #efebe3;
+  --color-cover-cream: #f0e9dd;
+  --color-cover-stone: #e6e4dd;
+  --color-cover-sand: #e9e2d4;
   /* Hover fill of the dark CTAs (`styles/classes/cta.ts`). */
   --color-coal: #0a0a0a;
 

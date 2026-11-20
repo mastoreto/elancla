@@ -54,7 +54,8 @@
   },
   "articles": {
     "by": "By",
-    "loadMore": "Load more"
+    "loadMore": "Load more",
+    "minutes": "min"
   },
   "series": {
     "counter": "[ 04 — Ongoing series ]",
@@ -89,6 +90,9 @@
     "backToBlog": "Back to blog",
     "toc": "In this article",
     "words": "words",
-    "reading": "Reading"
+    "reading": "Reading",
+    "edition": "Edition",
+    "articlesCount": "articles",
+    "tags": "Tags"
   }
 }

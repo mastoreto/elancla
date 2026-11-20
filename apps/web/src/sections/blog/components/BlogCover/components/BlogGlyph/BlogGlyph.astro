@@ -1,0 +1,46 @@
+---
+import type { PublicBlogCover } from '@ancla/content';
+// Artwork of the design covers. `BLOG_COVER_GLYPHS` are keys: the drawing is owned here, so the
+// CRM only stores which one to show. All of them are filled shapes in `currentColor` on a 64 grid.
+import AnchorMark from 'src/components/AnchorMark';
+
+type Glyph = Extract<PublicBlogCover, { kind: 'design' }>['glyph'];
+
+interface Props {
+  glyph: Glyph;
+  class?: string;
+}
+
+const { glyph, class: className } = Astro.props;
+
+// Each value is the inside of the <svg>; `evenodd` lets a subpath cut a hole in the shape.
+const GLYPH_SHAPES: Record<Exclude<Glyph, 'anchor'>, string> = {
+  cross: 'M27 6h10v18h18v10H37v24H27V34H9V24h18z',
+  book: 'M32 14C25 9 15 8 6 10v38c9-2 19-1 26 4 7-5 17-6 26-4V10c-9-2-19-1-26 4zM30 18v30c-6-3-13-4-20-3V14c7-1 14 0 20 4zm4 0c6-4 13-5 20-4v31c-7-1-14 0-20 3z',
+  dove: 'M8 38c9 3 16-1 20-8 2-7 8-12 15-12l9-8-1 11c3 3 5 7 5 12 0 12-9 20-22 20-9 0-16-5-19-12-3-1-5-2-7-3z',
+  flame:
+    'M32 5c3 11 15 17 15 33a15 15 0 0 1-30 0c0-9 5-13 9-18 0 7 3 9 6 9-3-9-3-17 0-24z',
+  lamp: 'M6 36c0 9 9 16 20 16h6c9 0 16-5 16-12l8-7-7-6H28c-4-4-10-5-17-3zM47 8c-4 5-4 9 0 11 4-2 4-6 0-11z',
+  wheat:
+    'M31 58V22h2v36zM32 4c4 5 5 10 0 15-5-5-4-10 0-15zM20 14c6 1 9 5 9 11-6-1-9-5-9-11zM44 14c0 6-3 10-9 11 0-6 3-10 9-11zM18 30c6 1 10 5 11 11-6-1-10-5-11-11zM46 30c-1 6-5 10-11 11 1-6 5-10 11-11z',
+  water:
+    'M32 5C24 18 14 28 14 40a18 18 0 0 0 36 0C50 28 40 18 32 5zM23 40c0 5 4 9 9 9v4c-7 0-13-6-13-13z',
+  path: 'M27 6h10l17 52H10zM31 14h2v8h-2zM30 28h4v10h-4zM29 44h6v10h-6z',
+  bread:
+    'M8 30c0-10 11-18 24-18s24 8 24 18c0 3-2 5-4 6v16H12V36c-2-1-4-3-4-6zM20 28l3-3 6 8-3 3zM32 24l3-3 6 8-3 3z',
+};
+
+const blogGlyph = {
+  svg: className,
+};
+---
+
+{
+  glyph === 'anchor' ? (
+    <AnchorMark id="blog-glyph" outline={false} class={blogGlyph.svg} />
+  ) : (
+    <svg viewBox="0 0 64 64" class={blogGlyph.svg} aria-hidden="true" focusable="false">
+      <path d={GLYPH_SHAPES[glyph]} fill="currentColor" fill-rule="evenodd" />
+    </svg>
+  )
+}

@@ -1,14 +1,19 @@
 ---
-// Cover placeholder shared by cards, featured and article: tinted block + faint anchor.
-// Slot = pills shown top-left. (Swap for a real <img class={PHOTO}> once articles carry a photo.)
-import AnchorMark from 'src/components/AnchorMark';
+// Cover shared by cards, featured and article: the photo of the post, or a design cover (tinted
+// block + faint glyph). A photo that is not ready arrives as `null` and gets the default design.
+// Slot = pills shown top-left.
+import type { PublicBlogCover } from '@ancla/content';
 import cn from 'src/utils/cn';
+import BlogGlyph from './components/BlogGlyph';
 
 type CoverSize = 'sm' | 'lg' | 'hero';
+type DesignCover = Extract<PublicBlogCover, { kind: 'design' }>;
 
 interface Props {
-  tint: string;
+  cover: PublicBlogCover | null;
   size?: CoverSize;
+  /** The cover of the hero is the LCP: it loads first instead of lazily. */
+  priority?: boolean;
   class?: string;
 }
 
@@ -21,28 +26,58 @@ const SIZE: Record<CoverSize, { box: string; pills: string; ghost: string }> = {
     ghost: 'w-[clamp(90px,10vw,150px)]',
   },
 };
+// Full class names so Tailwind finds them: they read the `--color-cover-*` tokens of the theme.
+const TINT: Record<DesignCover['tint'], string> = {
+  paper: 'bg-cover-paper',
+  cream: 'bg-cover-cream',
+  stone: 'bg-cover-stone',
+  sand: 'bg-cover-sand',
+};
+const DEFAULT_COVER: DesignCover = {
+  kind: 'design',
+  glyph: 'anchor',
+  tint: 'paper',
+};
 
-const { tint, size = 'sm', class: className } = Astro.props;
+const { cover, size = 'sm', priority = false, class: className } = Astro.props;
 const { box, pills, ghost } = SIZE[size];
+const shown = cover ?? DEFAULT_COVER;
 
 const blogCover = {
   container: cn(
-    'relative flex items-end justify-end overflow-hidden bg-(--tint)',
+    'relative flex items-end justify-end overflow-hidden',
     box,
+    shown.kind === 'design' && TINT[shown.tint],
     className
   ),
-  category: cn('absolute flex gap-2', pills),
+  photo: cn('absolute inset-0 size-full object-cover'),
+  category: cn('absolute z-1 flex gap-2', pills),
   markBox: cn('block text-obra-red opacity-16', ghost),
   mark: cn('block h-auto w-full'),
 };
 ---
 
-<div
-  class={blogCover.container}
-  style={`--tint: ${tint}`}
->
+<div class={blogCover.container}>
+  {
+    shown.kind === 'photo' && (
+      <img
+        class={blogCover.photo}
+        src={shown.image.url}
+        width={shown.image.width}
+        height={shown.image.height}
+        alt={shown.alt}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchpriority={priority ? 'high' : undefined}
+        decoding="async"
+      />
+    )
+  }
   <span class={blogCover.category}><slot /></span>
-  <span class={blogCover.markBox}>
-    <AnchorMark id="blog-cover" outline={false} class={blogCover.mark} />
-  </span>
+  {
+    shown.kind === 'design' && (
+      <span class={blogCover.markBox}>
+        <BlogGlyph glyph={shown.glyph} class={blogCover.mark} />
+      </span>
+    )
+  }
 </div>
