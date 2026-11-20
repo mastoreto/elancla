@@ -491,6 +491,62 @@ const rows: MatrixRow[] = [
     expected: 400,
   },
 
+  // visit page content: view reads, edit writes.
+  ...(
+    [
+      ["GET", undefined],
+      ["PUT", { directions: {}, faqs: [] }],
+    ] as const
+  ).flatMap(([method, body]): MatrixRow[] => [
+    {
+      who: "anonymous",
+      caller: "anonymous",
+      method,
+      path: "/site/visit",
+      body,
+      expected: 401,
+    },
+    {
+      who: "no role",
+      caller: NOTHING,
+      method,
+      path: "/site/visit",
+      body,
+      expected: 403,
+    },
+  ]),
+  {
+    who: PERMISSIONS.visit.view,
+    caller: [grant(PERMISSIONS.visit.view)],
+    method: "GET",
+    path: "/site/visit",
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.visit.view,
+    caller: [grant(PERMISSIONS.visit.view)],
+    method: "PUT",
+    path: "/site/visit",
+    body: { directions: {}, faqs: [] },
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.visit.edit,
+    caller: [grant(PERMISSIONS.visit.edit)],
+    method: "GET",
+    path: "/site/visit",
+    expected: 403,
+  },
+  {
+    // `{}` never reaches the use case: a 400 proves the guard let the caller through.
+    who: PERMISSIONS.visit.edit,
+    caller: [grant(PERMISSIONS.visit.edit)],
+    method: "PUT",
+    path: "/site/visit",
+    body: {},
+    expected: 400,
+  },
+
   // people profiles: view reads, create/edit/delete write. A `{}` body never reaches the use case,
   // so a 400 (or the 404 of an unknown id) proves the guard let the caller through.
   ...(

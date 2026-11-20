@@ -225,6 +225,7 @@ describe("GET /api/public/v1/openapi.json", () => {
     expect(Object.keys(document.paths)).toEqual([
       "/{churchSlug}/settings",
       "/{churchSlug}/people",
+      "/{churchSlug}/visit",
     ]);
   });
 });

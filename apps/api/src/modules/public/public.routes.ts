@@ -3,6 +3,7 @@ import {
   publicPeopleQuery,
   publicPersonDto,
   publicSiteSettingsDto,
+  publicVisitDto,
 } from "@ancla/contracts";
 import { createRoute, z } from "@hono/zod-openapi";
 import { allowPublic } from "../../core/authz";
@@ -13,7 +14,11 @@ import {
   publicOpenApiConfig,
 } from "../../core/openapi";
 import { requireSiteKey } from "./guards";
-import { getPublicPeople, getPublicSiteSettings } from "./useCases";
+import {
+  getPublicPeople,
+  getPublicSiteSettings,
+  getPublicVisit,
+} from "./useCases";
 
 /** Content is public by nature: the CDN may keep it a minute and serve it stale for five more. */
 export const PUBLIC_CACHE_CONTROL =
@@ -61,6 +66,24 @@ const peopleRoute = createRoute({
   },
 });
 
+const visitRoute = createRoute({
+  method: "get",
+  path: "/{churchSlug}/visit",
+  tags: ["visit"],
+  summary:
+    "The directions and FAQ of the visit page, in the requested language.",
+  middleware: [requireSiteKey],
+  request: { params: churchParams, query: publicLocaleQuery },
+  responses: {
+    200: jsonResponse("The visit page content", publicVisitDto),
+    400: problemResponse("The locale is not valid"),
+    401: problemResponse(
+      "The site key is missing, invalid or not for this church",
+    ),
+    404: problemResponse("The church was not found"),
+  },
+});
+
 export const publicRoutes = createRouter()
   .openapi(settingsRoute, async (c) => {
     const { organizationId } = c.get("ctx");
@@ -81,6 +104,15 @@ export const publicRoutes = createRouter()
     });
     c.header("Cache-Control", PUBLIC_CACHE_CONTROL);
     return c.json(people, 200);
+  })
+  .openapi(visitRoute, async (c) => {
+    const { organizationId } = c.get("ctx");
+    const visit = await getPublicVisit({
+      organizationId: organizationId as string,
+      requestedLocale: c.req.valid("query").locale,
+    });
+    c.header("Cache-Control", PUBLIC_CACHE_CONTROL);
+    return c.json(visit, 200);
   });
 
 // The document describes only these routes (this router's registry), never the private ones.

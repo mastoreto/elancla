@@ -61,3 +61,38 @@ export function findVisiblePeopleInContext(input: {
 export type PublicPersonRow = Awaited<
   ReturnType<typeof findVisiblePeopleInContext>
 >[number];
+
+/** The visit page: direction texts and FAQ (in order) in the two languages the response can use. */
+export async function findVisitContent(
+  organizationId: string,
+  locales: string[],
+) {
+  const tenantDb = forOrganization(db, organizationId);
+  const [settings, faqs] = await Promise.all([
+    tenantDb.siteSettings.findFirst({
+      select: {
+        translations: {
+          where: { locale: { in: locales } },
+          select: {
+            locale: true,
+            directionsParking: true,
+            directionsTransit: true,
+            directionsAccessibility: true,
+          },
+        },
+      },
+    }),
+    tenantDb.visitFaq.findMany({
+      orderBy: [{ order: "asc" }, { id: "asc" }],
+      select: {
+        translations: {
+          where: { locale: { in: locales } },
+          select: { locale: true, question: true, answer: true },
+        },
+      },
+    }),
+  ]);
+  return { settings, faqs };
+}
+
+export type PublicVisitRows = Awaited<ReturnType<typeof findVisitContent>>;
