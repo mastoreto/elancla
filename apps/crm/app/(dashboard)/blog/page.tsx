@@ -1,11 +1,18 @@
-import { BlogPageContent } from "./components/blog-page-content";
-import { blogPosts } from "./data/blog-seeds";
-import type { BlogConfig } from "./types";
+import { notFound } from "next/navigation";
+import { createServerApiClient } from "@/lib/api/createServerApiClient";
+import { BlogListPageContent } from "./components/blog-list-page-content";
 
-// Operational state of the public-facing blog as a whole (seed default).
-const BLOG_CONFIG: BlogConfig = { status: "live" };
+const HTTP_FORBIDDEN = 403;
 
 /** biome-ignore lint/style/noDefaultExport: Next.js App Router page files require default exports. */
-export default function BlogPage() {
-  return <BlogPageContent config={BLOG_CONFIG} posts={blogPosts} />;
+export default async function BlogPage() {
+  const api = await createServerApiClient();
+  const response = await api.content.posts.$get();
+
+  // Like the proxy, a role without `blogPosts:view` does not learn the section exists.
+  if (response.status === HTTP_FORBIDDEN) notFound();
+  if (!response.ok) throw new Error(`Could not load the posts (${response.status})`);
+
+  const { items } = await response.json();
+  return <BlogListPageContent posts={items} />;
 }

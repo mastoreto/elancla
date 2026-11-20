@@ -107,8 +107,8 @@ const routeMeta: RouteMeta[] = [
     internalRoute: churchToDashboardRouteMap.blog,
     section: "Contenido",
     title: "Blog",
-    ctaLabel: "Nuevo post",
-    ctaHref: getChurchRoutePath("blog", "new"),
+    ctaLabel: "Categorías y series",
+    ctaHref: getChurchRoutePath("blog", "taxonomy"),
   },
   {
     route: "podcasts",
