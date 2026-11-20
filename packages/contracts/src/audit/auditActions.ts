@@ -58,6 +58,17 @@ export const AUDIT_ACTIONS = {
   },
   visit: { updated: "visit.updated" },
   simplePage: { created: "simplePage.created" },
+  post: { created: "post.created" },
+  category: {
+    created: "category.created",
+    updated: "category.updated",
+    deleted: "category.deleted",
+  },
+  series: {
+    created: "series.created",
+    updated: "series.updated",
+    deleted: "series.deleted",
+  },
   media: {
     uploadRequested: "media.upload.requested",
     finalized: "media.finalized",

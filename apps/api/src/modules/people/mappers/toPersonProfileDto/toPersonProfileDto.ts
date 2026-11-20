@@ -1,4 +1,4 @@
-import type { PersonProfileDto } from "@ancla/contracts";
+import { type PersonProfileDto, personStatsDto } from "@ancla/contracts";
 import { toMediaFileDto } from "../../../media";
 import type { PersonRow } from "../../data";
 import { CONTEXT_FROM_DB } from "../../domain";
@@ -23,7 +23,10 @@ export function toPersonProfileDto(
         visible: role.visible,
         order: role.order,
         translations: Object.fromEntries(
-          role.translations.map(({ locale, title }) => [locale, { title }]),
+          role.translations.map(({ locale, title, stats }) => [
+            locale,
+            { title, stats: personStatsDto.parse(stats) },
+          ]),
         ),
       })),
   };

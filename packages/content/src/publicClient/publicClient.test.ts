@@ -136,6 +136,7 @@ describe("createPublicClient", () => {
       photo: null,
       bio: null,
       title: null,
+      stats: [],
     };
     const client = createPublicClient({
       baseUrl: "https://crm.example.org",

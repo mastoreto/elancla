@@ -10,5 +10,10 @@ export {
   type RichTextDoc,
   type RichTextInline,
   type RichTextMark,
+  type RichTextParagraph,
+  richTextBlockSchema,
+  richTextBoundedInput,
   richTextDocSchema,
+  richTextInlineSchema,
+  richTextParagraphSchema,
 } from "./richTextDoc";

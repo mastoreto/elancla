@@ -14,3 +14,11 @@ export {
   type UpsertPersonProfileBody,
   upsertPersonProfileBody,
 } from "./personProfileDto";
+export {
+  PERSON_STAT_LABEL_MAX_LENGTH,
+  PERSON_STAT_VALUE_MAX_LENGTH,
+  PERSON_STATS_MAX_COUNT,
+  type PersonStatDto,
+  personStatDto,
+  personStatsDto,
+} from "./personStatDto";

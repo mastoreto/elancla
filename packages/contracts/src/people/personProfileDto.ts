@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { mediaFileDto } from "../media";
+import { personStatsDto } from "./personStatDto";
 
 /** Where a public profile is shown. Query-string spelling; the API maps it to the DB enum. */
 export const PERSON_CONTEXTS = [
@@ -20,6 +21,8 @@ const bioTranslationDto = z.strictObject({
 });
 const titleTranslationDto = z.strictObject({
   title: z.string().trim().min(1).max(PERSON_TITLE_MAX_LENGTH),
+  /** Free-form figures of the role ("estadísticas libres"); empty when there are none. */
+  stats: personStatsDto.default([]),
 });
 
 const personRoleFields = {
