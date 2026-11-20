@@ -2,6 +2,7 @@ import { createAuthRouter } from "./core/auth";
 import { createApp, createRouter } from "./core/createApp";
 import { openApiConfig } from "./core/openapi";
 import { auditRoutes } from "./modules/audit";
+import { editorialRoutes } from "./modules/editorial";
 import { healthRoutes } from "./modules/health";
 import { invitationsRoutes } from "./modules/identity/invitations";
 import { rolesRoutes } from "./modules/identity/roles";
@@ -24,6 +25,7 @@ const routes = createRouter()
   .route("/", mediaRoutes)
   .route("/", mediaInternalRoutes)
   .route("/", siteKeysRoutes)
+  .route("/", editorialRoutes)
   .route("/public/v1", publicRoutes);
 
 // Better Auth is mounted next to the typed routes but kept out of `AppType`: it has its own client.

@@ -1,0 +1,1 @@
+export { requireEditorialPermission } from "./requireEditorialPermission";

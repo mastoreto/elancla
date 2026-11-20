@@ -1,0 +1,11 @@
+export { approve } from "./approve";
+export { getEditorialSettings } from "./getEditorialSettings";
+export { getEditorialStatus } from "./getEditorialStatus";
+export { getInbox } from "./getInbox";
+export { listHistory } from "./listHistory";
+export { pause } from "./pause";
+export { publish } from "./publish";
+export { requestChanges } from "./requestChanges";
+export { saveDraft } from "./saveDraft";
+export { submit } from "./submit";
+export { updateEditorialSettings } from "./updateEditorialSettings";
