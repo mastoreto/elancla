@@ -28,7 +28,7 @@ export const ROUTE_PERMISSIONS = {
   voting: [PERMISSIONS.voting.view],
   assembly: [PERMISSIONS.voting.view],
   reports: [PERMISSIONS.reports.view],
-  website: [PERMISSIONS.content.view],
+  website: [PERMISSIONS.site.view],
   blog: [PERMISSIONS.content.view],
   podcasts: [PERMISSIONS.content.view],
   sermons: [PERMISSIONS.content.view],

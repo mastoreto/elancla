@@ -1,18 +1,18 @@
 "use client";
 
+import type { SiteSettingsDto } from "@ancla/contracts";
 import { Link2, Mic, Video } from "lucide-react";
-import { useState, useTransition } from "react";
-import { toast } from "sonner";
-import { BoardButton } from "@/components/dashboard/board/board-button";
+import { useState } from "react";
 import { BoardCard, BoardCardHeader } from "@/components/dashboard/board/board-card";
 import { BoardInput } from "@/components/dashboard/board/board-form";
 import { cn } from "@/lib/utils";
-import { updateSocialLinks } from "../actions";
+import { useSaveSiteSettings } from "../../hooks/useSaveSiteSettings";
+import { toNullableText } from "../../utils/toNullableText";
+import { CardSaveFooter } from "../card-save-footer";
 
-const socialLinksSectionWebsitePage = {
+const socialLinksCardWebsitePage = {
   grid: cn("grid gap-3.5 md:grid-cols-2"),
   icon: cn("size-[18px] shrink-0 text-[var(--tinta-apagada)]"),
-  footer: cn("mt-3.5 flex justify-end"),
 };
 
 const PLATFORMS = [
@@ -50,31 +50,33 @@ const PLATFORMS = [
 ] as const;
 
 type PlatformKey = (typeof PLATFORMS)[number]["key"];
-type SocialLinks = Record<PlatformKey | "website", string>;
+type SocialLinks = Record<PlatformKey, string>;
+type SocialSettings = Pick<SiteSettingsDto, PlatformKey | "version">;
 
-export function SocialLinksSection({ initialLinks }: { initialLinks: SocialLinks }) {
-  const [links, setLinks] = useState<SocialLinks>(initialLinks);
-  const [isPending, startTransition] = useTransition();
-  const isDirty = PLATFORMS.some(({ key }) => links[key] !== initialLinks[key]);
+interface SocialLinksCardProps {
+  settings: SocialSettings;
+}
 
-  const save = () => {
-    startTransition(async () => {
-      try {
-        await updateSocialLinks(links);
-        toast.success("Redes sociales actualizadas");
-      } catch {
-        toast.error("Revisa las URLs: no se pudieron guardar las redes sociales");
-      }
-    });
-  };
+export function SocialLinksCard({ settings }: SocialLinksCardProps) {
+  const [links, setLinks] = useState<SocialLinks>(
+    () => Object.fromEntries(PLATFORMS.map(({ key }) => [key, settings[key] ?? ""])) as SocialLinks,
+  );
+  const { canEdit, saving, save } = useSaveSiteSettings(settings.version);
+
+  const submit = () =>
+    save(
+      Object.fromEntries(PLATFORMS.map(({ key }) => [key, toNullableText(links[key])])),
+      "Redes sociales actualizadas",
+    );
 
   return (
     <BoardCard>
       <BoardCardHeader subtitle="Enlaces que aparecen en el pie del sitio" title="Redes sociales" />
-      <div className={socialLinksSectionWebsitePage.grid}>
+      <div className={socialLinksCardWebsitePage.grid}>
         {PLATFORMS.map(({ key, label, placeholder, icon: Icon }) => (
           <BoardInput
-            icon={<Icon aria-hidden="true" className={socialLinksSectionWebsitePage.icon} />}
+            disabled={!canEdit}
+            icon={<Icon aria-hidden="true" className={socialLinksCardWebsitePage.icon} />}
             id={`social-${key}`}
             key={key}
             label={label}
@@ -87,13 +89,7 @@ export function SocialLinksSection({ initialLinks }: { initialLinks: SocialLinks
           />
         ))}
       </div>
-      {isDirty ? (
-        <div className={socialLinksSectionWebsitePage.footer}>
-          <BoardButton disabled={isPending} onClick={save} variant="primary">
-            {isPending ? "Guardando…" : "Guardar cambios"}
-          </BoardButton>
-        </div>
-      ) : null}
+      <CardSaveFooter canEdit={canEdit} onSave={() => void submit()} saving={saving} />
     </BoardCard>
   );
 }
