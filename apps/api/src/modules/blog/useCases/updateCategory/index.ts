@@ -1,0 +1,1 @@
+export { updateCategory } from "./updateCategory";

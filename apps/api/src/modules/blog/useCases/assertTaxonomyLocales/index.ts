@@ -1,0 +1,1 @@
+export { assertTaxonomyLocales } from "./assertTaxonomyLocales";

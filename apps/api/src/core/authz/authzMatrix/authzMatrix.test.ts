@@ -752,6 +752,123 @@ const rows: MatrixRow[] = [
     expected: 403,
   },
 
+  // blog: posts are created with content.posts:create; categories and series are plain data
+  // (not editorial) guarded by the same resource: view lists, edit creates, edits and deletes.
+  ...(
+    [
+      ["GET", "/content/posts", undefined],
+      ["POST", "/content/posts", undefined],
+      ["GET", "/content/categories", undefined],
+      ["POST", "/content/categories", {}],
+      ["PATCH", `/content/categories/${UNKNOWN_ID}`, {}],
+      ["DELETE", `/content/categories/${UNKNOWN_ID}`, undefined],
+      ["GET", "/content/series", undefined],
+      ["POST", "/content/series", {}],
+      ["PATCH", `/content/series/${UNKNOWN_ID}`, {}],
+      ["DELETE", `/content/series/${UNKNOWN_ID}`, undefined],
+    ] as const
+  ).flatMap(([method, path, body]): MatrixRow[] => [
+    {
+      who: "anonymous",
+      caller: "anonymous",
+      method,
+      path,
+      body,
+      expected: 401,
+    },
+    { who: "no role", caller: NOTHING, method, path, body, expected: 403 },
+  ]),
+  {
+    who: PERMISSIONS.blogPosts.view,
+    caller: [grant(PERMISSIONS.blogPosts.view)],
+    method: "GET",
+    path: "/content/posts",
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.blogPosts.view,
+    caller: [grant(PERMISSIONS.blogPosts.view)],
+    method: "POST",
+    path: "/content/posts",
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.blogPosts.create,
+    caller: [grant(PERMISSIONS.blogPosts.create)],
+    method: "GET",
+    path: "/content/posts",
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.blogPosts.create,
+    caller: [grant(PERMISSIONS.blogPosts.create)],
+    method: "POST",
+    path: "/content/posts",
+    expected: 201,
+  },
+  ...(["categories", "series"] as const).flatMap((resource): MatrixRow[] => [
+    {
+      who: PERMISSIONS.blogPosts.view,
+      caller: [grant(PERMISSIONS.blogPosts.view)],
+      method: "GET",
+      path: `/content/${resource}`,
+      expected: 200,
+    },
+    {
+      who: PERMISSIONS.blogPosts.view,
+      caller: [grant(PERMISSIONS.blogPosts.view)],
+      method: "POST",
+      path: `/content/${resource}`,
+      body: {},
+      expected: 403,
+    },
+    {
+      who: PERMISSIONS.blogPosts.view,
+      caller: [grant(PERMISSIONS.blogPosts.view)],
+      method: "PATCH",
+      path: `/content/${resource}/${UNKNOWN_ID}`,
+      body: {},
+      expected: 403,
+    },
+    {
+      who: PERMISSIONS.blogPosts.view,
+      caller: [grant(PERMISSIONS.blogPosts.view)],
+      method: "DELETE",
+      path: `/content/${resource}/${UNKNOWN_ID}`,
+      expected: 403,
+    },
+    {
+      who: PERMISSIONS.blogPosts.edit,
+      caller: [grant(PERMISSIONS.blogPosts.edit)],
+      method: "GET",
+      path: `/content/${resource}`,
+      expected: 403,
+    },
+    {
+      who: PERMISSIONS.blogPosts.edit,
+      caller: [grant(PERMISSIONS.blogPosts.edit)],
+      method: "POST",
+      path: `/content/${resource}`,
+      body: {},
+      expected: 400,
+    },
+    {
+      who: PERMISSIONS.blogPosts.edit,
+      caller: [grant(PERMISSIONS.blogPosts.edit)],
+      method: "PATCH",
+      path: `/content/${resource}/${UNKNOWN_ID}`,
+      body: {},
+      expected: 400,
+    },
+    {
+      who: PERMISSIONS.blogPosts.edit,
+      caller: [grant(PERMISSIONS.blogPosts.edit)],
+      method: "DELETE",
+      path: `/content/${resource}/${UNKNOWN_ID}`,
+      expected: 404,
+    },
+  ]),
+
   // media: the permission is the one of the file's purpose (content:create, vouchers:create...).
   {
     who: "anonymous",
