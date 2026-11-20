@@ -38,6 +38,14 @@ export function BlogEditorToolbar({ editor }: BlogEditorToolbarProps) {
   };
   const insert = (content: Record<string, unknown>) =>
     editor.chain().focus().insertContent(content).run();
+  // An inserted atom stays selected, so the next insertion would replace it: a trailing paragraph
+  // takes the cursor and keeps consecutive atoms (figure, video, links) from eating each other.
+  const insertAtom = (content: Record<string, unknown>) =>
+    editor
+      .chain()
+      .focus()
+      .insertContent([content, { type: "paragraph" }])
+      .run();
 
   return (
     <>
@@ -106,17 +114,17 @@ export function BlogEditorToolbar({ editor }: BlogEditorToolbarProps) {
       />
       <FigureDialog
         onOpenChange={close}
-        onSubmit={(attrs) => insert({ type: "figure", attrs })}
+        onSubmit={(attrs) => insertAtom({ type: "figure", attrs })}
         open={dialog === "figure"}
       />
       <VideoDialog
         onOpenChange={close}
-        onSubmit={(attrs) => insert({ type: "video", attrs })}
+        onSubmit={(attrs) => insertAtom({ type: "video", attrs })}
         open={dialog === "video"}
       />
       <LinkCardsDialog
         onOpenChange={close}
-        onSubmit={(items) => insert({ type: "linkCards", attrs: { items } })}
+        onSubmit={(items) => insertAtom({ type: "linkCards", attrs: { items } })}
         open={dialog === "linkCards"}
       />
     </>

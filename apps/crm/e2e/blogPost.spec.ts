@@ -18,6 +18,7 @@ const E2E_EDITOR_NAME = "E2E Editor";
 const RUN_ID = Date.now().toString(36);
 const CATEGORY_NAME = `Categoria e2e ${RUN_ID}`;
 const AUTHOR_NAME = `Autor e2e ${RUN_ID}`;
+const LINK_CARD_HREF = "https://example.com/e2e";
 const VERSE_TEXT = `La fe es la certeza ${RUN_ID}`;
 const VERSE_REFERENCE = `Hebreos 11:${RUN_ID.length}`;
 
@@ -81,6 +82,14 @@ async function insertVideo(page: Page): Promise<void> {
   await page.getByRole("dialog").getByRole("button", { name: "Insertar" }).click();
 }
 
+/** Inserts one link card right after the video: consecutive atoms must not replace each other. */
+async function insertLinkCard(page: Page): Promise<void> {
+  await page.getByTitle("Tarjetas de enlaces").click();
+  await page.getByRole("dialog").getByLabel("Título").first().fill("Un enlace");
+  await page.getByRole("dialog").getByLabel("Enlace", { exact: true }).first().fill(LINK_CARD_HREF);
+  await page.getByRole("dialog").getByRole("button", { name: "Insertar" }).click();
+}
+
 /** Creates a post from the list, fills the Spanish content and saves it as a draft. */
 async function createPostDraft(page: Page, draft: PostDraft): Promise<string> {
   await page.goto(BLOG_ROUTE);
@@ -97,6 +106,7 @@ async function createPostDraft(page: Page, draft: PostDraft): Promise<string> {
   if (draft.withBlocks) {
     await insertVerse(page, body);
     await insertVideo(page);
+    await insertLinkCard(page);
   }
 
   await pickOption(page, "#post-author", AUTHOR_NAME);
@@ -191,6 +201,7 @@ test("a published post shows on the web with its nodes and counts one view; sche
   expect(article).toContain(VERSE_REFERENCE);
   expect(article).toContain(VERSE_TEXT);
   expect(article).toContain(`youtube-nocookie.com/embed/${YOUTUBE_ID}`);
+  expect(article).toContain(`href="${LINK_CARD_HREF}"`);
 
   // Two readers in the same day, from the same address and browser: one view.
   await readArticle(browser, articleRoute);
