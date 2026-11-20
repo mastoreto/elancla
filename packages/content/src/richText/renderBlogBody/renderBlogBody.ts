@@ -115,7 +115,7 @@ function renderVideo(node: Dict): string {
   );
   return (
     `<figure class="blog-video"><div class="blog-video-frame">` +
-    `<iframe src="${YOUTUBE_EMBED_URL}${id}" title="${escapeHtml(title)}" loading="lazy" allow="${VIDEO_ALLOW}" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>` +
+    `<iframe src="${YOUTUBE_EMBED_URL}${id}" title="${escapeHtml(title)}" loading="lazy" allow="${VIDEO_ALLOW}" referrerpolicy="strict-origin-when-cross-origin"></iframe>` +
     `</div>${caption}</figure>`
   );
 }
