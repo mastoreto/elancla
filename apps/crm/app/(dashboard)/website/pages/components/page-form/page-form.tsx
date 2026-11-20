@@ -14,11 +14,11 @@ import { EditorialStatusBar } from "@/components/editorial/editorial-status-bar"
 import { useAccess } from "@/lib/authz/AccessProvider";
 import { can } from "@/lib/authz/can";
 import { getChurchRoutePath } from "@/lib/church";
+import { slugify } from "@/lib/slugify";
 import { cn } from "@/lib/utils";
 import { useSavePageDraft } from "../../hooks/useSavePageDraft";
 import type { PageFormValues, PageTranslationValues, SiteLocales } from "../../types";
 import { toPageFormValues, toPageSnapshot } from "../../utils/pageFormValues";
-import { slugify } from "../../utils/slugify";
 import { hasPageFormErrors, validatePageForm } from "../../utils/validatePageForm";
 import { PageTranslationFields } from "../page-translation-fields";
 
