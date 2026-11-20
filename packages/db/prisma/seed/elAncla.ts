@@ -25,8 +25,18 @@ export const EL_ANCLA_SITE_SETTINGS = {
   geoLng: -56.161429,
   themeColor: "#ff2e34",
   founded: "1997",
-  serviceTimesSummary: "Su 11:15-13:00",
+  serviceTimes: [
+    { kind: "worship", weekday: 0, start: "11:15", end: "13:00" },
+    { kind: "bibleSchool", weekday: 0, start: "10:00", end: null },
+  ],
   youtube: "https://youtube.com/@iglesiaelanclauy",
   instagram: "https://www.instagram.com/iglesiaelancla",
   facebook: "https://www.facebook.com/iglesiabautistaelancla",
+} as const;
+
+/** Default meta description per locale; hours and address are composed by the web from the data. */
+export const EL_ANCLA_SEO_DESCRIPTIONS = {
+  es: "Iglesia Bautista El Ancla en Montevideo: una comunidad cristiana centrada en el evangelio. Reflexiones, ministerios y vida en comunidad.",
+  en: "El Ancla Baptist Church in Montevideo: a Christian community centered on the gospel. Reflections, ministries and life together.",
+  pt: "Igreja Batista El Ancla em Montevidéu: uma comunidade cristã centrada no evangelho. Reflexões, ministérios e vida em comunidade.",
 } as const;
