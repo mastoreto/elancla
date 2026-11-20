@@ -11,6 +11,8 @@ const apiEnvSchema = z.object({
   GOOGLE_CLIENT_SECRET: z.string().default(""),
   SMTP_URL: z.string().min(1),
   MAIL_FROM: z.string().min(1),
+  // Secret of the anonymous post-view hash (HMAC of day + ip + user agent).
+  VIEW_HASH_SECRET: z.string().min(32),
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),

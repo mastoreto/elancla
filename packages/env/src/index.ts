@@ -13,6 +13,8 @@ export const env = createEnv({
     // Better Auth (apps/admin). Requeridas en runtime del backoffice.
     BETTER_AUTH_SECRET: z.string().min(32).optional(),
     BETTER_AUTH_URL: z.string().url().optional(),
+    // Secreto del hash anónimo de visitas del blog (API).
+    VIEW_HASH_SECRET: z.string().min(32).optional(),
   },
   client: {
     // URL base del admin para el authClient (Better Auth en el browser).
@@ -23,6 +25,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+    VIEW_HASH_SECRET: process.env.VIEW_HASH_SECRET,
     NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
   },
   emptyStringAsUndefined: true,

@@ -170,6 +170,7 @@ services:
       S3_PUBLIC_SECRET: ${S3_PUBLIC_SECRET:-ancla-public-secret}
       MEDIA_PUBLIC_BASE_URL: ${MEDIA_PUBLIC_BASE_URL:-http://localhost:9000/ancla-public}
       CRON_SECRET: ${CRON_SECRET:?define CRON_SECRET en .env}
+      VIEW_HASH_SECRET: ${VIEW_HASH_SECRET:?define VIEW_HASH_SECRET en .env}
     depends_on:
       db:
         condition: service_healthy
