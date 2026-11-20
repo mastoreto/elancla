@@ -1,15 +1,20 @@
 import {
   type PersonContext,
+  type PublicBlogIndexDto,
   type PublicPageDto,
   type PublicPageSummaryDto,
   type PublicPersonDto,
+  type PublicPostDto,
   type PublicSiteSettingsDto,
   type PublicVisitDto,
+  publicBlogIndexDto,
   publicPageDto,
   publicPageListDto,
   publicPersonDto,
+  publicPostDto,
   publicSiteSettingsDto,
   publicVisitDto,
+  type RecordPostViewBody,
 } from "@ancla/contracts";
 
 const DEFAULT_TIMEOUT_MS = 2000;
@@ -36,7 +41,20 @@ export interface PublicClient {
   getPages(locale: string): Promise<PublicPageSummaryDto[]>;
   /** One simple page by the slug of any of its languages; `null` when it does not exist or is paused. */
   getPage(slug: string, locale: string): Promise<PublicPageDto | null>;
+  /** The blog index (visible posts, featured, categories, series, archive...) in `locale`. */
+  getPosts(locale: string): Promise<PublicBlogIndexDto>;
+  /** One visible post by the slug of any of its languages; `null` when there is none. */
+  getPost(slug: string, locale: string): Promise<PublicPostDto | null>;
+  /**
+   * Counts an anonymous view. `visitor.ip` is also sent as `x-forwarded-for`: the API rate limits
+   * per forwarded address, so without it every visitor of the site would share one bucket.
+   */
+  recordPostView(slug: string, visitor: RecordPostViewBody): Promise<void>;
 }
+
+// What `fetch` accepts as a header value, and what an address looks like: anything else is not
+// forwarded (the body still carries it for the hash).
+const FORWARDABLE_ADDRESS = /^[0-9a-fA-F:.]{1,64}$/;
 
 /** The API answered with something other than success, or not with what the contract says. */
 export class PublicApiError extends Error {
@@ -86,6 +104,33 @@ export function createPublicClient(options: PublicClientOptions): PublicClient {
       );
     }
     return response.json();
+  }
+
+  async function postView(
+    slug: string,
+    visitor: RecordPostViewBody,
+  ): Promise<void> {
+    const response = await fetchImplementation(
+      `${baseUrl}/api/public/v1/${encodeURIComponent(churchSlug)}/posts/${encodeURIComponent(slug)}/views`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+          ...(FORWARDABLE_ADDRESS.test(visitor.ip)
+            ? { "X-Forwarded-For": visitor.ip }
+            : {}),
+        },
+        body: JSON.stringify({ ip: visitor.ip, userAgent: visitor.userAgent }),
+        signal: AbortSignal.timeout(timeoutMs),
+      },
+    );
+    if (!response.ok) {
+      throw new PublicApiError(
+        `Public API answered ${response.status}`,
+        response.status,
+      );
+    }
   }
 
   return {
@@ -155,5 +200,33 @@ export function createPublicClient(options: PublicClientOptions): PublicClient {
       }
       return parsed.data;
     },
+    async getPosts(locale) {
+      const parsed = publicBlogIndexDto.safeParse(
+        await getJson(`/posts?locale=${encodeURIComponent(locale)}`),
+      );
+      if (!parsed.success) {
+        throw new PublicApiError(
+          "Public API posts do not match the contract",
+          null,
+        );
+      }
+      return parsed.data;
+    },
+    async getPost(slug, locale) {
+      const body = await getJson(
+        `/posts/${encodeURIComponent(slug)}?locale=${encodeURIComponent(locale)}`,
+        { nullOn404: true },
+      );
+      if (body === null) return null;
+      const parsed = publicPostDto.safeParse(body);
+      if (!parsed.success) {
+        throw new PublicApiError(
+          "Public API post does not match the contract",
+          null,
+        );
+      }
+      return parsed.data;
+    },
+    recordPostView: postView,
   };
 }
