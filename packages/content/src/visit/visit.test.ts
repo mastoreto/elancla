@@ -23,6 +23,8 @@ function clientReturning(
     getSettings: async () => {
       throw new Error("not used");
     },
+    getPages: async () => [],
+    getPage: async () => null,
     getPeople: async () => [],
     async getVisit(locale) {
       const result = results[Math.min(locales.length, results.length - 1)];

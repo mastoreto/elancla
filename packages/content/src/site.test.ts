@@ -58,6 +58,8 @@ function clientReturning(
       if (result instanceof Error) throw result;
       return result as PublicSiteSettingsDto;
     },
+    getPages: async () => [],
+    getPage: async () => null,
     getPeople: async () => [],
     getVisit: async () => {
       throw new Error("not used");
@@ -167,6 +169,8 @@ describe("createSiteConfigLoader", () => {
         locales.push(locale);
         return { ...SETTINGS, name: `site-${locale ?? "default"}` };
       },
+      getPages: async () => [],
+      getPage: async () => null,
       getPeople: async () => [],
       getVisit: async () => {
         throw new Error("not used");

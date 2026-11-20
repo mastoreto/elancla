@@ -1,8 +1,12 @@
 import {
   type PersonContext,
+  type PublicPageDto,
+  type PublicPageSummaryDto,
   type PublicPersonDto,
   type PublicSiteSettingsDto,
   type PublicVisitDto,
+  publicPageDto,
+  publicPageListDto,
   publicPersonDto,
   publicSiteSettingsDto,
   publicVisitDto,
@@ -28,6 +32,10 @@ export interface PublicClient {
   getPeople(context: PersonContext, locale: string): Promise<PublicPersonDto[]>;
   /** Visit page directions and editable FAQ, resolved by the API in `locale` with fallback. */
   getVisit(locale: string): Promise<PublicVisitDto>;
+  /** Published simple pages (title and slug) in `locale`, for the footer, sitemap and llms.txt. */
+  getPages(locale: string): Promise<PublicPageSummaryDto[]>;
+  /** One simple page by the slug of any of its languages; `null` when it does not exist or is paused. */
+  getPage(slug: string, locale: string): Promise<PublicPageDto | null>;
 }
 
 /** The API answered with something other than success, or not with what the contract says. */
@@ -55,7 +63,11 @@ export function createPublicClient(options: PublicClientOptions): PublicClient {
   } = options;
   const baseUrl = options.baseUrl.replace(/\/+$/, "");
 
-  async function getJson(path: string): Promise<unknown> {
+  /** `null` for a 404 only when the caller asks: for a page by slug it means "does not exist". */
+  async function getJson(
+    path: string,
+    options?: { nullOn404: true },
+  ): Promise<unknown> {
     const response = await fetchImplementation(
       `${baseUrl}/api/public/v1/${encodeURIComponent(churchSlug)}${path}`,
       {
@@ -66,6 +78,7 @@ export function createPublicClient(options: PublicClientOptions): PublicClient {
         signal: AbortSignal.timeout(timeoutMs),
       },
     );
+    if (options?.nullOn404 && response.status === 404) return null;
     if (!response.ok) {
       throw new PublicApiError(
         `Public API answered ${response.status}`,
@@ -110,6 +123,33 @@ export function createPublicClient(options: PublicClientOptions): PublicClient {
       if (!parsed.success) {
         throw new PublicApiError(
           "Public API visit does not match the contract",
+          null,
+        );
+      }
+      return parsed.data;
+    },
+    async getPages(locale) {
+      const parsed = publicPageListDto.safeParse(
+        await getJson(`/pages?locale=${encodeURIComponent(locale)}`),
+      );
+      if (!parsed.success) {
+        throw new PublicApiError(
+          "Public API pages do not match the contract",
+          null,
+        );
+      }
+      return parsed.data.items;
+    },
+    async getPage(slug, locale) {
+      const body = await getJson(
+        `/pages/${encodeURIComponent(slug)}?locale=${encodeURIComponent(locale)}`,
+        { nullOn404: true },
+      );
+      if (body === null) return null;
+      const parsed = publicPageDto.safeParse(body);
+      if (!parsed.success) {
+        throw new PublicApiError(
+          "Public API page does not match the contract",
           null,
         );
       }

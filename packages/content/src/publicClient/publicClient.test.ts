@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import type { PublicSiteSettingsDto } from "@ancla/contracts";
+import type { PublicPageDto, PublicSiteSettingsDto } from "@ancla/contracts";
 import { createPublicClient, PublicApiError } from "./publicClient";
 
 const SETTINGS: PublicSiteSettingsDto = {
@@ -183,5 +183,57 @@ describe("createPublicClient", () => {
       fetch: fakeFetch(() => json({ directions: {}, faqs: [] })),
     });
     await expect(client.getVisit("es")).rejects.toBeInstanceOf(PublicApiError);
+  });
+
+  const PAGE: PublicPageDto = {
+    slug: "privacidad",
+    title: "Privacidad",
+    body: { type: "doc", content: [] },
+    seoTitle: null,
+    seoDescription: null,
+    locale: "es",
+    alternates: { es: "privacidad" },
+  };
+  const pageClient = (respond: () => Response, calls: Call[] = []) =>
+    createPublicClient({
+      baseUrl: "https://crm.example.org",
+      apiKey: "k",
+      churchSlug: "el-ancla",
+      fetch: fakeFetch(respond, calls),
+    });
+
+  test("getPages sends the locale and returns the items", async () => {
+    const calls: Call[] = [];
+    const items = [{ slug: "privacidad", title: "Privacidad" }];
+    const client = pageClient(() => json({ items }), calls);
+    expect(await client.getPages("en")).toEqual(items);
+    expect(calls[0]?.url).toEndWith("/pages?locale=en");
+  });
+
+  test("getPages rejects a body that does not match the contract", async () => {
+    const client = pageClient(() => json({ items: [{ slug: "x" }] }));
+    await expect(client.getPages("es")).rejects.toBeInstanceOf(PublicApiError);
+  });
+
+  test("getPage encodes the slug, sends the locale and parses the page", async () => {
+    const calls: Call[] = [];
+    const client = pageClient(() => json(PAGE), calls);
+    expect(await client.getPage("pri vacidad", "es")).toEqual(PAGE);
+    expect(calls[0]?.url).toEndWith("/pages/pri%20vacidad?locale=es");
+  });
+
+  test("getPage answers null for a 404 but throws for other statuses", async () => {
+    expect(await pageClient(() => json({}, 404)).getPage("x", "es")).toBeNull();
+    const error = await pageClient(() => json({}, 500))
+      .getPage("x", "es")
+      .catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(PublicApiError);
+  });
+
+  test("getPage rejects a body that does not match the contract", async () => {
+    const client = pageClient(() => json({ ...PAGE, body: { type: "nope" } }));
+    await expect(client.getPage("x", "es")).rejects.toBeInstanceOf(
+      PublicApiError,
+    );
   });
 });
