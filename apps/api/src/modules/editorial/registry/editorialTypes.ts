@@ -7,11 +7,8 @@ import {
 } from "@ancla/contracts";
 import type { EditorialContentType, Prisma } from "@ancla/db";
 import type { z } from "zod";
-import {
-  assertSimplePageSlugsFree,
-  simplePageExists,
-  validateSimplePageLocales,
-} from "./simplePage";
+import { assertSimplePageSlugsFree, simplePageExists } from "./simplePage";
+import { validateSnapshotLocales } from "./validateSnapshotLocales";
 
 export type EditorialPermissionKind = "view" | "edit" | "publish";
 
@@ -101,7 +98,7 @@ export const EDITORIAL_TYPES: Record<
     crmPath: (entityId) => `/website/pages/${entityId}`,
     entityExists: simplePageExists,
     beforeGoLive: assertSimplePageSlugsFree,
-    validateSnapshot: validateSimplePageLocales,
+    validateSnapshot: validateSnapshotLocales,
   },
 };
 

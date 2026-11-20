@@ -1,0 +1,1 @@
+export { validateSnapshotLocales } from "./validateSnapshotLocales";

@@ -1,19 +1,19 @@
 import { describe, expect, test } from "bun:test";
-import { validateSimplePageLocales } from "./validateSimplePageLocales";
+import { validateSnapshotLocales } from "./validateSnapshotLocales";
 
 const organization = { locales: ["es", "en"], defaultLocale: "es" };
 const translation = { title: "t", slug: "t", body: { type: "doc" } };
 
-describe("validateSimplePageLocales", () => {
+describe("validateSnapshotLocales", () => {
   test("accepts the default language alone or with other enabled ones", () => {
     expect(
-      validateSimplePageLocales(
+      validateSnapshotLocales(
         { translations: { es: translation } },
         organization,
       ),
     ).toBeNull();
     expect(
-      validateSimplePageLocales(
+      validateSnapshotLocales(
         { translations: { es: translation, en: translation } },
         organization,
       ),
@@ -22,7 +22,7 @@ describe("validateSimplePageLocales", () => {
 
   test("requires the default language", () => {
     expect(
-      validateSimplePageLocales(
+      validateSnapshotLocales(
         { translations: { en: translation } },
         organization,
       ),
@@ -31,7 +31,7 @@ describe("validateSimplePageLocales", () => {
 
   test("rejects a language the organization does not serve", () => {
     expect(
-      validateSimplePageLocales(
+      validateSnapshotLocales(
         { translations: { es: translation, pt: translation } },
         organization,
       ),
