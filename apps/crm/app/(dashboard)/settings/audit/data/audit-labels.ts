@@ -41,6 +41,7 @@ export const AUDIT_ACTION_LABELS: Record<AuditAction, string> = {
   [AUDIT_ACTIONS.personProfile.updated]: "Persona del sitio editada",
   [AUDIT_ACTIONS.personProfile.deleted]: "Persona del sitio eliminada",
   [AUDIT_ACTIONS.visit.updated]: "Página Visítanos actualizada",
+  [AUDIT_ACTIONS.simplePage.created]: "Página del sitio creada",
   [AUDIT_ACTIONS.media.uploadRequested]: "Subida de archivo solicitada",
   [AUDIT_ACTIONS.media.finalized]: "Archivo verificado",
   [AUDIT_ACTIONS.media.rejected]: "Archivo rechazado",

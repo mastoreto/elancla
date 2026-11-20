@@ -22,6 +22,21 @@ import { actionLabel, stateLabel, stateTone } from "./utils";
 const INVALID_TRANSITION_MESSAGE =
   "Alguien cambió este contenido mientras tanto. Recarga la página.";
 
+const SLUG_TAKEN_CODE = "slug_taken";
+const SLUG_TAKEN_MESSAGE = "Otra página publicada ya usa ese slug. Cámbialo antes de publicar.";
+
+/** The API answers 409 for several reasons; the problem `code` says which one it was. */
+async function describeFailure(response: Response): Promise<string> {
+  const problem: unknown = await response
+    .clone()
+    .json()
+    .catch(() => null);
+  const code =
+    typeof problem === "object" && problem !== null ? Reflect.get(problem, "code") : null;
+  if (code === SLUG_TAKEN_CODE) return SLUG_TAKEN_MESSAGE;
+  return describeApiFailure(response.status, INVALID_TRANSITION_MESSAGE);
+}
+
 const SUCCESS_MESSAGES: Record<EditorialActionDto, string> = {
   saveDraft: "Borrador guardado",
   submit: "Enviado a revisión",
@@ -46,6 +61,8 @@ interface EditorialStatusBarProps {
   status: EditorialStatusDto;
   /** The current content of the editor; without it the draft cannot be saved from here. */
   getSnapshot?: () => Record<string, unknown>;
+  /** The page may have its own, validated "save draft" button. Defaults to showing the bar's. */
+  showSaveDraft?: boolean;
   className?: string;
 }
 
@@ -58,6 +75,7 @@ export function EditorialStatusBar({
   entityId,
   status,
   getSnapshot,
+  showSaveDraft = true,
   className,
 }: EditorialStatusBarProps) {
   const router = useRouter();
@@ -85,14 +103,27 @@ export function EditorialStatusBar({
     }
   }
 
+  // What the editor sees is what goes to review or live: unsaved edits are saved first.
+  const savesFirst = (action: EditorialActionDto): boolean =>
+    Boolean(getSnapshot) &&
+    Boolean(status.working) &&
+    status.availableActions.includes("saveDraft") &&
+    (action === "submit" || action === "publish");
+
   async function run(action: EditorialActionDto, comment?: string) {
-    const pending = request(action, comment);
-    if (!pending) return;
     setBusy(true);
     try {
-      const response = await pending;
+      if (savesFirst(action) && getSnapshot) {
+        const saved = await entity.draft.$put({ param, json: { snapshot: getSnapshot() } });
+        if (!saved.ok) {
+          toast.error(await describeFailure(saved));
+          return;
+        }
+      }
+      const response = await request(action, comment);
+      if (!response) return;
       if (!response.ok) {
-        toast.error(describeApiFailure(response.status, INVALID_TRANSITION_MESSAGE));
+        toast.error(await describeFailure(response));
         return;
       }
       toast.success(SUCCESS_MESSAGES[action]);
@@ -103,7 +134,9 @@ export function EditorialStatusBar({
     }
   }
 
-  const actions = status.availableActions.filter((action) => action !== "saveDraft" || getSnapshot);
+  const actions = status.availableActions.filter(
+    (action) => action !== "saveDraft" || (getSnapshot && showSaveDraft),
+  );
 
   return (
     <BoardCard className={cn(editorialStatusBarEditorialPage.container, className)}>

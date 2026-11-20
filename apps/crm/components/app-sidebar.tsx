@@ -20,6 +20,7 @@ import {
   Newspaper,
   PiggyBank,
   Receipt,
+  ScrollText,
   Settings,
   Users,
   Vote,
@@ -48,6 +49,7 @@ import {
 import { useAccess } from "@/lib/authz/AccessProvider";
 import { type AccessSnapshot, canAny } from "@/lib/authz/can";
 import {
+  PAGES_ROUTE_PERMISSIONS,
   PEOPLE_ROUTE_PERMISSIONS,
   ROUTE_PERMISSIONS,
   VISIT_ROUTE_PERMISSIONS,
@@ -216,6 +218,13 @@ export const navigationSections: NavigationSection[] = [
         url: getChurchRoutePath("website", "people"),
         icon: Users,
         requires: PEOPLE_ROUTE_PERMISSIONS,
+      },
+      {
+        type: "link",
+        title: "Páginas",
+        url: getChurchRoutePath("website", "pages"),
+        icon: ScrollText,
+        requires: PAGES_ROUTE_PERMISSIONS,
       },
       {
         type: "link",

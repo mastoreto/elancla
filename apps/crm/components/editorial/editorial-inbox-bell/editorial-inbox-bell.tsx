@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 const CONTENT_TYPE_LABELS: Record<InboxItemDto["contentType"], string> = {
   "blog-post": "Entrada del blog",
   ministry: "Perfil de ministerio",
+  "simple-page": "Página del sitio",
 };
 
 const editorialInboxBellEditorialPage = {
