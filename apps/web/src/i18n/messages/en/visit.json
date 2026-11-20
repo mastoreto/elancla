@@ -26,7 +26,7 @@
   },
   "where": {
     "eyebrow": "Where we are",
-    "title": "Av. Luis A. de Herrera, at Juan Arrieta.",
+    "title": "{street}.",
     "body": "Open the route in Google Maps from wherever you are.",
     "cta": "Open in Google Maps",
     "mapLabel": "Map of the area around the church"
@@ -59,15 +59,15 @@
     "items": [
       {
         "q": "What time are the services?",
-        "a": "Sundays at 11:15 AM. At 10:00 AM there is Bible school for adults and children."
+        "a": "Sundays at {worshipTime}. At {bibleSchoolTime} there is Bible school for adults and children."
       },
       {
         "q": "Where is the church?",
-        "a": "At Av. Luis A. de Herrera 3101, at the corner of Juan Arrieta, Montevideo."
+        "a": "At {street}, Montevideo."
       },
       {
         "q": "How long is the service?",
-        "a": "It ends around 1:00 PM. You are welcome to stay and chat afterwards."
+        "a": "It ends around {worshipEnd}. You are welcome to stay and chat afterwards."
       },
       {
         "q": "Do I need to be a member or tell you I'm coming?",
@@ -91,7 +91,7 @@
       },
       {
         "q": "How can I contact the church?",
-        "a": "Write to contacto@elancla.uy or find us on YouTube, Instagram and Facebook."
+        "a": "Write to {email} or find us on YouTube, Instagram and Facebook."
       }
     ]
   },

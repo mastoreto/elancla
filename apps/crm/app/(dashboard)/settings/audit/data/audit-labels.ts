@@ -36,6 +36,7 @@ export const AUDIT_ACTION_LABELS: Record<AuditAction, string> = {
   [AUDIT_ACTIONS.editorial.paused]: "Contenido pausado",
   [AUDIT_ACTIONS.editorial.resumed]: "Contenido reanudado",
   [AUDIT_ACTIONS.editorial.settingsUpdated]: "Revisión editorial configurada",
+  [AUDIT_ACTIONS.site.settingsUpdated]: "Configuración del sitio actualizada",
   [AUDIT_ACTIONS.media.uploadRequested]: "Subida de archivo solicitada",
   [AUDIT_ACTIONS.media.finalized]: "Archivo verificado",
   [AUDIT_ACTIONS.media.rejected]: "Archivo rechazado",

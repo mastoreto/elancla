@@ -29,10 +29,10 @@
     "Espacio Ancladitos"
   ],
   "socialLinks": [
-    "YouTube · @iglesiaelanclauy",
-    "Instagram · @iglesiaelancla",
-    "Facebook · @iglesiabautistaelancla"
+    "YouTube · {youtubeHandle}",
+    "Instagram · {instagramHandle}",
+    "Facebook · {facebookHandle}"
   ],
-  "address": "Av. Luis A. de Herrera 3101, esq. Juan Arrieta — Montevideo, Uruguay",
+  "address": "{street} — Montevideo, Uruguay",
   "copyright": "Iglesia Bautista El Ancla. Todos los derechos reservados."
 }

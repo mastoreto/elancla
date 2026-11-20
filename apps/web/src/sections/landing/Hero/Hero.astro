@@ -13,8 +13,10 @@ interface Props {
   copy: Messages['landing']['hero'];
   locale: Locale;
   street: string;
+  /** Start of the Sunday service (`SiteConfig.serviceTimes`); the fact is hidden without it. */
+  worshipTime?: string;
 }
-const { copy, locale, street } = Astro.props;
+const { copy, locale, street, worshipTime } = Astro.props;
 const [line1, ...rest] = street.split(', ');
 
 const DRIFT_ANIMATION = {
@@ -208,10 +210,12 @@ const heroSection = {
     class={heroSection.facts}
     data-hero-facts
   >
-    <div class={heroSection.sundayFact} data-hero-fact>
-      <small class={heroSection.sundayLabel}>{copy.sunday}</small>
-      <strong class={heroSection.sundayTime}>11:15</strong>
-    </div>
+    {worshipTime && (
+      <div class={heroSection.sundayFact} data-hero-fact>
+        <small class={heroSection.sundayLabel}>{copy.sunday}</small>
+        <strong class={heroSection.sundayTime}>{worshipTime}</strong>
+      </div>
+    )}
     <div class={heroSection.whereFact} data-hero-fact>
       <small class={heroSection.whereLabel}>{copy.where}</small>
       <span class={heroSection.whereAddress}>

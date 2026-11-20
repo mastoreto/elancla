@@ -93,8 +93,11 @@ model SiteSettings {
 
   themeColor          String?
   founded             String?
-  /// Temporary until phase 1.6 derives service times from recurring activities.
-  serviceTimesSummary String?
+  // ponytail: temporary bridge until phase 1.6 derives service times from recurring activities.
+  /// List of { kind: "worship" | "bibleSchool", weekday 0-6 (0 = Sunday), start "HH:mm", end "HH:mm" | null }.
+  serviceTimes        Json    @default("[]")
+  /// Map of section key -> "active" | "maintenance" | "outOfService"; a missing key means active.
+  sectionStatuses     Json    @default("{}")
 
   website   String?
   instagram String?
@@ -118,7 +121,8 @@ model SiteSettingsTranslation {
   siteSettings   SiteSettings @relation(fields: [siteSettingsId], references: [id], onDelete: Cascade)
   /// BCP 47 language code.
   locale         String
-  aboutRichText  Json?
+  /// Default meta description of the public site (max 160 chars, validated by the contracts).
+  seoDescription String?
 
   @@unique([siteSettingsId, locale])
   @@map("site_settings_translations")

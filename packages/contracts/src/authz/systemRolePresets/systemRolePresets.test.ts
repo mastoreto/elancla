@@ -43,3 +43,25 @@ describe("editorial presets", () => {
     expect(leader?.grants.some((g) => g.action === "publish")).toBe(false);
   });
 });
+
+describe("institutional site presets", () => {
+  test("the content editor manages settings, people, visit and pages", () => {
+    const editor = SYSTEM_ROLE_PRESETS.find((p) => p.key === "content-editor");
+    const resources = new Set(editor?.grants.map((g) => g.resource));
+    for (const resource of [
+      "site",
+      "content.people",
+      "content.visit",
+      "content.pages",
+    ]) {
+      expect(resources).toContain(resource);
+    }
+  });
+
+  test("only the content editor and the admin reach the site settings", () => {
+    const holders = SYSTEM_ROLE_PRESETS.filter((preset) =>
+      preset.grants.some((g) => g.resource === "site"),
+    ).map((preset) => preset.key);
+    expect(holders).toEqual(["content-editor"]);
+  });
+});

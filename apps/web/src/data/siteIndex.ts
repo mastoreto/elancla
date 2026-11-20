@@ -1,7 +1,13 @@
-import { getAllPostsFull, isSeedArticle } from '@ancla/content';
+import {
+  getAllPostsFull,
+  isSeedArticle,
+  type SiteConfig,
+} from '@ancla/content';
 import { getContentPages } from 'src/data/contentPages';
 import { defaultLocale, type Locale, locales } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
+import { buildSiteTokens } from 'src/utils/siteTokens';
+import { withoutOutOfService } from 'src/utils/withoutOutOfService';
 
 export interface SiteIndexEntry {
   /** Locale-free canonical path, e.g. `/confesion-de-fe`. */
@@ -24,15 +30,21 @@ const STATIC_PATHS = [
   '/blog',
 ];
 
-/** Single list of indexable URLs; the sitemap and the llms files both read it. */
-export async function getSiteIndex(): Promise<SiteIndexEntry[]> {
+/**
+ * Single list of indexable URLs; the sitemap and the llms files both read it. Sections taken out
+ * of service are left out.
+ */
+export async function getSiteIndex(
+  site: SiteConfig
+): Promise<SiteIndexEntry[]> {
   const entries: SiteIndexEntry[] = STATIC_PATHS.map((path) => ({
     path,
     locales,
   }));
 
   // Aliases (ñ → n slugs) are noindex duplicates, so only `page.slug` is listed.
-  for (const page of getContentPages(defaultLocale)) {
+  const tokens = buildSiteTokens(site, defaultLocale);
+  for (const page of getContentPages(defaultLocale, tokens)) {
     const path =
       page.routeGroup === 'ministerios'
         ? `/ministerios/${page.slug}`
@@ -55,7 +67,7 @@ export async function getSiteIndex(): Promise<SiteIndexEntry[]> {
       description: post.description,
     });
   }
-  return entries;
+  return withoutOutOfService(entries, site.sections, (entry) => entry.path);
 }
 
 export function entryUrls(entry: SiteIndexEntry, siteUrl: string) {

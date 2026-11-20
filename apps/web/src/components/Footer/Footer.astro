@@ -1,19 +1,27 @@
 ---
+import type { SiteConfig } from '@ancla/content';
 import LogoText from 'src/components/LogoText';
 import type { Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
-import { localizePath } from 'src/i18n/utils';
+import { interpolateDeep, localizePath } from 'src/i18n/utils';
 import { ULINK } from 'src/styles/classes';
 import cn from 'src/utils/cn';
+import type { SiteTokens } from 'src/utils/siteTokens';
+import { withoutOutOfService } from 'src/utils/withoutOutOfService';
 
 interface Props {
   locale: Locale;
   /** `dark` sits under the red closing of the landing instead of being red itself. */
   variant?: 'red' | 'dark';
   social?: { youtube?: string; instagram?: string; facebook?: string };
+  /** Values for the `{placeholders}` of footer.json (handles, address). */
+  tokens: SiteTokens;
+  /** Section statuses: links into an out-of-service section are not shown. */
+  sections: SiteConfig['sections'];
 }
 
-const { locale, variant = 'red', social = {} } = Astro.props;
+const { locale, variant = 'red', social = {}, tokens, sections } = Astro.props;
+const copy = interpolateDeep(getMessages(locale).footer, tokens);
 // Link targets, in the same order as the labels in footer.json.
 const churchHrefs = [
   '/nosotros#identidad',
@@ -22,8 +30,15 @@ const churchHrefs = [
   '/confesion-de-fe',
   '/visitanos',
 ];
+const churchLinks = withoutOutOfService(
+  copy.churchLinks.map((label, index) => ({
+    label,
+    href: churchHrefs[index] ?? '/',
+  })),
+  sections,
+  (link) => link.href
+);
 const socialHrefs = [social.youtube, social.instagram, social.facebook];
-const copy = getMessages(locale).footer;
 
 const footer = {
   footer: cn(
@@ -95,8 +110,8 @@ const year = new Date().getFullYear();
       <div class={footer.colLinks}>
         <div class={footer.colLabel}>{copy.churchLabel}</div>
         <ul class={footer.linkList}>
-          {copy.churchLinks.map((l, i) => (
-            <li><a href={localizePath(churchHrefs[i] ?? '/', locale)} class={footer.churchLink}>{l}</a></li>
+          {churchLinks.map((link) => (
+            <li><a href={localizePath(link.href, locale)} class={footer.churchLink}>{link.label}</a></li>
           ))}
         </ul>
       </div>

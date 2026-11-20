@@ -1,6 +1,10 @@
 // Idempotent seed: `bun run db:seed` (Prisma runs it via prisma.config.ts).
 import { db } from "../../src";
-import { EL_ANCLA_ORGANIZATION, EL_ANCLA_SITE_SETTINGS } from "./elAncla";
+import {
+  EL_ANCLA_ORGANIZATION,
+  EL_ANCLA_SEO_DESCRIPTIONS,
+  EL_ANCLA_SITE_SETTINGS,
+} from "./elAncla";
 import { seedMinistries } from "./seedMinistries";
 import { seedRoles } from "./seedRoles";
 
@@ -15,11 +19,27 @@ async function seed(): Promise<void> {
     update: {},
   });
 
-  await db.siteSettings.upsert({
+  const siteSettings = await db.siteSettings.upsert({
     where: { organizationId: organization.id },
-    create: { organizationId: organization.id, ...EL_ANCLA_SITE_SETTINGS },
+    create: {
+      organizationId: organization.id,
+      ...EL_ANCLA_SITE_SETTINGS,
+      serviceTimes: [...EL_ANCLA_SITE_SETTINGS.serviceTimes],
+    },
     update: {},
   });
+
+  for (const [locale, seoDescription] of Object.entries(
+    EL_ANCLA_SEO_DESCRIPTIONS,
+  )) {
+    await db.siteSettingsTranslation.upsert({
+      where: {
+        siteSettingsId_locale: { siteSettingsId: siteSettings.id, locale },
+      },
+      create: { siteSettingsId: siteSettings.id, locale, seoDescription },
+      update: {},
+    });
+  }
 
   await seedRoles(db, organization.id);
   await seedMinistries(db, organization.id);

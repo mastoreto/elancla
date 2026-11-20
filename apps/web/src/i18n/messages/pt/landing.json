@@ -62,17 +62,17 @@
     "photoAlt": "Uma reunião no salão da igreja",
     "rows": [
       {
-        "time": "10:00",
+        "time": "{bibleSchoolTime}",
         "title": "Escola bíblica",
         "text": "Para adultos e crianças. Você pode participar ou chegar direto ao culto."
       },
       {
-        "time": "11:15",
+        "time": "{worshipTime}",
         "title": "Culto de celebração",
         "text": "Cantamos, oramos e abrimos a Bíblia juntos. Também ao vivo pelo YouTube."
       },
       {
-        "time": "13:00",
+        "time": "{worshipEnd}",
         "title": "Fim do culto",
         "text": "Se quiser, fique para conversar. Ninguém vai apressar você."
       }
@@ -83,12 +83,12 @@
   "closing": {
     "eyebrow": "A obra continua",
     "title": "Esperamos você neste domingo.",
-    "text": "Uma igreja ancorada no evangelho. Escola bíblica às 10:00 e culto às 11:15.",
+    "text": "Uma igreja ancorada no evangelho. Escola bíblica às {bibleSchoolTime} e culto às {worshipTime}.",
     "follow": "Acompanhe-nos durante a semana",
-    "mapLabel": "Mapa da região: Av. Herrera esquina Juan Arrieta, Montevidéu",
-    "where": "Montevidéu · Domingos 10:00 e 11:15",
+    "mapLabel": "Mapa da região: {street}, Montevidéu",
+    "where": "Montevidéu · Domingos {bibleSchoolTime} e {worshipTime}",
     "how": "Como chegar",
-    "since": "· Igreja Batista · Montevidéu, desde 1997"
+    "since": "· Igreja Batista · Montevidéu, desde {founded}"
   },
   "a11y": {
     "scrollProgress": "Progresso da página"

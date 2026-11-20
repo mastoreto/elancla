@@ -489,6 +489,8 @@ sistema. Editar algo publicado no lo cambia en la web hasta aprobar/publicar.
 propio: **activa**, **mantenimiento** (muestra la pantalla de mantenimiento de esa sección) o **fuera
 de servicio** (no se enruta y sale de la navegación). Convive con el estado general del sitio.
 
+*Implementación (1.3a):* el estado vive en la columna JSON `SiteSettings.sectionStatuses` (no hay tabla `SiteSection`; una clave ausente es `activa`), con claves `blog`, `calendar`, `sermons`, `ministries`, `visit` (`SITE_SECTION_KEYS`). La web responde 503 con la pantalla de mantenimiento de sección o reescribe a 404 y oculta la sección de Nav, Footer, sitemap y `llms.txt`.
+
 ## D-34 — Newsletter
 
 **Aceptada.** Suscripción desde la web con doble opt-in, baja con un clic, registro de
@@ -524,10 +526,14 @@ JSON-LD derivados de los datos. Editables y traducibles: indicaciones (estaciona
 accesibilidad) y preguntas frecuentes; las preguntas de horario y dirección se generan solas para no
 quedar desactualizadas. Confesión de fe, nav y footer: fijos.
 
+*Implementación (1.3a):* horarios, dirección y JSON-LD ya salen de `SiteSettings` (puente `serviceTimes` hasta la 1.6); las indicaciones y las FAQ editables llegan en 1.3c.
+
 ## D-39 — Nosotros
 
 **Aceptada.** Todo fijo (identidad, valores, historia con su línea de tiempo, enlaces) salvo el
 **equipo**, que es editable porque cambia con las rotaciones.
+
+*Implementación (1.3a):* se borra `aboutRichText` (la web nunca lo mostró); el equipo editable llega en 1.3b.
 
 ## D-40 — Perfil público de persona
 
@@ -540,6 +546,8 @@ contexto se define rol, orden y si se muestra en la web.
 **Aceptada.** Tipo de página editable con título, slug, cuerpo en texto enriquecido y SEO, todo
 traducible, con flujo editorial. Sin constructor de bloques. La primera es la política de privacidad,
 obligatoria antes de habilitar el newsletter.
+
+*Implementación (1.3a):* el permiso `content.pages` ya existe en el catálogo y en el preset `content-editor`; las páginas llegan en 1.3d.
 
 ## D-42 — Circuito de egresos
 

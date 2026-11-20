@@ -126,6 +126,10 @@ export const SYSTEM_ROLE_PRESETS: readonly SystemRolePreset[] = [
     grants: [
       ...everyAction(PERMISSIONS.content, "all"),
       ...everyAction(PERMISSIONS.blogPosts, "all"),
+      ...everyAction(PERMISSIONS.site, "all"),
+      ...everyAction(PERMISSIONS.people, "all"),
+      ...everyAction(PERMISSIONS.visit, "all"),
+      ...everyAction(PERMISSIONS.pages, "all"),
       grant(PERMISSIONS.ministryProfile.view, "all"),
       grant(PERMISSIONS.ministryProfile.edit, "all"),
       grant(PERMISSIONS.ministryProfile.publish, "all"),

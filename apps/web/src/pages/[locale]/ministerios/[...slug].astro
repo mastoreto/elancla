@@ -1,16 +1,22 @@
 ---
+import { getSiteConfig } from '@ancla/content';
 import { getContentPageBySlug } from 'src/data/contentPages';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout';
 import MinistryTemplate from 'src/sections/ministry/MinistryTemplate';
+import { buildSiteTokens } from 'src/utils/siteTokens';
 
 const { locale: localeParam, slug } = Astro.params;
 if (!isLocale(localeParam) || localeParam === defaultLocale) {
   return Astro.rewrite('/404');
 }
 const locale = localeParam;
-const result = slug ? getContentPageBySlug('ministerios', slug, locale) : null;
+const site = Astro.locals.site ?? (await getSiteConfig());
+const tokens = buildSiteTokens(site, locale);
+const result = slug
+  ? getContentPageBySlug('ministerios', slug, { locale, tokens })
+  : null;
 if (!result) {
   return Astro.rewrite('/404');
 }

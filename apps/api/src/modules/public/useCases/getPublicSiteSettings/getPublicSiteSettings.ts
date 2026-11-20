@@ -1,5 +1,4 @@
 import type { PublicSiteSettingsDto } from "@ancla/contracts";
-import { resolveTranslation } from "@ancla/db";
 import { NotFoundError } from "../../../../core/errors";
 import {
   findOrganizationLocales,
@@ -25,14 +24,14 @@ export async function getPublicSiteSettings(
     defaultLocale,
   ]);
   if (!settings) throw new NotFoundError("The site settings were not found");
-  const translation = resolveTranslation(
-    settings.translations,
-    locale,
-    defaultLocale,
-  );
+  const seoDescriptionOf = (wanted: string): string | null =>
+    settings.translations.find((row) => row.locale === wanted)
+      ?.seoDescription ?? null;
+  // A language with no description of its own serves the default one's, and `locale` says so.
+  const ownDescription = seoDescriptionOf(locale);
   return toPublicSiteSettingsDto(
     settings,
-    translation,
-    translation?.locale ?? locale,
+    ownDescription ?? seoDescriptionOf(defaultLocale),
+    ownDescription === null ? defaultLocale : locale,
   );
 }

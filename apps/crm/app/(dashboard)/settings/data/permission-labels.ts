@@ -26,6 +26,10 @@ export const PERMISSION_RESOURCE_INFO: Record<PermissionResource, { label: strin
     reports: { label: "Informes", hint: "Reportes y exportación" },
     content: { label: "Contenido", hint: "Sitio, blog y podcasts" },
     "content.posts": { label: "Entradas del blog", hint: "Escribir y publicar entradas" },
+    site: { label: "Configuración del sitio", hint: "Datos, horarios y secciones del sitio" },
+    "content.people": { label: "Personas del sitio", hint: "Equipo y liderazgo que se muestra" },
+    "content.visit": { label: "Visítanos", hint: "Indicaciones y preguntas frecuentes" },
+    "content.pages": { label: "Páginas del sitio", hint: "Páginas simples como la privacidad" },
     "ministries.profile": { label: "Ministerios: perfil", hint: "Datos públicos del ministerio" },
     "ministries.finance": {
       label: "Ministerios: finanzas",

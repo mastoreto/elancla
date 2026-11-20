@@ -1,7 +1,8 @@
 import { defaultLocale, type Locale, nonDefaultLocales } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
-import { localizePath } from 'src/i18n/utils';
+import { interpolate, interpolateDeep, localizePath } from 'src/i18n/utils';
 import ministriesData from 'src/utils/ministriesData.json';
+import type { SiteTokens } from 'src/utils/siteTokens';
 
 export type ContentPageRouteGroup = 'root' | 'ministerios';
 
@@ -250,13 +251,6 @@ function slugFromMinistryUrl(url: string): string {
   return url.replace(/^\/ministerios\//, '').replace(/^\/|\/$/g, '');
 }
 
-function interpolate(value: string, replacements: Record<string, string>) {
-  return Object.entries(replacements).reduce(
-    (text, [key, replacement]) => text.replaceAll(`{${key}}`, replacement),
-    value
-  );
-}
-
 function localizeHtmlLinks(html: string, locale: Locale) {
   return html.replace(/href="(\/[^"]*)"/g, (_, href: string) => {
     return `href="${localizePath(href, locale)}"`;
@@ -351,9 +345,11 @@ function getMinistryCopy(locale: Locale, slug: string) {
   return ministry;
 }
 
-function buildMinistryPages(locale: Locale): ContentPage[] {
-  const template = getMessages(locale).contentPages
-    .ministryTemplate as MinistryTemplate;
+function buildMinistryPages(locale: Locale, tokens: SiteTokens): ContentPage[] {
+  const template = interpolateDeep(
+    getMessages(locale).contentPages.ministryTemplate as MinistryTemplate,
+    tokens
+  );
 
   return ministriesData
     .filter((ministry) => ministry.url.startsWith('/ministerios/'))
@@ -481,16 +477,30 @@ function buildMinistryPages(locale: Locale): ContentPage[] {
     });
 }
 
-export function getContentPages(locale: Locale = defaultLocale): ContentPage[] {
-  const nosotros = getMessages(locale).contentPages.nosotros as ContentPage;
-  return [localizeContentPage(nosotros, locale), ...buildMinistryPages(locale)];
+/**
+ * `tokens` fill the church's own data (times, address, handles) into the message templates; they
+ * are filled before the links are localized because some of them are URLs.
+ */
+export function getContentPages(
+  locale: Locale = defaultLocale,
+  tokens: SiteTokens = {}
+): ContentPage[] {
+  const nosotros = interpolateDeep(
+    getMessages(locale).contentPages.nosotros as ContentPage,
+    tokens
+  );
+  return [
+    localizeContentPage(nosotros, locale),
+    ...buildMinistryPages(locale, tokens),
+  ];
 }
 
 export function getContentPagesByRouteGroup(
   routeGroup: ContentPageRouteGroup,
-  locale: Locale = defaultLocale
+  locale: Locale = defaultLocale,
+  tokens: SiteTokens = {}
 ): ContentPage[] {
-  return getContentPages(locale).filter(
+  return getContentPages(locale, tokens).filter(
     (page) => page.routeGroup === routeGroup
   );
 }
@@ -515,9 +525,10 @@ export function getContentPageStaticPaths(
 export function getContentPageBySlug(
   routeGroup: ContentPageRouteGroup,
   slug: string,
-  locale: Locale = defaultLocale
+  context: { locale: Locale; tokens: SiteTokens }
 ): { page: ContentPage; isAlias: boolean } | null {
-  for (const page of getContentPagesByRouteGroup(routeGroup, locale)) {
+  const { locale, tokens } = context;
+  for (const page of getContentPagesByRouteGroup(routeGroup, locale, tokens)) {
     if (page.slug === slug) return { page, isAlias: false };
     if (page.aliases?.includes(slug)) return { page, isAlias: true };
   }

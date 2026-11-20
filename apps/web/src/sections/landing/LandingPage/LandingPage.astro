@@ -2,6 +2,7 @@
 import { getSiteConfig } from '@ancla/content';
 import type { Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
+import { interpolateDeep } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout';
 import Closing from 'src/sections/landing/Closing';
 import Doctrines from 'src/sections/landing/Doctrines';
@@ -10,14 +11,19 @@ import Hero from 'src/sections/landing/Hero';
 import Sunday from 'src/sections/landing/Sunday';
 import Together from 'src/sections/landing/Together';
 import cn from 'src/utils/cn';
+import { buildSiteTokens } from 'src/utils/siteTokens';
 
 interface Props {
   locale: Locale;
 }
 
 const { locale } = Astro.props;
-const copy = getMessages(locale);
 const site = Astro.locals.site ?? (await getSiteConfig());
+const tokens = buildSiteTokens(site, locale);
+const copy = {
+  home: interpolateDeep(getMessages(locale).home, tokens),
+  landing: interpolateDeep(getMessages(locale).landing, tokens),
+};
 const street = site.address.street;
 const coords = `${site.geo.latitude},${site.geo.longitude}`;
 // Directions open Google Maps with the church as destination, ready to start the trip.
@@ -37,7 +43,7 @@ const landingPage = {
   footer="dark"
 >
   <div class={landingPage.container}>
-    <Hero copy={copy.landing.hero} locale={locale} street={street} />
+    <Hero copy={copy.landing.hero} locale={locale} street={street} worshipTime={tokens.worshipTime} />
     <God copy={copy.landing.god} locale={locale} />
     <Doctrines copy={copy.landing.doctrines} locale={locale} />
     <Together copy={copy.landing.together} locale={locale} />

@@ -6,6 +6,9 @@ import {
   type SiteIndexEntry,
 } from 'src/data/siteIndex';
 import { getMessages } from 'src/i18n/messages';
+import { interpolateDeep } from 'src/i18n/utils';
+import { sectionForPath } from 'src/utils/sectionForPath';
+import { buildSiteTokens } from 'src/utils/siteTokens';
 
 const stripHtml = (html: string) =>
   html
@@ -24,7 +27,10 @@ function link(entry: SiteIndexEntry, site: SiteConfig, fallbackTitle: string) {
 }
 
 function header(site: SiteConfig) {
-  const sunday = getMessages('es').landing.sunday.rows;
+  const sunday = interpolateDeep(
+    getMessages('es').landing.sunday.rows,
+    buildSiteTokens(site, 'es')
+  );
   return [
     `# ${site.name}`,
     '',
@@ -46,18 +52,35 @@ function sections(entries: SiteIndexEntry[], site: SiteConfig) {
   const posts = entries.filter((e) => BLOG.test(e.path));
   const block = (title: string, items: string[]) =>
     items.length ? ['', `## ${title}`, ...items] : [];
+  // Fixed entries point into a section; the ones out of service are left out.
+  const available = (path: string, line: string) => {
+    const section = sectionForPath(path);
+    return section && site.sections[section] === 'outOfService' ? [] : [line];
+  };
   return [
     ...block('Visitar', [
-      `- [Visítanos](${site.url}/visitanos): horarios, cómo llegar y preguntas frecuentes`,
-      `- [Calendario anual](${site.url}/calendario-anual): actividades y eventos del año`,
+      ...available(
+        '/visitanos',
+        `- [Visítanos](${site.url}/visitanos): horarios, cómo llegar y preguntas frecuentes`
+      ),
+      ...available(
+        '/calendario-anual',
+        `- [Calendario anual](${site.url}/calendario-anual): actividades y eventos del año`
+      ),
     ]),
     ...block('Quiénes somos y qué creemos', [
       ...pick(['/nosotros']).map((e) => link(e, site, 'Nosotros')),
       `- [Confesión de fe](${site.url}/confesion-de-fe): las doctrinas bíblicas que sostienen la iglesia`,
     ]),
     ...block('Enseñanza', [
-      `- [Sermones](${site.url}/sermones): culto en vivo por YouTube y predicaciones por serie`,
-      `- [Blog](${site.url}/blog): reflexiones y estudios bíblicos`,
+      ...available(
+        '/sermones',
+        `- [Sermones](${site.url}/sermones): culto en vivo por YouTube y predicaciones por serie`
+      ),
+      ...available(
+        '/blog',
+        `- [Blog](${site.url}/blog): reflexiones y estudios bíblicos`
+      ),
     ]),
     ...block(
       'Ministerios',
@@ -72,14 +95,17 @@ function sections(entries: SiteIndexEntry[], site: SiteConfig) {
 
 export async function buildLlmsTxt(knownSite?: SiteConfig) {
   const site = knownSite ?? (await getSiteConfig());
-  const entries = await getSiteIndex();
+  const entries = await getSiteIndex(site);
   return [...header(site), ...sections(entries, site).slice(1), ''].join('\n');
 }
 
 export async function buildLlmsFullTxt(knownSite?: SiteConfig) {
   const site = knownSite ?? (await getSiteConfig());
-  const entries = await getSiteIndex();
-  const visit = getMessages('es').visit;
+  const entries = await getSiteIndex(site);
+  const visit = interpolateDeep(
+    getMessages('es').visit,
+    buildSiteTokens(site, 'es')
+  );
   const doctrines = getDoctrines('es').flatMap((d) => [
     `### ${d.number}. ${d.title}: ${d.subtitle}`,
     d.summary,
@@ -87,12 +113,13 @@ export async function buildLlmsFullTxt(knownSite?: SiteConfig) {
     ...d.sections.map((s) => `**${s.h}.** ${stripHtml(s.body)}`),
     '',
   ]);
-  const faq = visit.faq.items.flatMap((i) => [`### ${i.q}`, i.a, '']);
+  const faq =
+    site.sections.visit === 'outOfService'
+      ? []
+      : visit.faq.items.flatMap((i) => [`### ${i.q}`, i.a, '']);
   return [
     ...header(site),
-    '## Preguntas frecuentes',
-    '',
-    ...faq,
+    ...(faq.length > 0 ? ['## Preguntas frecuentes', '', ...faq] : []),
     '## Confesión de fe',
     '',
     ...doctrines,

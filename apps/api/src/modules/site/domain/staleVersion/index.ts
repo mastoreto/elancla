@@ -1,0 +1,1 @@
+export { StaleVersionError } from "./staleVersion";

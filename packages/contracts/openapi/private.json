@@ -208,6 +208,10 @@
                               "reports",
                               "content",
                               "content.posts",
+                              "site",
+                              "content.people",
+                              "content.visit",
+                              "content.pages",
                               "ministries.profile",
                               "ministries.finance",
                               "users",
@@ -2053,6 +2057,10 @@
                                 "reports",
                                 "content",
                                 "content.posts",
+                                "site",
+                                "content.people",
+                                "content.visit",
+                                "content.pages",
                                 "ministries.profile",
                                 "ministries.finance",
                                 "users",
@@ -2091,7 +2099,7 @@
                           ],
                           "additionalProperties": false
                         },
-                        "maxItems": 108
+                        "maxItems": 132
                       }
                     },
                     "required": [
@@ -2273,6 +2281,10 @@
                             "reports",
                             "content",
                             "content.posts",
+                            "site",
+                            "content.people",
+                            "content.visit",
+                            "content.pages",
                             "ministries.profile",
                             "ministries.finance",
                             "users",
@@ -2311,7 +2323,7 @@
                       ],
                       "additionalProperties": false
                     },
-                    "maxItems": 108
+                    "maxItems": 132
                   }
                 },
                 "required": [
@@ -2378,6 +2390,10 @@
                               "reports",
                               "content",
                               "content.posts",
+                              "site",
+                              "content.people",
+                              "content.visit",
+                              "content.pages",
                               "ministries.profile",
                               "ministries.finance",
                               "users",
@@ -2416,7 +2432,7 @@
                         ],
                         "additionalProperties": false
                       },
-                      "maxItems": 108
+                      "maxItems": 132
                     }
                   },
                   "required": [
@@ -2728,6 +2744,10 @@
                               "reports",
                               "content",
                               "content.posts",
+                              "site",
+                              "content.people",
+                              "content.visit",
+                              "content.pages",
                               "ministries.profile",
                               "ministries.finance",
                               "users",
@@ -2766,7 +2786,7 @@
                         ],
                         "additionalProperties": false
                       },
-                      "maxItems": 108
+                      "maxItems": 132
                     }
                   },
                   "required": [
@@ -3013,6 +3033,10 @@
                             "reports",
                             "content",
                             "content.posts",
+                            "site",
+                            "content.people",
+                            "content.visit",
+                            "content.pages",
                             "ministries.profile",
                             "ministries.finance",
                             "users",
@@ -3051,7 +3075,7 @@
                       ],
                       "additionalProperties": false
                     },
-                    "maxItems": 108
+                    "maxItems": 132
                   }
                 },
                 "required": [
@@ -3118,6 +3142,10 @@
                               "reports",
                               "content",
                               "content.posts",
+                              "site",
+                              "content.people",
+                              "content.visit",
+                              "content.pages",
                               "ministries.profile",
                               "ministries.finance",
                               "users",
@@ -3156,7 +3184,7 @@
                         ],
                         "additionalProperties": false
                       },
-                      "maxItems": 108
+                      "maxItems": 132
                     }
                   },
                   "required": [
@@ -6771,6 +6799,1335 @@
           },
           "404": {
             "description": "Not found or already revoked",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/site/settings": {
+      "get": {
+        "tags": [
+          "site"
+        ],
+        "summary": "The site settings as the CRM edits them.",
+        "responses": {
+          "200": {
+            "description": "The site settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "shortName": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "subtitle": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "online",
+                        "maintenance",
+                        "closed"
+                      ]
+                    },
+                    "contactEmail": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "addressStreet": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "addressCity": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "addressRegion": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "addressCountry": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "addressPostal": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "geoLat": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "geoLng": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "themeColor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "founded": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "website": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "instagram": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "youtube": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "facebook": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "twitter": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "spotify": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "linkedin": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "serviceTimes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "worship",
+                              "bibleSchool"
+                            ]
+                          },
+                          "weekday": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 6
+                          },
+                          "start": {
+                            "type": "string",
+                            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                          },
+                          "end": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "weekday",
+                          "start",
+                          "end"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "sections": {
+                      "type": "object",
+                      "properties": {
+                        "blog": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "calendar": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "sermons": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "ministries": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "visit": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "blog",
+                        "calendar",
+                        "sermons",
+                        "ministries",
+                        "visit"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "translations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "seoDescription": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "maxLength": 160
+                          }
+                        },
+                        "required": [
+                          "seoDescription"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "locales": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "defaultLocale": {
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "shortName",
+                    "subtitle",
+                    "url",
+                    "status",
+                    "contactEmail",
+                    "addressStreet",
+                    "addressCity",
+                    "addressRegion",
+                    "addressCountry",
+                    "addressPostal",
+                    "geoLat",
+                    "geoLng",
+                    "themeColor",
+                    "founded",
+                    "website",
+                    "instagram",
+                    "youtube",
+                    "facebook",
+                    "twitter",
+                    "spotify",
+                    "linkedin",
+                    "serviceTimes",
+                    "sections",
+                    "translations",
+                    "locales",
+                    "defaultLocale",
+                    "version"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid session",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The role does not allow this",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The organization has no site settings",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "site"
+        ],
+        "summary": "Change part of the site settings (needs the `version` you loaded).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "shortName": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
+                  },
+                  "subtitle": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 200
+                  },
+                  "url": {
+                    "type": "string",
+                    "maxLength": 300,
+                    "format": "uri"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "online",
+                      "maintenance",
+                      "closed"
+                    ]
+                  },
+                  "contactEmail": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 300,
+                    "format": "email"
+                  },
+                  "addressStreet": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
+                  },
+                  "addressCity": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
+                  },
+                  "addressRegion": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
+                  },
+                  "addressCountry": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
+                  },
+                  "addressPostal": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 40
+                  },
+                  "geoLat": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": -90,
+                    "maximum": 90
+                  },
+                  "geoLng": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": -180,
+                    "maximum": 180
+                  },
+                  "themeColor": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^#[0-9a-fA-F]{6}$"
+                  },
+                  "founded": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^\\d{4}$"
+                  },
+                  "website": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 300,
+                    "format": "uri"
+                  },
+                  "instagram": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 300,
+                    "format": "uri"
+                  },
+                  "youtube": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 300,
+                    "format": "uri"
+                  },
+                  "facebook": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 300,
+                    "format": "uri"
+                  },
+                  "twitter": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 300,
+                    "format": "uri"
+                  },
+                  "spotify": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 300,
+                    "format": "uri"
+                  },
+                  "linkedin": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 300,
+                    "format": "uri"
+                  },
+                  "serviceTimes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "worship",
+                            "bibleSchool"
+                          ]
+                        },
+                        "weekday": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 6
+                        },
+                        "start": {
+                          "type": "string",
+                          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                        },
+                        "end": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "weekday",
+                        "start",
+                        "end"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 10
+                  },
+                  "sections": {
+                    "type": "object",
+                    "properties": {
+                      "blog": {
+                        "type": "string",
+                        "enum": [
+                          "active",
+                          "maintenance",
+                          "outOfService"
+                        ]
+                      },
+                      "calendar": {
+                        "type": "string",
+                        "enum": [
+                          "active",
+                          "maintenance",
+                          "outOfService"
+                        ]
+                      },
+                      "sermons": {
+                        "type": "string",
+                        "enum": [
+                          "active",
+                          "maintenance",
+                          "outOfService"
+                        ]
+                      },
+                      "ministries": {
+                        "type": "string",
+                        "enum": [
+                          "active",
+                          "maintenance",
+                          "outOfService"
+                        ]
+                      },
+                      "visit": {
+                        "type": "string",
+                        "enum": [
+                          "active",
+                          "maintenance",
+                          "outOfService"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "translations": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "seoDescription": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "maxLength": 160
+                        }
+                      },
+                      "required": [
+                        "seoDescription"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "version"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The site settings after the change",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "shortName": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "subtitle": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "online",
+                        "maintenance",
+                        "closed"
+                      ]
+                    },
+                    "contactEmail": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "addressStreet": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "addressCity": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "addressRegion": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "addressCountry": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "addressPostal": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "geoLat": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "geoLng": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "themeColor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "founded": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "website": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "instagram": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "youtube": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "facebook": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "twitter": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "spotify": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "linkedin": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "serviceTimes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "worship",
+                              "bibleSchool"
+                            ]
+                          },
+                          "weekday": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 6
+                          },
+                          "start": {
+                            "type": "string",
+                            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                          },
+                          "end": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "weekday",
+                          "start",
+                          "end"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "sections": {
+                      "type": "object",
+                      "properties": {
+                        "blog": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "calendar": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "sermons": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "ministries": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "visit": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "blog",
+                        "calendar",
+                        "sermons",
+                        "ministries",
+                        "visit"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "translations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "seoDescription": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "maxLength": 160
+                          }
+                        },
+                        "required": [
+                          "seoDescription"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "locales": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "defaultLocale": {
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "shortName",
+                    "subtitle",
+                    "url",
+                    "status",
+                    "contactEmail",
+                    "addressStreet",
+                    "addressCity",
+                    "addressRegion",
+                    "addressCountry",
+                    "addressPostal",
+                    "geoLat",
+                    "geoLng",
+                    "themeColor",
+                    "founded",
+                    "website",
+                    "instagram",
+                    "youtube",
+                    "facebook",
+                    "twitter",
+                    "spotify",
+                    "linkedin",
+                    "serviceTimes",
+                    "sections",
+                    "translations",
+                    "locales",
+                    "defaultLocale",
+                    "version"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is not valid or uses a disabled language",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid session",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The role does not allow this",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The organization has no site settings",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The settings changed since they were loaded",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -11609,7 +12966,98 @@
                         "null"
                       ]
                     },
-                    "serviceTimesSummary": {
+                    "serviceTimes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "worship",
+                              "bibleSchool"
+                            ]
+                          },
+                          "weekday": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 6
+                          },
+                          "start": {
+                            "type": "string",
+                            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                          },
+                          "end": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "weekday",
+                          "start",
+                          "end"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "sections": {
+                      "type": "object",
+                      "properties": {
+                        "blog": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "calendar": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "sermons": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "ministries": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "visit": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "blog",
+                        "calendar",
+                        "sermons",
+                        "ministries",
+                        "visit"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "seoDescription": {
                       "type": [
                         "string",
                         "null"
@@ -11671,12 +13119,6 @@
                         "linkedin"
                       ],
                       "additionalProperties": false
-                    },
-                    "about": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
                     }
                   },
                   "required": [
@@ -11691,9 +13133,10 @@
                     "geo",
                     "themeColor",
                     "founded",
-                    "serviceTimesSummary",
-                    "social",
-                    "about"
+                    "serviceTimes",
+                    "sections",
+                    "seoDescription",
+                    "social"
                   ],
                   "additionalProperties": false
                 }

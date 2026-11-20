@@ -39,7 +39,7 @@
     "latestChip": "Último sermón",
     "playingChip": "Reproduciendo",
     "liveMeta": "Transmisión en directo",
-    "nextService": "Próximo culto en vivo: domingo 11:15",
+    "nextService": "Próximo culto en vivo: domingo {worshipTime}",
     "iframeTitle": "Reproductor de YouTube",
     "emptyTitle": "Pronto estarán aquí los sermones",
     "emptyBody": "Estamos conectando el canal de YouTube."
@@ -65,7 +65,7 @@
     "countOne": "1 sermón"
   },
   "cta": {
-    "eyebrow": "Cada domingo · 11:15",
+    "eyebrow": "Cada domingo · {worshipTime}",
     "title": "Acompáñanos en vivo desde casa.",
     "body": "Suscríbete en YouTube y activa la campanita: te avisamos cuando empiece el culto.",
     "subscribe": "Suscribirme en YouTube"

@@ -19,7 +19,19 @@
   },
   "facts": {
     "status": "Status",
-    "services": "Services",
     "where": "Where"
+  },
+  "section": {
+    "kicker": "Section under maintenance",
+    "title": "This section is under maintenance",
+    "titleEmphasis": "maintenance",
+    "description": "We are improving this part of the site. Please come back soon: the rest of the site is still available.",
+    "tag": "Under maintenance",
+    "statusValue": "Under maintenance",
+    "homeCta": "Go to the home page"
+  },
+  "serviceKinds": {
+    "worship": "Service",
+    "bibleSchool": "Bible school"
   }
 }

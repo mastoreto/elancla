@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import { publicSiteSettingsDto } from "@ancla/contracts";
-import { db } from "@ancla/db";
+import { db, type Prisma } from "@ancla/db";
 import { createApiCaller } from "../../../test/support/apiCaller";
 import { createFixtures } from "../../../test/support/fixtures";
 import { resolveOrganizationId } from "../../core/tenancy";
@@ -9,7 +9,8 @@ import { PUBLIC_CACHE_CONTROL } from "./public.routes";
 const fixtures = createFixtures();
 const call = createApiCaller(fixtures);
 
-const ABOUT_ES = "Texto en español (test)";
+const SEO_ES = "Descripción en español (test)";
+const SECTION_KEYS = ["blog", "calendar", "sermons", "ministries", "visit"];
 const FORBIDDEN_KEYS = [
   "id",
   "organizationId",
@@ -17,6 +18,8 @@ const FORBIDDEN_KEYS = [
   "secretHash",
   "createdAt",
   "updatedAt",
+  "about",
+  "serviceTimesSummary",
 ];
 
 let organizationId = "";
@@ -24,8 +27,19 @@ let slug = "";
 let validKey = "";
 let otherChurchKey = "";
 let otherChurchSlug = "";
-let previousAbout: unknown;
+let settingsId = "";
+let previousSections: Prisma.JsonValue = {};
+let previousSeo: string | null = null;
 let hadSpanishTranslation = false;
+let previousPortugueseSeo: string | null = null;
+
+const portugueseTranslation = () => ({
+  siteSettingsId_locale: { siteSettingsId: settingsId, locale: "pt" },
+});
+
+const spanishTranslation = () => ({
+  siteSettingsId_locale: { siteSettingsId: settingsId, locale: "es" },
+});
 
 beforeAll(async () => {
   organizationId = await resolveOrganizationId();
@@ -42,44 +56,58 @@ beforeAll(async () => {
 
   const settings = await db.siteSettings.findFirstOrThrow({
     where: { organizationId },
-    select: { id: true },
   });
+  settingsId = settings.id;
+  previousSections = settings.sectionStatuses;
   const existing = await db.siteSettingsTranslation.findUnique({
-    where: {
-      siteSettingsId_locale: { siteSettingsId: settings.id, locale: "es" },
-    },
+    where: spanishTranslation(),
   });
   hadSpanishTranslation = existing !== null;
-  previousAbout = existing?.aboutRichText;
+  previousSeo = existing?.seoDescription ?? null;
   await db.siteSettingsTranslation.upsert({
-    where: {
-      siteSettingsId_locale: { siteSettingsId: settings.id, locale: "es" },
-    },
+    where: spanishTranslation(),
     create: {
-      siteSettingsId: settings.id,
+      siteSettingsId: settingsId,
       locale: "es",
-      aboutRichText: ABOUT_ES,
+      seoDescription: SEO_ES,
     },
-    update: { aboutRichText: ABOUT_ES },
+    update: { seoDescription: SEO_ES },
+  });
+  // The seed translates every locale; Portuguese must have no description for the fallback case.
+  const portuguese = await db.siteSettingsTranslation.findUnique({
+    where: portugueseTranslation(),
+  });
+  previousPortugueseSeo = portuguese?.seoDescription ?? null;
+  if (portuguese) {
+    await db.siteSettingsTranslation.update({
+      where: portugueseTranslation(),
+      data: { seoDescription: null },
+    });
+  }
+  // One configured section and one junk key: the response must complete and clean the map.
+  await db.siteSettings.update({
+    where: { id: settingsId },
+    data: { sectionStatuses: { blog: "maintenance", gallery: "maintenance" } },
   });
 });
 
 afterAll(async () => {
-  const settings = await db.siteSettings.findFirstOrThrow({
-    where: { organizationId },
-    select: { id: true },
+  await db.siteSettings.update({
+    where: { id: settingsId },
+    data: { sectionStatuses: previousSections as Prisma.InputJsonValue },
   });
-  const where = {
-    siteSettingsId_locale: { siteSettingsId: settings.id, locale: "es" },
-  };
   if (hadSpanishTranslation) {
     await db.siteSettingsTranslation.update({
-      where,
-      data: { aboutRichText: previousAbout as string },
+      where: spanishTranslation(),
+      data: { seoDescription: previousSeo },
     });
   } else {
-    await db.siteSettingsTranslation.delete({ where });
+    await db.siteSettingsTranslation.delete({ where: spanishTranslation() });
   }
+  await db.siteSettingsTranslation.updateMany({
+    where: { siteSettingsId: settingsId, locale: "pt" },
+    data: { seoDescription: previousPortugueseSeo },
+  });
   await fixtures.cleanup();
 });
 
@@ -158,15 +186,29 @@ describe("GET /api/public/v1/:churchSlug/settings response", () => {
       expect(serialized).not.toContain(`"${key}"`);
     }
     expect(body.locale).toBe("es");
-    expect(body.about).toBe(ABOUT_ES);
+    expect(body.seoDescription).toBe(SEO_ES);
+    expect(Array.isArray(body.serviceTimes)).toBe(true);
+  });
+
+  test("sections always carry the five keys, completed and without unknown ones", async () => {
+    const res = await getSettings(slug, `Bearer ${validKey}`);
+    const { sections } = (await res.json()) as {
+      sections: Record<string, string>;
+    };
+    expect(Object.keys(sections).sort()).toEqual([...SECTION_KEYS].sort());
+    expect(sections.blog).toBe("maintenance");
+    expect(sections.visit).toBe("active");
   });
 
   test("a locale without translation serves the default language and says so", async () => {
     const res = await getSettings(slug, `Bearer ${validKey}`, "?locale=pt");
     expect(res.status).toBe(200);
-    const body = (await res.json()) as { locale: string; about: string | null };
+    const body = (await res.json()) as {
+      locale: string;
+      seoDescription: string | null;
+    };
     expect(body.locale).toBe("es");
-    expect(body.about).toBe(ABOUT_ES);
+    expect(body.seoDescription).toBe(SEO_ES);
   });
 
   test("a locale that is not valid is a 400", async () => {

@@ -93,3 +93,5 @@ export function getLocaleSeo(locale: Locale) {
     ogLocale: localeMeta[locale].ogLocale,
   };
 }
+
+export { interpolate, interpolateDeep } from './interpolate';

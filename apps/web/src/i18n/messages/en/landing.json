@@ -62,17 +62,17 @@
     "photoAlt": "A gathering in the church hall",
     "rows": [
       {
-        "time": "10:00",
+        "time": "{bibleSchoolTime}",
         "title": "Bible school",
         "text": "For adults and children. Join in or come straight to the service."
       },
       {
-        "time": "11:15",
+        "time": "{worshipTime}",
         "title": "Celebration service",
         "text": "We sing, pray and open the Bible together. Also live on YouTube."
       },
       {
-        "time": "13:00",
+        "time": "{worshipEnd}",
         "title": "Service ends",
         "text": "If you like, stay and chat. Nobody will rush you."
       }
@@ -83,12 +83,12 @@
   "closing": {
     "eyebrow": "The work goes on",
     "title": "We're waiting for you this Sunday.",
-    "text": "A church anchored in the gospel. Bible school at 10:00 and service at 11:15.",
+    "text": "A church anchored in the gospel. Bible school at {bibleSchoolTime} and service at {worshipTime}.",
     "follow": "Follow us during the week",
-    "mapLabel": "Area map: Av. Herrera at Juan Arrieta, Montevideo",
-    "where": "Montevideo · Sundays 10:00 and 11:15",
+    "mapLabel": "Area map: {street}, Montevideo",
+    "where": "Montevideo · Sundays {bibleSchoolTime} and {worshipTime}",
     "how": "Get directions",
-    "since": "· Baptist Church · Montevideo, since 1997"
+    "since": "· Baptist Church · Montevideo, since {founded}"
   },
   "a11y": {
     "scrollProgress": "Page progress"

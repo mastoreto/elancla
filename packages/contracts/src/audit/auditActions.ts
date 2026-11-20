@@ -50,6 +50,7 @@ export const AUDIT_ACTIONS = {
     resumed: "editorial.resumed",
     settingsUpdated: "editorial.settingsUpdated",
   },
+  site: { settingsUpdated: "site.settingsUpdated" },
   media: {
     uploadRequested: "media.upload.requested",
     finalized: "media.finalized",

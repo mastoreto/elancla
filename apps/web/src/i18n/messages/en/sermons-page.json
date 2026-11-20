@@ -39,7 +39,7 @@
     "latestChip": "Latest sermon",
     "playingChip": "Now playing",
     "liveMeta": "Live broadcast",
-    "nextService": "Next live service: Sunday 11:15",
+    "nextService": "Next live service: Sunday {worshipTime}",
     "iframeTitle": "YouTube player",
     "emptyTitle": "Sermons will be here soon",
     "emptyBody": "We are connecting the YouTube channel."
@@ -65,7 +65,7 @@
     "countOne": "1 sermon"
   },
   "cta": {
-    "eyebrow": "Every Sunday · 11:15",
+    "eyebrow": "Every Sunday · {worshipTime}",
     "title": "Join us live from home.",
     "body": "Subscribe on YouTube and turn on the bell: we will let you know when the service starts.",
     "subscribe": "Subscribe on YouTube"

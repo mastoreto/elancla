@@ -17,7 +17,7 @@
         { "emphasis": "ancla", "after": " en el" },
         { "text": "evangelio." }
       ],
-      "standfirst": "Conocer una iglesia es un gran desafío en estos tiempos. Esperamos que con la información que encuentres aquí, puedas tener un mayor panorama de quiénes somos, en qué creemos y cómo vivimos la fe en Montevideo desde 1997.",
+      "standfirst": "Conocer una iglesia es un gran desafío en estos tiempos. Esperamos que con la información que encuentres aquí, puedas tener un mayor panorama de quiénes somos, en qué creemos y cómo vivimos la fe en Montevideo desde {founded}.",
       "stats": [
         { "value": "29", "label": "Años" },
         { "value": "10", "label": "Ministerios" },
@@ -28,8 +28,8 @@
       "src": "/images/homebanner-web.jpg",
       "alt": "Casa de la Iglesia Bautista El Ancla en Montevideo",
       "label": "[ FIG.01 ]",
-      "caption": "Casa de la iglesia · Av. Dr. Luis A. de Herrera 3101 esq. Juan Arrieta.",
-      "badge": "Av. L. A. de Herrera 3101",
+      "caption": "Casa de la iglesia · {street}.",
+      "badge": "{streetShort}",
       "meta": "— Montevideo · UY",
       "aspect": "wide"
     },
@@ -232,7 +232,7 @@
             "links": [
               {
                 "href": "/confesion-de-fe",
-                "sourceLabel": "elancla.uy / confesion",
+                "sourceLabel": "{host} / confesion",
                 "title": "Confesión de Fe — doce artículos",
                 "description": "El detalle largo de nuestras convicciones doctrinales sobre Dios, la Escritura, el evangelio y la iglesia.",
                 "meta": "Leer · 12 artículos",
@@ -240,7 +240,7 @@
               },
               {
                 "href": "/#juntos",
-                "sourceLabel": "elancla.uy / ministerios",
+                "sourceLabel": "{host} / ministerios",
                 "title": "Diez ministerios donde servir",
                 "description": "Cada ministerio es una invitación: un lugar para crecer, usar tus dones y servir a otros en nombre de Cristo.",
                 "meta": "Ver listado completo",
@@ -249,7 +249,7 @@
               },
               {
                 "href": "/blog",
-                "sourceLabel": "elancla.uy / blog",
+                "sourceLabel": "{host} / blog",
                 "title": "Blog · reflexiones y notas pastorales",
                 "description": "Una bitácora semanal con sermones, lecturas guiadas y notas breves sobre la vida en la iglesia.",
                 "meta": "Cada martes · 7 min",
@@ -257,8 +257,8 @@
                 "tint": "#ece5d2"
               },
               {
-                "href": "https://youtube.com/@iglesiaelanclauy",
-                "sourceLabel": "youtube · @iglesiaelanclauy",
+                "href": "{youtubeUrl}",
+                "sourceLabel": "youtube · {youtubeHandle}",
                 "title": "Sermones en video",
                 "description": "El archivo completo de sermones dominicales y eventos especiales, transmitidos en vivo cada domingo.",
                 "meta": "Abrir canal",
@@ -274,7 +274,7 @@
     "cta": {
       "eyebrow": "[ Próximo paso ]",
       "title": { "before": "Lo mejor es ", "emphasis": "venir." },
-      "body": "Conocer una iglesia se hace caminando hasta ella un domingo a la mañana. Te esperamos a las 11:15 hs en Av. Dr. Luis A. de Herrera 3101. Sin códigos, sin requisitos.",
+      "body": "Conocer una iglesia se hace caminando hasta ella un domingo a la mañana. Te esperamos a las {worshipTime} hs en {streetShort}. Sin códigos, sin requisitos.",
       "primary": { "label": "Cómo llegar", "href": "/#visitanos" },
       "secondary": { "label": "Ver horarios de la semana", "href": "/#domingo" }
     }
@@ -318,15 +318,15 @@
       "factsTitleBefore": "Cuándo, dónde y ",
       "factsTitleEmphasis": "con quién.",
       "facts": [
-        { "label": "Culto", "value": "Domingo · 11:15" },
-        { "label": "Lugar", "value": "Templo · Av. L. A. de Herrera 3101" },
+        { "label": "Culto", "value": "Domingo · {worshipTime}" },
+        { "label": "Lugar", "value": "Templo · {streetShort}" },
         {
           "label": "Cómo sumarte",
           "value": "Visítanos un domingo y conversemos después del culto."
         }
       ],
       "stats": [
-        { "value": "Dom 11:15", "label": "Culto" },
+        { "value": "Dom {worshipTime}", "label": "Culto" },
         { "value": "Montevideo", "label": "Uruguay" }
       ]
     },
@@ -362,7 +362,7 @@
       "links": [
         {
           "href": "/#juntos",
-          "sourceLabel": "elancla.uy / ministerios",
+          "sourceLabel": "{host} / ministerios",
           "title": "Volver al listado de ministerios",
           "description": "Explorá los demás espacios de servicio y crecimiento de la iglesia.",
           "meta": "Ver ministerios",
@@ -370,10 +370,10 @@
         },
         {
           "href": "/#visitanos",
-          "sourceLabel": "elancla.uy / visitanos",
+          "sourceLabel": "{host} / visitanos",
           "title": "Conocernos un domingo",
           "description": "La mejor forma de conectar con un ministerio es venir y conversar después del culto.",
-          "meta": "Domingos · 11:15",
+          "meta": "Domingos · {worshipTime}",
           "glyph": "V",
           "tint": "#e6e2d4"
         }

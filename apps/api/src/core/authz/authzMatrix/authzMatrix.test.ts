@@ -428,6 +428,69 @@ const rows: MatrixRow[] = [
     expected: 404,
   },
 
+  // site settings: view reads, edit writes.
+  ...(
+    [
+      ["GET", undefined],
+      ["PATCH", { version: 0 }],
+    ] as const
+  ).map(
+    ([method, body]): MatrixRow => ({
+      who: "anonymous",
+      caller: "anonymous",
+      method,
+      path: "/site/settings",
+      body,
+      expected: 401,
+    }),
+  ),
+  {
+    who: "no role",
+    caller: NOTHING,
+    method: "GET",
+    path: "/site/settings",
+    expected: 403,
+  },
+  {
+    who: "no role",
+    caller: NOTHING,
+    method: "PATCH",
+    path: "/site/settings",
+    body: { version: 0 },
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.site.view,
+    caller: [grant(PERMISSIONS.site.view)],
+    method: "GET",
+    path: "/site/settings",
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.site.view,
+    caller: [grant(PERMISSIONS.site.view)],
+    method: "PATCH",
+    path: "/site/settings",
+    body: { version: 0 },
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.site.edit,
+    caller: [grant(PERMISSIONS.site.edit)],
+    method: "GET",
+    path: "/site/settings",
+    expected: 403,
+  },
+  {
+    // A body with no version never reaches the use case: 400 proves the guard let it through.
+    who: PERMISSIONS.site.edit,
+    caller: [grant(PERMISSIONS.site.edit)],
+    method: "PATCH",
+    path: "/site/settings",
+    body: {},
+    expected: 400,
+  },
+
   // media: the permission is the one of the file's purpose (content:create, vouchers:create...).
   {
     who: "anonymous",

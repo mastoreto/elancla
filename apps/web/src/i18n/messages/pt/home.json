@@ -1,14 +1,14 @@
 {
   "seo": {
     "title": "Igreja Batista em Montevidéu, Uruguai | El Ancla",
-    "description": "Igreja Batista El Ancla: comunidade cristã centrada no evangelho. Cultos aos domingos às 11h15 na Av. Luis A. de Herrera 3101, Montevidéu, Uruguai.",
+    "description": "Igreja Batista El Ancla: comunidade cristã centrada no evangelho. Cultos aos domingos às {worshipTime} na {streetShort}, Montevidéu, Uruguai.",
     "keywords": [
       "Igreja Batista El Ancla",
       "Igreja Batista Montevidéu",
       "igreja evangélica Uruguai",
       "igreja cristã Montevidéu",
       "culto dominical Montevidéu",
-      "Av. Herrera 3101",
+      "{streetShort}",
       "Hebreus 6:19"
     ]
   },
@@ -24,12 +24,12 @@
     "schedule": [
       {
         "label": "01 · Domingos",
-        "time": "11:15",
+        "time": "{worshipTime}",
         "description": "Culto de celebração"
       },
       {
         "label": "02 · Domingos",
-        "time": "10:00",
+        "time": "{bibleSchoolTime}",
         "description": "Escola bíblica"
       },
       {

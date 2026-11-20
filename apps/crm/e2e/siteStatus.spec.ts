@@ -11,7 +11,14 @@ const RETRY_AFTER_SECONDS = "300";
 // Set to a directory to keep screenshots of every state (used to compare against the design).
 const SCREENSHOT_DIR = process.env.E2E_SCREENSHOT_DIR;
 
+const BLOG_ROUTE = "/blog";
+const HTTP_OK = 200;
+const HTTP_NOT_FOUND = 404;
+const HTTP_UNAVAILABLE = 503;
+const WEB_POLL_TIMEOUT_MS = 15_000;
+
 type SiteStatusLabel = "En línea" | "Mantenimiento" | "Cerrado";
+type SectionStatusLabel = "Activa" | "Mantenimiento" | "Fuera de servicio";
 
 /**
  * Picks a status in the CRM with the real controls and proves it was saved: the confirmation toast
@@ -35,10 +42,37 @@ async function chooseSiteStatus(page: Page, label: SiteStatusLabel): Promise<voi
 }
 
 /** The web caches the settings for a moment (SITE_CONFIG_TTL_MS): wait until it serves `status`. */
-async function waitForWebStatus(page: Page, expected: number): Promise<void> {
+async function waitForWebStatus(page: Page, expected: number, route = "/"): Promise<void> {
   await expect
-    .poll(async () => (await page.request.get(`${WEB_URL}/`)).status(), { timeout: 15_000 })
+    .poll(async () => (await page.request.get(`${WEB_URL}${route}`)).status(), {
+      timeout: WEB_POLL_TIMEOUT_MS,
+    })
     .toBe(expected);
+}
+
+/**
+ * Sets the status of one section with the real controls of the "Secciones del sitio" card and
+ * proves it was saved: the toast shows and the choice survives a reload.
+ */
+async function chooseSectionStatus(
+  page: Page,
+  section: string,
+  label: SectionStatusLabel,
+): Promise<void> {
+  await page.goto(WEBSITE_PAGE);
+  const card = page.locator("section", {
+    has: page.getByRole("heading", { name: "Secciones del sitio" }),
+  });
+  const select = card.getByRole("combobox", { name: section });
+  await expect(select).toBeVisible();
+  if (!(await select.innerText()).includes(label)) {
+    await select.click();
+    await page.getByRole("option", { name: label }).click();
+    await card.getByRole("button", { name: "Guardar cambios" }).click();
+    await expect(page.getByText("Secciones actualizadas")).toBeVisible();
+  }
+  await page.reload();
+  await expect(card.getByRole("combobox", { name: section })).toContainText(label);
 }
 
 async function captureState(page: Page, name: string): Promise<void> {
@@ -69,6 +103,7 @@ test.describe("the public site follows the status chosen in the CRM", () => {
     const page = await context.newPage();
     await login(page, E2E_USERS.admin);
     await chooseSiteStatus(page, "En línea");
+    await chooseSectionStatus(page, "Blog", "Activa");
     await context.close();
   });
 
@@ -157,5 +192,35 @@ test.describe("the public site follows the status chosen in the CRM", () => {
     await expect(page.locator("main")).toHaveCount(1);
     await expect(page.locator('meta[name="robots"][content*="noindex"]')).toHaveCount(0);
     expect((await page.request.get(`${WEB_URL}/visitanos`)).status()).toBe(200);
+  });
+  test("a section in Mantenimiento answers 503 on its own and leaves the home up", async ({
+    page,
+  }) => {
+    await chooseSiteStatus(page, "En línea");
+    await chooseSectionStatus(page, "Blog", "Mantenimiento");
+    await waitForWebStatus(page, HTTP_UNAVAILABLE, BLOG_ROUTE);
+
+    await page.setViewportSize(DESKTOP);
+    await page.goto(`${WEB_URL}${BLOG_ROUTE}`);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "Esta sección está en mantenimiento",
+    );
+    expect((await page.request.get(`${WEB_URL}/`)).status()).toBe(HTTP_OK);
+  });
+
+  test("a section Fuera de servicio is a 404 and leaves the navigation", async ({ page }) => {
+    await chooseSiteStatus(page, "En línea");
+    await chooseSectionStatus(page, "Blog", "Fuera de servicio");
+    await waitForWebStatus(page, HTTP_NOT_FOUND, BLOG_ROUTE);
+
+    await page.setViewportSize(DESKTOP);
+    await page.goto(WEB_URL);
+    await expect(page.locator('nav a[href$="/blog"]')).toHaveCount(0);
+    expect((await page.request.get(`${WEB_URL}/`)).status()).toBe(HTTP_OK);
+  });
+
+  test("Activa brings the section back", async ({ page }) => {
+    await chooseSectionStatus(page, "Blog", "Activa");
+    await waitForWebStatus(page, HTTP_OK, BLOG_ROUTE);
   });
 });
