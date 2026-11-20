@@ -128,15 +128,15 @@ model SiteSettingsTranslation {
 // Authorization lives in the RBAC models below (roles, permissions, ministries).
 
 model User {
-  id                 String         @id @default(uuid(7)) @db.Uuid
+  id                 String            @id @default(uuid(7)) @db.Uuid
   name               String
-  email              String         @unique
-  emailVerified      Boolean        @default(false)
+  email              String            @unique
+  emailVerified      Boolean           @default(false)
   image              String?
   /// Better Auth two-factor plugin flag.
-  twoFactorEnabled   Boolean        @default(false)
-  createdAt          DateTime       @default(now()) @db.Timestamptz(3)
-  updatedAt          DateTime       @updatedAt @db.Timestamptz(3)
+  twoFactorEnabled   Boolean           @default(false)
+  createdAt          DateTime          @default(now()) @db.Timestamptz(3)
+  updatedAt          DateTime          @updatedAt @db.Timestamptz(3)
   sessions           Session[]
   accounts           Account[]
   twoFactors         TwoFactor[]
@@ -470,6 +470,7 @@ model ContentRevision {
 
 /// Who reviews, and who must be reviewed, per content type. The id arrays are not FKs: an id of a
 /// deleted role or user simply stops matching and is filtered out when read.
+/// ponytail: arrays, not join tables; move to FKs if stale ids ever matter.
 model EditorialSettings {
   id                     String               @id @default(uuid(7)) @db.Uuid
   organizationId         String               @db.Uuid

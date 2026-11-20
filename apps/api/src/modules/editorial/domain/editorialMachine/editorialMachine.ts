@@ -19,6 +19,7 @@ const TRANSITIONS: Record<
   publish: { DRAFT: "PUBLISHED" },
   approve: { IN_REVIEW: "PUBLISHED" },
   requestChanges: { IN_REVIEW: "CHANGES_REQUESTED" },
+  // ponytail: no withdraw (IN_REVIEW → DRAFT) for the author; add it if asked.
   pause: { PUBLISHED: "PAUSED" },
   resume: { PAUSED: "PUBLISHED" },
 };
