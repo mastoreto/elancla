@@ -483,6 +483,8 @@ sistema. Editar algo publicado no lo cambia en la web hasta aprobar/publicar.
   este conteo: para eso está Search Console.
 - Revisión obligatoria configurable por autor/rol (D-30).
 
+**Notas de implementación (1.4a):** el snapshot es la fuente de verdad (sin tablas de traducción del artículo). Hooks de `blog-post`: `entityExists`, `validateSnapshot`, `beforeGoLive` (409 `slug_taken`, 409 `slug_locked`, 400 `invalid_media`/`invalid_author`/`invalid_category`/`invalid_series`, y fija `Post.firstLiveAt`). Visitas: la web reenvía `{ ip, userAgent }`; la API descarta bots, guarda solo `HMAC-SHA256(VIEW_HASH_SECRET, día + ip + ua)` en `PostViewVisitor` y cuenta en `PostViewDaily`; el purge borra los hashes de días anteriores. Programación: filtro en lectura, sin job (la caché puede retrasar la visibilidad hasta su TTL).
+
 ## D-33 — Estado por sección
 
 **Aceptada.** Cada sección del sitio (blog, calendario, sermones, ministerios, galería…) tiene estado
