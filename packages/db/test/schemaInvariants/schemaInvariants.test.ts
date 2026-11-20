@@ -16,6 +16,9 @@ const TABLES_WITHOUT_TENANT = new Set([
   "rate_limits",
   // Children reach the tenant through their parent row.
   "site_settings_translations",
+  "person_profile_translations",
+  "person_roles",
+  "person_role_translations",
   "role_permissions",
   "user_roles",
   "user_ministries",
