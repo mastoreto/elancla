@@ -1,5 +1,5 @@
 ---
-import { getSiteConfig } from '@ancla/content';
+import { getPeople, getSiteConfig } from '@ancla/content';
 import { getContentPageBySlug } from 'src/data/contentPages';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
@@ -22,6 +22,7 @@ if (!result) {
   return Astro.rewrite('/404');
 }
 const { page, isAlias } = result;
+const team = page.slug === 'nosotros' ? await getPeople('team', locale) : [];
 
 const canonicalPath = `/${page.slug}`;
 const canonical = new URL(
@@ -44,5 +45,5 @@ const breadcrumbs = page.hero.breadcrumbs.map((item) => ({
   noindex={isAlias}
   locale={locale}
 >
-  {page.slug === 'nosotros' ? <AboutPage page={page} /> : <ContentPageTemplate page={page} />}
+  {page.slug === 'nosotros' ? <AboutPage page={page} team={team} /> : <ContentPageTemplate page={page} />}
 </Layout>

@@ -1,4 +1,5 @@
 ---
+import type { PublicPerson } from '@ancla/content';
 import InlineText from 'src/components/InlineText';
 import type { ContentSection } from 'src/data/contentPages';
 import AboutLinkGrid from 'src/sections/about/AboutPage/components/AboutSection/components/AboutLinkGrid';
@@ -11,9 +12,10 @@ import cn from 'src/utils/cn';
 
 interface Props {
   section: ContentSection;
+  team?: PublicPerson[];
 }
 
-const { section } = Astro.props;
+const { section, team = [] } = Astro.props;
 // The design shows the history as a timeline only; the long narrative stays in the data but is not rendered.
 const blocks = section.blocks.filter(
   (b) =>
@@ -46,7 +48,7 @@ const aboutSection = {
         {block.type === 'verse' && <AboutVerse block={block} sectionId={section.id} />}
         {block.type === 'values' && <AboutValues block={block} />}
         {block.type === 'timeline' && <AboutTimeline block={block} />}
-        {block.type === 'team' && <AboutTeam block={block} />}
+        {block.type === 'team' && <AboutTeam people={team} />}
         {block.type === 'linkGrid' && <AboutLinkGrid block={block} />}
       </>
     ))

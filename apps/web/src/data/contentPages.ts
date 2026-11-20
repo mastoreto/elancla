@@ -60,14 +60,6 @@ export interface ContentTimelineItem {
   isCurrent?: boolean;
 }
 
-export interface ContentPerson {
-  name: string;
-  role: string;
-  bio: string;
-  initials: string;
-  tint?: string;
-}
-
 export interface ContentLink {
   title: string;
   description: string;
@@ -132,8 +124,8 @@ export interface ContentFigureBlock {
 }
 
 export interface ContentTeamBlock {
+  /** The people come from the public API (`getPeople('team')`), not from the page data. */
   type: 'team';
-  people: ContentPerson[];
 }
 
 export interface ContentLinkGridBlock {

@@ -6,7 +6,6 @@ import ContentFigure from 'src/sections/contentPage/ContentPageTemplate/componen
 import LinkGridBlock from 'src/sections/contentPage/ContentPageTemplate/components/ContentSection/components/LinkGridBlock';
 import ProseBlock from 'src/sections/contentPage/ContentPageTemplate/components/ContentSection/components/ProseBlock';
 import PullquoteBlock from 'src/sections/contentPage/ContentPageTemplate/components/ContentSection/components/PullquoteBlock';
-import TeamBlock from 'src/sections/contentPage/ContentPageTemplate/components/ContentSection/components/TeamBlock';
 import TimelineBlock from 'src/sections/contentPage/ContentPageTemplate/components/ContentSection/components/TimelineBlock';
 import ValuesBlock from 'src/sections/contentPage/ContentPageTemplate/components/ContentSection/components/ValuesBlock';
 import VerseBlock from 'src/sections/contentPage/ContentPageTemplate/components/ContentSection/components/VerseBlock';
@@ -60,7 +59,6 @@ const contentSection = {
         {block.type === 'timeline' && <TimelineBlock block={block} />}
         {block.type === 'pullquote' && <PullquoteBlock block={block} />}
         {block.type === 'figure' && <ContentFigure figure={block.figure} />}
-        {block.type === 'team' && <TeamBlock block={block} />}
         {block.type === 'linkGrid' && <LinkGridBlock block={block} />}
         {block.type === 'cta' && <ContentCTA cta={block.cta} />}
       </>

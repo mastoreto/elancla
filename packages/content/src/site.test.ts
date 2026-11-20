@@ -58,6 +58,7 @@ function clientReturning(
       if (result instanceof Error) throw result;
       return result as PublicSiteSettingsDto;
     },
+    getPeople: async () => [],
   };
 }
 
@@ -163,6 +164,7 @@ describe("createSiteConfigLoader", () => {
         locales.push(locale);
         return { ...SETTINGS, name: `site-${locale ?? "default"}` };
       },
+      getPeople: async () => [],
     };
     const { load } = loaderFor(client, { now: 0 });
     expect((await load()).name).toBe("site-default");
