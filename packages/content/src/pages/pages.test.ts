@@ -54,6 +54,11 @@ function clientFor(options: {
       if (result instanceof Error) throw result;
       return result as PublicPageDto | null;
     },
+    getPosts: async () => {
+      throw new Error("not used");
+    },
+    getPost: async () => null,
+    recordPostView: async () => {},
   };
 }
 

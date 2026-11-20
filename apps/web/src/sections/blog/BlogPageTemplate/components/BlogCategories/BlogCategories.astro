@@ -1,11 +1,11 @@
 ---
-import Chip from 'src/components/ui/Chip';
 // Heading + category chips. The chips are the grid filters (wired by initBlog via data-blog-filter-button).
-import type { BlogCategory } from 'src/data/blog';
+import type { PublicBlogIndex } from '@ancla/content';
+import Chip from 'src/components/ui/Chip';
 import cn from 'src/utils/cn';
 
 interface Props {
-  categories: BlogCategory[];
+  categories: PublicBlogIndex['categories'];
   copy: any;
 }
 
@@ -13,8 +13,8 @@ const { categories, copy } = Astro.props;
 const filters = [
   { label: copy.all, value: 'todos' },
   ...categories.map((category) => ({
-    label: category.name.replace(' bíblico', ''),
-    value: category.filter,
+    label: category.name,
+    value: category.slug,
   })),
 ];
 

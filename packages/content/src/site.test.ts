@@ -60,6 +60,11 @@ function clientReturning(
     },
     getPages: async () => [],
     getPage: async () => null,
+    getPosts: async () => {
+      throw new Error("not used");
+    },
+    getPost: async () => null,
+    recordPostView: async () => {},
     getPeople: async () => [],
     getVisit: async () => {
       throw new Error("not used");
@@ -171,6 +176,11 @@ describe("createSiteConfigLoader", () => {
       },
       getPages: async () => [],
       getPage: async () => null,
+      getPosts: async () => {
+        throw new Error("not used");
+      },
+      getPost: async () => null,
+      recordPostView: async () => {},
       getPeople: async () => [],
       getVisit: async () => {
         throw new Error("not used");

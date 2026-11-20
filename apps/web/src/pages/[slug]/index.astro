@@ -1,5 +1,10 @@
 ---
-import { getPage, getPeople, getSiteConfig } from '@ancla/content';
+import {
+  getPage,
+  getPeople,
+  getSiteConfig,
+  renderRichText,
+} from '@ancla/content';
 import { getContentPageBySlug } from 'src/data/contentPages';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
@@ -8,7 +13,6 @@ import AboutPage from 'src/sections/about/AboutPage';
 import ContentPageTemplate from 'src/sections/contentPage/ContentPageTemplate';
 import LandingPage from 'src/sections/landing/LandingPage';
 import SimplePage from 'src/sections/simplePage/SimplePage';
-import { renderRichText } from 'src/utils/renderRichText';
 import { buildSimplePageMeta } from 'src/utils/simplePageMeta';
 import { buildSiteTokens } from 'src/utils/siteTokens';
 

@@ -1,5 +1,5 @@
 ---
-import type { BlogArticle, BlogCategory, BlogSeriesItem } from 'src/data/blog';
+import type { PublicBlogIndex } from '@ancla/content';
 import type { Locale } from 'src/i18n/config';
 import BlogArticleGrid from 'src/sections/blog/BlogPageTemplate/components/BlogArticleGrid';
 import BlogCategories from 'src/sections/blog/BlogPageTemplate/components/BlogCategories';
@@ -11,17 +11,19 @@ import NewsletterCard from 'src/sections/blog/components/NewsletterCard';
 import cn from 'src/utils/cn';
 
 interface Props {
-  articles: BlogArticle[];
-  categories: BlogCategory[];
-  featured: BlogArticle | null;
-  marqueeItems: string[];
-  series: BlogSeriesItem[];
+  index: PublicBlogIndex;
   copy: any;
   locale: Locale;
 }
 
-const { articles, categories, featured, marqueeItems, series, copy, locale } =
-  Astro.props;
+const { index, copy, locale } = Astro.props;
+const { posts, categories, featured, series } = index;
+const marqueeItems = categories.map((category) => category.name);
+const minutes = copy.articles.minutes;
+
+// ponytail: `index.popular` (most read), `index.archive` and `index.tags` already arrive but the
+// design has no block for them; they are not built in this phase.
+// ponytail: the design has one series panel, so only the first series is shown.
 
 const blogPageTemplate = {
   container: cn('ln overflow-x-clip bg-obra-paper'),
@@ -31,11 +33,17 @@ const blogPageTemplate = {
 
 <div class={blogPageTemplate.container}>
   <BlogHero copy={copy.hero} />
-  <BlogMarquee items={marqueeItems} />
-  <BlogFeatured article={featured} copy={copy.featured} locale={locale} />
-  <BlogCategories categories={categories} copy={copy.categories} />
-  <BlogArticleGrid articles={articles} copy={copy.articles} locale={locale} />
-  <BlogSeries series={series} copy={copy.series} locale={locale} />
+  {marqueeItems.length > 0 && <BlogMarquee items={marqueeItems} />}
+  <BlogFeatured article={featured} copy={copy.featured} minutes={minutes} locale={locale} />
+  {
+    posts.length > 0 && (
+      <>
+        <BlogCategories categories={categories} copy={copy.categories} />
+        <BlogArticleGrid articles={posts} copy={copy.articles} locale={locale} />
+      </>
+    )
+  }
+  <BlogSeries series={series[0] ?? null} copy={copy.series} minutes={minutes} locale={locale} />
   <NewsletterCard id="newsletter" copy={copy.newsletter} />
   <div class={blogPageTemplate.wrapper}></div>
 </div>

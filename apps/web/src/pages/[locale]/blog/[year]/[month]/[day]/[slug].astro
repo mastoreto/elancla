@@ -1,61 +1,65 @@
 ---
-import { getAllPostsFull, isSeedArticle } from '@ancla/content';
-import type { BlogArticle } from 'src/data/blog';
-import { getBlogNeighbours } from 'src/data/blogNeighbours';
+import { getPost, getSiteConfig } from '@ancla/content';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout';
 import BlogArticleTemplate from 'src/sections/blog/BlogArticleTemplate';
+import { buildBlogArticleMeta } from 'src/sections/blog/utils/buildBlogArticleMeta';
+import { toUrlDate } from 'src/sections/blog/utils/getBlogArticlePath';
 
 const { locale: localeParam, year, month, day, slug } = Astro.params;
 if (!isLocale(localeParam) || localeParam === defaultLocale) {
   return Astro.rewrite('/404');
 }
 const locale = localeParam;
-const posts = await getAllPostsFull();
-const article = posts.find(
-  (a) =>
-    a.year === year && a.month === month && a.day === day && a.slug === slug
-) as BlogArticle | undefined;
-if (!article) {
+const article = slug ? await getPost(slug, locale) : null;
+// The date of the URL is part of its identity: a known slug under another date is not this post.
+if (!article || article.urlDate !== toUrlDate(year, month, day)) {
   return Astro.rewrite('/404');
 }
 const copy = getMessages(locale).blog;
-const { related, previous, next } = getBlogNeighbours(
-  posts as BlogArticle[],
-  article
-);
-const articleUrl = `/blog/${article.year}/${article.month}/${article.day}/${article.slug}`;
+const site = Astro.locals.site ?? (await getSiteConfig());
+const { canonical, noindex, languageAlternates } = buildBlogArticleMeta({
+  post: article,
+  locale,
+  siteUrl: site.url,
+});
 const breadcrumbs = [
   { name: copy.breadcrumbs.home, url: localizePath('/', locale) },
   { name: copy.breadcrumbs.blog, url: localizePath('/blog', locale) },
-  { name: article.title, url: localizePath(articleUrl, locale) },
+  { name: article.title, url: canonical },
 ];
+const image =
+  article.cover?.kind === 'photo' ? article.cover.image.url : undefined;
 ---
 
 <Layout
   title={article.seoTitle ?? article.title}
-  description={article.description}
+  description={article.seoDescription ?? article.excerpt}
   isBlog={true}
   pageType="article"
-  noindex={isSeedArticle(article)}
+  noindex={noindex}
   breadcrumbs={breadcrumbs}
   keywords={article.tags}
-  canonical={new URL(localizePath(articleUrl, locale), Astro.site).toString()}
+  canonical={canonical}
+  languageAlternates={languageAlternates}
+  image={image}
+  imageAlt={article.cover?.kind === 'photo' ? article.cover.alt : undefined}
   locale={locale}
   article={{
     publishedAt: article.publishedAt,
+    modifiedAt: article.modifiedAt ?? undefined,
     authorName: article.author.name,
-    section: article.category,
+    section: article.category.name,
     tags: article.tags,
   }}
 >
   <BlogArticleTemplate
     article={article}
-    related={related}
-    previous={previous}
-    next={next}
+    related={article.related}
+    previous={article.previous}
+    next={article.next}
     copy={copy}
     locale={locale}
   />

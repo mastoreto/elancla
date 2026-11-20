@@ -1,10 +1,26 @@
 // @ancla/content — dominio de contenido compartido (el CMS custom como librería).
-// Tipos + datos seed + acceso. el ancla (web) lee; iEkklesia (admin) escribirá.
+// Cliente de la API pública + renderers. el ancla (web) lee; iEkklesia (admin) escribe.
 
 // Re-exported so the web can check its own routes against it without depending on contracts.
 export { RESERVED_ROOT_SLUGS } from "@ancla/contracts";
-export * from "./access";
-export * from "./blog";
+export {
+  type BlogIndexLoader,
+  type BlogLoaderOptions,
+  createBlogIndexLoader,
+  createPostLoader,
+  createPostViewRecorder,
+  getBlogIndex,
+  getPost,
+  type PostLoader,
+  type PostViewRecorder,
+  type PublicBlogCover,
+  type PublicBlogIndex,
+  type PublicPost,
+  type PublicPostAuthor,
+  type PublicPostSummary,
+  type PublicSeries,
+  recordPostView,
+} from "./blog";
 export { type CachedLoaderOptions, createCachedLoader } from "./cachedLoader";
 export {
   createPageLoader,
@@ -29,6 +45,7 @@ export {
   PublicApiError,
   type PublicClient,
 } from "./publicClient";
+export { renderBlogBody, renderRichText } from "./richText";
 export * from "./site";
 export {
   createVisitLoader,

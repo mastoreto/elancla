@@ -54,7 +54,8 @@
   },
   "articles": {
     "by": "Por",
-    "loadMore": "Cargar más"
+    "loadMore": "Cargar más",
+    "minutes": "min"
   },
   "series": {
     "counter": "[ 04 — Serie en curso ]",
@@ -89,6 +90,9 @@
     "backToBlog": "Volver al blog",
     "toc": "En este artículo",
     "words": "palabras",
-    "reading": "Lectura"
+    "reading": "Lectura",
+    "edition": "Edición",
+    "articlesCount": "artículos",
+    "tags": "Etiquetas"
   }
 }

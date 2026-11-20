@@ -1,25 +1,36 @@
 ---
-import type { BlogArticle } from 'src/data/blog';
-import { getArticleToc } from 'src/data/blog';
+import type { PublicPost, PublicPostSummary } from '@ancla/content';
+import { renderBlogBody } from '@ancla/content';
+import Chip from 'src/components/ui/Chip';
 import type { Locale } from 'src/i18n/config';
+import { localizePath } from 'src/i18n/utils';
 import BlogArticleBody from 'src/sections/blog/BlogArticleTemplate/components/BlogArticleBody';
 import BlogArticleHero from 'src/sections/blog/BlogArticleTemplate/components/BlogArticleHero';
 import BlogArticleNav from 'src/sections/blog/BlogArticleTemplate/components/BlogArticleNav';
 import BlogRelated from 'src/sections/blog/BlogArticleTemplate/components/BlogRelated';
 import NewsletterCard from 'src/sections/blog/components/NewsletterCard';
+import { formatIssue } from 'src/sections/blog/utils/formatIssue';
 import cn from 'src/utils/cn';
 
 interface Props {
-  article: BlogArticle;
-  related: BlogArticle[];
-  previous: BlogArticle | null;
-  next: BlogArticle | null;
+  article: PublicPost;
+  related: PublicPostSummary[];
+  previous: PublicPostSummary | null;
+  next: PublicPostSummary | null;
   copy: any;
   locale: Locale;
 }
 
 const { article, related, previous, next, copy, locale } = Astro.props;
-const toc = getArticleToc(article);
+const { toc, author, tags } = article;
+const profile = author.profile;
+const minutes: string = copy.articles.minutes;
+// The widest variant of the author photo, when the profile has one.
+const photo = profile?.photo
+  ? [...profile.photo].sort((a, b) => b.width - a.width)[0]
+  : undefined;
+
+// ponytail: the article design has no block for the series (`article.series`); the data already arrives.
 
 const blogArticleTemplate = {
   container: cn('ln overflow-x-clip bg-obra-paper'),
@@ -44,43 +55,117 @@ const blogArticleTemplate = {
     'flex size-12 flex-none items-center justify-center rounded-full bg-obra-red',
     'font-obra-sans-bold text-white'
   ),
+  photo: cn('size-12 flex-none rounded-full object-cover'),
+  role: cn('text-[0.8125rem] text-obra-muted'),
   text: cn('m-0 text-[0.875rem] leading-[1.45] text-obra-ink-soft'),
+  stats: cn('m-0 grid grid-cols-2 gap-2.5'),
+  stat: cn('flex flex-col-reverse rounded-2xl bg-obra-white px-3 py-2'),
+  statValue: cn('m-0 font-obra-serif text-[1.25rem] leading-none'),
+  statLabel: cn('m-0 text-[0.75rem] text-obra-muted'),
+  main: cn('flex max-w-180 min-w-0 flex-1 flex-col'),
+  footer: cn('mt-8 flex flex-col gap-3.5'),
+  footerLabel: cn(
+    'font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] uppercase text-obra-muted'
+  ),
+  tags: cn('flex flex-wrap gap-2'),
+  edition: cn('text-[0.875rem] text-obra-muted'),
   wrapper: cn('h-[clamp(4rem,8vw,6rem)]'),
 };
 ---
 
-<div class={blogArticleTemplate.container}>
-  <BlogArticleHero article={article} copy={copy.article} locale={locale} />
+<div class={blogArticleTemplate.container} data-blog-view-slug={article.slug}>
+  <BlogArticleHero article={article} copy={copy.article} minutes={minutes} locale={locale} />
 
   <section class={blogArticleTemplate.section}>
     <aside class={blogArticleTemplate.aside}>
-      <span class={blogArticleTemplate.toc}>{copy.article.toc}</span>
-      <nav class={blogArticleTemplate.asideToc}>
-        {
-          toc.map((item) => (
-            <a
-              href={`#${item.id}`}
-              class={blogArticleTemplate.tocLink}
-              data-toc-link
-              data-target={item.id}
-            >
-              <span>{item.number}</span>
-              <span>{item.label}</span>
-            </a>
-          ))
-        }
-      </nav>
-      <div class={blogArticleTemplate.stack}>
-        <span class={blogArticleTemplate.initials} aria-hidden="true">{article.author.initials}</span>
-        <b>{article.author.name}</b>
-        <p class={blogArticleTemplate.text}>{article.author.bio.split('. ')[0]}.</p>
-      </div>
+      {
+        toc.length > 0 && (
+          <>
+            <span class={blogArticleTemplate.toc}>{copy.article.toc}</span>
+            <nav class={blogArticleTemplate.asideToc} aria-label={copy.article.toc}>
+              {
+                toc.map((item, index) => (
+                  <a
+                    href={`#${item.id}`}
+                    class={blogArticleTemplate.tocLink}
+                    data-toc-link
+                    data-target={item.id}
+                  >
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <span>{item.text}</span>
+                  </a>
+                ))
+              }
+            </nav>
+          </>
+        )
+      }
+      {
+        profile && (
+          <div class={blogArticleTemplate.stack}>
+            {
+              photo ? (
+                <img
+                  class={blogArticleTemplate.photo}
+                  src={photo.url}
+                  width={photo.width}
+                  height={photo.height}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <span class={blogArticleTemplate.initials} aria-hidden="true">{author.initials}</span>
+              )
+            }
+            <b>{author.name}</b>
+            {profile.title && <span class={blogArticleTemplate.role}>{profile.title}</span>}
+            {profile.bio && <p class={blogArticleTemplate.text}>{profile.bio}</p>}
+            {
+              profile.stats.length > 0 && (
+                <dl class={blogArticleTemplate.stats}>
+                  {
+                    profile.stats.map((stat) => (
+                      <div class={blogArticleTemplate.stat}>
+                        <dt class={blogArticleTemplate.statLabel}>{stat.label}</dt>
+                        <dd class={blogArticleTemplate.statValue}>{stat.value}</dd>
+                      </div>
+                    ))
+                  }
+                </dl>
+              )
+            }
+            <p class={blogArticleTemplate.text}>{profile.articleCount} {copy.article.articlesCount}</p>
+          </div>
+        )
+      }
     </aside>
-    <BlogArticleBody article={article} locale={locale} />
+    <div class={blogArticleTemplate.main}>
+      <BlogArticleBody html={renderBlogBody(article.body)} />
+      <footer class={blogArticleTemplate.footer}>
+        {
+          tags.length > 0 && (
+            <>
+              <span class={blogArticleTemplate.footerLabel}>{copy.article.tags}</span>
+              <div class={blogArticleTemplate.tags}>
+                {tags.map((tag) => <Chip href={localizePath('/blog', locale)}>{tag}</Chip>)}
+              </div>
+            </>
+          )
+        }
+        <span class={blogArticleTemplate.edition}>{copy.article.edition} {formatIssue(article.issue)}</span>
+      </footer>
+    </div>
   </section>
 
   <BlogArticleNav previous={previous} next={next} copy={copy.article} locale={locale} />
-  <BlogRelated articles={related} copy={copy.article} by={copy.articles.by} locale={locale} />
+  <BlogRelated articles={related} copy={copy.article} by={copy.articles.by} minutes={minutes} locale={locale} />
   <NewsletterCard copy={copy.newsletter} />
   <div class={blogArticleTemplate.wrapper}></div>
 </div>
+
+<script>
+  import { trackView } from 'src/sections/blog/BlogArticleTemplate/scripts/trackView';
+
+  document.addEventListener('astro:page-load', trackView);
+</script>

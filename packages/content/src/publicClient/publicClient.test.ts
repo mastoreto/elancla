@@ -43,6 +43,9 @@ const SETTINGS: PublicSiteSettingsDto = {
 interface Call {
   url: string;
   authorization: string | null;
+  method?: string;
+  forwardedFor?: string | null;
+  body?: unknown;
 }
 
 function fakeFetch(
@@ -50,9 +53,17 @@ function fakeFetch(
   calls: Call[] = [],
 ): typeof globalThis.fetch {
   return (async (input: RequestInfo | URL, init?: RequestInit) => {
+    const headers = new Headers(init?.headers);
     calls.push({
       url: String(input),
-      authorization: new Headers(init?.headers).get("Authorization"),
+      authorization: headers.get("Authorization"),
+      ...(init?.method
+        ? {
+            method: init.method,
+            forwardedFor: headers.get("X-Forwarded-For"),
+            body: JSON.parse(String(init.body)),
+          }
+        : {}),
     });
     return respond();
   }) as typeof globalThis.fetch;
@@ -236,5 +247,83 @@ describe("createPublicClient", () => {
     await expect(client.getPage("x", "es")).rejects.toBeInstanceOf(
       PublicApiError,
     );
+  });
+
+  const emptyIndex = {
+    locale: "es",
+    posts: [],
+    featured: null,
+    categories: [],
+    series: [],
+    archive: [],
+    popular: [],
+    tags: [],
+  };
+
+  test("getPosts sends the locale and parses the index", async () => {
+    const calls: Call[] = [];
+    const client = pageClient(() => json(emptyIndex), calls);
+    expect(await client.getPosts("en")).toEqual(emptyIndex);
+    expect(calls[0]?.url).toEndWith("/posts?locale=en");
+  });
+
+  test("getPosts rejects an index that leaks an id", async () => {
+    const client = pageClient(() => json({ ...emptyIndex, id: "leaked" }));
+    await expect(client.getPosts("es")).rejects.toBeInstanceOf(PublicApiError);
+  });
+
+  test("getPost answers null for a 404 and encodes the slug", async () => {
+    const calls: Call[] = [];
+    const client = pageClient(() => json({}, 404), calls);
+    expect(await client.getPost("a b", "es")).toBeNull();
+    expect(calls[0]?.url).toEndWith("/posts/a%20b?locale=es");
+  });
+
+  test("getPost rejects a body that does not match the contract", async () => {
+    const client = pageClient(() => json({ slug: "x" }));
+    await expect(client.getPost("x", "es")).rejects.toBeInstanceOf(
+      PublicApiError,
+    );
+  });
+
+  test("recordPostView forwards the visitor address in x-forwarded-for and in the body", async () => {
+    const calls: Call[] = [];
+    const client = pageClient(() => new Response(null, { status: 204 }), calls);
+    await client.recordPostView("mi-post", {
+      ip: "203.0.113.7",
+      userAgent: "Mozilla/5.0",
+    });
+    expect(calls).toEqual([
+      {
+        url: "https://crm.example.org/api/public/v1/el-ancla/posts/mi-post/views",
+        authorization: "Bearer k",
+        method: "POST",
+        forwardedFor: "203.0.113.7",
+        body: { ip: "203.0.113.7", userAgent: "Mozilla/5.0" },
+      },
+    ]);
+  });
+
+  test("recordPostView forwards an IPv6 address too", async () => {
+    const calls: Call[] = [];
+    const client = pageClient(() => new Response(null, { status: 204 }), calls);
+    await client.recordPostView("p", { ip: "2001:db8::1", userAgent: "x" });
+    expect(calls[0]?.forwardedFor).toBe("2001:db8::1");
+  });
+
+  test("recordPostView does not forward an address that is not an address", async () => {
+    const calls: Call[] = [];
+    const client = pageClient(() => new Response(null, { status: 204 }), calls);
+    await client.recordPostView("p", { ip: "1.2.3.4, evil", userAgent: "x" });
+    expect(calls[0]?.forwardedFor).toBeNull();
+  });
+
+  test("recordPostView throws on a non success status", async () => {
+    const client = pageClient(() => json({}, 429));
+    const error = await client
+      .recordPostView("p", { ip: "1.1.1.1", userAgent: "x" })
+      .catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(PublicApiError);
+    expect((error as PublicApiError).status).toBe(429);
   });
 });

@@ -1,12 +1,12 @@
 ---
+import type { PublicPostSummary } from '@ancla/content';
 import Button from 'src/components/ui/Button';
-import type { BlogArticle } from 'src/data/blog';
 import type { Locale } from 'src/i18n/config';
 import BlogArticleCard from 'src/sections/blog/components/BlogArticleCard';
 import cn from 'src/utils/cn';
 
 interface Props {
-  articles: BlogArticle[];
+  articles: PublicPostSummary[];
   copy: any;
   locale: Locale;
 }
@@ -26,7 +26,7 @@ const blogArticleGrid = {
 
 <section id="articulos" class={blogArticleGrid.container}>
   <div id="blogArticleGrid" class={blogArticleGrid.articles}>
-    {articles.map((article) => <BlogArticleCard article={article} by={copy.by} locale={locale} />)}
+    {articles.map((article) => <BlogArticleCard article={article} by={copy.by} minutes={copy.minutes} locale={locale} />)}
   </div>
   <div class={blogArticleGrid.blogMore} data-blog-more>
     <Button variant="ghost" data-blog-more-button>{copy.loadMore}</Button>

@@ -12,7 +12,6 @@ export function initBlog(): void {
   initNewsletterForms(controller.signal);
   initTocActiveState();
   initTocSmoothScroll(controller.signal);
-  initReactions(controller.signal);
 }
 
 function initScrollReveal(): void {
@@ -214,27 +213,6 @@ function initTocSmoothScroll(signal: AbortSignal): void {
             top: target.offsetTop - 92,
             behavior: 'smooth',
           });
-        },
-        { signal }
-      );
-    });
-}
-
-function initReactions(signal: AbortSignal): void {
-  document
-    .querySelectorAll<HTMLButtonElement>('[data-blog-reaction]')
-    .forEach((button) => {
-      button.addEventListener(
-        'click',
-        () => {
-          const isActive = button.dataset.active === 'true';
-          const count = button.querySelector<HTMLElement>(
-            '[data-reaction-count]'
-          );
-          const current = Number.parseInt(count?.textContent ?? '0', 10);
-
-          button.dataset.active = isActive ? 'false' : 'true';
-          if (count) count.textContent = String(current + (isActive ? -1 : 1));
         },
         { signal }
       );

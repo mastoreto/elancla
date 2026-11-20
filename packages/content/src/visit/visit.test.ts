@@ -25,6 +25,11 @@ function clientReturning(
     },
     getPages: async () => [],
     getPage: async () => null,
+    getPosts: async () => {
+      throw new Error("not used");
+    },
+    getPost: async () => null,
+    recordPostView: async () => {},
     getPeople: async () => [],
     async getVisit(locale) {
       const result = results[Math.min(locales.length, results.length - 1)];

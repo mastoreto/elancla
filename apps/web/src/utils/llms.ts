@@ -20,8 +20,6 @@ const stripHtml = (html: string) =>
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 
-const BLOG = /^\/blog\/\d/;
-
 function link(entry: SiteIndexEntry, site: SiteConfig, fallbackTitle: string) {
   const url = entryUrls(entry, site.url)[0].url;
   return `- [${entry.title ?? fallbackTitle}](${url})${entry.description ? `: ${entry.description}` : ''}`;
@@ -50,7 +48,7 @@ function sections(entries: SiteIndexEntry[], site: SiteConfig) {
   const pick = (paths: string[]) =>
     entries.filter((e) => paths.includes(e.path));
   const ministries = entries.filter((e) => e.path.startsWith('/ministerios/'));
-  const posts = entries.filter((e) => BLOG.test(e.path));
+  const posts = entries.filter((e) => e.kind === 'post');
   const pages = entries.filter((e) => e.kind === 'simplePage');
   const block = (title: string, items: string[]) =>
     items.length ? ['', `## ${title}`, ...items] : [];
