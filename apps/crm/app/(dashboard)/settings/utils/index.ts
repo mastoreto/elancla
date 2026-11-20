@@ -1,4 +1,3 @@
-export { describeApiFailure } from "./api-errors";
 export {
   applyPreset,
   countActivePermissions,

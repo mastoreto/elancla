@@ -10,6 +10,7 @@ export const SETTINGS_TAB_PERMISSIONS: Record<SettingsTabValue, readonly Permiss
   currencies: [PERMISSIONS.settings.view],
   roles: [PERMISSIONS.roles.view],
   website: [PERMISSIONS.siteKeys.view],
+  editorial: [PERMISSIONS.editorial.view],
   notifications: [PERMISSIONS.settings.view],
   audit: [PERMISSIONS.audit.view],
   account: [],

@@ -12,7 +12,8 @@
   "private": true,
   "scripts": {
     "check-types": "tsc --noEmit -p tsconfig.json",
-    "clean": "rm -rf .turbo node_modules"
+    "clean": "rm -rf .turbo node_modules",
+    "test": "bun test"
   },
   "dependencies": {
     "@react-email/components": "1.0.12",

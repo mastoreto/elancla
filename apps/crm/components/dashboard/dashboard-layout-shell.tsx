@@ -1,9 +1,11 @@
 "use client";
 
-import { Bell, MessageSquare, MoreHorizontal, Search } from "lucide-react";
+import type { EditorialInboxDto } from "@ancla/contracts";
+import { MessageSquare, MoreHorizontal, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 import type * as React from "react";
 import { AppSidebar } from "@/components/app-sidebar";
+import { EditorialInboxBell } from "@/components/editorial/editorial-inbox-bell";
 import type { SidebarUser } from "@/components/sidebar-user-menu";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
@@ -12,6 +14,8 @@ import { getCurrentRouteMeta } from "./route-meta";
 type DashboardLayoutShellProps = {
   children: React.ReactNode;
   user: SidebarUser | null;
+  /** Pending editorial work for the header bell; `null` when it could not be loaded. */
+  editorialInbox: EditorialInboxDto | null;
 };
 
 const iconButtonShared = cn(
@@ -39,14 +43,16 @@ const dashboardLayoutShellDashboardPage = {
     "inline-flex h-[22px] min-w-[22px] items-center justify-center rounded-[7px] bg-secondary px-1.5 text-[11px] font-bold text-[var(--tinta-suave)]",
   ),
   actions: cn("flex flex-1 items-center justify-end gap-2"),
-  iconButton: cn(iconButtonShared),
   iconButtonHiddenOnMobile: cn(iconButtonShared, "hidden sm:inline-flex"),
-  notificationDot: cn("absolute top-2.5 right-2.5 size-2 rounded-full bg-primary ring-2 ring-card"),
   body: cn("min-h-0 flex-1 overflow-x-hidden overflow-y-auto scroll-smooth"),
   content: cn("mx-auto w-full max-w-[1480px] px-4 py-5 pb-20 md:px-7 md:py-6"),
 };
 
-export function DashboardLayoutShell({ children, user }: DashboardLayoutShellProps) {
+export function DashboardLayoutShell({
+  children,
+  user,
+  editorialInbox,
+}: DashboardLayoutShellProps) {
   const pathname = usePathname();
   const currentRoute = getCurrentRouteMeta(pathname);
 
@@ -78,14 +84,7 @@ export function DashboardLayoutShell({ children, user }: DashboardLayoutShellPro
             >
               <MessageSquare aria-hidden="true" className="size-[17px]" />
             </button>
-            <button
-              aria-label="Notificaciones"
-              className={dashboardLayoutShellDashboardPage.iconButton}
-              type="button"
-            >
-              <Bell aria-hidden="true" className="size-[17px]" />
-              <span className={dashboardLayoutShellDashboardPage.notificationDot} />
-            </button>
+            <EditorialInboxBell inbox={editorialInbox} />
             <button
               aria-label="Más opciones"
               className={dashboardLayoutShellDashboardPage.iconButtonHiddenOnMobile}

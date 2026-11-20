@@ -5,7 +5,12 @@ import { auditSourceForCli } from "../../core/audit";
 import { getAuth } from "../../core/auth";
 import { resolveOrganizationId } from "../../core/tenancy";
 import { issueInvitation } from "../../modules/identity/invitations/useCases";
-import { E2E_PASSWORD, E2E_USERS, type E2eUser } from "./e2eUsers";
+import {
+  E2E_PASSWORD,
+  E2E_USERS,
+  type E2eCustomRole,
+  type E2eUser,
+} from "./e2eUsers";
 import { ensureE2eSiteKey } from "./ensureE2eSiteKey";
 
 async function resolveRoleIds(
@@ -22,6 +27,22 @@ async function resolveRoleIds(
       `There is no seeded role "${roleKey}" (run db:seed first).`,
     );
   return [role.id];
+}
+
+async function ensureCustomRole(
+  organizationId: string,
+  { name, grants }: E2eCustomRole,
+): Promise<string> {
+  const existing = await db.role.findUnique({
+    where: { organizationId_name: { organizationId, name } },
+    select: { id: true },
+  });
+  if (existing) return existing.id;
+  const created = await db.role.create({
+    data: { organizationId, name, permissions: { create: grants } },
+    select: { id: true },
+  });
+  return created.id;
 }
 
 async function ensureUser(
@@ -45,7 +66,9 @@ async function ensureUser(
   await issueInvitation({
     organizationId,
     email: user.email,
-    roleIds: await resolveRoleIds(organizationId, user.roleKey),
+    roleIds: user.customRole
+      ? [await ensureCustomRole(organizationId, user.customRole)]
+      : await resolveRoleIds(organizationId, user.roleKey),
     ministryIds: [],
     invitedById: null,
     audit: auditSourceForCli(organizationId),

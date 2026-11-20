@@ -24,6 +24,7 @@ import {
   BoardSwitchRow,
 } from "@/components/dashboard/board/board-form";
 import { apiClient } from "@/lib/api/apiClient";
+import { describeApiFailure } from "@/lib/api/describeApiFailure";
 import { useAccess } from "@/lib/authz/AccessProvider";
 import { can } from "@/lib/authz/can";
 import { getChurchRoutePath } from "@/lib/church";
@@ -37,7 +38,6 @@ import type { PermissionGrid } from "../types";
 import {
   applyPreset,
   countActivePermissions,
-  describeApiFailure,
   detectPreset,
   NEW_ROLE_GRID,
   PERMISSION_PRESETS,

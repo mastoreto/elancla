@@ -20,7 +20,7 @@ const SKIPPED_DIRECTORIES = new Set([
 ]);
 const SCANNED_EXTENSIONS = new Set([".ts", ".tsx"]);
 const HAND_WRITTEN_PERMISSION =
-  /["'][a-zA-Z.]+:(view|create|edit|approve|delete)["']/;
+  /["'][a-zA-Z.]+:(view|create|edit|approve|delete|publish)["']/;
 const ALLOWED_FILES = new Set([
   "packages/contracts/src/authz/permissionCatalog/permissionCatalog.ts",
   // Spells the pattern to detect it, and asserts the built strings.

@@ -8,8 +8,8 @@ import { BoardButton } from "@/components/dashboard/board/board-button";
 import { BoardDialogContent } from "@/components/dashboard/board/board-dialog";
 import { Dialog } from "@/components/ui/dialog";
 import { apiClient } from "@/lib/api/apiClient";
+import { describeApiFailure } from "@/lib/api/describeApiFailure";
 import { cn } from "@/lib/utils";
-import { describeApiFailure } from "../utils";
 import { OptionChecklist } from "./option-checklist";
 
 const userDialogSettingsPage = {

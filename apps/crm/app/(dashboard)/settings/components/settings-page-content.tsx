@@ -1,6 +1,7 @@
 "use client";
 
 import type {
+  EditorialSettingsDto,
   InvitationDto,
   MeDto,
   MinistryDto,
@@ -31,6 +32,7 @@ import { BankAccountsCard } from "./bank-accounts-card";
 import { ChurchIdentityCard } from "./church-identity-card";
 import { CreateSiteKeyDialog } from "./create-site-key-dialog";
 import { CurrenciesCard } from "./currencies-card";
+import { EditorialSettingsPanel } from "./editorial-settings-panel";
 import { InvitationsPanel } from "./invitations-panel";
 import { InviteDialog } from "./invite-dialog";
 import { NotificationsPanel } from "./notifications-panel";
@@ -46,6 +48,7 @@ const INTRO: Record<SettingsTabValue, string> = {
   currencies: "Identidad de la iglesia, cuentas bancarias y monedas.",
   roles: "Roles con permisos claros para limitar alcance, aprobaciones y auditoría.",
   website: "Claves con las que el sitio público lee el contenido de la iglesia.",
+  editorial: "Quién revisa el contenido antes de publicarlo y a quién se le exige revisión.",
   notifications: "Elige qué avisos recibe tu equipo y por qué canal.",
   audit: "Registro inalterable de lo que ocurre en el sistema.",
   account: "Tu perfil, tus métodos de acceso y la verificación en dos pasos.",
@@ -70,6 +73,7 @@ interface SettingsPageContentProps {
   roles: RoleDto[] | null;
   ministries: MinistryDto[] | null;
   siteKeys: SiteKeyDto[] | null;
+  editorialSettings: EditorialSettingsDto[] | null;
   bankAccounts: BankAccountSetting[];
   currencies: CurrencySetting[];
   notifications: NotificationSettings;
@@ -85,6 +89,7 @@ export function SettingsPageContent({
   roles,
   ministries,
   siteKeys,
+  editorialSettings,
   bankAccounts,
   currencies,
   notifications: initialNotifications,
@@ -110,6 +115,7 @@ export function SettingsPageContent({
     { value: "currencies", label: "Monedas", count: currencies.length },
     { value: "roles", label: "Roles y permisos" },
     { value: "website", label: "Sitio web" },
+    { value: "editorial", label: "Revisión editorial" },
     { value: "notifications", label: "Notificaciones" },
     { value: "audit", label: "Auditoría" },
     { value: "account", label: "Mi cuenta" },
@@ -182,6 +188,10 @@ export function SettingsPageContent({
       {tab === "roles" && roles ? <RolesPanel roles={roles} /> : null}
 
       {tab === "website" ? <SiteKeysCard siteKeys={siteKeys} /> : null}
+
+      {tab === "editorial" ? (
+        <EditorialSettingsPanel roles={roles} settings={editorialSettings} users={users} />
+      ) : null}
 
       {tab === "notifications" ? (
         <NotificationsPanel

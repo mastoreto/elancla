@@ -31,6 +31,17 @@ const voucherUpload = {
   fileName: "a.pdf",
 };
 
+const EDITORIAL_BODIES: Record<string, unknown> = {
+  draft: { snapshot: {} },
+  "request-changes": { comment: "x" },
+  "blog-post": {
+    reviewerRoleIds: [],
+    reviewerUserIds: [],
+    mandatoryReviewRoleIds: [],
+    mandatoryReviewUserIds: [],
+  },
+};
+
 /** Each row proves the guard: 401/403 when stopped, anything else (200/400/404) when let through. */
 const rows: MatrixRow[] = [
   // Any session reaches /me; no session does not.
@@ -517,6 +528,175 @@ const rows: MatrixRow[] = [
     method: "GET",
     path: "/internal/media/purge",
     expected: 401,
+  },
+
+  // editorial: each route is guarded by the permission of the content type (blog posts here).
+  ...(
+    [
+      ["GET", `/editorial/blog-post/${UNKNOWN_ID}`],
+      ["GET", `/editorial/blog-post/${UNKNOWN_ID}/history`],
+      ["PUT", `/editorial/blog-post/${UNKNOWN_ID}/draft`],
+      ["POST", `/editorial/blog-post/${UNKNOWN_ID}/submit`],
+      ["POST", `/editorial/blog-post/${UNKNOWN_ID}/publish`],
+      ["POST", `/editorial/blog-post/${UNKNOWN_ID}/pause`],
+      ["POST", `/editorial/blog-post/${UNKNOWN_ID}/approve`],
+      ["POST", `/editorial/blog-post/${UNKNOWN_ID}/request-changes`],
+      ["GET", "/editorial/inbox"],
+      ["GET", "/editorial/settings"],
+      ["PUT", "/editorial/settings/blog-post"],
+    ] as const
+  ).flatMap(([method, path]): MatrixRow[] => [
+    {
+      who: "anonymous",
+      caller: "anonymous",
+      method,
+      path,
+      body: EDITORIAL_BODIES[path.split("/").at(-1) as string],
+      expected: 401,
+    },
+    ...(path === "/editorial/inbox"
+      ? []
+      : [
+          {
+            who: "no role",
+            caller: NOTHING,
+            method,
+            path,
+            body: EDITORIAL_BODIES[path.split("/").at(-1) as string],
+            expected: 403,
+          } satisfies MatrixRow,
+        ]),
+  ]),
+  {
+    who: "no role (any session reaches the inbox)",
+    caller: NOTHING,
+    method: "GET",
+    path: "/editorial/inbox",
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.blogPosts.view,
+    caller: [grant(PERMISSIONS.blogPosts.view)],
+    method: "GET",
+    path: `/editorial/blog-post/${UNKNOWN_ID}`,
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.blogPosts.view,
+    caller: [grant(PERMISSIONS.blogPosts.view)],
+    method: "GET",
+    path: `/editorial/blog-post/${UNKNOWN_ID}/history`,
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.blogPosts.view,
+    caller: [grant(PERMISSIONS.blogPosts.view)],
+    method: "PUT",
+    path: `/editorial/blog-post/${UNKNOWN_ID}/draft`,
+    body: { snapshot: {} },
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.blogPosts.view,
+    caller: [grant(PERMISSIONS.blogPosts.view)],
+    method: "POST",
+    path: `/editorial/blog-post/${UNKNOWN_ID}/publish`,
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.blogPosts.edit,
+    caller: [grant(PERMISSIONS.blogPosts.edit)],
+    method: "POST",
+    path: `/editorial/blog-post/${UNKNOWN_ID}/submit`,
+    expected: 409,
+  },
+  {
+    who: PERMISSIONS.blogPosts.edit,
+    caller: [grant(PERMISSIONS.blogPosts.edit)],
+    method: "POST",
+    path: `/editorial/blog-post/${UNKNOWN_ID}/publish`,
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.blogPosts.publish,
+    caller: [grant(PERMISSIONS.blogPosts.publish)],
+    method: "POST",
+    path: `/editorial/blog-post/${UNKNOWN_ID}/pause`,
+    expected: 409,
+  },
+  {
+    who: PERMISSIONS.blogPosts.publish,
+    caller: [grant(PERMISSIONS.blogPosts.publish)],
+    method: "GET",
+    path: `/editorial/blog-post/${UNKNOWN_ID}`,
+    expected: 403,
+  },
+  {
+    who: "view without being a reviewer",
+    caller: [grant(PERMISSIONS.blogPosts.view)],
+    method: "POST",
+    path: `/editorial/blog-post/${UNKNOWN_ID}/approve`,
+    expected: 403,
+  },
+  {
+    who: "admin (a reviewer) with nothing in review",
+    caller: ["admin"],
+    method: "POST",
+    path: `/editorial/blog-post/${UNKNOWN_ID}/approve`,
+    expected: 409,
+  },
+  {
+    who: "admin",
+    caller: ["admin"],
+    method: "GET",
+    path: `/editorial/nope/${UNKNOWN_ID}`,
+    expected: 404,
+  },
+  {
+    who: PERMISSIONS.editorial.view,
+    caller: [grant(PERMISSIONS.editorial.view)],
+    method: "GET",
+    path: "/editorial/settings",
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.editorial.view,
+    caller: [grant(PERMISSIONS.editorial.view)],
+    method: "PUT",
+    path: "/editorial/settings/blog-post",
+    body: EDITORIAL_BODIES["blog-post"],
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.editorial.edit,
+    caller: [grant(PERMISSIONS.editorial.edit)],
+    method: "GET",
+    path: "/editorial/settings",
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.editorial.edit,
+    caller: [grant(PERMISSIONS.editorial.edit)],
+    method: "PUT",
+    path: "/editorial/settings/blog-post",
+    body: {},
+    expected: 400,
+  },
+  // A leader holds ministry-scoped profile permissions: a ministry that is not theirs is a 403.
+  {
+    who: "seeded leader on a ministry that is not theirs",
+    caller: ["leader"],
+    method: "PUT",
+    path: `/editorial/ministry/${UNKNOWN_ID}/draft`,
+    body: { snapshot: {} },
+    expected: 403,
+  },
+  {
+    who: "seeded leader on a ministry that is not theirs",
+    caller: ["leader"],
+    method: "GET",
+    path: `/editorial/ministry/${UNKNOWN_ID}`,
+    expected: 403,
   },
 
   // The seeded admin holds everything, resources added later included.

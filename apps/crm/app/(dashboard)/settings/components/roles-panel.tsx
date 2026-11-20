@@ -18,12 +18,12 @@ import { RowIconButton, rowIconButtonClass } from "@/components/dashboard/board/
 import { StatusPill } from "@/components/dashboard/board/status-pill";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { apiClient } from "@/lib/api/apiClient";
+import { describeApiFailure } from "@/lib/api/describeApiFailure";
 import { useAccess } from "@/lib/authz/AccessProvider";
 import { can } from "@/lib/authz/can";
 import { getChurchRoutePath } from "@/lib/church";
 import { cn } from "@/lib/utils";
 import { PERMISSION_RESOURCE_INFO } from "../data/permission-labels";
-import { describeApiFailure } from "../utils";
 
 const COLUMNS = "1fr 1.5fr 2.4fr 70px 84px";
 const HEADERS = ["Rol", "Descripción", "Alcance", "Usuarios", ""];

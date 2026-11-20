@@ -1,1 +1,1 @@
-export { db } from "./db";
+export { createDbClient, db } from "./db";

@@ -1,0 +1,1 @@
+export { hasEditorialPermission } from "./editorialAccess";

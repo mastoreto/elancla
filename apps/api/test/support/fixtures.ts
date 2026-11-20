@@ -1,5 +1,5 @@
 import type { PermissionGrant } from "@ancla/contracts";
-import { db } from "@ancla/db";
+import { createDbClient, db } from "@ancla/db";
 import type { Auth } from "../../src/core/auth";
 import { sha256Hex } from "../../src/core/crypto";
 import { resolveOrganizationId } from "../../src/core/tenancy";
@@ -40,6 +40,22 @@ export type TestUserAccess = readonly string[] | readonly PermissionGrant[];
 
 function isRoleKeyList(access: TestUserAccess): access is readonly string[] {
   return access.every((entry) => typeof entry === "string");
+}
+
+/**
+ * The editorial history cannot be deleted by the runtime role (and its author FK is RESTRICT), so
+ * a test that wrote revisions removes them with the owner role before removing its users.
+ */
+async function deleteRevisionsAuthoredBy(userIds: string[]): Promise<void> {
+  if (userIds.length === 0) return;
+  const owner = createDbClient(process.env.DATABASE_MIGRATION_URL as string);
+  try {
+    await owner.contentRevision.deleteMany({
+      where: { authorId: { in: userIds } },
+    });
+  } finally {
+    await owner.$disconnect();
+  }
 }
 
 export function createFixtures() {
@@ -212,6 +228,11 @@ export function createFixtures() {
 
     async cleanup(): Promise<void> {
       await db.invitation.deleteMany({ where: { email: { in: emails } } });
+      const users = await db.user.findMany({
+        where: { email: { in: emails } },
+        select: { id: true },
+      });
+      await deleteRevisionsAuthoredBy(users.map((user) => user.id));
       await db.user.deleteMany({ where: { email: { in: emails } } });
       await db.role.deleteMany({ where: { id: { in: roleIds } } });
       await db.ministry.deleteMany({ where: { id: { in: ministryIds } } });

@@ -40,6 +40,16 @@ export const AUDIT_ACTIONS = {
     created: "siteApiKey.created",
     revoked: "siteApiKey.revoked",
   },
+  editorial: {
+    draftSaved: "editorial.draftSaved",
+    submitted: "editorial.submitted",
+    published: "editorial.published",
+    approved: "editorial.approved",
+    changesRequested: "editorial.changesRequested",
+    paused: "editorial.paused",
+    resumed: "editorial.resumed",
+    settingsUpdated: "editorial.settingsUpdated",
+  },
   media: {
     uploadRequested: "media.upload.requested",
     finalized: "media.finalized",

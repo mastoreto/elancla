@@ -35,3 +35,11 @@ export function findLink(text: string, pathFragment: string): string {
   if (!link) throw new Error(`The email has no link containing ${pathFragment}`);
   return link;
 }
+
+/** Removes what Mailpit holds for the address, so the next wait cannot find an older message. */
+export async function clearMailTo(email: string): Promise<void> {
+  const response = await fetch(`${MAILPIT_API}/search?query=${encodeURIComponent(`to:${email}`)}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) throw new Error(`Mailpit answered ${response.status} when clearing ${email}`);
+}
