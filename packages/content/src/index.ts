@@ -3,6 +3,7 @@
 
 export * from "./access";
 export * from "./blog";
+export { type CachedLoaderOptions, createCachedLoader } from "./cachedLoader";
 export {
   createPublicClient,
   PublicApiError,

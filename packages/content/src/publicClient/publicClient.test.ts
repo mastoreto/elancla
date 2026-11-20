@@ -20,7 +20,15 @@ const SETTINGS: PublicSiteSettingsDto = {
   geo: null,
   themeColor: null,
   founded: null,
-  serviceTimesSummary: null,
+  serviceTimes: [],
+  sections: {
+    blog: "active",
+    calendar: "active",
+    sermons: "active",
+    ministries: "active",
+    visit: "active",
+  },
+  seoDescription: null,
   social: {
     website: null,
     instagram: null,
@@ -30,7 +38,6 @@ const SETTINGS: PublicSiteSettingsDto = {
     spotify: null,
     linkedin: null,
   },
-  about: null,
 };
 
 interface Call {

@@ -4,8 +4,19 @@
 // the first success SITE_FALLBACK (the historical values of seo.ts): the site never goes down
 // with the API. iEkklesia (admin) writes; the web only reads.
 
-import type { PublicSiteSettingsDto } from "@ancla/contracts";
+import {
+  type PublicSiteSettingsDto,
+  type ServiceTimeDto,
+  SITE_SECTION_KEYS,
+  type SiteSectionKey,
+  type SiteSectionStatus,
+} from "@ancla/contracts";
+import { createCachedLoader } from "./cachedLoader";
 import { createPublicClient, type PublicClient } from "./publicClient";
+
+export { SITE_SECTION_KEYS };
+export type ServiceTime = ServiceTimeDto;
+export type { SiteSectionKey, SiteSectionStatus };
 
 export type SiteLocale = "es" | "pt" | "en";
 export type SiteStatus = "online" | "maintenance" | "closed";
@@ -42,7 +53,11 @@ export interface SiteConfig {
   geo: { latitude: number; longitude: number };
   contactEmail: string;
   founded: string;
-  serviceTimes: string;
+  serviceTimes: ServiceTime[];
+  /** Status of each public section; every key is always present. */
+  sections: Record<SiteSectionKey, SiteSectionStatus>;
+  /** Default meta description written in iEkklesia (null: use `defaultDescription`). */
+  seoDescription: string | null;
   /** Google Business / Maps profile URL; when absent the schema uses a coordinates link. */
   mapUrl?: string;
   status: SiteStatus;
@@ -59,7 +74,7 @@ export const SITE_FALLBACK: SiteConfig = {
   defaultTitle: "Iglesia Bautista El Ancla",
   titleTemplate: "%s | Iglesia Bautista El Ancla",
   defaultDescription:
-    "Iglesia Bautista El Ancla en Montevideo: una comunidad cristiana centrada en el evangelio. Reflexiones, ministerios y vida en comunidad. Domingos 11:15 hs.",
+    "Iglesia Bautista El Ancla en Montevideo: una comunidad cristiana centrada en el evangelio. Reflexiones, ministerios y vida en comunidad.",
   defaultImage: "/images/og-default.jpg",
   themeColor: "#ff2e34",
   twitter: "@iglesiaelancla",
@@ -73,7 +88,18 @@ export const SITE_FALLBACK: SiteConfig = {
   geo: { latitude: -34.872968, longitude: -56.161429 },
   contactEmail: "contacto@elancla.uy",
   founded: "1997",
-  serviceTimes: "Su 11:15-13:00",
+  serviceTimes: [
+    { kind: "worship", weekday: 0, start: "11:15", end: "13:00" },
+    { kind: "bibleSchool", weekday: 0, start: "10:00", end: null },
+  ],
+  sections: {
+    blog: "active",
+    calendar: "active",
+    sermons: "active",
+    ministries: "active",
+    visit: "active",
+  },
+  seoDescription: null,
   status: "online",
   social: {
     youtube: "https://youtube.com/@iglesiaelanclauy",
@@ -95,7 +121,9 @@ export function toSiteConfig(settings: PublicSiteSettingsDto): SiteConfig {
     themeColor: settings.themeColor ?? SITE_FALLBACK.themeColor,
     contactEmail: settings.contactEmail ?? SITE_FALLBACK.contactEmail,
     founded: settings.founded ?? SITE_FALLBACK.founded,
-    serviceTimes: settings.serviceTimesSummary ?? SITE_FALLBACK.serviceTimes,
+    serviceTimes: settings.serviceTimes,
+    sections: settings.sections,
+    seoDescription: settings.seoDescription,
     status: settings.status,
     address: {
       street: address.street ?? SITE_FALLBACK.address.street,
@@ -126,43 +154,27 @@ export interface SiteConfigLoaderOptions {
 }
 
 /**
- * Builds the cached reader behind `getSiteConfig`. One attempt per TTL window (success or failure,
- * so an API that is down is not hit, and waited on, by every request) and one in flight at a time.
+ * Builds the cached reader behind `getSiteConfig`, keyed by locale (`undefined` is the church
+ * default). See `createCachedLoader` for the window and last-known-good semantics.
  */
 export function createSiteConfigLoader(
   options: SiteConfigLoaderOptions,
-): () => Promise<SiteConfig> {
-  const {
-    client,
-    now = Date.now,
-    ttlMs = CACHE_TTL_MS,
-    warn = (message, error) => console.warn(message, error),
-  } = options;
-  let lastGood: SiteConfig | null = null;
-  let nextAttemptAt = 0;
-  let inFlight: Promise<SiteConfig> | null = null;
-
-  async function refresh(publicClient: PublicClient): Promise<SiteConfig> {
-    try {
-      lastGood = toSiteConfig(await publicClient.getSettings());
-    } catch (error) {
-      // Once per window, because the window is also the retry interval.
-      warn(
-        "[@ancla/content] public API unavailable, serving the last known site config",
-        error,
-      );
-    }
-    nextAttemptAt = now() + ttlMs;
-    return lastGood ?? SITE_FALLBACK;
-  }
-
-  return async function getSiteConfig(): Promise<SiteConfig> {
-    if (!client) return SITE_FALLBACK;
-    if (now() < nextAttemptAt) return lastGood ?? SITE_FALLBACK;
-    inFlight ??= refresh(client).finally(() => {
-      inFlight = null;
-    });
-    return inFlight;
+): (locale?: string) => Promise<SiteConfig> {
+  const { client, now, ttlMs = CACHE_TTL_MS, warn } = options;
+  const get = createCachedLoader<SiteConfig>({
+    load: async (key) =>
+      toSiteConfig(
+        await (client as PublicClient).getSettings(key || undefined),
+      ),
+    fallback: () => SITE_FALLBACK,
+    ttlMs,
+    now,
+    warn,
+  });
+  return function getSiteConfig(locale?: string): Promise<SiteConfig> {
+    // No client: nothing to fetch, the fallback needs no cache either.
+    if (!client) return Promise.resolve(SITE_FALLBACK);
+    return get(locale ?? "");
   };
 }
 
@@ -207,7 +219,7 @@ export function readCacheTtlMs(
   return Number.isInteger(parsed) && parsed > 0 ? parsed : CACHE_TTL_MS;
 }
 
-let defaultLoader: (() => Promise<SiteConfig>) | null = null;
+let defaultLoader: ((locale?: string) => Promise<SiteConfig>) | null = null;
 
 /**
  * Site configuration merged over SITE_FALLBACK. Fields the API does not provide (lang, title
@@ -215,10 +227,10 @@ let defaultLoader: (() => Promise<SiteConfig>) | null = null;
  * `API_URL`, `SITE_API_KEY` and `SITE_CHURCH_SLUG` (and optionally `SITE_CONFIG_TTL_MS`) from
  * the environment; when the first three are missing it warns once per process.
  */
-export function getSiteConfig(): Promise<SiteConfig> {
+export function getSiteConfig(locale?: string): Promise<SiteConfig> {
   defaultLoader ??= createSiteConfigLoader({
     client: createPublicClientFromEnv(process.env),
     ttlMs: readCacheTtlMs(process.env),
   });
-  return defaultLoader();
+  return defaultLoader(locale);
 }

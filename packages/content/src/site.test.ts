@@ -27,7 +27,15 @@ const SETTINGS: PublicSiteSettingsDto = {
   geo: { latitude: 1.5, longitude: -2.5 },
   themeColor: "#123456",
   founded: "2001",
-  serviceTimesSummary: "Do 10:00",
+  serviceTimes: [{ kind: "worship", weekday: 0, start: "10:00", end: null }],
+  sections: {
+    blog: "maintenance",
+    calendar: "active",
+    sermons: "active",
+    ministries: "active",
+    visit: "outOfService",
+  },
+  seoDescription: "Descripcion de prueba",
   social: {
     website: null,
     instagram: "https://instagram.com/prueba",
@@ -37,7 +45,6 @@ const SETTINGS: PublicSiteSettingsDto = {
     spotify: null,
     linkedin: null,
   },
-  about: null,
 };
 
 function clientReturning(
@@ -69,7 +76,9 @@ describe("toSiteConfig", () => {
   test("maps the public settings and keeps the fallback for what is null", () => {
     const site = toSiteConfig(SETTINGS);
     expect(site.name).toBe("Iglesia de prueba");
-    expect(site.serviceTimes).toBe("Do 10:00");
+    expect(site.serviceTimes).toEqual(SETTINGS.serviceTimes);
+    expect(site.sections.blog).toBe("maintenance");
+    expect(site.seoDescription).toBe("Descripcion de prueba");
     expect(site.status).toBe("maintenance");
     expect(site.themeColor).toBe("#123456");
     expect(site.geo).toEqual({ latitude: 1.5, longitude: -2.5 });
@@ -144,6 +153,22 @@ describe("createSiteConfigLoader", () => {
   test("without a client it serves the fallback and never fetches", async () => {
     const { load } = loaderFor(null, { now: 0 });
     expect(await load()).toBe(SITE_FALLBACK);
+    expect(await load("en")).toBe(SITE_FALLBACK);
+  });
+
+  test("caches per locale and asks the client for each one", async () => {
+    const locales: (string | undefined)[] = [];
+    const client: PublicClient = {
+      async getSettings(locale) {
+        locales.push(locale);
+        return { ...SETTINGS, name: `site-${locale ?? "default"}` };
+      },
+    };
+    const { load } = loaderFor(client, { now: 0 });
+    expect((await load()).name).toBe("site-default");
+    expect((await load("en")).name).toBe("site-en");
+    await load("en");
+    expect(locales).toEqual([undefined, "en"]);
   });
 });
 
