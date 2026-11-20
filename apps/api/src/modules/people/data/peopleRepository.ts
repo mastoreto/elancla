@@ -109,10 +109,9 @@ function roleRows(roles: UpsertPersonProfileBody["roles"]) {
     visible: role.visible,
     order: role.order,
     translations: {
-      create: Object.entries(role.translations).map(([locale, { title }]) => ({
-        locale,
-        title,
-      })),
+      create: Object.entries(role.translations).map(
+        ([locale, { title, stats }]) => ({ locale, title, stats }),
+      ),
     },
   }));
 }

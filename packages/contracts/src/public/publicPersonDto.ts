@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { personContext } from "../people";
+import { personContext, personStatsDto } from "../people";
 import { publicLocaleQuery } from "./publicSiteSettingsDto";
 
 /** `context` is required: a person only exists publicly inside the context that shows them. */
@@ -24,5 +24,7 @@ export const publicPersonDto = z.strictObject({
     .nullable(),
   bio: z.string().nullable(),
   title: z.string().nullable(),
+  /** Free-form figures of the role in this context; empty when there are none. */
+  stats: personStatsDto,
 });
 export type PublicPersonDto = z.infer<typeof publicPersonDto>;

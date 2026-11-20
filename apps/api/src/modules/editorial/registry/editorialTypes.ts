@@ -1,4 +1,5 @@
 import {
+  blogPostSnapshot,
   type EditorialContentTypeParam,
   PERMISSIONS,
   type Permission,
@@ -7,11 +8,9 @@ import {
 } from "@ancla/contracts";
 import type { EditorialContentType, Prisma } from "@ancla/db";
 import type { z } from "zod";
-import {
-  assertSimplePageSlugsFree,
-  simplePageExists,
-  validateSimplePageLocales,
-} from "./simplePage";
+import { blogPostBeforeGoLive, blogPostExists } from "./blogPost";
+import { assertSimplePageSlugsFree, simplePageExists } from "./simplePage";
+import { validateSnapshotLocales } from "./validateSnapshotLocales";
 
 export type EditorialPermissionKind = "view" | "edit" | "publish";
 
@@ -26,6 +25,8 @@ export interface GoLiveContext {
   organizationId: string;
   entityId: string;
   snapshot: Record<string, unknown>;
+  /** The instant of the transition; hooks use it instead of reading the clock (testable). */
+  now: Date;
 }
 
 export interface EditorialTypeDefinition {
@@ -37,7 +38,7 @@ export interface EditorialTypeDefinition {
   permissions: Record<EditorialPermissionKind, Permission>;
   /** The content belongs to a ministry: a ministry-scoped grant only reaches the user's own. */
   ministryScoped: boolean;
-  /** ponytail: 1.4/1.5 replace it with the real content schema. */
+  /** ponytail: 1.5 replaces the generic schema of `ministry` with the real one. */
   snapshotSchema: z.ZodType<Record<string, unknown>>;
   /** Where the CRM shows this entity, for the links in emails and in the inbox. */
   crmPath(entityId: string): string;
@@ -71,8 +72,11 @@ export const EDITORIAL_TYPES: Record<
       publish: PERMISSIONS.blogPosts.publish,
     },
     ministryScoped: false,
-    snapshotSchema,
-    crmPath: () => "/blog",
+    snapshotSchema: blogPostSnapshot,
+    crmPath: (entityId) => `/blog/${entityId}`,
+    entityExists: blogPostExists,
+    beforeGoLive: blogPostBeforeGoLive,
+    validateSnapshot: validateSnapshotLocales,
   },
   ministry: {
     contentType: "MINISTRY",
@@ -101,7 +105,7 @@ export const EDITORIAL_TYPES: Record<
     crmPath: (entityId) => `/website/pages/${entityId}`,
     entityExists: simplePageExists,
     beforeGoLive: assertSimplePageSlugsFree,
-    validateSnapshot: validateSimplePageLocales,
+    validateSnapshot: validateSnapshotLocales,
   },
 };
 

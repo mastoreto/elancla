@@ -5,6 +5,7 @@ import {
   EL_ANCLA_SEO_DESCRIPTIONS,
   EL_ANCLA_SITE_SETTINGS,
 } from "./elAncla";
+import { seedBlog } from "./seedBlog";
 import { seedMinistries } from "./seedMinistries";
 import { seedPeople } from "./seedPeople";
 import { seedRoles } from "./seedRoles";
@@ -49,6 +50,7 @@ async function seed(): Promise<void> {
   await seedPeople(db, organization.id);
   await seedVisit(db, organization.id);
   await seedSimplePages(db, organization.id);
+  await seedBlog(db, organization.id);
 
   console.info(`Seeded organization "${organization.slug}".`);
 }

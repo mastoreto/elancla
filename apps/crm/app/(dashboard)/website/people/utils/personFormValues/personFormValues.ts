@@ -37,7 +37,7 @@ function toTeamRole(values: PersonFormValues, locales: readonly string[]): Perso
   const translations: PersonRoleDto["translations"] = {};
   for (const locale of locales) {
     const title = toNullableText(values.team.titles[locale] ?? "");
-    if (title) translations[locale] = { title };
+    if (title) translations[locale] = { title, stats: [] }; // ponytail: 1.4c edits stats; team roles carry none until then
   }
   // A role without any title is "not on the team": it is left out, which removes an existing one.
   if (Object.keys(translations).length === 0) return null;

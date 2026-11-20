@@ -9,6 +9,7 @@ const PERSON: PublicPerson = {
   photo: null,
   bio: "Bio",
   title: "Pastora",
+  stats: [],
 };
 
 interface Call {

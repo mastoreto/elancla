@@ -235,6 +235,35 @@ describe("POST /content/people", () => {
     expect(row?.after).toMatchObject({ id: created.id, name: created.name });
   });
 
+  test("saves the stats of a role title and returns them", async () => {
+    const stats = [{ label: "Años de ministerio", value: "20" }];
+    const created = await createOk({
+      roles: [
+        role({
+          context: "blog-author",
+          translations: { es: { title: "Autor", stats } },
+        }),
+      ],
+    });
+    expect(created.roles[0]?.translations.es?.stats).toEqual(stats);
+    const stored = await db.personRoleTranslation.findFirst({
+      where: { personRole: { personProfileId: created.id }, locale: "es" },
+    });
+    expect(stored?.stats).toEqual(stats);
+  });
+
+  test("more than four stats is a 400", async () => {
+    const stat = { label: "L", value: "1" };
+    const res = await create({
+      roles: [
+        role({
+          translations: { es: { title: "Pastor", stats: Array(5).fill(stat) } },
+        }),
+      ],
+    });
+    expect(res.status).toBe(400);
+  });
+
   test("a repeated context is a 400", async () => {
     const res = await create({ roles: [role(), role()] });
     expect(res.status).toBe(400);
@@ -386,6 +415,21 @@ describe("PATCH /content/people/:id", () => {
     });
     expect(row?.before).toMatchObject({ name: created.name });
     expect(row?.after).toMatchObject({ name: `${NAME_PREFIX} Renamed` });
+  });
+
+  test("replaces the stats of a role", async () => {
+    const created = await createOk();
+    const stats = [{ label: "Libros", value: "3" }];
+    const res = await call("PATCH", `/content/people/${created.id}`, {
+      cookie: editorCookie,
+      body: bodyOf({
+        name: created.name,
+        roles: [role({ translations: { es: { title: "Pastor", stats } } })],
+      }),
+    });
+    expect(res.status).toBe(200);
+    const updated = (await res.json()) as PersonProfileDto;
+    expect(updated.roles[0]?.translations.es?.stats).toEqual(stats);
   });
 
   test("keeping its own user is fine; taking another profile's user is a 409", async () => {

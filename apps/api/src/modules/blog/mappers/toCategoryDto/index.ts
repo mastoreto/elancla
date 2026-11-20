@@ -1,0 +1,1 @@
+export { toCategoryDto } from "./toCategoryDto";

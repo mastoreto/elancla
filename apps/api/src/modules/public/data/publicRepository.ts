@@ -96,3 +96,59 @@ export async function findVisitContent(
 }
 
 export type PublicVisitRows = Awaited<ReturnType<typeof findVisitContent>>;
+
+/** Every category of the organization (deleted ones too: a live post may still name one). */
+export function findBlogCategories(organizationId: string) {
+  return forOrganization(db, organizationId).category.findMany({
+    include: { translations: true },
+  });
+}
+
+export type PublicBlogCategoryRow = Awaited<
+  ReturnType<typeof findBlogCategories>
+>[number];
+
+export function findBlogSeries(organizationId: string) {
+  return forOrganization(db, organizationId).series.findMany({
+    orderBy: { id: "asc" },
+    include: { translations: true },
+  });
+}
+
+export type PublicBlogSeriesRow = Awaited<
+  ReturnType<typeof findBlogSeries>
+>[number];
+
+/** The profiles named as authors, with their BLOG_AUTHOR role (the card shows only if visible). */
+export function findBlogAuthors(
+  organizationId: string,
+  profileIds: readonly string[],
+  locales: string[],
+) {
+  return forOrganization(db, organizationId).personProfile.findMany({
+    where: { id: { in: [...profileIds] } },
+    include: {
+      photo: true,
+      translations: { where: { locale: { in: locales } } },
+      roles: {
+        where: { context: "BLOG_AUTHOR" },
+        include: { translations: { where: { locale: { in: locales } } } },
+      },
+    },
+  });
+}
+
+export type PublicBlogAuthorRow = Awaited<
+  ReturnType<typeof findBlogAuthors>
+>[number];
+
+/** The media files with their stored variants (the caller keeps only the ones that are ready). */
+export function findBlogMedia(
+  organizationId: string,
+  mediaIds: readonly string[],
+) {
+  return forOrganization(db, organizationId).mediaFile.findMany({
+    where: { id: { in: [...mediaIds] } },
+    select: { id: true, status: true, variants: true },
+  });
+}

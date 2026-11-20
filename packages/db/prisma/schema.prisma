@@ -49,6 +49,9 @@ model Organization {
   personProfiles    PersonProfile[]
   visitFaqs         VisitFaq[]
   simplePages       SimplePage[]
+  posts             Post[]
+  categories        Category[]
+  series            Series[]
 
   @@map("organizations")
 }
@@ -177,6 +180,110 @@ model SimplePage {
   @@map("simple_pages")
 }
 
+// ─── Blog ────────────────────────────────────────────────────────────────────
+
+/// A blog post. Only the identity and what cannot change with revisions live here: title, slug,
+/// body, author, category, series and cover are in the snapshot of its ContentRevision (editorial
+/// workflow), so there is no translation table. Posts are never deleted, only paused.
+model Post {
+  id             String            @id @default(uuid(7)) @db.Uuid
+  organizationId String            @db.Uuid
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime          @default(now()) @db.Timestamptz(3)
+  /// Date of the post URL: set the first time the post goes live and fixed once it is visible.
+  firstLiveAt    DateTime?         @db.Timestamptz(3)
+  viewsDaily     PostViewDaily[]
+  viewVisitors   PostViewVisitor[]
+
+  @@index([organizationId])
+  @@map("posts")
+}
+
+model Category {
+  id             String                @id @default(uuid(7)) @db.Uuid
+  organizationId String                @db.Uuid
+  organization   Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  order          Int                   @default(0)
+  /// Optimistic lock (409 stale_version).
+  version        Int                   @default(1)
+  /// Logical delete; slug uniqueness is checked in the use case so deleted rows never block it.
+  deletedAt      DateTime?             @db.Timestamptz(3)
+  translations   CategoryTranslation[]
+  createdAt      DateTime              @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime              @updatedAt @db.Timestamptz(3)
+
+  @@index([organizationId])
+  @@map("categories")
+}
+
+model CategoryTranslation {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  categoryId String   @db.Uuid
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  locale     String
+  /// Max 60 chars (validated by the contracts).
+  name       String
+  slug       String
+
+  @@unique([categoryId, locale])
+  @@map("category_translations")
+}
+
+model Series {
+  id             String              @id @default(uuid(7)) @db.Uuid
+  organizationId String              @db.Uuid
+  organization   Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  /// Optimistic lock (409 stale_version).
+  version        Int                 @default(1)
+  /// Logical delete; slug uniqueness is checked in the use case so deleted rows never block it.
+  deletedAt      DateTime?           @db.Timestamptz(3)
+  translations   SeriesTranslation[]
+  createdAt      DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime            @updatedAt @db.Timestamptz(3)
+
+  @@index([organizationId])
+  @@map("series")
+}
+
+model SeriesTranslation {
+  id          String  @id @default(uuid(7)) @db.Uuid
+  seriesId    String  @db.Uuid
+  series      Series  @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  locale      String
+  /// Max 80 chars (validated by the contracts).
+  name        String
+  slug        String
+  /// Max 300 chars (validated by the contracts).
+  description String?
+
+  @@unique([seriesId, locale])
+  @@map("series_translations")
+}
+
+/// Daily view counter per post. No visitor data: only the count.
+model PostViewDaily {
+  postId String   @db.Uuid
+  post   Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  /// Calendar day in the organization time zone.
+  day    DateTime @db.Date
+  count  Int      @default(0)
+
+  @@id([postId, day])
+  @@map("post_views_daily")
+}
+
+/// Anonymous dedupe marker: HMAC(day + ip + user agent). Neither IP nor user agent is stored, and
+/// rows of past days are purged.
+model PostViewVisitor {
+  postId      String   @db.Uuid
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  day         DateTime @db.Date
+  visitorHash String
+
+  @@id([postId, day, visitorHash])
+  @@map("post_view_visitors")
+}
+
 // ─── People (public profiles) ────────────────────────────────────────────────
 
 /// Where a public profile is shown. BLOG_AUTHOR, PREACHER and MINISTRY_LEADER are used by phases
@@ -241,6 +348,8 @@ model PersonRoleTranslation {
   locale       String
   /// Max 80 chars (validated by the contracts).
   title        String
+  /// Free-form author stats `[{ label, value }]`, max 4 (validated by the contracts).
+  stats        Json       @default("[]")
 
   @@unique([personRoleId, locale])
   @@map("person_role_translations")

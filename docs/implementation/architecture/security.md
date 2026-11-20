@@ -86,6 +86,11 @@ Decisiones de origen: D-07, D-08, D-10, D-11, D-16, D-21, D-24, D-25.
 2. Visitas: `sendBeacon` tras cargar el artículo; deduplicación diaria con hash de IP + user agent +
    sal que rota cada día y **no se guarda** (no hay forma de recuperar la IP); se descartan bots
    conocidos; rate limit. Solo se persiste el conteo agregado por artículo y día.
+   *Como quedó (1.4a):* la web reenvía `{ ip, userAgent }` a `POST /public/v1/:churchSlug/posts/:slug/views`
+   y la API guarda `HMAC-SHA256(VIEW_HASH_SECRET, día + ip + ua)` en `PostViewVisitor` (el día en la
+   zona horaria de la organización); si es nuevo suma en `PostViewDaily`. `GET /internal/blog/views/purge`
+   (secreto de cron) borra los hashes de días anteriores, y cada visita limpia los del mismo artículo.
+   Rate limit de 30/min por IP reenviada (`x-forwarded-for`), 429 al excederlo.
 3. Newsletter: doble opt-in, rate limit por IP, respuesta idéntica exista o no el email.
 
 **Subida de archivos** (D-06):

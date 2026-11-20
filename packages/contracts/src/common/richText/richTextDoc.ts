@@ -190,3 +190,12 @@ const boundedInput = z.unknown().superRefine((value, ctx) => {
 
 export const richTextDocSchema: z.ZodType<RichTextDoc, unknown> =
   boundedInput.pipe(docSchema);
+
+/*
+ * Base pieces other documents (the blog body) extend instead of duplicating: they add their own
+ * node types on top and keep the same whitelist, depth and size limits.
+ */
+export const richTextBoundedInput: typeof boundedInput = boundedInput;
+export const richTextInlineSchema: typeof inlineSchema = inlineSchema;
+export const richTextParagraphSchema: typeof paragraphSchema = paragraphSchema;
+export const richTextBlockSchema: typeof blockSchema = blockSchema;

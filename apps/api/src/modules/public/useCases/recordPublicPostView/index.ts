@@ -1,0 +1,1 @@
+export { recordPublicPostView } from "./recordPublicPostView";

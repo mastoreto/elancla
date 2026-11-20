@@ -1,0 +1,1 @@
+export { getPublicPost } from "./getPublicPost";

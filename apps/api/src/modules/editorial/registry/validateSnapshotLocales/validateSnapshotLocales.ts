@@ -1,12 +1,14 @@
-import type { SimplePageSnapshot } from "@ancla/contracts";
 import type { OrganizationLocales } from "../editorialTypes";
 
-/** What the static schema cannot know: the default language must be there, no unknown one. */
-export function validateSimplePageLocales(
+/**
+ * What a static schema cannot know about any translated snapshot (`{ translations: { <locale>: … } }`):
+ * the default language must be there and no unknown one may slip in.
+ */
+export function validateSnapshotLocales(
   snapshot: Record<string, unknown>,
   { locales, defaultLocale }: OrganizationLocales,
 ): string | null {
-  const { translations } = snapshot as SimplePageSnapshot;
+  const translations = (snapshot.translations ?? {}) as Record<string, unknown>;
   if (!translations[defaultLocale]) {
     return `The ${defaultLocale} translation (the default language) is required`;
   }

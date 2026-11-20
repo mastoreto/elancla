@@ -16,13 +16,13 @@ const person: PersonProfileDto = {
       context: "team",
       visible: false,
       order: 3,
-      translations: { es: { title: "Pastora" }, en: { title: "Pastor" } },
+      translations: { es: { title: "Pastora", stats: [] }, en: { title: "Pastor", stats: [] } },
     },
     {
       context: "preacher",
       visible: true,
       order: 1,
-      translations: { es: { title: "Predicadora" } },
+      translations: { es: { title: "Predicadora", stats: [] } },
     },
   ],
 };
@@ -75,7 +75,12 @@ describe("toUpsertPersonBody", () => {
     expect(body.name).toBe("Luis");
     expect(body.translations.es).toEqual({ bio: null });
     expect(body.roles).toEqual([
-      { context: "team", visible: true, order: 0, translations: { es: { title: "Diácono" } } },
+      {
+        context: "team",
+        visible: true,
+        order: 0,
+        translations: { es: { title: "Diácono", stats: [] } },
+      },
     ]);
   });
 

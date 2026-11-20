@@ -1,4 +1,4 @@
-import type { PublicPersonDto } from "@ancla/contracts";
+import { type PublicPersonDto, personStatsDto } from "@ancla/contracts";
 import { buildMediaVariantUrls } from "../../../media";
 import { initials } from "../../../people";
 import type { PublicPersonRow } from "../../data";
@@ -49,5 +49,10 @@ export function toPublicPersonDto(
     title: role
       ? withFallback(role.translations, locales, (t) => t.title)
       : null,
+    stats: role
+      ? personStatsDto.parse(
+          withFallback(role.translations, locales, (t) => t.stats) ?? [],
+        )
+      : [],
   };
 }

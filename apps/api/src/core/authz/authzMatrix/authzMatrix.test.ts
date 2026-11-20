@@ -1,5 +1,6 @@
-import { afterAll, describe, expect, test } from "bun:test";
+import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import { grant, PERMISSIONS } from "@ancla/contracts";
+import { db } from "@ancla/db";
 import { createApiCaller } from "../../../../test/support/apiCaller";
 import {
   defineAuthzMatrix,
@@ -8,13 +9,29 @@ import {
 import { createFixtures } from "../../../../test/support/fixtures";
 import { app } from "../../../app";
 import { getAuth } from "../../auth";
+import { resolveOrganizationId } from "../../tenancy";
 import { findUnguardedRoutes } from "../routeCoverage";
 
 const fixtures = createFixtures();
 const call = createApiCaller(fixtures);
 const UNKNOWN_ID = "01900000-0000-7000-8000-000000000000";
 
-afterAll(() => fixtures.cleanup());
+// A real post: its editorial routes answer from the entity (a missing one is a 404).
+let blogPostId = UNKNOWN_ID;
+const blogPostPath =
+  (suffix = "") =>
+  (): string =>
+    `/editorial/blog-post/${blogPostId}${suffix}`;
+
+beforeAll(async () => {
+  const organizationId = await resolveOrganizationId();
+  blogPostId = (await db.post.create({ data: { organizationId } })).id;
+});
+
+afterAll(async () => {
+  await db.post.deleteMany({ where: { id: blogPostId } });
+  await fixtures.cleanup();
+});
 
 const NOTHING = [] as const;
 const validRole = { name: "x", grants: [] };
@@ -735,6 +752,123 @@ const rows: MatrixRow[] = [
     expected: 403,
   },
 
+  // blog: posts are created with content.posts:create; categories and series are plain data
+  // (not editorial) guarded by the same resource: view lists, edit creates, edits and deletes.
+  ...(
+    [
+      ["GET", "/content/posts", undefined],
+      ["POST", "/content/posts", undefined],
+      ["GET", "/content/categories", undefined],
+      ["POST", "/content/categories", {}],
+      ["PATCH", `/content/categories/${UNKNOWN_ID}`, {}],
+      ["DELETE", `/content/categories/${UNKNOWN_ID}`, undefined],
+      ["GET", "/content/series", undefined],
+      ["POST", "/content/series", {}],
+      ["PATCH", `/content/series/${UNKNOWN_ID}`, {}],
+      ["DELETE", `/content/series/${UNKNOWN_ID}`, undefined],
+    ] as const
+  ).flatMap(([method, path, body]): MatrixRow[] => [
+    {
+      who: "anonymous",
+      caller: "anonymous",
+      method,
+      path,
+      body,
+      expected: 401,
+    },
+    { who: "no role", caller: NOTHING, method, path, body, expected: 403 },
+  ]),
+  {
+    who: PERMISSIONS.blogPosts.view,
+    caller: [grant(PERMISSIONS.blogPosts.view)],
+    method: "GET",
+    path: "/content/posts",
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.blogPosts.view,
+    caller: [grant(PERMISSIONS.blogPosts.view)],
+    method: "POST",
+    path: "/content/posts",
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.blogPosts.create,
+    caller: [grant(PERMISSIONS.blogPosts.create)],
+    method: "GET",
+    path: "/content/posts",
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.blogPosts.create,
+    caller: [grant(PERMISSIONS.blogPosts.create)],
+    method: "POST",
+    path: "/content/posts",
+    expected: 201,
+  },
+  ...(["categories", "series"] as const).flatMap((resource): MatrixRow[] => [
+    {
+      who: PERMISSIONS.blogPosts.view,
+      caller: [grant(PERMISSIONS.blogPosts.view)],
+      method: "GET",
+      path: `/content/${resource}`,
+      expected: 200,
+    },
+    {
+      who: PERMISSIONS.blogPosts.view,
+      caller: [grant(PERMISSIONS.blogPosts.view)],
+      method: "POST",
+      path: `/content/${resource}`,
+      body: {},
+      expected: 403,
+    },
+    {
+      who: PERMISSIONS.blogPosts.view,
+      caller: [grant(PERMISSIONS.blogPosts.view)],
+      method: "PATCH",
+      path: `/content/${resource}/${UNKNOWN_ID}`,
+      body: {},
+      expected: 403,
+    },
+    {
+      who: PERMISSIONS.blogPosts.view,
+      caller: [grant(PERMISSIONS.blogPosts.view)],
+      method: "DELETE",
+      path: `/content/${resource}/${UNKNOWN_ID}`,
+      expected: 403,
+    },
+    {
+      who: PERMISSIONS.blogPosts.edit,
+      caller: [grant(PERMISSIONS.blogPosts.edit)],
+      method: "GET",
+      path: `/content/${resource}`,
+      expected: 403,
+    },
+    {
+      who: PERMISSIONS.blogPosts.edit,
+      caller: [grant(PERMISSIONS.blogPosts.edit)],
+      method: "POST",
+      path: `/content/${resource}`,
+      body: {},
+      expected: 400,
+    },
+    {
+      who: PERMISSIONS.blogPosts.edit,
+      caller: [grant(PERMISSIONS.blogPosts.edit)],
+      method: "PATCH",
+      path: `/content/${resource}/${UNKNOWN_ID}`,
+      body: {},
+      expected: 400,
+    },
+    {
+      who: PERMISSIONS.blogPosts.edit,
+      caller: [grant(PERMISSIONS.blogPosts.edit)],
+      method: "DELETE",
+      path: `/content/${resource}/${UNKNOWN_ID}`,
+      expected: 404,
+    },
+  ]),
+
   // media: the permission is the one of the file's purpose (content:create, vouchers:create...).
   {
     who: "anonymous",
@@ -821,7 +955,7 @@ const rows: MatrixRow[] = [
     expected: 404,
   },
 
-  // The cron route has no session: only the bearer opens it, not even the admin role.
+  // The cron routes have no session: only the bearer opens them, not even the admin role.
   {
     who: "anonymous",
     caller: "anonymous",
@@ -834,6 +968,20 @@ const rows: MatrixRow[] = [
     caller: ["admin"],
     method: "GET",
     path: "/internal/media/purge",
+    expected: 401,
+  },
+  {
+    who: "anonymous",
+    caller: "anonymous",
+    method: "GET",
+    path: "/internal/blog/views/purge",
+    expected: 401,
+  },
+  {
+    who: "admin (a session is not the cron secret)",
+    caller: ["admin"],
+    method: "GET",
+    path: "/internal/blog/views/purge",
     expected: 401,
   },
 
@@ -885,21 +1033,21 @@ const rows: MatrixRow[] = [
     who: PERMISSIONS.blogPosts.view,
     caller: [grant(PERMISSIONS.blogPosts.view)],
     method: "GET",
-    path: `/editorial/blog-post/${UNKNOWN_ID}`,
+    path: blogPostPath(""),
     expected: 200,
   },
   {
     who: PERMISSIONS.blogPosts.view,
     caller: [grant(PERMISSIONS.blogPosts.view)],
     method: "GET",
-    path: `/editorial/blog-post/${UNKNOWN_ID}/history`,
+    path: blogPostPath("/history"),
     expected: 200,
   },
   {
     who: PERMISSIONS.blogPosts.view,
     caller: [grant(PERMISSIONS.blogPosts.view)],
     method: "PUT",
-    path: `/editorial/blog-post/${UNKNOWN_ID}/draft`,
+    path: blogPostPath("/draft"),
     body: { snapshot: {} },
     expected: 403,
   },
@@ -907,50 +1055,64 @@ const rows: MatrixRow[] = [
     who: PERMISSIONS.blogPosts.view,
     caller: [grant(PERMISSIONS.blogPosts.view)],
     method: "POST",
-    path: `/editorial/blog-post/${UNKNOWN_ID}/publish`,
+    path: blogPostPath("/publish"),
     expected: 403,
   },
   {
     who: PERMISSIONS.blogPosts.edit,
     caller: [grant(PERMISSIONS.blogPosts.edit)],
     method: "POST",
-    path: `/editorial/blog-post/${UNKNOWN_ID}/submit`,
+    path: blogPostPath("/submit"),
     expected: 409,
   },
   {
     who: PERMISSIONS.blogPosts.edit,
     caller: [grant(PERMISSIONS.blogPosts.edit)],
     method: "POST",
-    path: `/editorial/blog-post/${UNKNOWN_ID}/publish`,
+    path: blogPostPath("/publish"),
     expected: 403,
   },
   {
     who: PERMISSIONS.blogPosts.publish,
     caller: [grant(PERMISSIONS.blogPosts.publish)],
     method: "POST",
-    path: `/editorial/blog-post/${UNKNOWN_ID}/pause`,
+    path: blogPostPath("/pause"),
     expected: 409,
   },
   {
     who: PERMISSIONS.blogPosts.publish,
     caller: [grant(PERMISSIONS.blogPosts.publish)],
     method: "GET",
-    path: `/editorial/blog-post/${UNKNOWN_ID}`,
+    path: blogPostPath(""),
     expected: 403,
   },
   {
     who: "view without being a reviewer",
     caller: [grant(PERMISSIONS.blogPosts.view)],
     method: "POST",
-    path: `/editorial/blog-post/${UNKNOWN_ID}/approve`,
+    path: blogPostPath("/approve"),
     expected: 403,
   },
   {
     who: "admin (a reviewer) with nothing in review",
     caller: ["admin"],
     method: "POST",
-    path: `/editorial/blog-post/${UNKNOWN_ID}/approve`,
+    path: blogPostPath("/approve"),
     expected: 409,
+  },
+  {
+    who: PERMISSIONS.blogPosts.view,
+    caller: [grant(PERMISSIONS.blogPosts.view)],
+    method: "GET",
+    path: `/editorial/blog-post/${UNKNOWN_ID}`,
+    expected: 404,
+  },
+  {
+    who: PERMISSIONS.blogPosts.edit,
+    caller: [grant(PERMISSIONS.blogPosts.edit)],
+    method: "POST",
+    path: `/editorial/blog-post/${UNKNOWN_ID}/submit`,
+    expected: 404,
   },
   {
     who: "admin",
