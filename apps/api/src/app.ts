@@ -11,6 +11,7 @@ import { meRoutes } from "./modules/me";
 import { mediaInternalRoutes, mediaRoutes } from "./modules/media";
 import { ministriesRoutes } from "./modules/ministries";
 import { publicRoutes } from "./modules/public";
+import { siteRoutes } from "./modules/site";
 import { siteKeysRoutes } from "./modules/siteKeys";
 
 /** Module routes without the `/api` prefix: this is what the typed client mirrors. */
@@ -25,6 +26,7 @@ const routes = createRouter()
   .route("/", mediaRoutes)
   .route("/", mediaInternalRoutes)
   .route("/", siteKeysRoutes)
+  .route("/", siteRoutes)
   .route("/", editorialRoutes)
   .route("/public/v1", publicRoutes);
 

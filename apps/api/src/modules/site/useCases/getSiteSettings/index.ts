@@ -1,0 +1,1 @@
+export { getSiteSettings } from "./getSiteSettings";

@@ -1,17 +1,12 @@
 import type { PublicSiteSettingsDto, PublicSiteStatus } from "@ancla/contracts";
-import type { SiteSettings, SiteSettingsTranslation } from "@ancla/db";
+import type { SiteSettings } from "@ancla/db";
+import { parseServiceTimes, resolveSectionStatuses } from "../../../site";
 
 const STATUSES: Record<SiteSettings["status"], PublicSiteStatus> = {
   ONLINE: "online",
   MAINTENANCE: "maintenance",
   CLOSED: "closed",
 };
-
-/** The about text is stored as JSON; only a plain string is part of the public contract. */
-function aboutOf(translation: SiteSettingsTranslation | null): string | null {
-  const text = translation?.aboutRichText;
-  return typeof text === "string" && text.length > 0 ? text : null;
-}
 
 function geoOf(settings: SiteSettings): PublicSiteSettingsDto["geo"] {
   if (settings.geoLat === null || settings.geoLng === null) return null;
@@ -21,7 +16,7 @@ function geoOf(settings: SiteSettings): PublicSiteSettingsDto["geo"] {
 /** Explicit field list: no ids, `version` or timestamps leave through the public API. */
 export function toPublicSiteSettingsDto(
   settings: SiteSettings,
-  translation: SiteSettingsTranslation | null,
+  seoDescription: string | null,
   locale: string,
 ): PublicSiteSettingsDto {
   return {
@@ -42,7 +37,9 @@ export function toPublicSiteSettingsDto(
     geo: geoOf(settings),
     themeColor: settings.themeColor,
     founded: settings.founded,
-    serviceTimesSummary: settings.serviceTimesSummary,
+    serviceTimes: parseServiceTimes(settings.serviceTimes),
+    sections: resolveSectionStatuses(settings.sectionStatuses),
+    seoDescription,
     social: {
       website: settings.website,
       instagram: settings.instagram,
@@ -52,6 +49,5 @@ export function toPublicSiteSettingsDto(
       spotify: settings.spotify,
       linkedin: settings.linkedin,
     },
-    about: aboutOf(translation),
   };
 }
