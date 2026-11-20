@@ -10857,6 +10857,519 @@
         }
       }
     },
+    "/api/content/pages": {
+      "get": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "List the simple pages with their live and working revisions.",
+        "responses": {
+          "200": {
+            "description": "The pages, newest first",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "title": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "live": {
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "number": {
+                                "type": "integer"
+                              },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "draft",
+                                  "in_review",
+                                  "changes_requested",
+                                  "published",
+                                  "paused",
+                                  "superseded"
+                                ]
+                              },
+                              "author": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "reviewer": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "comment": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "submittedAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "format": "date-time"
+                              },
+                              "decidedAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "format": "date-time"
+                              },
+                              "publishedAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "number",
+                              "state",
+                              "author",
+                              "reviewer",
+                              "comment",
+                              "createdAt",
+                              "submittedAt",
+                              "decidedAt",
+                              "publishedAt"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "working": {
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "number": {
+                                "type": "integer"
+                              },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "draft",
+                                  "in_review",
+                                  "changes_requested",
+                                  "published",
+                                  "paused",
+                                  "superseded"
+                                ]
+                              },
+                              "author": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "reviewer": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "comment": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "submittedAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "format": "date-time"
+                              },
+                              "decidedAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "format": "date-time"
+                              },
+                              "publishedAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "number",
+                              "state",
+                              "author",
+                              "reviewer",
+                              "comment",
+                              "createdAt",
+                              "submittedAt",
+                              "decidedAt",
+                              "publishedAt"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "title",
+                          "live",
+                          "working"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid session",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The role does not allow this",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Create an empty page; its content goes through /editorial/simple-page/{id}/draft.",
+        "responses": {
+          "201": {
+            "description": "The page created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid session",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The role does not allow this",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/editorial/inbox": {
       "get": {
         "tags": [
@@ -10884,7 +11397,8 @@
                             "type": "string",
                             "enum": [
                               "blog-post",
-                              "ministry"
+                              "ministry",
+                              "simple-page"
                             ]
                           },
                           "entityId": {
@@ -10951,7 +11465,8 @@
                             "type": "string",
                             "enum": [
                               "blog-post",
-                              "ministry"
+                              "ministry",
+                              "simple-page"
                             ]
                           },
                           "entityId": {
@@ -11093,7 +11608,8 @@
                         "type": "string",
                         "enum": [
                           "blog-post",
-                          "ministry"
+                          "ministry",
+                          "simple-page"
                         ]
                       },
                       "reviewerRoleIds": {
@@ -11267,7 +11783,8 @@
               "type": "string",
               "enum": [
                 "blog-post",
-                "ministry"
+                "ministry",
+                "simple-page"
               ]
             },
             "required": true,
@@ -11338,7 +11855,8 @@
                       "type": "string",
                       "enum": [
                         "blog-post",
-                        "ministry"
+                        "ministry",
+                        "simple-page"
                       ]
                     },
                     "reviewerRoleIds": {
@@ -11566,7 +12084,8 @@
               "type": "string",
               "enum": [
                 "blog-post",
-                "ministry"
+                "ministry",
+                "simple-page"
               ]
             },
             "required": true,
@@ -11682,6 +12201,10 @@
                             "null"
                           ],
                           "format": "date-time"
+                        },
+                        "snapshot": {
+                          "type": "object",
+                          "additionalProperties": {}
                         }
                       },
                       "required": [
@@ -11694,7 +12217,8 @@
                         "createdAt",
                         "submittedAt",
                         "decidedAt",
-                        "publishedAt"
+                        "publishedAt",
+                        "snapshot"
                       ],
                       "additionalProperties": false
                     },
@@ -12016,7 +12540,8 @@
               "type": "string",
               "enum": [
                 "blog-post",
-                "ministry"
+                "ministry",
+                "simple-page"
               ]
             },
             "required": true,
@@ -12328,7 +12853,8 @@
               "type": "string",
               "enum": [
                 "blog-post",
-                "ministry"
+                "ministry",
+                "simple-page"
               ]
             },
             "required": true,
@@ -12464,6 +12990,10 @@
                             "null"
                           ],
                           "format": "date-time"
+                        },
+                        "snapshot": {
+                          "type": "object",
+                          "additionalProperties": {}
                         }
                       },
                       "required": [
@@ -12476,7 +13006,8 @@
                         "createdAt",
                         "submittedAt",
                         "decidedAt",
-                        "publishedAt"
+                        "publishedAt",
+                        "snapshot"
                       ],
                       "additionalProperties": false
                     },
@@ -12908,7 +13439,8 @@
               "type": "string",
               "enum": [
                 "blog-post",
-                "ministry"
+                "ministry",
+                "simple-page"
               ]
             },
             "required": true,
@@ -13024,6 +13556,10 @@
                             "null"
                           ],
                           "format": "date-time"
+                        },
+                        "snapshot": {
+                          "type": "object",
+                          "additionalProperties": {}
                         }
                       },
                       "required": [
@@ -13036,7 +13572,8 @@
                         "createdAt",
                         "submittedAt",
                         "decidedAt",
-                        "publishedAt"
+                        "publishedAt",
+                        "snapshot"
                       ],
                       "additionalProperties": false
                     },
@@ -13413,7 +13950,8 @@
               "type": "string",
               "enum": [
                 "blog-post",
-                "ministry"
+                "ministry",
+                "simple-page"
               ]
             },
             "required": true,
@@ -13529,6 +14067,10 @@
                             "null"
                           ],
                           "format": "date-time"
+                        },
+                        "snapshot": {
+                          "type": "object",
+                          "additionalProperties": {}
                         }
                       },
                       "required": [
@@ -13541,7 +14083,8 @@
                         "createdAt",
                         "submittedAt",
                         "decidedAt",
-                        "publishedAt"
+                        "publishedAt",
+                        "snapshot"
                       ],
                       "additionalProperties": false
                     },
@@ -13918,7 +14461,8 @@
               "type": "string",
               "enum": [
                 "blog-post",
-                "ministry"
+                "ministry",
+                "simple-page"
               ]
             },
             "required": true,
@@ -14034,6 +14578,10 @@
                             "null"
                           ],
                           "format": "date-time"
+                        },
+                        "snapshot": {
+                          "type": "object",
+                          "additionalProperties": {}
                         }
                       },
                       "required": [
@@ -14046,7 +14594,8 @@
                         "createdAt",
                         "submittedAt",
                         "decidedAt",
-                        "publishedAt"
+                        "publishedAt",
+                        "snapshot"
                       ],
                       "additionalProperties": false
                     },
@@ -14423,7 +14972,8 @@
               "type": "string",
               "enum": [
                 "blog-post",
-                "ministry"
+                "ministry",
+                "simple-page"
               ]
             },
             "required": true,
@@ -14539,6 +15089,10 @@
                             "null"
                           ],
                           "format": "date-time"
+                        },
+                        "snapshot": {
+                          "type": "object",
+                          "additionalProperties": {}
                         }
                       },
                       "required": [
@@ -14551,7 +15105,8 @@
                         "createdAt",
                         "submittedAt",
                         "decidedAt",
-                        "publishedAt"
+                        "publishedAt",
+                        "snapshot"
                       ],
                       "additionalProperties": false
                     },
@@ -14928,7 +15483,8 @@
               "type": "string",
               "enum": [
                 "blog-post",
-                "ministry"
+                "ministry",
+                "simple-page"
               ]
             },
             "required": true,
@@ -15065,6 +15621,10 @@
                             "null"
                           ],
                           "format": "date-time"
+                        },
+                        "snapshot": {
+                          "type": "object",
+                          "additionalProperties": {}
                         }
                       },
                       "required": [
@@ -15077,7 +15637,8 @@
                         "createdAt",
                         "submittedAt",
                         "decidedAt",
-                        "publishedAt"
+                        "publishedAt",
+                        "snapshot"
                       ],
                       "additionalProperties": false
                     },
@@ -16464,6 +17025,487 @@
           },
           "404": {
             "description": "The church was not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v1/{churchSlug}/pages": {
+      "get": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "The published simple pages (title and slug), in the requested language.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "churchSlug",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z]{2}(-[A-Z]{2})?$"
+            },
+            "required": false,
+            "name": "locale",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The published pages, by title",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "slug": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "slug",
+                          "title"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The locale is not valid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The site key is missing, invalid or not for this church",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The church was not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v1/{churchSlug}/pages/{slug}": {
+      "get": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "A published simple page by its slug (in any of its languages), in the requested language.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "churchSlug",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "slug",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z]{2}(-[A-Z]{2})?$"
+            },
+            "required": false,
+            "name": "locale",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "slug": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "body": {},
+                    "seoTitle": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "seoDescription": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "locale": {
+                      "type": "string"
+                    },
+                    "alternates": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "slug",
+                    "title",
+                    "body",
+                    "seoTitle",
+                    "seoDescription",
+                    "locale",
+                    "alternates"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The locale is not valid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The site key is missing, invalid or not for this church",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "There is no published page with that slug",
             "content": {
               "application/problem+json": {
                 "schema": {

@@ -8,6 +8,7 @@ import { withTransaction } from "../../../../core/db";
 import { ValidationError } from "../../../../core/errors";
 import { createDraftRevision, nextRevisionNumber } from "../../data";
 import { InvalidTransitionError, nextState } from "../../domain";
+import type { EditorialTypeDefinition } from "../../registry";
 import {
   auditTransition,
   buildEditorialStatus,
@@ -18,12 +19,33 @@ import {
   moveRevision,
 } from "../editorialState";
 
+/** Type rules that need the organization (enabled languages...); a message is a 400. */
+async function assertSnapshotFitsOrganization(
+  definition: EditorialTypeDefinition,
+  snapshot: Record<string, unknown>,
+  organizationId: string,
+): Promise<void> {
+  if (!definition.validateSnapshot) return;
+  const organization = await db.organization.findUniqueOrThrow({
+    where: { id: organizationId },
+    select: { locales: true, defaultLocale: true },
+  });
+  const message = definition.validateSnapshot(snapshot, organization);
+  if (message) {
+    throw new ValidationError("The content is not valid", [
+      { path: "snapshot", message },
+    ]);
+  }
+}
+
 interface SaveDraftInput extends EditorialInput {
   body: SaveDraftBody;
 }
 
 /** Edits the working revision, or starts one (also from published content: the live one stays untouched). */
-export function saveDraft(input: SaveDraftInput): Promise<EditorialStatusDto> {
+export async function saveDraft(
+  input: SaveDraftInput,
+): Promise<EditorialStatusDto> {
   const { ctx, definition, body } = input;
   const parsed = definition.snapshotSchema.safeParse(body.snapshot);
   if (!parsed.success) {
@@ -31,6 +53,11 @@ export function saveDraft(input: SaveDraftInput): Promise<EditorialStatusDto> {
       { path: "snapshot", message: parsed.error.message },
     ]);
   }
+  await assertSnapshotFitsOrganization(
+    definition,
+    parsed.data,
+    ctx.organizationId,
+  );
   const snapshot = parsed.data as Prisma.InputJsonObject;
 
   return failOnRace(() =>

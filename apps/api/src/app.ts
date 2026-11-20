@@ -10,6 +10,7 @@ import { usersRoutes } from "./modules/identity/users";
 import { meRoutes } from "./modules/me";
 import { mediaInternalRoutes, mediaRoutes } from "./modules/media";
 import { ministriesRoutes } from "./modules/ministries";
+import { pagesRoutes } from "./modules/pages";
 import { peopleRoutes } from "./modules/people";
 import { publicRoutes } from "./modules/public";
 import { siteRoutes } from "./modules/site";
@@ -31,6 +32,7 @@ const routes = createRouter()
   .route("/", siteRoutes)
   .route("/", peopleRoutes)
   .route("/", visitRoutes)
+  .route("/", pagesRoutes)
   .route("/", editorialRoutes)
   .route("/public/v1", publicRoutes);
 

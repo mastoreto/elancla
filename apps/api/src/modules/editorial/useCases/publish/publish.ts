@@ -9,6 +9,7 @@ import {
 } from "../../domain";
 import {
   auditTransition,
+  beforeGoLive,
   buildEditorialStatus,
   type EditorialInput,
   failOnRace,
@@ -33,6 +34,8 @@ export function publish(input: EditorialInput): Promise<EditorialStatusDto> {
         if (!live || nextState(live.state, "resume") !== "PUBLISHED") {
           throw new InvalidTransitionError();
         }
+        // Another page may have taken the slug while this one was paused.
+        await beforeGoLive(tx, input, live);
         const resumed = await moveRevision(tx, {
           organizationId: ctx.organizationId,
           revision: live,
@@ -51,6 +54,7 @@ export function publish(input: EditorialInput): Promise<EditorialStatusDto> {
         throw new ReviewRequiredError();
       if (nextState(working.state, "publish") !== "PUBLISHED")
         throw new InvalidTransitionError();
+      await beforeGoLive(tx, input, working);
       await retireLive(tx, ctx.organizationId, live);
       const published = await moveRevision(tx, {
         organizationId: ctx.organizationId,

@@ -5,10 +5,28 @@ import {
   simplePageSnapshot,
   snapshotSchema,
 } from "@ancla/contracts";
-import type { EditorialContentType } from "@ancla/db";
+import type { EditorialContentType, Prisma } from "@ancla/db";
 import type { z } from "zod";
+import {
+  assertSimplePageSlugsFree,
+  simplePageExists,
+  validateSimplePageLocales,
+} from "./simplePage";
 
 export type EditorialPermissionKind = "view" | "edit" | "publish";
+
+export interface OrganizationLocales {
+  locales: string[];
+  defaultLocale: string;
+}
+
+/** What a type's `beforeGoLive` hook sees: the revision about to become the live one. */
+export interface GoLiveContext {
+  tx: Prisma.TransactionClient;
+  organizationId: string;
+  entityId: string;
+  snapshot: Record<string, unknown>;
+}
 
 export interface EditorialTypeDefinition {
   contentType: EditorialContentType;
@@ -23,6 +41,19 @@ export interface EditorialTypeDefinition {
   snapshotSchema: z.ZodType<Record<string, unknown>>;
   /** Where the CRM shows this entity, for the links in emails and in the inbox. */
   crmPath(entityId: string): string;
+  /** Types whose entity is a row of its own: an id that matches nothing is a 404. */
+  entityExists?(
+    tx: Prisma.TransactionClient,
+    organizationId: string,
+    entityId: string,
+  ): Promise<boolean>;
+  /** Runs in the transaction of publish, approve and resume; throws to refuse going live. */
+  beforeGoLive?(context: GoLiveContext): Promise<void>;
+  /** Rules that depend on the organization; a message means the snapshot is a 400. */
+  validateSnapshot?(
+    snapshot: Record<string, unknown>,
+    organization: OrganizationLocales,
+  ): string | null;
 }
 
 /** Each phase that adopts the workflow adds its type here (and a value to the Prisma enum). */
@@ -68,6 +99,9 @@ export const EDITORIAL_TYPES: Record<
     ministryScoped: false,
     snapshotSchema: simplePageSnapshot,
     crmPath: (entityId) => `/website/pages/${entityId}`,
+    entityExists: simplePageExists,
+    beforeGoLive: assertSimplePageSlugsFree,
+    validateSnapshot: validateSimplePageLocales,
   },
 };
 

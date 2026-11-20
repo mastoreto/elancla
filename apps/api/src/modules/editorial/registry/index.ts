@@ -5,4 +5,6 @@ export {
   type EditorialTypeDefinition,
   editorialTypeOf,
   findEditorialType,
+  type GoLiveContext,
+  type OrganizationLocales,
 } from "./editorialTypes";

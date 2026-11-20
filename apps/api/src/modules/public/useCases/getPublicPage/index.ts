@@ -1,0 +1,1 @@
+export { getPublicPage } from "./getPublicPage";

@@ -12,6 +12,7 @@ export {
   findToReviewRows,
   findWorkingRevision,
   isUniqueViolation,
+  listCurrentRevisionRows,
   listRevisionRows,
   nextRevisionNumber,
   type RevisionRow,

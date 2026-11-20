@@ -143,3 +143,17 @@ export function auditTransition(
     },
   });
 }
+
+/** Lets the content type veto going live (publish, approve, resume); a no-op for most types. */
+export async function beforeGoLive(
+  tx: Prisma.TransactionClient,
+  { ctx, definition, entityId }: EditorialInput,
+  revision: RevisionRow,
+): Promise<void> {
+  await definition.beforeGoLive?.({
+    tx,
+    organizationId: ctx.organizationId,
+    entityId,
+    snapshot: revision.snapshot as Record<string, unknown>,
+  });
+}

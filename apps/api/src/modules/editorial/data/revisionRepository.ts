@@ -46,6 +46,17 @@ export function findLiveRevision(
   });
 }
 
+/** Live and working revisions of every entity of a type, for list screens (one query, no N+1). */
+export function listCurrentRevisionRows(
+  organizationId: string,
+  contentType: EditorialContentType,
+): Promise<RevisionRow[]> {
+  return forOrganization(db, organizationId).contentRevision.findMany({
+    where: { contentType, state: { in: [...WORKING_STATES, ...LIVE_STATES] } },
+    include: WITH_PEOPLE,
+  });
+}
+
 export function listRevisionRows(key: EntityKey): Promise<RevisionRow[]> {
   return forOrganization(db, key.organizationId).contentRevision.findMany({
     where: { contentType: key.contentType, entityId: key.entityId },

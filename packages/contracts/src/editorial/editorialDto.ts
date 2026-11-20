@@ -57,7 +57,10 @@ export type RevisionSummaryDto = z.infer<typeof revisionSummaryDto>;
 export const snapshotSchema = z.record(z.string(), z.unknown());
 
 export const editorialStatusDto = z.strictObject({
-  live: revisionSummaryDto.nullable(),
+  live: revisionSummaryDto
+    .extend({ snapshot: snapshotSchema })
+    .strict()
+    .nullable(),
   working: revisionSummaryDto
     .extend({ snapshot: snapshotSchema })
     .strict()
