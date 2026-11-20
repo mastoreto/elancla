@@ -5,6 +5,13 @@ export * from "./access";
 export * from "./blog";
 export { type CachedLoaderOptions, createCachedLoader } from "./cachedLoader";
 export {
+  createPeopleLoader,
+  getPeople,
+  type PeopleLoader,
+  type PeopleLoaderOptions,
+  type PublicPerson,
+} from "./people";
+export {
   createPublicClient,
   PublicApiError,
   type PublicClient,

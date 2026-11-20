@@ -46,6 +46,7 @@ model Organization {
   siteApiKeys       SiteApiKey[]
   contentRevisions  ContentRevision[]
   editorialSettings EditorialSettings[]
+  personProfiles    PersonProfile[]
 
   @@map("organizations")
 }
@@ -128,6 +129,75 @@ model SiteSettingsTranslation {
   @@map("site_settings_translations")
 }
 
+// ─── People (public profiles) ────────────────────────────────────────────────
+
+/// Where a public profile is shown. BLOG_AUTHOR, PREACHER and MINISTRY_LEADER are used by phases
+/// 1.4, 1.7 and 1.5; they exist now so "visible in one context, hidden in another" is testable.
+enum PersonContext {
+  TEAM
+  BLOG_AUTHOR
+  PREACHER
+  MINISTRY_LEADER
+}
+
+model PersonProfile {
+  id             String                     @id @default(uuid(7)) @db.Uuid
+  organizationId String                     @db.Uuid
+  organization   Organization               @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  /// Max 120 chars (validated by the contracts).
+  name           String
+  photoId        String?                    @db.Uuid
+  photo          MediaFile?                 @relation(fields: [photoId], references: [id], onDelete: SetNull)
+  userId         String?                    @db.Uuid
+  user           User?                      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  translations   PersonProfileTranslation[]
+  roles          PersonRole[]
+  createdAt      DateTime                   @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime                   @updatedAt @db.Timestamptz(3)
+
+  @@unique([organizationId, userId])
+  @@index([organizationId, name])
+  @@map("person_profiles")
+}
+
+model PersonProfileTranslation {
+  id              String        @id @default(uuid(7)) @db.Uuid
+  personProfileId String        @db.Uuid
+  personProfile   PersonProfile @relation(fields: [personProfileId], references: [id], onDelete: Cascade)
+  locale          String
+  /// Max 600 chars (validated by the contracts).
+  bio             String?
+
+  @@unique([personProfileId, locale])
+  @@map("person_profile_translations")
+}
+
+model PersonRole {
+  id              String                  @id @default(uuid(7)) @db.Uuid
+  personProfileId String                  @db.Uuid
+  personProfile   PersonProfile           @relation(fields: [personProfileId], references: [id], onDelete: Cascade)
+  context         PersonContext
+  visible         Boolean                 @default(true)
+  order           Int                     @default(0)
+  translations    PersonRoleTranslation[]
+
+  // ponytail: 1.5 adds ministryId and widens this unique.
+  @@unique([personProfileId, context])
+  @@map("person_roles")
+}
+
+model PersonRoleTranslation {
+  id           String     @id @default(uuid(7)) @db.Uuid
+  personRoleId String     @db.Uuid
+  personRole   PersonRole @relation(fields: [personRoleId], references: [id], onDelete: Cascade)
+  locale       String
+  /// Max 80 chars (validated by the contracts).
+  title        String
+
+  @@unique([personRoleId, locale])
+  @@map("person_role_translations")
+}
+
 // ─── Authentication (Better Auth core schema) ────────────────────────────────
 // Authorization lives in the RBAC models below (roles, permissions, ministries).
 
@@ -151,6 +221,7 @@ model User {
   mediaFiles         MediaFile[]
   authoredRevisions  ContentRevision[] @relation("RevisionAuthor")
   reviewedRevisions  ContentRevision[] @relation("RevisionReviewer")
+  personProfiles     PersonProfile[]
 
   @@map("users")
 }
@@ -403,6 +474,7 @@ model MediaFile {
   uploadedBy     User?           @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
   createdAt      DateTime        @default(now()) @db.Timestamptz(3)
   finalizedAt    DateTime?       @db.Timestamptz(3)
+  personProfiles PersonProfile[]
 
   @@index([organizationId, status, createdAt])
   @@map("media_files")

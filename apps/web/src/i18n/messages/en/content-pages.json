@@ -173,50 +173,7 @@
         "description": "The church leadership is a plural team that shares teaching, prayer, and pastoral care for the congregation.",
         "blocks": [
           {
-            "type": "team",
-            "people": [
-              {
-                "initials": "JO",
-                "role": "Lead pastor",
-                "name": "Pr. Juan Olivera",
-                "bio": "Pastoring since 2007. Leads Sunday preaching and the expository series in Hebrews."
-              },
-              {
-                "initials": "MR",
-                "role": "Associate pastor",
-                "name": "Pr. Martín Recalde",
-                "bio": "Coordinates teaching, growth groups, and discipleship for new believers.",
-                "tint": "#e6e2d6"
-              },
-              {
-                "initials": "SP",
-                "role": "Elder",
-                "name": "Sebastián Pérez",
-                "bio": "Supports pastoral care for men and oversees local missions.",
-                "tint": "#ece6da"
-              },
-              {
-                "initials": "CV",
-                "role": "Deaconess",
-                "name": "Carolina Vidal",
-                "bio": "Leads Women's Space and the congregation's hospitality and care network.",
-                "tint": "#efe9dc"
-              },
-              {
-                "initials": "DA",
-                "role": "Deacon",
-                "name": "Diego Acosta",
-                "bio": "Coordinates logistics, finances, and Sunday service operations.",
-                "tint": "#e9e4d6"
-              },
-              {
-                "initials": "LN",
-                "role": "Youth leader",
-                "name": "Lucía Núñez",
-                "bio": "Walks with teens and young adults in biblical formation for those under 25.",
-                "tint": "#ece5d4"
-              }
-            ]
+            "type": "team"
           }
         ]
       },

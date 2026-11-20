@@ -11,6 +11,11 @@ export const SETTINGS_PERMISSIONS = [
   PERMISSIONS.audit.view,
 ] as const satisfies readonly Permission[];
 
+/** Team profiles live under /website but have their own permission resource. */
+export const PEOPLE_ROUTE_PERMISSIONS = [
+  PERMISSIONS.people.view,
+] as const satisfies readonly Permission[];
+
 /**
  * What a signed-in user needs to see each section: any one of the listed permissions; an empty
  * list means every signed-in user. The sidebar and the route guards read this same table.

@@ -173,50 +173,7 @@
         "description": "A liderança da igreja é formada por uma equipe plural, que compartilha o ensino, a oração e o cuidado pastoral da congregação.",
         "blocks": [
           {
-            "type": "team",
-            "people": [
-              {
-                "initials": "JO",
-                "role": "Pastor principal",
-                "name": "Pr. Juan Olivera",
-                "bio": "No pastorado desde 2007. Conduz a pregação dominical e a série expositiva de Hebreus."
-              },
-              {
-                "initials": "MR",
-                "role": "Pastor associado",
-                "name": "Pr. Martín Recalde",
-                "bio": "Coordena o ensino, os grupos de crescimento e o discipulado de novos crentes.",
-                "tint": "#e6e2d6"
-              },
-              {
-                "initials": "SP",
-                "role": "Presbítero",
-                "name": "Sebastián Pérez",
-                "bio": "Acompanha a pastoral de homens e supervisiona missões locais.",
-                "tint": "#ece6da"
-              },
-              {
-                "initials": "CV",
-                "role": "Diaconisa",
-                "name": "Carolina Vidal",
-                "bio": "Lidera Espaço Mulher e a rede de hospitalidade e cuidado da congregação.",
-                "tint": "#efe9dc"
-              },
-              {
-                "initials": "DA",
-                "role": "Diácono",
-                "name": "Diego Acosta",
-                "bio": "Coordena logística, finanças e serviço dominical da igreja.",
-                "tint": "#e9e4d6"
-              },
-              {
-                "initials": "LN",
-                "role": "Líder de jovens",
-                "name": "Lucía Núñez",
-                "bio": "Acompanha adolescentes e jovens na formação bíblica de menores de 25 anos.",
-                "tint": "#ece5d4"
-              }
-            ]
+            "type": "team"
           }
         ]
       },

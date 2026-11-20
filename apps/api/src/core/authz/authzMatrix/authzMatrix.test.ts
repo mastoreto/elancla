@@ -491,6 +491,104 @@ const rows: MatrixRow[] = [
     expected: 400,
   },
 
+  // people profiles: view reads, create/edit/delete write. A `{}` body never reaches the use case,
+  // so a 400 (or the 404 of an unknown id) proves the guard let the caller through.
+  ...(
+    [
+      ["GET", "/content/people", undefined],
+      ["POST", "/content/people", {}],
+      ["GET", `/content/people/${UNKNOWN_ID}`, undefined],
+      ["PATCH", `/content/people/${UNKNOWN_ID}`, {}],
+      ["DELETE", `/content/people/${UNKNOWN_ID}`, undefined],
+    ] as const
+  ).map(
+    ([method, path, body]): MatrixRow => ({
+      who: "anonymous",
+      caller: "anonymous",
+      method,
+      path,
+      body,
+      expected: 401,
+    }),
+  ),
+  ...(
+    [
+      ["GET", "/content/people", undefined],
+      ["POST", "/content/people", {}],
+      ["PATCH", `/content/people/${UNKNOWN_ID}`, {}],
+      ["DELETE", `/content/people/${UNKNOWN_ID}`, undefined],
+    ] as const
+  ).map(
+    ([method, path, body]): MatrixRow => ({
+      who: "no role",
+      caller: NOTHING,
+      method,
+      path,
+      body,
+      expected: 403,
+    }),
+  ),
+  ...(
+    [
+      ["POST", "/content/people", {}],
+      ["PATCH", `/content/people/${UNKNOWN_ID}`, {}],
+      ["DELETE", `/content/people/${UNKNOWN_ID}`, undefined],
+    ] as const
+  ).map(
+    ([method, path, body]): MatrixRow => ({
+      who: PERMISSIONS.people.view,
+      caller: [grant(PERMISSIONS.people.view)],
+      method,
+      path,
+      body,
+      expected: 403,
+    }),
+  ),
+  {
+    who: PERMISSIONS.people.view,
+    caller: [grant(PERMISSIONS.people.view)],
+    method: "GET",
+    path: "/content/people",
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.people.view,
+    caller: [grant(PERMISSIONS.people.view)],
+    method: "GET",
+    path: `/content/people/${UNKNOWN_ID}`,
+    expected: 404,
+  },
+  {
+    who: PERMISSIONS.people.create,
+    caller: [grant(PERMISSIONS.people.create)],
+    method: "POST",
+    path: "/content/people",
+    body: {},
+    expected: 400,
+  },
+  {
+    who: PERMISSIONS.people.create,
+    caller: [grant(PERMISSIONS.people.create)],
+    method: "GET",
+    path: "/content/people",
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.people.edit,
+    caller: [grant(PERMISSIONS.people.edit)],
+    method: "PATCH",
+    path: `/content/people/${UNKNOWN_ID}`,
+    body: {},
+    expected: 400,
+  },
+  {
+    who: PERMISSIONS.people.delete,
+    caller: [grant(PERMISSIONS.people.delete)],
+    method: "DELETE",
+    path: `/content/people/${UNKNOWN_ID}`,
+    expected: 404,
+  },
+
   // media: the permission is the one of the file's purpose (content:create, vouchers:create...).
   {
     who: "anonymous",

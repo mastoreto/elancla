@@ -222,7 +222,10 @@ describe("GET /api/public/v1/openapi.json", () => {
     const res = await call("GET", "/public/v1/openapi.json");
     expect(res.status).toBe(200);
     const document = (await res.json()) as { paths: Record<string, unknown> };
-    expect(Object.keys(document.paths)).toEqual(["/{churchSlug}/settings"]);
+    expect(Object.keys(document.paths)).toEqual([
+      "/{churchSlug}/settings",
+      "/{churchSlug}/people",
+    ]);
   });
 });
 

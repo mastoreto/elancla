@@ -127,4 +127,35 @@ describe("createPublicClient", () => {
     });
     await expect(client.getSettings()).rejects.toThrow("connection refused");
   });
+
+  test("getPeople sends context and locale and parses the list", async () => {
+    const calls: Call[] = [];
+    const person = {
+      name: "Ana",
+      initials: "A",
+      photo: null,
+      bio: null,
+      title: null,
+    };
+    const client = createPublicClient({
+      baseUrl: "https://crm.example.org",
+      apiKey: "k",
+      churchSlug: "el-ancla",
+      fetch: fakeFetch(() => json([person]), calls),
+    });
+    expect(await client.getPeople("team", "en")).toEqual([person]);
+    expect(calls[0]?.url).toEndWith("/people?context=team&locale=en");
+  });
+
+  test("getPeople rejects a list that does not match the contract", async () => {
+    const client = createPublicClient({
+      baseUrl: "https://crm.example.org",
+      apiKey: "k",
+      churchSlug: "el-ancla",
+      fetch: fakeFetch(() => json([{ name: "Ana", id: "leaked" }])),
+    });
+    await expect(client.getPeople("team", "es")).rejects.toBeInstanceOf(
+      PublicApiError,
+    );
+  });
 });

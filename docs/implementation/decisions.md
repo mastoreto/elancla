@@ -541,6 +541,8 @@ quedar desactualizadas. Confesión de fe, nav y footer: fijos.
 usado en varios contextos: autor del blog, predicador, responsable de ministerio, equipo. En cada
 contexto se define rol, orden y si se muestra en la web.
 
+*Implementación (1.3b):* `PersonProfile` (+ traducción de la bio) y `PersonRole` (+ traducción del título) con `@@unique([personProfileId, contexto])`; el enum `PersonContext` ya trae los cuatro contextos para que 1.4, 1.5 y 1.7 solo sumen su pantalla en el CRM. Se guardan directo (permiso `content.people`, auditoría `personProfile.*`), sin flujo editorial. La API pública (`people?context=`) devuelve solo los roles visibles del contexto, sin ids, con la foto como lista de variantes `webp`. Las iniciales se calculan en la API. El CRM de 1.3b muestra solo el contexto Equipo y conserva los roles de otros contextos al guardar. Borrar una persona borra sus roles en cascada.
+
 ## D-41 — Páginas simples
 
 **Aceptada.** Tipo de página editable con título, slug, cuerpo en texto enriquecido y SEO, todo

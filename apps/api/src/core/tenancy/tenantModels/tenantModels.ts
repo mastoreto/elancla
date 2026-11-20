@@ -13,4 +13,5 @@ export const TENANT_MODELS: ReadonlySet<string> = new Set([
   "SiteApiKey",
   "ContentRevision",
   "EditorialSettings",
+  "PersonProfile",
 ]);

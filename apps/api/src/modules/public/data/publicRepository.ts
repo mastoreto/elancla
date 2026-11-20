@@ -1,4 +1,4 @@
-import { db } from "@ancla/db";
+import { db, type PersonContext } from "@ancla/db";
 import { forOrganization } from "../../../core/tenancy";
 
 /**
@@ -33,3 +33,31 @@ export function findSiteSettingsWithTranslations(
     include: { translations: { where: { locale: { in: locales } } } },
   });
 }
+
+/**
+ * The people shown in a context: only roles that are visible, with the texts of the two languages
+ * the response can use. Ordering by role `order` is done by the caller (it lives on the role).
+ */
+export function findVisiblePeopleInContext(input: {
+  organizationId: string;
+  context: PersonContext;
+  locales: string[];
+}) {
+  const { organizationId, context, locales } = input;
+  const role = { context, visible: true };
+  return forOrganization(db, organizationId).personProfile.findMany({
+    where: { roles: { some: role } },
+    include: {
+      photo: true,
+      translations: { where: { locale: { in: locales } } },
+      roles: {
+        where: role,
+        include: { translations: { where: { locale: { in: locales } } } },
+      },
+    },
+  });
+}
+
+export type PublicPersonRow = Awaited<
+  ReturnType<typeof findVisiblePeopleInContext>
+>[number];

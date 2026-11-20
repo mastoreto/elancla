@@ -1,0 +1,1 @@
+export { getPublicPeople } from "./getPublicPeople";

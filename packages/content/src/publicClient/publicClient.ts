@@ -1,5 +1,8 @@
 import {
+  type PersonContext,
+  type PublicPersonDto,
   type PublicSiteSettingsDto,
+  publicPersonDto,
   publicSiteSettingsDto,
 } from "@ancla/contracts";
 
@@ -19,6 +22,8 @@ export interface PublicClientOptions {
 export interface PublicClient {
   /** Site settings in `locale` (the church default when omitted or not enabled). */
   getSettings(locale?: string): Promise<PublicSiteSettingsDto>;
+  /** People visible in `context`, already ordered by the API, with bio and title in `locale`. */
+  getPeople(context: PersonContext, locale: string): Promise<PublicPersonDto[]>;
 }
 
 /** The API answered with something other than success, or not with what the contract says. */
@@ -79,6 +84,20 @@ export function createPublicClient(options: PublicClientOptions): PublicClient {
         );
       }
       return parsed.data;
+    },
+    async getPeople(context, locale) {
+      const query = `?context=${encodeURIComponent(context)}&locale=${encodeURIComponent(locale)}`;
+      const body = await getJson(`/people${query}`);
+      const parsed = Array.isArray(body)
+        ? body.map((item) => publicPersonDto.safeParse(item))
+        : [];
+      if (!Array.isArray(body) || parsed.some((result) => !result.success)) {
+        throw new PublicApiError(
+          "Public API people do not match the contract",
+          null,
+        );
+      }
+      return parsed.flatMap((result) => (result.success ? [result.data] : []));
     },
   };
 }

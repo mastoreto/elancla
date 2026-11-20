@@ -1,12 +1,14 @@
 ---
-import type { ContentTeamBlock } from 'src/data/contentPages';
+import type { PublicPerson } from '@ancla/content';
 import cn from 'src/utils/cn';
+import { buildPhotoSrcSet } from './utils/buildPhotoSrcSet';
 
 interface Props {
-  block: ContentTeamBlock;
+  people: PublicPerson[];
 }
 
-const { block } = Astro.props;
+const { people } = Astro.props;
+const AVATAR_SIZES = '60px';
 
 const aboutTeam = {
   container: cn('grid grid-cols-[1fr] gap-3.5', 'md:grid-cols-[repeat(2,1fr)]'),
@@ -20,6 +22,7 @@ const aboutTeam = {
     'flex size-15 items-center justify-center rounded-full font-obra-sans-bold',
     'text-[1.125rem] text-white'
   ),
+  photo: cn('size-15 rounded-full object-cover'),
   initialsLead: cn('bg-obra-red'),
   initialsRest: cn('bg-obra-ink'),
   role: cn(
@@ -32,16 +35,33 @@ const aboutTeam = {
 
 <div class={aboutTeam.container}>
   {
-    block.people.map((person, i) => (
-      <article class={aboutTeam.person}>
-        <span
-          class={cn(aboutTeam.initials, i === 0 ? aboutTeam.initialsLead : aboutTeam.initialsRest)}
-          aria-hidden="true"
-        >{person.initials}</span>
-        <span class={aboutTeam.role}>{person.role}</span>
-        <b class={aboutTeam.personName}>{person.name}</b>
-        <span class={aboutTeam.bio}>{person.bio}</span>
-      </article>
-    ))
+    people.map((person, i) => {
+      const photo = buildPhotoSrcSet(person.photo);
+      return (
+        <article class={aboutTeam.person}>
+          {photo ? (
+            <img
+              class={aboutTeam.photo}
+              src={photo.src}
+              srcset={photo.srcset}
+              sizes={AVATAR_SIZES}
+              width="60"
+              height="60"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <span
+              class={cn(aboutTeam.initials, i === 0 ? aboutTeam.initialsLead : aboutTeam.initialsRest)}
+              aria-hidden="true"
+            >{person.initials}</span>
+          )}
+          {person.title && <span class={aboutTeam.role}>{person.title}</span>}
+          <b class={aboutTeam.personName}>{person.name}</b>
+          {person.bio && <span class={aboutTeam.bio}>{person.bio}</span>}
+        </article>
+      );
+    })
   }
 </div>

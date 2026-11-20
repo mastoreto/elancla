@@ -170,50 +170,7 @@
         "description": "El liderazgo de la iglesia está formado por un equipo plural, que comparte la enseñanza, la oración y el cuidado pastoral de la congregación.",
         "blocks": [
           {
-            "type": "team",
-            "people": [
-              {
-                "initials": "JO",
-                "role": "Pastor principal",
-                "name": "Pr. Juan Olivera",
-                "bio": "En el pastorado desde 2007. Lleva la predicación dominical y la serie expositiva de Hebreos."
-              },
-              {
-                "initials": "MR",
-                "role": "Pastor asociado",
-                "name": "Pr. Martín Recalde",
-                "bio": "Coordina la enseñanza, los grupos de crecimiento y el discipulado a nuevos creyentes.",
-                "tint": "#e6e2d6"
-              },
-              {
-                "initials": "SP",
-                "role": "Anciano",
-                "name": "Sebastián Pérez",
-                "bio": "Acompaña la pastoral de hombres y supervisa el ministerio de misiones locales.",
-                "tint": "#ece6da"
-              },
-              {
-                "initials": "CV",
-                "role": "Diaconisa",
-                "name": "Carolina Vidal",
-                "bio": "Lidera Espacio Mujer y la red de hospitalidad y cuidado de la congregación.",
-                "tint": "#efe9dc"
-              },
-              {
-                "initials": "DA",
-                "role": "Diácono",
-                "name": "Diego Acosta",
-                "bio": "Coordina los aspectos de logística, finanzas y servicio dominical de la iglesia.",
-                "tint": "#e9e4d6"
-              },
-              {
-                "initials": "LN",
-                "role": "Líder de jóvenes",
-                "name": "Lucía Núñez",
-                "bio": "Acompaña al ministerio de adolescentes y jóvenes y la formación bíblica de menores de 25.",
-                "tint": "#ece5d4"
-              }
-            ]
+            "type": "team"
           }
         ]
       },

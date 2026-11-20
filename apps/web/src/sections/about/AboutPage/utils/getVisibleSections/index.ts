@@ -1,0 +1,1 @@
+export { getVisibleSections } from './getVisibleSections';

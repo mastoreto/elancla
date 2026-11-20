@@ -1,17 +1,22 @@
 ---
+import type { PublicPerson } from '@ancla/content';
 import type { ContentPage } from 'src/data/contentPages';
 import AboutCTA from 'src/sections/about/AboutPage/components/AboutCTA';
 import AboutFigure from 'src/sections/about/AboutPage/components/AboutFigure';
 import AboutHero from 'src/sections/about/AboutPage/components/AboutHero';
 import AboutSection from 'src/sections/about/AboutPage/components/AboutSection';
 import AboutToc from 'src/sections/about/AboutPage/components/AboutToc';
+import { getVisibleSections } from 'src/sections/about/AboutPage/utils/getVisibleSections';
 import cn from 'src/utils/cn';
 
 interface Props {
   page: ContentPage;
+  /** Team members from the public API; empty hides the team section and its index entry. */
+  team?: PublicPerson[];
 }
 
-const { page } = Astro.props;
+const { page, team = [] } = Astro.props;
+const sections = getVisibleSections(page.sections, team.length > 0);
 
 const aboutPage = {
   container: cn('ln bg-obra-paper pb-24'),
@@ -27,9 +32,9 @@ const aboutPage = {
   {page.featuredImage && <AboutFigure figure={page.featuredImage} />}
   <div class={aboutPage.row}>
     <div class={aboutPage.sections}>
-      {page.sections.map((section) => <AboutSection section={section} />)}
+      {sections.map((section) => <AboutSection section={section} team={team} />)}
     </div>
-    <AboutToc title={page.tocTitle ?? ''} sections={page.sections} />
+    <AboutToc title={page.tocTitle ?? ''} sections={sections} />
   </div>
   {page.cta && <AboutCTA cta={page.cta} />}
 </div>

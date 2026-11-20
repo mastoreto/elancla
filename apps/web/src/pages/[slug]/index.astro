@@ -1,5 +1,5 @@
 ---
-import { getSiteConfig } from '@ancla/content';
+import { getPeople, getSiteConfig } from '@ancla/content';
 import { getContentPageBySlug } from 'src/data/contentPages';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
@@ -26,6 +26,7 @@ if (!localeHome && !result) {
 }
 
 const page = result?.page;
+const team = page?.slug === 'nosotros' ? await getPeople('team', locale) : [];
 const canonicalPath = page ? `/${page.slug}` : '';
 const canonical = page
   ? new URL(localizePath(canonicalPath, locale), Astro.site).toString()
@@ -52,7 +53,7 @@ const breadcrumbs = page
       noindex={result!.isAlias}
       locale={locale}
     >
-      {page!.slug === 'nosotros' ? <AboutPage page={page!} /> : <ContentPageTemplate page={page!} />}
+      {page!.slug === 'nosotros' ? <AboutPage page={page!} team={team} /> : <ContentPageTemplate page={page!} />}
     </Layout>
   )
 }
