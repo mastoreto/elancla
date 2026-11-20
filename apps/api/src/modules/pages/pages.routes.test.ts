@@ -521,11 +521,11 @@ describe("GET /public/v1/:churchSlug/pages/:slug", () => {
   });
 });
 
-describe("blog posts and ministries keep their behavior", () => {
+describe("types without entityExists keep their behavior", () => {
   test("an entity id that is not a row is still fine for types without entityExists", async () => {
     const res = await call(
       "GET",
-      `/editorial/blog-post/${crypto.randomUUID()}`,
+      `/editorial/ministry/${crypto.randomUUID()}`,
       {
         cookie: admin.cookie,
       },

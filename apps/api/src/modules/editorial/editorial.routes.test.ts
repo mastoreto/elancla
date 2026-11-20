@@ -33,9 +33,9 @@ import { findLiveSnapshot, listLiveSnapshots } from "./index";
 const fixtures = createFixtures();
 const call = createApiCaller(fixtures);
 
-const VIEW = grant(PERMISSIONS.blogPosts.view);
-const EDIT = grant(PERMISSIONS.blogPosts.edit);
-const PUBLISH = grant(PERMISSIONS.blogPosts.publish);
+const VIEW = grant(PERMISSIONS.ministryProfile.view);
+const EDIT = grant(PERMISSIONS.ministryProfile.edit);
+const PUBLISH = grant(PERMISSIONS.ministryProfile.publish);
 
 interface TestUser {
   id: string;
@@ -92,13 +92,13 @@ async function configure(
   settings: Partial<Omit<EditorialSettingsDto, "contentType">>,
 ): Promise<void> {
   await db.editorialSettings.create({
-    data: { organizationId, contentType: "BLOG_POST", ...settings },
+    data: { organizationId, contentType: "MINISTRY", ...settings },
   });
 }
 
 const newEntity = (): string => crypto.randomUUID();
 const urlOf = (entityId: string, suffix = ""): string =>
-  `/editorial/blog-post/${entityId}${suffix}`;
+  `/editorial/ministry/${entityId}${suffix}`;
 
 async function act(
   user: TestUser,
@@ -227,18 +227,18 @@ describe("editing published content", () => {
     await draft(publisher, entityId, "old");
     await expectOk(await act(publisher, entityId, "publish"));
     expect(
-      await findLiveSnapshot(organizationId, "BLOG_POST", entityId),
+      await findLiveSnapshot(organizationId, "MINISTRY", entityId),
     ).toEqual({ title: "old" });
 
     await expectOk(await draft(editor, entityId, "new"));
     await expectOk(await act(editor, entityId, "submit"));
     expect(
-      await findLiveSnapshot(organizationId, "BLOG_POST", entityId),
+      await findLiveSnapshot(organizationId, "MINISTRY", entityId),
     ).toEqual({ title: "old" });
 
     await expectOk(await act(admin, entityId, "approve"));
     expect(
-      await findLiveSnapshot(organizationId, "BLOG_POST", entityId),
+      await findLiveSnapshot(organizationId, "MINISTRY", entityId),
     ).toEqual({ title: "new" });
 
     const history = (await (
@@ -322,7 +322,7 @@ describe("requesting changes", () => {
       (entry) => entry.entityId === entityId,
     );
     expect(item?.comment).toBe("Fix the title");
-    expect(item?.crmPath).toBe("/blog");
+    expect(item?.crmPath).toBe(`/ministries/${entityId}`);
 
     const edited = await expectOk(await draft(editor, entityId, "v2"));
     expect(edited.working?.state).toBe("draft");
@@ -363,17 +363,17 @@ describe("pausing", () => {
     expect(paused.live?.state).toBe("paused");
     expect(paused.availableActions).toContain("resume");
     expect(
-      await findLiveSnapshot(organizationId, "BLOG_POST", entityId),
+      await findLiveSnapshot(organizationId, "MINISTRY", entityId),
     ).toBeNull();
-    const listed = await listLiveSnapshots(organizationId, "BLOG_POST");
+    const listed = await listLiveSnapshots(organizationId, "MINISTRY");
     expect(listed.some((entry) => entry.entityId === entityId)).toBe(false);
 
     const resumed = await expectOk(await act(publisher, entityId, "publish"));
     expect(resumed.live?.state).toBe("published");
     expect(
-      await findLiveSnapshot(organizationId, "BLOG_POST", entityId),
+      await findLiveSnapshot(organizationId, "MINISTRY", entityId),
     ).toEqual({ title: "kept" });
-    const again = await listLiveSnapshots(organizationId, "BLOG_POST");
+    const again = await listLiveSnapshots(organizationId, "MINISTRY");
     expect(again.some((entry) => entry.entityId === entityId)).toBe(true);
   });
 
@@ -451,7 +451,7 @@ describe("emails", () => {
     mailer.sent.length = 0;
     await act(admin, second, "approve");
     expect(mailer.sent.map((message) => message.to)).toEqual([editor.email]);
-    expect(mailer.sent[0]?.html).toContain("/blog");
+    expect(mailer.sent[0]?.html).toContain("/ministries/");
   });
 
   test("a mailer that fails does not break the request", async () => {
@@ -538,14 +538,14 @@ describe("settings", () => {
     ).toBe(200);
     expect(
       (
-        await call("PUT", "/editorial/settings/blog-post", {
+        await call("PUT", "/editorial/settings/ministry", {
           cookie: viewer.cookie,
           body,
         })
       ).status,
     ).toBe(403);
 
-    const saved = await call("PUT", "/editorial/settings/blog-post", {
+    const saved = await call("PUT", "/editorial/settings/ministry", {
       cookie: manager.cookie,
       body,
     });
@@ -567,8 +567,8 @@ describe("settings", () => {
       "ministry",
       "simple-page",
     ]);
-    expect(list[0]?.reviewerUserIds).toEqual([editor.id]);
-    expect(list[1]?.reviewerUserIds).toEqual([]);
+    expect(list[1]?.reviewerUserIds).toEqual([editor.id]);
+    expect(list[0]?.reviewerUserIds).toEqual([]);
   });
 
   test("ids that are not from the organization are a 400", async () => {
@@ -591,7 +591,7 @@ describe("settings", () => {
       { ...empty, reviewerUserIds: [crypto.randomUUID()] },
       { ...empty, mandatoryReviewUserIds: [crypto.randomUUID()] },
     ]) {
-      const res = await call("PUT", "/editorial/settings/blog-post", {
+      const res = await call("PUT", "/editorial/settings/ministry", {
         cookie: admin.cookie,
         body,
       });
@@ -638,7 +638,7 @@ describe("concurrency", () => {
       db.contentRevision.create({
         data: {
           organizationId,
-          contentType: "BLOG_POST",
+          contentType: "MINISTRY",
           entityId,
           number,
           state: "DRAFT",

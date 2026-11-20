@@ -1,0 +1,1 @@
+export { assertBlogAuthorValid } from "./assertBlogAuthorValid";

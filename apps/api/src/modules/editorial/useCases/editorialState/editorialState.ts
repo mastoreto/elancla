@@ -155,5 +155,6 @@ export async function beforeGoLive(
     organizationId: ctx.organizationId,
     entityId,
     snapshot: revision.snapshot as Record<string, unknown>,
+    now: new Date(),
   });
 }
