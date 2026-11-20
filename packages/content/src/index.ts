@@ -29,6 +29,7 @@ export {
   PublicApiError,
   type PublicClient,
 } from "./publicClient";
+export { renderBlogBody, renderRichText } from "./richText";
 export * from "./site";
 export {
   createVisitLoader,
