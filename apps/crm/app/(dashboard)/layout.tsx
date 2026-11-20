@@ -2,6 +2,7 @@ import { getAuth } from "@ancla/api";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { DashboardLayoutShell } from "@/components/dashboard";
+import { createServerApiClient } from "@/lib/api/createServerApiClient";
 import { AccessProvider } from "@/lib/authz/AccessProvider";
 import { getAccess } from "@/lib/authz/getAccess";
 import { isDevAuthBypassEnabled } from "@/lib/dev-auth-bypass";
@@ -21,6 +22,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect("/");
   }
 
+  // Pending reviews and requested changes for the header bell; the bell is optional, so a failure
+  // only means "nothing pending".
+  const inboxResponse = session
+    ? await (await createServerApiClient()).editorial.inbox.$get()
+    : null;
+  const editorialInbox = inboxResponse?.ok ? await inboxResponse.json() : null;
+
   const user = session
     ? {
         name: session.user.name,
@@ -32,7 +40,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <AccessProvider access={access}>
-      <DashboardLayoutShell user={user}>{children}</DashboardLayoutShell>
+      <DashboardLayoutShell editorialInbox={editorialInbox} user={user}>
+        {children}
+      </DashboardLayoutShell>
     </AccessProvider>
   );
 }

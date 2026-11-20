@@ -17,6 +17,7 @@ const SETTINGS_TABS: readonly SettingsTabValue[] = [
   "currencies",
   "roles",
   "website",
+  "editorial",
   "notifications",
   "account",
 ];
@@ -53,6 +54,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
     rolesResponse,
     ministriesResponse,
     siteKeysResponse,
+    editorialSettingsResponse,
   ] = await Promise.all([
     api.me.$get(),
     can(access, PERMISSIONS.invitations.view) ? api.invitations.$get(query) : null,
@@ -60,6 +62,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
     can(access, PERMISSIONS.roles.view) ? api.roles.$get() : null,
     can(access, PERMISSIONS.ministryProfile.view) ? api.ministries.$get(query) : null,
     can(access, PERMISSIONS.siteKeys.view) ? api["site-keys"].$get() : null,
+    can(access, PERMISSIONS.editorial.view) ? api.editorial.settings.$get() : null,
   ]);
   const me = meResponse.ok ? await meResponse.json() : null;
   const invitations = invitationsResponse?.ok ? (await invitationsResponse.json()).items : null;
@@ -67,6 +70,9 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
   const roles = rolesResponse?.ok ? await rolesResponse.json() : null;
   const ministries = ministriesResponse?.ok ? (await ministriesResponse.json()).items : null;
   const siteKeys = siteKeysResponse?.ok ? await siteKeysResponse.json() : null;
+  const editorialSettings = editorialSettingsResponse?.ok
+    ? await editorialSettingsResponse.json()
+    : null;
   const tab = initialTab ?? defaultTab;
 
   return (
@@ -80,6 +86,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
       churchName={CHURCH_NAME}
       churchSubtitle={CHURCH_SUBTITLE}
       currencies={settingsCurrencies}
+      editorialSettings={editorialSettings}
       ministries={ministries}
       notifications={settingsNotifications}
       roles={roles}

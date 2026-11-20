@@ -7,6 +7,7 @@ export type SettingsTabValue =
   | "currencies"
   | "roles"
   | "website"
+  | "editorial"
   | "notifications"
   | "audit"
   | "account";
