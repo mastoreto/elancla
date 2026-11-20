@@ -1,1 +1,5 @@
-export { ROUTE_PERMISSIONS, SETTINGS_PERMISSIONS } from "./routePermissions";
+export {
+  PEOPLE_ROUTE_PERMISSIONS,
+  ROUTE_PERMISSIONS,
+  SETTINGS_PERMISSIONS,
+} from "./routePermissions";

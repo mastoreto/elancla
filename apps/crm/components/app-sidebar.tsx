@@ -20,6 +20,7 @@ import {
   PiggyBank,
   Receipt,
   Settings,
+  Users,
   Vote,
 } from "lucide-react";
 import Link from "next/link";
@@ -45,7 +46,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useAccess } from "@/lib/authz/AccessProvider";
 import { type AccessSnapshot, canAny } from "@/lib/authz/can";
-import { ROUTE_PERMISSIONS } from "@/lib/authz/routePermissions";
+import { PEOPLE_ROUTE_PERMISSIONS, ROUTE_PERMISSIONS } from "@/lib/authz/routePermissions";
 import { churchToDashboardRouteMap, getChurchRoutePath } from "@/lib/church";
 import { moneyRequests } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -63,6 +64,8 @@ type NavigationLinkItem = {
   icon: NavigationIcon;
   requires: Requires;
   badge?: number;
+  /** Active only on its own page, not on the pages nested under it (e.g. /website/people). */
+  exact?: boolean;
 };
 
 type NavigationGroupItem = {
@@ -200,6 +203,14 @@ export const navigationSections: NavigationSection[] = [
         url: getChurchRoutePath("website"),
         icon: Globe,
         requires: ROUTE_PERMISSIONS.website,
+        exact: true,
+      },
+      {
+        type: "link",
+        title: "Personas",
+        url: getChurchRoutePath("website", "people"),
+        icon: Users,
+        requires: PEOPLE_ROUTE_PERMISSIONS,
       },
       {
         type: "link",
@@ -348,12 +359,12 @@ function getNavigationMatchUrls(url: string): string[] {
   return [url, `/${internalRoute}${suffix}`];
 }
 
-function isNavigationItemActive(pathname: string, url: string | null): boolean {
+function isNavigationItemActive(pathname: string, url: string | null, exact = false): boolean {
   if (!url) {
     return false;
   }
   return getNavigationMatchUrls(url).some(
-    (matchUrl) => pathname === matchUrl || pathname.startsWith(`${matchUrl}/`),
+    (matchUrl) => pathname === matchUrl || (!exact && pathname.startsWith(`${matchUrl}/`)),
   );
 }
 
@@ -367,7 +378,7 @@ function NavigationLink({ item, pathname }: { item: NavigationLinkItem; pathname
       <SidebarMenuButton
         asChild={true}
         className={appSidebarSharedPage.menuButton}
-        isActive={isNavigationItemActive(pathname, item.url)}
+        isActive={isNavigationItemActive(pathname, item.url, item.exact)}
       >
         <Link href={item.url}>
           <item.icon />

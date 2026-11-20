@@ -23,6 +23,12 @@ describe("matchRouteRule", () => {
     });
   });
 
+  test("people profiles under the website have their own permission", () => {
+    expect(matchRouteRule("/website")?.requires).toEqual([PERMISSIONS.site.view]);
+    expect(matchRouteRule("/website/people")?.requires).toEqual([PERMISSIONS.people.view]);
+    expect(matchRouteRule("/website/people/new")?.requires).toEqual([PERMISSIONS.people.view]);
+  });
+
   test("an undeclared route has no rule (the proxy denies it)", () => {
     expect(matchRouteRule("/nope")).toBeUndefined();
     expect(matchRouteRule("/")).toBeUndefined();

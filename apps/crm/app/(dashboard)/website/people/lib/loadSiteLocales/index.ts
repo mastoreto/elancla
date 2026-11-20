@@ -1,0 +1,1 @@
+export { loadSiteLocales } from "./loadSiteLocales";
