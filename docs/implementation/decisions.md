@@ -551,7 +551,7 @@ contexto se define rol, orden y si se muestra en la web.
 traducible, con flujo editorial. Sin constructor de bloques. La primera es la política de privacidad,
 obligatoria antes de habilitar el newsletter.
 
-*Implementación (1.3a):* el permiso `content.pages` ya existe en el catálogo y en el preset `content-editor`; las páginas llegan en 1.3d.
+*Implementación (1.3d):* `SimplePage` guarda solo la identidad; el contenido por idioma (`title`, `slug`, `body`, `seoTitle`, `seoDescription`) es el snapshot de la revisión editorial, validado por `simplePageSnapshot`. El cuerpo es Tiptap **JSON** con lista blanca de nodos y marcas (`richTextDocSchema`, `href` solo `http(s):`/`mailto:`, profundidad y tamaño acotados) y la web lo renderiza con un renderer propio que escapa todo, sin dependencia de sanitizado. Los slugs viven en la raíz (`/privacidad`) y no pueden usar `RESERVED_ROOT_SLUGS`; la unicidad entre páginas en vivo la valida el hook `beforeGoLive` del registro editorial (409 `slug_taken`). Las páginas se pausan, no se borran. El seed de desarrollo crea la política de privacidad como borrador con texto de ejemplo (solo si ya existe un usuario que la firme como autor); el texto legal real lo carga la iglesia y su publicación previa al newsletter la exige la 1.9.
 
 ## D-42 — Circuito de egresos
 

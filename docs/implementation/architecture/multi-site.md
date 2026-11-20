@@ -20,7 +20,7 @@ Organization (iglesia, tenant)          slug único (p. ej. "el-ancla")
 
 ## Contrato público
 
-- Rutas: `/api/public/v1/:churchSlug/...` (settings, posts, events, ministries, sermons, gallery…; en 1.1 solo `settings`; desde 1.3a `settings` trae además `serviceTimes`, `sections` (estado por sección, siempre las 5 claves) y `seoDescription`; desde 1.3b `people?context=team|blog-author|preacher|ministry-leader` (solo roles visibles del contexto, sin ids); desde 1.3c `visit?locale=` (indicaciones y FAQ editables resueltas por locale, sin ids); el resto llega con su subfase).
+- Rutas: `/api/public/v1/:churchSlug/...` (settings, posts, events, ministries, sermons, gallery…; en 1.1 solo `settings`; desde 1.3a `settings` trae además `serviceTimes`, `sections` (estado por sección, siempre las 5 claves) y `seoDescription`; desde 1.3b `people?context=team|blog-author|preacher|ministry-leader` (solo roles visibles del contexto, sin ids); desde 1.3c `visit?locale=` (indicaciones y FAQ editables resueltas por locale, sin ids); desde 1.3d `pages?locale=` y `pages/:slug?locale=` (páginas simples publicadas, slug en cualquier idioma, `alternates`, sin ids); el resto llega con su subfase).
 - La site key (`sk_<keyId>_<secreto>`) identifica a la iglesia; el `churchSlug` de la URL **debe coincidir** con la key
   (si no, 401). El slug va en la URL porque el CDN cachea por URL: así dos iglesias nunca comparten
   una respuesta cacheada.
