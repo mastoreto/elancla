@@ -18,7 +18,8 @@
     "invite": "bun run src/scripts/invite/invite.ts",
     "site-key:create": "bun run src/scripts/createSiteKey/createSiteKey.ts",
     "seed:e2e": "bun run src/scripts/seedE2eUsers/seedE2eUsers.ts",
-    "media:purge": "bun run src/scripts/purgeMedia/purgeMedia.ts"
+    "media:purge": "bun run src/scripts/purgeMedia/purgeMedia.ts",
+    "blog:purge-views": "bun run src/scripts/purgeViewVisitors/purgeViewVisitors.ts"
   },
   "dependencies": {
     "@ancla/contracts": "*",

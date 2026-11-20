@@ -26,4 +26,11 @@ export {
   type SeriesRow,
   softDeleteSeries,
 } from "./seriesRepository";
-export { type PostViewTotals, sumPostViews } from "./viewsRepository";
+export {
+  deleteOrganizationVisitorsBefore,
+  deleteVisitorsBefore,
+  incrementDailyViews,
+  insertVisitorIfNew,
+  type PostViewTotals,
+  sumPostViews,
+} from "./viewsRepository";

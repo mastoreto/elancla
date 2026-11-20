@@ -1,8 +1,18 @@
+export {
+  type BlogEntry,
+  buildBlogEntries,
+  findVisibleEntryBySlug,
+  type LiveBlogRevision,
+  type PickedBlogTranslation,
+  pickBlogTranslation,
+} from "./blogEntries";
+export { coverMediaId, figureMediaIds } from "./blogMediaIds";
 export { buildArchive } from "./buildArchive";
 export { buildToc } from "./buildToc";
 export { isKnownBot } from "./isKnownBot";
 export { issueNumbers } from "./issueNumbers";
 export { isVisible } from "./isVisible";
+export { POPULAR_POSTS_COUNT, pickPopular } from "./pickPopular";
 export { pickRelated, type RelatedCandidate } from "./pickRelated";
 export { type ReadingStats, readingStats } from "./readingStats";
 export type { RichTextNodeLike } from "./richTextNodes";

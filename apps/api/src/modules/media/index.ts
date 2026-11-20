@@ -1,3 +1,4 @@
+export { requireCronSecret } from "./guards";
 export { mediaInternalRoutes } from "./internal.routes";
 export {
   buildMediaVariantUrls,

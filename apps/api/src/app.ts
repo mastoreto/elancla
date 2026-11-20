@@ -2,7 +2,7 @@ import { createAuthRouter } from "./core/auth";
 import { createApp, createRouter } from "./core/createApp";
 import { openApiConfig } from "./core/openapi";
 import { auditRoutes } from "./modules/audit";
-import { blogRoutes } from "./modules/blog";
+import { blogInternalRoutes, blogRoutes } from "./modules/blog";
 import { editorialRoutes } from "./modules/editorial";
 import { healthRoutes } from "./modules/health";
 import { invitationsRoutes } from "./modules/identity/invitations";
@@ -29,6 +29,7 @@ const routes = createRouter()
   .route("/", auditRoutes)
   .route("/", mediaRoutes)
   .route("/", mediaInternalRoutes)
+  .route("/", blogInternalRoutes)
   .route("/", siteKeysRoutes)
   .route("/", siteRoutes)
   .route("/", peopleRoutes)

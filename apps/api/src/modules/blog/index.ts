@@ -3,6 +3,7 @@ export {
   type CategoryRow,
   findOrganizationBlogConfig,
   listCategoryRows,
+  listPostRows,
   listSeriesRows,
   type OrganizationBlogConfig,
   type PostViewTotals,
@@ -10,3 +11,6 @@ export {
   sumPostViews,
 } from "./data";
 export * from "./domain";
+export { blogInternalRoutes } from "./internal.routes";
+
+export { recordPostView } from "./useCases";

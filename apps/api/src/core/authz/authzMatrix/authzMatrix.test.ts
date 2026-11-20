@@ -955,7 +955,7 @@ const rows: MatrixRow[] = [
     expected: 404,
   },
 
-  // The cron route has no session: only the bearer opens it, not even the admin role.
+  // The cron routes have no session: only the bearer opens them, not even the admin role.
   {
     who: "anonymous",
     caller: "anonymous",
@@ -968,6 +968,20 @@ const rows: MatrixRow[] = [
     caller: ["admin"],
     method: "GET",
     path: "/internal/media/purge",
+    expected: 401,
+  },
+  {
+    who: "anonymous",
+    caller: "anonymous",
+    method: "GET",
+    path: "/internal/blog/views/purge",
+    expected: 401,
+  },
+  {
+    who: "admin (a session is not the cron secret)",
+    caller: ["admin"],
+    method: "GET",
+    path: "/internal/blog/views/purge",
     expected: 401,
   },
 
