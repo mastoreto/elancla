@@ -1,6 +1,7 @@
 export * from "./audit";
 export * from "./authz";
 export * from "./common";
+export * from "./editorial";
 export * from "./health";
 export * from "./invitations";
 export * from "./me";

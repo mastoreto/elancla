@@ -6,6 +6,7 @@ export const PERMISSION_ACTIONS = [
   "edit",
   "approve",
   "delete",
+  "publish",
 ] as const;
 
 export const PERMISSION_SCOPES = ["own", "ministry", "all"] as const;
@@ -30,7 +31,8 @@ interface ResourceDefinition {
 }
 
 const CRUD = ["view", "create", "edit", "delete"] as const;
-const WITH_APPROVAL = PERMISSION_ACTIONS;
+const WITH_APPROVAL = ["view", "create", "edit", "approve", "delete"] as const;
+const CRUD_AND_PUBLISH = [...CRUD, "publish"] as const;
 const ALL_ONLY = ["all"] as const;
 const MINISTRY_OR_ALL = ["ministry", "all"] as const;
 const OWN_MINISTRY_OR_ALL = ["own", "ministry", "all"] as const;
@@ -69,9 +71,15 @@ export const PERMISSION_CATALOG = {
   voting: { resource: "voting", actions: CRUD, scopes: ALL_ONLY },
   reports: { resource: "reports", actions: CRUD, scopes: ALL_ONLY },
   content: { resource: "content", actions: CRUD, scopes: ALL_ONLY },
+  // Posts are published through the editorial workflow (see the editorial module).
+  blogPosts: {
+    resource: "content.posts",
+    actions: CRUD_AND_PUBLISH,
+    scopes: ALL_ONLY,
+  },
   ministryProfile: {
     resource: "ministries.profile",
-    actions: CRUD,
+    actions: CRUD_AND_PUBLISH,
     scopes: MINISTRY_OR_ALL,
   },
   ministryFinance: {
@@ -106,6 +114,13 @@ export const PERMISSION_CATALOG = {
   },
   // Reading the trail is a power of its own: it shows who did what, and to whom.
   audit: { resource: "audit", actions: ["view"], scopes: ALL_ONLY },
+  // Who reviews what is configured in editorial settings; this only guards that screen.
+  editorial: {
+    resource: "editorial",
+    actions: ["view", "edit"],
+    scopes: ALL_ONLY,
+    dangerous: ["edit"],
+  },
   settings: {
     resource: "settings",
     actions: ["view", "edit"],

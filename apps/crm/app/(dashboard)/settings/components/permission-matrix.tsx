@@ -18,10 +18,12 @@ import {
   type LucideIcon,
   Mail,
   Newspaper,
+  PenLine,
   PiggyBank,
   Receipt,
   ScrollText,
   Shield,
+  ShieldCheck,
   SquareCheck,
   Sun,
   TriangleAlert,
@@ -49,6 +51,7 @@ const RESOURCE_ICONS: Record<PermissionResource, LucideIcon> = {
   voting: SquareCheck,
   reports: BarChart3,
   content: Newspaper,
+  "content.posts": PenLine,
   "ministries.profile": HeartHandshake,
   "ministries.finance": Wallet,
   users: Users,
@@ -56,11 +59,12 @@ const RESOURCE_ICONS: Record<PermissionResource, LucideIcon> = {
   invitations: Mail,
   "site.keys": KeyRound,
   audit: ScrollText,
+  editorial: ShieldCheck,
   settings: Sun,
 };
 
 const COLUMNS =
-  "grid-cols-[minmax(170px,1fr)_repeat(5,minmax(78px,1fr))_70px] sm:grid-cols-[1.2fr_repeat(5,1fr)_90px]";
+  "grid-cols-[minmax(170px,1fr)_repeat(6,minmax(78px,1fr))_70px] sm:grid-cols-[1.2fr_repeat(6,1fr)_90px]";
 
 const permissionMatrixSettingsPage = {
   scroller: cn("overflow-x-auto"),

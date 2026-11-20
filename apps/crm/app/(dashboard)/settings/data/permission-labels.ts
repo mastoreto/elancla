@@ -6,6 +6,7 @@ export const PERMISSION_ACTION_LABELS: Record<PermissionAction, string> = {
   edit: "Editar",
   approve: "Aprobar",
   delete: "Eliminar",
+  publish: "Publicar",
 };
 
 export const PERMISSION_SCOPE_LABELS: Record<PermissionScope, string> = {
@@ -24,6 +25,7 @@ export const PERMISSION_RESOURCE_INFO: Record<PermissionResource, { label: strin
     voting: { label: "Votaciones", hint: "Asambleas y quórum" },
     reports: { label: "Informes", hint: "Reportes y exportación" },
     content: { label: "Contenido", hint: "Sitio, blog y podcasts" },
+    "content.posts": { label: "Entradas del blog", hint: "Escribir y publicar entradas" },
     "ministries.profile": { label: "Ministerios: perfil", hint: "Datos públicos del ministerio" },
     "ministries.finance": {
       label: "Ministerios: finanzas",
@@ -34,6 +36,7 @@ export const PERMISSION_RESOURCE_INFO: Record<PermissionResource, { label: strin
     invitations: { label: "Invitaciones", hint: "Altas por correo" },
     "site.keys": { label: "Claves del sitio", hint: "Acceso del sitio público al contenido" },
     audit: { label: "Auditoría", hint: "Registro de lo que ocurre en el sistema" },
+    editorial: { label: "Revisión editorial", hint: "Quién revisa y publica el contenido" },
     settings: { label: "Configuración", hint: "Iglesia, cuentas y monedas" },
   };
 

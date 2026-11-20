@@ -75,3 +75,24 @@ describe("permission catalog", () => {
     expect(PERMISSIONS.settings.create).toBeUndefined();
   });
 });
+
+describe("publish permission", () => {
+  test("only content resources can be published", () => {
+    expect(isGrantSupported(grant(PERMISSIONS.blogPosts.publish))).toBe(true);
+    expect(
+      isGrantSupported(grant(PERMISSIONS.ministryProfile.publish, "ministry")),
+    ).toBe(true);
+    expect(
+      isGrantSupported({
+        resource: "movements",
+        action: "publish",
+        scope: "all",
+      }),
+    ).toBe(false);
+  });
+
+  test("editing the editorial settings is dangerous, viewing them is not", () => {
+    expect(isDangerousPermission("editorial", "edit")).toBe(true);
+    expect(isDangerousPermission("editorial", "view")).toBe(false);
+  });
+});

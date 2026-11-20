@@ -125,8 +125,10 @@ export const SYSTEM_ROLE_PRESETS: readonly SystemRolePreset[] = [
     description: "Edita el sitio público y los perfiles de ministerio.",
     grants: [
       ...everyAction(PERMISSIONS.content, "all"),
+      ...everyAction(PERMISSIONS.blogPosts, "all"),
       grant(PERMISSIONS.ministryProfile.view, "all"),
       grant(PERMISSIONS.ministryProfile.edit, "all"),
+      grant(PERMISSIONS.ministryProfile.publish, "all"),
     ],
   },
 ];

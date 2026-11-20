@@ -27,3 +27,19 @@ describe("system role presets", () => {
     );
   });
 });
+
+describe("editorial presets", () => {
+  test("the content editor publishes posts and ministry profiles", () => {
+    const editor = SYSTEM_ROLE_PRESETS.find((p) => p.key === "content-editor");
+    const publishers = editor?.grants
+      .filter((g) => g.action === "publish")
+      .map((g) => g.resource);
+    expect(publishers).toContain("content.posts");
+    expect(publishers).toContain("ministries.profile");
+  });
+
+  test("the leader cannot publish", () => {
+    const leader = SYSTEM_ROLE_PRESETS.find((p) => p.key === "leader");
+    expect(leader?.grants.some((g) => g.action === "publish")).toBe(false);
+  });
+});
