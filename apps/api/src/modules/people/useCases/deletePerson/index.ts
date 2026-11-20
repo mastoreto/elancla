@@ -1,0 +1,1 @@
+export { deletePerson } from "./deletePerson";

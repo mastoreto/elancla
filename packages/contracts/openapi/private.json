@@ -8184,6 +8184,1972 @@
         }
       }
     },
+    "/api/content/people": {
+      "get": {
+        "tags": [
+          "people"
+        ],
+        "summary": "List the people profiles, by name.",
+        "responses": {
+          "200": {
+            "description": "The people",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "photo": {
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "purpose": {
+                                "type": "string",
+                                "enum": [
+                                  "contentImage",
+                                  "voucherDocument"
+                                ]
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "pending",
+                                  "ready"
+                                ]
+                              },
+                              "contentType": {
+                                "type": "string"
+                              },
+                              "size": {
+                                "type": "integer",
+                                "minimum": 0
+                              },
+                              "originalName": {
+                                "type": "string"
+                              },
+                              "variants": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "width": {
+                                      "type": "integer",
+                                      "exclusiveMinimum": 0
+                                    },
+                                    "format": {
+                                      "type": "string",
+                                      "enum": [
+                                        "webp",
+                                        "avif"
+                                      ]
+                                    },
+                                    "url": {
+                                      "type": "string",
+                                      "format": "uri"
+                                    }
+                                  },
+                                  "required": [
+                                    "width",
+                                    "format",
+                                    "url"
+                                  ]
+                                }
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "purpose",
+                              "status",
+                              "contentType",
+                              "size",
+                              "originalName",
+                              "variants",
+                              "createdAt"
+                            ]
+                          },
+                          "userId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "format": "uuid"
+                          },
+                          "translations": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "object",
+                              "properties": {
+                                "bio": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "maxLength": 600
+                                }
+                              },
+                              "required": [
+                                "bio"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "roles": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "context": {
+                                  "type": "string",
+                                  "enum": [
+                                    "team",
+                                    "blog-author",
+                                    "preacher",
+                                    "ministry-leader"
+                                  ]
+                                },
+                                "visible": {
+                                  "type": "boolean"
+                                },
+                                "order": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 9999
+                                },
+                                "translations": {
+                                  "type": "object",
+                                  "additionalProperties": {
+                                    "type": "object",
+                                    "properties": {
+                                      "title": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 80
+                                      }
+                                    },
+                                    "required": [
+                                      "title"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                }
+                              },
+                              "required": [
+                                "context",
+                                "visible",
+                                "order",
+                                "translations"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "photo",
+                          "userId",
+                          "translations",
+                          "roles"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid session",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The role does not allow this",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "people"
+        ],
+        "summary": "Create a person profile with its roles.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "photoId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "uuid"
+                  },
+                  "userId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "uuid"
+                  },
+                  "translations": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "bio": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "maxLength": 600
+                        }
+                      },
+                      "required": [
+                        "bio"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "roles": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "context": {
+                          "type": "string",
+                          "enum": [
+                            "team",
+                            "blog-author",
+                            "preacher",
+                            "ministry-leader"
+                          ]
+                        },
+                        "visible": {
+                          "type": "boolean"
+                        },
+                        "order": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9999
+                        },
+                        "translations": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              }
+                            },
+                            "required": [
+                              "title"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "context",
+                        "visible",
+                        "order",
+                        "translations"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 4
+                  }
+                },
+                "required": [
+                  "name",
+                  "photoId",
+                  "userId",
+                  "translations",
+                  "roles"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The person created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "photo": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "purpose": {
+                          "type": "string",
+                          "enum": [
+                            "contentImage",
+                            "voucherDocument"
+                          ]
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "pending",
+                            "ready"
+                          ]
+                        },
+                        "contentType": {
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "originalName": {
+                          "type": "string"
+                        },
+                        "variants": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "width": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0
+                              },
+                              "format": {
+                                "type": "string",
+                                "enum": [
+                                  "webp",
+                                  "avif"
+                                ]
+                              },
+                              "url": {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            },
+                            "required": [
+                              "width",
+                              "format",
+                              "url"
+                            ]
+                          }
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "purpose",
+                        "status",
+                        "contentType",
+                        "size",
+                        "originalName",
+                        "variants",
+                        "createdAt"
+                      ]
+                    },
+                    "userId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "uuid"
+                    },
+                    "translations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "bio": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "maxLength": 600
+                          }
+                        },
+                        "required": [
+                          "bio"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "roles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "context": {
+                            "type": "string",
+                            "enum": [
+                              "team",
+                              "blog-author",
+                              "preacher",
+                              "ministry-leader"
+                            ]
+                          },
+                          "visible": {
+                            "type": "boolean"
+                          },
+                          "order": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9999
+                          },
+                          "translations": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "object",
+                              "properties": {
+                                "title": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
+                                }
+                              },
+                              "required": [
+                                "title"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "context",
+                          "visible",
+                          "order",
+                          "translations"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "photo",
+                    "userId",
+                    "translations",
+                    "roles"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is not valid, or the photo, user or a language is not allowed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid session",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The role does not allow this",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The user already has a profile",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/content/people/{id}": {
+      "get": {
+        "tags": [
+          "people"
+        ],
+        "summary": "One person profile as the CRM edits it.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The person",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "photo": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "purpose": {
+                          "type": "string",
+                          "enum": [
+                            "contentImage",
+                            "voucherDocument"
+                          ]
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "pending",
+                            "ready"
+                          ]
+                        },
+                        "contentType": {
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "originalName": {
+                          "type": "string"
+                        },
+                        "variants": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "width": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0
+                              },
+                              "format": {
+                                "type": "string",
+                                "enum": [
+                                  "webp",
+                                  "avif"
+                                ]
+                              },
+                              "url": {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            },
+                            "required": [
+                              "width",
+                              "format",
+                              "url"
+                            ]
+                          }
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "purpose",
+                        "status",
+                        "contentType",
+                        "size",
+                        "originalName",
+                        "variants",
+                        "createdAt"
+                      ]
+                    },
+                    "userId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "uuid"
+                    },
+                    "translations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "bio": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "maxLength": 600
+                          }
+                        },
+                        "required": [
+                          "bio"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "roles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "context": {
+                            "type": "string",
+                            "enum": [
+                              "team",
+                              "blog-author",
+                              "preacher",
+                              "ministry-leader"
+                            ]
+                          },
+                          "visible": {
+                            "type": "boolean"
+                          },
+                          "order": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9999
+                          },
+                          "translations": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "object",
+                              "properties": {
+                                "title": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
+                                }
+                              },
+                              "required": [
+                                "title"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "context",
+                          "visible",
+                          "order",
+                          "translations"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "photo",
+                    "userId",
+                    "translations",
+                    "roles"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid session",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The role does not allow this",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The person was not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "people"
+        ],
+        "summary": "Replace a profile: its fields, the bios sent and the whole list of roles.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "photoId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "uuid"
+                  },
+                  "userId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "uuid"
+                  },
+                  "translations": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "bio": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "maxLength": 600
+                        }
+                      },
+                      "required": [
+                        "bio"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "roles": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "context": {
+                          "type": "string",
+                          "enum": [
+                            "team",
+                            "blog-author",
+                            "preacher",
+                            "ministry-leader"
+                          ]
+                        },
+                        "visible": {
+                          "type": "boolean"
+                        },
+                        "order": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9999
+                        },
+                        "translations": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 80
+                              }
+                            },
+                            "required": [
+                              "title"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "context",
+                        "visible",
+                        "order",
+                        "translations"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 4
+                  }
+                },
+                "required": [
+                  "name",
+                  "photoId",
+                  "userId",
+                  "translations",
+                  "roles"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The person after the change",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "photo": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "purpose": {
+                          "type": "string",
+                          "enum": [
+                            "contentImage",
+                            "voucherDocument"
+                          ]
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "pending",
+                            "ready"
+                          ]
+                        },
+                        "contentType": {
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "originalName": {
+                          "type": "string"
+                        },
+                        "variants": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "width": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0
+                              },
+                              "format": {
+                                "type": "string",
+                                "enum": [
+                                  "webp",
+                                  "avif"
+                                ]
+                              },
+                              "url": {
+                                "type": "string",
+                                "format": "uri"
+                              }
+                            },
+                            "required": [
+                              "width",
+                              "format",
+                              "url"
+                            ]
+                          }
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "purpose",
+                        "status",
+                        "contentType",
+                        "size",
+                        "originalName",
+                        "variants",
+                        "createdAt"
+                      ]
+                    },
+                    "userId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "uuid"
+                    },
+                    "translations": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "bio": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "maxLength": 600
+                          }
+                        },
+                        "required": [
+                          "bio"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "roles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "context": {
+                            "type": "string",
+                            "enum": [
+                              "team",
+                              "blog-author",
+                              "preacher",
+                              "ministry-leader"
+                            ]
+                          },
+                          "visible": {
+                            "type": "boolean"
+                          },
+                          "order": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9999
+                          },
+                          "translations": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "object",
+                              "properties": {
+                                "title": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 80
+                                }
+                              },
+                              "required": [
+                                "title"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "context",
+                          "visible",
+                          "order",
+                          "translations"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "photo",
+                    "userId",
+                    "translations",
+                    "roles"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is not valid, or the photo, user or a language is not allowed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid session",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The role does not allow this",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The person was not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The user already has a profile",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "people"
+        ],
+        "summary": "Delete a person profile and its roles.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Person deleted"
+          },
+          "401": {
+            "description": "No valid session",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The role does not allow this",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The person was not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/editorial/inbox": {
       "get": {
         "tags": [
@@ -13255,6 +15221,283 @@
           },
           "404": {
             "description": "The church has no site settings",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v1/{churchSlug}/people": {
+      "get": {
+        "tags": [
+          "people"
+        ],
+        "summary": "The people shown in a context (`team`, `preacher`...), in the requested language.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "churchSlug",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z]{2}(-[A-Z]{2})?$"
+            },
+            "required": false,
+            "name": "locale",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "team",
+                "blog-author",
+                "preacher",
+                "ministry-leader"
+              ]
+            },
+            "required": true,
+            "name": "context",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The visible people of the context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "initials": {
+                        "type": "string"
+                      },
+                      "photo": {
+                        "type": [
+                          "array",
+                          "null"
+                        ],
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "url": {
+                              "type": "string"
+                            },
+                            "width": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "height": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            }
+                          },
+                          "required": [
+                            "url",
+                            "width",
+                            "height"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "bio": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "title": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "initials",
+                      "photo",
+                      "bio",
+                      "title"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The context is missing or not valid, or the locale is not valid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The site key is missing, invalid or not for this church",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The church was not found",
             "content": {
               "application/problem+json": {
                 "schema": {

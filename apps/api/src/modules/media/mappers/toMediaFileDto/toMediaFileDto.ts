@@ -1,6 +1,6 @@
 import type { MediaFileDto } from "@ancla/contracts";
 import type { MediaFile } from "@ancla/db";
-import { parseStoredVariants } from "../../domain";
+import { buildMediaVariantUrls } from "../buildMediaVariantUrls";
 
 /** `publicBaseUrl` is injected: the mapper does not read the environment. */
 export function toMediaFileDto(
@@ -14,11 +14,9 @@ export function toMediaFileDto(
     contentType: row.contentType,
     size: row.size,
     originalName: row.originalName,
-    variants: parseStoredVariants(row.variants).map((variant) => ({
-      width: variant.width,
-      format: variant.format,
-      url: `${publicBaseUrl}/${variant.key}`,
-    })),
+    variants: buildMediaVariantUrls(row.variants, publicBaseUrl).map(
+      ({ width, format, url }) => ({ width, format, url }),
+    ),
     createdAt: row.createdAt.toISOString(),
   };
 }
