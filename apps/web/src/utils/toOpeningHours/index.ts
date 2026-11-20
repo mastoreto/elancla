@@ -1,0 +1,1 @@
+export { toOpeningHours } from './toOpeningHours';

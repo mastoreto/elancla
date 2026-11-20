@@ -7,7 +7,7 @@ const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 export const GET: APIRoute = async ({ locals }) => {
   const site = locals.site ?? (await getSiteConfig());
-  const entries = await getSiteIndex();
+  const entries = await getSiteIndex(site);
 
   const urls = entries.flatMap((entry) => {
     const versions = entryUrls(entry, site.url);

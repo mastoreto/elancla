@@ -1,5 +1,5 @@
 ---
-import type { SiteStatus } from '@ancla/content';
+import type { SiteConfig, SiteStatus } from '@ancla/content';
 import AnchorMark from 'src/components/AnchorMark';
 import LogoText from 'src/components/LogoText';
 import MobileMenu from 'src/components/Nav/components/MobileMenu';
@@ -8,6 +8,7 @@ import { getMessages } from 'src/i18n/messages';
 import { getLocaleSwitcherLinks, localizePath } from 'src/i18n/utils';
 import { CTA_ARROW, CTA_FILL, LIVE_DOT, ULINK } from 'src/styles/classes';
 import cn from 'src/utils/cn';
+import { withoutOutOfService } from 'src/utils/withoutOutOfService';
 
 interface ResourceItem {
   label: string;
@@ -18,16 +19,24 @@ interface ResourceItem {
 interface Props {
   locale: Locale;
   status?: SiteStatus;
+  /** Section statuses: links into an out-of-service section are not shown. */
+  sections: SiteConfig['sections'];
+  /** Short service time shown in the chip ("Dom · 09:30"); no chip when absent. */
+  liveLabel?: string;
 }
 
-const { locale, status = 'online' } = Astro.props;
+const { locale, status = 'online', sections, liveLabel } = Astro.props;
 // Fuera de línea (mantenimiento/cerrado) solo dejamos idioma y tema.
 const isOnline = status === 'online';
 const copy = getMessages(locale).nav;
 const localeLinks = getLocaleSwitcherLinks(Astro.url.pathname, locale);
 const currentLocale =
   localeLinks.find((item) => item.current) ?? localeLinks[0];
-const recursos: ResourceItem[] = copy.resources.items.map((item) => ({
+const recursos: ResourceItem[] = withoutOutOfService(
+  copy.resources.items,
+  sections,
+  (item) => item.href
+).map((item) => ({
   ...item,
   href: localizePath(item.href, locale),
 }));
@@ -250,7 +259,7 @@ const nav = {
         <span class={nav.liveChip}>
           <span data-live-off class={nav.liveOff}>
             <span class={nav.liveDot}></span>
-            {copy.live}
+            {liveLabel}
           </span>
           <a href={localizePath('/sermones#vivo', locale)} data-live-on hidden class={nav.liveOn}>
             <span class={nav.liveDot}></span>
@@ -355,7 +364,7 @@ const nav = {
   </dialog>
 )}
 
-{isOnline && <MobileMenu recursos={recursos} locale={locale} localeLinks={localeLinks} />}
+{isOnline && <MobileMenu recursos={recursos} locale={locale} localeLinks={localeLinks} liveLabel={liveLabel} />}
 
 {isOnline && (
   <script>

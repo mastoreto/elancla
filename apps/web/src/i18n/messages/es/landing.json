@@ -62,17 +62,17 @@
     "photoAlt": "Una reunión en el salón de la iglesia",
     "rows": [
       {
-        "time": "10:00",
+        "time": "{bibleSchoolTime}",
         "title": "Escuela bíblica",
         "text": "Para adultos y niños. Puedes sumarte o llegar directo al culto."
       },
       {
-        "time": "11:15",
+        "time": "{worshipTime}",
         "title": "Culto de celebración",
         "text": "Cantamos, oramos y abrimos la Biblia juntos. También en vivo por YouTube."
       },
       {
-        "time": "13:00",
+        "time": "{worshipEnd}",
         "title": "Termina el culto",
         "text": "Si quieres, quédate a conversar. Nadie te va a apurar."
       }
@@ -83,12 +83,12 @@
   "closing": {
     "eyebrow": "La obra sigue",
     "title": "Te esperamos este domingo.",
-    "text": "Una iglesia con ancla en el evangelio. Escuela bíblica a las 10:00 y culto a las 11:15.",
+    "text": "Una iglesia con ancla en el evangelio. Escuela bíblica a las {bibleSchoolTime} y culto a las {worshipTime}.",
     "follow": "Síguenos durante la semana",
-    "mapLabel": "Mapa de la zona: Av. Herrera esquina Juan Arrieta, Montevideo",
-    "where": "Montevideo · Domingos 10:00 y 11:15",
+    "mapLabel": "Mapa de la zona: {street}, Montevideo",
+    "where": "Montevideo · Domingos {bibleSchoolTime} y {worshipTime}",
     "how": "Cómo llegar",
-    "since": "· Iglesia Bautista · Montevideo, desde 1997"
+    "since": "· Iglesia Bautista · Montevideo, desde {founded}"
   },
   "a11y": {
     "scrollProgress": "Progreso de la página"

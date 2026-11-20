@@ -1,4 +1,5 @@
 export {
+  formatServiceTimeShort,
   formatServiceTimes,
-  type ServiceTimesFact,
+  type ServiceTimeRow,
 } from './formatServiceTimes';

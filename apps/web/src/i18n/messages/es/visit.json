@@ -26,7 +26,7 @@
   },
   "where": {
     "eyebrow": "Dónde estamos",
-    "title": "Av. Luis A. de Herrera, esquina Juan Arrieta.",
+    "title": "{street}.",
     "body": "Abre la ruta en Google Maps desde donde estés.",
     "cta": "Abrir en Google Maps",
     "mapLabel": "Mapa de la zona de la iglesia"
@@ -59,15 +59,15 @@
     "items": [
       {
         "q": "¿A qué hora son los cultos?",
-        "a": "Los domingos a las 11:15. A las 10:00 hay escuela bíblica para adultos y niños."
+        "a": "Los domingos a las {worshipTime}. A las {bibleSchoolTime} hay escuela bíblica para adultos y niños."
       },
       {
         "q": "¿Dónde queda la iglesia?",
-        "a": "En Av. Luis A. de Herrera 3101, esquina Juan Arrieta, Montevideo."
+        "a": "En {street}, Montevideo."
       },
       {
         "q": "¿Cuánto dura el culto?",
-        "a": "Termina cerca de las 13:00. Si quieres, puedes quedarte a conversar después."
+        "a": "Termina cerca de las {worshipEnd}. Si quieres, puedes quedarte a conversar después."
       },
       {
         "q": "¿Tengo que ser miembro o avisar que voy?",
@@ -91,7 +91,7 @@
       },
       {
         "q": "¿Cómo me comunico con la iglesia?",
-        "a": "Escribiendo a contacto@elancla.uy o por nuestras redes en YouTube, Instagram y Facebook."
+        "a": "Escribiendo a {email} o por nuestras redes en YouTube, Instagram y Facebook."
       }
     ]
   },

@@ -29,10 +29,10 @@
     "Espaço Ancladitos"
   ],
   "socialLinks": [
-    "YouTube · @iglesiaelanclauy",
-    "Instagram · @iglesiaelancla",
-    "Facebook · @iglesiabautistaelancla"
+    "YouTube · {youtubeHandle}",
+    "Instagram · {instagramHandle}",
+    "Facebook · {facebookHandle}"
   ],
-  "address": "Av. Luis A. de Herrera 3101, esq. Juan Arrieta — Montevidéu, Uruguai",
+  "address": "{street} — Montevidéu, Uruguai",
   "copyright": "Igreja Batista El Ancla. Todos os direitos reservados."
 }

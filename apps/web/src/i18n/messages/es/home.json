@@ -1,14 +1,14 @@
 {
   "seo": {
     "title": "Iglesia Bautista en Montevideo, Uruguay | El Ancla",
-    "description": "Iglesia Bautista El Ancla: comunidad cristiana centrada en el evangelio. Cultos los domingos a las 11:15 en Av. Luis A. de Herrera 3101, Montevideo, Uruguay.",
+    "description": "Iglesia Bautista El Ancla: comunidad cristiana centrada en el evangelio. Cultos los domingos a las {worshipTime} en {streetShort}, Montevideo, Uruguay.",
     "keywords": [
       "Iglesia Bautista El Ancla",
       "Iglesia Bautista Montevideo",
       "iglesia evangélica Uruguay",
       "iglesia cristiana Montevideo",
       "culto dominical Montevideo",
-      "Av. Herrera 3101",
+      "{streetShort}",
       "Hebreos 6:19"
     ]
   },
@@ -24,12 +24,12 @@
     "schedule": [
       {
         "label": "01 · Domingos",
-        "time": "11:15",
+        "time": "{worshipTime}",
         "description": "Culto de celebración"
       },
       {
         "label": "02 · Domingos",
-        "time": "10:00",
+        "time": "{bibleSchoolTime}",
         "description": "Escuela bíblica"
       },
       {

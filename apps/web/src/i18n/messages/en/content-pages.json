@@ -17,7 +17,7 @@
         { "emphasis": "anchored", "after": " in the" },
         { "text": "gospel." }
       ],
-      "standfirst": "Getting to know a church is a real challenge in these times. We hope the information here helps you understand who we are, what we believe, and how we have lived the faith in Montevideo since 1997.",
+      "standfirst": "Getting to know a church is a real challenge in these times. We hope the information here helps you understand who we are, what we believe, and how we have lived the faith in Montevideo since {founded}.",
       "stats": [
         { "value": "29", "label": "Years" },
         { "value": "10", "label": "Ministries" },
@@ -28,8 +28,8 @@
       "src": "/images/homebanner-web.jpg",
       "alt": "Home of El Ancla Baptist Church in Montevideo",
       "label": "[ FIG.01 ]",
-      "caption": "Church house · Av. Dr. Luis A. de Herrera 3101 corner of Juan Arrieta.",
-      "badge": "Av. L. A. de Herrera 3101",
+      "caption": "Church house · {street}.",
+      "badge": "{streetShort}",
       "meta": "— Montevideo · UY",
       "aspect": "wide"
     },
@@ -235,7 +235,7 @@
             "links": [
               {
                 "href": "/confesion-de-fe",
-                "sourceLabel": "elancla.uy / confession",
+                "sourceLabel": "{host} / confession",
                 "title": "Statement of Faith — twelve articles",
                 "description": "The longer detail of our doctrinal convictions about God, Scripture, the gospel, and the church.",
                 "meta": "Read · 12 articles",
@@ -243,7 +243,7 @@
               },
               {
                 "href": "/#juntos",
-                "sourceLabel": "elancla.uy / ministries",
+                "sourceLabel": "{host} / ministries",
                 "title": "Ten ministries where you can serve",
                 "description": "Every ministry is an invitation: a place to grow, use your gifts, and serve others in the name of Christ.",
                 "meta": "See full list",
@@ -252,7 +252,7 @@
               },
               {
                 "href": "/blog",
-                "sourceLabel": "elancla.uy / blog",
+                "sourceLabel": "{host} / blog",
                 "title": "Blog · reflections and pastoral notes",
                 "description": "A weekly journal with sermons, guided readings, and brief notes about church life.",
                 "meta": "Every Tuesday · 7 min",
@@ -260,8 +260,8 @@
                 "tint": "#ece5d2"
               },
               {
-                "href": "https://youtube.com/@iglesiaelanclauy",
-                "sourceLabel": "youtube · @iglesiaelanclauy",
+                "href": "{youtubeUrl}",
+                "sourceLabel": "youtube · {youtubeHandle}",
                 "title": "Sermons on video",
                 "description": "The full archive of Sunday sermons and special events, streamed live every Sunday.",
                 "meta": "Open channel",
@@ -277,7 +277,7 @@
     "cta": {
       "eyebrow": "[ Next step ]",
       "title": { "before": "The best thing is to ", "emphasis": "come." },
-      "body": "Getting to know a church happens by walking into it on a Sunday morning. We are waiting for you at 11:15 AM at Av. Dr. Luis A. de Herrera 3101. No codes, no requirements.",
+      "body": "Getting to know a church happens by walking into it on a Sunday morning. We are waiting for you at {worshipTime} at {streetShort}. No codes, no requirements.",
       "primary": { "label": "How to get there", "href": "/#visitanos" },
       "secondary": { "label": "See weekly times", "href": "/#domingo" }
     }
@@ -318,15 +318,15 @@
       "factsTitleBefore": "When, where and ",
       "factsTitleEmphasis": "with whom.",
       "facts": [
-        { "label": "Service", "value": "Sunday · 11:15" },
-        { "label": "Place", "value": "Sanctuary · Av. L. A. de Herrera 3101" },
+        { "label": "Service", "value": "Sunday · {worshipTime}" },
+        { "label": "Place", "value": "Sanctuary · {streetShort}" },
         {
           "label": "How to join",
           "value": "Visit us on a Sunday and let's talk after the service."
         }
       ],
       "stats": [
-        { "value": "Sun 11:15", "label": "Service" },
+        { "value": "Sun {worshipTime}", "label": "Service" },
         { "value": "Montevideo", "label": "Uruguay" }
       ]
     },
@@ -362,7 +362,7 @@
       "links": [
         {
           "href": "/#juntos",
-          "sourceLabel": "elancla.uy / ministries",
+          "sourceLabel": "{host} / ministries",
           "title": "Return to the ministry list",
           "description": "Explore the other spaces for service and growth in the church.",
           "meta": "See ministries",
@@ -370,10 +370,10 @@
         },
         {
           "href": "/#visitanos",
-          "sourceLabel": "elancla.uy / visit",
+          "sourceLabel": "{host} / visit",
           "title": "Meet us on a Sunday",
           "description": "The best way to connect with a ministry is to come and talk after worship.",
-          "meta": "Sundays · 11:15",
+          "meta": "Sundays · {worshipTime}",
           "glyph": "V",
           "tint": "#e6e2d4"
         }

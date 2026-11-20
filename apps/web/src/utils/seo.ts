@@ -1,4 +1,5 @@
 import { SITE_FALLBACK, type SiteConfig } from '@ancla/content';
+import { toOpeningHours } from 'src/utils/toOpeningHours';
 
 export type { SiteConfig } from '@ancla/content';
 
@@ -28,25 +29,29 @@ export function absoluteUrl(path: string | URL, site = SITE.url): string {
   return `${site}${trimmed}`;
 }
 
-const WEEKDAYS: Record<string, string> = {
-  Mo: 'Monday',
-  Tu: 'Tuesday',
-  We: 'Wednesday',
-  Th: 'Thursday',
-  Fr: 'Friday',
-  Sa: 'Saturday',
-  Su: 'Sunday',
-};
+const SCHEMA_WEEKDAYS = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+] as const;
 
-/** Parses "Su 11:15-12:30" (SiteConfig.serviceTimes); falls back to the Sunday service. */
-function parseServiceTimes(summary: string) {
-  const match = summary.match(
-    /^(Mo|Tu|We|Th|Fr|Sa|Su)\s+(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/
-  );
+/** The meta description written in iEkklesia, or the built-in one when none was written. */
+export function defaultDescription(site: SiteConfig): string {
+  return site.seoDescription ?? site.defaultDescription;
+}
+
+/** First worship slot as schema.org schedule fields; null when the church has none. */
+function worshipSchedule(site: SiteConfig) {
+  const worship = site.serviceTimes.find((time) => time.kind === 'worship');
+  if (!worship) return null;
   return {
-    dayOfWeek: WEEKDAYS[match?.[1] ?? 'Su'],
-    opens: match?.[2] ?? '11:15',
-    closes: match?.[3] ?? '12:30',
+    dayOfWeek: SCHEMA_WEEKDAYS[worship.weekday],
+    opens: worship.start,
+    closes: worship.end,
   };
 }
 
@@ -58,7 +63,6 @@ export function mapLink(site: SiteConfig) {
 }
 
 export function buildOrganizationLd(site: SiteConfig = SITE) {
-  const service = parseServiceTimes(site.serviceTimes);
   return {
     '@context': 'https://schema.org',
     '@type': 'Church',
@@ -68,7 +72,7 @@ export function buildOrganizationLd(site: SiteConfig = SITE) {
     url: site.url,
     logo: absoluteUrl('/images/anclarojo.png', site.url),
     image: absoluteUrl(site.defaultImage, site.url),
-    description: site.defaultDescription,
+    description: defaultDescription(site),
     foundingDate: site.founded,
     email: site.contactEmail,
     knowsLanguage: ['es', 'pt', 'en'],
@@ -86,9 +90,7 @@ export function buildOrganizationLd(site: SiteConfig = SITE) {
       latitude: site.geo.latitude,
       longitude: site.geo.longitude,
     },
-    openingHoursSpecification: [
-      { '@type': 'OpeningHoursSpecification', ...service },
-    ],
+    openingHours: toOpeningHours(site.serviceTimes),
     sameAs: [
       site.social.youtube,
       site.social.instagram,
@@ -128,7 +130,7 @@ export function buildServiceEventLd(params: {
   language: string;
 }) {
   const { site } = params;
-  const service = parseServiceTimes(site.serviceTimes);
+  const service = worshipSchedule(site);
   return {
     '@context': 'https://schema.org',
     '@type': 'Event',
@@ -139,14 +141,16 @@ export function buildServiceEventLd(params: {
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     eventStatus: 'https://schema.org/EventScheduled',
     isAccessibleForFree: true,
-    eventSchedule: {
-      '@type': 'Schedule',
-      repeatFrequency: 'P1W',
-      byDay: `https://schema.org/${service.dayOfWeek}`,
-      startTime: service.opens,
-      endTime: service.closes,
-      scheduleTimezone: 'America/Montevideo',
-    },
+    ...(service && {
+      eventSchedule: {
+        '@type': 'Schedule',
+        repeatFrequency: 'P1W',
+        byDay: `https://schema.org/${service.dayOfWeek}`,
+        startTime: service.opens,
+        ...(service.closes && { endTime: service.closes }),
+        scheduleTimezone: 'America/Montevideo',
+      },
+    }),
     location: {
       '@type': 'Place',
       name: site.name,
@@ -169,7 +173,7 @@ export function buildWebsiteLd(site: SiteConfig = SITE, language = site.lang) {
     '@id': `${site.url}#website`,
     url: site.url,
     name: site.name,
-    description: site.defaultDescription,
+    description: defaultDescription(site),
     inLanguage: language,
     publisher: { '@id': `${site.url}#organization` },
   };

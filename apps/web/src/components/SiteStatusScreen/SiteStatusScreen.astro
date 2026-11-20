@@ -2,32 +2,46 @@
 // Replaces the whole page while the site is in maintenance ("obra" design, palette B) or closed.
 // Maintenance: forged red anchor, link to the service times below, email contact.
 // Closed (offline): grey anchor hanging from a rope, a retry link, frozen photo wall.
-import type { SiteStatus } from '@ancla/content';
+import type { ServiceTime, SiteStatus } from '@ancla/content';
 import { cn } from '@ancla/utils';
 import Button from 'src/components/ui/Button';
 import type { Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+import { formatServiceTimes } from 'src/utils/formatServiceTimes';
 import { RISE_IN } from 'src/utils/riseIn';
 import StatusAnchor from './components/StatusAnchor';
 import StatusFact from './components/StatusFact';
 import StatusPhotoWall from './components/StatusPhotoWall';
-import { formatServiceTimes } from './utils/formatServiceTimes';
 
 interface Props {
   status: Exclude<SiteStatus, 'online'>;
   locale: Locale;
+  /** `section`: only one section is in maintenance; the rest of the site is up. */
+  variant?: 'site' | 'section';
   contactEmail?: string;
-  /** `SiteConfig.serviceTimes`, e.g. "Su 11:15-13:00". */
-  serviceTimes: string;
+  /** `SiteConfig.serviceTimes`. */
+  serviceTimes: ServiceTime[];
   /** Street line of the church, shown on the offline screen. */
   street: string;
 }
 
-const { status, locale, contactEmail, serviceTimes, street } = Astro.props;
+const {
+  status,
+  locale,
+  variant = 'site',
+  contactEmail,
+  serviceTimes,
+  street,
+} = Astro.props;
 const messages = getMessages(locale).siteStatus;
-const isMaintenance = status === 'maintenance';
-const copy = messages[status];
-const services = formatServiceTimes(serviceTimes, locale);
+const isSection = variant === 'section';
+const isMaintenance = isSection || status === 'maintenance';
+const copy = isSection ? messages.section : messages[status];
+const services = formatServiceTimes(serviceTimes, locale).map((row) => ({
+  label: `${messages.serviceKinds[row.kind]} · ${row.dayLabel}`,
+  value: row.timeLabel,
+}));
 // The title ends with the emphasized word, picked out in red (same trick as the 404 page).
 const titleBefore = copy.title.slice(
   0,
@@ -95,9 +109,15 @@ const siteStatusScreen = {
     <div class={siteStatusScreen.actions} style="--d: 0.6s">
       {isMaintenance ? (
         <>
-          <Button href={`#${SERVICES_ID}`} arrow data-status-action="services">
-            {messages.maintenance.servicesCta}
-          </Button>
+          {isSection ? (
+            <Button href={localizePath('/', locale)} arrow data-status-action="home">
+              {messages.section.homeCta}
+            </Button>
+          ) : (
+            <Button href={`#${SERVICES_ID}`} arrow data-status-action="services">
+              {messages.maintenance.servicesCta}
+            </Button>
+          )}
           {contactEmail && (
             <Button
               href={`mailto:${contactEmail}`}
@@ -127,17 +147,19 @@ const siteStatusScreen = {
     {isMaintenance && (
       <StatusFact label={messages.facts.status}>
         <span class={siteStatusScreen.statusDot} aria-hidden="true"></span>
-        {messages.maintenance.statusValue}
+        {isSection ? messages.section.statusValue : messages.maintenance.statusValue}
       </StatusFact>
     )}
-    <StatusFact
-      id={SERVICES_ID}
-      label={services.label ?? messages.facts.services}
-      display
-      class={siteStatusScreen.factTarget}
-    >
-      {services.value}
-    </StatusFact>
+    {services.map((service, index) => (
+      <StatusFact
+        id={index === 0 ? SERVICES_ID : undefined}
+        label={service.label}
+        display
+        class={siteStatusScreen.factTarget}
+      >
+        {service.value}
+      </StatusFact>
+    ))}
     {!isMaintenance && <StatusFact label={messages.facts.where}>{street}</StatusFact>}
   </div>
 </section>

@@ -25,9 +25,11 @@ interface Props {
   recursos: ResourceItem[];
   locale: Locale;
   localeLinks: LocaleLink[];
+  /** Short service time shown under the menu ("Dom · 09:30"). */
+  liveLabel?: string;
 }
 
-const { recursos, locale, localeLinks } = Astro.props;
+const { recursos, locale, localeLinks, liveLabel } = Astro.props;
 const copy = getMessages(locale).nav;
 
 // The panel fades and drops in while the script toggles `is-open`.
@@ -230,7 +232,7 @@ const mobileMenu = {
 
       <div class={mobileMenu.liveStatus}>
         <span class={mobileMenu.liveDot}></span>
-        {copy.live}
+        {liveLabel}
       </div>
     </div>
   </div>

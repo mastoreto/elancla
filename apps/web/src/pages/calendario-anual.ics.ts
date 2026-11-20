@@ -1,3 +1,4 @@
+import { getSiteConfig } from '@ancla/content';
 import type { APIRoute } from 'astro';
 import { events } from 'src/data/calendar';
 
@@ -6,7 +7,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
 const escapeText = (s: string) =>
   s.replace(/[;,]/g, (c) => `\\${c}`).replace(/\n/g, '\\n');
 
-export const GET: APIRoute = () => {
+export const GET: APIRoute = async ({ locals }) => {
+  const site = locals.site ?? (await getSiteConfig());
+  const host = new URL(site.url).host;
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
@@ -21,7 +24,7 @@ export const GET: APIRoute = () => {
         `${y}${pad(m)}${pad(d)}T${pad(hours)}${pad(min)}00`;
       return [
         'BEGIN:VEVENT',
-        `UID:${e.date}-${e.time.replace(':', '')}-${e.ministry}@elancla.uy`,
+        `UID:${e.date}-${e.time.replace(':', '')}-${e.ministry}@${host}`,
         `DTSTAMP:${y}0101T000000Z`,
         `DTSTART;TZID=America/Montevideo:${stamp(h)}`,
         `DTEND;TZID=America/Montevideo:${stamp(Math.min(h + 2, 23))}`,

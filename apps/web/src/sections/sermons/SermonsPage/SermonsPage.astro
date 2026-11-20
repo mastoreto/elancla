@@ -12,18 +12,22 @@ import {
 } from 'src/data/youtube';
 import type { Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
-import { getHtmlLang, localizePath } from 'src/i18n/utils';
+import { getHtmlLang, interpolateDeep, localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout';
 import { PHOTO } from 'src/styles/classes';
 import cn from 'src/utils/cn';
 import { RISE_IN } from 'src/utils/riseIn';
+import { buildSiteTokens } from 'src/utils/siteTokens';
 
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
-const copy = getMessages(locale).sermonsPage;
 const site = Astro.locals.site ?? (await getSiteConfig());
+const copy = interpolateDeep(
+  getMessages(locale).sermonsPage,
+  buildSiteTokens(site, locale)
+);
 const path = localizePath('/sermones', locale);
 
 // ?serie=<playlistId> filters the list; only ids of the channel's own playlists are accepted.

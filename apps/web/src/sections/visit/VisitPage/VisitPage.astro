@@ -3,18 +3,20 @@ import { getSiteConfig } from '@ancla/content';
 import Button from 'src/components/ui/Button';
 import type { Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
-import { getHtmlLang, localizePath } from 'src/i18n/utils';
+import { getHtmlLang, interpolateDeep, localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout';
 import cn from 'src/utils/cn';
 import { buildFaqLd, buildServiceEventLd, mapLink } from 'src/utils/seo';
+import { buildSiteTokens } from 'src/utils/siteTokens';
 
 interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
-const copy = getMessages(locale).visit;
-const sunday = getMessages(locale).landing.sunday;
 const site = Astro.locals.site ?? (await getSiteConfig());
+const tokens = buildSiteTokens(site, locale);
+const copy = interpolateDeep(getMessages(locale).visit, tokens);
+const sunday = interpolateDeep(getMessages(locale).landing.sunday, tokens);
 const path = localizePath('/visitanos', locale);
 const coords = `${site.geo.latitude},${site.geo.longitude}`;
 const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${coords}`;

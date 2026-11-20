@@ -17,20 +17,24 @@ import {
   stripLocaleFromPath,
 } from 'src/i18n/utils';
 import cn from 'src/utils/cn';
+import { formatServiceTimeShort } from 'src/utils/formatServiceTimes';
 import {
   absoluteUrl,
   buildArticleLd,
   buildBreadcrumbsLd,
   buildOrganizationLd,
   buildWebsiteLd,
+  defaultDescription,
   type PageType,
   type SEOArticleMeta,
   type SEOBreadcrumb,
 } from 'src/utils/seo';
+import { buildSiteTokens } from 'src/utils/siteTokens';
 
 // Estado/config del sitio leídos en vivo por request (SSR). El middleware ya
 // lo dejó en locals; si no, lo pedimos aquí. Cae a SITE_FALLBACK si no hay BD.
 const site = Astro.locals.site ?? (await getSiteConfig());
+const sectionMaintenance = Astro.locals.sectionMaintenance === true;
 
 interface Props {
   title: string;
@@ -53,7 +57,7 @@ interface Props {
 
 const {
   title,
-  description = site.defaultDescription,
+  description = defaultDescription(site),
   pageType = 'website',
   image = site.defaultImage,
   imageAlt = 'Iglesia Bautista El Ancla — Montevideo, Uruguay',
@@ -68,8 +72,11 @@ const {
 } = Astro.props;
 
 const locale = localeProp ?? getLocaleFromUrl(Astro.url);
+const worship = site.serviceTimes.find((time) => time.kind === 'worship');
+const liveLabel = worship ? formatServiceTimeShort(worship, locale) : undefined;
+const siteTokens = buildSiteTokens(site, locale);
 // The maintenance/closed notice must not be indexed in place of the real page.
-const noindex = noindexProp || site.status !== 'online';
+const noindex = noindexProp || site.status !== 'online' || sectionMaintenance;
 const localeSeo = getLocaleSeo(locale);
 const canonicalPath = stripLocaleFromPath(Astro.url.pathname);
 const localizedPath = localizePath(canonicalPath, locale);
@@ -346,18 +353,19 @@ const layout = {
   <body class={layout.container}>
     <LoadingOverlay />
     <div id="readprog" class={layout.readprog}></div>
-    <Nav locale={locale} status={site.status} />
+    <Nav locale={locale} status={site.status} sections={site.sections} liveLabel={liveLabel} />
     {
-      site.status === 'online' ? (
+      site.status === 'online' && !sectionMaintenance ? (
         <>
           <main class={layout.main}>
             <slot />
           </main>
-          {footer && <Footer locale={locale} variant={footer === 'dark' ? 'dark' : 'red'} social={site.social} />}
+          {footer && <Footer locale={locale} variant={footer === 'dark' ? 'dark' : 'red'} social={site.social} tokens={siteTokens} sections={site.sections} />}
         </>
       ) : (
         <SiteStatusScreen
-          status={site.status}
+          status={site.status === 'closed' ? 'closed' : 'maintenance'}
+          variant={sectionMaintenance ? 'section' : 'site'}
           locale={locale}
           contactEmail={site.contactEmail}
           serviceTimes={site.serviceTimes}

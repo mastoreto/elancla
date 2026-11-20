@@ -19,7 +19,19 @@
   },
   "facts": {
     "status": "Estado",
-    "services": "Cultos",
     "where": "Onde"
+  },
+  "section": {
+    "kicker": "Seção em manutenção",
+    "title": "Esta seção está em manutenção",
+    "titleEmphasis": "manutenção",
+    "description": "Estamos melhorando esta parte do site. Volte em breve: o restante do site continua disponível.",
+    "tag": "Em manutenção",
+    "statusValue": "Em manutenção",
+    "homeCta": "Ir para o início"
+  },
+  "serviceKinds": {
+    "worship": "Culto",
+    "bibleSchool": "Escola bíblica"
   }
 }

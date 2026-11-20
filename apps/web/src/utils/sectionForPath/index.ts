@@ -1,0 +1,1 @@
+export { sectionForPath } from './sectionForPath';

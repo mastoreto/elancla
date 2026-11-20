@@ -26,6 +26,12 @@ import {
 } from 'src/sections/calendar/CalendarPrint/utils/printFormat';
 import cn from 'src/utils/cn';
 
+interface Props {
+  /** Back cover contact lines, from `SiteConfig`. */
+  contact: { address: string; instagram?: string; youtube?: string };
+}
+const { contact } = Astro.props;
+
 const weekly = weeklySorted();
 const weeklyLine = weekly
   .map((a) => `${capitalize(weekdayShortByIndex(a.day))} ${a.time} ${a.title}`)
@@ -147,8 +153,8 @@ const printA4 = {
     <div class={printA4.weeklyRow}><b>{weekdayLong(a.day)}</b><span>{a.time} · {a.title}</span></div>
   ))}
   <div class={printA4.weeklyFooter}>
-    <span>Av. Luis A. de Herrera 3101, esq. Juan Arrieta — Montevideo</span>
-    <span>Instagram · @iglesiaelancla</span>
-    <span>YouTube · @iglesiaelanclauy</span>
+    <span>{contact.address}</span>
+    {contact.instagram && <span>Instagram · {contact.instagram}</span>}
+    {contact.youtube && <span>YouTube · {contact.youtube}</span>}
   </div>
 </section>

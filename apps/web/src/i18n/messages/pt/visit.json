@@ -26,7 +26,7 @@
   },
   "where": {
     "eyebrow": "Onde estamos",
-    "title": "Av. Luis A. de Herrera, esquina Juan Arrieta.",
+    "title": "{street}.",
     "body": "Abra a rota no Google Maps de onde você estiver.",
     "cta": "Abrir no Google Maps",
     "mapLabel": "Mapa da região da igreja"
@@ -59,15 +59,15 @@
     "items": [
       {
         "q": "A que horas são os cultos?",
-        "a": "Aos domingos às 11:15. Às 10:00 há escola bíblica para adultos e crianças."
+        "a": "Aos domingos às {worshipTime}. Às {bibleSchoolTime} há escola bíblica para adultos e crianças."
       },
       {
         "q": "Onde fica a igreja?",
-        "a": "Na Av. Luis A. de Herrera 3101, esquina Juan Arrieta, Montevidéu."
+        "a": "Na {street}, Montevidéu."
       },
       {
         "q": "Quanto tempo dura o culto?",
-        "a": "Termina por volta das 13:00. Se quiser, pode ficar para conversar depois."
+        "a": "Termina por volta das {worshipEnd}. Se quiser, pode ficar para conversar depois."
       },
       {
         "q": "Preciso ser membro ou avisar que vou?",
@@ -91,7 +91,7 @@
       },
       {
         "q": "Como entro em contato com a igreja?",
-        "a": "Escrevendo para contacto@elancla.uy ou pelas nossas redes no YouTube, Instagram e Facebook."
+        "a": "Escrevendo para {email} ou pelas nossas redes no YouTube, Instagram e Facebook."
       }
     ]
   },
