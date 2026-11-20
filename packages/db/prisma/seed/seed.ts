@@ -8,6 +8,7 @@ import {
 import { seedMinistries } from "./seedMinistries";
 import { seedPeople } from "./seedPeople";
 import { seedRoles } from "./seedRoles";
+import { seedVisit } from "./seedVisit";
 
 async function seed(): Promise<void> {
   const organization = await db.organization.upsert({
@@ -45,6 +46,7 @@ async function seed(): Promise<void> {
   await seedRoles(db, organization.id);
   await seedMinistries(db, organization.id);
   await seedPeople(db, organization.id);
+  await seedVisit(db, organization.id);
 
   console.info(`Seeded organization "${organization.slug}".`);
 }
