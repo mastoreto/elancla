@@ -1,6 +1,9 @@
 export { EmailLayout } from "./components/email-layout";
 export {
+  type EditorialNoticeInput,
+  type EditorialNoticeVariant,
   type RenderedEmail,
+  renderEditorialNoticeEmail,
   renderInvitationEmail,
   renderPasswordResetEmail,
 } from "./renderEmail";
