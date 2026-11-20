@@ -124,37 +124,49 @@ const saveDraftRoute = createRoute({
   },
 });
 
-const actionRoute = (
-  action: string,
-  summary: string,
-  kind: "view" | "edit" | "publish",
-) =>
-  createRoute({
-    method: "post",
-    path: `/editorial/{type}/{entityId}/${action}`,
-    tags: TAGS,
-    summary,
-    middleware: entityGuard(kind),
-    request: { params: entityParams },
-    responses: statusResponses,
-  });
+const noBody = { params: entityParams };
 
-const submitRoute = actionRoute("submit", "Send the draft to review.", "edit");
-const publishRoute = actionRoute(
-  "publish",
-  "Publish the draft directly, or resume paused content.",
-  "publish",
-);
-const pauseRoute = actionRoute(
-  "pause",
-  "Hide the published content without losing it.",
-  "publish",
-);
-const approveRoute = actionRoute(
-  "approve",
-  "Approve the revision in review and publish it (configured reviewers only).",
-  "view",
-);
+const submitRoute = createRoute({
+  method: "post",
+  path: "/editorial/{type}/{entityId}/submit",
+  tags: TAGS,
+  summary: "Send the draft to review.",
+  middleware: entityGuard("edit"),
+  request: noBody,
+  responses: statusResponses,
+});
+
+const publishRoute = createRoute({
+  method: "post",
+  path: "/editorial/{type}/{entityId}/publish",
+  tags: TAGS,
+  summary: "Publish the draft directly, or resume paused content.",
+  middleware: entityGuard("publish"),
+  request: noBody,
+  responses: statusResponses,
+});
+
+const pauseRoute = createRoute({
+  method: "post",
+  path: "/editorial/{type}/{entityId}/pause",
+  tags: TAGS,
+  summary: "Hide the published content without losing it.",
+  middleware: entityGuard("publish"),
+  request: noBody,
+  responses: statusResponses,
+});
+
+const approveRoute = createRoute({
+  method: "post",
+  path: "/editorial/{type}/{entityId}/approve",
+  tags: TAGS,
+  summary:
+    "Approve the revision in review and publish it (configured reviewers only).",
+  middleware: entityGuard("view"),
+  request: noBody,
+  responses: statusResponses,
+});
+
 const requestChangesRoute = createRoute({
   method: "post",
   path: "/editorial/{type}/{entityId}/request-changes",
