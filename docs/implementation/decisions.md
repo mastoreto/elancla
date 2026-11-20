@@ -422,6 +422,25 @@ sistema. Editar algo publicado no lo cambia en la web hasta aprobar/publicar.
 `ContentRevision` con snapshot del borrador; `EditorialSettings` con los revisores. Subfase
 [`1.2`](./phases/1-content/1.2-editorial-workflow.md).
 
+**Notas de implementación (1.2):**
+
+- **Las revisiones son el contenido.** El "publicado" de una entidad es su revisión
+  `PUBLISHED`/`PAUSED`; hay a lo sumo una revisión de trabajo (`DRAFT`/`IN_REVIEW`/`CHANGES_REQUESTED`)
+  y una en vivo por entidad. Lo garantizan **índices únicos parciales** en SQL
+  (`content_revisions_one_working`, `content_revisions_one_live`), no el código; una carrera termina
+  en 409. Se suma el estado interno `SUPERSEDED` y el historial no se borra (`app_runtime` no tiene
+  `DELETE` sobre `content_revisions`).
+- **Nadie revisa lo suyo**, tampoco el admin (403 `self_review`): si no, la revisión obligatoria no
+  sirve.
+- **Publicar directo** exige `publish` y que ni quien publica ni el autor de la revisión estén en
+  revisión obligatoria (por persona o por rol). Reanudar algo pausado exige `publish` pero no
+  revisión: ya fue aprobado.
+- **Los revisores no tienen un permiso propio** (no hay `content:review`): son los de
+  `EditorialSettings` por tipo, y el admin. Aun así necesitan `view` del tipo para llegar a las
+  rutas de decisión.
+- Cada transición y cada cambio de configuración deja su fila de `AuditLog` (`editorial.*`) en la
+  misma transacción, sin el snapshot.
+
 ## D-31 — Calendario
 
 **Aceptada.** Detalle en

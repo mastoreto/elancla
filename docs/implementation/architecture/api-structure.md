@@ -82,6 +82,7 @@ apps/api/
     │   ├── media/                       # subidas firmadas, finalize, variantes de imagen, descarga privada, purga (data/ domain/ lib/ mappers/ policies/ useCases/ guards/)
     │   ├── audit/                       # consulta del log (solo lectura)
     │   ├── siteKeys/                    # alta, listado y revocación de site keys (domain/ data/ mappers/ useCases/)
+    │   ├── editorial/                   # flujo editorial (D-30): domain/ (máquina de estados, availableActions) registry/ guards/ data/ mappers/ notifications/ useCases/
     │   └── public/                      # API pública v1 para sitios (solo contenido publicado): guards/requireSiteKey, useCases, mappers
     │
     └── test/                            # helpers: BD de test, factories, cliente HTTP, matriz de permisos
