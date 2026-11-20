@@ -1,19 +1,23 @@
 ---
-import { getSiteConfig } from '@ancla/content';
+import type { SiteConfig, VisitContent } from '@ancla/content';
+import { cn } from '@ancla/utils';
 import Button from 'src/components/ui/Button';
 import type { Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { getHtmlLang, interpolateDeep, localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout';
-import cn from 'src/utils/cn';
+import { buildVisitFaqs } from 'src/utils/buildVisitFaqs';
 import { buildFaqLd, buildServiceEventLd, mapLink } from 'src/utils/seo';
 import { buildSiteTokens } from 'src/utils/siteTokens';
+import VisitDirections from './components/VisitDirections';
+import { buildDirectionItems } from './utils/buildDirectionItems';
 
 interface Props {
   locale: Locale;
+  site: SiteConfig;
+  visit: VisitContent;
 }
-const { locale } = Astro.props;
-const site = Astro.locals.site ?? (await getSiteConfig());
+const { locale, site, visit } = Astro.props;
 const tokens = buildSiteTokens(site, locale);
 const copy = interpolateDeep(getMessages(locale).visit, tokens);
 const sunday = interpolateDeep(getMessages(locale).landing.sunday, tokens);
@@ -22,7 +26,16 @@ const coords = `${site.geo.latitude},${site.geo.longitude}`;
 const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${coords}`;
 const embedUrl = `https://www.google.com/maps?ll=${coords}&z=17&output=embed`;
 
-const faqLd = buildFaqLd(copy.faq.items);
+const directionItems = buildDirectionItems(visit.directions, {
+  parking: copy.directions.parking,
+  transit: copy.directions.transit,
+  accessibility: copy.directions.accessibility,
+});
+const faqItems = buildVisitFaqs({ site, visit, locale }).map(
+  ({ question, answer }) => ({ q: question, a: answer })
+);
+
+const faqLd = buildFaqLd(faqItems);
 const jsonLd = [
   ...(faqLd ? [faqLd] : []),
   buildServiceEventLd({
@@ -158,6 +171,12 @@ const visitPage = {
         class={visitPage.whereMap} src={embedUrl} title={copy.where.mapLabel} loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </section>
 
+    <VisitDirections
+      eyebrow={copy.directions.eyebrow}
+      title={copy.directions.title}
+      items={directionItems}
+    />
+
     <section class={visitPage.expect} aria-labelledby="vs-expect">
       <span class={visitPage.expectEyebrow}>{copy.expect.eyebrow}</span>
       <h2 id="vs-expect" class={visitPage.expectTitle}>{copy.expect.title}</h2>
@@ -175,7 +194,7 @@ const visitPage = {
       <span class={visitPage.faqEyebrow}>{copy.faq.eyebrow}</span>
       <h2 id="vs-faq" class={visitPage.faqTitle}>{copy.faq.title}</h2>
       <div class={visitPage.faqList}>
-        {copy.faq.items.map((item) => (
+        {faqItems.map((item) => (
           <details class={visitPage.faqItem}>
             <summary class={visitPage.faqQuestion}>{item.q}</summary>
             <p class={visitPage.faqAnswer}>{item.a}</p>

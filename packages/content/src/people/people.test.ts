@@ -30,6 +30,9 @@ function clientReturning(
       if (result instanceof Error) throw result;
       return result as PublicPerson[];
     },
+    getVisit: async () => {
+      throw new Error("not used");
+    },
   };
 }
 

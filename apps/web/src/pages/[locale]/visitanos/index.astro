@@ -1,4 +1,5 @@
 ---
+import { getSiteConfig, getVisit } from '@ancla/content';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import VisitPage from 'src/sections/visit/VisitPage';
 
@@ -6,6 +7,8 @@ const { locale } = Astro.params;
 if (!isLocale(locale) || locale === defaultLocale) {
   return Astro.rewrite('/404');
 }
+const site = Astro.locals.site ?? (await getSiteConfig());
+const visit = await getVisit(locale);
 ---
 
-<VisitPage locale={locale} />
+<VisitPage locale={locale} {site} {visit} />

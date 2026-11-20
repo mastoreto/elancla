@@ -17,3 +17,10 @@ export {
   type PublicClient,
 } from "./publicClient";
 export * from "./site";
+export {
+  createVisitLoader,
+  getVisit,
+  type VisitContent,
+  type VisitLoader,
+  type VisitLoaderOptions,
+} from "./visit";
