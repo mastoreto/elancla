@@ -103,6 +103,24 @@ describe("site keys", () => {
     );
   });
 
+  test("GET lists active keys before newer revoked ones", async () => {
+    await revokeEveryActiveKey();
+    const older = (await (
+      await createKey("older-active")
+    ).json()) as CreatedSiteKeyDto;
+    const newer = (await (
+      await createKey("newer-revoked")
+    ).json()) as CreatedSiteKeyDto;
+    await call("DELETE", `/site-keys/${newer.id}`, { cookie });
+
+    const list = (await (
+      await call("GET", "/site-keys", { cookie })
+    ).json()) as SiteKeyDto[];
+    expect(list[0]?.id).toBe(older.id);
+    // Then the revoked ones, most recent revocation first.
+    expect(list.find((key) => key.revokedAt !== null)?.id).toBe(newer.id);
+  });
+
   test("DELETE revokes: the key stops authenticating and the audit keeps the request id", async () => {
     await revokeEveryActiveKey();
     const created = (await (
