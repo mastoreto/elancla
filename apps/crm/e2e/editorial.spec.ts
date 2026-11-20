@@ -29,17 +29,17 @@ async function callApi(
 }
 
 test("an editor's draft reaches the reviewer's bell and inbox mail", async ({ page, browser }) => {
-  // 1. The admin makes the reviewer a reviewer of the blog, and it survives a reload.
+  // 1. The admin makes the reviewer a reviewer of the ministries, and it survives a reload.
   await login(page, E2E_USERS.admin);
   await page.goto(SETTINGS_URL);
   const blogCard = page
     .locator("section")
-    .filter({ has: page.getByRole("heading", { name: "Blog" }) });
+    .filter({ has: page.getByRole("heading", { name: "Ministerios" }) });
   const reviewerBox = blogCard
     .getByRole("group", { name: "Personas revisoras", exact: true })
     .getByLabel(E2E_REVIEWER_NAME);
   await reviewerBox.check();
-  await blogCard.getByRole("button", { name: "Guardar Blog" }).click();
+  await blogCard.getByRole("button", { name: "Guardar Ministerios" }).click();
   await expect(page.getByText("Revisión editorial guardada")).toBeVisible();
   await page.reload();
   await expect(reviewerBox).toBeChecked();
@@ -50,10 +50,10 @@ test("an editor's draft reaches the reviewer's bell and inbox mail", async ({ pa
   const editorContext = await browser.newContext({ extraHTTPHeaders: clientAddressHeaders() });
   const editorPage = await editorContext.newPage();
   await login(editorPage, E2E_USERS.editor);
-  await callApi(editorPage, "PUT", `/editorial/blog-post/${entityId}/draft`, {
-    snapshot: { title: "Entrada de prueba" },
+  await callApi(editorPage, "PUT", `/editorial/ministry/${entityId}/draft`, {
+    snapshot: { title: "Perfil de prueba" },
   });
-  await callApi(editorPage, "POST", `/editorial/blog-post/${entityId}/submit`);
+  await callApi(editorPage, "POST", `/editorial/ministry/${entityId}/submit`);
   await editorContext.close();
 
   // The reviewer sees the dot on the bell and the item in the popover.
@@ -64,17 +64,17 @@ test("an editor's draft reaches the reviewer's bell and inbox mail", async ({ pa
   await reviewerPage.getByRole("button", { name: "Notificaciones" }).click();
   await expect(reviewerPage.getByText("Para revisar")).toBeVisible();
   await expect(
-    reviewerPage.getByRole("link", { name: /Entrada del blog/ }).first(),
-  ).toHaveAttribute("href", "/blog");
+    reviewerPage.getByRole("link", { name: /Perfil de ministerio/ }).first(),
+  ).toHaveAttribute("href", `/ministries/${entityId}`);
   await reviewerContext.close();
 
   // 3. Mailpit received the "to review" email.
   const mail = await latestMailTo(E2E_USERS.reviewer);
-  expect(mail).toContain("una entrada del blog");
+  expect(mail).toContain("el perfil de un ministerio");
   expect(mail).toContain("revisión");
 
   // Leave the inbox as found: the admin (a reviewer too) approves it.
-  await callApi(page, "POST", `/editorial/blog-post/${entityId}/approve`);
+  await callApi(page, "POST", `/editorial/ministry/${entityId}/approve`);
 });
 
 test("someone with no editorial permission does not see the review tab", async ({ page }) => {

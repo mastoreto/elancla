@@ -43,7 +43,7 @@ export const E2E_USERS: readonly E2eUser[] = [
     roleKey: "content-editor",
   },
   {
-    // Reads blog posts but cannot publish: reviews only because editorial settings say so.
+    // Reads ministry profiles but cannot publish: reviews only because editorial settings say so.
     email: "e2e-reviewer@example.test",
     name: "E2E Reviewer",
     roleKey: null,
@@ -52,6 +52,8 @@ export const E2E_USERS: readonly E2eUser[] = [
       grants: [
         grant(PERMISSIONS.blogPosts.view),
         grant(PERMISSIONS.blogPosts.edit),
+        grant(PERMISSIONS.ministryProfile.view),
+        grant(PERMISSIONS.ministryProfile.edit),
       ],
     },
   },
