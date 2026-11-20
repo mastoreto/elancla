@@ -12,3 +12,4 @@ export {
   publicLocaleQuery,
   publicSiteSettingsDto,
 } from "./publicSiteSettingsDto";
+export { type PublicVisitDto, publicVisitDto } from "./publicVisitDto";

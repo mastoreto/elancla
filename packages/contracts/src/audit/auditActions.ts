@@ -56,6 +56,7 @@ export const AUDIT_ACTIONS = {
     updated: "personProfile.updated",
     deleted: "personProfile.deleted",
   },
+  visit: { updated: "visit.updated" },
   media: {
     uploadRequested: "media.upload.requested",
     finalized: "media.finalized",
