@@ -16,6 +16,11 @@ export const PEOPLE_ROUTE_PERMISSIONS = [
   PERMISSIONS.people.view,
 ] as const satisfies readonly Permission[];
 
+/** The visit page lives under /website but has its own permission resource. */
+export const VISIT_ROUTE_PERMISSIONS = [
+  PERMISSIONS.visit.view,
+] as const satisfies readonly Permission[];
+
 /**
  * What a signed-in user needs to see each section: any one of the listed permissions; an empty
  * list means every signed-in user. The sidebar and the route guards read this same table.

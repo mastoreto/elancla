@@ -4,7 +4,6 @@ import { useState } from "react";
 import { LocaleTabs } from "@/components/content/locale-tabs";
 import { BoardInput, BoardTextarea } from "@/components/dashboard/board/board-form";
 import { cn } from "@/lib/utils";
-import type { SiteLocales } from "../../types";
 
 const localizedTextFieldWebsitePage = {
   container: cn("flex flex-col gap-3.5"),
@@ -14,7 +13,10 @@ const localizedTextFieldWebsitePage = {
 
 const TEXTAREA_ROWS = 4;
 
-interface LocalizedTextFieldProps extends SiteLocales {
+interface LocalizedTextFieldProps {
+  /** Languages the organization works in. */
+  locales: readonly string[];
+  defaultLocale: string;
   /** Prefix of the input ids; unique per field on the page. */
   id: string;
   label: string;

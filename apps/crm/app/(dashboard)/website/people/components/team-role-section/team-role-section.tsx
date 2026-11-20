@@ -1,8 +1,8 @@
 import { PERSON_TITLE_MAX_LENGTH } from "@ancla/contracts";
+import { LocalizedTextField } from "@/components/content/localized-text-field";
 import { BoardFormRow, BoardInput, BoardSwitchRow } from "@/components/dashboard/board/board-form";
 import { cn } from "@/lib/utils";
 import type { SiteLocales, TeamRoleFormValues } from "../../types";
-import { LocalizedTextField } from "../localized-text-field";
 
 const teamRoleSectionWebsitePage = {
   container: cn("flex flex-col gap-4"),
