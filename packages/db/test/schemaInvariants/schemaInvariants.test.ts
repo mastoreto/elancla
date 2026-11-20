@@ -99,6 +99,25 @@ describe("schema invariants", () => {
     expect(fk?.onDelete).toBe("r");
   });
 
+  test("editorial history cannot be deleted and allows one working and one live revision", async () => {
+    const [privileges] = await db.$queryRaw<
+      { canDelete: boolean; canUpdate: boolean }[]
+    >`
+      SELECT has_table_privilege('app_runtime', 'content_revisions', 'DELETE') AS "canDelete",
+             has_table_privilege('app_runtime', 'content_revisions', 'UPDATE') AS "canUpdate"
+    `;
+    expect(privileges).toEqual({ canDelete: false, canUpdate: true });
+    const indexes = await db.$queryRaw<{ name: string; definition: string }[]>`
+      SELECT indexname AS name, indexdef AS definition FROM pg_indexes
+      WHERE tablename = 'content_revisions' AND indexname LIKE 'content_revisions_one_%'
+    `;
+    expect(indexes.map((index) => index.name).sort()).toEqual([
+      "content_revisions_one_live",
+      "content_revisions_one_working",
+    ]);
+    for (const index of indexes) expect(index.definition).toContain("UNIQUE");
+  });
+
   test("the runtime role cannot change the schema", async () => {
     // PrismaPromise is lazy and not a native Promise; wrap it so the call actually runs.
     await expect(

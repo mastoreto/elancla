@@ -44,6 +44,8 @@ model Organization {
   auditLogs         AuditLog[]
   mediaFiles        MediaFile[]
   siteApiKeys       SiteApiKey[]
+  contentRevisions  ContentRevision[]
+  editorialSettings EditorialSettings[]
 
   @@map("organizations")
 }
@@ -143,6 +145,8 @@ model User {
   userRoles          UserRole[]
   userMinistries     UserMinistry[]
   mediaFiles         MediaFile[]
+  authoredRevisions  ContentRevision[] @relation("RevisionAuthor")
+  reviewedRevisions  ContentRevision[] @relation("RevisionReviewer")
 
   @@map("users")
 }
@@ -415,4 +419,68 @@ model SiteApiKey {
 
   @@index([organizationId, revokedAt])
   @@map("site_api_keys")
+}
+
+// ─── Editorial workflow ──────────────────────────────────────────────────────
+
+/// Each content type that goes through the workflow adds a value (with its migration).
+enum EditorialContentType {
+  BLOG_POST
+  MINISTRY
+}
+
+/// SUPERSEDED is internal: the live revision that a newer one replaced. History is never deleted.
+enum EditorialState {
+  DRAFT
+  IN_REVIEW
+  CHANGES_REQUESTED
+  PUBLISHED
+  PAUSED
+  SUPERSEDED
+}
+
+/// The revisions are the content: the draft snapshot lives here and the "published" version of an
+/// entity is its PUBLISHED/PAUSED revision. Partial unique indexes (see the migration) allow at
+/// most one working and one live revision per entity. Rows are never deleted by `app_runtime`.
+model ContentRevision {
+  id             String               @id @default(uuid(7)) @db.Uuid
+  organizationId String               @db.Uuid
+  organization   Organization         @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  contentType    EditorialContentType
+  /// Not a FK: the entity tables arrive with the phases that adopt the workflow.
+  entityId       String               @db.Uuid
+  number         Int
+  state          EditorialState
+  snapshot       Json
+  authorId       String               @db.Uuid
+  author         User                 @relation("RevisionAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+  reviewerId     String?              @db.Uuid
+  reviewer       User?                @relation("RevisionReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  comment        String?
+  submittedAt    DateTime?            @db.Timestamptz(3)
+  decidedAt      DateTime?            @db.Timestamptz(3)
+  publishedAt    DateTime?            @db.Timestamptz(3)
+  createdAt      DateTime             @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime             @updatedAt @db.Timestamptz(3)
+
+  @@unique([organizationId, contentType, entityId, number])
+  @@index([organizationId, state])
+  @@map("content_revisions")
+}
+
+/// Who reviews, and who must be reviewed, per content type. The id arrays are not FKs: an id of a
+/// deleted role or user simply stops matching and is filtered out when read.
+model EditorialSettings {
+  id                     String               @id @default(uuid(7)) @db.Uuid
+  organizationId         String               @db.Uuid
+  organization           Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  contentType            EditorialContentType
+  reviewerRoleIds        String[]             @default([]) @db.Uuid
+  reviewerUserIds        String[]             @default([]) @db.Uuid
+  mandatoryReviewRoleIds String[]             @default([]) @db.Uuid
+  mandatoryReviewUserIds String[]             @default([]) @db.Uuid
+  updatedAt              DateTime             @updatedAt @db.Timestamptz(3)
+
+  @@unique([organizationId, contentType])
+  @@map("editorial_settings")
 }
