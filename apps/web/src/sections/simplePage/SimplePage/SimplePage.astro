@@ -1,0 +1,59 @@
+---
+import type { Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+import Layout from 'src/layouts/Layout';
+import { simplePageStyles } from './styles';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  /** Output of `renderRichText`: the only HTML this component injects. */
+  html: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  canonical: string;
+  noindex: boolean;
+  languageAlternates: { hrefLang: string; href: string }[];
+}
+
+const {
+  locale,
+  title,
+  html,
+  seoTitle,
+  seoDescription,
+  canonical,
+  noindex,
+  languageAlternates,
+} = Astro.props;
+const copy = getMessages(locale).simplePage;
+const homePath = localizePath('/', locale);
+---
+
+<Layout
+  title={seoTitle ?? title}
+  description={seoDescription}
+  breadcrumbs={[
+    { name: copy.breadcrumbs.home, url: homePath },
+    { name: title, url: canonical },
+  ]}
+  canonical={canonical}
+  noindex={noindex}
+  languageAlternates={languageAlternates}
+  locale={locale}
+>
+  <div class={simplePageStyles.container}>
+    <header class={simplePageStyles.header}>
+      <nav class={simplePageStyles.nav} aria-label={copy.breadcrumbs.label}>
+        <a class={simplePageStyles.home} href={homePath}>{copy.breadcrumbs.home}</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{title}</span>
+      </nav>
+      <h1 class={simplePageStyles.title}>{title}</h1>
+    </header>
+    <article class={simplePageStyles.article}>
+      <div class={simplePageStyles.body} set:html={html} />
+    </article>
+  </div>
+</Layout>

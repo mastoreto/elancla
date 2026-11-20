@@ -51,6 +51,7 @@ function sections(entries: SiteIndexEntry[], site: SiteConfig) {
     entries.filter((e) => paths.includes(e.path));
   const ministries = entries.filter((e) => e.path.startsWith('/ministerios/'));
   const posts = entries.filter((e) => BLOG.test(e.path));
+  const pages = entries.filter((e) => e.kind === 'simplePage');
   const block = (title: string, items: string[]) =>
     items.length ? ['', `## ${title}`, ...items] : [];
   // Fixed entries point into a section; the ones out of service are left out.
@@ -86,6 +87,10 @@ function sections(entries: SiteIndexEntry[], site: SiteConfig) {
     ...block(
       'Ministerios',
       ministries.map((e) => link(e, site, e.path))
+    ),
+    ...block(
+      'Más información',
+      pages.map((e) => link(e, site, e.path))
     ),
     ...block(
       'Artículos',

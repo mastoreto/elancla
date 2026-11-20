@@ -1,0 +1,1 @@
+export { toSimplePageListItemDto } from "./toSimplePageListItemDto";

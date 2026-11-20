@@ -7,6 +7,7 @@ export * from "./invitations";
 export * from "./me";
 export * from "./media";
 export * from "./ministries";
+export * from "./pages";
 export * from "./people";
 export * from "./public";
 export * from "./roles";

@@ -1,5 +1,5 @@
 ---
-import { getPeople, getSiteConfig } from '@ancla/content';
+import { getPage, getPeople, getSiteConfig } from '@ancla/content';
 import { getContentPageBySlug } from 'src/data/contentPages';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
@@ -7,6 +7,9 @@ import Layout from 'src/layouts/Layout';
 import AboutPage from 'src/sections/about/AboutPage';
 import ContentPageTemplate from 'src/sections/contentPage/ContentPageTemplate';
 import LandingPage from 'src/sections/landing/LandingPage';
+import SimplePage from 'src/sections/simplePage/SimplePage';
+import { renderRichText } from 'src/utils/renderRichText';
+import { buildSimplePageMeta } from 'src/utils/simplePageMeta';
 import { buildSiteTokens } from 'src/utils/siteTokens';
 
 // En SSR, `/pt` y `/en` (home localizada) comparten forma con `/nosotros`
@@ -21,9 +24,15 @@ const result =
   !localeHome && slug
     ? getContentPageBySlug('root', slug, { locale, tokens })
     : null;
-if (!localeHome && !result) {
+// Third option, after the home and the content pages: a page written in the CRM.
+const simplePage =
+  !localeHome && !result && slug ? await getPage(slug, locale) : null;
+if (!localeHome && !result && !simplePage) {
   return Astro.rewrite('/404');
 }
+const simplePageMeta = simplePage
+  ? buildSimplePageMeta({ page: simplePage, locale, siteUrl: site.url })
+  : null;
 
 const page = result?.page;
 const team = page?.slug === 'nosotros' ? await getPeople('team', locale) : [];
@@ -42,6 +51,15 @@ const breadcrumbs = page
 {
   localeHome ? (
     <LandingPage locale={localeHome} />
+  ) : simplePage && simplePageMeta ? (
+    <SimplePage
+      locale={locale}
+      title={simplePage.title}
+      html={renderRichText(simplePage.body)}
+      seoTitle={simplePage.seoTitle ?? undefined}
+      seoDescription={simplePage.seoDescription ?? undefined}
+      {...simplePageMeta}
+    />
   ) : (
     <Layout
       title={page!.seoTitle ?? page!.title}

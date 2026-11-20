@@ -57,6 +57,7 @@ export const AUDIT_ACTIONS = {
     deleted: "personProfile.deleted",
   },
   visit: { updated: "visit.updated" },
+  simplePage: { created: "simplePage.created" },
   media: {
     uploadRequested: "media.upload.requested",
     finalized: "media.finalized",

@@ -51,7 +51,13 @@ export function toEditorialStatusDto({
   availableActions,
 }: StatusParts): EditorialStatusDto {
   return {
-    live: live ? toRevisionSummaryDto(live) : null,
+    // The live snapshot lets an editor start the next draft from what is published.
+    live: live
+      ? {
+          ...toRevisionSummaryDto(live),
+          snapshot: live.snapshot as Record<string, unknown>,
+        }
+      : null,
     working: working
       ? {
           ...toRevisionSummaryDto(working),

@@ -645,6 +645,96 @@ const rows: MatrixRow[] = [
     expected: 404,
   },
 
+  // simple pages: pages:view lists, pages:create creates; the content goes through the editorial
+  // routes (below), guarded by the pages:view/edit/publish permissions.
+  ...(
+    [
+      ["GET", "/content/pages"],
+      ["POST", "/content/pages"],
+    ] as const
+  ).flatMap(([method, path]): MatrixRow[] => [
+    { who: "anonymous", caller: "anonymous", method, path, expected: 401 },
+    { who: "no role", caller: NOTHING, method, path, expected: 403 },
+  ]),
+  {
+    who: PERMISSIONS.pages.view,
+    caller: [grant(PERMISSIONS.pages.view)],
+    method: "POST",
+    path: "/content/pages",
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.pages.view,
+    caller: [grant(PERMISSIONS.pages.view)],
+    method: "GET",
+    path: "/content/pages",
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.pages.create,
+    caller: [grant(PERMISSIONS.pages.create)],
+    method: "GET",
+    path: "/content/pages",
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.pages.create,
+    caller: [grant(PERMISSIONS.pages.create)],
+    method: "POST",
+    path: "/content/pages",
+    expected: 201,
+  },
+  {
+    who: PERMISSIONS.pages.view,
+    caller: [grant(PERMISSIONS.pages.view)],
+    method: "GET",
+    path: `/editorial/simple-page/${UNKNOWN_ID}`,
+    expected: 404,
+  },
+  {
+    who: PERMISSIONS.pages.view,
+    caller: [grant(PERMISSIONS.pages.view)],
+    method: "PUT",
+    path: `/editorial/simple-page/${UNKNOWN_ID}/draft`,
+    body: { snapshot: {} },
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.pages.view,
+    caller: [grant(PERMISSIONS.pages.view)],
+    method: "POST",
+    path: `/editorial/simple-page/${UNKNOWN_ID}/publish`,
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.pages.edit,
+    caller: [grant(PERMISSIONS.pages.edit)],
+    method: "POST",
+    path: `/editorial/simple-page/${UNKNOWN_ID}/submit`,
+    expected: 404,
+  },
+  {
+    who: PERMISSIONS.pages.edit,
+    caller: [grant(PERMISSIONS.pages.edit)],
+    method: "POST",
+    path: `/editorial/simple-page/${UNKNOWN_ID}/publish`,
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.pages.publish,
+    caller: [grant(PERMISSIONS.pages.publish)],
+    method: "POST",
+    path: `/editorial/simple-page/${UNKNOWN_ID}/pause`,
+    expected: 404,
+  },
+  {
+    who: PERMISSIONS.pages.publish,
+    caller: [grant(PERMISSIONS.pages.publish)],
+    method: "GET",
+    path: `/editorial/simple-page/${UNKNOWN_ID}`,
+    expected: 403,
+  },
+
   // media: the permission is the one of the file's purpose (content:create, vouchers:create...).
   {
     who: "anonymous",

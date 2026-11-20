@@ -1,3 +1,4 @@
+import { db } from "@ancla/db";
 import type { MiddlewareHandler } from "hono";
 import { declareAccess } from "../../../../core/authz";
 import type { AppEnv } from "../../../../core/context";
@@ -15,7 +16,7 @@ import {
 /**
  * 403 unless the user holds the permission the content type ties to this kind of action (and, for
  * a ministry-scoped type with a `ministry` grant, belongs to that ministry). Reads `:type` and
- * `:entityId` from the route; an unknown type is a 404. Runs after `requireSession`.
+ * `:entityId` from the route; an unknown type, or an entity the type says does not exist, is a 404. Runs after `requireSession`.
  */
 export function requireEditorialPermission(
   kind: EditorialPermissionKind,
@@ -29,6 +30,13 @@ export function requireEditorialPermission(
     if (!hasEditorialPermission(access, definition, kind, entityId)) {
       throw new ForbiddenError();
     }
+    // After the permission check, so a caller without access cannot probe which ids exist.
+    const exists = await definition.entityExists?.(
+      db,
+      c.get("ctx").organizationId as string,
+      entityId,
+    );
+    if (exists === false) throw new NotFoundError("Content not found");
     await next();
   });
 }

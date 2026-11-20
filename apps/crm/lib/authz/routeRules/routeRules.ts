@@ -2,6 +2,7 @@ import type { Permission } from "@ancla/contracts";
 import { PERMISSIONS } from "@ancla/contracts";
 import { churchToDashboardRouteMap } from "@/lib/church";
 import {
+  PAGES_ROUTE_PERMISSIONS,
   PEOPLE_ROUTE_PERMISSIONS,
   ROUTE_PERMISSIONS,
   VISIT_ROUTE_PERMISSIONS,
@@ -30,8 +31,9 @@ const SECTION_RULES: RouteRule[] = Object.entries(ROUTE_PERMISSIONS)
  */
 export const ROUTE_RULES: readonly RouteRule[] = [
   ...SECTION_RULES,
-  // The longest prefix wins, so people profiles and the visit page do not fall back to `site:view`.
+  // The longest prefix wins, so people profiles, pages and the visit page do not fall back to `site:view`.
   { path: "/website/people", requires: PEOPLE_ROUTE_PERMISSIONS },
+  { path: "/website/pages", requires: PAGES_ROUTE_PERMISSIONS },
   { path: "/website/visit", requires: VISIT_ROUTE_PERMISSIONS },
   { path: "/settings", requires: [] },
   { path: "/settings/emails", requires: [PERMISSIONS.settings.view] },

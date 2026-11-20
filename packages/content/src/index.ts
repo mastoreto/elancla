@@ -1,9 +1,22 @@
 // @ancla/content — dominio de contenido compartido (el CMS custom como librería).
 // Tipos + datos seed + acceso. el ancla (web) lee; iEkklesia (admin) escribirá.
 
+// Re-exported so the web can check its own routes against it without depending on contracts.
+export { RESERVED_ROOT_SLUGS } from "@ancla/contracts";
 export * from "./access";
 export * from "./blog";
 export { type CachedLoaderOptions, createCachedLoader } from "./cachedLoader";
+export {
+  createPageLoader,
+  createPagesLoader,
+  getPage,
+  getPages,
+  type PageLoader,
+  type PagesLoader,
+  type PagesLoaderOptions,
+  type PublicPage,
+  type PublicPageSummary,
+} from "./pages";
 export {
   createPeopleLoader,
   getPeople,

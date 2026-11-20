@@ -1,5 +1,6 @@
 export {
   auditTransition,
+  beforeGoLive,
   buildEditorialStatus,
   type EditorialInput,
   entityKeyOf,

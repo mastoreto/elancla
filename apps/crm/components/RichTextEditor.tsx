@@ -1,5 +1,6 @@
 "use client";
 
+import { RICH_TEXT_HREF_PATTERN, type RichTextDoc } from "@ancla/contracts";
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -11,11 +12,14 @@ import {
   Link as LinkIcon,
   List,
   ListOrdered,
+  Minus,
   Quote,
   Underline as UnderlineIcon,
   Unlink,
+  WrapText,
 } from "lucide-react";
 import { useCallback, useEffect } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -60,23 +64,44 @@ function ToolbarSeparator({ className }: ToolbarSeparatorProps) {
   return <div className={cn(RichTextEditorSharedPage.separator, className)} />;
 }
 
-export interface RichTextEditorProps {
-  value: string;
-  onChange: (html: string) => void;
+interface RichTextEditorBaseProps {
   placeholder?: string;
   className?: string;
   editorClassName?: string;
   hasError?: boolean;
+  disabled?: boolean;
 }
 
-export function RichTextEditor({
-  value,
-  onChange,
-  placeholder = "Escribe el contenido aquí...",
-  className,
-  editorClassName,
-  hasError,
-}: RichTextEditorProps) {
+interface HtmlRichTextEditorProps extends RichTextEditorBaseProps {
+  /** `html` (default) keeps the full editor and speaks HTML strings. */
+  format?: "html";
+  value: string;
+  onChange: (html: string) => void;
+}
+
+interface JsonRichTextEditorProps extends RichTextEditorBaseProps {
+  /**
+   * `json` speaks the Tiptap JSON the simple pages store and offers only what that schema admits:
+   * headings 2-3, bold, italic, http(s)/mailto links, lists, quote, line break and rule.
+   */
+  format: "json";
+  value: RichTextDoc;
+  onChange: (doc: RichTextDoc) => void;
+}
+
+export type RichTextEditorProps = HtmlRichTextEditorProps | JsonRichTextEditorProps;
+
+const LINK_NOT_ALLOWED_MESSAGE = "El enlace debe empezar con https://, http:// o mailto:";
+
+export function RichTextEditor(props: RichTextEditorProps) {
+  const {
+    placeholder = "Escribe el contenido aquí...",
+    className,
+    editorClassName,
+    hasError,
+    disabled = false,
+  } = props;
+  const isJson = props.format === "json";
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -84,11 +109,14 @@ export function RichTextEditor({
         link: {
           openOnClick: false,
           HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" },
+          ...(isJson ? { isAllowedUri: (url: string) => RICH_TEXT_HREF_PATTERN.test(url) } : {}),
         },
+        ...(isJson ? { underline: false, strike: false, code: false, codeBlock: false } : {}),
       }),
       Placeholder.configure({ placeholder }),
     ],
-    content: value,
+    content: props.value,
+    editable: !disabled,
     editorProps: {
       attributes: {
         class: cn(
@@ -103,19 +131,32 @@ export function RichTextEditor({
       },
     },
     onUpdate: ({ editor }) => {
-      onChange(editor.isEmpty ? "" : editor.getHTML());
+      if (props.format === "json") {
+        props.onChange(editor.getJSON() as RichTextDoc);
+        return;
+      }
+      props.onChange(editor.isEmpty ? "" : editor.getHTML());
     },
     immediatelyRender: false,
   });
 
   // Sync external value changes (e.g., form reset)
+  const { value } = props;
   useEffect(() => {
     if (!editor) return;
-    const currentHtml = editor.isEmpty ? "" : editor.getHTML();
-    if (currentHtml !== value) {
-      editor.commands.setContent(value || "", { emitUpdate: false });
+    if (typeof value === "string") {
+      const currentHtml = editor.isEmpty ? "" : editor.getHTML();
+      if (currentHtml !== value) editor.commands.setContent(value || "", { emitUpdate: false });
+      return;
+    }
+    if (JSON.stringify(editor.getJSON()) !== JSON.stringify(value)) {
+      editor.commands.setContent(value, { emitUpdate: false });
     }
   }, [editor, value]);
+
+  useEffect(() => {
+    editor?.setEditable(!disabled);
+  }, [editor, disabled]);
 
   const setLink = useCallback(() => {
     if (!editor) return;
@@ -126,8 +167,12 @@ export function RichTextEditor({
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
       return;
     }
+    if (isJson && !RICH_TEXT_HREF_PATTERN.test(url)) {
+      toast.error(LINK_NOT_ALLOWED_MESSAGE);
+      return;
+    }
     editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
-  }, [editor]);
+  }, [editor, isJson]);
 
   if (!editor) return null;
 
@@ -142,7 +187,7 @@ export function RichTextEditor({
       )}
     >
       {/* Toolbar */}
-      <div className={RichTextEditorSharedPage.block}>
+      <div className={cn(RichTextEditorSharedPage.block, disabled && "hidden")}>
         <ToolbarButton
           title="Negrita"
           onClick={() => editor.chain().focus().toggleBold().run()}
@@ -159,13 +204,15 @@ export function RichTextEditor({
           <Italic className="size-3.5" />
         </ToolbarButton>
 
-        <ToolbarButton
-          title="Subrayado"
-          onClick={() => editor.chain().focus().toggleUnderline().run()}
-          isActive={editor.isActive("underline")}
-        >
-          <UnderlineIcon className="size-3.5" />
-        </ToolbarButton>
+        {isJson ? null : (
+          <ToolbarButton
+            title="Subrayado"
+            onClick={() => editor.chain().focus().toggleUnderline().run()}
+            isActive={editor.isActive("underline")}
+          >
+            <UnderlineIcon className="size-3.5" />
+          </ToolbarButton>
+        )}
 
         <ToolbarSeparator />
 
@@ -210,6 +257,23 @@ export function RichTextEditor({
         >
           <Quote className="size-3.5" />
         </ToolbarButton>
+
+        {isJson ? (
+          <>
+            <ToolbarButton
+              title="Salto de línea"
+              onClick={() => editor.chain().focus().setHardBreak().run()}
+            >
+              <WrapText className="size-3.5" />
+            </ToolbarButton>
+            <ToolbarButton
+              title="Línea divisoria"
+              onClick={() => editor.chain().focus().setHorizontalRule().run()}
+            >
+              <Minus className="size-3.5" />
+            </ToolbarButton>
+          </>
+        ) : null}
 
         <ToolbarSeparator />
 

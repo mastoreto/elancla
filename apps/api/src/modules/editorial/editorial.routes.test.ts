@@ -565,6 +565,7 @@ describe("settings", () => {
     expect(list.map((entry) => entry.contentType)).toEqual([
       "blog-post",
       "ministry",
+      "simple-page",
     ]);
     expect(list[0]?.reviewerUserIds).toEqual([editor.id]);
     expect(list[1]?.reviewerUserIds).toEqual([]);

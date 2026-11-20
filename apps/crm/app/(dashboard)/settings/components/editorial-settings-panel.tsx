@@ -22,6 +22,7 @@ import { OptionChecklist } from "./option-checklist";
 const CONTENT_TYPE_LABELS: Record<EditorialContentTypeParam, string> = {
   "blog-post": "Blog",
   ministry: "Ministerios",
+  "simple-page": "Páginas",
 };
 
 const editorialSettingsPanelSettingsPage = {

@@ -16,6 +16,11 @@ export const PEOPLE_ROUTE_PERMISSIONS = [
   PERMISSIONS.people.view,
 ] as const satisfies readonly Permission[];
 
+/** Simple pages live under /website but have their own permission resource. */
+export const PAGES_ROUTE_PERMISSIONS = [
+  PERMISSIONS.pages.view,
+] as const satisfies readonly Permission[];
+
 /** The visit page lives under /website but has its own permission resource. */
 export const VISIT_ROUTE_PERMISSIONS = [
   PERMISSIONS.visit.view,

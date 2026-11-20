@@ -1,5 +1,5 @@
 ---
-import type { SiteConfig } from '@ancla/content';
+import type { PublicPageSummary, SiteConfig } from '@ancla/content';
 import LogoText from 'src/components/LogoText';
 import type { Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
@@ -18,9 +18,18 @@ interface Props {
   tokens: SiteTokens;
   /** Section statuses: links into an out-of-service section are not shown. */
   sections: SiteConfig['sections'];
+  /** Published simple pages (already in `locale`); one link each under the church column. */
+  pages?: PublicPageSummary[];
 }
 
-const { locale, variant = 'red', social = {}, tokens, sections } = Astro.props;
+const {
+  locale,
+  variant = 'red',
+  social = {},
+  tokens,
+  sections,
+  pages = [],
+} = Astro.props;
 const copy = interpolateDeep(getMessages(locale).footer, tokens);
 // Link targets, in the same order as the labels in footer.json.
 const churchHrefs = [
@@ -112,6 +121,9 @@ const year = new Date().getFullYear();
         <ul class={footer.linkList}>
           {churchLinks.map((link) => (
             <li><a href={localizePath(link.href, locale)} class={footer.churchLink}>{link.label}</a></li>
+          ))}
+          {pages.map((page) => (
+            <li><a href={localizePath(`/${page.slug}`, locale)} class={footer.churchLink}>{page.title}</a></li>
           ))}
         </ul>
       </div>

@@ -1,11 +1,14 @@
 ---
-import { getPeople, getSiteConfig } from '@ancla/content';
+import { getPage, getPeople, getSiteConfig } from '@ancla/content';
 import { getContentPageBySlug } from 'src/data/contentPages';
 import { defaultLocale, isLocale } from 'src/i18n/config';
 import { localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout';
 import AboutPage from 'src/sections/about/AboutPage';
 import ContentPageTemplate from 'src/sections/contentPage/ContentPageTemplate';
+import SimplePage from 'src/sections/simplePage/SimplePage';
+import { renderRichText } from 'src/utils/renderRichText';
+import { buildSimplePageMeta } from 'src/utils/simplePageMeta';
 import { buildSiteTokens } from 'src/utils/siteTokens';
 
 const { locale: localeParam, slug } = Astro.params;
@@ -18,32 +21,51 @@ const tokens = buildSiteTokens(site, locale);
 const result = slug
   ? getContentPageBySlug('root', slug, { locale, tokens })
   : null;
-if (!result) {
+// After the content pages: a page written in the CRM.
+const simplePage = !result && slug ? await getPage(slug, locale) : null;
+if (!result && !simplePage) {
   return Astro.rewrite('/404');
 }
-const { page, isAlias } = result;
-const team = page.slug === 'nosotros' ? await getPeople('team', locale) : [];
+const simplePageMeta = simplePage
+  ? buildSimplePageMeta({ page: simplePage, locale, siteUrl: site.url })
+  : null;
 
-const canonicalPath = `/${page.slug}`;
-const canonical = new URL(
-  localizePath(canonicalPath, locale),
-  Astro.site
-).toString();
-const breadcrumbs = page.hero.breadcrumbs.map((item) => ({
-  name: item.label,
-  url: item.href ?? localizePath(canonicalPath, locale),
-}));
+const page = result?.page;
+const team = page?.slug === 'nosotros' ? await getPeople('team', locale) : [];
+const canonicalPath = page ? `/${page.slug}` : '';
+const canonical = page
+  ? new URL(localizePath(canonicalPath, locale), Astro.site).toString()
+  : '';
+const breadcrumbs = page
+  ? page.hero.breadcrumbs.map((item) => ({
+      name: item.label,
+      url: item.href ?? localizePath(canonicalPath, locale),
+    }))
+  : [];
 ---
 
-<Layout
-  title={page.seoTitle ?? page.title}
-  description={page.description}
-  breadcrumbs={breadcrumbs}
-  image={page.featuredImage?.src}
-  imageAlt={page.featuredImage?.alt}
-  canonical={canonical}
-  noindex={isAlias}
-  locale={locale}
->
-  {page.slug === 'nosotros' ? <AboutPage page={page} team={team} /> : <ContentPageTemplate page={page} />}
-</Layout>
+{
+  simplePage && simplePageMeta ? (
+    <SimplePage
+      locale={locale}
+      title={simplePage.title}
+      html={renderRichText(simplePage.body)}
+      seoTitle={simplePage.seoTitle ?? undefined}
+      seoDescription={simplePage.seoDescription ?? undefined}
+      {...simplePageMeta}
+    />
+  ) : (
+    <Layout
+      title={page!.seoTitle ?? page!.title}
+      description={page!.description}
+      breadcrumbs={breadcrumbs}
+      image={page!.featuredImage?.src}
+      imageAlt={page!.featuredImage?.alt}
+      canonical={canonical}
+      noindex={result!.isAlias}
+      locale={locale}
+    >
+      {page!.slug === 'nosotros' ? <AboutPage page={page!} team={team} /> : <ContentPageTemplate page={page!} />}
+    </Layout>
+  )
+}

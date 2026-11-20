@@ -11,6 +11,7 @@ import {
 import { notifyEditorial } from "../../notifications";
 import {
   auditTransition,
+  beforeGoLive,
   buildEditorialStatus,
   type EditorialInput,
   failOnRace,
@@ -37,6 +38,7 @@ export async function approve(
       }
       if (working.authorId === ctx.user.id) throw new SelfReviewError();
 
+      await beforeGoLive(tx, input, working);
       await retireLive(tx, ctx.organizationId, live);
       const now = new Date();
       const moved = await moveRevision(tx, {

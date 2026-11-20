@@ -24,6 +24,8 @@ function clientReturning(
     getSettings: async () => {
       throw new Error("not used");
     },
+    getPages: async () => [],
+    getPage: async () => null,
     async getPeople(context, locale) {
       const result = results[Math.min(calls.length, results.length - 1)];
       calls.push({ context, locale });
