@@ -77,6 +77,20 @@ export const PERMISSION_CATALOG = {
     actions: CRUD_AND_PUBLISH,
     scopes: ALL_ONLY,
   },
+  // Institutional site data: edited directly, with its own permission and audit (not editorial).
+  site: { resource: "site", actions: ["view", "edit"], scopes: ALL_ONLY },
+  people: { resource: "content.people", actions: CRUD, scopes: ALL_ONLY },
+  visit: {
+    resource: "content.visit",
+    actions: ["view", "edit"],
+    scopes: ALL_ONLY,
+  },
+  // Simple pages go through the editorial workflow.
+  pages: {
+    resource: "content.pages",
+    actions: CRUD_AND_PUBLISH,
+    scopes: ALL_ONLY,
+  },
   ministryProfile: {
     resource: "ministries.profile",
     actions: CRUD_AND_PUBLISH,

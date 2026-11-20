@@ -152,7 +152,98 @@
                         "null"
                       ]
                     },
-                    "serviceTimesSummary": {
+                    "serviceTimes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "worship",
+                              "bibleSchool"
+                            ]
+                          },
+                          "weekday": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 6
+                          },
+                          "start": {
+                            "type": "string",
+                            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                          },
+                          "end": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "weekday",
+                          "start",
+                          "end"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "sections": {
+                      "type": "object",
+                      "properties": {
+                        "blog": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "calendar": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "sermons": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "ministries": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        },
+                        "visit": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "maintenance",
+                            "outOfService"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "blog",
+                        "calendar",
+                        "sermons",
+                        "ministries",
+                        "visit"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "seoDescription": {
                       "type": [
                         "string",
                         "null"
@@ -214,12 +305,6 @@
                         "linkedin"
                       ],
                       "additionalProperties": false
-                    },
-                    "about": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
                     }
                   },
                   "required": [
@@ -234,9 +319,10 @@
                     "geo",
                     "themeColor",
                     "founded",
-                    "serviceTimesSummary",
-                    "social",
-                    "about"
+                    "serviceTimes",
+                    "sections",
+                    "seoDescription",
+                    "social"
                   ],
                   "additionalProperties": false
                 }

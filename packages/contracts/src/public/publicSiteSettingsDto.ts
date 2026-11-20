@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { serviceTimeDto, siteSectionsDto } from "../site";
 
 export const PUBLIC_SITE_STATUSES = [
   "online",
@@ -38,7 +39,11 @@ export const publicSiteSettingsDto = z.strictObject({
     .nullable(),
   themeColor: z.string().nullable(),
   founded: z.string().nullable(),
-  serviceTimesSummary: z.string().nullable(),
+  serviceTimes: z.array(serviceTimeDto),
+  /** Every section key is always present; a section never configured is `active`. */
+  sections: siteSectionsDto,
+  /** Default meta description, resolved by locale (null when none was written). */
+  seoDescription: z.string().nullable(),
   social: z.strictObject({
     website: z.string().nullable(),
     instagram: z.string().nullable(),
@@ -48,7 +53,6 @@ export const publicSiteSettingsDto = z.strictObject({
     spotify: z.string().nullable(),
     linkedin: z.string().nullable(),
   }),
-  about: z.string().nullable(),
 });
 
 export type PublicSiteStatus = (typeof PUBLIC_SITE_STATUSES)[number];
