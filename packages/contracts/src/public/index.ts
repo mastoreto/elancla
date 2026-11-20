@@ -1,4 +1,13 @@
 export {
+  type PublicPageDto,
+  type PublicPageListDto,
+  type PublicPageSummaryDto,
+  publicPageDto,
+  publicPageListDto,
+  publicPageQuery,
+  publicPageSummaryDto,
+} from "./publicPageDto";
+export {
   type PublicPeopleQuery,
   type PublicPersonDto,
   publicPeopleQuery,

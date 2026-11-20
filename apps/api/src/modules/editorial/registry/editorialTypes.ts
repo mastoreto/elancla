@@ -2,6 +2,7 @@ import {
   type EditorialContentTypeParam,
   PERMISSIONS,
   type Permission,
+  simplePageSnapshot,
   snapshotSchema,
 } from "@ancla/contracts";
 import type { EditorialContentType } from "@ancla/db";
@@ -54,6 +55,19 @@ export const EDITORIAL_TYPES: Record<
     ministryScoped: true,
     snapshotSchema,
     crmPath: (entityId) => `/ministries/${entityId}`,
+  },
+  "simple-page": {
+    contentType: "SIMPLE_PAGE",
+    param: "simple-page",
+    label: "una página del sitio",
+    permissions: {
+      view: PERMISSIONS.pages.view,
+      edit: PERMISSIONS.pages.edit,
+      publish: PERMISSIONS.pages.publish,
+    },
+    ministryScoped: false,
+    snapshotSchema: simplePageSnapshot,
+    crmPath: (entityId) => `/website/pages/${entityId}`,
   },
 };
 

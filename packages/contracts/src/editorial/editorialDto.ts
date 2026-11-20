@@ -4,7 +4,11 @@ const COMMENT_MAX_LENGTH = 2000;
 const MAX_IDS_PER_LIST = 50;
 
 /** Content types that go through the workflow, as they appear in the URL. */
-export const EDITORIAL_CONTENT_TYPES = ["blog-post", "ministry"] as const;
+export const EDITORIAL_CONTENT_TYPES = [
+  "blog-post",
+  "ministry",
+  "simple-page",
+] as const;
 export const editorialContentTypeParam = z.enum(EDITORIAL_CONTENT_TYPES);
 export type EditorialContentTypeParam = z.infer<
   typeof editorialContentTypeParam
