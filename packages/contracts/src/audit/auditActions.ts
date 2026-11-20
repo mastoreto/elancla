@@ -51,6 +51,11 @@ export const AUDIT_ACTIONS = {
     settingsUpdated: "editorial.settingsUpdated",
   },
   site: { settingsUpdated: "site.settingsUpdated" },
+  personProfile: {
+    created: "personProfile.created",
+    updated: "personProfile.updated",
+    deleted: "personProfile.deleted",
+  },
   media: {
     uploadRequested: "media.upload.requested",
     finalized: "media.finalized",

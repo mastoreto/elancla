@@ -1,4 +1,10 @@
 export {
+  type PublicPeopleQuery,
+  type PublicPersonDto,
+  publicPeopleQuery,
+  publicPersonDto,
+} from "./publicPersonDto";
+export {
   PUBLIC_LOCALE_PATTERN,
   PUBLIC_SITE_STATUSES,
   type PublicSiteSettingsDto,
