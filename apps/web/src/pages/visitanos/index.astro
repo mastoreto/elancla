@@ -1,6 +1,10 @@
 ---
+import { getSiteConfig, getVisit } from '@ancla/content';
 import { defaultLocale } from 'src/i18n/config';
 import VisitPage from 'src/sections/visit/VisitPage';
+
+const site = Astro.locals.site ?? (await getSiteConfig());
+const visit = await getVisit(defaultLocale);
 ---
 
-<VisitPage locale={defaultLocale} />
+<VisitPage locale={defaultLocale} {site} {visit} />

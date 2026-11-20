@@ -1,4 +1,4 @@
-import { getSiteConfig, type SiteConfig } from '@ancla/content';
+import { getSiteConfig, getVisit, type SiteConfig } from '@ancla/content';
 import { getDoctrines } from 'src/data/doctrines';
 import {
   entryUrls,
@@ -7,6 +7,7 @@ import {
 } from 'src/data/siteIndex';
 import { getMessages } from 'src/i18n/messages';
 import { interpolateDeep } from 'src/i18n/utils';
+import { buildVisitFaqs } from 'src/utils/buildVisitFaqs';
 import { sectionForPath } from 'src/utils/sectionForPath';
 import { buildSiteTokens } from 'src/utils/siteTokens';
 
@@ -102,10 +103,6 @@ export async function buildLlmsTxt(knownSite?: SiteConfig) {
 export async function buildLlmsFullTxt(knownSite?: SiteConfig) {
   const site = knownSite ?? (await getSiteConfig());
   const entries = await getSiteIndex(site);
-  const visit = interpolateDeep(
-    getMessages('es').visit,
-    buildSiteTokens(site, 'es')
-  );
   const doctrines = getDoctrines('es').flatMap((d) => [
     `### ${d.number}. ${d.title}: ${d.subtitle}`,
     d.summary,
@@ -116,7 +113,11 @@ export async function buildLlmsFullTxt(knownSite?: SiteConfig) {
   const faq =
     site.sections.visit === 'outOfService'
       ? []
-      : visit.faq.items.flatMap((i) => [`### ${i.q}`, i.a, '']);
+      : buildVisitFaqs({
+          site,
+          visit: await getVisit('es'),
+          locale: 'es',
+        }).flatMap((item) => [`### ${item.question}`, item.answer, '']);
   return [
     ...header(site),
     ...(faq.length > 0 ? ['## Preguntas frecuentes', '', ...faq] : []),

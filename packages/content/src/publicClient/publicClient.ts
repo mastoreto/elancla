@@ -2,8 +2,10 @@ import {
   type PersonContext,
   type PublicPersonDto,
   type PublicSiteSettingsDto,
+  type PublicVisitDto,
   publicPersonDto,
   publicSiteSettingsDto,
+  publicVisitDto,
 } from "@ancla/contracts";
 
 const DEFAULT_TIMEOUT_MS = 2000;
@@ -24,6 +26,8 @@ export interface PublicClient {
   getSettings(locale?: string): Promise<PublicSiteSettingsDto>;
   /** People visible in `context`, already ordered by the API, with bio and title in `locale`. */
   getPeople(context: PersonContext, locale: string): Promise<PublicPersonDto[]>;
+  /** Visit page directions and editable FAQ, resolved by the API in `locale` with fallback. */
+  getVisit(locale: string): Promise<PublicVisitDto>;
 }
 
 /** The API answered with something other than success, or not with what the contract says. */
@@ -98,6 +102,18 @@ export function createPublicClient(options: PublicClientOptions): PublicClient {
         );
       }
       return parsed.flatMap((result) => (result.success ? [result.data] : []));
+    },
+    async getVisit(locale) {
+      const parsed = publicVisitDto.safeParse(
+        await getJson(`/visit?locale=${encodeURIComponent(locale)}`),
+      );
+      if (!parsed.success) {
+        throw new PublicApiError(
+          "Public API visit does not match the contract",
+          null,
+        );
+      }
+      return parsed.data;
     },
   };
 }

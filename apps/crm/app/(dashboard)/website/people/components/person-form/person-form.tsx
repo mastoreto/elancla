@@ -4,6 +4,7 @@ import type { PersonProfileDto } from "@ancla/contracts";
 import { PERMISSIONS, PERSON_BIO_MAX_LENGTH, PERSON_NAME_MAX_LENGTH } from "@ancla/contracts";
 import { useState } from "react";
 import { toast } from "sonner";
+import { LocalizedTextField } from "@/components/content/localized-text-field";
 import { BoardButton } from "@/components/dashboard/board/board-button";
 import {
   BoardFormCard,
@@ -20,7 +21,6 @@ import { usePersonProfileActions } from "../../hooks/usePersonProfileActions";
 import type { LinkableUser, PersonFormValues, SiteLocales } from "../../types";
 import { toPersonFormValues, toUpsertPersonBody } from "../../utils/personFormValues";
 import { hasFormErrors, validatePersonForm } from "../../utils/validatePersonForm";
-import { LocalizedTextField } from "../localized-text-field";
 import { PersonDeleteButton } from "../person-delete-button";
 import { PersonPhotoField } from "../person-photo-field";
 import { PersonUserField } from "../person-user-field";

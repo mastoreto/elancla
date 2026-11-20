@@ -19,6 +19,7 @@ const TABLES_WITHOUT_TENANT = new Set([
   "person_profile_translations",
   "person_roles",
   "person_role_translations",
+  "visit_faq_translations",
   "role_permissions",
   "user_roles",
   "user_ministries",

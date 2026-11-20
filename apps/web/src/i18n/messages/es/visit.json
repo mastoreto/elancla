@@ -53,47 +53,27 @@
       }
     ]
   },
+  "directions": {
+    "eyebrow": "Cómo llegar bien",
+    "title": "Antes de salir.",
+    "parking": "Estacionamiento",
+    "transit": "Transporte público",
+    "accessibility": "Accesibilidad"
+  },
   "faq": {
     "eyebrow": "Preguntas frecuentes",
     "title": "Antes de venir.",
-    "items": [
-      {
+    "generated": {
+      "when": {
         "q": "¿A qué hora son los cultos?",
-        "a": "Los domingos a las {worshipTime}. A las {bibleSchoolTime} hay escuela bíblica para adultos y niños."
+        "a": "Los domingos a las {worshipTime}.",
+        "bibleSchool": "A las {bibleSchoolTime} hay escuela bíblica para adultos y niños."
       },
-      {
+      "where": {
         "q": "¿Dónde queda la iglesia?",
-        "a": "En {street}, Montevideo."
-      },
-      {
-        "q": "¿Cuánto dura el culto?",
-        "a": "Termina cerca de las {worshipEnd}. Si quieres, puedes quedarte a conversar después."
-      },
-      {
-        "q": "¿Tengo que ser miembro o avisar que voy?",
-        "a": "No. Cualquier persona puede venir, sin inscripción y sin compromiso."
-      },
-      {
-        "q": "¿Se puede tomar mate?",
-        "a": "¡Sí! Te animamos a traer tu mate, y también algo para anotar, ya que muchas veces nos quedan ganas de apuntar lo que se enseña. Siéntete como en casa."
-      },
-      {
-        "q": "¿Hay código de vestimenta?",
-        "a": "No es necesario venir de manera formal, pero sí te sugerimos un estilo sport casual: jean, cargo, remera polo, camisa o remera sport están perfectos. No es un código rígido, solo venir cómodo y prolijo."
-      },
-      {
-        "q": "¿Qué cree la Iglesia Bautista El Ancla?",
-        "a": "Somos una iglesia bautista centrada en el evangelio de Jesucristo. Nuestra doctrina está explicada en la confesión de fe."
-      },
-      {
-        "q": "¿Puedo ver el culto sin ir?",
-        "a": "Sí. Transmitimos en vivo por YouTube y las prédicas quedan disponibles en la sección de sermones."
-      },
-      {
-        "q": "¿Cómo me comunico con la iglesia?",
-        "a": "Escribiendo a {email} o por nuestras redes en YouTube, Instagram y Facebook."
+        "a": "En {street}, {city}."
       }
-    ]
+    }
   },
   "cta": {
     "title": "¿Quieres conocernos un poco más?",

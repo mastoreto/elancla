@@ -10,9 +10,13 @@ export interface NewSiteKey {
   createdById: string | null;
 }
 
+/**
+ * Active keys first, then the most recently revoked: however many revoked ones pile up, the limit
+ * never hides a live key.
+ */
 export function listSiteKeyRows(organizationId: string) {
   return forOrganization(db, organizationId).siteApiKey.findMany({
-    orderBy: { id: "desc" },
+    orderBy: [{ revokedAt: { sort: "desc", nulls: "first" } }, { id: "desc" }],
     take: LIST_LIMIT,
   });
 }

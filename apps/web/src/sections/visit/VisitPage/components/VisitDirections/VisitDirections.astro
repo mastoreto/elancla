@@ -1,0 +1,43 @@
+---
+import { cn } from '@ancla/utils';
+import type { DirectionItem } from '../../utils/buildDirectionItems';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  /** Items with text only: the page filters out the empty ones. */
+  items: DirectionItem[];
+  class?: string;
+}
+const { eyebrow, title, items, class: className } = Astro.props;
+
+const visitDirectionsStyles = {
+  container: cn(
+    'mx-auto flex max-w-275 flex-col gap-5 px-gutter pt-[clamp(3rem,7vw,5.5rem)]',
+    className
+  ),
+  eyebrow: cn('ln-eyebrow'),
+  title: cn('ln-h max-w-[22ch] text-[clamp(1.8rem,4vw,3rem)] text-balance'),
+  list: cn(
+    'm-0 grid list-none grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4 p-0'
+  ),
+  item: cn('rounded-[20px] bg-obra-white p-5'),
+  itemTitle: cn('mx-0 mt-0 mb-1 font-obra-sans-bold text-[1.125rem]'),
+  itemText: cn('m-0 leading-[1.55] text-obra-ink-soft'),
+};
+---
+
+{items.length > 0 && (
+  <section class={visitDirectionsStyles.container} aria-labelledby="vs-directions">
+    <span class={visitDirectionsStyles.eyebrow}>{eyebrow}</span>
+    <h2 id="vs-directions" class={visitDirectionsStyles.title}>{title}</h2>
+    <ul class={visitDirectionsStyles.list}>
+      {items.map((item) => (
+        <li class={visitDirectionsStyles.item}>
+          <h3 class={visitDirectionsStyles.itemTitle}>{item.title}</h3>
+          <p class={visitDirectionsStyles.itemText}>{item.text}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

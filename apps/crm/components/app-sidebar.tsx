@@ -14,6 +14,7 @@ import {
   Image as ImageIcon,
   LayoutDashboard,
   LayoutGrid,
+  MapPin,
   Mic,
   MonitorPlay,
   Newspaper,
@@ -46,7 +47,11 @@ import {
 } from "@/components/ui/sidebar";
 import { useAccess } from "@/lib/authz/AccessProvider";
 import { type AccessSnapshot, canAny } from "@/lib/authz/can";
-import { PEOPLE_ROUTE_PERMISSIONS, ROUTE_PERMISSIONS } from "@/lib/authz/routePermissions";
+import {
+  PEOPLE_ROUTE_PERMISSIONS,
+  ROUTE_PERMISSIONS,
+  VISIT_ROUTE_PERMISSIONS,
+} from "@/lib/authz/routePermissions";
 import { churchToDashboardRouteMap, getChurchRoutePath } from "@/lib/church";
 import { moneyRequests } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -211,6 +216,13 @@ export const navigationSections: NavigationSection[] = [
         url: getChurchRoutePath("website", "people"),
         icon: Users,
         requires: PEOPLE_ROUTE_PERMISSIONS,
+      },
+      {
+        type: "link",
+        title: "Visítanos",
+        url: getChurchRoutePath("website", "visit"),
+        icon: MapPin,
+        requires: VISIT_ROUTE_PERMISSIONS,
       },
       {
         type: "link",

@@ -528,6 +528,8 @@ quedar desactualizadas. Confesión de fe, nav y footer: fijos.
 
 *Implementación (1.3a):* horarios, dirección y JSON-LD ya salen de `SiteSettings` (puente `serviceTimes` hasta la 1.6); las indicaciones y las FAQ editables llegan en 1.3c.
 
+*Implementación (1.3c):* las indicaciones viven en `SiteSettingsTranslation.directions*` y las FAQ en `VisitFaq` (+ traducción), con RLS y permiso `content.visit`; se guardan directo (`PUT /site/visit`, lista completa, un audit `visit.updated`), sin flujo editorial. La web arma las dos preguntas generadas (horario y dirección) con `buildGeneratedFaqs` a partir de `serviceTimes` y la dirección, y las muestra antes de las editables; el JSON-LD `FAQPage` las incluye todas. Las respuestas editables aceptan `{worshipEnd}` y `{email}`, que la web completa con los datos del sitio. Las indicaciones vacías no se muestran.
+
 ## D-39 — Nosotros
 
 **Aceptada.** Todo fijo (identidad, valores, historia con su línea de tiempo, enlaces) salvo el

@@ -1,0 +1,1 @@
+export { interpolateFaqAnswers } from './interpolateFaqAnswers';

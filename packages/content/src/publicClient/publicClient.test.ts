@@ -158,4 +158,30 @@ describe("createPublicClient", () => {
       PublicApiError,
     );
   });
+
+  test("getVisit sends the locale and parses the visit content", async () => {
+    const calls: Call[] = [];
+    const visit = {
+      directions: { parking: "Calle", transit: null, accessibility: null },
+      faqs: [{ question: "Q", answer: "A" }],
+    };
+    const client = createPublicClient({
+      baseUrl: "https://crm.example.org",
+      apiKey: "k",
+      churchSlug: "el-ancla",
+      fetch: fakeFetch(() => json(visit), calls),
+    });
+    expect(await client.getVisit("pt")).toEqual(visit);
+    expect(calls[0]?.url).toEndWith("/visit?locale=pt");
+  });
+
+  test("getVisit rejects a body that does not match the contract", async () => {
+    const client = createPublicClient({
+      baseUrl: "https://crm.example.org",
+      apiKey: "k",
+      churchSlug: "el-ancla",
+      fetch: fakeFetch(() => json({ directions: {}, faqs: [] })),
+    });
+    await expect(client.getVisit("es")).rejects.toBeInstanceOf(PublicApiError);
+  });
 });
