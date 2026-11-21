@@ -5,7 +5,7 @@ import {
 } from "@ancla/contracts";
 import { toMediaFileDto } from "../../../media";
 import type { PersonRow } from "../../data";
-import { CONTEXT_FROM_DB } from "../../domain";
+import { EDITABLE_CONTEXT_FROM_DB } from "../../domain";
 
 /** `publicBaseUrl` is injected: the mapper does not read the environment. */
 const titlesOf = (
@@ -35,16 +35,19 @@ export function toPersonProfileDto(
     translations: Object.fromEntries(
       row.translations.map(({ locale, bio }) => [locale, { bio }]),
     ),
-    roles: row.roles
-      .filter((role) => role.context !== "MINISTRY_LEADER")
-      .sort(byOrder)
-      .map((role) => ({
-        context: CONTEXT_FROM_DB[role.context],
-        visible: role.visible,
-        order: role.order,
-        translations: titlesOf(role.translations),
-      })),
-    ministryRoles: row.roles
+    roles: [...row.roles].sort(byOrder).flatMap((role) => {
+      const context = EDITABLE_CONTEXT_FROM_DB[role.context];
+      if (!context) return [];
+      return [
+        {
+          context,
+          visible: role.visible,
+          order: role.order,
+          translations: titlesOf(role.translations),
+        },
+      ];
+    }),
+    ministryRoles: [...row.roles]
       .filter(
         (role) =>
           role.context === "MINISTRY_LEADER" && role.ministryId !== null,

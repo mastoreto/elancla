@@ -1,5 +1,5 @@
 import type {
-  PersonContext,
+  EditablePersonContext,
   PersonProfileDto,
   PersonRoleDto,
   UpsertPersonProfileBody,
@@ -12,7 +12,7 @@ export const BLOG_AUTHOR_CONTEXT = "blog-author" as const;
 
 const NEW_PERSON_ROLE_ORDER = "0";
 
-const EDITABLE_CONTEXTS: readonly PersonContext[] = [TEAM_CONTEXT, BLOG_AUTHOR_CONTEXT];
+const EDITABLE_CONTEXTS: readonly EditablePersonContext[] = [TEAM_CONTEXT, BLOG_AUTHOR_CONTEXT];
 
 function valuesByLocale(
   locales: readonly string[],
@@ -40,7 +40,8 @@ export function toPersonFormValues(
   person: PersonProfileDto | null,
   locales: readonly string[],
 ): PersonFormValues {
-  const roleOf = (context: PersonContext) => person?.roles.find((role) => role.context === context);
+  const roleOf = (context: EditablePersonContext) =>
+    person?.roles.find((role) => role.context === context);
   return {
     name: person?.name ?? "",
     photo: person?.photo ?? null,
@@ -60,7 +61,7 @@ export function cleanStats(stats: readonly RoleStatFormValues[]): RoleStatFormVa
 }
 
 function toRole(
-  context: PersonContext,
+  context: EditablePersonContext,
   values: RoleFormValues,
   locales: readonly string[],
 ): PersonRoleDto | null {

@@ -21,6 +21,7 @@ export const EDITABLE_PERSON_CONTEXTS = [
 ] as const;
 export const editablePersonContext = z.enum(EDITABLE_PERSON_CONTEXTS);
 export type PersonContext = z.infer<typeof personContext>;
+export type EditablePersonContext = z.infer<typeof editablePersonContext>;
 
 export const PERSON_NAME_MAX_LENGTH = 120;
 export const PERSON_BIO_MAX_LENGTH = 600;
@@ -36,7 +37,7 @@ const titleTranslationDto = z.strictObject({
 });
 
 const personRoleFields = {
-  context: personContext,
+  context: editablePersonContext,
   /** Whether the person shows up in that context on the public site. */
   visible: z.boolean(),
   order: z.number().int().min(0).max(9999),
@@ -79,9 +80,7 @@ export const upsertPersonProfileBody = z.strictObject({
   userId: z.uuid().nullable(),
   translations: z.record(z.string(), bioTranslationDto),
   roles: z
-    .array(
-      z.strictObject({ ...personRoleFields, context: editablePersonContext }),
-    )
+    .array(z.strictObject(personRoleFields))
     .max(EDITABLE_PERSON_CONTEXTS.length)
     .refine(
       (roles) =>

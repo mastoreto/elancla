@@ -1,5 +1,6 @@
 export {
   EDITABLE_PERSON_CONTEXTS,
+  type EditablePersonContext,
   editablePersonContext,
   PERSON_BIO_MAX_LENGTH,
   PERSON_CONTEXTS,
