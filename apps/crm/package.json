@@ -11,7 +11,8 @@
     "lint": "biome lint --diagnostic-level=warn .",
     "lint:fix": "biome lint --fix .",
     "format": "biome format --write .",
-    "check": "biome check --fix ."
+    "check": "biome check --fix .",
+    "check-types": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@ancla/api": "*",
