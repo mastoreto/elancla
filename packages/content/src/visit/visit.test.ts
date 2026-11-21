@@ -20,6 +20,10 @@ function clientReturning(
   locales: string[],
 ): PublicClient {
   return {
+    getMinistries: async () => {
+      throw new Error("not used");
+    },
+    getMinistry: async () => null,
     getSettings: async () => {
       throw new Error("not used");
     },

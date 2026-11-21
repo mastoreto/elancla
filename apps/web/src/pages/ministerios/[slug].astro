@@ -1,0 +1,48 @@
+---
+import { getMinistry, getSiteConfig } from '@ancla/content';
+import { defaultLocale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+import Layout from 'src/layouts/Layout';
+import MinistryTemplate from 'src/sections/ministry/MinistryTemplate';
+import { resolveMinistryRequest } from 'src/sections/ministry/utils/resolveMinistryRequest';
+
+const locale = defaultLocale;
+const { slug } = Astro.params;
+const site = Astro.locals.site ?? (await getSiteConfig());
+const request = slug
+  ? await resolveMinistryRequest({
+      slug,
+      locale,
+      siteUrl: site.url,
+      load: getMinistry,
+    })
+  : ({ kind: 'notFound' } as const);
+if (request.kind === 'redirect') {
+  return Astro.redirect(request.location, 301);
+}
+if (request.kind === 'notFound') {
+  return Astro.rewrite('/404');
+}
+const { ministry, meta } = request;
+const copy = getMessages(locale).contentPages.ministryTemplate;
+const breadcrumbs = [
+  { name: copy.breadcrumbs.home, url: localizePath('/', locale) },
+  { name: copy.breadcrumbs.ministries, url: localizePath('/#juntos', locale) },
+  { name: ministry.name, url: meta.canonical },
+];
+---
+
+<Layout
+  title={ministry.seo.title}
+  description={ministry.seo.description}
+  breadcrumbs={breadcrumbs}
+  image={ministry.seo.image?.url}
+  imageAlt={ministry.cover?.alt ?? ministry.name}
+  canonical={meta.canonical}
+  noindex={meta.noindex}
+  languageAlternates={meta.languageAlternates}
+  locale={locale}
+>
+  <MinistryTemplate ministry={ministry} locale={locale} />
+</Layout>

@@ -7,21 +7,42 @@
     "description": "Conocé quiénes somos, en qué creemos y cómo vivimos la fe como Iglesia Bautista El Ancla en Montevideo.",
     "hero": {
       "breadcrumbs": [
-        { "label": "El Ancla", "href": "/" },
-        { "label": "Nosotros" }
+        {
+          "label": "El Ancla",
+          "href": "/"
+        },
+        {
+          "label": "Nosotros"
+        }
       ],
       "chip": "Iglesia",
       "meta": ["Sec. 01 / Nosotros", "Montevideo · UY"],
       "titleLines": [
-        { "text": "Una iglesia con" },
-        { "emphasis": "ancla", "after": " en el" },
-        { "text": "evangelio." }
+        {
+          "text": "Una iglesia con"
+        },
+        {
+          "emphasis": "ancla",
+          "after": " en el"
+        },
+        {
+          "text": "evangelio."
+        }
       ],
       "standfirst": "Conocer una iglesia es un gran desafío en estos tiempos. Esperamos que con la información que encuentres aquí, puedas tener un mayor panorama de quiénes somos, en qué creemos y cómo vivimos la fe en Montevideo desde {founded}.",
       "stats": [
-        { "value": "29", "label": "Años" },
-        { "value": "10", "label": "Ministerios" },
-        { "value": "∞", "label": "Gracia" }
+        {
+          "value": "29",
+          "label": "Años"
+        },
+        {
+          "value": "10",
+          "label": "Ministerios"
+        },
+        {
+          "value": "∞",
+          "label": "Gracia"
+        }
       ]
     },
     "featuredImage": {
@@ -34,10 +55,22 @@
       "aspect": "wide"
     },
     "shortcuts": [
-      { "label": "Confesión de fe", "href": "/confesion-de-fe" },
-      { "label": "Ministerios", "href": "/#juntos" },
-      { "label": "Cómo visitarnos", "href": "/#visitanos" },
-      { "label": "Blog", "href": "/blog" }
+      {
+        "label": "Confesión de fe",
+        "href": "/confesion-de-fe"
+      },
+      {
+        "label": "Ministerios",
+        "href": "/#juntos"
+      },
+      {
+        "label": "Cómo visitarnos",
+        "href": "/#visitanos"
+      },
+      {
+        "label": "Blog",
+        "href": "/blog"
+      }
     ],
     "tocTitle": "En esta página",
     "sections": [
@@ -45,7 +78,10 @@
         "id": "identidad",
         "eyebrow": "01 — Identidad",
         "tocLabel": "Quiénes somos",
-        "title": { "before": "Gracias por querer ", "emphasis": "conocernos." },
+        "title": {
+          "before": "Gracias por querer ",
+          "emphasis": "conocernos."
+        },
         "blocks": [
           {
             "type": "prose",
@@ -166,7 +202,10 @@
         "id": "equipo",
         "eyebrow": "04 — Equipo",
         "tocLabel": "Equipo pastoral",
-        "title": { "before": "Quienes pastorean ", "emphasis": "la casa." },
+        "title": {
+          "before": "Quienes pastorean ",
+          "emphasis": "la casa."
+        },
         "description": "El liderazgo de la iglesia está formado por un equipo plural, que comparte la enseñanza, la oración y el cuidado pastoral de la congregación.",
         "blocks": [
           {
@@ -230,116 +269,60 @@
     ],
     "cta": {
       "eyebrow": "[ Próximo paso ]",
-      "title": { "before": "Lo mejor es ", "emphasis": "venir." },
+      "title": {
+        "before": "Lo mejor es ",
+        "emphasis": "venir."
+      },
       "body": "Conocer una iglesia se hace caminando hasta ella un domingo a la mañana. Te esperamos a las {worshipTime} hs en {streetShort}. Sin códigos, sin requisitos.",
-      "primary": { "label": "Cómo llegar", "href": "/#visitanos" },
-      "secondary": { "label": "Ver horarios de la semana", "href": "/#domingo" }
+      "primary": {
+        "label": "Cómo llegar",
+        "href": "/#visitanos"
+      },
+      "secondary": {
+        "label": "Ver horarios de la semana",
+        "href": "/#domingo"
+      }
     }
   },
   "ministryTemplate": {
-    "summaries": {
-      "predicacion": "La Palabra, expuesta fielmente",
-      "servicio": "Manos que cuidan",
-      "ensenanza": "Crecer en entendimiento",
-      "misiones": "Al fin del mundo",
-      "adolescentes": "Raíces en la adolescencia",
-      "jovenes": "Una generación para Cristo",
-      "hombres": "Discipulado entre varones",
-      "multimedia": "Contar la historia",
-      "alabanza": "Cantar con entendimiento",
-      "espacio-cuidado": "Acompañar y cuidar",
-      "espacio-ancladitos": "Los niños, junto a Jesús"
-    },
-    "fallbackSummary": "Un espacio para crecer y servir juntos",
     "breadcrumbs": {
       "home": "El Ancla",
       "ministries": "Ministerios"
     },
     "chip": "Ministerio",
-    "metaLocation": "Montevideo · UY",
     "titleSuffixBefore": "en ",
     "titleSuffixEmphasis": "El Ancla.",
-    "standfirst": "Cada ministerio es una invitación: un lugar para crecer, usar tus dones y servir a otros en nombre de Cristo.",
-    "figureLabel": "[ MINISTERIO ]",
-    "figureMeta": "— Montevideo · UY",
+    "coverLabel": "[ MINISTERIO ]",
+    "tocTitle": "En esta página",
     "shortcuts": {
+      "title": "Atajos",
       "all": "Todos los ministerios",
       "visit": "Cómo visitarnos",
       "confession": "Confesión de fe"
     },
-    "ui": {
-      "toc": "En esta página",
-      "shortcuts": "Atajos",
-      "factsEyebrow": "02 — Datos prácticos",
-      "factsToc": "Datos prácticos",
-      "factsTitleBefore": "Cuándo, dónde y ",
-      "factsTitleEmphasis": "con quién.",
-      "facts": [
-        { "label": "Culto", "value": "Domingo · {worshipTime}" },
-        { "label": "Lugar", "value": "Templo · {streetShort}" },
-        {
-          "label": "Cómo sumarte",
-          "value": "Visítanos un domingo y conversemos después del culto."
-        }
-      ],
-      "stats": [
-        { "value": "Dom {worshipTime}", "label": "Culto" },
-        { "value": "Montevideo", "label": "Uruguay" }
-      ]
+    "about": {
+      "eyebrow": "Ministerio",
+      "toc": "Sobre el ministerio"
     },
-    "sections": {
-      "identityEyebrow": "01 — Ministerio",
-      "identityToc": "Sobre el ministerio",
-      "identityTitleBefore": "{name}: ",
-      "paragraphs": [
-        "El ministerio de <strong>{name}</strong> existe para acompañar a la iglesia en una forma concreta de servicio. Hoy dejamos una base simple y ordenada para publicar su propósito, actividades, responsables y próximos pasos.",
-        "La intención es que cada página de ministerio pueda evolucionar desde datos tipados: se agrega contenido al registro y el template se encarga del diseño, el índice, las imágenes, los enlaces y la experiencia móvil."
-      ],
-      "values": [
-        {
-          "number": "I.",
-          "title": "Crecer",
-          "description": "Formar personas arraigadas en Cristo y en la Palabra."
-        },
-        {
-          "number": "II.",
-          "title": "Servir",
-          "description": "Usar dones concretos para cuidar y edificar a la iglesia."
-        },
-        {
-          "number": "III.",
-          "title": "Acompañar",
-          "description": "Caminar con otros con hospitalidad, oración y perseverancia."
-        }
-      ],
-      "nextEyebrow": "03 — Próximo paso",
-      "nextToc": "Para conectar",
-      "nextTitleBefore": "Un lugar para ",
-      "nextTitleEmphasis": "servir juntos.",
-      "links": [
-        {
-          "href": "/#juntos",
-          "sourceLabel": "{host} / ministerios",
-          "title": "Volver al listado de ministerios",
-          "description": "Explorá los demás espacios de servicio y crecimiento de la iglesia.",
-          "meta": "Ver ministerios",
-          "glyph": "M"
-        },
-        {
-          "href": "/#visitanos",
-          "sourceLabel": "{host} / visitanos",
-          "title": "Conocernos un domingo",
-          "description": "La mejor forma de conectar con un ministerio es venir y conversar después del culto.",
-          "meta": "Domingos · {worshipTime}",
-          "glyph": "V",
-          "tint": "#e6e2d4"
-        }
-      ]
+    "facts": {
+      "eyebrow": "Datos prácticos",
+      "toc": "Datos prácticos",
+      "titleBefore": "Dónde y ",
+      "titleEmphasis": "con quién.",
+      "place": "Lugar",
+      "audience": "Para quién",
+      "leaders": "Responsables",
+      "howToJoin": "Cómo sumarte"
+    },
+    "next": {
+      "eyebrow": "Próximo paso",
+      "toc": "Próximo paso",
+      "titleBefore": "Un lugar para ",
+      "titleEmphasis": "servir juntos."
     },
     "cta": {
       "eyebrow": "[ Conectar ]",
       "titleBefore": "Sumate a ",
-      "body": "Si querés conocer más sobre este ministerio, visitanos un domingo o escribinos desde los canales de contacto de la iglesia.",
       "primary": "Cómo llegar",
       "secondary": "Ver ministerios"
     }

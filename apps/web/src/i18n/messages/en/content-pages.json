@@ -7,21 +7,42 @@
     "description": "Learn who we are, what we believe, and how we live the faith as El Ancla Baptist Church in Montevideo.",
     "hero": {
       "breadcrumbs": [
-        { "label": "El Ancla", "href": "/" },
-        { "label": "About us" }
+        {
+          "label": "El Ancla",
+          "href": "/"
+        },
+        {
+          "label": "About us"
+        }
       ],
       "chip": "Church",
       "meta": ["Sec. 01 / About us", "Montevideo · UY"],
       "titleLines": [
-        { "text": "A church" },
-        { "emphasis": "anchored", "after": " in the" },
-        { "text": "gospel." }
+        {
+          "text": "A church"
+        },
+        {
+          "emphasis": "anchored",
+          "after": " in the"
+        },
+        {
+          "text": "gospel."
+        }
       ],
       "standfirst": "Getting to know a church is a real challenge in these times. We hope the information here helps you understand who we are, what we believe, and how we have lived the faith in Montevideo since {founded}.",
       "stats": [
-        { "value": "29", "label": "Years" },
-        { "value": "10", "label": "Ministries" },
-        { "value": "∞", "label": "Grace" }
+        {
+          "value": "29",
+          "label": "Years"
+        },
+        {
+          "value": "10",
+          "label": "Ministries"
+        },
+        {
+          "value": "∞",
+          "label": "Grace"
+        }
       ]
     },
     "featuredImage": {
@@ -34,10 +55,22 @@
       "aspect": "wide"
     },
     "shortcuts": [
-      { "label": "Statement of faith", "href": "/confesion-de-fe" },
-      { "label": "Ministries", "href": "/#juntos" },
-      { "label": "How to visit", "href": "/#visitanos" },
-      { "label": "Blog", "href": "/blog" }
+      {
+        "label": "Statement of faith",
+        "href": "/confesion-de-fe"
+      },
+      {
+        "label": "Ministries",
+        "href": "/#juntos"
+      },
+      {
+        "label": "How to visit",
+        "href": "/#visitanos"
+      },
+      {
+        "label": "Blog",
+        "href": "/blog"
+      }
     ],
     "tocTitle": "On this page",
     "sections": [
@@ -169,7 +202,10 @@
         "id": "equipo",
         "eyebrow": "04 — Team",
         "tocLabel": "Pastoral team",
-        "title": { "before": "Those who shepherd ", "emphasis": "the house." },
+        "title": {
+          "before": "Those who shepherd ",
+          "emphasis": "the house."
+        },
         "description": "The church leadership is a plural team that shares teaching, prayer, and pastoral care for the congregation.",
         "blocks": [
           {
@@ -233,113 +269,60 @@
     ],
     "cta": {
       "eyebrow": "[ Next step ]",
-      "title": { "before": "The best thing is to ", "emphasis": "come." },
+      "title": {
+        "before": "The best thing is to ",
+        "emphasis": "come."
+      },
       "body": "Getting to know a church happens by walking into it on a Sunday morning. We are waiting for you at {worshipTime} at {streetShort}. No codes, no requirements.",
-      "primary": { "label": "How to get there", "href": "/#visitanos" },
-      "secondary": { "label": "See weekly times", "href": "/#domingo" }
+      "primary": {
+        "label": "How to get there",
+        "href": "/#visitanos"
+      },
+      "secondary": {
+        "label": "See weekly times",
+        "href": "/#domingo"
+      }
     }
   },
   "ministryTemplate": {
-    "summaries": {
-      "predicacion": "The Word faithfully taught",
-      "servicio": "Hands that care",
-      "ensenanza": "Growing in understanding",
-      "misiones": "To the ends of the earth",
-      "adolescentes": "Roots in adolescence",
-      "jovenes": "A generation for Christ",
-      "hombres": "Discipleship among men",
-      "multimedia": "Telling the story",
-      "alabanza": "Singing with understanding",
-      "espacio-cuidado": "Walking alongside, caring",
-      "espacio-ancladitos": "Children, close to Jesus"
+    "breadcrumbs": {
+      "home": "El Ancla",
+      "ministries": "Ministries"
     },
-    "fallbackSummary": "A space to grow and serve together",
-    "breadcrumbs": { "home": "El Ancla", "ministries": "Ministries" },
     "chip": "Ministry",
-    "metaLocation": "Montevideo · UY",
     "titleSuffixBefore": "at ",
     "titleSuffixEmphasis": "El Ancla.",
-    "standfirst": "Every ministry is an invitation: a place to grow, use your gifts, and serve others in the name of Christ.",
-    "figureLabel": "[ MINISTRY ]",
-    "figureMeta": "— Montevideo · UY",
+    "coverLabel": "[ MINISTRY ]",
+    "tocTitle": "On this page",
     "shortcuts": {
+      "title": "Shortcuts",
       "all": "All ministries",
       "visit": "How to visit",
       "confession": "Statement of faith"
     },
-    "ui": {
-      "toc": "On this page",
-      "shortcuts": "Shortcuts",
-      "factsEyebrow": "02 — Practical info",
-      "factsToc": "Practical info",
-      "factsTitleBefore": "When, where and ",
-      "factsTitleEmphasis": "with whom.",
-      "facts": [
-        { "label": "Service", "value": "Sunday · {worshipTime}" },
-        { "label": "Place", "value": "Sanctuary · {streetShort}" },
-        {
-          "label": "How to join",
-          "value": "Visit us on a Sunday and let's talk after the service."
-        }
-      ],
-      "stats": [
-        { "value": "Sun {worshipTime}", "label": "Service" },
-        { "value": "Montevideo", "label": "Uruguay" }
-      ]
+    "about": {
+      "eyebrow": "Ministry",
+      "toc": "About the ministry"
     },
-    "sections": {
-      "identityEyebrow": "01 — Ministry",
-      "identityToc": "About the ministry",
-      "identityTitleBefore": "{name}: ",
-      "paragraphs": [
-        "The <strong>{name}</strong> ministry exists to accompany the church through a concrete form of service. Today we leave a simple, ordered base for publishing its purpose, activities, leaders, and next steps.",
-        "The intention is that every ministry page can evolve from typed data: content is added to the record and the template handles the design, index, images, links, and mobile experience."
-      ],
-      "values": [
-        {
-          "number": "I.",
-          "title": "Grow",
-          "description": "Form people rooted in Christ and in the Word."
-        },
-        {
-          "number": "II.",
-          "title": "Serve",
-          "description": "Use concrete gifts to care for and build up the church."
-        },
-        {
-          "number": "III.",
-          "title": "Walk with others",
-          "description": "Walk with others in hospitality, prayer, and perseverance."
-        }
-      ],
-      "nextEyebrow": "03 — Next step",
-      "nextToc": "Connect",
-      "nextTitleBefore": "A place to ",
-      "nextTitleEmphasis": "serve together.",
-      "links": [
-        {
-          "href": "/#juntos",
-          "sourceLabel": "{host} / ministries",
-          "title": "Return to the ministry list",
-          "description": "Explore the other spaces for service and growth in the church.",
-          "meta": "See ministries",
-          "glyph": "M"
-        },
-        {
-          "href": "/#visitanos",
-          "sourceLabel": "{host} / visit",
-          "title": "Meet us on a Sunday",
-          "description": "The best way to connect with a ministry is to come and talk after worship.",
-          "meta": "Sundays · {worshipTime}",
-          "glyph": "V",
-          "tint": "#e6e2d4"
-        }
-      ]
+    "facts": {
+      "eyebrow": "Practical info",
+      "toc": "Practical info",
+      "titleBefore": "Where and ",
+      "titleEmphasis": "with whom.",
+      "place": "Place",
+      "audience": "Who it is for",
+      "leaders": "Leaders",
+      "howToJoin": "How to join"
+    },
+    "next": {
+      "eyebrow": "Next step",
+      "toc": "Next step",
+      "titleBefore": "A place to ",
+      "titleEmphasis": "serve together."
     },
     "cta": {
       "eyebrow": "[ Connect ]",
       "titleBefore": "Join ",
-      "body": "If you want to know more about this ministry, visit us on a Sunday or write through the church contact channels.",
       "primary": "How to get there",
       "secondary": "See ministries"
     }

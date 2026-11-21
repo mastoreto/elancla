@@ -1,5 +1,7 @@
 import {
   getBlogIndex,
+  getMinistries,
+  getMinistry,
   getPage,
   getPages,
   getPost,
@@ -21,9 +23,9 @@ export interface SiteIndexEntry {
   locales: readonly Locale[];
   title?: string;
   description?: string;
-  /** Simple pages and posts: their slug differs per language, so `path` is the default one. */
+  /** Simple pages, posts and ministries: their slug differs per language, so `path` is the default one. */
   localizedPaths?: Partial<Record<Locale, string>>;
-  kind?: 'simplePage' | 'post';
+  kind?: 'simplePage' | 'post' | 'ministry';
 }
 
 /** Pages that exist in every locale and are not content pages. */
@@ -48,24 +50,54 @@ export async function getSiteIndex(
     locales,
   }));
 
-  // Aliases (ñ → n slugs) are noindex duplicates, so only `page.slug` is listed.
   const tokens = buildSiteTokens(site, defaultLocale);
   for (const page of getContentPages(defaultLocale, tokens)) {
-    const path =
-      page.routeGroup === 'ministerios'
-        ? `/ministerios/${page.slug}`
-        : `/${page.slug}`;
     entries.push({
-      path,
+      path: `/${page.slug}`,
       locales,
       title: page.title,
       description: page.description,
     });
   }
 
+  entries.push(...(await getMinistryEntries()));
   entries.push(...(await getPostEntries()));
   entries.push(...(await getSimplePageEntries()));
   return withoutOutOfService(entries, site.sections, (entry) => entry.path);
+}
+
+/**
+ * Visible ministries that have a page of their own. The list comes in the default language; each
+ * one is asked once more for the slug it has in every language (the SDK caches both, and the
+ * sitemap is cached too), so it is listed only in the languages it exists in.
+ */
+async function getMinistryEntries(): Promise<SiteIndexEntry[]> {
+  const { ministries } = await getMinistries(defaultLocale);
+  const withPage = ministries.flatMap(({ slug, name }) =>
+    slug ? [{ slug, name }] : []
+  );
+  return Promise.all(
+    withPage.map(async ({ slug, name }): Promise<SiteIndexEntry> => {
+      const ministry = await getMinistry(slug, defaultLocale);
+      const pathOf = (localeSlug: string) => `/ministerios/${localeSlug}`;
+      const localizedPaths: Partial<Record<Locale, string>> = {
+        [defaultLocale]: pathOf(slug),
+      };
+      for (const [locale, localeSlug] of Object.entries(
+        ministry?.alternates ?? {}
+      )) {
+        if (isLocale(locale)) localizedPaths[locale] = pathOf(localeSlug);
+      }
+      return {
+        path: pathOf(slug),
+        locales: locales.filter((locale) => localizedPaths[locale]),
+        localizedPaths,
+        title: name,
+        description: ministry?.seo.description,
+        kind: 'ministry',
+      };
+    })
+  );
 }
 
 /**

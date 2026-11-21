@@ -1,6 +1,8 @@
 import {
   type PersonContext,
   type PublicBlogIndexDto,
+  type PublicMinistriesDto,
+  type PublicMinistryDto,
   type PublicPageDto,
   type PublicPageSummaryDto,
   type PublicPersonDto,
@@ -8,6 +10,8 @@ import {
   type PublicSiteSettingsDto,
   type PublicVisitDto,
   publicBlogIndexDto,
+  publicMinistriesDto,
+  publicMinistryDto,
   publicPageDto,
   publicPageListDto,
   publicPersonDto,
@@ -45,6 +49,10 @@ export interface PublicClient {
   getPosts(locale: string): Promise<PublicBlogIndexDto>;
   /** One visible post by the slug of any of its languages; `null` when there is none. */
   getPost(slug: string, locale: string): Promise<PublicPostDto | null>;
+  /** The visible ministries and the ordered landing mosaic in `locale`. */
+  getMinistries(locale: string): Promise<PublicMinistriesDto>;
+  /** One visible ministry by the slug of any of its languages; `null` when there is none. */
+  getMinistry(slug: string, locale: string): Promise<PublicMinistryDto | null>;
   /**
    * Counts an anonymous view. `visitor.ip` is also sent as `x-forwarded-for`: the API rate limits
    * per forwarded address, so without it every visitor of the site would share one bucket.
@@ -222,6 +230,33 @@ export function createPublicClient(options: PublicClientOptions): PublicClient {
       if (!parsed.success) {
         throw new PublicApiError(
           "Public API post does not match the contract",
+          null,
+        );
+      }
+      return parsed.data;
+    },
+    async getMinistries(locale) {
+      const parsed = publicMinistriesDto.safeParse(
+        await getJson(`/ministries?locale=${encodeURIComponent(locale)}`),
+      );
+      if (!parsed.success) {
+        throw new PublicApiError(
+          "Public API ministries do not match the contract",
+          null,
+        );
+      }
+      return parsed.data;
+    },
+    async getMinistry(slug, locale) {
+      const body = await getJson(
+        `/ministries/${encodeURIComponent(slug)}?locale=${encodeURIComponent(locale)}`,
+        { nullOn404: true },
+      );
+      if (body === null) return null;
+      const parsed = publicMinistryDto.safeParse(body);
+      if (!parsed.success) {
+        throw new PublicApiError(
+          "Public API ministry does not match the contract",
           null,
         );
       }
