@@ -1,14 +1,18 @@
-import type { BlogPostSnapshot } from "@ancla/contracts";
+import type { EditorialContentType } from "@ancla/db";
 import type { GoLiveContext } from "../../editorialTypes";
-import { BlogSlugLockedError } from "../errors";
+import { ContentSlugLockedError } from "../errors";
+
+interface TranslatedSnapshot {
+  translations: Record<string, { slug: string }>;
+}
 
 const slugsByLocale = (
   snapshot: Record<string, unknown>,
 ): Record<string, string> =>
   Object.fromEntries(
-    Object.entries((snapshot as BlogPostSnapshot).translations).map(
-      ([locale, translation]) => [locale, translation.slug],
-    ),
+    Object.entries(
+      (snapshot as unknown as TranslatedSnapshot).translations,
+    ).map(([locale, translation]) => [locale, translation.slug]),
   );
 
 /**
@@ -27,17 +31,15 @@ export function findLockedLocale(
   );
 }
 
-/** Once a post was live its URLs are public: the slug of each published language stays. */
-export async function assertBlogSlugsLocked({
-  tx,
-  organizationId,
-  entityId,
-  snapshot,
-}: GoLiveContext): Promise<void> {
+/** Once an item was live its URLs are public: the slug of each published language stays. */
+export async function assertSlugsLocked(
+  { tx, organizationId, entityId, snapshot }: GoLiveContext,
+  contentType: EditorialContentType,
+): Promise<void> {
   const previous = await tx.contentRevision.findFirst({
     where: {
       organizationId,
-      contentType: "BLOG_POST",
+      contentType,
       entityId,
       state: { in: ["PUBLISHED", "PAUSED"] },
     },
@@ -48,5 +50,5 @@ export async function assertBlogSlugsLocked({
     previous.snapshot as Record<string, unknown>,
     snapshot,
   );
-  if (locked) throw new BlogSlugLockedError(locked);
+  if (locked) throw new ContentSlugLockedError(locked);
 }

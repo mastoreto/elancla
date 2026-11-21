@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { blogSlugsOf, findTakenSlug } from "./assertBlogSlugsFree";
+import { findTakenSlug, slugsOf } from "./assertSlugsFree";
 
 const snapshotOf = (slugs: Record<string, string>) => ({
   translations: Object.fromEntries(
@@ -28,7 +28,7 @@ describe("findTakenSlug", () => {
     expect(findTakenSlug(["a"], [])).toBeUndefined();
   });
 
-  test("blogSlugsOf lists the slugs of every language", () => {
-    expect(blogSlugsOf(snapshotOf({ es: "a", en: "b" }))).toEqual(["a", "b"]);
+  test("slugsOf lists the slugs of every language", () => {
+    expect(slugsOf(snapshotOf({ es: "a", en: "b" }))).toEqual(["a", "b"]);
   });
 });

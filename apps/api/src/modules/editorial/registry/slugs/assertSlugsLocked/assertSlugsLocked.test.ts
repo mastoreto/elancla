@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { findLockedLocale } from "./assertBlogSlugsLocked";
+import { findLockedLocale } from "./assertSlugsLocked";
 
 const snapshotOf = (slugs: Record<string, string>) => ({
   translations: Object.fromEntries(
