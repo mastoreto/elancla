@@ -1,109 +1,25 @@
 ---
+import type { PublicLandingEntry } from '@ancla/content';
 import type { Locale } from 'src/i18n/config';
 import type { Messages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
 import { LandingSection } from 'src/sections/landing/components/LandingSection';
 import cn from 'src/utils/cn';
+import { TOGETHER_PHOTOS } from './data/photos';
+import { buildTogetherLayout } from './utils/buildTogetherLayout';
 
 interface Props {
   copy: Messages['landing']['together'];
   locale: Locale;
+  /** The ordered mosaic of the public API: one entry per ministry on the landing. */
+  landing: PublicLandingEntry[];
 }
-const { copy, locale } = Astro.props;
-// Each tile opens its ministry page; prayer has none (points to the visit info) and Espacio Mujer lives on its own site.
-const ministryHref: Record<string, string> = {
-  preaching: '/ministerios/predicacion',
-  teaching: '/ministerios/enseñanza',
-  worship: '/ministerios/alabanza',
-  prayer: '/#visitanos',
-  youth: '/ministerios/jovenes',
-  teens: '/ministerios/adolescentes',
-  missions: '/ministerios/misiones',
-  men: '/ministerios/hombres',
-  media: '/ministerios/multimedia',
-  service: '/ministerios/servicio',
-  care: '/ministerios/espacio-cuidado',
-  kids: '/ministerios/espacio-ancladitos',
-};
-const EXTERNAL_WOMEN = 'https://emujer.elancla.uy/';
-type Tile =
-  | {
-      kind: 'link';
-      key: keyof Props['copy']['tiles'];
-      w: number;
-      om: number;
-      ot: number;
-      tone?: 'dark' | 'red';
-    }
-  | {
-      kind: 'photo';
-      key: keyof Props['copy']['photos'];
-      src: string;
-      w: number;
-      om: number;
-      ot: number;
-      crop: string;
-      pos: string;
-      wide?: boolean;
-    };
+const { copy, locale, landing } = Astro.props;
 // Desktop rows and widths follow design H (widths are flex ratios). `om` / `ot` = order in the
 // mobile (2 columns) and tablet (3 columns) grids of the responsive designs.
-const rows: Tile[][] = [
-  [
-    { kind: 'link', key: 'preaching', w: 260, om: 1, ot: 1 },
-    {
-      kind: 'photo',
-      key: 'youth',
-      src: '/images/comunidad.jpg',
-      w: 300,
-      om: 3,
-      ot: 5,
-      crop: 'width:240%;left:-110%;top:-150%',
-      pos: '55% 70%',
-    },
-    { kind: 'link', key: 'teaching', w: 220, om: 2, ot: 2 },
-    { kind: 'link', key: 'worship', w: 240, om: 4, ot: 3 },
-    { kind: 'link', key: 'prayer', w: 228, om: 5, ot: 4 },
-  ],
-  [
-    {
-      kind: 'photo',
-      key: 'women',
-      src: '/images/salon.jpg',
-      w: 292,
-      om: 8,
-      ot: 9,
-      crop: 'width:260%;left:-60%;top:-210%',
-      pos: '50% 40%',
-    },
-    { kind: 'link', key: 'youth', w: 300, om: 6, ot: 6, tone: 'dark' },
-    { kind: 'link', key: 'teens', w: 360, om: 7, ot: 7 },
-    { kind: 'link', key: 'missions', w: 308, om: 9, ot: 8 },
-  ],
-  [
-    { kind: 'link', key: 'men', w: 240, om: 10, ot: 10 },
-    { kind: 'link', key: 'women', w: 300, om: 11, ot: 11, tone: 'red' },
-    {
-      kind: 'photo',
-      key: 'kids',
-      src: '/images/comunidad.jpg',
-      w: 360,
-      om: 13,
-      ot: 13,
-      crop: 'width:200%;left:-50%;top:-200%',
-      pos: '50% 72%',
-      wide: true,
-    },
-    { kind: 'link', key: 'media', w: 360, om: 12, ot: 12 },
-  ],
-  [
-    { kind: 'link', key: 'service', w: 300, om: 14, ot: 14 },
-    { kind: 'link', key: 'care', w: 340, om: 15, ot: 15, tone: 'dark' },
-    { kind: 'link', key: 'kids', w: 340, om: 16, ot: 16 },
-  ],
-];
-const orderOf = (r: number, c: number) =>
-  (r === 3 ? -4 : r === 2 ? 0 : r === 1 ? 4 : 8) + c;
+const rows = buildTogetherLayout(landing);
+// A destination from the API is already in the visitor's language; the external one is absolute.
+const isExternal = (href: string) => /^https?:/i.test(href);
 
 // Desktop rows flex by `--grow`; stacked layouts become a grid ordered by `--ot` / `--om`.
 const TILE_LAYOUT = [
@@ -119,9 +35,10 @@ const LINK_TILE = [
   'hover:-translate-y-0.75 hover:shadow-[0_18px_32px_-20px_rgba(21,21,21,0.5)]',
   'max-lg:px-5.5 max-lg:py-5 max-sm:px-4.5 max-sm:py-4',
 ];
+// Tones of the contract (`mist`, `ink`, `red`) and how each one paints a color tile.
 const TILE_TONE = {
-  light: 'bg-obra-mist text-obra-ink hover:bg-obra-white',
-  dark: 'bg-obra-ink text-white hover:bg-inherit hover:brightness-112',
+  mist: 'bg-obra-mist text-obra-ink hover:bg-obra-white',
+  ink: 'bg-obra-ink text-white hover:bg-inherit hover:brightness-112',
   red: 'bg-obra-red text-white hover:bg-inherit hover:brightness-112',
 } as const;
 
@@ -165,6 +82,17 @@ const togetherSection = {
     'group-hover:opacity-100 group-focus-visible:translate-none',
     'group-focus-visible:opacity-100'
   ),
+  // A ministry tile that shows a photo instead of a color: the name sits over a soft shade.
+  photoTile: cn(LINK_TILE, 'relative overflow-hidden bg-obra-ink text-white'),
+  photoTileImage: cn(
+    'absolute inset-0 size-full object-cover',
+    'transition-transform duration-1400 ease-obra group-hover:scale-104',
+    '[filter:grayscale(1)_sepia(0.14)_contrast(1.06)]'
+  ),
+  photoTileShade: cn(
+    'absolute inset-0 bg-linear-to-t from-obra-ink/70 via-obra-ink/10 to-transparent'
+  ),
+  photoTileName: cn('relative'),
   rowsTile: cn(
     TILE_LAYOUT,
     'group relative overflow-hidden bg-obra-mist p-0',
@@ -209,39 +137,66 @@ const togetherSection = {
   </div>
 
   <div class={togetherSection.rows} data-tog-rows>
-    {rows.map((row, r) => (
+    {rows.map((row) => (
       <div class={togetherSection.row}>
-        {row.map((t, c) => t.kind === 'link' ? (
-          <a
-            href={t.key === 'women' ? EXTERNAL_WOMEN : localizePath(ministryHref[t.key], locale)}
-            target={t.key === 'women' ? '_blank' : undefined}
-            rel={t.key === 'women' ? 'noopener' : undefined}
-            class={cn(togetherSection.tile, TILE_TONE[t.tone ?? 'light'])}
-            style={`--grow:${t.w};--om:${t.om};--ot:${t.ot}`}
-            data-tile={orderOf(r, c)}
-          >
-            {copy.tiles[t.key]}
-            <span
-              class={togetherSection.label}
-              aria-hidden="true"
-            >→</span>
-          </a>
-        ) : (
-          <div
-            class={cn(togetherSection.rowsTile, t.wide && togetherSection.rowsTileWide)}
-            style={`--grow:${t.w};--om:${t.om};--ot:${t.ot};--pos:${t.pos}`}
-            data-tile={orderOf(r, c)}
-          >
-            <img
-              src={t.src}
-              alt={copy.photos[t.key]}
-              class={togetherSection.image}
-              style={t.crop}
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-        ))}
+        {row.map((cell) => {
+          const place = `--grow:${cell.w};--om:${cell.om};--ot:${cell.ot}`;
+          if (cell.kind === 'photo') {
+            const photo = TOGETHER_PHOTOS[cell.photo];
+            return (
+              <div
+                class={cn(togetherSection.rowsTile, photo.wide && togetherSection.rowsTileWide)}
+                style={`${place};--pos:${photo.pos}`}
+                data-tile={cell.order}
+              >
+                <img
+                  src={photo.src}
+                  alt={copy.photos[photo.key]}
+                  class={togetherSection.image}
+                  style={photo.crop}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            );
+          }
+          const { name, href, tile } = cell.tile;
+          const Tag = href ? 'a' : 'div';
+          const external = href ? isExternal(href) : false;
+          const isPhoto = tile.kind === 'photo';
+          return (
+            <Tag
+              href={href}
+              target={external ? '_blank' : undefined}
+              rel={external ? 'noopener' : undefined}
+              class={cn(
+                isPhoto ? togetherSection.photoTile : togetherSection.tile,
+                tile.kind === 'color' && TILE_TONE[tile.tone]
+              )}
+              style={place}
+              data-tile={cell.order}
+            >
+              {tile.kind === 'photo' && (
+                <>
+                  <img
+                    src={tile.image.url}
+                    width={tile.image.width}
+                    height={tile.image.height}
+                    alt=""
+                    class={togetherSection.photoTileImage}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span class={togetherSection.photoTileShade} aria-hidden="true" />
+                </>
+              )}
+              <span class={isPhoto ? togetherSection.photoTileName : undefined}>{name}</span>
+              {href && (
+                <span class={cn(togetherSection.label, isPhoto && togetherSection.photoTileName)} aria-hidden="true">→</span>
+              )}
+            </Tag>
+          );
+        })}
       </div>
     ))}
   </div>

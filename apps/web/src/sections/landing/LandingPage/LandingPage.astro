@@ -1,5 +1,5 @@
 ---
-import { getSiteConfig } from '@ancla/content';
+import { getMinistries, getSiteConfig } from '@ancla/content';
 import type { Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
 import { interpolateDeep } from 'src/i18n/utils';
@@ -19,6 +19,7 @@ interface Props {
 
 const { locale } = Astro.props;
 const site = Astro.locals.site ?? (await getSiteConfig());
+const { landing } = await getMinistries(locale);
 const tokens = buildSiteTokens(site, locale);
 const copy = {
   home: interpolateDeep(getMessages(locale).home, tokens),
@@ -46,7 +47,7 @@ const landingPage = {
     <Hero copy={copy.landing.hero} locale={locale} street={street} worshipTime={tokens.worshipTime} />
     <God copy={copy.landing.god} locale={locale} />
     <Doctrines copy={copy.landing.doctrines} locale={locale} />
-    <Together copy={copy.landing.together} locale={locale} />
+    <Together copy={copy.landing.together} locale={locale} landing={landing} />
     <Sunday copy={copy.landing.sunday} street={street} mapsUrl={mapsUrl} email={site.contactEmail} />
     <Closing copy={copy.landing.closing} street={street} mapsUrl={mapsUrl} embedUrl={embedUrl} social={site.social} />
   </div>

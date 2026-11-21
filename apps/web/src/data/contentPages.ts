@@ -1,10 +1,9 @@
 import { defaultLocale, type Locale, nonDefaultLocales } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
-import { interpolate, interpolateDeep, localizePath } from 'src/i18n/utils';
-import ministriesData from 'src/utils/ministriesData.json';
+import { interpolateDeep, localizePath } from 'src/i18n/utils';
 import type { SiteTokens } from 'src/utils/siteTokens';
 
-export type ContentPageRouteGroup = 'root' | 'ministerios';
+export type ContentPageRouteGroup = 'root';
 
 export interface ContentInlineText {
   text?: string;
@@ -182,67 +181,6 @@ export interface ContentPage {
   cta?: ContentCta;
 }
 
-interface MinistryTemplate {
-  summaries: Record<string, string>;
-  fallbackSummary: string;
-  breadcrumbs: {
-    home: string;
-    ministries: string;
-  };
-  chip: string;
-  metaLocation: string;
-  titleSuffixBefore: string;
-  titleSuffixEmphasis: string;
-  standfirst: string;
-  figureLabel: string;
-  figureMeta: string;
-  shortcuts: {
-    all: string;
-    visit: string;
-    confession: string;
-  };
-  ui: {
-    toc: string;
-    shortcuts: string;
-    factsEyebrow: string;
-    factsToc: string;
-    factsTitleBefore: string;
-    factsTitleEmphasis: string;
-    facts: { label: string; value: string }[];
-    stats: ContentHeroStat[];
-  };
-  sections: {
-    identityEyebrow: string;
-    identityToc: string;
-    identityTitleBefore: string;
-    paragraphs: string[];
-    values: ContentValue[];
-    nextEyebrow: string;
-    nextToc: string;
-    nextTitleBefore: string;
-    nextTitleEmphasis: string;
-    links: ContentLink[];
-  };
-  cta: {
-    eyebrow: string;
-    titleBefore: string;
-    body: string;
-    primary: string;
-    secondary: string;
-  };
-}
-
-function normalizeSlug(value: string): string {
-  return value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase();
-}
-
-function slugFromMinistryUrl(url: string): string {
-  return url.replace(/^\/ministerios\//, '').replace(/^\/|\/$/g, '');
-}
-
 function localizeHtmlLinks(html: string, locale: Locale) {
   return html.replace(/href="(\/[^"]*)"/g, (_, href: string) => {
     return `href="${localizePath(href, locale)}"`;
@@ -328,147 +266,6 @@ function localizeContentPage(page: ContentPage, locale: Locale): ContentPage {
   };
 }
 
-function getMinistryCopy(locale: Locale, slug: string) {
-  const ministry = getMessages(locale).ministries.items.find((item) => {
-    if (!item.href.startsWith('/ministerios/')) return false;
-    return normalizeSlug(slugFromMinistryUrl(item.href)) === slug;
-  });
-
-  return ministry;
-}
-
-function buildMinistryPages(locale: Locale, tokens: SiteTokens): ContentPage[] {
-  const template = interpolateDeep(
-    getMessages(locale).contentPages.ministryTemplate as MinistryTemplate,
-    tokens
-  );
-
-  return ministriesData
-    .filter((ministry) => ministry.url.startsWith('/ministerios/'))
-    .map((ministry, index) => {
-      const rawSlug = slugFromMinistryUrl(ministry.url);
-      const slug = normalizeSlug(rawSlug);
-      const copy = getMinistryCopy(locale, slug);
-      const name = copy?.name ?? ministry.name;
-      const summary =
-        template.summaries[slug] ??
-        copy?.description ??
-        template.fallbackSummary;
-      const sectionNumber = String(index + 1).padStart(2, '0');
-
-      const page: ContentPage = {
-        routeGroup: 'ministerios',
-        slug,
-        aliases: rawSlug !== slug ? [rawSlug] : undefined,
-        title: name,
-        seoTitle: `${name} | ${template.breadcrumbs.ministries} | El Ancla`,
-        description: `${name}: ${summary.toLowerCase()} en Iglesia Bautista El Ancla.`,
-        hero: {
-          breadcrumbs: [
-            { label: template.breadcrumbs.home, href: '/' },
-            { label: template.breadcrumbs.ministries, href: '/#juntos' },
-            { label: name },
-          ],
-          chip: template.chip,
-          meta: [`Sec. ${sectionNumber} / ${name}`, template.metaLocation],
-          titleLines: [
-            { text: name },
-            {
-              before: template.titleSuffixBefore,
-              emphasis: template.titleSuffixEmphasis,
-            },
-          ],
-          standfirst: template.standfirst,
-          stats: template.ui.stats,
-        },
-        tocTitle: template.ui.toc,
-        shortcutsTitle: template.ui.shortcuts,
-        featuredImage: {
-          src: '/images/homebanner-web.jpg',
-          alt: `${name} · Iglesia Bautista El Ancla`,
-          label: template.figureLabel,
-          caption: `${name} · ${summary}.`,
-          badge: summary,
-          meta: template.figureMeta,
-          aspect: 'wide',
-        },
-        shortcuts: [
-          { label: template.shortcuts.all, href: '/#juntos' },
-          { label: template.shortcuts.visit, href: '/#visitanos' },
-          { label: template.shortcuts.confession, href: '/confesion-de-fe' },
-        ],
-        sections: [
-          {
-            id: 'identidad',
-            eyebrow: template.sections.identityEyebrow,
-            tocLabel: template.sections.identityToc,
-            title: {
-              before: interpolate(template.sections.identityTitleBefore, {
-                name,
-              }),
-              emphasis: summary.toLowerCase(),
-            },
-            blocks: [
-              {
-                type: 'prose',
-                paragraphs: template.sections.paragraphs.map((paragraph) =>
-                  interpolate(paragraph, { name, summary })
-                ),
-              },
-              {
-                type: 'values',
-                values: template.sections.values,
-              },
-            ],
-          },
-          {
-            id: 'datos',
-            eyebrow: template.ui.factsEyebrow,
-            tocLabel: template.ui.factsToc,
-            title: {
-              before: template.ui.factsTitleBefore,
-              emphasis: template.ui.factsTitleEmphasis,
-            },
-            blocks: [{ type: 'facts', facts: template.ui.facts }],
-          },
-          {
-            id: 'siguiente-paso',
-            eyebrow: template.sections.nextEyebrow,
-            tocLabel: template.sections.nextToc,
-            title: {
-              before: template.sections.nextTitleBefore,
-              emphasis: template.sections.nextTitleEmphasis,
-            },
-            blocks: [
-              {
-                type: 'linkGrid',
-                links: template.sections.links,
-              },
-            ],
-          },
-        ],
-        cta: {
-          eyebrow: template.cta.eyebrow,
-          title: {
-            before: template.cta.titleBefore,
-            emphasis: `${name}.`,
-          },
-          body: template.cta.body,
-          primary: {
-            label: template.cta.primary,
-            href: '/#visitanos',
-          },
-          secondary: {
-            label: template.cta.secondary,
-            href: '/#juntos',
-          },
-        },
-      };
-
-      return localizeContentPage(page, locale);
-    });
-}
-
 /**
  * `tokens` fill the church's own data (times, address, handles) into the message templates; they
  * are filled before the links are localized because some of them are URLs.
@@ -481,10 +278,7 @@ export function getContentPages(
     getMessages(locale).contentPages.nosotros as ContentPage,
     tokens
   );
-  return [
-    localizeContentPage(nosotros, locale),
-    ...buildMinistryPages(locale, tokens),
-  ];
+  return [localizeContentPage(nosotros, locale)];
 }
 
 export function getContentPagesByRouteGroup(
