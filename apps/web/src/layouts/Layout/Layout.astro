@@ -5,7 +5,7 @@ import Nav from 'src/components/Nav';
 import SiteStatusScreen from 'src/components/SiteStatusScreen';
 import '../../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
-import { getPages, getSiteConfig } from '@ancla/content';
+import { getMinistries, getPages, getSiteConfig } from '@ancla/content';
 import { SEO } from 'astro-seo';
 import type { Locale } from 'src/i18n/config';
 import {
@@ -80,6 +80,9 @@ const liveLabel = worship ? formatServiceTimeShort(worship, locale) : undefined;
 const siteTokens = buildSiteTokens(site, locale);
 // The SDK caches it, so every page does not hit the API; `[]` when it is down.
 const pages = footer ? await getPages(locale) : [];
+const { ministries } = footer
+  ? await getMinistries(locale)
+  : { ministries: [] };
 // The maintenance/closed notice must not be indexed in place of the real page.
 const noindex = noindexProp || site.status !== 'online' || sectionMaintenance;
 const localeSeo = getLocaleSeo(locale);
@@ -365,7 +368,7 @@ const layout = {
           <main class={layout.main}>
             <slot />
           </main>
-          {footer && <Footer locale={locale} variant={footer === 'dark' ? 'dark' : 'red'} social={site.social} tokens={siteTokens} sections={site.sections} pages={pages} />}
+          {footer && <Footer locale={locale} variant={footer === 'dark' ? 'dark' : 'red'} social={site.social} tokens={siteTokens} sections={site.sections} pages={pages} ministries={ministries} />}
         </>
       ) : (
         <SiteStatusScreen

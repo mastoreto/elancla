@@ -1,5 +1,9 @@
 ---
-import type { PublicPageSummary, SiteConfig } from '@ancla/content';
+import type {
+  PublicMinistrySummary,
+  PublicPageSummary,
+  SiteConfig,
+} from '@ancla/content';
 import LogoText from 'src/components/LogoText';
 import type { Locale } from 'src/i18n/config';
 import { getMessages } from 'src/i18n/messages';
@@ -20,6 +24,8 @@ interface Props {
   sections: SiteConfig['sections'];
   /** Published simple pages (already in `locale`); one link each under the church column. */
   pages?: PublicPageSummary[];
+  /** Visible ministries (already in `locale`); one link each for those with a destination. */
+  ministries?: PublicMinistrySummary[];
 }
 
 const {
@@ -29,6 +35,7 @@ const {
   tokens,
   sections,
   pages = [],
+  ministries = [],
 } = Astro.props;
 const copy = interpolateDeep(getMessages(locale).footer, tokens);
 // Link targets, in the same order as the labels in footer.json.
@@ -46,6 +53,10 @@ const churchLinks = withoutOutOfService(
   })),
   sections,
   (link) => link.href
+);
+// Their `href` already carries the language prefix, or is the external site.
+const ministryLinks = ministries.flatMap(({ name, href }) =>
+  href ? [{ name, href, external: /^https?:/i.test(href) }] : []
 );
 const socialHrefs = [social.youtube, social.instagram, social.facebook];
 
@@ -132,8 +143,8 @@ const year = new Date().getFullYear();
       <div class={footer.colMinis}>
         <div class={footer.colLabel}>{copy.ministryLabel}</div>
         <ul class={footer.minisGrid}>
-          {copy.ministryLinks.map((l) => (
-            <li><a href={localizePath('/#juntos', locale)} class={footer.ministryLink}>{l}</a></li>
+          {ministryLinks.map((link) => (
+            <li><a href={link.href} class={footer.ministryLink} target={link.external ? '_blank' : undefined} rel={link.external ? 'noopener' : undefined}>{link.name}</a></li>
           ))}
         </ul>
       </div>
