@@ -36,22 +36,23 @@ model Organization {
   createdAt     DateTime @default(now()) @db.Timestamptz(3)
   updatedAt     DateTime @updatedAt @db.Timestamptz(3)
 
-  siteSettings      SiteSettings?
-  documentSequences DocumentSequence[]
-  invitations       Invitation[]
-  roles             Role[]
-  ministries        Ministry[]
-  auditLogs         AuditLog[]
-  mediaFiles        MediaFile[]
-  siteApiKeys       SiteApiKey[]
-  contentRevisions  ContentRevision[]
-  editorialSettings EditorialSettings[]
-  personProfiles    PersonProfile[]
-  visitFaqs         VisitFaq[]
-  simplePages       SimplePage[]
-  posts             Post[]
-  categories        Category[]
-  series            Series[]
+  siteSettings       SiteSettings?
+  documentSequences  DocumentSequence[]
+  invitations        Invitation[]
+  roles              Role[]
+  ministries         Ministry[]
+  auditLogs          AuditLog[]
+  mediaFiles         MediaFile[]
+  siteApiKeys        SiteApiKey[]
+  contentRevisions   ContentRevision[]
+  editorialSettings  EditorialSettings[]
+  personProfiles     PersonProfile[]
+  visitFaqs          VisitFaq[]
+  simplePages        SimplePage[]
+  posts              Post[]
+  categories         Category[]
+  ministryCategories MinistryCategory[]
+  series             Series[]
 
   @@map("organizations")
 }
@@ -335,9 +336,11 @@ model PersonRole {
   visible         Boolean                 @default(true)
   order           Int                     @default(0)
   translations    PersonRoleTranslation[]
+  /// Set only for MINISTRY_LEADER (CHECK in the migration); one role per person per ministry.
+  ministryId      String?                 @db.Uuid
+  ministry        Ministry?               @relation(fields: [ministryId], references: [id], onDelete: Cascade)
 
-  // ponytail: 1.5 adds ministryId and widens this unique.
-  @@unique([personProfileId, context])
+  @@unique([personProfileId, context, ministryId])
   @@map("person_roles")
 }
 
@@ -489,17 +492,77 @@ model Invitation {
 
 /// Minimal ministry (phase 0.4) so the `ministry` scope has something to point at; phase 1.5 extends it.
 model Ministry {
-  id             String         @id @default(uuid(7)) @db.Uuid
-  organizationId String         @db.Uuid
-  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  id             String              @id @default(uuid(7)) @db.Uuid
+  organizationId String              @db.Uuid
+  organization   Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  /// Internal name (users, invitations, treasury); the public name lives in the profile snapshot.
   name           String
   slug           String
-  createdAt      DateTime       @default(now()) @db.Timestamptz(3)
-  updatedAt      DateTime       @updatedAt @db.Timestamptz(3)
+  /// Optimistic lock for the settings (409 stale_version).
+  version        Int                 @default(1)
+  categoryId     String?             @db.Uuid
+  category       MinistryCategory?   @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  destination    MinistryDestination @default(PAGE)
+  /// https URL, required when `destination` is EXTERNAL.
+  externalUrl    String?
+  /// One of MINISTRY_ICONS (validated by the contracts).
+  icon           String?
+  /// One of MINISTRY_COLORS (validated by the contracts).
+  color          String              @default("secondary-700")
+  showOnLanding  Boolean             @default(false)
+  landingOrder   Int                 @default(0)
+  landingTile    MinistryLandingTile @default(COLOR)
+  /// One of LANDING_TONES (validated by the contracts).
+  landingTone    String              @default("mist")
+  landingPhotoId String?             @db.Uuid
+  landingPhoto   MediaFile?          @relation("MinistryLandingPhoto", fields: [landingPhotoId], references: [id], onDelete: SetNull)
+  createdAt      DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime            @updatedAt @db.Timestamptz(3)
   members        UserMinistry[]
+  leaders        PersonRole[]
 
   @@unique([organizationId, slug])
   @@map("ministries")
+}
+
+enum MinistryDestination {
+  PAGE
+  EXTERNAL
+  NONE
+}
+
+enum MinistryLandingTile {
+  COLOR
+  PHOTO
+}
+
+model MinistryCategory {
+  id             String                        @id @default(uuid(7)) @db.Uuid
+  organizationId String                        @db.Uuid
+  organization   Organization                  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  order          Int                           @default(0)
+  /// Optimistic lock (409 stale_version).
+  version        Int                           @default(1)
+  deletedAt      DateTime?                     @db.Timestamptz(3)
+  translations   MinistryCategoryTranslation[]
+  ministries     Ministry[]
+  createdAt      DateTime                      @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime                      @updatedAt @db.Timestamptz(3)
+
+  @@index([organizationId])
+  @@map("ministry_categories")
+}
+
+model MinistryCategoryTranslation {
+  id         String           @id @default(uuid(7)) @db.Uuid
+  categoryId String           @db.Uuid
+  category   MinistryCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  locale     String
+  /// Max 60 chars (validated by the contracts).
+  name       String
+
+  @@unique([categoryId, locale])
+  @@map("ministry_category_translations")
 }
 
 /// `key` is set only for seeded roles (`admin` has implicit full access and no permission rows).
@@ -611,27 +674,28 @@ enum MediaFileStatus {
 /// The bucket is not stored: it is derived from the purpose. Every upload lands first in the
 /// private bucket under `key`; `variants` hold the public keys generated by `finalize`.
 model MediaFile {
-  id             String          @id @default(uuid(7)) @db.Uuid
-  organizationId String          @db.Uuid
-  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Restrict)
-  purpose        MediaPurpose
-  status         MediaFileStatus @default(pending)
+  id               String          @id @default(uuid(7)) @db.Uuid
+  organizationId   String          @db.Uuid
+  organization     Organization    @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  purpose          MediaPurpose
+  status           MediaFileStatus @default(pending)
   /// Key of the original in the private bucket: `<organizationId>/<id>`.
-  key            String          @unique
-  contentType    String
+  key              String          @unique
+  contentType      String
   /// Declared at request time; the real size once `ready`.
-  size           Int
+  size             Int
   /// SHA-256 hex of the original, set by `finalize`.
-  checksum       String?
+  checksum         String?
   /// Sanitized, at most 200 characters.
-  originalName   String
+  originalName     String
   /// `[{ width, height, format, key, size }]`, set by `finalize` for public images.
-  variants       Json?
-  uploadedById   String?         @db.Uuid
-  uploadedBy     User?           @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
-  createdAt      DateTime        @default(now()) @db.Timestamptz(3)
-  finalizedAt    DateTime?       @db.Timestamptz(3)
-  personProfiles PersonProfile[]
+  variants         Json?
+  uploadedById     String?         @db.Uuid
+  uploadedBy       User?           @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  createdAt        DateTime        @default(now()) @db.Timestamptz(3)
+  finalizedAt      DateTime?       @db.Timestamptz(3)
+  personProfiles   PersonProfile[]
+  ministryLandings Ministry[]      @relation("MinistryLandingPhoto")
 
   @@index([organizationId, status, createdAt])
   @@map("media_files")
