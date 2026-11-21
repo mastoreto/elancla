@@ -55,7 +55,7 @@ apps/crm/test-results/
 .playwright-mcp/
 
 # Videos
-video/
+/video/
 *.mp4
 *.mov
 *.webm
