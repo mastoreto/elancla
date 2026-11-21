@@ -1,0 +1,1 @@
+export { loadTaxonomy } from "./loadTaxonomy";

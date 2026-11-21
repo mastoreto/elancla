@@ -13,29 +13,10 @@ import { BoardCard } from "@/components/dashboard/board/board-card";
 import { BoardConfirmDialog } from "@/components/dashboard/board/board-confirm-dialog";
 import { StatusPill } from "@/components/dashboard/board/status-pill";
 import { apiClient } from "@/lib/api/apiClient";
-import { describeApiFailure } from "@/lib/api/describeApiFailure";
 import { cn } from "@/lib/utils";
 import { EditorialHistorySheet } from "./components/editorial-history-sheet";
 import { RequestChangesDialog } from "./components/request-changes-dialog";
-import { actionLabel, stateLabel, stateTone } from "./utils";
-
-const INVALID_TRANSITION_MESSAGE =
-  "Alguien cambió este contenido mientras tanto. Recarga la página.";
-
-const SLUG_TAKEN_CODE = "slug_taken";
-const SLUG_TAKEN_MESSAGE = "Otra página publicada ya usa ese slug. Cámbialo antes de publicar.";
-
-/** The API answers 409 for several reasons; the problem `code` says which one it was. */
-async function describeFailure(response: Response): Promise<string> {
-  const problem: unknown = await response
-    .clone()
-    .json()
-    .catch(() => null);
-  const code =
-    typeof problem === "object" && problem !== null ? Reflect.get(problem, "code") : null;
-  if (code === SLUG_TAKEN_CODE) return SLUG_TAKEN_MESSAGE;
-  return describeApiFailure(response.status, INVALID_TRANSITION_MESSAGE);
-}
+import { actionLabel, describeEditorialFailure, stateLabel, stateTone } from "./utils";
 
 const SUCCESS_MESSAGES: Record<EditorialActionDto, string> = {
   saveDraft: "Borrador guardado",
@@ -116,14 +97,14 @@ export function EditorialStatusBar({
       if (savesFirst(action) && getSnapshot) {
         const saved = await entity.draft.$put({ param, json: { snapshot: getSnapshot() } });
         if (!saved.ok) {
-          toast.error(await describeFailure(saved));
+          toast.error(await describeEditorialFailure(saved));
           return;
         }
       }
       const response = await request(action, comment);
       if (!response) return;
       if (!response.ok) {
-        toast.error(await describeFailure(response));
+        toast.error(await describeEditorialFailure(response));
         return;
       }
       toast.success(SUCCESS_MESSAGES[action]);

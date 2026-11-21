@@ -2,7 +2,7 @@
 
 import { RICH_TEXT_HREF_PATTERN, type RichTextDoc } from "@ancla/contracts";
 import Placeholder from "@tiptap/extension-placeholder";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { type AnyExtension, type Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {
   Bold,
@@ -18,7 +18,7 @@ import {
   Unlink,
   WrapText,
 } from "lucide-react";
-import { useCallback, useEffect } from "react";
+import { type ReactNode, useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -37,7 +37,13 @@ const RichTextEditorSharedPage = {
   block: cn("flex flex-wrap items-center gap-1.5 bg-secondary px-3 py-2.5"),
 };
 
-function ToolbarButton({ onClick, isActive, disabled, title, children }: ToolbarButtonProps) {
+export function ToolbarButton({
+  onClick,
+  isActive,
+  disabled,
+  title,
+  children,
+}: ToolbarButtonProps) {
   return (
     <Button
       type="button"
@@ -60,7 +66,7 @@ interface ToolbarSeparatorProps {
   className?: string;
 }
 
-function ToolbarSeparator({ className }: ToolbarSeparatorProps) {
+export function ToolbarSeparator({ className }: ToolbarSeparatorProps) {
   return <div className={cn(RichTextEditorSharedPage.separator, className)} />;
 }
 
@@ -70,6 +76,15 @@ interface RichTextEditorBaseProps {
   editorClassName?: string;
   hasError?: boolean;
   disabled?: boolean;
+  /** Extra Tiptap extensions; one named `paragraph` replaces the StarterKit one. */
+  extensions?: AnyExtension[];
+  /** Extra toolbar content, rendered after the built-in buttons. It receives the live editor. */
+  toolbarExtra?: (editor: Editor) => ReactNode;
+}
+
+/** A Tiptap JSON document; schemas with their own nodes (the blog) narrow it. */
+export interface JsonRichTextDocument {
+  type: "doc";
 }
 
 interface HtmlRichTextEditorProps extends RichTextEditorBaseProps {
@@ -79,28 +94,36 @@ interface HtmlRichTextEditorProps extends RichTextEditorBaseProps {
   onChange: (html: string) => void;
 }
 
-interface JsonRichTextEditorProps extends RichTextEditorBaseProps {
+interface JsonRichTextEditorProps<TDoc extends JsonRichTextDocument>
+  extends RichTextEditorBaseProps {
   /**
    * `json` speaks the Tiptap JSON the simple pages store and offers only what that schema admits:
    * headings 2-3, bold, italic, http(s)/mailto links, lists, quote, line break and rule.
    */
   format: "json";
-  value: RichTextDoc;
-  onChange: (doc: RichTextDoc) => void;
+  value: TDoc;
+  onChange: (doc: TDoc) => void;
 }
 
-export type RichTextEditorProps = HtmlRichTextEditorProps | JsonRichTextEditorProps;
+export type RichTextEditorProps<TDoc extends JsonRichTextDocument = RichTextDoc> =
+  | HtmlRichTextEditorProps
+  | JsonRichTextEditorProps<TDoc>;
 
 const LINK_NOT_ALLOWED_MESSAGE = "El enlace debe empezar con https://, http:// o mailto:";
 
-export function RichTextEditor(props: RichTextEditorProps) {
+export function RichTextEditor<TDoc extends JsonRichTextDocument = RichTextDoc>(
+  props: RichTextEditorProps<TDoc>,
+) {
   const {
     placeholder = "Escribe el contenido aquí...",
     className,
     editorClassName,
     hasError,
     disabled = false,
+    extensions = [],
+    toolbarExtra,
   } = props;
+  const hasOwnParagraph = extensions.some((extension) => extension.name === "paragraph");
   const isJson = props.format === "json";
   const editor = useEditor({
     extensions: [
@@ -111,9 +134,11 @@ export function RichTextEditor(props: RichTextEditorProps) {
           HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" },
           ...(isJson ? { isAllowedUri: (url: string) => RICH_TEXT_HREF_PATTERN.test(url) } : {}),
         },
+        ...(hasOwnParagraph ? { paragraph: false } : {}),
         ...(isJson ? { underline: false, strike: false, code: false, codeBlock: false } : {}),
       }),
       Placeholder.configure({ placeholder }),
+      ...extensions,
     ],
     content: props.value,
     editable: !disabled,
@@ -132,7 +157,8 @@ export function RichTextEditor(props: RichTextEditorProps) {
     },
     onUpdate: ({ editor }) => {
       if (props.format === "json") {
-        props.onChange(editor.getJSON() as RichTextDoc);
+        // The caller's schema (extensions + zod) is what narrows the JSON; the editor only knows `JSONContent`.
+        props.onChange(editor.getJSON() as unknown as TDoc);
         return;
       }
       props.onChange(editor.isEmpty ? "" : editor.getHTML());
@@ -288,6 +314,13 @@ export function RichTextEditor(props: RichTextEditorProps) {
         >
           <Unlink className="size-3.5" />
         </ToolbarButton>
+
+        {toolbarExtra ? (
+          <>
+            <ToolbarSeparator />
+            {toolbarExtra(editor)}
+          </>
+        ) : null}
       </div>
 
       {/* Editor content */}

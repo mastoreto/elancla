@@ -17,6 +17,7 @@ import {
 import { useAccess } from "@/lib/authz/AccessProvider";
 import { can } from "@/lib/authz/can";
 import { getChurchRoutePath } from "@/lib/church";
+import { PERSON_CONTEXT_LABELS } from "../../data/personContextLabels";
 import { usePersonProfileActions } from "../../hooks/usePersonProfileActions";
 import type { LinkableUser, PersonFormValues, SiteLocales } from "../../types";
 import { toPersonFormValues, toUpsertPersonBody } from "../../utils/personFormValues";
@@ -24,7 +25,7 @@ import { hasFormErrors, validatePersonForm } from "../../utils/validatePersonFor
 import { PersonDeleteButton } from "../person-delete-button";
 import { PersonPhotoField } from "../person-photo-field";
 import { PersonUserField } from "../person-user-field";
-import { TeamRoleSection } from "../team-role-section";
+import { RoleSection } from "../role-section";
 
 interface PersonFormProps {
   /** `null` creates a new person. */
@@ -104,13 +105,32 @@ export function PersonForm({ person, site, users }: PersonFormProps) {
         </BoardFormSection>
         <BoardFormDivider />
         <BoardFormSection>
-          <TeamRoleSection
+          <RoleSection
             {...site}
             disabled={!canEdit}
+            hint="Sin cargo, la persona no pertenece al equipo y no aparece en esa sección."
+            id="person-team"
             onChange={(team) => update({ team })}
             orderError={visibleErrors.order}
-            team={values.team}
+            role={values.team}
+            title="Equipo"
             titleError={visibleErrors.teamTitle}
+          />
+        </BoardFormSection>
+        <BoardFormDivider />
+        <BoardFormSection>
+          <RoleSection
+            {...site}
+            disabled={!canEdit}
+            hint="Sin cargo, la persona no firma artículos del blog. Las estadísticas se muestran en su tarjeta de autor."
+            id="person-blog-author"
+            onChange={(blogAuthor) => update({ blogAuthor })}
+            orderError={visibleErrors.blogAuthorOrder}
+            role={values.blogAuthor}
+            statsError={visibleErrors.blogAuthorStats}
+            title={PERSON_CONTEXT_LABELS["blog-author"]}
+            titleError={visibleErrors.blogAuthorTitle}
+            withStats={true}
           />
         </BoardFormSection>
       </BoardFormSections>

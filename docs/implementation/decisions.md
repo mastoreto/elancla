@@ -441,6 +441,8 @@ sistema. Editar algo publicado no lo cambia en la web hasta aprobar/publicar.
 - Cada transición y cada cambio de configuración deja su fila de `AuditLog` (`editorial.*`) en la
   misma transacción, sin el snapshot.
 
+**Notas de implementación (1.4, blog):** `blog-post` es el primer tipo con esquema real y los tres hooks del registro: `entityExists` (fila `Post` de la organización), `validateSnapshot` (idiomas habilitados) y `beforeGoLive` (409 `slug_taken` y `slug_locked`, 400 `invalid_media|author|category|series`, y fija `Post.firstLiveAt` mientras el artículo nunca fue visible). `crmPath` es `/blog/<id>`, así que la bandeja y los correos de revisión abren el editor. El CRM traduce esos códigos a toasts (`describeEditorialFailure`).
+
 ## D-31 — Calendario
 
 **Aceptada.** Detalle en
@@ -484,6 +486,8 @@ sistema. Editar algo publicado no lo cambia en la web hasta aprobar/publicar.
 - Revisión obligatoria configurable por autor/rol (D-30).
 
 **Notas de implementación (1.4a):** el snapshot es la fuente de verdad (sin tablas de traducción del artículo). Hooks de `blog-post`: `entityExists`, `validateSnapshot`, `beforeGoLive` (409 `slug_taken`, 409 `slug_locked`, 400 `invalid_media`/`invalid_author`/`invalid_category`/`invalid_series`, y fija `Post.firstLiveAt`). Visitas: la web reenvía `{ ip, userAgent }`; la API descarta bots, guarda solo `HMAC-SHA256(VIEW_HASH_SECRET, día + ip + ua)` en `PostViewVisitor` y cuenta en `PostViewDaily`; el purge borra los hashes de días anteriores. Programación: filtro en lectura, sin job (la caché puede retrasar la visibilidad hasta su TTL).
+
+**Notas de implementación (1.4c):** el CRM edita el snapshot con el esquema real (`blogPostSnapshot`) y un editor Tiptap con un nodo por bloque del diseño (`blogRichTextDocSchema`); el slug de un idioma ya publicado se deshabilita en el formulario (la API lo exige igual con `slug_locked`). Los autores son `PersonProfile` con el rol `BLOG_AUTHOR`, que se edita en Sitio web → Personas junto con sus estadísticas libres. Categorías y series se administran en `/blog/taxonomy` con el permiso `blogPosts`.
 
 ## D-33 — Estado por sección
 

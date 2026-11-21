@@ -35,7 +35,9 @@ describe("toPersonFormValues", () => {
       visible: true,
       order: "0",
       titles: { es: "", en: "", pt: "" },
+      stats: { es: [], en: [], pt: [] },
     });
+    expect(values.blogAuthor.titles).toEqual({ es: "", en: "", pt: "" });
   });
 
   test("fills every locale, with empty text where the person has none", () => {
@@ -45,6 +47,7 @@ describe("toPersonFormValues", () => {
       visible: false,
       order: "3",
       titles: { es: "Pastora", en: "Pastor", pt: "" },
+      stats: { es: [], en: [], pt: [] },
     });
   });
 
@@ -88,6 +91,64 @@ describe("toUpsertPersonBody", () => {
     const values = toPersonFormValues(person, LOCALES);
     values.team.titles = { es: "", en: "", pt: "" };
     expect(toUpsertPersonBody(values, LOCALES).roles).toEqual([person.roles[1]]);
+  });
+
+  test("the blog author role is edited apart and keeps stats by language", () => {
+    const stats = [{ label: "Años", value: "12" }];
+    const withAuthor: PersonProfileDto = {
+      ...person,
+      roles: [
+        ...person.roles,
+        {
+          context: "blog-author",
+          visible: true,
+          order: 2,
+          translations: { es: { title: "Autora", stats } },
+        },
+      ],
+    };
+    const values = toPersonFormValues(withAuthor, LOCALES);
+    expect(values.blogAuthor).toMatchObject({ order: "2", titles: { es: "Autora" } });
+    expect(values.blogAuthor.stats.es).toEqual(stats);
+    expect(values.otherRoles.map((role) => role.context)).toEqual(["preacher"]);
+    const body = toUpsertPersonBody(values, LOCALES);
+    expect(body.roles).toEqual([withAuthor.roles[1], withAuthor.roles[0], withAuthor.roles[2]]);
+  });
+
+  test("blank stat rows are dropped, the rest trimmed; a stat-less title sends none", () => {
+    const values = toPersonFormValues(null, LOCALES);
+    values.blogAuthor.titles = { es: "Autor", en: "Author", pt: "" };
+    values.blogAuthor.stats = {
+      es: [
+        { label: " Años ", value: " 12 " },
+        { label: " ", value: "" },
+      ],
+      en: [],
+      pt: [{ label: "x", value: "y" }],
+    };
+    const [role] = toUpsertPersonBody(values, LOCALES).roles;
+    expect(role?.context).toBe("blog-author");
+    expect(role?.translations.es?.stats).toEqual([{ label: "Años", value: "12" }]);
+    expect(role?.translations.en?.stats).toEqual([]);
+    expect(role?.translations.pt).toBeUndefined();
+  });
+
+  test("a team role with stats keeps them on save; clearing the blog titles removes that role", () => {
+    const stats = [{ label: "Años", value: "12" }];
+    const withStats: PersonProfileDto = {
+      ...person,
+      roles: [
+        {
+          context: "team",
+          visible: true,
+          order: 1,
+          translations: { es: { title: "Pastora", stats } },
+        },
+      ],
+    };
+    const body = toUpsertPersonBody(toPersonFormValues(withStats, LOCALES), LOCALES);
+    expect(body.roles[0]?.translations.es?.stats).toEqual(stats);
+    expect(body.roles.some((role) => role.context === "blog-author")).toBe(false);
   });
 
   test("sends the photo id and the linked user", () => {

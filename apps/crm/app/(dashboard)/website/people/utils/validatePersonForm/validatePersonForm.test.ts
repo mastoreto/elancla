@@ -49,4 +49,32 @@ describe("validatePersonForm", () => {
     expect(errors.teamTitle).toBeDefined();
     expect(errors.bio).toBeDefined();
   });
+
+  test("the blog author role has its own order and title rules", () => {
+    const values = validValues();
+    values.blogAuthor.order = "x";
+    values.blogAuthor.titles = { es: "", en: "Author" };
+    const errors = validatePersonForm(values, SITE);
+    expect(errors.blogAuthorOrder).toBeDefined();
+    expect(errors.blogAuthorTitle).toBeDefined();
+    expect(errors.order).toBeUndefined();
+  });
+
+  test("blog author stats: at most 4 per language, both texts, within limits and with a title", () => {
+    const values = validValues();
+    values.blogAuthor.titles = { es: "Autor", en: "" };
+    const row = { label: "Años", value: "12" };
+    values.blogAuthor.stats = { es: [row, row, row, row], en: [] };
+    expect(validatePersonForm(values, SITE).blogAuthorStats).toBeUndefined();
+    values.blogAuthor.stats = { es: [row, row, row, row, row], en: [] };
+    expect(validatePersonForm(values, SITE).blogAuthorStats).toBeDefined();
+    values.blogAuthor.stats = { es: [{ label: "Años", value: "" }], en: [] };
+    expect(validatePersonForm(values, SITE).blogAuthorStats).toBeDefined();
+    values.blogAuthor.stats = { es: [{ label: "l".repeat(31), value: "1" }], en: [] };
+    expect(validatePersonForm(values, SITE).blogAuthorStats).toBeDefined();
+    values.blogAuthor.stats = { es: [{ label: " ", value: " " }], en: [] };
+    expect(validatePersonForm(values, SITE).blogAuthorStats).toBeUndefined();
+    values.blogAuthor.stats = { es: [], en: [row] };
+    expect(validatePersonForm(values, SITE).blogAuthorStats).toBeDefined();
+  });
 });

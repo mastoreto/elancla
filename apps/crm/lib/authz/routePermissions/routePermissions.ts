@@ -44,7 +44,7 @@ export const ROUTE_PERMISSIONS = {
   assembly: [PERMISSIONS.voting.view],
   reports: [PERMISSIONS.reports.view],
   website: [PERMISSIONS.site.view],
-  blog: [PERMISSIONS.content.view],
+  blog: [PERMISSIONS.blogPosts.view],
   podcasts: [PERMISSIONS.content.view],
   sermons: [PERMISSIONS.content.view],
   ministries: [PERMISSIONS.ministryProfile.view],
