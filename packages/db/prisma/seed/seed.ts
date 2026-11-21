@@ -46,8 +46,8 @@ async function seed(): Promise<void> {
   }
 
   await seedRoles(db, organization.id);
-  await seedMinistries(db, organization.id);
   await seedPeople(db, organization.id);
+  await seedMinistries(db, organization.id);
   await seedVisit(db, organization.id);
   await seedSimplePages(db, organization.id);
   await seedBlog(db, organization.id);
