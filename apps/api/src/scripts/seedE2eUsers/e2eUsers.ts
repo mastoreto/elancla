@@ -43,6 +43,13 @@ export const E2E_USERS: readonly E2eUser[] = [
     roleKey: "content-editor",
   },
   {
+    // The ministry leader preset: edits the profile of its own ministry only. The ministry spec
+    // assigns the ministry it creates (a leader's scope comes from `UserMinistry`).
+    email: "e2e-leader@example.test",
+    name: "E2E Leader",
+    roleKey: "leader",
+  },
+  {
     // Reads ministry profiles but cannot publish: reviews only because editorial settings say so.
     email: "e2e-reviewer@example.test",
     name: "E2E Reviewer",
