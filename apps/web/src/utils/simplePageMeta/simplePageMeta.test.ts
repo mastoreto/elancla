@@ -66,4 +66,23 @@ describe('buildSimplePageMeta', () => {
       'x-default',
     ]);
   });
+
+  test('pages under a base path keep it in every language', () => {
+    const meta = buildSimplePageMeta({
+      page: {
+        slug: 'worship',
+        locale: 'en',
+        alternates: { es: 'alabanza', en: 'worship' },
+      },
+      locale: 'en',
+      siteUrl: SITE,
+      basePath: '/ministerios',
+    });
+    expect(meta.canonical).toBe('https://example.org/en/ministerios/worship');
+    expect(meta.languageAlternates.map((alternate) => alternate.href)).toEqual([
+      'https://example.org/ministerios/alabanza',
+      'https://example.org/en/ministerios/worship',
+      'https://example.org/ministerios/alabanza',
+    ]);
+  });
 });

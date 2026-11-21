@@ -1,31 +1,50 @@
 ---
+import type { PublicMinistry } from '@ancla/content';
+import { renderRichText } from '@ancla/content';
 import AnchorMark from 'src/components/AnchorMark';
 import InlineText from 'src/components/InlineText';
 import Button from 'src/components/ui/Button';
 import Pill from 'src/components/ui/Pill';
-import type { ContentPage } from 'src/data/contentPages';
+import type { Locale } from 'src/i18n/config';
+import { getMessages } from 'src/i18n/messages';
+import { localizePath } from 'src/i18n/utils';
+import { simplePageStyles } from 'src/sections/simplePage/SimplePage';
 import { ULINK } from 'src/styles/classes';
+import { buildPhotoSrcSet } from 'src/utils/buildPhotoSrcSet';
 import cn from 'src/utils/cn';
 import { RISE_IN } from 'src/utils/riseIn';
+import { buildMinistrySections } from './utils/buildMinistrySections';
 
 interface Props {
-  page: ContentPage;
+  ministry: PublicMinistry;
+  locale: Locale;
 }
 
-const { page } = Astro.props;
-const { hero, featuredImage, sections, cta } = page;
-const sectionsWithBlocks = sections.map((section) => ({
-  ...section,
-  prose: section.blocks.find((b) => b.type === 'prose'),
-  values: section.blocks.find((b) => b.type === 'values'),
-  facts: section.blocks.find((b) => b.type === 'facts'),
-  links: section.blocks.find((b) => b.type === 'linkGrid'),
-}));
-// Stat cards alternate white / red / mist, as in the design.
-const statTone = ['bg-obra-white', 'bg-obra-red text-white', 'bg-obra-mist'];
+const { ministry, locale } = Astro.props;
+const copy = getMessages(locale).contentPages.ministryTemplate;
+const sections = buildMinistrySections(ministry);
+const has = (key: string) => sections.find((section) => section.key === key);
+const about = has('about');
+const facts = has('facts');
+const next = has('next');
+const aboutHtml = renderRichText(ministry.about);
+const sectionLabel = {
+  about: copy.about,
+  facts: copy.facts,
+  next: copy.next,
+};
+const juntosPath = localizePath('/#juntos', locale);
+const shortcuts = [
+  { label: copy.shortcuts.all, href: juntosPath },
+  { label: copy.shortcuts.visit, href: localizePath('/#visitanos', locale) },
+  {
+    label: copy.shortcuts.confession,
+    href: localizePath('/confesion-de-fe', locale),
+  },
+];
+const { cover, icon, values, leaders } = ministry;
 const EMPHASIS = 'text-obra-red not-italic';
-const CARD =
-  'flex flex-col gap-3 rounded-[28px] bg-(--tint,var(--color-obra-mist)) text-inherit no-underline [transition:translate_0.5s_var(--ease-obra),box-shadow_0.5s,background-color_0.4s] hover:-translate-y-1 hover:bg-obra-white hover:shadow-obra-lift';
+const CARD = 'flex flex-col gap-3 rounded-[28px] bg-obra-mist text-inherit';
 const CARD_TITLE = 'font-obra-serif text-[1.625rem] leading-[1.1] font-bold';
 const BOX = 'flex flex-col rounded-[28px] p-6';
 const BOX_LABEL =
@@ -51,6 +70,7 @@ const ministryTemplate = {
   heroChip: cn(
     'rounded-full bg-obra-red px-3 py-1.5 tracking-[0.08em] text-white'
   ),
+  heroIcon: cn('size-14 rounded-2xl bg-obra-mist p-3'),
   heroTitle: cn(
     'ln-h text-[clamp(3.25rem,7.2vw,6.5rem)] wrap-anywhere',
     RISE_IN
@@ -60,17 +80,6 @@ const ministryTemplate = {
     'text-obra-ink-soft',
     'max-lg:w-full max-lg:basis-auto',
     RISE_IN
-  ),
-  stats: cn(
-    'grid grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] gap-2.5',
-    RISE_IN
-  ),
-  stat: cn('flex flex-col gap-1 rounded-[32px] p-6'),
-  statStrong: cn(
-    'font-obra-serif text-[clamp(2rem,3.6vw,3.25rem)] leading-none font-bold'
-  ),
-  statLabel: cn(
-    'font-obra-sans-bold text-[0.8125rem] tracking-[0.12em] uppercase opacity-80'
   ),
   featured: cn('px-gutter-sm pt-11'),
   featuredFrame: cn(
@@ -82,7 +91,6 @@ const ministryTemplate = {
     '[filter:grayscale(1)_sepia(0.14)_contrast(1.06)]'
   ),
   featuredLabel: cn('absolute top-4.5 left-4.5'),
-  featuredBadge: cn('absolute bottom-4.5 left-4.5'),
   body: cn(
     'flex gap-14 px-gutter-sm pt-[clamp(3.5rem,6vw,5.5rem)]',
     'max-lg:flex-col'
@@ -92,6 +100,10 @@ const ministryTemplate = {
   sectionHead: cn('flex flex-col gap-3.5'),
   sectionEyebrow: cn('ln-eyebrow'),
   sectionHeading: cn('ln-h text-[clamp(2rem,3.6vw,3.25rem)]'),
+  prose: cn(
+    simplePageStyles.body,
+    'max-w-none text-[clamp(1.0625rem,1.4vw,1.25rem)]'
+  ),
   paragraph: cn('m-0 text-[clamp(1.0625rem,1.4vw,1.25rem)] leading-[1.7]'),
   values: cn('grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-3.5'),
   value: cn(CARD, 'p-6.5'),
@@ -109,21 +121,11 @@ const ministryTemplate = {
     'font-obra-sans-bold text-[0.75rem] tracking-[0.14em] text-obra-muted uppercase'
   ),
   factValue: cn('m-0 font-obra-sans-bold text-[1.125rem] leading-[1.35]'),
-  links: cn('grid grid-cols-[repeat(auto-fit,minmax(19rem,1fr))] gap-3.5'),
-  linkCard: cn(CARD, 'flex-row items-start gap-4.5 p-6'),
-  linkGlyph: cn(
-    'inline-flex size-14 flex-none items-center justify-center rounded-[18px] bg-obra-red',
-    'font-obra-serif text-[1.625rem] font-bold text-white'
-  ),
-  linkCopy: cn(
-    'flex flex-col gap-2 text-[1rem] leading-[1.55] text-obra-ink-soft'
-  ),
-  linkSource: cn(
-    'font-obra-sans-bold text-[0.6875rem] tracking-[0.14em] text-obra-muted uppercase'
-  ),
-  linkTitle: cn(CARD_TITLE),
-  linkDescription: cn('text-[0.9375rem] leading-normal text-obra-ink-soft'),
-  linkMeta: cn('font-obra-sans-bold text-[0.8125rem] text-obra-red not-italic'),
+  leaders: cn('m-0 flex list-none flex-col gap-4 p-0'),
+  leader: cn('flex items-center gap-4'),
+  leaderPhoto: cn('size-15 flex-none rounded-full object-cover'),
+  leaderName: cn('font-obra-sans-bold text-[1.125rem] leading-[1.3]'),
+  leaderTitle: cn('block text-[0.9375rem] font-normal text-obra-ink-soft'),
   toc: cn(
     'sticky top-28 flex flex-[0_0_17.5rem] flex-col gap-5 self-start',
     'max-lg:hidden'
@@ -154,7 +156,6 @@ const ministryTemplate = {
     'font-obra-sans-bold text-[0.8125rem] tracking-[0.16em] text-obra-blush uppercase'
   ),
   ctaTitle: cn('ln-h text-[clamp(2.25rem,3.9vw,3.5rem)] leading-none'),
-  ctaBody: cn('m-0 max-w-120 text-[1.125rem] leading-normal'),
   ctaActions: cn(
     'relative flex flex-[0_0_min(22.5rem,100%)] flex-col gap-3',
     'max-lg:w-full max-lg:basis-auto'
@@ -168,67 +169,43 @@ const ministryTemplate = {
 
 <article class={ministryTemplate.container}>
   <header class={ministryTemplate.header}>
-    <nav
-      class={ministryTemplate.breadcrumbs}
-      aria-label="breadcrumb"
-    >
-      {
-        hero.breadcrumbs.map((crumb, i) => (
-          <>
-            {crumb.href ? <a href={crumb.href} class={ministryTemplate.crumbLink}>{crumb.label}</a> : <span class={ministryTemplate.current} aria-current="page">{crumb.label}</span>}
-            {i < hero.breadcrumbs.length - 1 && <span aria-hidden="true">/</span>}
-          </>
-        ))
-      }
+    <nav class={ministryTemplate.breadcrumbs} aria-label="breadcrumb">
+      <a href={localizePath('/', locale)} class={ministryTemplate.crumbLink}>{copy.breadcrumbs.home}</a>
+      <span aria-hidden="true">/</span>
+      <a href={juntosPath} class={ministryTemplate.crumbLink}>{copy.breadcrumbs.ministries}</a>
+      <span aria-hidden="true">/</span>
+      <span class={ministryTemplate.current} aria-current="page">{ministry.name}</span>
     </nav>
 
     <div class={ministryTemplate.heroBody}>
       <div class={ministryTemplate.heroCopy}>
         <span class={ministryTemplate.heroMeta}>
-          <span class={ministryTemplate.heroChip}>{hero.chip}</span>{hero.meta.join(' · ')}
+          <span class={ministryTemplate.heroChip}>{copy.chip}</span>
+          {icon && <img src={`/images/ministries/${icon}.svg`} alt="" width="56" height="56" class={ministryTemplate.heroIcon} />}
         </span>
-        <h1
-          class={ministryTemplate.heroTitle}
-          style="--d: 0.15s"
-        >
-          {hero.titleLines.map((line, i) => <>{i > 0 && ' '}<InlineText value={line} emphasisClass={EMPHASIS} /></>)}
+        <h1 class={ministryTemplate.heroTitle} style="--d: 0.15s">
+          {ministry.name}{' '}<InlineText value={{ before: copy.titleSuffixBefore, emphasis: copy.titleSuffixEmphasis }} emphasisClass={EMPHASIS} />
         </h1>
       </div>
-      <p
-        class={ministryTemplate.standfirst}
-        style="--d: 0.3s"
-      >{hero.standfirst}</p>
+      <p class={ministryTemplate.standfirst} style="--d: 0.3s">{ministry.tagline}</p>
     </div>
-
-    {
-      hero.stats?.length && (
-        <div
-          class={ministryTemplate.stats}
-          style="--d: 0.45s"
-        >
-          {hero.stats.map((stat, i) => (
-            <div class={cn(ministryTemplate.stat, statTone[i % statTone.length])}>
-              <b class={ministryTemplate.statStrong}>{stat.value}</b>
-              <span class={ministryTemplate.statLabel}>{stat.label}</span>
-            </div>
-          ))}
-        </div>
-      )
-    }
   </header>
 
   {
-    featuredImage && (
+    cover && (
       <section class={ministryTemplate.featured}>
         <div class={ministryTemplate.featuredFrame}>
           <img
-            src={featuredImage.src}
-            alt={featuredImage.alt}
+            src={cover.image.url}
+            width={cover.image.width}
+            height={cover.image.height}
+            alt={cover.alt ?? ministry.name}
             class={ministryTemplate.featuredImage}
             loading="eager"
+            fetchpriority="high"
+            decoding="async"
           />
-          {featuredImage.label && <Pill class={ministryTemplate.featuredLabel}>{featuredImage.label}</Pill>}
-          {featuredImage.badge && <Pill class={ministryTemplate.featuredBadge}>{featuredImage.badge}</Pill>}
+          <Pill class={ministryTemplate.featuredLabel}>{copy.coverLabel}</Pill>
         </div>
       </section>
     )
@@ -237,131 +214,149 @@ const ministryTemplate = {
   <section class={ministryTemplate.body}>
     <div class={ministryTemplate.sections}>
       {
-        sectionsWithBlocks.map((section) => (
-          <section id={section.id} class={ministryTemplate.section}>
+        about && (
+          <section id={about.id} class={ministryTemplate.section}>
             <div class={ministryTemplate.sectionHead}>
-              <span class={ministryTemplate.sectionEyebrow}>{section.eyebrow}</span>
-              <h2 class={ministryTemplate.sectionHeading}><InlineText value={section.title} emphasisClass={EMPHASIS} /></h2>
+              <span class={ministryTemplate.sectionEyebrow}>{about.number} — {sectionLabel.about.eyebrow}</span>
+              <h2 class={ministryTemplate.sectionHeading}><InlineText value={{ before: `${ministry.name}: `, emphasis: ministry.tagline }} emphasisClass={EMPHASIS} /></h2>
             </div>
-
-            {section.prose?.type === 'prose' && section.prose.paragraphs.map((p) => <p class={ministryTemplate.paragraph} set:html={p} />)}
-
+            <div class={ministryTemplate.prose} set:html={aboutHtml} />
             {
-              section.values?.type === 'values' && (
+              values.length > 0 && (
                 <div class={ministryTemplate.values}>
-                  {section.values.values.map((v) => (
+                  {values.map((value, index) => (
                     <div class={ministryTemplate.value}>
-                      <span class={ministryTemplate.valueNumber}>{v.number}</span>
-                      <b class={ministryTemplate.valueTitle}>{v.title}</b>
-                      <span class={ministryTemplate.valueDescription}>{v.description}</span>
+                      <span class={ministryTemplate.valueNumber}>{String(index + 1).padStart(2, '0')}</span>
+                      <b class={ministryTemplate.valueTitle}>{value.title}</b>
+                      {value.description && <span class={ministryTemplate.valueDescription}>{value.description}</span>}
                     </div>
-                  ))}
-                </div>
-              )
-            }
-
-            {
-              section.facts?.type === 'facts' && (
-                <dl class={ministryTemplate.facts}>
-                  {section.facts.facts.map((f) => (
-                    <div class={ministryTemplate.fact}>
-                      <dt class={ministryTemplate.factLabel}>{f.label}</dt>
-                      <dd class={ministryTemplate.factValue}>{f.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              )
-            }
-
-            {
-              section.links?.type === 'linkGrid' && (
-                <div class={ministryTemplate.links}>
-                  {section.links.links.map((link) => (
-                    <a
-                      href={link.href}
-                      class={ministryTemplate.linkCard}
-                      style={link.tint ? `--tint: ${link.tint}` : undefined}
-                    >
-                      <span
-                        class={ministryTemplate.linkGlyph}
-                        aria-hidden="true"
-                      >
-                        {link.glyph}
-                      </span>
-                      <span class={ministryTemplate.linkCopy}>
-                        <small class={ministryTemplate.linkSource}>{link.sourceLabel}</small>
-                        <b class={ministryTemplate.linkTitle}>{link.title}</b>
-                        <span class={ministryTemplate.linkDescription}>{link.description}</span>
-                        <em class={ministryTemplate.linkMeta}>{link.meta} →</em>
-                      </span>
-                    </a>
                   ))}
                 </div>
               )
             }
           </section>
-        ))
+        )
+      }
+
+      {
+        facts && (
+          <section id={facts.id} class={ministryTemplate.section}>
+            <div class={ministryTemplate.sectionHead}>
+              <span class={ministryTemplate.sectionEyebrow}>{facts.number} — {sectionLabel.facts.eyebrow}</span>
+              <h2 class={ministryTemplate.sectionHeading}><InlineText value={{ before: copy.facts.titleBefore, emphasis: copy.facts.titleEmphasis }} emphasisClass={EMPHASIS} /></h2>
+            </div>
+            <dl class={ministryTemplate.facts}>
+              {ministry.place && (
+                <div class={ministryTemplate.fact}>
+                  <dt class={ministryTemplate.factLabel}>{copy.facts.place}</dt>
+                  <dd class={ministryTemplate.factValue}>{ministry.place}</dd>
+                </div>
+              )}
+              {ministry.audience && (
+                <div class={ministryTemplate.fact}>
+                  <dt class={ministryTemplate.factLabel}>{copy.facts.audience}</dt>
+                  <dd class={ministryTemplate.factValue}>{ministry.audience}</dd>
+                </div>
+              )}
+              {ministry.howToJoin && (
+                <div class={ministryTemplate.fact}>
+                  <dt class={ministryTemplate.factLabel}>{copy.facts.howToJoin}</dt>
+                  <dd class={ministryTemplate.factValue}>{ministry.howToJoin}</dd>
+                </div>
+              )}
+              {leaders.length > 0 && (
+                <div class={ministryTemplate.fact}>
+                  <dt class={ministryTemplate.factLabel}>{copy.facts.leaders}</dt>
+                  <dd class={ministryTemplate.factValue}>
+                    <ul class={ministryTemplate.leaders}>
+                      {leaders.map((leader) => {
+                        const photo = buildPhotoSrcSet(leader.photo ?? null);
+                        return (
+                          <li class={ministryTemplate.leader}>
+                            {photo && (
+                              <img
+                                src={photo.src}
+                                srcset={photo.srcset}
+                                sizes="60px"
+                                width="60"
+                                height="60"
+                                alt=""
+                                class={ministryTemplate.leaderPhoto}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                            <span class={ministryTemplate.leaderName}>
+                              {leader.name}
+                              <span class={ministryTemplate.leaderTitle}>{leader.title}</span>
+                            </span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </section>
+        )
+      }
+
+      {
+        next && ministry.nextStep && (
+          <section id={next.id} class={ministryTemplate.section}>
+            <div class={ministryTemplate.sectionHead}>
+              <span class={ministryTemplate.sectionEyebrow}>{next.number} — {sectionLabel.next.eyebrow}</span>
+              <h2 class={ministryTemplate.sectionHeading}><InlineText value={{ before: copy.next.titleBefore, emphasis: copy.next.titleEmphasis }} emphasisClass={EMPHASIS} /></h2>
+            </div>
+            <p class={ministryTemplate.paragraph}>{ministry.nextStep}</p>
+          </section>
+        )
       }
     </div>
 
     <aside class={ministryTemplate.toc}>
       <div class={ministryTemplate.tocPanel}>
-        <span class={ministryTemplate.tocTitle}>{page.tocTitle}</span>
+        <span class={ministryTemplate.tocTitle}>{copy.tocTitle}</span>
         <nav class={ministryTemplate.tocNav}>
           {
-            sections.map((section, i) => (
+            sections.map((section) => (
               <a
                 href={`#${section.id}`}
                 class={ministryTemplate.tocLink}
                 data-content-toc
                 data-target={section.id}
               >
-                <span class={ministryTemplate.tocNumber}>{String(i + 1).padStart(2, '0')}</span>{section.tocLabel}
+                <span class={ministryTemplate.tocNumber}>{section.number}</span>{sectionLabel[section.key].toc}
               </a>
             ))
           }
         </nav>
       </div>
-      {
-        page.shortcuts?.length && (
-          <div class={ministryTemplate.shortcuts}>
-            <span class={ministryTemplate.shortcutsTitle}>{page.shortcutsTitle}</span>
-            {page.shortcuts.map((s) => (
-              <a href={s.href} class={ministryTemplate.shortcutLink}>{s.label}</a>
-            ))}
-          </div>
-        )
-      }
+      <div class={ministryTemplate.shortcuts}>
+        <span class={ministryTemplate.shortcutsTitle}>{copy.shortcuts.title}</span>
+        {shortcuts.map((shortcut) => (
+          <a href={shortcut.href} class={ministryTemplate.shortcutLink}>{shortcut.label}</a>
+        ))}
+      </div>
     </aside>
   </section>
 
-  {
-    cta && (
-      <section class={ministryTemplate.cta}>
-        <div class={ministryTemplate.ctaPanel}>
-          <AnchorMark
-            id="mn-cta"
-            color="#fff"
-            outline={false}
-            class={ministryTemplate.ctaMark}
-          />
-          <div class={ministryTemplate.ctaCopy}>
-            <span class={ministryTemplate.ctaEyebrow}>{cta.eyebrow}</span>
-            <h2 class={ministryTemplate.ctaTitle}>
-              <InlineText value={cta.title} emphasisClass="not-italic" />
-            </h2>
-            <p class={ministryTemplate.ctaBody}>{cta.body}</p>
-          </div>
-          <div class={ministryTemplate.ctaActions}>
-            <Button href={cta.primary.href} variant="dark" class={ministryTemplate.ctaPrimary}>{cta.primary.label}</Button>
-            {cta.secondary && (
-              <Button href={cta.secondary.href} class={ministryTemplate.ctaSecondary}>{cta.secondary.label}</Button>
-            )}
-          </div>
-        </div>
-      </section>
-    )
-  }
+  <section class={ministryTemplate.cta}>
+    <div class={ministryTemplate.ctaPanel}>
+      <AnchorMark id="mn-cta" color="#fff" outline={false} class={ministryTemplate.ctaMark} />
+      <div class={ministryTemplate.ctaCopy}>
+        <span class={ministryTemplate.ctaEyebrow}>{copy.cta.eyebrow}</span>
+        <h2 class={ministryTemplate.ctaTitle}>
+          <InlineText value={{ before: copy.cta.titleBefore, emphasis: `${ministry.name}.` }} emphasisClass="not-italic" />
+        </h2>
+      </div>
+      <div class={ministryTemplate.ctaActions}>
+        <Button href={localizePath('/#visitanos', locale)} variant="dark" class={ministryTemplate.ctaPrimary}>{copy.cta.primary}</Button>
+        <Button href={juntosPath} class={ministryTemplate.ctaSecondary}>{copy.cta.secondary}</Button>
+      </div>
+    </div>
+  </section>
 </article>
 
 <script>

@@ -44,32 +44,6 @@ interface AllowedOccurrence {
 // else is cleaned up, not allowed here. Each phase removes its own entries.
 const ALLOWLIST: AllowedOccurrence[] = [
   {
-    file: 'utils/ministriesData.json',
-    fragment: 'elancla.uy',
-    reason: '1.5: ministry data (the women ministry has its own subdomain)',
-  },
-  {
-    file: 'i18n/messages/es/ministries.json',
-    fragment: 'elancla.uy',
-    reason: '1.5: ministry data (the women ministry has its own subdomain)',
-  },
-  {
-    file: 'i18n/messages/en/ministries.json',
-    fragment: 'elancla.uy',
-    reason: '1.5: ministry data (the women ministry has its own subdomain)',
-  },
-  {
-    file: 'i18n/messages/pt/ministries.json',
-    fragment: 'elancla.uy',
-    reason: '1.5: ministry data (the women ministry has its own subdomain)',
-  },
-  {
-    file: 'sections/landing/Together/Together.astro',
-    fragment: 'elancla.uy',
-    reason:
-      '1.5: link to the women ministry site, which comes with the ministry data',
-  },
-  {
     file: 'data/calendar.ts',
     fragment: '11:15',
     reason:
