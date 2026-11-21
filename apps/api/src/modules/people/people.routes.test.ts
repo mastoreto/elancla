@@ -192,6 +192,33 @@ async function createOk(
   return (await res.json()) as PersonProfileDto;
 }
 
+let leaderMinistryId = "";
+
+/**
+ * A person leading a ministry. The role is written straight to the database: ministry leadership
+ * is edited from the ministry, and the people body refuses it.
+ */
+async function createLeaderOk(
+  overrides: Partial<UpsertPersonProfileBody> & {
+    order?: number;
+    title?: string;
+  },
+): Promise<PersonProfileDto> {
+  const { order = 0, title = "Pastor", ...rest } = overrides;
+  const person = await createOk({ ...rest, roles: [] });
+  leaderMinistryId ||= await fixtures.createMinistry("people-leaders");
+  await db.personRole.create({
+    data: {
+      personProfileId: person.id,
+      context: "MINISTRY_LEADER",
+      ministryId: leaderMinistryId,
+      order,
+      translations: { create: { locale: "es", title } },
+    },
+  });
+  return person;
+}
+
 function getPublic(
   context: string | null,
   query = "",
@@ -535,23 +562,12 @@ describe("GET /public/v1/:churchSlug/people", () => {
   });
 
   test("orders by role order, then name; carries title, bio, initials and cache policy", async () => {
-    await createOk({
-      name: `${NAME_PREFIX} Zeta`,
-      roles: [role({ context: "ministry-leader", order: 1 })],
-    });
-    await createOk({
-      name: `${NAME_PREFIX} Alfa`,
-      roles: [role({ context: "ministry-leader", order: 1 })],
-    });
-    await createOk({
+    await createLeaderOk({ name: `${NAME_PREFIX} Zeta`, order: 1 });
+    await createLeaderOk({ name: `${NAME_PREFIX} Alfa`, order: 1 });
+    await createLeaderOk({
       name: `${NAME_PREFIX} Primero`,
-      roles: [
-        role({
-          context: "ministry-leader",
-          order: 0,
-          translations: { es: { title: "Líder" } },
-        }),
-      ],
+      order: 0,
+      title: "Líder",
     });
     const res = await getPublic("ministry-leader");
     expect(res.headers.get("Cache-Control")).toBe(
@@ -618,10 +634,10 @@ describe("GET /public/v1/:churchSlug/people", () => {
   });
 
   test("the photo is the webp variants as url/width/height, and null while it is not ready", async () => {
-    await createOk({
+    await createLeaderOk({
       name: `${NAME_PREFIX} Photo`,
       photoId: readyPhotoId,
-      roles: [role({ context: "ministry-leader", order: 5 })],
+      order: 5,
     });
     const person = (await publicPeople("ministry-leader")).find(
       (entry) => entry.name === `${NAME_PREFIX} Photo`,
@@ -663,5 +679,50 @@ describe("GET /public/v1/:churchSlug/people", () => {
   test("the seeded team is still served", async () => {
     const team = await publicPeople("team");
     expect(team.length).toBeGreaterThanOrEqual(SEEDED_TEAM_SIZE);
+  });
+});
+
+describe("ministry leadership", () => {
+  test("a body with the ministry-leader context is a 400: it is managed from the ministry", async () => {
+    const res = await call("POST", "/content/people", {
+      cookie: editorCookie,
+      body: { ...bodyOf(), roles: [{ ...role(), context: "ministry-leader" }] },
+    });
+    expect(res.status).toBe(400);
+  });
+
+  test("saving a person keeps their ministry roles and shows them read-only", async () => {
+    const created = await createOk();
+    const ministryId = await fixtures.createMinistry("people-leader");
+    await db.personRole.create({
+      data: {
+        personProfileId: created.id,
+        context: "MINISTRY_LEADER",
+        ministryId,
+        visible: false,
+        translations: { create: { locale: "es", title: "Líder" } },
+      },
+    });
+
+    const res = await call("PATCH", `/content/people/${created.id}`, {
+      cookie: editorCookie,
+      body: bodyOf({ roles: [role({ context: "preacher" })] }),
+    });
+    expect(res.status).toBe(200);
+    const updated = (await res.json()) as PersonProfileDto;
+    expect(updated.roles.map((r) => r.context)).toEqual(["preacher"]);
+    expect(updated.ministryRoles).toEqual([
+      expect.objectContaining({
+        ministryId,
+        ministryName: "Test people-leader",
+        visible: false,
+        translations: { es: { title: "Líder", stats: [] } },
+      }),
+    ]);
+    expect(
+      await db.personRole.count({
+        where: { personProfileId: created.id, context: "MINISTRY_LEADER" },
+      }),
+    ).toBe(1);
   });
 });
