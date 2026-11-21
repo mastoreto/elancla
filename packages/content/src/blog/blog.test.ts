@@ -39,6 +39,10 @@ function clientFor(options: {
   const { index = [INDEX], post = [null], view, calls } = options;
   const log = calls ?? { index: [], post: [], view: [] };
   return {
+    getMinistries: async () => {
+      throw new Error("not used");
+    },
+    getMinistry: async () => null,
     getSettings: async () => {
       throw new Error("not used");
     },

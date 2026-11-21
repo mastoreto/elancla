@@ -35,6 +35,10 @@ function clientFor(options: {
     pageCalls = [],
   } = options;
   return {
+    getMinistries: async () => {
+      throw new Error("not used");
+    },
+    getMinistry: async () => null,
     getSettings: async () => {
       throw new Error("not used");
     },

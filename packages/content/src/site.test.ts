@@ -52,6 +52,10 @@ function clientReturning(
   calls: { count: number },
 ): PublicClient {
   return {
+    getMinistries: async () => {
+      throw new Error("not used");
+    },
+    getMinistry: async () => null,
     async getSettings() {
       const result = results[Math.min(calls.count, results.length - 1)];
       calls.count += 1;
@@ -170,6 +174,10 @@ describe("createSiteConfigLoader", () => {
   test("caches per locale and asks the client for each one", async () => {
     const locales: (string | undefined)[] = [];
     const client: PublicClient = {
+      getMinistries: async () => {
+        throw new Error("not used");
+      },
+      getMinistry: async () => null,
       async getSettings(locale) {
         locales.push(locale);
         return { ...SETTINGS, name: `site-${locale ?? "default"}` };
