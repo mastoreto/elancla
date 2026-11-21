@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { grant, PERMISSIONS } from "@ancla/contracts";
-import { can, canAny } from "./can";
+import { can, canAny, canWithAllScope } from "./can";
 
 const leader = {
   isAdmin: false,
@@ -33,5 +33,24 @@ describe("can", () => {
     expect(canAny(access, [PERMISSIONS.movements.view, PERMISSIONS.requests.view])).toBe(true);
     expect(canAny(access, [PERMISSIONS.movements.view, PERMISSIONS.budgets.view])).toBe(false);
     expect(canAny(access, [])).toBe(true);
+  });
+});
+
+describe("canWithAllScope", () => {
+  test("the admin holds every scope", () => {
+    expect(canWithAllScope({ isAdmin: true, grants: [] }, PERMISSIONS.ministryProfile.edit)).toBe(
+      true,
+    );
+  });
+
+  test("a ministry scope does not count, an all scope does", () => {
+    const ministryScoped = {
+      isAdmin: false,
+      grants: [grant(PERMISSIONS.ministryProfile.edit, "ministry")],
+    };
+    const allScoped = { isAdmin: false, grants: [grant(PERMISSIONS.ministryProfile.edit, "all")] };
+    expect(canWithAllScope(ministryScoped, PERMISSIONS.ministryProfile.edit)).toBe(false);
+    expect(canWithAllScope(allScoped, PERMISSIONS.ministryProfile.edit)).toBe(true);
+    expect(canWithAllScope(allScoped, PERMISSIONS.ministryProfile.create)).toBe(false);
   });
 });

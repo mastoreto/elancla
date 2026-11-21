@@ -1,0 +1,1 @@
+export { loadMinistryCategories } from "./loadMinistryCategories";

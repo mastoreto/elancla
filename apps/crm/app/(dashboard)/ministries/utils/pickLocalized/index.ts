@@ -1,0 +1,1 @@
+export { pickLocalized } from "./pickLocalized";

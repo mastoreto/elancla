@@ -15,3 +15,15 @@ export function canAny(access: AccessSnapshot, permissions: readonly Permission[
   if (permissions.length === 0) return true;
   return permissions.some((permission) => can(access, permission));
 }
+
+/**
+ * Whether the user may do `permission` over every ministry, not only their own. The API answers
+ * 403 to a `ministry` scope on the settings of a ministry, so the screens hide those controls.
+ */
+export function canWithAllScope(access: AccessSnapshot, permission: Permission): boolean {
+  if (access.isAdmin) return true;
+  const [resource, action] = permission.split(":");
+  return access.grants.some(
+    (grant) => grant.resource === resource && grant.action === action && grant.scope === "all",
+  );
+}
