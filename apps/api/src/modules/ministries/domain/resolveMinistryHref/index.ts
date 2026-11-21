@@ -1,0 +1,1 @@
+export { resolveMinistryHref } from "./resolveMinistryHref";

@@ -520,16 +520,3 @@ describe("GET /public/v1/:churchSlug/pages/:slug", () => {
     expect(after.title).toBe("Nuevo");
   });
 });
-
-describe("types without entityExists keep their behavior", () => {
-  test("an entity id that is not a row is still fine for types without entityExists", async () => {
-    const res = await call(
-      "GET",
-      `/editorial/ministry/${crypto.randomUUID()}`,
-      {
-        cookie: admin.cookie,
-      },
-    );
-    expect(res.status).toBe(200);
-  });
-});

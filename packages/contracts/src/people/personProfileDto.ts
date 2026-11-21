@@ -10,7 +10,18 @@ export const PERSON_CONTEXTS = [
   "ministry-leader",
 ] as const;
 export const personContext = z.enum(PERSON_CONTEXTS);
+/**
+ * Contexts the people CRM edits. `ministry-leader` is managed from the ministry (1.5), so a body
+ * that carries it is a 400.
+ */
+export const EDITABLE_PERSON_CONTEXTS = [
+  "team",
+  "blog-author",
+  "preacher",
+] as const;
+export const editablePersonContext = z.enum(EDITABLE_PERSON_CONTEXTS);
 export type PersonContext = z.infer<typeof personContext>;
+export type EditablePersonContext = z.infer<typeof editablePersonContext>;
 
 export const PERSON_NAME_MAX_LENGTH = 120;
 export const PERSON_BIO_MAX_LENGTH = 600;
@@ -26,7 +37,7 @@ const titleTranslationDto = z.strictObject({
 });
 
 const personRoleFields = {
-  context: personContext,
+  context: editablePersonContext,
   /** Whether the person shows up in that context on the public site. */
   visible: z.boolean(),
   order: z.number().int().min(0).max(9999),
@@ -36,6 +47,16 @@ const personRoleFields = {
 export const personRoleDto = z.strictObject(personRoleFields);
 export type PersonRoleDto = z.infer<typeof personRoleDto>;
 
+/** A ministry the person leads, read-only in the people CRM (edited from the ministry). */
+export const personMinistryRoleDto = z.strictObject({
+  ministryId: z.uuid(),
+  ministryName: z.string(),
+  visible: z.boolean(),
+  order: z.number().int(),
+  translations: z.record(z.string(), titleTranslationDto),
+});
+export type PersonMinistryRoleDto = z.infer<typeof personMinistryRoleDto>;
+
 /** A person as the CRM edits them. */
 export const personProfileDto = z.strictObject({
   id: z.uuid(),
@@ -43,7 +64,9 @@ export const personProfileDto = z.strictObject({
   photo: mediaFileDto.nullable(),
   userId: z.uuid().nullable(),
   translations: z.record(z.string(), bioTranslationDto),
+  /** The editable roles; ministry leadership is in `ministryRoles`. */
   roles: z.array(personRoleDto),
+  ministryRoles: z.array(personMinistryRoleDto),
 });
 export type PersonProfileDto = z.infer<typeof personProfileDto>;
 
@@ -58,7 +81,7 @@ export const upsertPersonProfileBody = z.strictObject({
   translations: z.record(z.string(), bioTranslationDto),
   roles: z
     .array(z.strictObject(personRoleFields))
-    .max(PERSON_CONTEXTS.length)
+    .max(EDITABLE_PERSON_CONTEXTS.length)
     .refine(
       (roles) =>
         new Set(roles.map((role) => role.context)).size === roles.length,

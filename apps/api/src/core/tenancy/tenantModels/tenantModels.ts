@@ -21,5 +21,6 @@ export const TENANT_MODELS: ReadonlySet<string> = new Set([
   "SimplePage",
   "Post",
   "Category",
+  "MinistryCategory",
   "Series",
 ]);

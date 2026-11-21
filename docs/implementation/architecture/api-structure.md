@@ -28,7 +28,7 @@ apps/api/
 ├── package.json
 ├── tsconfig.json
 └── src/
-    ├── index.ts                         # barrel: export { app, type AppType }
+    ├── index.ts                         # barrel: export { app, type AppType } (AppType refleja solo las rutas privadas: con la API pública dentro, `hc<AppType>` supera el límite de profundidad de TypeScript; la pública tiene su OpenAPI)
     ├── app.ts                           # composición: middlewares globales + montaje de módulos
     ├── server.ts                        # entrypoint standalone (fase 2, deploy propio)
     │
@@ -85,9 +85,10 @@ apps/api/
     │   ├── site/                        # configuración del sitio (GET/PATCH /site/settings, lock por version, auditoría; domain/ data/ mappers/ useCases/)
     │   ├── people/                      # perfiles públicos de persona (D-40): /content/people CRUD, auditoría personProfile.*, initials; domain/ data/ mappers/ useCases/
     │   ├── visit/                       # Visítanos (D-38): GET/PUT /site/visit, reemplazo en transacción, auditoría visit.updated; domain/ data/ mappers/ useCases/
+    │   ├── ministries/                  # ministerios (D-29): GET /ministries (0.4), GET/POST /content/ministries, PATCH …/:id/settings, PUT …/:id/leaders, PATCH …/landing, CRUD /content/ministry-categories; auditoría ministry.* y ministryCategory.*; el perfil va por /editorial/ministry; configuración con alcance `all` (requireAllScope); domain/ (resolveMinistryHref, resolveSeo, sortLanding, slugifyMinistryName, requireAllScope) data/ mappers/ useCases/
     │   ├── pages/                       # páginas simples (D-41): GET/POST /content/pages, auditoría simplePage.created; el contenido va por /editorial/simple-page; domain/ data/ mappers/ useCases/
     │   ├── blog/                        # blog (D-32): GET/POST /content/posts, CRUD /content/categories y /content/series, visitas (recordPostView) y GET /internal/blog/views/purge; domain/ (readingStats, buildToc, issueNumbers, seriesState, pickRelated, isVisible, urlDate, isKnownBot, visitorHash…) data/ mappers/ useCases/
-    │   ├── editorial/                   # flujo editorial (D-30): domain/ (máquina de estados, availableActions) registry/ (hooks opcionales por tipo: entityExists, validateSnapshot, beforeGoLive; registrados simplePage y blogPost) guards/ data/ mappers/ notifications/ useCases/
+    │   ├── editorial/                   # flujo editorial (D-30): domain/ (máquina de estados, availableActions) registry/ (hooks opcionales por tipo: entityExists, validateSnapshot, beforeGoLive; registrados simplePage, blogPost y ministry; slugs/ y media/ son los chequeos genéricos de slugs libres/fijos y medios) guards/ data/ mappers/ notifications/ useCases/
     │   └── public/                      # API pública v1 para sitios (solo contenido publicado): guards/requireSiteKey, useCases, mappers
     │
     └── test/                            # helpers: BD de test, factories, cliente HTTP, matriz de permisos

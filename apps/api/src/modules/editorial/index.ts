@@ -7,3 +7,4 @@ export {
 } from "./data";
 export { editorialRoutes } from "./editorial.routes";
 export { toRevisionSummaryDto } from "./mappers";
+export { assertMediaValid } from "./registry/media";

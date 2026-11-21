@@ -1,5 +1,1 @@
-export {
-  BlogSlugLockedError,
-  BlogSlugTakenError,
-  InvalidBlogReferenceError,
-} from "./blogPostErrors";
+export { InvalidBlogReferenceError } from "./blogPostErrors";

@@ -1,8 +1,7 @@
 import type { GoLiveContext } from "../../editorialTypes";
+import { assertSlugsFree, assertSlugsLocked } from "../../slugs";
 import { assertBlogAuthorValid } from "../assertBlogAuthorValid";
 import { assertBlogMediaValid } from "../assertBlogMediaValid";
-import { assertBlogSlugsFree } from "../assertBlogSlugsFree";
-import { assertBlogSlugsLocked } from "../assertBlogSlugsLocked";
 import { assertBlogTaxonomyValid } from "../assertBlogTaxonomyValid";
 import { fixFirstLiveAt } from "../fixFirstLiveAt";
 
@@ -16,7 +15,7 @@ export async function blogPostBeforeGoLive(
   await assertBlogAuthorValid(context);
   await assertBlogTaxonomyValid(context);
   await assertBlogMediaValid(context);
-  await assertBlogSlugsFree(context);
-  await assertBlogSlugsLocked(context);
+  await assertSlugsFree(context, "BLOG_POST");
+  await assertSlugsLocked(context, "BLOG_POST");
   await fixFirstLiveAt(context);
 }

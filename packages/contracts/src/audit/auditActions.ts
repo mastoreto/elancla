@@ -64,6 +64,17 @@ export const AUDIT_ACTIONS = {
     updated: "category.updated",
     deleted: "category.deleted",
   },
+  ministry: {
+    created: "ministry.created",
+    settingsUpdated: "ministry.settingsUpdated",
+    leadersUpdated: "ministry.leadersUpdated",
+    landingUpdated: "ministry.landingUpdated",
+  },
+  ministryCategory: {
+    created: "ministryCategory.created",
+    updated: "ministryCategory.updated",
+    deleted: "ministryCategory.deleted",
+  },
   series: {
     created: "series.created",
     updated: "series.updated",

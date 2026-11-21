@@ -1,4 +1,6 @@
 export { getPublicBlogIndex } from "./getPublicBlogIndex";
+export { getPublicMinistries } from "./getPublicMinistries";
+export { getPublicMinistry } from "./getPublicMinistry";
 export { getPublicPage } from "./getPublicPage";
 export { getPublicPages } from "./getPublicPages";
 export { getPublicPeople } from "./getPublicPeople";

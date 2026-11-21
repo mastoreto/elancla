@@ -6,7 +6,9 @@ import { CONTEXT_TO_DB } from "../domain";
 const personInclude = {
   photo: true,
   translations: true,
-  roles: { include: { translations: true } },
+  roles: {
+    include: { translations: true, ministry: { select: { name: true } } },
+  },
 } satisfies Prisma.PersonProfileInclude;
 
 export type PersonRow = Prisma.PersonProfileGetPayload<{
@@ -135,8 +137,8 @@ export function createPersonRow(
 }
 
 /**
- * Replaces the profile: the fields, the bios of the locales sent and the whole list of roles
- * (their titles go with them in cascade). The children are cleared first, in separate statements,
+ * Replaces the profile: the fields, the bios of the locales sent and the list of roles that are
+ * not ministry leadership (their titles go with them in cascade). The children are cleared first, in separate statements,
  * so the unique keys never see the old and the new row together.
  */
 export async function replacePersonRow(
@@ -151,7 +153,10 @@ export async function replacePersonRow(
       locale: { in: Object.keys(body.translations) },
     },
   });
-  await tx.personRole.deleteMany({ where: { personProfileId: id } });
+  // The leader roles belong to their ministry (edited from there), so saving a person keeps them.
+  await tx.personRole.deleteMany({
+    where: { personProfileId: id, context: { not: "MINISTRY_LEADER" } },
+  });
   return tx.personProfile.update({
     where: { id, organizationId },
     data: {

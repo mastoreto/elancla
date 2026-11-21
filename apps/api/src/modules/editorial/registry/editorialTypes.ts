@@ -1,14 +1,15 @@
 import {
   blogPostSnapshot,
   type EditorialContentTypeParam,
+  ministrySnapshot,
   PERMISSIONS,
   type Permission,
   simplePageSnapshot,
-  snapshotSchema,
 } from "@ancla/contracts";
 import type { EditorialContentType, Prisma } from "@ancla/db";
 import type { z } from "zod";
 import { blogPostBeforeGoLive, blogPostExists } from "./blogPost";
+import { ministryBeforeGoLive, ministryExists } from "./ministry";
 import { assertSimplePageSlugsFree, simplePageExists } from "./simplePage";
 import { validateSnapshotLocales } from "./validateSnapshotLocales";
 
@@ -38,7 +39,6 @@ export interface EditorialTypeDefinition {
   permissions: Record<EditorialPermissionKind, Permission>;
   /** The content belongs to a ministry: a ministry-scoped grant only reaches the user's own. */
   ministryScoped: boolean;
-  /** ponytail: 1.5 replaces the generic schema of `ministry` with the real one. */
   snapshotSchema: z.ZodType<Record<string, unknown>>;
   /** Where the CRM shows this entity, for the links in emails and in the inbox. */
   crmPath(entityId: string): string;
@@ -88,8 +88,11 @@ export const EDITORIAL_TYPES: Record<
       publish: PERMISSIONS.ministryProfile.publish,
     },
     ministryScoped: true,
-    snapshotSchema,
+    snapshotSchema: ministrySnapshot,
     crmPath: (entityId) => `/ministries/${entityId}`,
+    entityExists: ministryExists,
+    beforeGoLive: ministryBeforeGoLive,
+    validateSnapshot: validateSnapshotLocales,
   },
   "simple-page": {
     contentType: "SIMPLE_PAGE",

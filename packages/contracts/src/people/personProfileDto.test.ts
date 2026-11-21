@@ -39,4 +39,11 @@ describe("upsertPersonProfileBody", () => {
       false,
     );
   });
+
+  test("rejects ministry-leader: it is managed from the ministry", () => {
+    expect(
+      upsertPersonProfileBody.safeParse(body([role("ministry-leader")]))
+        .success,
+    ).toBe(false);
+  });
 });

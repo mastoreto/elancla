@@ -21,6 +21,10 @@ import { createApiCaller } from "../../../test/support/apiCaller";
 import { auditRowsOf, requestIdOf } from "../../../test/support/auditRows";
 import { createFixtures } from "../../../test/support/fixtures";
 import {
+  nameOfSnapshot,
+  validMinistrySnapshot,
+} from "../../../test/support/ministrySnapshot";
+import {
   createRecordingMailer,
   type RecordingMailer,
 } from "../../../test/support/recordingMailer";
@@ -96,7 +100,8 @@ async function configure(
   });
 }
 
-const newEntity = (): string => crypto.randomUUID();
+/** A real ministry: its type checks the entity exists. */
+const newEntity = (): Promise<string> => fixtures.createMinistry("editorial");
 const urlOf = (entityId: string, suffix = ""): string =>
   `/editorial/ministry/${entityId}${suffix}`;
 
@@ -130,13 +135,16 @@ async function statusOf(
 }
 
 const draft = (user: TestUser, entityId: string, title = "v1") =>
-  act(user, entityId, "draft", { snapshot: { title } });
+  act(user, entityId, "draft", {
+    snapshot: validMinistrySnapshot(entityId, title),
+  });
 
 /** A revision submitted by `author`, ready for a reviewer to decide. */
 async function inReview(
   author: TestUser,
-  entityId = newEntity(),
+  existingEntityId?: string,
 ): Promise<string> {
+  const entityId = existingEntityId ?? (await newEntity());
   await expectOk(await draft(author, entityId));
   await expectOk(await act(author, entityId, "submit"));
   return entityId;
@@ -144,7 +152,7 @@ async function inReview(
 
 describe("state transitions over HTTP", () => {
   test("an action that does not fit the state is a 409 invalid_transition", async () => {
-    const entityId = newEntity();
+    const entityId = await newEntity();
     await expectOk(await draft(editor, entityId));
 
     const approveDraft = await act(admin, entityId, "approve");
@@ -158,16 +166,18 @@ describe("state transitions over HTTP", () => {
   });
 
   test("submitting or pausing an entity with nothing is a 409", async () => {
-    expect((await act(editor, newEntity(), "submit")).status).toBe(409);
-    expect((await act(publisher, newEntity(), "pause")).status).toBe(409);
-    expect((await act(publisher, newEntity(), "publish")).status).toBe(409);
+    expect((await act(editor, await newEntity(), "submit")).status).toBe(409);
+    expect((await act(publisher, await newEntity(), "pause")).status).toBe(409);
+    expect((await act(publisher, await newEntity(), "publish")).status).toBe(
+      409,
+    );
   });
 
   test("the status carries the working snapshot and what the user can do", async () => {
-    const entityId = newEntity();
+    const entityId = await newEntity();
     const created = await expectOk(await draft(editor, entityId, "hello"));
     expect(created.working?.state).toBe("draft");
-    expect(created.working?.snapshot).toEqual({ title: "hello" });
+    expect(nameOfSnapshot(created.working?.snapshot)).toBe("hello");
     expect(created.live).toBeNull();
     expect(created.availableActions).toEqual(["saveDraft", "submit"]);
   });
@@ -175,7 +185,7 @@ describe("state transitions over HTTP", () => {
 
 describe("publishing without review", () => {
   test("without publish a direct publish is a 403, and the same user can submit", async () => {
-    const entityId = newEntity();
+    const entityId = await newEntity();
     await expectOk(await draft(editor, entityId));
     expect((await act(editor, entityId, "publish")).status).toBe(403);
     await expectOk(await act(editor, entityId, "submit"));
@@ -184,7 +194,7 @@ describe("publishing without review", () => {
   test("a publisher under mandatory review by user cannot publish directly", async () => {
     const user = await makeUser("mandatory-user", [VIEW, EDIT, PUBLISH]);
     await configure({ mandatoryReviewUserIds: [user.id] });
-    const entityId = newEntity();
+    const entityId = await newEntity();
     const created = await expectOk(await draft(user, entityId));
     expect(created.availableActions).not.toContain("publish");
     const res = await act(user, entityId, "publish");
@@ -195,7 +205,7 @@ describe("publishing without review", () => {
   test("a publisher under mandatory review by role cannot publish directly", async () => {
     const user = await makeUser("mandatory-role", [VIEW, EDIT, PUBLISH]);
     await configure({ mandatoryReviewRoleIds: user.roleIds });
-    const entityId = newEntity();
+    const entityId = await newEntity();
     const created = await expectOk(await draft(user, entityId));
     expect(created.availableActions).not.toContain("publish");
     expect((await act(user, entityId, "publish")).status).toBe(403);
@@ -203,7 +213,7 @@ describe("publishing without review", () => {
 
   test("a publisher cannot bypass the review of an author under mandatory review", async () => {
     await configure({ mandatoryReviewUserIds: [editor.id] });
-    const entityId = newEntity();
+    const entityId = await newEntity();
     await expectOk(await draft(editor, entityId));
     expect(
       (await statusOf(publisher, entityId)).availableActions,
@@ -212,7 +222,7 @@ describe("publishing without review", () => {
   });
 
   test("a publisher publishes directly, and the live revision shows in the status", async () => {
-    const entityId = newEntity();
+    const entityId = await newEntity();
     await expectOk(await draft(publisher, entityId));
     const published = await expectOk(await act(publisher, entityId, "publish"));
     expect(published.live?.state).toBe("published");
@@ -223,23 +233,29 @@ describe("publishing without review", () => {
 
 describe("editing published content", () => {
   test("the live snapshot stays until approval, then the old revision is superseded", async () => {
-    const entityId = newEntity();
+    const entityId = await newEntity();
     await draft(publisher, entityId, "old");
     await expectOk(await act(publisher, entityId, "publish"));
     expect(
-      await findLiveSnapshot(organizationId, "MINISTRY", entityId),
-    ).toEqual({ title: "old" });
+      nameOfSnapshot(
+        await findLiveSnapshot(organizationId, "MINISTRY", entityId),
+      ),
+    ).toBe("old");
 
     await expectOk(await draft(editor, entityId, "new"));
     await expectOk(await act(editor, entityId, "submit"));
     expect(
-      await findLiveSnapshot(organizationId, "MINISTRY", entityId),
-    ).toEqual({ title: "old" });
+      nameOfSnapshot(
+        await findLiveSnapshot(organizationId, "MINISTRY", entityId),
+      ),
+    ).toBe("old");
 
     await expectOk(await act(admin, entityId, "approve"));
     expect(
-      await findLiveSnapshot(organizationId, "MINISTRY", entityId),
-    ).toEqual({ title: "new" });
+      nameOfSnapshot(
+        await findLiveSnapshot(organizationId, "MINISTRY", entityId),
+      ),
+    ).toBe("new");
 
     const history = (await (
       await call("GET", urlOf(entityId, "/history"), { cookie: admin.cookie })
@@ -355,7 +371,7 @@ describe("requesting changes", () => {
 
 describe("pausing", () => {
   test("a paused entity disappears from the live reads and publish resumes it", async () => {
-    const entityId = newEntity();
+    const entityId = await newEntity();
     await draft(publisher, entityId, "kept");
     await expectOk(await act(publisher, entityId, "publish"));
 
@@ -371,14 +387,16 @@ describe("pausing", () => {
     const resumed = await expectOk(await act(publisher, entityId, "publish"));
     expect(resumed.live?.state).toBe("published");
     expect(
-      await findLiveSnapshot(organizationId, "MINISTRY", entityId),
-    ).toEqual({ title: "kept" });
+      nameOfSnapshot(
+        await findLiveSnapshot(organizationId, "MINISTRY", entityId),
+      ),
+    ).toBe("kept");
     const again = await listLiveSnapshots(organizationId, "MINISTRY");
     expect(again.some((entry) => entry.entityId === entityId)).toBe(true);
   });
 
   test("a publisher under mandatory review can still resume approved content", async () => {
-    const entityId = newEntity();
+    const entityId = await newEntity();
     await draft(publisher, entityId);
     await act(publisher, entityId, "publish");
     await act(publisher, entityId, "pause");
@@ -389,7 +407,7 @@ describe("pausing", () => {
 
 describe("audit", () => {
   test("every transition leaves its row with the request id and no snapshot", async () => {
-    const entityId = newEntity();
+    const entityId = await newEntity();
     const steps: [Response, string][] = [];
     steps.push([await draft(editor, entityId), "editorial.draftSaved"]);
     steps.push([await act(editor, entityId, "submit"), "editorial.submitted"]);
@@ -405,7 +423,7 @@ describe("audit", () => {
       await act(publisher, entityId, "publish"),
       "editorial.resumed",
     ]);
-    const direct = newEntity();
+    const direct = await newEntity();
     await draft(publisher, direct);
     steps.push([
       await act(publisher, direct, "publish"),
@@ -463,7 +481,7 @@ describe("emails", () => {
     setMailerForTests(failing);
     const error = spyOn(console, "error").mockImplementation(() => undefined);
     try {
-      const entityId = newEntity();
+      const entityId = await newEntity();
       await draft(editor, entityId);
       expect((await act(editor, entityId, "submit")).status).toBe(200);
       expect((await statusOf(editor, entityId)).working?.state).toBe(
@@ -490,7 +508,7 @@ describe("ministry scope", () => {
     );
     const mine = await call("PUT", `/editorial/ministry/${own}/draft`, {
       cookie: leader.cookie,
-      body: { snapshot: { name: "x" } },
+      body: { snapshot: validMinistrySnapshot(own, "x") },
     });
     expect(mine.status).toBe(200);
     expect(
@@ -510,7 +528,7 @@ describe("ministry scope", () => {
   });
 
   test("an unknown content type is a 404", async () => {
-    const res = await call("GET", `/editorial/nope/${newEntity()}`, {
+    const res = await call("GET", `/editorial/nope/${crypto.randomUUID()}`, {
       cookie: admin.cookie,
     });
     expect(res.status).toBe(404);
@@ -612,7 +630,7 @@ describe("settings", () => {
 
 describe("concurrency", () => {
   test("saves racing on a new entity never leave two working revisions", async () => {
-    const entityId = newEntity();
+    const entityId = await newEntity();
     const results = await Promise.all(
       ["a", "b", "c", "d"].map((title) => draft(editor, entityId, title)),
     );
@@ -633,7 +651,7 @@ describe("concurrency", () => {
   });
 
   test("the database refuses a second working revision and the error is recognized", async () => {
-    const entityId = newEntity();
+    const entityId = await newEntity();
     const row = (number: number) =>
       db.contentRevision.create({
         data: {

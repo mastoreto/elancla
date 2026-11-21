@@ -18,14 +18,34 @@ async function callApi(
   method: "PUT" | "POST",
   path: string,
   data?: unknown,
-): Promise<void> {
+  expectedStatus = 200,
+): Promise<{ id?: string }> {
   const origin = new URL(page.url()).origin;
   const response = await page.request.fetch(`/api${path}`, {
     method,
     data,
     headers: { origin },
   });
-  expect(response.status(), `${method} ${path}`).toBe(200);
+  expect(response.status(), `${method} ${path}`).toBe(expectedStatus);
+  return expectedStatus === 201 ? ((await response.json()) as { id?: string }) : {};
+}
+
+/** The smallest profile a ministry accepts; the slug follows the entity so reruns never clash. */
+function ministryProfile(entityId: string) {
+  const name = "Perfil de prueba";
+  return {
+    translations: {
+      es: {
+        name,
+        slug: `e2e-${entityId}`,
+        tagline: "Una frase de prueba",
+        about: {
+          type: "doc",
+          content: [{ type: "paragraph", content: [{ type: "text", text: name }] }],
+        },
+      },
+    },
+  };
 }
 
 test("an editor's draft reaches the reviewer's bell and inbox mail", async ({ page, browser }) => {
@@ -46,12 +66,20 @@ test("an editor's draft reaches the reviewer's bell and inbox mail", async ({ pa
 
   // 2. The editor saves a draft and sends it to review.
   await clearMailTo(E2E_USERS.reviewer);
-  const entityId = crypto.randomUUID();
+  // The ministry is a real row (the editorial type checks the entity exists): the admin creates it.
+  const created = await callApi(
+    page,
+    "POST",
+    "/content/ministries",
+    { name: "Ministerio de prueba" },
+    201,
+  );
+  const entityId = created.id as string;
   const editorContext = await browser.newContext({ extraHTTPHeaders: clientAddressHeaders() });
   const editorPage = await editorContext.newPage();
   await login(editorPage, E2E_USERS.editor);
   await callApi(editorPage, "PUT", `/editorial/ministry/${entityId}/draft`, {
-    snapshot: { title: "Perfil de prueba" },
+    snapshot: ministryProfile(entityId),
   });
   await callApi(editorPage, "POST", `/editorial/ministry/${entityId}/submit`);
   await editorContext.close();
@@ -73,8 +101,11 @@ test("an editor's draft reaches the reviewer's bell and inbox mail", async ({ pa
   expect(mail).toContain("el perfil de un ministerio");
   expect(mail).toContain("revisión");
 
-  // Leave the inbox as found: the admin (a reviewer too) approves it.
-  await callApi(page, "POST", `/editorial/ministry/${entityId}/approve`);
+  // Leave the inbox as found without publishing the test profile: the admin (a reviewer too)
+  // sends it back.
+  await callApi(page, "POST", `/editorial/ministry/${entityId}/request-changes`, {
+    comment: "Prueba terminada",
+  });
 });
 
 test("someone with no editorial permission does not see the review tab", async ({ page }) => {

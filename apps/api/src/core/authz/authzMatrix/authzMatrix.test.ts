@@ -1168,6 +1168,93 @@ const rows: MatrixRow[] = [
     expected: 403,
   },
 
+  // ministry profile and settings: view lists, create makes ministries, edit changes settings,
+  // leaders, the mosaic and the categories. A role with only treasury (ministryFinance) gets none.
+  ...(
+    [
+      ["GET", "/content/ministries", undefined],
+      ["POST", "/content/ministries", {}],
+      ["PATCH", `/content/ministries/${UNKNOWN_ID}/settings`, {}],
+      ["PUT", `/content/ministries/${UNKNOWN_ID}/leaders`, []],
+      ["PATCH", "/content/ministries/landing", []],
+      ["GET", "/content/ministry-categories", undefined],
+      ["POST", "/content/ministry-categories", {}],
+      ["PATCH", `/content/ministry-categories/${UNKNOWN_ID}`, {}],
+      ["DELETE", `/content/ministry-categories/${UNKNOWN_ID}`, undefined],
+    ] as const
+  ).flatMap(([method, path, body]): MatrixRow[] => [
+    {
+      who: "anonymous",
+      caller: "anonymous",
+      method,
+      path,
+      body,
+      expected: 401,
+    },
+    { who: "no role", caller: NOTHING, method, path, body, expected: 403 },
+    {
+      who: PERMISSIONS.ministryFinance.view,
+      caller: [grant(PERMISSIONS.ministryFinance.view, "all")],
+      method,
+      path,
+      body,
+      expected: 403,
+    },
+  ]),
+  {
+    who: PERMISSIONS.ministryProfile.view,
+    caller: [grant(PERMISSIONS.ministryProfile.view, "ministry")],
+    method: "GET",
+    path: "/content/ministries",
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.ministryProfile.view,
+    caller: [grant(PERMISSIONS.ministryProfile.view, "all")],
+    method: "PATCH",
+    path: `/content/ministries/${UNKNOWN_ID}/settings`,
+    body: {},
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.ministryProfile.view,
+    caller: [grant(PERMISSIONS.ministryProfile.view, "all")],
+    method: "GET",
+    path: "/content/ministry-categories",
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.ministryProfile.edit,
+    caller: [grant(PERMISSIONS.ministryProfile.edit, "all")],
+    method: "PATCH",
+    path: "/content/ministries/landing",
+    body: [],
+    expected: 200,
+  },
+  {
+    who: PERMISSIONS.ministryProfile.edit,
+    caller: [grant(PERMISSIONS.ministryProfile.edit, "all")],
+    method: "GET",
+    path: "/content/ministries",
+    expected: 403,
+  },
+  {
+    who: "ministries.profile:edit (ministry)",
+    caller: [grant(PERMISSIONS.ministryProfile.edit, "ministry")],
+    method: "PATCH",
+    path: "/content/ministries/landing",
+    body: [],
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.ministryProfile.create,
+    caller: [grant(PERMISSIONS.ministryProfile.create, "all")],
+    method: "POST",
+    path: "/content/ministries",
+    body: {},
+    expected: 400,
+  },
+
   // The seeded admin holds everything, resources added later included.
   {
     who: "admin",

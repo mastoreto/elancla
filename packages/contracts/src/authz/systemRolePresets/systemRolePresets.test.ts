@@ -64,4 +64,25 @@ describe("institutional site presets", () => {
     ).map((preset) => preset.key);
     expect(holders).toEqual(["content-editor"]);
   });
+
+  test("the leader edits the profile of their ministry but neither creates, deletes nor publishes it", () => {
+    const profile = (action: string) =>
+      SYSTEM_ROLE_PRESETS.find((p) => p.key === "leader")?.grants.find(
+        (g) => g.resource === "ministries.profile" && g.action === action,
+      )?.scope;
+    expect(profile("view")).toBe("ministry");
+    expect(profile("edit")).toBe("ministry");
+    for (const action of ["create", "delete", "publish"]) {
+      expect(profile(action)).toBeUndefined();
+    }
+  });
+
+  test("the content editor publishes ministry profiles on every ministry", () => {
+    const grants = SYSTEM_ROLE_PRESETS.find(
+      (p) => p.key === "content-editor",
+    )?.grants.filter((g) => g.resource === "ministries.profile");
+    expect(
+      Object.fromEntries((grants ?? []).map((g) => [g.action, g.scope])),
+    ).toMatchObject({ view: "all", edit: "all", publish: "all" });
+  });
 });

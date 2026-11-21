@@ -1,1 +1,10 @@
+export { createMinistry } from "./createMinistry";
+export { createMinistryCategory } from "./createMinistryCategory";
+export { deleteMinistryCategory } from "./deleteMinistryCategory";
 export { listMinistries } from "./listMinistries";
+export { listMinistryCategories } from "./listMinistryCategories";
+export { listMinistryItems } from "./listMinistryItems";
+export { replaceMinistryLeaders } from "./replaceMinistryLeaders";
+export { updateMinistryCategory } from "./updateMinistryCategory";
+export { updateMinistryLanding } from "./updateMinistryLanding";
+export { updateMinistrySettings } from "./updateMinistrySettings";

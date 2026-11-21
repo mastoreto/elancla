@@ -1,0 +1,1 @@
+export { getPublicMinistry } from "./getPublicMinistry";

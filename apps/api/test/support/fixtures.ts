@@ -63,6 +63,7 @@ export function createFixtures() {
   const emails: string[] = [];
   const roleIds: string[] = [];
   const ministryIds: string[] = [];
+  const ministryCategoryIds: string[] = [];
   const organizationIds: string[] = [];
   const siteKeyIds: string[] = [];
   let ipCounter = 0;
@@ -139,6 +140,16 @@ export function createFixtures() {
       });
       ministryIds.push(ministry.id);
       return ministry.id;
+    },
+
+    /** Keeps a ministry made through the API in the list `cleanup()` removes. */
+    trackMinistry(id: string): void {
+      ministryIds.push(id);
+    },
+
+    /** Keeps a ministry category made through the API in the list `cleanup()` removes. */
+    trackMinistryCategory(id: string): void {
+      ministryCategoryIds.push(id);
     },
 
     /** A second church, for the cases where a credential of one must not open another. */
@@ -236,6 +247,9 @@ export function createFixtures() {
       await db.user.deleteMany({ where: { email: { in: emails } } });
       await db.role.deleteMany({ where: { id: { in: roleIds } } });
       await db.ministry.deleteMany({ where: { id: { in: ministryIds } } });
+      await db.ministryCategory.deleteMany({
+        where: { id: { in: ministryCategoryIds } },
+      });
       await db.siteApiKey.updateMany({
         where: { id: { in: siteKeyIds }, revokedAt: null },
         data: { revokedAt: new Date() },

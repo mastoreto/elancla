@@ -399,6 +399,11 @@ vigencia.
   libre.
 - La foto de Sunday queda fija; si en el futuro se configura, será en una configuración global de
   "Visita" (Sunday + Visítanos).
+- *Implementación (1.5):* el mosaico es el índice de ministerios (no hay `/ministerios`) y se
+  **calcula**: la API entrega `landing` ordenado (enlaces con `tile` de color o foto) y la web
+  reparte esos enlaces y las 3 fotos fijas del diseño en filas (`buildTogetherLayout`); con los 13
+  actuales reproduce el layout de hoy. Se guarda directo (`PATCH /content/ministries/landing`), sin
+  flujo editorial. Solo entran los ministerios visibles con "mostrar en la landing".
 - Lo no mencionado queda fijo.
 
 ## D-29 — Ministerio
@@ -408,8 +413,15 @@ vigencia.
 - Página de **estructura fija**: "sobre el ministerio" en texto enriquecido + valores opcionales;
   datos prácticos derivados. Sin constructor de bloques.
 - Horarios: se cargan como actividades del calendario vinculadas al ministerio, no en el ministerio.
-- Responsables: siempre visibles en el CRM; en la web, opcional por persona.
-- Lo edita un rol custom definido para eso (p. ej. Editorial), no los líderes por defecto.
+  Hasta la 1.6 el "cuándo" no se muestra en la página.
+- Responsables: siempre visibles en el CRM; en la web, opcional por persona (por defecto no). Se
+  editan desde el ministerio, no desde Personas.
+- **Quién edita qué (ajustada en 1.5):** el **perfil** (texto público) lo edita el líder del
+  ministerio (preset `leader`: `ministries.profile:view` + `edit` alcance ministerio, sin `publish`)
+  y pasa por el flujo editorial (D-30); publica quien tenga `publish` (p. ej. `content-editor`). La
+  **configuración** (categoría, destino, ícono, color, responsables, mosaico, alta) la edita un rol
+  con `ministries.profile:edit` (alta: `create`) con alcance `all`; con alcance `ministry` es 403.
+  Las finanzas siguen en `ministries.finance` (fase 2).
 
 ## D-30 — Flujo editorial
 
@@ -486,6 +498,8 @@ sistema. Editar algo publicado no lo cambia en la web hasta aprobar/publicar.
 - Revisión obligatoria configurable por autor/rol (D-30).
 
 **Notas de implementación (1.4a):** el snapshot es la fuente de verdad (sin tablas de traducción del artículo). Hooks de `blog-post`: `entityExists`, `validateSnapshot`, `beforeGoLive` (409 `slug_taken`, 409 `slug_locked`, 400 `invalid_media`/`invalid_author`/`invalid_category`/`invalid_series`, y fija `Post.firstLiveAt`). Visitas: la web reenvía `{ ip, userAgent }`; la API descarta bots, guarda solo `HMAC-SHA256(VIEW_HASH_SECRET, día + ip + ua)` en `PostViewVisitor` y cuenta en `PostViewDaily`; el purge borra los hashes de días anteriores. Programación: filtro en lectura, sin job (la caché puede retrasar la visibilidad hasta su TTL).
+
+**Notas de implementación (1.5a):** ministerios adopta el flujo con el snapshot como fuente (`ministrySnapshot`, sin tablas de traducción): hooks `entityExists`, `validateSnapshot` y `beforeGoLive` (409 `slug_taken`/`slug_locked`, 400 `invalid_media`). Los chequeos de slugs y medios son genéricos (`registry/slugs/`, `registry/media/`) y los comparten blog y ministerios. Visible en la web = revisión `PUBLISHED`; pausar oculta.
 
 **Notas de implementación (1.4c):** el CRM edita el snapshot con el esquema real (`blogPostSnapshot`) y un editor Tiptap con un nodo por bloque del diseño (`blogRichTextDocSchema`); el slug de un idioma ya publicado se deshabilita en el formulario (la API lo exige igual con `slug_locked`). Los autores son `PersonProfile` con el rol `BLOG_AUTHOR`, que se edita en Sitio web → Personas junto con sus estadísticas libres. Categorías y series se administran en `/blog/taxonomy` con el permiso `blogPosts`.
 

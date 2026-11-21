@@ -1,6 +1,6 @@
 import type { BlogPostSnapshot } from "@ancla/contracts";
 import type { GoLiveContext } from "../../editorialTypes";
-import { InvalidBlogReferenceError } from "../errors";
+import { assertMediaValid } from "../../media";
 
 interface NodeLike {
   type?: string;
@@ -31,25 +31,12 @@ export function collectBlogMediaIds(
 }
 
 /** Images of the post must be finished content images of the organization (400 `invalid_media`). */
-export async function assertBlogMediaValid({
-  tx,
-  organizationId,
-  snapshot,
-}: GoLiveContext): Promise<void> {
-  const ids = collectBlogMediaIds(snapshot);
-  if (ids.length === 0) return;
-  const valid = await tx.mediaFile.count({
-    where: {
-      id: { in: ids },
-      organizationId,
-      purpose: "contentImage",
-      status: "ready",
-    },
-  });
-  if (valid !== ids.length) {
-    throw new InvalidBlogReferenceError(
-      "invalid_media",
-      "The cover and the figures must be finished content images of the organization",
-    );
-  }
+export async function assertBlogMediaValid(
+  context: GoLiveContext,
+): Promise<void> {
+  await assertMediaValid(
+    context,
+    collectBlogMediaIds(context.snapshot),
+    "The cover and the figures must be finished content images of the organization",
+  );
 }

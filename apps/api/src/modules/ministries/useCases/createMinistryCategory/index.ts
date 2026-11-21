@@ -1,0 +1,1 @@
+export { createMinistryCategory } from "./createMinistryCategory";

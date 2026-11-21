@@ -21,6 +21,7 @@ const TABLES_WITHOUT_TENANT = new Set([
   "person_role_translations",
   "visit_faq_translations",
   "category_translations",
+  "ministry_category_translations",
   "series_translations",
   "post_views_daily",
   "post_view_visitors",
@@ -178,5 +179,14 @@ describe("schema invariants", () => {
       .filter((row) => row.columns !== 1 || row.type !== "uuid")
       .map((row) => row.name);
     expect(nonUuid).toEqual([]);
+  });
+
+  test("only ministry leaders belong to a ministry, and every one of them does", async () => {
+    const [check] = await db.$queryRaw<{ definition: string }[]>`
+      SELECT pg_get_constraintdef(oid) AS definition FROM pg_constraint
+      WHERE conname = 'person_roles_ministry_leader_check'
+    `;
+    expect(check?.definition).toContain("MINISTRY_LEADER");
+    expect(check?.definition).toContain('"ministryId" IS NOT NULL');
   });
 });

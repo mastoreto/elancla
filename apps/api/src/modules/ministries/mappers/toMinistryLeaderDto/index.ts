@@ -1,0 +1,1 @@
+export { toMinistryLeaderDto } from "./toMinistryLeaderDto";

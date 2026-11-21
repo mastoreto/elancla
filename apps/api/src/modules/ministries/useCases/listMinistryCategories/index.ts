@@ -1,0 +1,1 @@
+export { listMinistryCategories } from "./listMinistryCategories";

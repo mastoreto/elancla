@@ -1,0 +1,1 @@
+export { deleteMinistryCategory } from "./deleteMinistryCategory";
