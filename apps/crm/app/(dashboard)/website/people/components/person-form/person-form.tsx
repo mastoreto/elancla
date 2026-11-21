@@ -22,6 +22,7 @@ import { usePersonProfileActions } from "../../hooks/usePersonProfileActions";
 import type { LinkableUser, PersonFormValues, SiteLocales } from "../../types";
 import { toPersonFormValues, toUpsertPersonBody } from "../../utils/personFormValues";
 import { hasFormErrors, validatePersonForm } from "../../utils/validatePersonForm";
+import { MinistryRolesSection } from "../ministry-roles-section";
 import { PersonDeleteButton } from "../person-delete-button";
 import { PersonPhotoField } from "../person-photo-field";
 import { PersonUserField } from "../person-user-field";
@@ -133,6 +134,17 @@ export function PersonForm({ person, site, users }: PersonFormProps) {
             withStats={true}
           />
         </BoardFormSection>
+        {person && person.ministryRoles.length > 0 ? (
+          <>
+            <BoardFormDivider />
+            <BoardFormSection>
+              <MinistryRolesSection
+                defaultLocale={site.defaultLocale}
+                roles={person.ministryRoles}
+              />
+            </BoardFormSection>
+          </>
+        ) : null}
       </BoardFormSections>
       <BoardFormFooter>
         {canDelete && person ? (

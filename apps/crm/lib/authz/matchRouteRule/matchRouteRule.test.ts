@@ -33,6 +33,19 @@ describe("matchRouteRule", () => {
     expect(matchRouteRule("/website/visit")?.requires).toEqual([PERMISSIONS.visit.view]);
   });
 
+  test("the ministry landing and categories need the edit permission, the rest the view one", () => {
+    expect(matchRouteRule("/ministries")?.requires).toEqual([PERMISSIONS.ministryProfile.view]);
+    expect(matchRouteRule("/ministries/0190-id")?.requires).toEqual([
+      PERMISSIONS.ministryProfile.view,
+    ]);
+    expect(matchRouteRule("/ministries/landing")?.requires).toEqual([
+      PERMISSIONS.ministryProfile.edit,
+    ]);
+    expect(matchRouteRule("/ministries/categories")?.requires).toEqual([
+      PERMISSIONS.ministryProfile.edit,
+    ]);
+  });
+
   test("an undeclared route has no rule (the proxy denies it)", () => {
     expect(matchRouteRule("/nope")).toBeUndefined();
     expect(matchRouteRule("/")).toBeUndefined();
