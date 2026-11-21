@@ -1,0 +1,1 @@
+export { updateMinistrySettings } from "./updateMinistrySettings";

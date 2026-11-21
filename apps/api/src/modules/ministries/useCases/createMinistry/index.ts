@@ -1,0 +1,1 @@
+export { createMinistry } from "./createMinistry";

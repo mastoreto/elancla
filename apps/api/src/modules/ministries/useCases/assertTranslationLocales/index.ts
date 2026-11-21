@@ -1,0 +1,1 @@
+export { assertTranslationLocales } from "./assertTranslationLocales";

@@ -10,7 +10,11 @@ import { rolesRoutes } from "./modules/identity/roles";
 import { usersRoutes } from "./modules/identity/users";
 import { meRoutes } from "./modules/me";
 import { mediaInternalRoutes, mediaRoutes } from "./modules/media";
-import { ministriesRoutes } from "./modules/ministries";
+import {
+  ministriesRoutes,
+  ministryCategoriesRoutes,
+  ministryContentRoutes,
+} from "./modules/ministries";
 import { pagesRoutes } from "./modules/pages";
 import { peopleRoutes } from "./modules/people";
 import { publicRoutes } from "./modules/public";
@@ -26,6 +30,8 @@ const routes = createRouter()
   .route("/", rolesRoutes)
   .route("/", usersRoutes)
   .route("/", ministriesRoutes)
+  .route("/", ministryContentRoutes)
+  .route("/", ministryCategoriesRoutes)
   .route("/", auditRoutes)
   .route("/", mediaRoutes)
   .route("/", mediaInternalRoutes)

@@ -1,0 +1,1 @@
+export { buildMinistryListItems } from "./buildMinistryListItems";

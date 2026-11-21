@@ -1,0 +1,1 @@
+export { requireAllScope } from "./requireAllScope";

@@ -1,0 +1,1 @@
+export { updateMinistryCategory } from "./updateMinistryCategory";

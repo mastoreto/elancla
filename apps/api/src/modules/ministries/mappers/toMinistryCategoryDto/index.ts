@@ -1,0 +1,1 @@
+export { toMinistryCategoryDto } from "./toMinistryCategoryDto";

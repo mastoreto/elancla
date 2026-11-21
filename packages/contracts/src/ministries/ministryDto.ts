@@ -111,7 +111,8 @@ export const ministryLeadersBody = z
   .array(
     z.strictObject({
       personProfileId: z.uuid(),
-      visible: z.boolean(),
+      /** Hidden unless turned on: a leader only shows on the public site on purpose. */
+      visible: z.boolean().default(false),
       order: z.number().int().min(0).max(MINISTRY_ORDER_MAX),
       translations: z
         .record(z.string(), leaderTitleDto)
