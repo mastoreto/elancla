@@ -22,7 +22,12 @@ import { siteRoutes } from "./modules/site";
 import { siteKeysRoutes } from "./modules/siteKeys";
 import { visitRoutes } from "./modules/visit";
 
-/** Module routes without the `/api` prefix: this is what the typed client mirrors. */
+/**
+ * Module routes without the `/api` prefix: this is what the typed client mirrors. The public API
+ * is mounted next to them but kept out of `AppType`: it has its own contract (`public-v1.json`),
+ * and the CRM never calls it. With it inside, `hc<AppType>` hits TypeScript's instantiation depth
+ * limit ("excessively deep") once the private routes grew past the ministries.
+ */
 const routes = createRouter()
   .route("/", healthRoutes)
   .route("/", meRoutes)
@@ -42,12 +47,12 @@ const routes = createRouter()
   .route("/", visitRoutes)
   .route("/", pagesRoutes)
   .route("/", blogRoutes)
-  .route("/", editorialRoutes)
-  .route("/public/v1", publicRoutes);
+  .route("/", editorialRoutes);
 
 // Better Auth is mounted next to the typed routes but kept out of `AppType`: it has its own client.
 export const app = createApp()
   .route("/", routes)
+  .route("/public/v1", publicRoutes)
   .route("/", createAuthRouter());
 
 // ponytail: the private contract is never published; the endpoint only exists outside production.
