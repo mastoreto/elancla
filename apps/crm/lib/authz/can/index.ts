@@ -1,1 +1,1 @@
-export { type AccessSnapshot, can, canAny } from "./can";
+export { type AccessSnapshot, can, canAny, canWithAllScope } from "./can";

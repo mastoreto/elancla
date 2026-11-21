@@ -131,8 +131,8 @@ const routeMeta: RouteMeta[] = [
     internalRoute: churchToDashboardRouteMap.ministries,
     section: "Contenido",
     title: "Ministerios",
-    ctaLabel: "Nuevo ministerio",
-    ctaHref: getChurchRoutePath("ministries"),
+    ctaLabel: "Mosaico de la landing",
+    ctaHref: getChurchRoutePath("ministries", "landing"),
   },
   {
     route: "inventory",

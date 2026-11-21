@@ -1,0 +1,1 @@
+export { loadMinistryEditor } from "./loadMinistryEditor";

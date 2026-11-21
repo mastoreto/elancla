@@ -1,0 +1,1 @@
+export { loadMinistryStatus } from "./loadMinistryStatus";

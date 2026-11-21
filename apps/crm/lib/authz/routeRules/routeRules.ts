@@ -2,6 +2,7 @@ import type { Permission } from "@ancla/contracts";
 import { PERMISSIONS } from "@ancla/contracts";
 import { churchToDashboardRouteMap } from "@/lib/church";
 import {
+  MINISTRY_CONFIG_ROUTE_PERMISSIONS,
   PAGES_ROUTE_PERMISSIONS,
   PEOPLE_ROUTE_PERMISSIONS,
   ROUTE_PERMISSIONS,
@@ -35,6 +36,9 @@ export const ROUTE_RULES: readonly RouteRule[] = [
   { path: "/website/people", requires: PEOPLE_ROUTE_PERMISSIONS },
   { path: "/website/pages", requires: PAGES_ROUTE_PERMISSIONS },
   { path: "/website/visit", requires: VISIT_ROUTE_PERMISSIONS },
+  // The ministry settings need the edit permission (and the all scope, which the pages check).
+  { path: "/ministries/landing", requires: MINISTRY_CONFIG_ROUTE_PERMISSIONS },
+  { path: "/ministries/categories", requires: MINISTRY_CONFIG_ROUTE_PERMISSIONS },
   { path: "/settings", requires: [] },
   { path: "/settings/emails", requires: [PERMISSIONS.settings.view] },
   { path: "/settings/audit", requires: [PERMISSIONS.audit.view] },

@@ -9,6 +9,7 @@ export const E2E_USERS = {
   twoFactor: "e2e-twofactor@example.test",
   editor: "e2e-editor@example.test",
   reviewer: "e2e-reviewer@example.test",
+  leader: "e2e-leader@example.test",
 } as const;
 
 /** Name of the site key seeded from `.env.test` for the public web (see seed:e2e). */

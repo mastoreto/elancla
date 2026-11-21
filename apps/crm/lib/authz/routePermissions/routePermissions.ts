@@ -26,6 +26,11 @@ export const VISIT_ROUTE_PERMISSIONS = [
   PERMISSIONS.visit.view,
 ] as const satisfies readonly Permission[];
 
+/** The landing mosaic and the categories live under /ministries but need the edit permission. */
+export const MINISTRY_CONFIG_ROUTE_PERMISSIONS = [
+  PERMISSIONS.ministryProfile.edit,
+] as const satisfies readonly Permission[];
+
 /**
  * What a signed-in user needs to see each section: any one of the listed permissions; an empty
  * list means every signed-in user. The sidebar and the route guards read this same table.
