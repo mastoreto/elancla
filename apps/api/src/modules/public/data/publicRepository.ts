@@ -152,3 +152,41 @@ export function findBlogMedia(
     select: { id: true, status: true, variants: true },
   });
 }
+
+/** Every ministry of the organization with its category names; the live profile comes from the snapshots. */
+export function findPublicMinistries(organizationId: string) {
+  return forOrganization(db, organizationId).ministry.findMany({
+    include: { category: { include: { translations: true } } },
+  });
+}
+
+export type PublicMinistryRow = Awaited<
+  ReturnType<typeof findPublicMinistries>
+>[number];
+
+/** The visible leaders of a ministry with their profile, photo and the texts of the two languages. */
+export function findPublicMinistryLeaders(
+  organizationId: string,
+  ministryId: string,
+  locales: string[],
+) {
+  return forOrganization(db, organizationId).personProfile.findMany({
+    where: {
+      roles: {
+        some: { context: "MINISTRY_LEADER", ministryId, visible: true },
+      },
+    },
+    include: {
+      photo: true,
+      translations: { where: { locale: { in: locales } } },
+      roles: {
+        where: { context: "MINISTRY_LEADER", ministryId, visible: true },
+        include: { translations: { where: { locale: { in: locales } } } },
+      },
+    },
+  });
+}
+
+export type PublicMinistryLeaderRow = Awaited<
+  ReturnType<typeof findPublicMinistryLeaders>
+>[number];

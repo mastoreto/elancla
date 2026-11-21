@@ -1,0 +1,1 @@
+export { toPublicMinistriesDto } from "./toPublicMinistriesDto";

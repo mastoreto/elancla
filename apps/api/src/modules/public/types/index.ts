@@ -1,9 +1,14 @@
-import type { PublicBlogImageDto } from "@ancla/contracts";
+import type {
+  MinistrySnapshot,
+  MinistryTranslation,
+  PublicBlogImageDto,
+} from "@ancla/contracts";
 import type { BlogEntry, PickedBlogTranslation } from "../../blog";
 import type {
   PublicBlogAuthorRow,
   PublicBlogCategoryRow,
   PublicBlogSeriesRow,
+  PublicMinistryRow,
 } from "../data";
 import type { ServedLocales } from "../domain";
 
@@ -21,4 +26,12 @@ export interface PublicBlogContext extends ServedLocales {
   /** Ready images by media id (covers and figures); a media id that is absent is not shown. */
   images: ReadonlyMap<string, PublicBlogImageDto>;
   publicBaseUrl: string;
+}
+
+/** A ministry whose profile is published, with the language it is served in. */
+export interface ServedMinistry {
+  row: PublicMinistryRow;
+  snapshot: MinistrySnapshot;
+  locale: string;
+  translation: MinistryTranslation;
 }

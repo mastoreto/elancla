@@ -2,6 +2,10 @@ import {
   publicBlogIndexDto,
   publicBlogQuery,
   publicLocaleQuery,
+  publicMinistriesDto,
+  publicMinistriesQuery,
+  publicMinistryDto,
+  publicMinistryQuery,
   publicPageDto,
   publicPageListDto,
   publicPageQuery,
@@ -24,6 +28,8 @@ import {
 import { requireSiteKey } from "./guards";
 import {
   getPublicBlogIndex,
+  getPublicMinistries,
+  getPublicMinistry,
   getPublicPage,
   getPublicPages,
   getPublicPeople,
@@ -133,6 +139,48 @@ const pageRoute = createRoute({
       "The site key is missing, invalid or not for this church",
     ),
     404: problemResponse("There is no published page with that slug"),
+  },
+});
+
+const ministriesRoute = createRoute({
+  method: "get",
+  path: "/{churchSlug}/ministries",
+  tags: ["ministries"],
+  summary:
+    "The ministries with a published profile and the ordered landing mosaic, in the requested language.",
+  middleware: [requireSiteKey],
+  request: { params: churchParams, query: publicMinistriesQuery },
+  responses: {
+    200: jsonResponse(
+      "The visible ministries and the mosaic",
+      publicMinistriesDto,
+    ),
+    400: problemResponse("The locale is not valid"),
+    401: problemResponse(
+      "The site key is missing, invalid or not for this church",
+    ),
+    404: problemResponse("The church was not found"),
+  },
+});
+
+const ministryRoute = createRoute({
+  method: "get",
+  path: "/{churchSlug}/ministries/{slug}",
+  tags: ["ministries"],
+  summary:
+    "A ministry with a published profile and a page of its own, by its slug (in any of its languages), in the requested language.",
+  middleware: [requireSiteKey],
+  request: {
+    params: churchParams.extend({ slug: z.string() }),
+    query: publicMinistryQuery,
+  },
+  responses: {
+    200: jsonResponse("The ministry", publicMinistryDto),
+    400: problemResponse("The locale is not valid"),
+    401: problemResponse(
+      "The site key is missing, invalid or not for this church",
+    ),
+    404: problemResponse("There is no visible ministry with that slug"),
   },
 });
 
@@ -254,6 +302,25 @@ export const publicRoutes = createRouter()
     });
     c.header("Cache-Control", PUBLIC_CACHE_CONTROL);
     return c.json(page, 200);
+  })
+  .openapi(ministriesRoute, async (c) => {
+    const { organizationId } = c.get("ctx");
+    const ministries = await getPublicMinistries({
+      organizationId: organizationId as string,
+      requestedLocale: c.req.valid("query").locale,
+    });
+    c.header("Cache-Control", PUBLIC_CACHE_CONTROL);
+    return c.json(ministries, 200);
+  })
+  .openapi(ministryRoute, async (c) => {
+    const { organizationId } = c.get("ctx");
+    const ministry = await getPublicMinistry({
+      organizationId: organizationId as string,
+      slug: c.req.valid("param").slug,
+      requestedLocale: c.req.valid("query").locale,
+    });
+    c.header("Cache-Control", PUBLIC_CACHE_CONTROL);
+    return c.json(ministry, 200);
   })
   .openapi(postsRoute, async (c) => {
     const { organizationId } = c.get("ctx");
