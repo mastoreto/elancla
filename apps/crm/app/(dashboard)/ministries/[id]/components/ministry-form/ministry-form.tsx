@@ -19,11 +19,11 @@ import { can } from "@/lib/authz/can";
 import { getChurchRoutePath } from "@/lib/church";
 import { slugify } from "@/lib/slugify";
 import { cn } from "@/lib/utils";
+import { MinistryImageField } from "../../../components/ministry-image-field";
 import { useSaveMinistryDraft } from "../../hooks/useSaveMinistryDraft";
 import type { MinistryFormValues, MinistryTranslationValues, SiteLocales } from "../../types";
 import { toMinistryFormValues, toMinistrySnapshot } from "../../utils/ministryFormValues";
 import { hasMinistryFormErrors, validateMinistryForm } from "../../utils/validateMinistryForm";
-import { MinistryImageField } from "../ministry-image-field";
 import { MinistryTranslationFields } from "../ministry-translation-fields";
 
 const ministryFormMinistriesPage = {
