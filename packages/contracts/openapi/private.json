@@ -11883,8 +11883,7 @@
                                   "enum": [
                                     "team",
                                     "blog-author",
-                                    "preacher",
-                                    "ministry-leader"
+                                    "preacher"
                                   ]
                                 },
                                 "visible": {
@@ -12417,8 +12416,7 @@
                             "enum": [
                               "team",
                               "blog-author",
-                              "preacher",
-                              "ministry-leader"
+                              "preacher"
                             ]
                           },
                           "visible": {
@@ -12936,8 +12934,7 @@
                             "enum": [
                               "team",
                               "blog-author",
-                              "preacher",
-                              "ministry-leader"
+                              "preacher"
                             ]
                           },
                           "visible": {
@@ -13530,8 +13527,7 @@
                             "enum": [
                               "team",
                               "blog-author",
-                              "preacher",
-                              "ministry-leader"
+                              "preacher"
                             ]
                           },
                           "visible": {
