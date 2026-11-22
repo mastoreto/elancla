@@ -584,6 +584,7 @@ describe("settings", () => {
       "blog-post",
       "ministry",
       "simple-page",
+      "event",
     ]);
     expect(list[1]?.reviewerUserIds).toEqual([editor.id]);
     expect(list[0]?.reviewerUserIds).toEqual([]);

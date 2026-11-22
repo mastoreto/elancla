@@ -50,9 +50,31 @@ async function reviewersToNotify(
 }
 
 async function recipientsOf(notice: EditorialNotice): Promise<Recipient[]> {
-  if (notice.variant === "submitted") return reviewersToNotify(notice);
+  const candidates =
+    notice.variant === "submitted"
+      ? await reviewersToNotify(notice)
+      : await authorRecipient(notice);
+  return onlyThoseWhoCanSee(notice, candidates);
+}
+
+async function authorRecipient(notice: EditorialNotice): Promise<Recipient[]> {
   const author = await findUserRecipient(notice.revision.authorId);
   return author ? [author] : [];
+}
+
+/** An email must not tell someone about an entity they are not allowed to see (internal events). */
+async function onlyThoseWhoCanSee(
+  { definition, organizationId, revision }: EditorialNotice,
+  recipients: Recipient[],
+): Promise<Recipient[]> {
+  if (!definition.usersWhoCanSee || recipients.length === 0) return recipients;
+  const allowed = await definition.usersWhoCanSee(
+    db,
+    organizationId,
+    revision.entityId,
+    recipients.map(({ id }) => id),
+  );
+  return recipients.filter(({ id }) => allowed.has(id));
 }
 
 async function sendTo(

@@ -1,1 +1,4 @@
-export { resolvePublicWeekActivities } from "./resolvePublicWeekActivities";
+export {
+  type PublicWeekSlot,
+  resolvePublicWeekActivities,
+} from "./resolvePublicWeekActivities";

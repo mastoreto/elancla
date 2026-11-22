@@ -51,6 +51,28 @@ export const calendarYearNumber = z
 export const SERVICE_KINDS = ["worship", "bibleSchool"] as const;
 export type ServiceKind = (typeof SERVICE_KINDS)[number];
 
+export const EVENT_TITLE_MAX_LENGTH = 120;
+export const EVENT_DESCRIPTION_MAX_LENGTH = 1000;
+export const EVENT_EXTERNAL_ADDRESS_MAX_LENGTH = 200;
+export const EVENT_LINK_URL_MAX_LENGTH = 300;
+export const EVENT_MINISTRIES_MAX_COUNT = 6;
+export const EVENT_AUDIENCE_ROLES_MAX_COUNT = 50;
+/** Most items a single "copy from the previous year" request may carry (per kind). */
+export const COPY_YEAR_MAX_ITEMS = 500;
+
+/** Lower case on the wire; the API maps them to the database enums. */
+export const EVENT_VISIBILITIES = ["public", "internal"] as const;
+export type EventVisibility = (typeof EVENT_VISIBILITIES)[number];
+
+export const EVENT_PLACE_MODES = ["place", "tbc", "external"] as const;
+export type EventPlaceMode = (typeof EVENT_PLACE_MODES)[number];
+
+export const EVENT_STATUSES = ["scheduled", "cancelled"] as const;
+export type EventStatus = (typeof EVENT_STATUSES)[number];
+
+export const CALENDAR_YEAR_STATUSES = ["draft", "published"] as const;
+export type CalendarYearStatus = (typeof CALENDAR_YEAR_STATUSES)[number];
+
 /** At least one language; the API checks that the default one is there and the rest are enabled. */
 export function translationsOf<Shape extends z.ZodType>(shape: Shape) {
   return z

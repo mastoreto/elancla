@@ -5,10 +5,39 @@ import {
   findChangesRequestedRows,
   findReviewSettings,
   findToReviewRows,
+  type RevisionRow,
 } from "../../data";
 import { isReviewer } from "../../domain";
 import { toInboxItemDto } from "../../mappers";
 import { EDITORIAL_CONTENT_TYPE_LIST } from "../../registry";
+
+/**
+ * The revisions whose entity the user may see: a type that restricts who sees its entities
+ * (internal events) is asked once for all of its rows, never once per row.
+ */
+async function visibleRevisionIds(
+  ctx: AuthenticatedContext,
+  rows: readonly RevisionRow[],
+): Promise<Set<string>> {
+  const visible = new Set(rows.map((row) => row.id));
+  for (const definition of EDITORIAL_CONTENT_TYPE_LIST) {
+    if (!definition.entitiesVisibleTo) continue;
+    const ofType = rows.filter(
+      (row) => row.contentType === definition.contentType,
+    );
+    if (ofType.length === 0) continue;
+    const allowed = await definition.entitiesVisibleTo(
+      db,
+      ctx.organizationId,
+      ofType.map((row) => row.entityId),
+      ctx.access,
+    );
+    for (const row of ofType) {
+      if (!allowed.has(row.entityId)) visible.delete(row.id);
+    }
+  }
+  return visible;
+}
 
 /**
  * Pending work, derived from the revisions themselves (there is no notification table): what is
@@ -36,10 +65,16 @@ export async function getInbox(
     findToReviewRows(ctx.organizationId, reviewedTypes, ctx.user.id),
     findChangesRequestedRows(ctx.organizationId, ctx.user.id),
   ]);
+  const visible = await visibleRevisionIds(ctx, [
+    ...toReview,
+    ...changesRequested,
+  ]);
   return {
-    toReview: toReview.map((row) => toInboxItemDto(row, row.submittedAt)),
-    changesRequested: changesRequested.map((row) =>
-      toInboxItemDto(row, row.decidedAt),
-    ),
+    toReview: toReview
+      .filter((row) => visible.has(row.id))
+      .map((row) => toInboxItemDto(row, row.submittedAt)),
+    changesRequested: changesRequested
+      .filter((row) => visible.has(row.id))
+      .map((row) => toInboxItemDto(row, row.decidedAt)),
   };
 }

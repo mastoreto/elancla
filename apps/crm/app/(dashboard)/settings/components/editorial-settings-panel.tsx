@@ -23,6 +23,7 @@ const CONTENT_TYPE_LABELS: Record<EditorialContentTypeParam, string> = {
   "blog-post": "Blog",
   ministry: "Ministerios",
   "simple-page": "Páginas",
+  event: "Eventos",
 };
 
 const editorialSettingsPanelSettingsPage = {

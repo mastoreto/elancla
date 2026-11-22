@@ -1,5 +1,5 @@
 import type { UpsertPlaceBody } from "@ancla/contracts";
-import { db, type Prisma } from "@ancla/db";
+import { db, type EditorialState, type Prisma } from "@ancla/db";
 import { forOrganization } from "../../../core/tenancy";
 
 const placeInclude = {
@@ -11,6 +11,14 @@ export type PlaceRow = Prisma.PlaceGetPayload<{
 }>;
 
 type Client = Prisma.TransactionClient | typeof db;
+
+const CURRENT_REVISION_STATES: EditorialState[] = [
+  "DRAFT",
+  "IN_REVIEW",
+  "CHANGES_REQUESTED",
+  "PUBLISHED",
+  "PAUSED",
+];
 
 /** Places that are not deleted, by their order. */
 export function listPlaceRows(organizationId: string): Promise<PlaceRow[]> {
@@ -104,14 +112,24 @@ export async function softDeletePlace(
   });
 }
 
-/** A live activity points at the place. */
+/** A live activity, or an event (in any of its revisions that still count), points at the place. */
 export async function isPlaceInUse(
   tx: Prisma.TransactionClient,
   organizationId: string,
   id: string,
 ): Promise<boolean> {
-  const used = await tx.recurringActivity.count({
+  const usedByActivity = await tx.recurringActivity.count({
     where: { organizationId, placeId: id, deletedAt: null },
   });
-  return used > 0;
+  if (usedByActivity > 0) return true;
+  // Events keep the place inside their snapshot, not in a column; superseded revisions do not count.
+  const usedByEvent = await tx.contentRevision.count({
+    where: {
+      organizationId,
+      contentType: "EVENT",
+      state: { in: CURRENT_REVISION_STATES },
+      snapshot: { path: ["placeId"], equals: id },
+    },
+  });
+  return usedByEvent > 0;
 }

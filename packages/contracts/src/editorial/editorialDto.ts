@@ -8,6 +8,7 @@ export const EDITORIAL_CONTENT_TYPES = [
   "blog-post",
   "ministry",
   "simple-page",
+  "event",
 ] as const;
 export const editorialContentTypeParam = z.enum(EDITORIAL_CONTENT_TYPES);
 export type EditorialContentTypeParam = z.infer<

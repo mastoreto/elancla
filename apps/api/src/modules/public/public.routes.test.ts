@@ -232,6 +232,7 @@ describe("GET /api/public/v1/openapi.json", () => {
       "/{churchSlug}/ministries/{slug}",
       "/{churchSlug}/posts",
       "/{churchSlug}/posts/{slug}",
+      "/{churchSlug}/calendar",
       "/{churchSlug}/posts/{slug}/views",
     ]);
   });

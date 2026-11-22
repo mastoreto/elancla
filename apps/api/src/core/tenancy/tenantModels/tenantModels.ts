@@ -28,4 +28,6 @@ export const TENANT_MODELS: ReadonlySet<string> = new Set([
   "ScheduleException",
   "Place",
   "CalendarYear",
+  "Event",
+  "CalendarReminderSettings",
 ]);

@@ -8,6 +8,20 @@ export {
   softDeleteActivity,
 } from "./activitiesRepository";
 export {
+  copyActivityToYear,
+  findYearActivities,
+} from "./copyRepository";
+export {
+  createCopiedEventRow,
+  createEventRow,
+  deleteEventRow,
+  type EventRow,
+  findEventRow,
+  findExistingRoleIdsOf,
+  listEventRows,
+  replaceEventSettingsIfVersion,
+} from "./eventsRepository";
+export {
   createExceptionRow,
   deleteException,
   findExceptionRow,
@@ -27,10 +41,19 @@ export {
   softDeletePlace,
 } from "./placesRepository";
 export {
+  type ActivityYearReviewRow,
+  confirmReviewRow,
+} from "./reviewsRepository";
+export {
   findOrganizationTimezone,
   findPublicActivities,
+  findPublicEventRows,
   findScheduleContext,
+  findYearExceptions,
+  isYearPublished,
   type PublicActivityRow,
+  type PublicEventRow,
+  type PublicExceptionRow,
   type ScheduleContextRows,
 } from "./scheduleReadRepository";
 export {
@@ -44,3 +67,10 @@ export {
   scheduleSetExists,
   softDeleteScheduleSet,
 } from "./scheduleSetsRepository";
+export {
+  type CalendarYearRow,
+  createYearRow,
+  findYearRow,
+  listYearRows,
+  markYearPublished,
+} from "./yearsRepository";
