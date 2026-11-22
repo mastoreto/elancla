@@ -148,7 +148,7 @@ export function buildServiceEventLd(params: {
         byDay: `https://schema.org/${service.dayOfWeek}`,
         startTime: service.opens,
         ...(service.closes && { endTime: service.closes }),
-        scheduleTimezone: 'America/Montevideo',
+        scheduleTimezone: site.timezone,
       },
     }),
     location: {

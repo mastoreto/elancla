@@ -4,6 +4,7 @@ import {
   type PublicBlogImageDto,
   type PublicMinistryDto,
   type PublicMinistryLeaderDto,
+  type PublicMinistryScheduleSlotDto,
   richTextDocSchema,
 } from "@ancla/contracts";
 import { resolveSeo } from "../../../ministries";
@@ -13,6 +14,7 @@ import type { ServedMinistry } from "../../types";
 import { webpVariantsOf } from "../toPublicBlogImages";
 
 interface MinistryContext extends ServedLocales {
+  schedule: PublicMinistryScheduleSlotDto[];
   images: ReadonlyMap<string, PublicBlogImageDto>;
   publicBaseUrl: string;
 }
@@ -45,7 +47,7 @@ export function toPublicMinistryDto(
   leaders: readonly PublicMinistryLeaderRow[],
   context: MinistryContext,
 ): PublicMinistryDto {
-  const { images, publicBaseUrl, ...locales } = context;
+  const { images, publicBaseUrl, schedule, ...locales } = context;
   const imageOf = (id: string | undefined) =>
     id === undefined ? undefined : images.get(id);
   const cover = imageOf(snapshot.coverMediaId);
@@ -70,6 +72,7 @@ export function toPublicMinistryDto(
     leaders: [...leaders]
       .sort((a, b) => orderOf(a) - orderOf(b) || a.name.localeCompare(b.name))
       .map((leader) => toPublicLeaderDto(leader, locales, publicBaseUrl)),
+    schedule,
     ...(cover
       ? {
           cover: {

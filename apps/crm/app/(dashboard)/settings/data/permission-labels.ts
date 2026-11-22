@@ -30,6 +30,15 @@ export const PERMISSION_RESOURCE_INFO: Record<PermissionResource, { label: strin
     "content.people": { label: "Personas del sitio", hint: "Equipo y liderazgo que se muestra" },
     "content.visit": { label: "Visítanos", hint: "Indicaciones y preguntas frecuentes" },
     "content.pages": { label: "Páginas del sitio", hint: "Páginas simples como la privacidad" },
+    "content.events": {
+      label: "Calendario: horarios y eventos",
+      hint: "Horarios, lugares, excepciones y eventos",
+    },
+    "calendar.internal": {
+      label: "Calendario: eventos internos",
+      hint: "Ver los eventos internos de su audiencia",
+    },
+    "calendar.year": { label: "Calendario: año", hint: "Publicar el año del calendario" },
     "ministries.profile": { label: "Ministerios: perfil", hint: "Datos públicos del ministerio" },
     "ministries.finance": {
       label: "Ministerios: finanzas",

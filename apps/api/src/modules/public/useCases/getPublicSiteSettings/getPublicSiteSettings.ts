@@ -1,5 +1,6 @@
 import type { PublicSiteSettingsDto } from "@ancla/contracts";
 import { NotFoundError } from "../../../../core/errors";
+import { getPublicServiceTimes } from "../../../calendar";
 import {
   findOrganizationLocales,
   findSiteSettingsWithTranslations,
@@ -14,14 +15,15 @@ import { toPublicSiteSettingsDto } from "../../mappers";
 export async function getPublicSiteSettings(
   organizationId: string,
   requestedLocale: string | undefined,
+  now: Date = new Date(),
 ): Promise<PublicSiteSettingsDto> {
   const organization = await findOrganizationLocales(organizationId);
   if (!organization) throw new NotFoundError("The church was not found");
-  const { defaultLocale, locales } = organization;
+  const { defaultLocale, locales, timezone } = organization;
   const locale = resolvePublicLocale(requestedLocale, locales, defaultLocale);
-  const settings = await findSiteSettingsWithTranslations(organizationId, [
-    locale,
-    defaultLocale,
+  const [settings, serviceTimes] = await Promise.all([
+    findSiteSettingsWithTranslations(organizationId, [locale, defaultLocale]),
+    getPublicServiceTimes(organizationId, now),
   ]);
   if (!settings) throw new NotFoundError("The site settings were not found");
   const seoDescriptionOf = (wanted: string): string | null =>
@@ -29,9 +31,10 @@ export async function getPublicSiteSettings(
       ?.seoDescription ?? null;
   // A language with no description of its own serves the default one's, and `locale` says so.
   const ownDescription = seoDescriptionOf(locale);
-  return toPublicSiteSettingsDto(
-    settings,
-    ownDescription ?? seoDescriptionOf(defaultLocale),
-    ownDescription === null ? defaultLocale : locale,
-  );
+  return toPublicSiteSettingsDto(settings, {
+    seoDescription: ownDescription ?? seoDescriptionOf(defaultLocale),
+    locale: ownDescription === null ? defaultLocale : locale,
+    timezone,
+    serviceTimes,
+  });
 }

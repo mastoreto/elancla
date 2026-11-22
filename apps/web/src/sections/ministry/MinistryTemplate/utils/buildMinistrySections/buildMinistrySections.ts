@@ -22,6 +22,7 @@ export function buildMinistrySections(
     ministry.place ||
       ministry.audience ||
       ministry.howToJoin ||
+      ministry.schedule.length > 0 ||
       ministry.leaders.length > 0
   );
   const keys: MinistrySectionKey[] = [

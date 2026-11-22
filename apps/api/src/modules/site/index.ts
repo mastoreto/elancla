@@ -1,2 +1,2 @@
-export { parseServiceTimes, resolveSectionStatuses } from "./domain";
+export { resolveSectionStatuses } from "./domain";
 export { siteRoutes } from "./site.routes";

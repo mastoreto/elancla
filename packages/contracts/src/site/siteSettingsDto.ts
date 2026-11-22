@@ -19,7 +19,6 @@ export const siteSectionStatus = z.enum(SITE_SECTION_STATUSES);
 export type SiteSectionStatus = z.infer<typeof siteSectionStatus>;
 
 export const SERVICE_TIME_KINDS = ["worship", "bibleSchool"] as const;
-export const MAX_SERVICE_TIMES = 10;
 export const SEO_DESCRIPTION_MAX_LENGTH = 160;
 
 const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
@@ -81,7 +80,6 @@ export const siteSettingsDto = z.strictObject({
   twitter: z.string().nullable(),
   spotify: z.string().nullable(),
   linkedin: z.string().nullable(),
-  serviceTimes: z.array(serviceTimeDto),
   /** Complete map: keys never configured come back as `active`. */
   sections: siteSectionsDto,
   translations: z.record(z.string(), seoTranslationDto),
@@ -118,7 +116,6 @@ const editableFields = z.strictObject({
   twitter: httpUrl.nullable(),
   spotify: httpUrl.nullable(),
   linkedin: httpUrl.nullable(),
-  serviceTimes: z.array(serviceTimeDto).max(MAX_SERVICE_TIMES),
   /** Replaces the whole map; a key left out falls back to `active`. */
   sections: siteSectionsDto.partial(),
   /** Replaces only the locales sent; locales the organization does not use are rejected (400). */

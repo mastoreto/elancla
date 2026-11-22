@@ -20,6 +20,7 @@ const SETTINGS: PublicSiteSettingsDto = {
   geo: null,
   themeColor: null,
   founded: null,
+  timezone: "America/Montevideo",
   serviceTimes: [],
   sections: {
     blog: "active",

@@ -66,7 +66,6 @@ afterAll(async () => {
     data: {
       ...columns,
       updatedAt: originalSettings.updatedAt,
-      serviceTimes: columns.serviceTimes as Prisma.InputJsonValue,
       sectionStatuses: columns.sectionStatuses as Prisma.InputJsonValue,
     },
   });
@@ -133,10 +132,6 @@ describe("PATCH /site/settings", () => {
     const res = await patch({
       version: before.version,
       subtitle: "Subtitle (site test)",
-      serviceTimes: [
-        { kind: "worship", weekday: 0, start: "11:15", end: "13:00" },
-        { kind: "bibleSchool", weekday: 0, start: "10:00", end: null },
-      ],
       sections: { blog: "maintenance" },
       translations: { en: { seoDescription: SEO_EN } },
     });
@@ -144,7 +139,7 @@ describe("PATCH /site/settings", () => {
     const after = (await res.json()) as SiteSettingsDto;
     expect(after.version).toBe(before.version + 1);
     expect(after.subtitle).toBe("Subtitle (site test)");
-    expect(after.serviceTimes).toHaveLength(2);
+    expect("serviceTimes" in after).toBe(false);
     // The map is replaced as a whole: keys that were left out are active again.
     expect(after.sections.blog).toBe("maintenance");
     expect(after.sections.visit).toBe("active");
@@ -185,14 +180,13 @@ describe("PATCH /site/settings", () => {
     expect((await currentSettings()).version).toBe(before.version);
   });
 
-  test.each([
-    ["end equal to start", { start: "10:00", end: "10:00" }],
-    ["end before start", { start: "12:00", end: "11:00" }],
-  ])("a service time with %s is a 400", async (_label, times) => {
+  test("service times are no longer editable here: they come from the calendar", async () => {
     const { version } = await currentSettings();
     const res = await patch({
       version,
-      serviceTimes: [{ kind: "worship", weekday: 0, ...times }],
+      serviceTimes: [
+        { kind: "worship", weekday: 0, start: "10:00", end: null },
+      ],
     });
     expect(res.status).toBe(400);
   });

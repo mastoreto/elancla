@@ -46,7 +46,7 @@ const dateFormat = new Intl.DateTimeFormat(getHtmlLang(locale), {
   day: '2-digit',
   month: 'short',
   year: 'numeric',
-  timeZone: 'America/Montevideo',
+  timeZone: site.timezone,
 });
 const metaOf = (sermon: { publishedAt: string; duration: string }) =>
   `${dateFormat.format(new Date(sermon.publishedAt)).replace(/\./g, '')} · ${sermon.duration}`;

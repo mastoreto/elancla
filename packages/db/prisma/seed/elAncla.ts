@@ -25,10 +25,6 @@ export const EL_ANCLA_SITE_SETTINGS = {
   geoLng: -56.161429,
   themeColor: "#ff2e34",
   founded: "1997",
-  serviceTimes: [
-    { kind: "worship", weekday: 0, start: "11:15", end: "13:00" },
-    { kind: "bibleSchool", weekday: 0, start: "10:00", end: null },
-  ],
   youtube: "https://youtube.com/@iglesiaelanclauy",
   instagram: "https://www.instagram.com/iglesiaelancla",
   facebook: "https://www.facebook.com/iglesiabautistaelancla",

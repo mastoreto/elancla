@@ -152,6 +152,9 @@
                         "null"
                       ]
                     },
+                    "timezone": {
+                      "type": "string"
+                    },
                     "serviceTimes": {
                       "type": "array",
                       "items": {
@@ -319,6 +322,7 @@
                     "geo",
                     "themeColor",
                     "founded",
+                    "timezone",
                     "serviceTimes",
                     "sections",
                     "seoDescription",
@@ -2056,6 +2060,30 @@
                         "additionalProperties": false
                       }
                     },
+                    "schedule": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "weekday": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 6
+                          },
+                          "start": {
+                            "type": "string"
+                          },
+                          "end": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "weekday",
+                          "start"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
                     "cover": {
                       "type": "object",
                       "properties": {
@@ -2144,6 +2172,7 @@
                     "values",
                     "color",
                     "leaders",
+                    "schedule",
                     "seo",
                     "alternates"
                   ],

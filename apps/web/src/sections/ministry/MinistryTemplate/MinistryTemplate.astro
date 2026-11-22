@@ -12,6 +12,7 @@ import { simplePageStyles } from 'src/sections/simplePage/SimplePage';
 import { ULINK } from 'src/styles/classes';
 import { buildPhotoSrcSet } from 'src/utils/buildPhotoSrcSet';
 import cn from 'src/utils/cn';
+import { formatWeeklySlots } from 'src/utils/formatWeeklySlots';
 import { RISE_IN } from 'src/utils/riseIn';
 import { buildMinistrySections } from './utils/buildMinistrySections';
 
@@ -43,6 +44,7 @@ const shortcuts = [
   },
 ];
 const { cover, icon, values, leaders } = ministry;
+const scheduleRows = formatWeeklySlots(ministry.schedule, locale);
 const EMPHASIS = 'text-obra-red not-italic';
 const CARD = 'flex flex-col gap-3 rounded-[28px] bg-obra-mist text-inherit';
 const CARD_TITLE = 'font-obra-serif text-[1.625rem] leading-[1.1] font-bold';
@@ -121,6 +123,7 @@ const ministryTemplate = {
     'font-obra-sans-bold text-[0.75rem] tracking-[0.14em] text-obra-muted uppercase'
   ),
   factValue: cn('m-0 font-obra-sans-bold text-[1.125rem] leading-[1.35]'),
+  schedule: cn('m-0 flex list-none flex-col gap-1 p-0'),
   leaders: cn('m-0 flex list-none flex-col gap-4 p-0'),
   leader: cn('flex items-center gap-4'),
   leaderPhoto: cn('size-15 flex-none rounded-full object-cover'),
@@ -246,6 +249,18 @@ const ministryTemplate = {
               <h2 class={ministryTemplate.sectionHeading}><InlineText value={{ before: copy.facts.titleBefore, emphasis: copy.facts.titleEmphasis }} emphasisClass={EMPHASIS} /></h2>
             </div>
             <dl class={ministryTemplate.facts}>
+              {scheduleRows.length > 0 && (
+                <div class={ministryTemplate.fact}>
+                  <dt class={ministryTemplate.factLabel}>{copy.facts.when}</dt>
+                  <dd class={ministryTemplate.factValue}>
+                    <ul class={ministryTemplate.schedule}>
+                      {scheduleRows.map((row) => (
+                        <li>{row.dayLabel} · {row.timeLabel}</li>
+                      ))}
+                    </ul>
+                  </dd>
+                </div>
+              )}
               {ministry.place && (
                 <div class={ministryTemplate.fact}>
                   <dt class={ministryTemplate.factLabel}>{copy.facts.place}</dt>

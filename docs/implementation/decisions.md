@@ -380,11 +380,17 @@ Los textos de estructura y los narrativos fijos del diseño siguen en i18n (cód
 todo lugar donde aparezca un horario: Hero, Sunday, Closing, Visítanos, footer y JSON-LD.
 
 **Modelo:** ver D-31 (los horarios de culto son actividades recurrentes del calendario marcadas
-como "horario de culto"). Se mantiene la regla de resolución: excepción de la fecha > conjunto con
-vigencia que cubre la fecha > conjunto predeterminado; el cambio puede ser manual (switch) o por
-vigencia.
+como "horario de culto"). Regla de resolución: excepción de la fecha > conjunto con el switch
+manual (`forcedActive`) > conjunto con vigencia que cubre la fecha (el de vigencia más corta si hay
+varios) > conjunto predeterminado. Un conjunto sin vigencia solo participa como manual o
+predeterminado.
 
 - Los textos fijos que hoy repiten horarios (Closing, Hero) pasan a construirse con estos datos.
+
+*Implementación (1.6a):* `resolveScheduleForDate` y `resolveWeek` (7 días desde hoy local, zona de
+`Organization.timezone` vía `Intl`) son funciones puras del módulo `calendar` de la API. Activar
+`isDefault` o `forcedActive` en un conjunto se lo quita al que lo tenía (índices únicos parciales como
+red de seguridad). Una excepción cuyo reemplazo es un conjunto impide borrarlo (`schedule_set_in_use`).
 
 ## D-28 — Landing: fijo vs. editable
 
@@ -484,6 +490,14 @@ sistema. Editar algo publicado no lo cambia en la web hasta aprobar/publicar.
    (actividades recurrentes, eventos), por ministerio y por elemento individual. Lo copiado queda marcado
    "a revisar". Las fechas de eventos se trasladan manteniendo el día de la semana (el sábado
    8/5/2027 pasa al sábado más cercano en 2028), con opción de mantener la fecha exacta.
+
+*Notas de implementación (1.6a):* el switch "es horario de culto" es `RecurringActivity.serviceKind`
+(`WORSHIP` | `BIBLE_SCHOOL`, nulo = no lo es) para no perder la distinción culto / escuela bíblica que
+usan los tokens del sitio. `SiteSettings.serviceTimes` se borró: el DTO público de settings conserva
+`serviceTimes` con la misma forma, calculado por la API desde las actividades públicas con
+`serviceKind` de la semana en curso (fijas más las del año si está publicado), y suma `timezone`.
+Las actividades se editan directo con auditoría (`recurringActivity.*`, `scheduleSet.*`,
+`scheduleException.*`, `place.*`), sin flujo editorial. `publicMinistryDto` suma `schedule` (el "cuándo").
 
 ## D-32 — Blog
 

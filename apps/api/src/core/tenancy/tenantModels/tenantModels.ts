@@ -23,4 +23,9 @@ export const TENANT_MODELS: ReadonlySet<string> = new Set([
   "Category",
   "MinistryCategory",
   "Series",
+  "ScheduleSet",
+  "RecurringActivity",
+  "ScheduleException",
+  "Place",
+  "CalendarYear",
 ]);

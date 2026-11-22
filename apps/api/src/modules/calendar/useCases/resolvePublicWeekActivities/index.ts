@@ -1,0 +1,1 @@
+export { resolvePublicWeekActivities } from "./resolvePublicWeekActivities";

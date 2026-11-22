@@ -6,6 +6,7 @@ import {
   EL_ANCLA_SITE_SETTINGS,
 } from "./elAncla";
 import { seedBlog } from "./seedBlog";
+import { seedCalendar } from "./seedCalendar";
 import { seedMinistries } from "./seedMinistries";
 import { seedPeople } from "./seedPeople";
 import { seedRoles } from "./seedRoles";
@@ -28,7 +29,6 @@ async function seed(): Promise<void> {
     create: {
       organizationId: organization.id,
       ...EL_ANCLA_SITE_SETTINGS,
-      serviceTimes: [...EL_ANCLA_SITE_SETTINGS.serviceTimes],
     },
     update: {},
   });
@@ -51,6 +51,7 @@ async function seed(): Promise<void> {
   await seedVisit(db, organization.id);
   await seedSimplePages(db, organization.id);
   await seedBlog(db, organization.id);
+  await seedCalendar(db, organization.id);
 
   console.info(`Seeded organization "${organization.slug}".`);
 }

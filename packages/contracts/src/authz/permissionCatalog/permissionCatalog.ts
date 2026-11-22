@@ -91,6 +91,24 @@ export const PERMISSION_CATALOG = {
     actions: CRUD_AND_PUBLISH,
     scopes: ALL_ONLY,
   },
+  // Events go through the editorial workflow; schedules, places and exceptions are edited directly.
+  events: {
+    resource: "content.events",
+    actions: CRUD_AND_PUBLISH,
+    scopes: ALL_ONLY,
+  },
+  // Internal events are visible only to the roles of their audience, and only with this permission.
+  calendarInternal: {
+    resource: "calendar.internal",
+    actions: ["view"],
+    scopes: ALL_ONLY,
+  },
+  // Publishing a calendar year makes its activities and events public in one step.
+  calendarYear: {
+    resource: "calendar.year",
+    actions: ["publish"],
+    scopes: ALL_ONLY,
+  },
   ministryProfile: {
     resource: "ministries.profile",
     actions: CRUD_AND_PUBLISH,

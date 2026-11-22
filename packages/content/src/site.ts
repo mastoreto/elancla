@@ -53,6 +53,8 @@ export interface SiteConfig {
   geo: { latitude: number; longitude: number };
   contactEmail: string;
   founded: string;
+  /** IANA time zone of the church; every hour of the site is in it. */
+  timezone: string;
   serviceTimes: ServiceTime[];
   /** Status of each public section; every key is always present. */
   sections: Record<SiteSectionKey, SiteSectionStatus>;
@@ -88,6 +90,7 @@ export const SITE_FALLBACK: SiteConfig = {
   geo: { latitude: -34.872968, longitude: -56.161429 },
   contactEmail: "contacto@elancla.uy",
   founded: "1997",
+  timezone: "America/Montevideo",
   serviceTimes: [
     { kind: "worship", weekday: 0, start: "11:15", end: "13:00" },
     { kind: "bibleSchool", weekday: 0, start: "10:00", end: null },
@@ -121,6 +124,7 @@ export function toSiteConfig(settings: PublicSiteSettingsDto): SiteConfig {
     themeColor: settings.themeColor ?? SITE_FALLBACK.themeColor,
     contactEmail: settings.contactEmail ?? SITE_FALLBACK.contactEmail,
     founded: settings.founded ?? SITE_FALLBACK.founded,
+    timezone: settings.timezone || SITE_FALLBACK.timezone,
     serviceTimes: settings.serviceTimes,
     sections: settings.sections,
     seoDescription: settings.seoDescription,

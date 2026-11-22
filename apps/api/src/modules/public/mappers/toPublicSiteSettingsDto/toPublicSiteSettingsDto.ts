@@ -1,6 +1,10 @@
-import type { PublicSiteSettingsDto, PublicSiteStatus } from "@ancla/contracts";
+import type {
+  PublicSiteSettingsDto,
+  PublicSiteStatus,
+  ServiceTimeDto,
+} from "@ancla/contracts";
 import type { SiteSettings } from "@ancla/db";
-import { parseServiceTimes, resolveSectionStatuses } from "../../../site";
+import { resolveSectionStatuses } from "../../../site";
 
 const STATUSES: Record<SiteSettings["status"], PublicSiteStatus> = {
   ONLINE: "online",
@@ -16,9 +20,14 @@ function geoOf(settings: SiteSettings): PublicSiteSettingsDto["geo"] {
 /** Explicit field list: no ids, `version` or timestamps leave through the public API. */
 export function toPublicSiteSettingsDto(
   settings: SiteSettings,
-  seoDescription: string | null,
-  locale: string,
+  context: {
+    seoDescription: string | null;
+    locale: string;
+    timezone: string;
+    serviceTimes: ServiceTimeDto[];
+  },
 ): PublicSiteSettingsDto {
+  const { seoDescription, locale, timezone, serviceTimes } = context;
   return {
     locale,
     name: settings.name,
@@ -37,7 +46,8 @@ export function toPublicSiteSettingsDto(
     geo: geoOf(settings),
     themeColor: settings.themeColor,
     founded: settings.founded,
-    serviceTimes: parseServiceTimes(settings.serviceTimes),
+    timezone,
+    serviceTimes,
     sections: resolveSectionStatuses(settings.sectionStatuses),
     seoDescription,
     social: {

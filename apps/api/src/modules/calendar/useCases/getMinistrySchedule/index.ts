@@ -1,0 +1,1 @@
+export { getMinistrySchedule } from "./getMinistrySchedule";
