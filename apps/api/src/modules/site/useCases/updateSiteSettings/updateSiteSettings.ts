@@ -45,11 +45,10 @@ function toColumns(
   body: UpdateSiteSettingsBody,
 ): Prisma.SiteSettingsUncheckedUpdateManyInput {
   const { version: _version, translations: _translations, ...fields } = body;
-  const { status, sections, serviceTimes, ...plain } = fields;
+  const { status, sections, ...plain } = fields;
   return {
     ...plain,
     status: status === undefined ? undefined : STATUSES[status],
-    serviceTimes,
     // The map is replaced as a whole; a key left out goes back to `active`.
     sectionStatuses:
       sections === undefined ? undefined : resolveSectionStatuses(sections),

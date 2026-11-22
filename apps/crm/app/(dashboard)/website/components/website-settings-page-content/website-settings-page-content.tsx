@@ -6,7 +6,6 @@ import { AddressCard } from "../address-card";
 import { GeneralInfoCard } from "../general-info-card";
 import { SectionsCard } from "../sections-card";
 import { SeoCard } from "../seo-card";
-import { ServiceTimesCard } from "../service-times-card";
 import { SiteStatusCard } from "../site-status-card";
 import { SocialLinksCard } from "../social-links-card";
 
@@ -56,10 +55,6 @@ export function WebsiteSettingsPageContent({ settings }: WebsiteSettingsPageCont
       </div>
       <SocialLinksCard
         key={`social:${JSON.stringify([settings.facebook, settings.instagram, settings.youtube, settings.spotify, settings.twitter, settings.linkedin])}`}
-        settings={settings}
-      />
-      <ServiceTimesCard
-        key={`times:${JSON.stringify(settings.serviceTimes)}`}
         settings={settings}
       />
       <SectionsCard key={`sections:${JSON.stringify(settings.sections)}`} settings={settings} />

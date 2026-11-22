@@ -1255,6 +1255,98 @@ const rows: MatrixRow[] = [
     expected: 400,
   },
 
+  // calendar schedules (sets, activities, exceptions, places): events:view reads, events:edit
+  // changes. A role with only treasury gets none.
+  ...(
+    [
+      ["GET", "/content/calendar/schedule-sets", undefined],
+      ["POST", "/content/calendar/schedule-sets", {}],
+      ["PATCH", `/content/calendar/schedule-sets/${UNKNOWN_ID}`, {}],
+      ["DELETE", `/content/calendar/schedule-sets/${UNKNOWN_ID}`, undefined],
+      ["GET", "/content/calendar/activities", undefined],
+      ["POST", "/content/calendar/activities", {}],
+      ["PATCH", `/content/calendar/activities/${UNKNOWN_ID}`, {}],
+      ["DELETE", `/content/calendar/activities/${UNKNOWN_ID}`, undefined],
+      ["GET", "/content/calendar/exceptions", undefined],
+      ["POST", "/content/calendar/exceptions", {}],
+      ["PATCH", `/content/calendar/exceptions/${UNKNOWN_ID}`, {}],
+      ["DELETE", `/content/calendar/exceptions/${UNKNOWN_ID}`, undefined],
+      ["GET", "/content/calendar/places", undefined],
+      ["POST", "/content/calendar/places", {}],
+      ["PATCH", `/content/calendar/places/${UNKNOWN_ID}`, {}],
+      ["DELETE", `/content/calendar/places/${UNKNOWN_ID}`, undefined],
+    ] as const
+  ).flatMap(([method, path, body]): MatrixRow[] => [
+    {
+      who: "anonymous",
+      caller: "anonymous",
+      method,
+      path,
+      body,
+      expected: 401,
+    },
+    { who: "no role", caller: NOTHING, method, path, body, expected: 403 },
+    {
+      who: PERMISSIONS.ministryFinance.view,
+      caller: [grant(PERMISSIONS.ministryFinance.view, "all")],
+      method,
+      path,
+      body,
+      expected: 403,
+    },
+    // Viewing is not editing.
+    ...(method === "GET"
+      ? []
+      : [
+          {
+            who: PERMISSIONS.events.view,
+            caller: [grant(PERMISSIONS.events.view)],
+            method,
+            path,
+            body,
+            expected: 403,
+          },
+        ]),
+  ]),
+  ...(
+    [
+      "/content/calendar/schedule-sets",
+      "/content/calendar/activities",
+      "/content/calendar/exceptions",
+      "/content/calendar/places",
+    ] as const
+  ).flatMap((path): MatrixRow[] => [
+    {
+      who: PERMISSIONS.events.view,
+      caller: [grant(PERMISSIONS.events.view)],
+      method: "GET",
+      path,
+      expected: 200,
+    },
+    {
+      who: PERMISSIONS.events.edit,
+      caller: [grant(PERMISSIONS.events.edit)],
+      method: "POST",
+      path,
+      body: {},
+      expected: 400,
+    },
+    {
+      who: PERMISSIONS.events.edit,
+      caller: [grant(PERMISSIONS.events.edit)],
+      method: "GET",
+      path,
+      expected: 403,
+    },
+  ]),
+  {
+    who: PERMISSIONS.events.edit,
+    caller: [grant(PERMISSIONS.events.edit)],
+    method: "DELETE",
+    path: `/content/calendar/places/${UNKNOWN_ID}`,
+    expected: 404,
+  },
+
   // The seeded admin holds everything, resources added later included.
   {
     who: "admin",

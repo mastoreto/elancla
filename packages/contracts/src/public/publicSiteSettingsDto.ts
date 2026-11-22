@@ -39,6 +39,9 @@ export const publicSiteSettingsDto = z.strictObject({
     .nullable(),
   themeColor: z.string().nullable(),
   founded: z.string().nullable(),
+  /** IANA time zone of the church (`America/Montevideo`): every hour of the site is in it. */
+  timezone: z.string(),
+  /** This week's worship times, derived from the calendar (the schedule set in force today). */
   serviceTimes: z.array(serviceTimeDto),
   /** Every section key is always present; a section never configured is `active`. */
   sections: siteSectionsDto,

@@ -23,6 +23,11 @@ const TABLES_WITHOUT_TENANT = new Set([
   "category_translations",
   "ministry_category_translations",
   "series_translations",
+  "schedule_set_translations",
+  "recurring_activity_translations",
+  "recurring_activity_ministries",
+  "schedule_exception_translations",
+  "place_translations",
   "post_views_daily",
   "post_view_visitors",
   "role_permissions",
@@ -43,6 +48,7 @@ const COMPOSITE_PK_TABLES = new Set([
   "role_permissions",
   "user_roles",
   "user_ministries",
+  "recurring_activity_ministries",
 ]);
 
 async function applicationTables(): Promise<string[]> {

@@ -49,6 +49,17 @@ describe('buildGeneratedFaqs', () => {
     expect(answerFor('18:30')).toBe('Sundays at 18:30.');
   });
 
+  test('the summer schedule the API serves is the one the visit page answers with', () => {
+    // What GET settings returns while the "Verano" set is in force (see the API tests).
+    const summerTimes: SiteConfig['serviceTimes'] = [
+      { kind: 'worship', weekday: 0, start: '09:30', end: '11:00' },
+      { kind: 'bibleSchool', weekday: 0, start: '08:30', end: null },
+    ];
+    const site = siteWith({ serviceTimes: summerTimes });
+    const [when] = buildGeneratedFaqs({ site, texts: TEXTS, locale: 'es' });
+    expect(when?.answer).toBe('Sundays at 09:30. Bible school at 08:30.');
+  });
+
   test('omits the schedule question without a worship slot', () => {
     const faqs = buildGeneratedFaqs({
       site: siteWith({ serviceTimes: [] }),

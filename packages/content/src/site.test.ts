@@ -27,6 +27,7 @@ const SETTINGS: PublicSiteSettingsDto = {
   geo: { latitude: 1.5, longitude: -2.5 },
   themeColor: "#123456",
   founded: "2001",
+  timezone: "America/Argentina/Buenos_Aires",
   serviceTimes: [{ kind: "worship", weekday: 0, start: "10:00", end: null }],
   sections: {
     blog: "maintenance",
@@ -92,6 +93,7 @@ describe("toSiteConfig", () => {
     const site = toSiteConfig(SETTINGS);
     expect(site.name).toBe("Iglesia de prueba");
     expect(site.serviceTimes).toEqual(SETTINGS.serviceTimes);
+    expect(site.timezone).toBe("America/Argentina/Buenos_Aires");
     expect(site.sections.blog).toBe("maintenance");
     expect(site.seoDescription).toBe("Descripcion de prueba");
     expect(site.status).toBe("maintenance");

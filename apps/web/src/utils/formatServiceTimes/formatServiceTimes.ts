@@ -14,7 +14,8 @@ export interface ServiceTimeRow {
   timeLabel: string;
 }
 
-function weekdayName(
+/** Localized weekday name from `Date#getDay` numbering (0 = Sunday). */
+export function weekdayName(
   weekday: number,
   locale: Locale,
   style: 'long' | 'short'
@@ -29,8 +30,12 @@ function weekdayName(
   return name.charAt(0).toLocaleUpperCase(locale) + name.slice(1);
 }
 
-function timeRange(time: ServiceTime): string {
-  return time.end ? `${time.start}${TIME_SEPARATOR}${time.end}` : time.start;
+/** "09:30 – 11:00", or just the start when the slot has no end. */
+export function timeRange(slot: {
+  start: string;
+  end?: string | null;
+}): string {
+  return slot.end ? `${slot.start}${TIME_SEPARATOR}${slot.end}` : slot.start;
 }
 
 /** Rows for a schedule list, in the order the church configured them. */

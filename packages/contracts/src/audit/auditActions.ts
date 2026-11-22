@@ -75,6 +75,26 @@ export const AUDIT_ACTIONS = {
     updated: "ministryCategory.updated",
     deleted: "ministryCategory.deleted",
   },
+  scheduleSet: {
+    created: "scheduleSet.created",
+    updated: "scheduleSet.updated",
+    deleted: "scheduleSet.deleted",
+  },
+  recurringActivity: {
+    created: "recurringActivity.created",
+    updated: "recurringActivity.updated",
+    deleted: "recurringActivity.deleted",
+  },
+  scheduleException: {
+    created: "scheduleException.created",
+    updated: "scheduleException.updated",
+    deleted: "scheduleException.deleted",
+  },
+  place: {
+    created: "place.created",
+    updated: "place.updated",
+    deleted: "place.deleted",
+  },
   series: {
     created: "series.created",
     updated: "series.updated",

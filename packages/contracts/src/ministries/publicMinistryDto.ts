@@ -55,6 +55,16 @@ export const publicMinistryLeaderDto = z.strictObject({
 });
 export type PublicMinistryLeaderDto = z.infer<typeof publicMinistryLeaderDto>;
 
+/** One weekly slot of a ministry. `weekday` follows `Date#getDay` (0 = Sunday); hours are `HH:mm`. */
+export const publicMinistryScheduleSlotDto = z.strictObject({
+  weekday: z.number().int().min(0).max(6),
+  start: z.string(),
+  end: z.string().optional(),
+});
+export type PublicMinistryScheduleSlotDto = z.infer<
+  typeof publicMinistryScheduleSlotDto
+>;
+
 /** `GET ministries/:slug`: the body is the JSON document (the web renders it), not HTML. */
 export const publicMinistryDto = z.strictObject({
   /** The language actually served (the default one when the requested one has no translation). */
@@ -73,6 +83,8 @@ export const publicMinistryDto = z.strictObject({
   icon: ministryIcon.optional(),
   color: ministryColor,
   leaders: z.array(publicMinistryLeaderDto),
+  /** When the ministry meets this week: its public linked activities, in the church time zone. */
+  schedule: z.array(publicMinistryScheduleSlotDto),
   cover: z
     .strictObject({ alt: z.string().optional(), image: publicBlogImageDto })
     .optional(),

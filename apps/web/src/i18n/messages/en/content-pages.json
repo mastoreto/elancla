@@ -307,8 +307,9 @@
     "facts": {
       "eyebrow": "Practical info",
       "toc": "Practical info",
-      "titleBefore": "Where and ",
+      "titleBefore": "When, where and ",
       "titleEmphasis": "with whom.",
+      "when": "When",
       "place": "Place",
       "audience": "Who it is for",
       "leaders": "Leaders",

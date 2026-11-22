@@ -1,5 +1,4 @@
 export {
-  MAX_SERVICE_TIMES,
   SEO_DESCRIPTION_MAX_LENGTH,
   SERVICE_TIME_KINDS,
   type ServiceTimeDto,

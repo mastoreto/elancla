@@ -12,5 +12,5 @@ export interface MinistrySection {
 
 export type MinistrySectionInput = Pick<
   PublicMinistry,
-  'place' | 'audience' | 'howToJoin' | 'nextStep' | 'leaders'
+  'place' | 'audience' | 'howToJoin' | 'nextStep' | 'leaders' | 'schedule'
 >;

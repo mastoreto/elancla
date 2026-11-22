@@ -20,7 +20,7 @@ export function findSiteKeyForAuthentication(id: string) {
 export function findOrganizationLocales(organizationId: string) {
   return db.organization.findUnique({
     where: { id: organizationId },
-    select: { defaultLocale: true, locales: true },
+    select: { defaultLocale: true, locales: true, timezone: true },
   });
 }
 

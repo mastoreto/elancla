@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { buildMinistrySections } from './buildMinistrySections';
 
-const BARE = { leaders: [] };
+const BARE = { leaders: [], schedule: [] };
 
 describe('buildMinistrySections', () => {
   test('a bare ministry only has the about section', () => {
@@ -33,7 +33,17 @@ describe('buildMinistrySections', () => {
   test('a visible leader is enough for the facts', () => {
     expect(
       buildMinistrySections({
+        ...BARE,
         leaders: [{ name: 'Ana', title: 'Líder' }],
+      }).map(({ key }) => key)
+    ).toEqual(['about', 'facts']);
+  });
+
+  test('a weekly schedule is enough for the facts', () => {
+    expect(
+      buildMinistrySections({
+        ...BARE,
+        schedule: [{ weekday: 5, start: '20:00' }],
       }).map(({ key }) => key)
     ).toEqual(['about', 'facts']);
   });

@@ -3,6 +3,12 @@ import { createApp, createRouter } from "./core/createApp";
 import { openApiConfig } from "./core/openapi";
 import { auditRoutes } from "./modules/audit";
 import { blogInternalRoutes, blogRoutes } from "./modules/blog";
+import {
+  activitiesRoutes,
+  exceptionsRoutes,
+  placesRoutes,
+  scheduleSetsRoutes,
+} from "./modules/calendar";
 import { editorialRoutes } from "./modules/editorial";
 import { healthRoutes } from "./modules/health";
 import { invitationsRoutes } from "./modules/identity/invitations";
@@ -49,9 +55,21 @@ const routes = createRouter()
   .route("/", blogRoutes)
   .route("/", editorialRoutes);
 
+/**
+ * The calendar routes have their own type for the same reason: chained into `routes` they push
+ * `hc<AppType>` over the instantiation depth limit. The CRM calendar pages use
+ * `hc<CalendarAppType>`.
+ */
+const calendarRoutes = createRouter()
+  .route("/", scheduleSetsRoutes)
+  .route("/", activitiesRoutes)
+  .route("/", exceptionsRoutes)
+  .route("/", placesRoutes);
+
 // Better Auth is mounted next to the typed routes but kept out of `AppType`: it has its own client.
 export const app = createApp()
   .route("/", routes)
+  .route("/", calendarRoutes)
   .route("/public/v1", publicRoutes)
   .route("/", createAuthRouter());
 
@@ -61,3 +79,4 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export type AppType = typeof routes;
+export type CalendarAppType = typeof calendarRoutes;

@@ -1,0 +1,1 @@
+export { deletePlace } from "./deletePlace";

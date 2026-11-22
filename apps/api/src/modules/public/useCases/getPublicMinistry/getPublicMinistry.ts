@@ -1,6 +1,7 @@
 import type { MinistrySnapshot, PublicMinistryDto } from "@ancla/contracts";
 import { NotFoundError } from "../../../../core/errors";
 import { getStorageEnv } from "../../../../core/storage";
+import { getMinistrySchedule } from "../../../calendar";
 import { listLiveSnapshots } from "../../../editorial";
 import {
   findOrganizationLocales,
@@ -25,8 +26,9 @@ export async function getPublicMinistry(input: {
   organizationId: string;
   slug: string;
   requestedLocale: string | undefined;
+  now?: Date;
 }): Promise<PublicMinistryDto> {
-  const { organizationId, slug, requestedLocale } = input;
+  const { organizationId, slug, requestedLocale, now = new Date() } = input;
   const organization = await findOrganizationLocales(organizationId);
   if (!organization) throw new NotFoundError("The church was not found");
   const { defaultLocale, locales } = organization;
@@ -48,8 +50,9 @@ export async function getPublicMinistry(input: {
   }
   const snapshot = found.snapshot as unknown as MinistrySnapshot;
 
-  const [leaders, images] = await Promise.all([
+  const [leaders, schedule, images] = await Promise.all([
     findPublicMinistryLeaders(organizationId, row.id, [locale, defaultLocale]),
+    getMinistrySchedule(organizationId, row.id, now),
     loadBlogImages(
       organizationId,
       [snapshot.coverMediaId, snapshot.socialImageId].filter(
@@ -59,6 +62,7 @@ export async function getPublicMinistry(input: {
   ]);
   return toPublicMinistryDto({ row, snapshot, ...picked }, leaders, {
     ...served,
+    schedule,
     images,
     publicBaseUrl: getStorageEnv().MEDIA_PUBLIC_BASE_URL,
   });

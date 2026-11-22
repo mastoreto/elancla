@@ -307,8 +307,9 @@
     "facts": {
       "eyebrow": "Datos prácticos",
       "toc": "Datos prácticos",
-      "titleBefore": "Dónde y ",
+      "titleBefore": "Cuándo, dónde y ",
       "titleEmphasis": "con quién.",
+      "when": "Cuándo",
       "place": "Lugar",
       "audience": "Para quién",
       "leaders": "Responsables",

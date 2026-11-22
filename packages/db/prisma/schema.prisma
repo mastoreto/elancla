@@ -36,23 +36,28 @@ model Organization {
   createdAt     DateTime @default(now()) @db.Timestamptz(3)
   updatedAt     DateTime @updatedAt @db.Timestamptz(3)
 
-  siteSettings       SiteSettings?
-  documentSequences  DocumentSequence[]
-  invitations        Invitation[]
-  roles              Role[]
-  ministries         Ministry[]
-  auditLogs          AuditLog[]
-  mediaFiles         MediaFile[]
-  siteApiKeys        SiteApiKey[]
-  contentRevisions   ContentRevision[]
-  editorialSettings  EditorialSettings[]
-  personProfiles     PersonProfile[]
-  visitFaqs          VisitFaq[]
-  simplePages        SimplePage[]
-  posts              Post[]
-  categories         Category[]
-  ministryCategories MinistryCategory[]
-  series             Series[]
+  siteSettings        SiteSettings?
+  documentSequences   DocumentSequence[]
+  invitations         Invitation[]
+  roles               Role[]
+  ministries          Ministry[]
+  auditLogs           AuditLog[]
+  mediaFiles          MediaFile[]
+  siteApiKeys         SiteApiKey[]
+  contentRevisions    ContentRevision[]
+  editorialSettings   EditorialSettings[]
+  personProfiles      PersonProfile[]
+  visitFaqs           VisitFaq[]
+  simplePages         SimplePage[]
+  posts               Post[]
+  categories          Category[]
+  ministryCategories  MinistryCategory[]
+  series              Series[]
+  scheduleSets        ScheduleSet[]
+  recurringActivities RecurringActivity[]
+  scheduleExceptions  ScheduleException[]
+  places              Place[]
+  calendarYears       CalendarYear[]
 
   @@map("organizations")
 }
@@ -100,9 +105,6 @@ model SiteSettings {
 
   themeColor      String?
   founded         String?
-  // ponytail: temporary bridge until phase 1.6 derives service times from recurring activities.
-  /// List of { kind: "worship" | "bibleSchool", weekday 0-6 (0 = Sunday), start "HH:mm", end "HH:mm" | null }.
-  serviceTimes    Json    @default("[]")
   /// Map of section key -> "active" | "maintenance" | "outOfService"; a missing key means active.
   sectionStatuses Json    @default("{}")
 
@@ -362,26 +364,27 @@ model PersonRoleTranslation {
 // Authorization lives in the RBAC models below (roles, permissions, ministries).
 
 model User {
-  id                 String            @id @default(uuid(7)) @db.Uuid
-  name               String
-  email              String            @unique
-  emailVerified      Boolean           @default(false)
-  image              String?
+  id                     String            @id @default(uuid(7)) @db.Uuid
+  name                   String
+  email                  String            @unique
+  emailVerified          Boolean           @default(false)
+  image                  String?
   /// Better Auth two-factor plugin flag.
-  twoFactorEnabled   Boolean           @default(false)
-  createdAt          DateTime          @default(now()) @db.Timestamptz(3)
-  updatedAt          DateTime          @updatedAt @db.Timestamptz(3)
-  sessions           Session[]
-  accounts           Account[]
-  twoFactors         TwoFactor[]
-  invitationsSent    Invitation[]
-  siteApiKeysCreated SiteApiKey[]
-  userRoles          UserRole[]
-  userMinistries     UserMinistry[]
-  mediaFiles         MediaFile[]
-  authoredRevisions  ContentRevision[] @relation("RevisionAuthor")
-  reviewedRevisions  ContentRevision[] @relation("RevisionReviewer")
-  personProfiles     PersonProfile[]
+  twoFactorEnabled       Boolean           @default(false)
+  createdAt              DateTime          @default(now()) @db.Timestamptz(3)
+  updatedAt              DateTime          @updatedAt @db.Timestamptz(3)
+  sessions               Session[]
+  accounts               Account[]
+  twoFactors             TwoFactor[]
+  invitationsSent        Invitation[]
+  siteApiKeysCreated     SiteApiKey[]
+  userRoles              UserRole[]
+  userMinistries         UserMinistry[]
+  mediaFiles             MediaFile[]
+  authoredRevisions      ContentRevision[] @relation("RevisionAuthor")
+  reviewedRevisions      ContentRevision[] @relation("RevisionReviewer")
+  personProfiles         PersonProfile[]
+  publishedCalendarYears CalendarYear[]
 
   @@map("users")
 }
@@ -492,34 +495,35 @@ model Invitation {
 
 /// Minimal ministry (phase 0.4) so the `ministry` scope has something to point at; phase 1.5 extends it.
 model Ministry {
-  id             String              @id @default(uuid(7)) @db.Uuid
-  organizationId String              @db.Uuid
-  organization   Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  id             String                      @id @default(uuid(7)) @db.Uuid
+  organizationId String                      @db.Uuid
+  organization   Organization                @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   /// Internal name (users, invitations, treasury); the public name lives in the profile snapshot.
   name           String
   slug           String
   /// Optimistic lock for the settings (409 stale_version).
-  version        Int                 @default(1)
-  categoryId     String?             @db.Uuid
-  category       MinistryCategory?   @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  destination    MinistryDestination @default(PAGE)
+  version        Int                         @default(1)
+  categoryId     String?                     @db.Uuid
+  category       MinistryCategory?           @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  destination    MinistryDestination         @default(PAGE)
   /// https URL, required when `destination` is EXTERNAL.
   externalUrl    String?
   /// One of MINISTRY_ICONS (validated by the contracts).
   icon           String?
   /// One of MINISTRY_COLORS (validated by the contracts).
-  color          String              @default("secondary-700")
-  showOnLanding  Boolean             @default(false)
-  landingOrder   Int                 @default(0)
-  landingTile    MinistryLandingTile @default(COLOR)
+  color          String                      @default("secondary-700")
+  showOnLanding  Boolean                     @default(false)
+  landingOrder   Int                         @default(0)
+  landingTile    MinistryLandingTile         @default(COLOR)
   /// One of LANDING_TONES (validated by the contracts).
-  landingTone    String              @default("mist")
-  landingPhotoId String?             @db.Uuid
-  landingPhoto   MediaFile?          @relation("MinistryLandingPhoto", fields: [landingPhotoId], references: [id], onDelete: SetNull)
-  createdAt      DateTime            @default(now()) @db.Timestamptz(3)
-  updatedAt      DateTime            @updatedAt @db.Timestamptz(3)
+  landingTone    String                      @default("mist")
+  landingPhotoId String?                     @db.Uuid
+  landingPhoto   MediaFile?                  @relation("MinistryLandingPhoto", fields: [landingPhotoId], references: [id], onDelete: SetNull)
+  createdAt      DateTime                    @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime                    @updatedAt @db.Timestamptz(3)
   members        UserMinistry[]
   leaders        PersonRole[]
+  activities     RecurringActivityMinistry[]
 
   @@unique([organizationId, slug])
   @@map("ministries")
@@ -782,4 +786,189 @@ model EditorialSettings {
 
   @@unique([organizationId, contentType])
   @@map("editorial_settings")
+}
+
+// ─── Calendar: schedules (phase 1.6a) ────────────────────────────────────────
+// Wall-clock model: hours are "HH:mm" text and dates are @db.Date, both in the church's own time
+// zone (Organization.timezone), never converted to UTC. `weekday` follows Date#getDay (0 = Sunday).
+
+enum ServiceKind {
+  WORSHIP
+  BIBLE_SCHOOL
+}
+
+enum CalendarYearStatus {
+  DRAFT
+  PUBLISHED
+}
+
+/// A named weekly schedule ("Habitual", "Verano"). Partial unique indexes (see the migration) allow
+/// one default and one manually forced set per organization.
+model ScheduleSet {
+  id             String                   @id @default(uuid(7)) @db.Uuid
+  organizationId String                   @db.Uuid
+  organization   Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  validFrom      DateTime?                @db.Date
+  validTo        DateTime?                @db.Date
+  isDefault      Boolean                  @default(false)
+  /// The manual switch: while set, this set wins over the validity window.
+  forcedActive   Boolean                  @default(false)
+  order          Int                      @default(0)
+  /// Optimistic lock (409 stale_version).
+  version        Int                      @default(1)
+  deletedAt      DateTime?                @db.Timestamptz(3)
+  translations   ScheduleSetTranslation[]
+  activities     RecurringActivity[]
+  exceptions     ScheduleException[]
+  createdAt      DateTime                 @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime                 @updatedAt @db.Timestamptz(3)
+
+  @@index([organizationId])
+  @@map("schedule_sets")
+}
+
+model ScheduleSetTranslation {
+  id            String      @id @default(uuid(7)) @db.Uuid
+  scheduleSetId String      @db.Uuid
+  scheduleSet   ScheduleSet @relation(fields: [scheduleSetId], references: [id], onDelete: Cascade)
+  locale        String
+  /// Max 60 chars (validated by the contracts).
+  name          String
+
+  @@unique([scheduleSetId, locale])
+  @@map("schedule_set_translations")
+}
+
+/// A weekly slot of a set. `serviceKind` set means "this is a worship time". Fixed activities
+/// (`year` null) repeat every year; the others belong to one calendar year. CHECKs in the migration:
+/// `isFixed = (year IS NULL)` and `annualReview` implies `isFixed`.
+model RecurringActivity {
+  id             String                         @id @default(uuid(7)) @db.Uuid
+  organizationId String                         @db.Uuid
+  organization   Organization                   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  scheduleSetId  String                         @db.Uuid
+  scheduleSet    ScheduleSet                    @relation(fields: [scheduleSetId], references: [id], onDelete: Cascade)
+  weekday        Int
+  start          String
+  end            String?
+  placeId        String?                        @db.Uuid
+  place          Place?                         @relation(fields: [placeId], references: [id], onDelete: NoAction)
+  serviceKind    ServiceKind?
+  isPublic       Boolean                        @default(true)
+  isFixed        Boolean                        @default(true)
+  year           Int?
+  annualReview   Boolean                        @default(false)
+  needsReview    Boolean                        @default(false)
+  /// Optimistic lock (409 stale_version).
+  version        Int                            @default(1)
+  deletedAt      DateTime?                      @db.Timestamptz(3)
+  translations   RecurringActivityTranslation[]
+  ministries     RecurringActivityMinistry[]
+  createdAt      DateTime                       @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime                       @updatedAt @db.Timestamptz(3)
+
+  @@index([organizationId, scheduleSetId])
+  @@map("recurring_activities")
+}
+
+model RecurringActivityTranslation {
+  id         String            @id @default(uuid(7)) @db.Uuid
+  activityId String            @db.Uuid
+  activity   RecurringActivity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  locale     String
+  /// Max 80 chars (validated by the contracts).
+  title      String
+
+  @@unique([activityId, locale])
+  @@map("recurring_activity_translations")
+}
+
+model RecurringActivityMinistry {
+  activityId String            @db.Uuid
+  activity   RecurringActivity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  ministryId String            @db.Uuid
+  ministry   Ministry          @relation(fields: [ministryId], references: [id], onDelete: Cascade)
+
+  @@id([activityId, ministryId])
+  @@map("recurring_activity_ministries")
+}
+
+/// A one-day override of the schedule: `replacementSetId` null means "no meeting that day".
+model ScheduleException {
+  id               String                         @id @default(uuid(7)) @db.Uuid
+  organizationId   String                         @db.Uuid
+  organization     Organization                   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  date             DateTime                       @db.Date
+  replacementSetId String?                        @db.Uuid
+  replacementSet   ScheduleSet?                   @relation(fields: [replacementSetId], references: [id], onDelete: NoAction)
+  /// Optimistic lock (409 stale_version).
+  version          Int                            @default(1)
+  translations     ScheduleExceptionTranslation[]
+  createdAt        DateTime                       @default(now()) @db.Timestamptz(3)
+  updatedAt        DateTime                       @updatedAt @db.Timestamptz(3)
+
+  @@unique([organizationId, date])
+  @@map("schedule_exceptions")
+}
+
+model ScheduleExceptionTranslation {
+  id          String            @id @default(uuid(7)) @db.Uuid
+  exceptionId String            @db.Uuid
+  exception   ScheduleException @relation(fields: [exceptionId], references: [id], onDelete: Cascade)
+  locale      String
+  /// Max 200 chars (validated by the contracts).
+  message     String
+
+  @@unique([exceptionId, locale])
+  @@map("schedule_exception_translations")
+}
+
+/// A place where activities and events happen. Deleting one that is used is refused (place_in_use).
+model Place {
+  id             String              @id @default(uuid(7)) @db.Uuid
+  organizationId String              @db.Uuid
+  organization   Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  address        String?
+  /// https URL (validated by the contracts).
+  mapsUrl        String?
+  order          Int                 @default(0)
+  /// Optimistic lock (409 stale_version).
+  version        Int                 @default(1)
+  deletedAt      DateTime?           @db.Timestamptz(3)
+  translations   PlaceTranslation[]
+  activities     RecurringActivity[]
+  createdAt      DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime            @updatedAt @db.Timestamptz(3)
+
+  @@index([organizationId])
+  @@map("places")
+}
+
+model PlaceTranslation {
+  id      String @id @default(uuid(7)) @db.Uuid
+  placeId String @db.Uuid
+  place   Place  @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  locale  String
+  /// Max 80 chars (validated by the contracts).
+  name    String
+
+  @@unique([placeId, locale])
+  @@map("place_translations")
+}
+
+/// One calendar year of the church. Activities of a year and (from 1.6b) its events are public
+/// only once the year is PUBLISHED.
+model CalendarYear {
+  id             String             @id @default(uuid(7)) @db.Uuid
+  organizationId String             @db.Uuid
+  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  year           Int
+  status         CalendarYearStatus @default(DRAFT)
+  publishedAt    DateTime?          @db.Timestamptz(3)
+  publishedById  String?            @db.Uuid
+  publishedBy    User?              @relation(fields: [publishedById], references: [id], onDelete: SetNull)
+  createdAt      DateTime           @default(now()) @db.Timestamptz(3)
+
+  @@unique([organizationId, year])
+  @@map("calendar_years")
 }

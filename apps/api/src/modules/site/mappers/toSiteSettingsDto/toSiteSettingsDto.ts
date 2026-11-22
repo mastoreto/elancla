@@ -1,6 +1,6 @@
 import type { SiteSettingsDto } from "@ancla/contracts";
 import type { SiteSettings, SiteSettingsTranslation } from "@ancla/db";
-import { parseServiceTimes, resolveSectionStatuses } from "../../domain";
+import { resolveSectionStatuses } from "../../domain";
 
 const STATUSES: Record<SiteSettings["status"], SiteSettingsDto["status"]> = {
   ONLINE: "online",
@@ -41,7 +41,6 @@ export function toSiteSettingsDto(
     twitter: settings.twitter,
     spotify: settings.spotify,
     linkedin: settings.linkedin,
-    serviceTimes: parseServiceTimes(settings.serviceTimes),
     sections: resolveSectionStatuses(settings.sectionStatuses),
     translations: Object.fromEntries(
       settings.translations.map((translation) => [
