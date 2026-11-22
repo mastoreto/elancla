@@ -41,6 +41,20 @@ export {
   softDeletePlace,
 } from "./placesRepository";
 export {
+  findAdminRecipients,
+  findExistingUserIdsOf,
+  findRecipientsOf,
+  findReminderSettingsRow,
+  lastSentOnOf,
+  listOrganizationIds,
+  listPendingReviewRows,
+  markReminderSent,
+  type PendingReviewRow,
+  type ReminderRecipient,
+  type ReminderSettingsRow,
+  upsertReminderSettingsRow,
+} from "./remindersRepository";
+export {
   type ActivityYearReviewRow,
   confirmReviewRow,
 } from "./reviewsRepository";

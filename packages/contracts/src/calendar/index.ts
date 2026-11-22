@@ -5,5 +5,6 @@ export * from "./eventSnapshot";
 export * from "./placeDto";
 export * from "./publicCalendarDto";
 export * from "./recurringActivityDto";
+export * from "./reminderDto";
 export * from "./scheduleExceptionDto";
 export * from "./scheduleSetDto";

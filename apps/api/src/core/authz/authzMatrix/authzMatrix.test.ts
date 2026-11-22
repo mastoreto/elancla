@@ -985,6 +985,21 @@ const rows: MatrixRow[] = [
     expected: 401,
   },
 
+  {
+    who: "anonymous",
+    caller: "anonymous",
+    method: "GET",
+    path: "/internal/calendar/reminders",
+    expected: 401,
+  },
+  {
+    who: "admin (a session is not the cron secret)",
+    caller: ["admin"],
+    method: "GET",
+    path: "/internal/calendar/reminders",
+    expected: 401,
+  },
+
   // editorial: each route is guarded by the permission of the content type (blog posts here).
   ...(
     [
@@ -1412,6 +1427,60 @@ const rows: MatrixRow[] = [
     body: {},
     expected: 400,
   },
+  // calendar reminders: events:view reads (recipients and pending), events:edit changes the recipients.
+  ...(
+    [
+      ["GET", "/content/calendar/reminders", undefined],
+      ["PUT", "/content/calendar/reminders", {}],
+      ["GET", "/content/calendar/pending", undefined],
+    ] as const
+  ).flatMap(([method, path, body]): MatrixRow[] => [
+    {
+      who: "anonymous",
+      caller: "anonymous",
+      method,
+      path,
+      body,
+      expected: 401,
+    },
+    { who: "no role", caller: NOTHING, method, path, body, expected: 403 },
+    {
+      who: PERMISSIONS.ministryFinance.view,
+      caller: [grant(PERMISSIONS.ministryFinance.view, "all")],
+      method,
+      path,
+      body,
+      expected: 403,
+    },
+    ...(method === "GET"
+      ? [
+          {
+            who: PERMISSIONS.events.view,
+            caller: [grant(PERMISSIONS.events.view)],
+            method,
+            path,
+            expected: 200,
+          },
+        ]
+      : [
+          {
+            who: PERMISSIONS.events.view,
+            caller: [grant(PERMISSIONS.events.view)],
+            method,
+            path,
+            body,
+            expected: 403,
+          },
+          {
+            who: PERMISSIONS.events.edit,
+            caller: [grant(PERMISSIONS.events.edit)],
+            method,
+            path,
+            body,
+            expected: 400,
+          },
+        ]),
+  ]),
   // Creating needs `create`; `edit` alone does not.
   {
     who: PERMISSIONS.events.edit,

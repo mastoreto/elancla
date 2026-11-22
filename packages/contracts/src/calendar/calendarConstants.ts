@@ -59,6 +59,7 @@ export const EVENT_MINISTRIES_MAX_COUNT = 6;
 export const EVENT_AUDIENCE_ROLES_MAX_COUNT = 50;
 /** Most items a single "copy from the previous year" request may carry (per kind). */
 export const COPY_YEAR_MAX_ITEMS = 500;
+export const REMINDER_RECIPIENTS_MAX_COUNT = 50;
 
 /** Lower case on the wire; the API maps them to the database enums. */
 export const EVENT_VISIBILITIES = ["public", "internal"] as const;

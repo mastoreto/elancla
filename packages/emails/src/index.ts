@@ -1,8 +1,10 @@
 export { EmailLayout } from "./components/email-layout";
 export {
+  type CalendarReminderInput,
   type EditorialNoticeInput,
   type EditorialNoticeVariant,
   type RenderedEmail,
+  renderCalendarReminderEmail,
   renderEditorialNoticeEmail,
   renderInvitationEmail,
   renderPasswordResetEmail,

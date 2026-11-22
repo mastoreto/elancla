@@ -11,6 +11,8 @@ export { deletePlace } from "./deletePlace";
 export { deleteRecurringActivity } from "./deleteRecurringActivity";
 export { deleteScheduleException } from "./deleteScheduleException";
 export { deleteScheduleSet } from "./deleteScheduleSet";
+export { getCalendarPending } from "./getCalendarPending";
+export { getCalendarReminderSettings } from "./getCalendarReminderSettings";
 export { getMinistrySchedule } from "./getMinistrySchedule";
 export { getPublicServiceTimes } from "./getPublicServiceTimes";
 export { listCalendarYears } from "./listCalendarYears";
@@ -24,6 +26,8 @@ export {
   type PublicCalendarData,
 } from "./loadPublicCalendar";
 export { publishCalendarYear } from "./publishCalendarYear";
+export { sendCalendarReminders } from "./sendCalendarReminders";
+export { updateCalendarReminderSettings } from "./updateCalendarReminderSettings";
 export { updateEventSettings } from "./updateEventSettings";
 export { updatePlace } from "./updatePlace";
 export { updateRecurringActivity } from "./updateRecurringActivity";

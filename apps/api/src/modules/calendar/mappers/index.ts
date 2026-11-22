@@ -6,6 +6,7 @@ export {
   toRecurringActivityDto,
   toServiceKindDto,
 } from "./toRecurringActivityDto";
+export { toReminderSettingsDto } from "./toReminderSettingsDto";
 export { toResolvableException, toResolvableSet } from "./toResolvable";
 export { toScheduleExceptionDto } from "./toScheduleExceptionDto";
 export { toScheduleSetDto } from "./toScheduleSetDto";

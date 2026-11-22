@@ -5,9 +5,11 @@ import { auditRoutes } from "./modules/audit";
 import { blogInternalRoutes, blogRoutes } from "./modules/blog";
 import {
   activitiesRoutes,
+  calendarInternalRoutes,
   eventsRoutes,
   exceptionsRoutes,
   placesRoutes,
+  remindersRoutes,
   scheduleSetsRoutes,
   yearsRoutes,
 } from "./modules/calendar";
@@ -68,7 +70,9 @@ const calendarRoutes = createRouter()
   .route("/", exceptionsRoutes)
   .route("/", placesRoutes)
   .route("/", eventsRoutes)
-  .route("/", yearsRoutes);
+  .route("/", yearsRoutes)
+  .route("/", remindersRoutes)
+  .route("/", calendarInternalRoutes);
 
 // Better Auth is mounted next to the typed routes but kept out of `AppType`: it has its own client.
 export const app = createApp()
