@@ -97,7 +97,8 @@ export async function replaceActivityIfVersion(
 ): Promise<boolean> {
   const { count } = await tx.recurringActivity.updateMany({
     where: { ...where, deletedAt: null },
-    data: { ...columnsOf(body), version: { increment: 1 } },
+    // Saving from the CRM is the confirmation of a copied activity: it no longer needs review.
+    data: { ...columnsOf(body), needsReview: false, version: { increment: 1 } },
   });
   if (count === 0) return false;
   await tx.recurringActivityTranslation.deleteMany({
