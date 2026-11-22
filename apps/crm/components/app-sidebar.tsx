@@ -4,6 +4,7 @@ import type { Permission } from "@ancla/contracts";
 import {
   ArrowLeftRight,
   Boxes,
+  CalendarDays,
   ChevronRight,
   FileBarChart2,
   FileText,
@@ -239,6 +240,13 @@ export const navigationSections: NavigationSection[] = [
         url: getChurchRoutePath("blog"),
         icon: Newspaper,
         requires: ROUTE_PERMISSIONS.blog,
+      },
+      {
+        type: "link",
+        title: "Calendario",
+        url: getChurchRoutePath("calendar"),
+        icon: CalendarDays,
+        requires: ROUTE_PERMISSIONS.calendar,
       },
       {
         type: "group",

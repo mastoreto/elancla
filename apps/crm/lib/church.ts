@@ -21,6 +21,7 @@ export const churchToDashboardRouteMap = {
   podcasts: "podcasts",
   sermons: "sermons",
   ministries: "ministries",
+  calendar: "calendar",
   inventory: "inventory",
   assembly: "assembly",
 } as const;
@@ -41,6 +42,7 @@ export const dashboardToChurchRouteMap = {
   podcasts: "podcasts",
   sermons: "sermons",
   ministries: "ministries",
+  calendar: "calendar",
   inventory: "inventory",
   assembly: "assembly",
 } as const;

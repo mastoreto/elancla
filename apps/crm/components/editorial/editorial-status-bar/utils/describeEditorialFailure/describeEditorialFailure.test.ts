@@ -13,6 +13,17 @@ describe("describeEditorialFailure", () => {
     expect(await describeEditorialFailure(problem(400, "invalid_media"))).toContain("imagen");
   });
 
+  test("the calendar event codes get their own message", async () => {
+    expect(await describeEditorialFailure(problem(409, "year_not_published"))).toContain(
+      "borrador",
+    );
+    expect(await describeEditorialFailure(problem(409, "year_mismatch"))).toContain("año");
+    expect(await describeEditorialFailure(problem(400, "invalid_place"))).toContain("lugar");
+    expect(await describeEditorialFailure(problem(400, "invalid_ministry"))).toContain(
+      "ministerios",
+    );
+  });
+
   test("without a known code it falls back to the status", async () => {
     expect(await describeEditorialFailure(problem(409))).toContain("Recarga");
     expect(await describeEditorialFailure(problem(403))).toContain("rol");

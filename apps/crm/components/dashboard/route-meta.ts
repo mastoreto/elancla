@@ -135,6 +135,14 @@ const routeMeta: RouteMeta[] = [
     ctaHref: getChurchRoutePath("ministries", "landing"),
   },
   {
+    route: "calendar",
+    internalRoute: churchToDashboardRouteMap.calendar,
+    section: "Contenido",
+    title: "Calendario",
+    ctaLabel: "Horarios de culto",
+    ctaHref: getChurchRoutePath("calendar", "schedule"),
+  },
+  {
     route: "inventory",
     internalRoute: churchToDashboardRouteMap.inventory,
     section: "Gobierno",

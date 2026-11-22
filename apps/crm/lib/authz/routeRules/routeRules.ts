@@ -2,6 +2,7 @@ import type { Permission } from "@ancla/contracts";
 import { PERMISSIONS } from "@ancla/contracts";
 import { churchToDashboardRouteMap } from "@/lib/church";
 import {
+  CALENDAR_EDIT_ROUTE_PERMISSIONS,
   MINISTRY_CONFIG_ROUTE_PERMISSIONS,
   PAGES_ROUTE_PERMISSIONS,
   PEOPLE_ROUTE_PERMISSIONS,
@@ -39,6 +40,9 @@ export const ROUTE_RULES: readonly RouteRule[] = [
   // The ministry settings need the edit permission (and the all scope, which the pages check).
   { path: "/ministries/landing", requires: MINISTRY_CONFIG_ROUTE_PERMISSIONS },
   { path: "/ministries/categories", requires: MINISTRY_CONFIG_ROUTE_PERMISSIONS },
+  // The copy wizard and the reminder recipients need the edit permission (the API checks it too).
+  { path: "/calendar/copy", requires: CALENDAR_EDIT_ROUTE_PERMISSIONS },
+  { path: "/calendar/reminders", requires: CALENDAR_EDIT_ROUTE_PERMISSIONS },
   { path: "/settings", requires: [] },
   { path: "/settings/emails", requires: [PERMISSIONS.settings.view] },
   { path: "/settings/audit", requires: [PERMISSIONS.audit.view] },

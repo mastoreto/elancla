@@ -31,6 +31,11 @@ export const MINISTRY_CONFIG_ROUTE_PERMISSIONS = [
   PERMISSIONS.ministryProfile.edit,
 ] as const satisfies readonly Permission[];
 
+/** The copy wizard and the reminder recipients live under /calendar but only make sense to editors. */
+export const CALENDAR_EDIT_ROUTE_PERMISSIONS = [
+  PERMISSIONS.events.edit,
+] as const satisfies readonly Permission[];
+
 /**
  * What a signed-in user needs to see each section: any one of the listed permissions; an empty
  * list means every signed-in user. The sidebar and the route guards read this same table.
@@ -53,5 +58,6 @@ export const ROUTE_PERMISSIONS = {
   podcasts: [PERMISSIONS.content.view],
   sermons: [PERMISSIONS.content.view],
   ministries: [PERMISSIONS.ministryProfile.view],
+  calendar: [PERMISSIONS.events.view],
   settings: SETTINGS_PERMISSIONS,
 } as const satisfies Record<ChurchRouteSegment, readonly Permission[]>;
