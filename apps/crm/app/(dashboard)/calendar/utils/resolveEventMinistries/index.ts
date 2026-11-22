@@ -1,0 +1,1 @@
+export { resolveEventMinistries } from "./resolveEventMinistries";

@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import {
   BalanceCards,
   PendingApprovalsCard,
+  PendingCalendarCard,
   ProjectBudgetsCard,
   QuickActionsCard,
   RecentMovementsCard,
@@ -17,6 +18,7 @@ import {
   recentMovements,
   treasuryNote,
 } from "./data/summary";
+import { loadPendingCalendar } from "./lib/loadPendingCalendar";
 import { formatLongDate, getGreeting } from "./utils";
 
 const dashboardPage = {
@@ -37,7 +39,7 @@ async function getFirstName(): Promise<string | null> {
 
 export default async function DashboardPage() {
   const now = new Date();
-  const firstName = await getFirstName();
+  const [firstName, pendingCalendar] = await Promise.all([getFirstName(), loadPendingCalendar()]);
 
   return (
     <div className={dashboardPage.stack}>
@@ -51,6 +53,7 @@ export default async function DashboardPage() {
       <div className={dashboardPage.columns}>
         <RecentMovementsCard movements={recentMovements} />
         <aside className={dashboardPage.aside}>
+          <PendingCalendarCard pending={pendingCalendar} />
           <PendingApprovalsCard approvals={pendingApprovals} />
           <ProjectBudgetsCard budgets={projectBudgets} />
           <QuickActionsCard />
