@@ -515,6 +515,13 @@ destino se usa el más cercano dentro de él. La API pública del calendario exp
 (`<uid>@<host>` en el `.ics`), con `sequence` y `lastModified`: la única excepción a "sin ids
 internos", porque el UID de RFC 5545 debe ser estable.
 
+*Notas de implementación (1.6c):* la web lee el calendario de `GET /public/v1/:churchSlug/calendar`
+(`getCalendar`); la página usa el año y la zona horaria del DTO ("hoy" = fecha local en `timezone`,
+por request). El "próximo" evento es el primero programado que no terminó hoy. Los ministerios del
+filtro y sus nombres vienen de la API. Las páginas de impresión siguen en español (decisión de diseño
+previa) pero sin años ni fechas fijas. El `.ics` usa `TZID` sin bloque `VTIMEZONE` (se apoya en
+`X-WR-TIMEZONE`) y omite `DTEND` cuando el evento no tiene hora de fin.
+
 ## D-32 — Blog
 
 **Aceptada.** Detalle en [`phases/1-content/1.4-blog.md`](./phases/1-content/1.4-blog.md).
