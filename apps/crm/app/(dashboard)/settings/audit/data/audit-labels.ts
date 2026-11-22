@@ -72,6 +72,9 @@ export const AUDIT_ACTION_LABELS: Record<AuditAction, string> = {
   [AUDIT_ACTIONS.calendarYear.published]: "Año del calendario publicado",
   [AUDIT_ACTIONS.calendarYear.copied]: "Año del calendario copiado",
   [AUDIT_ACTIONS.activityReview.confirmed]: "Revisión anual de actividad confirmada",
+  [AUDIT_ACTIONS.calendarReminder.settingsUpdated]:
+    "Destinatarios de recordatorios del calendario editados",
+  [AUDIT_ACTIONS.calendarReminder.sent]: "Recordatorio del calendario enviado",
   [AUDIT_ACTIONS.series.created]: "Serie del blog creada",
   [AUDIT_ACTIONS.series.updated]: "Serie del blog editada",
   [AUDIT_ACTIONS.series.deleted]: "Serie del blog eliminada",

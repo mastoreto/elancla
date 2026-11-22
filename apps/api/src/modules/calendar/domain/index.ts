@@ -40,3 +40,8 @@ export {
   shiftDateKeepingWeekday,
 } from "./shiftDateKeepingWeekday";
 export { shiftEventDates } from "./shiftEventDates";
+export {
+  type ReminderState,
+  reminderTargetYear,
+  shouldRemind,
+} from "./shouldRemind";

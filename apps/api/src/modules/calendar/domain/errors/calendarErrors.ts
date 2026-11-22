@@ -36,7 +36,8 @@ type CalendarReferenceCode =
   | "invalid_place"
   | "invalid_ministry"
   | "invalid_schedule_set"
-  | "invalid_role";
+  | "invalid_role"
+  | "invalid_user";
 
 /** A body points at something that is missing or does not belong to the organization. */
 export class InvalidCalendarReferenceError extends DomainError {

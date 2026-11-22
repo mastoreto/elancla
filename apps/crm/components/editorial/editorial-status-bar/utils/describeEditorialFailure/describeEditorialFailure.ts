@@ -12,6 +12,11 @@ const PROBLEM_CODE_MESSAGES: Record<string, string> = {
   invalid_author: "El autor elegido ya no es un autor del blog. Elige otro.",
   invalid_category: "La categoría elegida ya no existe. Elige otra.",
   invalid_series: "La serie elegida ya no existe. Elige otra o quita la serie.",
+  year_not_published:
+    "El año de este evento todavía es un borrador: se publica junto con el año completo.",
+  year_mismatch: "La fecha de inicio tiene que estar dentro del año del evento.",
+  invalid_place: "El lugar elegido ya no existe. Elige otro.",
+  invalid_ministry: "Uno de los ministerios elegidos ya no existe. Quítalo o elige otro.",
 };
 
 /** The message for a problem `code`, or `null` when the code has none of its own. */

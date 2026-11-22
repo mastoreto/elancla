@@ -14,22 +14,28 @@ export interface InProcessApiClientOptions {
   forwardedFor?: string | null;
 }
 
-/** Typed client that calls the API in the same process, forwarding the caller's cookie. */
-export function createInProcessApiClient({
+/** The `fetch` of an in-process client: dispatches to the API forwarding the caller's identity. */
+export function inProcessFetch({
   dispatch,
   cookie,
   userAgent,
   forwardedFor,
-}: InProcessApiClientOptions) {
-  return hc<AppType>(IN_PROCESS_BASE_URL, {
-    fetch: (input: RequestInfo | URL, init?: RequestInit) => {
-      const request = new Request(input, init);
-      if (cookie) request.headers.set("cookie", cookie);
-      if (userAgent) request.headers.set("user-agent", userAgent);
-      if (forwardedFor) request.headers.set("x-forwarded-for", forwardedFor);
-      return dispatch(request);
-    },
-  });
+}: InProcessApiClientOptions): (
+  input: RequestInfo | URL,
+  init?: RequestInit,
+) => Response | Promise<Response> {
+  return (input, init) => {
+    const request = new Request(input, init);
+    if (cookie) request.headers.set("cookie", cookie);
+    if (userAgent) request.headers.set("user-agent", userAgent);
+    if (forwardedFor) request.headers.set("x-forwarded-for", forwardedFor);
+    return dispatch(request);
+  };
+}
+
+/** Typed client that calls the API in the same process, forwarding the caller's cookie. */
+export function createInProcessApiClient(options: InProcessApiClientOptions) {
+  return hc<AppType>(IN_PROCESS_BASE_URL, { fetch: inProcessFetch(options) });
 }
 
 export type ServerApiClient = ReturnType<typeof createInProcessApiClient>;

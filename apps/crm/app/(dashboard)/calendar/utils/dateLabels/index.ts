@@ -1,0 +1,1 @@
+export { MONTH_SHORT_NAMES, WEEKDAY_NAMES, WEEKDAY_SHORT_NAMES } from "./dateLabels";

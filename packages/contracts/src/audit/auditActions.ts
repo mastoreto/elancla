@@ -106,6 +106,10 @@ export const AUDIT_ACTIONS = {
     copied: "calendarYear.copied",
   },
   activityReview: { confirmed: "activityReview.confirmed" },
+  calendarReminder: {
+    settingsUpdated: "calendarReminder.settingsUpdated",
+    sent: "calendarReminder.sent",
+  },
   series: {
     created: "series.created",
     updated: "series.updated",

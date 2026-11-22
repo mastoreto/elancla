@@ -414,6 +414,27 @@ describe("recurring activities", () => {
     expect(await codeOf(stale)).toBe("stale_version");
   });
 
+  test("saving a copied activity from the CRM clears needsReview", async () => {
+    const set = await createSet();
+    const activity = await createActivity(set.id);
+    await db.recurringActivity.update({
+      where: { id: activity.id },
+      data: { needsReview: true },
+    });
+    const res = await patch(`activities/${activity.id}`, {
+      ...activityBody(set.id),
+      version: activity.version,
+    });
+    expect(res.status).toBe(200);
+    expect(((await res.json()) as RecurringActivityDto).needsReview).toBe(
+      false,
+    );
+    const row = await db.recurringActivity.findUniqueOrThrow({
+      where: { id: activity.id },
+    });
+    expect(row.needsReview).toBe(false);
+  });
+
   test("lists by set and deletes logically", async () => {
     const set = await createSet();
     const other = await createSet();
