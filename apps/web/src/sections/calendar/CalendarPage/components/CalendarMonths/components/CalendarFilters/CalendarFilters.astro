@@ -1,23 +1,23 @@
 ---
-import { MINISTRY_COLORS, MINISTRY_KEYS } from 'src/data/calendar';
+import { cn } from '@ancla/utils';
 import type { Locale } from 'src/i18n/config';
 import type { Messages } from 'src/i18n/messages';
 import { getHtmlLang } from 'src/i18n/utils';
 import { DOT, FOCUS_RING } from 'src/sections/calendar/CalendarPage/styles';
-import cn from 'src/utils/cn';
+import type { CalendarMinistry } from 'src/sections/calendar/types';
+import { ministryColorVar, monthName } from 'src/sections/calendar/utils';
 
 interface Props {
   copy: Messages['calendar'];
   locale: Locale;
+  ministries: CalendarMinistry[];
 }
-const { copy, locale } = Astro.props;
+const { copy, locale, ministries } = Astro.props;
 
-const monthFormat = new Intl.DateTimeFormat(getHtmlLang(locale), {
-  month: 'short',
-  timeZone: 'UTC',
-});
-const months = Array.from({ length: 12 }, (_, i) =>
-  monthFormat.format(new Date(Date.UTC(2027, i, 1))).replace('.', '')
+const MONTHS_IN_YEAR = 12;
+const lang = getHtmlLang(locale);
+const months = Array.from({ length: MONTHS_IN_YEAR }, (_, i) =>
+  monthName(i, lang, 'short')
 );
 
 // On phones each chip row is one swipeable line bleeding to the screen edge.
@@ -59,14 +59,16 @@ const calendarFilters = {
       <button type="button" class={calendarFilters.month} data-cal-month={i} aria-pressed="false">{label}</button>
     ))}
   </div>
-  <div class={calendarFilters.ministries} role="group" aria-label={copy.months.ministryFilterLabel}>
-    <button type="button" class={calendarFilters.allMinistries} data-cal-ministry="all" aria-pressed="true">
-      <span class={calendarFilters.allMinistriesDot} style="--c:var(--color-obra-white)"></span>{copy.months.allMinistries}
-    </button>
-    {MINISTRY_KEYS.map((key) => (
-      <button type="button" class={calendarFilters.ministry} data-cal-ministry={key} aria-pressed="false">
-        <span class={calendarFilters.ministryDot} style={`--c:${MINISTRY_COLORS[key]}`}></span>{copy.ministries[key]}
+  {ministries.length > 0 && (
+    <div class={calendarFilters.ministries} role="group" aria-label={copy.months.ministryFilterLabel}>
+      <button type="button" class={calendarFilters.allMinistries} data-cal-ministry="all" aria-pressed="true">
+        <span class={calendarFilters.allMinistriesDot} style="--c:var(--color-obra-white)"></span>{copy.months.allMinistries}
       </button>
-    ))}
-  </div>
+      {ministries.map((ministry, index) => (
+        <button type="button" class={calendarFilters.ministry} data-cal-ministry={index} aria-pressed="false">
+          <span class={calendarFilters.ministryDot} style={`--c:${ministryColorVar(ministry.color)}`}></span>{ministry.name}
+        </button>
+      ))}
+    </div>
+  )}
 </div>

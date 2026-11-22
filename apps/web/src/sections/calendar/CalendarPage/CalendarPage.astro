@@ -1,6 +1,8 @@
 ---
-import { CALENDAR_YEAR, events } from 'src/data/calendar';
+import { getCalendar } from '@ancla/content';
+import { cn } from '@ancla/utils';
 import type { Locale } from 'src/i18n/config';
+import { interpolate } from 'src/i18n/interpolate';
 import { getMessages } from 'src/i18n/messages';
 import { getHtmlLang, localizePath } from 'src/i18n/utils';
 import Layout from 'src/layouts/Layout';
@@ -9,7 +11,12 @@ import CalendarMonths from 'src/sections/calendar/CalendarPage/components/Calend
 import CalendarSubscribe from 'src/sections/calendar/CalendarPage/components/CalendarSubscribe';
 import CalendarTakeHome from 'src/sections/calendar/CalendarPage/components/CalendarTakeHome';
 import CalendarWeekly from 'src/sections/calendar/CalendarPage/components/CalendarWeekly';
-import cn from 'src/utils/cn';
+import {
+  findNextEvent,
+  localDateIn,
+  monthName,
+} from 'src/sections/calendar/utils';
+import { weekdayName } from 'src/utils/formatServiceTimes';
 
 interface Props {
   locale: Locale;
@@ -18,17 +25,19 @@ const { locale } = Astro.props;
 const copy = getMessages(locale).calendar;
 const lang = getHtmlLang(locale);
 
-const first = [...events].sort((a, b) => a.date.localeCompare(b.date))[0];
-const firstDate = new Date(`${first.date}T00:00:00Z`);
-const next = {
-  day: firstDate.getUTCDate(),
-  weekday: new Intl.DateTimeFormat(lang, { weekday: 'short', timeZone: 'UTC' })
-    .format(firstDate)
-    .replace('.', ''),
-  month: new Intl.DateTimeFormat(lang, { month: 'short', timeZone: 'UTC' })
-    .format(firstDate)
-    .replace('.', ''),
-  title: first.title,
+const calendar = await getCalendar(locale);
+const year = String(calendar.year);
+const today = localDateIn(calendar.timezone);
+const nextEvent = findNextEvent(calendar.events, today);
+const next = nextEvent && {
+  day: Number(nextEvent.startDate.slice(8)),
+  weekday: weekdayName(
+    new Date(`${nextEvent.startDate}T00:00:00Z`).getUTCDay(),
+    locale,
+    'short'
+  ),
+  month: monthName(Number(nextEvent.startDate.slice(5, 7)) - 1, lang, 'short'),
+  title: nextEvent.title,
 };
 
 const icsUrl = new URL('/calendario-anual.ics', Astro.site).toString();
@@ -41,7 +50,7 @@ const calendarPage = {
 ---
 
 <Layout
-  title={copy.seo.title}
+  title={interpolate(copy.seo.title, { year })}
   description={copy.seo.description}
   keywords={copy.seo.keywords}
   breadcrumbs={[
@@ -50,11 +59,11 @@ const calendarPage = {
   ]}
   locale={locale}
 >
-  <div class={calendarPage.container} data-year={CALENDAR_YEAR}>
-    <CalendarHero copy={copy} locale={locale} next={next} />
-    <CalendarWeekly copy={copy} locale={locale} />
-    <CalendarMonths copy={copy} locale={locale} />
-    <CalendarTakeHome copy={copy} />
+  <div class={calendarPage.container} data-year={year}>
+    <CalendarHero copy={copy} locale={locale} next={next} year={year} />
+    <CalendarWeekly calendar={calendar} copy={copy} locale={locale} today={today} />
+    <CalendarMonths calendar={calendar} copy={copy} locale={locale} />
+    <CalendarTakeHome copy={copy} year={year} />
     <CalendarSubscribe copy={copy} googleHref={googleHref} icsHref={icsUrl} />
   </div>
 </Layout>

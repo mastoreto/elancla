@@ -42,14 +42,7 @@ interface AllowedOccurrence {
 
 // Narrow on purpose: data that belongs to another phase, or fixed narrative (D-39). Everything
 // else is cleaned up, not allowed here. Each phase removes its own entries.
-const ALLOWLIST: AllowedOccurrence[] = [
-  {
-    file: 'data/calendar.ts',
-    fragment: '11:15',
-    reason:
-      '1.6: sample calendar events; the calendar phase replaces them with activities',
-  },
-];
+const ALLOWLIST: AllowedOccurrence[] = [];
 
 function findOccurrences(): { file: string; fragment: string }[] {
   const found: { file: string; fragment: string }[] = [];

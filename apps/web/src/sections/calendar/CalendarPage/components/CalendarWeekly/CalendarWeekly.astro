@@ -1,33 +1,41 @@
 ---
-import { MINISTRY_COLORS, weeklyActivities } from 'src/data/calendar';
+import type { PublicCalendar } from '@ancla/content';
+import { cn } from '@ancla/utils';
 import type { Locale } from 'src/i18n/config';
 import type { Messages } from 'src/i18n/messages';
-import { getHtmlLang } from 'src/i18n/utils';
 import CalendarSectionHead from 'src/sections/calendar/CalendarPage/components/CalendarSectionHead';
+import CalendarExceptions from 'src/sections/calendar/CalendarPage/components/CalendarWeekly/components/CalendarExceptions';
 import {
   DOT,
   SECTION,
   SECTION_SPACING,
 } from 'src/sections/calendar/CalendarPage/styles';
-import cn from 'src/utils/cn';
+import {
+  ministryColorVar,
+  SUNDAY_COLUMN,
+  WEEK_COLUMNS,
+  weekdayOfColumn,
+  weeklyOfColumn,
+} from 'src/sections/calendar/utils';
+import { weekdayName } from 'src/utils/formatServiceTimes';
 
 interface Props {
+  calendar: PublicCalendar;
   copy: Messages['calendar'];
   locale: Locale;
+  /** Local date ("YYYY-MM-DD"): exceptions before it are no longer shown. */
+  today: string;
 }
-const { copy, locale } = Astro.props;
+const { calendar, copy, locale, today } = Astro.props;
 
-// 2027-01-04 is a Monday: index 0..6 maps Monday..Sunday.
-const SUNDAY = 6;
-const weekdayFormat = new Intl.DateTimeFormat(getHtmlLang(locale), {
-  weekday: 'long',
-  timeZone: 'UTC',
-});
-const days = Array.from({ length: 7 }, (_, i) => ({
-  name: weekdayFormat.format(new Date(Date.UTC(2027, 0, 4 + i))),
-  tone: i === SUNDAY ? ('sunday' as const) : ('weekday' as const),
-  slots: weeklyActivities.filter((a) => a.day === i),
+const days = Array.from({ length: WEEK_COLUMNS }, (_, column) => ({
+  name: weekdayName(weekdayOfColumn(column), locale, 'long'),
+  tone: column === SUNDAY_COLUMN ? ('sunday' as const) : ('weekday' as const),
+  slots: weeklyOfColumn(calendar.weekly, column),
 }));
+const upcomingExceptions = calendar.exceptions.filter(
+  (exception) => exception.date >= today
+);
 
 // Sunday stands out: red heading and dark slots.
 const DAY_NAME_TONE = {
@@ -44,9 +52,9 @@ const SLOT_TIME_TONE = {
 } as const;
 const dotColor = (
   tone: 'weekday' | 'sunday',
-  ministry: keyof typeof MINISTRY_COLORS
+  color: Parameters<typeof ministryColorVar>[0]
 ): string =>
-  tone === 'sunday' ? 'var(--color-obra-white)' : MINISTRY_COLORS[ministry];
+  tone === 'sunday' ? 'var(--color-obra-white)' : ministryColorVar(color);
 
 const calendarWeekly = {
   container: cn(SECTION, SECTION_SPACING.default),
@@ -71,9 +79,6 @@ const calendarWeekly = {
   slotTitle: cn('font-obra-sans-bold text-[0.9375rem] leading-[1.25]'),
   slotLabel: cn('flex items-center gap-1.5 text-[0.8125rem]'),
   slotLabelInner: cn(DOT),
-  example: cn(
-    'font-obra-sans-bold text-[0.625rem] tracking-[0.12em] text-obra-red uppercase'
-  ),
 };
 ---
 
@@ -84,18 +89,23 @@ const calendarWeekly = {
       <div class={calendarWeekly.day}>
         <b class={cn(calendarWeekly.dayName, DAY_NAME_TONE[day.tone])}>{day.name}</b>
         {day.slots.length === 0 && <span class={calendarWeekly.empty}>{copy.weekly.empty}</span>}
-        {day.slots.map((slot) => (
-          <div class={cn(calendarWeekly.slot, SLOT_TONE[day.tone])}>
-            <b class={cn(calendarWeekly.time, SLOT_TIME_TONE[day.tone])}>{slot.time}</b>
-            <b class={calendarWeekly.slotTitle}>{slot.title}</b>
-            <span class={calendarWeekly.slotLabel}>
-              <span class={calendarWeekly.slotLabelInner} style={`--c:${dotColor(day.tone, slot.ministry)}`}></span>
-              {copy.ministries[slot.ministry]}
-            </span>
-            {slot.isExample && <span class={calendarWeekly.example}>{copy.weekly.example}</span>}
-          </div>
-        ))}
+        {day.slots.map((slot) => {
+          const label = slot.ministries.length > 0 ? slot.ministries.join(' · ') : slot.place?.name;
+          return (
+            <div class={cn(calendarWeekly.slot, SLOT_TONE[day.tone])}>
+              <b class={cn(calendarWeekly.time, SLOT_TIME_TONE[day.tone])}>{slot.start}</b>
+              <b class={calendarWeekly.slotTitle}>{slot.title}</b>
+              {label && (
+                <span class={calendarWeekly.slotLabel}>
+                  <span class={calendarWeekly.slotLabelInner} style={`--c:${dotColor(day.tone, slot.color)}`}></span>
+                  {label}
+                </span>
+              )}
+            </div>
+          );
+        })}
       </div>
     ))}
   </div>
+  {upcomingExceptions.length > 0 && <CalendarExceptions copy={copy} exceptions={upcomingExceptions} locale={locale} />}
 </section>

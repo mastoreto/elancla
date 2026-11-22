@@ -1,6 +1,7 @@
 ---
 import Button from 'src/components/ui/Button';
 import type { Locale } from 'src/i18n/config';
+import { interpolate } from 'src/i18n/interpolate';
 import type { Messages } from 'src/i18n/messages';
 import { localizePath } from 'src/i18n/utils';
 import CalendarDate from 'src/sections/calendar/CalendarPage/components/CalendarDate';
@@ -15,9 +16,11 @@ import cn from 'src/utils/cn';
 interface Props {
   copy: Messages['calendar'];
   locale: Locale;
-  next: { day: number; weekday: string; month: string; title: string };
+  /** Next upcoming event; the card is left out when there is none. */
+  next: { day: number; weekday: string; month: string; title: string } | null;
+  year: string;
 }
-const { copy, locale, next } = Astro.props;
+const { copy, locale, next, year } = Astro.props;
 
 const calendarHero = {
   container: cn(SECTION, SECTION_SPACING.hero),
@@ -62,7 +65,7 @@ const calendarHero = {
   </nav>
   <div class={calendarHero.body}>
     <div class={calendarHero.intro}>
-      <span class={calendarHero.eyebrow}>{copy.hero.eyebrow}</span>
+      <span class={calendarHero.eyebrow}>{interpolate(copy.hero.eyebrow, { year })}</span>
       <h1 class={calendarHero.title}>
         {copy.hero.titleBefore}<em class={calendarHero.titleEmphasis}>{copy.hero.titleEmphasis}</em>
       </h1>
@@ -72,12 +75,14 @@ const calendarHero = {
         <Button href="#llevalo" variant="ghost">{copy.hero.downloadCta}</Button>
       </div>
     </div>
-    <div class={calendarHero.nextCard}>
-      <span class={calendarHero.nextLabel}>{copy.hero.nextLabel}</span>
-      <div class={calendarHero.nextRow}>
-        <CalendarDate day={next.day} label={`${next.weekday} · ${next.month}`} tone="hero" />
-        <b class={calendarHero.nextTitle}>{next.title}</b>
+    {next && (
+      <div class={calendarHero.nextCard}>
+        <span class={calendarHero.nextLabel}>{copy.hero.nextLabel}</span>
+        <div class={calendarHero.nextRow}>
+          <CalendarDate day={next.day} label={`${next.weekday} · ${next.month}`} tone="hero" />
+          <b class={calendarHero.nextTitle}>{next.title}</b>
+        </div>
       </div>
-    </div>
+    )}
   </div>
 </section>

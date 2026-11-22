@@ -1,10 +1,10 @@
 ---
-import { getSiteConfig } from '@ancla/content';
-import { CALENDAR_YEAR } from 'src/data/calendar';
+import { getCalendar, getSiteConfig } from '@ancla/content';
 import PrintA3 from 'src/sections/calendar/CalendarPrint/components/PrintA3';
 import PrintA4 from 'src/sections/calendar/CalendarPrint/components/PrintA4';
 import PrintDigital from 'src/sections/calendar/CalendarPrint/components/PrintDigital';
 import PrintLayout from 'src/sections/calendar/CalendarPrint/components/PrintLayout';
+import { PRINT_LANG } from 'src/sections/calendar/CalendarPrint/utils/printFormat';
 import { buildSiteTokens } from 'src/utils/siteTokens';
 
 const formats = {
@@ -28,7 +28,8 @@ const formats = {
 const format = formats[Astro.params.format as keyof typeof formats];
 if (!format) return Astro.rewrite('/404');
 const site = Astro.locals.site ?? (await getSiteConfig());
-const tokens = buildSiteTokens(site, 'es');
+const calendar = await getCalendar(PRINT_LANG);
+const tokens = buildSiteTokens(site, PRINT_LANG);
 const contact = {
   address: [tokens.street, tokens.city].filter(Boolean).join(' — '),
   instagram: tokens.instagramHandle,
@@ -36,14 +37,14 @@ const contact = {
 };
 ---
 
-<PrintLayout title={`Calendario ${CALENDAR_YEAR} · ${format.title} | El Ancla`} hint={format.hint} pageSize={format.size}>
+<PrintLayout title={`Calendario ${calendar.year} · ${format.title} | El Ancla`} hint={format.hint} pageSize={format.size}>
   {
     Astro.params.format === 'a4' ? (
-      <PrintA4 contact={contact} />
+      <PrintA4 calendar={calendar} contact={contact} />
     ) : Astro.params.format === 'a3' ? (
-      <PrintA3 />
+      <PrintA3 calendar={calendar} />
     ) : (
-      <PrintDigital />
+      <PrintDigital calendar={calendar} />
     )
   }
 </PrintLayout>

@@ -12,11 +12,12 @@ export function initCalendar() {
       const inMonth = month === 'all' || section.dataset.month === month;
       let visible = 0;
       section
-        .querySelectorAll<HTMLElement>('[data-ministry]')
+        .querySelectorAll<HTMLElement>('[data-ministries]')
         .forEach((row) => {
           const show =
             inMonth &&
-            (ministry === 'all' || row.dataset.ministry === ministry);
+            (ministry === 'all' ||
+              (row.dataset.ministries ?? '').split(' ').includes(ministry));
           row.hidden = !show;
           if (show) visible += 1;
         });

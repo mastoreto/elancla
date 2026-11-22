@@ -1,6 +1,6 @@
 {
   "seo": {
-    "title": "2027 yearly calendar: church activities",
+    "title": "{year} yearly calendar: church activities",
     "description": "Everything happening at Iglesia Bautista El Ancla: what repeats every week and the events of each month. Add them to your calendar or ask for the printed calendar.",
     "keywords": [
       "church calendar",
@@ -14,21 +14,22 @@
     "current": "Yearly calendar"
   },
   "hero": {
-    "eyebrow": "2027 yearly calendar",
+    "eyebrow": "{year} yearly calendar",
     "titleBefore": "All year long, to ",
     "titleEmphasis": "walk together.",
     "body": "First what repeats every week, then the events of each month. Add them to your calendar or take the printed church calendar with you.",
     "orderCta": "Request printed calendar",
     "downloadCta": "Download",
-    "nextLabel": "Next activity · sample"
+    "nextLabel": "Next activity"
   },
   "weekly": {
     "eyebrow": "Every week",
     "title": "Recurring ",
     "emphasis": "activities.",
-    "body": "They repeat every week, all year. Sunday times are real; the rest are samples.",
+    "body": "They repeat every week, all year.",
     "empty": "No fixed activities",
-    "example": "Sample"
+    "exceptionsTitle": "Schedule changes",
+    "noMeeting": "No meeting"
   },
   "months": {
     "eyebrow": "Specific dates",
@@ -38,13 +39,15 @@
     "ministryFilterLabel": "Filter by ministry",
     "allYear": "All year",
     "allMinistries": "All",
-    "notice": "These dates are samples. They will be replaced with the church's real list.",
-    "noticeLabel": "Sample",
-    "countOne": "1 activity · sample",
-    "countMany": "{n} activities · sample",
+    "countOne": "1 activity",
+    "countMany": "{n} activities",
     "add": "Add to my calendar",
     "tbc": "To be confirmed",
-    "timeSuffix": ""
+    "timeSuffix": "",
+    "empty": "No events have been published for {year} yet.",
+    "cancelled": "Cancelled",
+    "allDay": "All day",
+    "church": "Whole church"
   },
   "take": {
     "title": "Take it with you, ",
@@ -82,17 +85,5 @@
     "title": "Subscribe and the dates reach your phone.",
     "google": "Google Calendar",
     "ics": "Apple / Outlook (.ics)"
-  },
-  "ministries": {
-    "preaching": "Preaching",
-    "men": "Men",
-    "teaching": "Teaching",
-    "youth": "Youth",
-    "missions": "Missions",
-    "teens": "Teens",
-    "worship": "Worship",
-    "media": "Media",
-    "prayer": "Prayer",
-    "women": "Women's space"
   }
 }

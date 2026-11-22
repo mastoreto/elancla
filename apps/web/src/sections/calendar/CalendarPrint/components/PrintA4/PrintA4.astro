@@ -1,12 +1,7 @@
 ---
+import type { PublicCalendar } from '@ancla/content';
+import { cn } from '@ancla/utils';
 import AnchorMark from 'src/components/AnchorMark';
-import {
-  CALENDAR_YEAR,
-  events,
-  eventsOfMonth,
-  monthLayout,
-  weeklySorted,
-} from 'src/data/calendar';
 import {
   EYEBROW,
   EYEBROW_TONE,
@@ -15,27 +10,50 @@ import {
   SHEET_TONE,
 } from 'src/sections/calendar/CalendarPrint/styles';
 import {
-  capitalize,
-  dayOf,
   MONTHS_ES,
-  ministryEs,
-  placeEs,
-  weekdayLong,
+  PRINT_LANG,
+  printableEvents,
   weekdayShort,
-  weekdayShortByIndex,
 } from 'src/sections/calendar/CalendarPrint/utils/printFormat';
-import cn from 'src/utils/cn';
+import {
+  dayOfEvent,
+  eventPlaceName,
+  eventsOfMonth,
+  eventWhenLabel,
+  monthLayout,
+  sortWeekly,
+} from 'src/sections/calendar/utils';
+import { weekdayName } from 'src/utils/formatServiceTimes';
 
 interface Props {
+  calendar: PublicCalendar;
   /** Back cover contact lines, from `SiteConfig`. */
   contact: { address: string; instagram?: string; youtube?: string };
 }
-const { contact } = Astro.props;
+const { calendar, contact } = Astro.props;
 
-const weekly = weeklySorted();
+const year = calendar.year;
+const events = printableEvents(calendar.events);
+const weekly = sortWeekly(calendar.weekly);
 const weeklyLine = weekly
-  .map((a) => `${capitalize(weekdayShortByIndex(a.day))} ${a.time} ${a.title}`)
+  .map(
+    (a) =>
+      `${weekdayName(a.weekday, PRINT_LANG, 'short')} ${a.start} ${a.title}`
+  )
   .join(' · ');
+const eventMeta = (event: (typeof events)[number]): string =>
+  [
+    weekdayShort(event.startDate).toUpperCase(),
+    eventWhenLabel(event, {
+      lang: PRINT_LANG,
+      allDayLabel: 'Todo el día',
+      timeSuffix: 'h',
+    }),
+    eventPlaceName(event.place, 'Por confirmar'),
+    event.ministries.join(', '),
+  ]
+    .filter(Boolean)
+    .join(' · ');
 const WD = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
 const SUNDAY_COLUMN = 6;
 
@@ -96,20 +114,20 @@ const printA4 = {
 <section class={printA4.cover}>
   <span class={printA4.coverMark} aria-hidden="true"><AnchorMark id="cp-a4-cover" outline={false} color="#ff2e34" /></span>
   <span class={printA4.coverChurch}>Iglesia Bautista El Ancla · Montevideo</span>
-  <b class={printA4.coverTitle}>Calendario<br />{CALENDAR_YEAR}</b>
+  <b class={printA4.coverTitle}>Calendario<br />{year}</b>
   <span class={printA4.coverVerse}>Tenemos esta esperanza como firme y segura ancla del alma. <em class={printA4.emphasis}>Heb. 6:19</em></span>
 </section>
 
 {MONTHS_ES.map((name, month) => {
-  const { lead, days } = monthLayout(CALENDAR_YEAR, month);
+  const { lead, days } = monthLayout(year, month);
   const list = eventsOfMonth(events, month);
-  const byDay = new Map(list.map((e) => [dayOf(e), e]));
+  const byDay = new Map(list.map((e) => [dayOfEvent(e), e]));
   return (
     <section class={printA4.month}>
       <header class={printA4.monthHeader}>
         <b class={printA4.monthName}>{name}</b>
         <span class={printA4.monthYear}>
-          <span class={printA4.monthYearText}>{CALENDAR_YEAR}</span>
+          <span class={printA4.monthYearText}>{year}</span>
           <AnchorMark id={`cp-a4-${month}`} outline={false} color="#a8141b" class={printA4.monthMark} />
         </span>
       </header>
@@ -130,12 +148,12 @@ const printA4 = {
       </div>
       {list.length > 0 && (
         <div class={printA4.events}>
-          <span class={printA4.eventsEyebrow}>Eventos del mes · ejemplo</span>
+          <span class={printA4.eventsEyebrow}>Eventos del mes</span>
           {list.map((e) => (
             <div class={printA4.event}>
-              <b class={printA4.eventDay}>{dayOf(e)}</b>
+              <b class={printA4.eventDay}>{dayOfEvent(e)}</b>
               <b class={printA4.eventTitle}>{e.title}</b>
-              <span class={printA4.eventMeta}>{weekdayShort(e.date).toUpperCase()} · {e.time} h · {placeEs(e)} · {ministryEs[e.ministry]}</span>
+              <span class={printA4.eventMeta}>{eventMeta(e)}</span>
             </div>
           ))}
         </div>
@@ -150,7 +168,7 @@ const printA4 = {
   <span class={printA4.weeklyEyebrow}>Todas las semanas</span>
   <b class={printA4.weeklyTitle}>Te esperamos.</b>
   {weekly.map((a) => (
-    <div class={printA4.weeklyRow}><b>{weekdayLong(a.day)}</b><span>{a.time} · {a.title}</span></div>
+    <div class={printA4.weeklyRow}><b>{weekdayName(a.weekday, PRINT_LANG, 'long')}</b><span>{a.start} · {a.title}</span></div>
   ))}
   <div class={printA4.weeklyFooter}>
     <span>{contact.address}</span>
