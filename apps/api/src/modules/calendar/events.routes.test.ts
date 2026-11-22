@@ -2,6 +2,7 @@ import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import {
   type CalendarYearDto,
   type CopyYearResultDto,
+  type EditorialInboxDto,
   type EditorialStatusDto,
   type EventDto,
   type EventListDto,
@@ -15,7 +16,12 @@ import { db } from "@ancla/db";
 import { createApiCaller } from "../../../test/support/apiCaller";
 import { auditRowsOf, requestIdOf } from "../../../test/support/auditRows";
 import { createFixtures } from "../../../test/support/fixtures";
+import {
+  createRecordingMailer,
+  type RecordingMailer,
+} from "../../../test/support/recordingMailer";
 import { getAuth } from "../../core/auth";
+import { setMailerForTests } from "../../core/mail";
 import { resolveOrganizationId } from "../../core/tenancy";
 import { parseDateOnly, weekdayOf } from "./domain";
 
@@ -33,6 +39,7 @@ const UNKNOWN_ID = "01900000-0000-7000-8000-000000000000";
 
 interface TestUser {
   id: string;
+  email: string;
   cookie: string;
   roleIds: string[];
 }
@@ -56,6 +63,7 @@ async function makeUser(
   const roles = await db.userRole.findMany({ where: { userId: user.id } });
   return {
     id: user.id,
+    email,
     cookie: await fixtures.signIn(auth, email),
     roleIds: roles.map((role) => role.roleId),
   };
@@ -92,6 +100,10 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  setMailerForTests(undefined);
+  await db.editorialSettings.deleteMany({
+    where: { organizationId, contentType: "EVENT" },
+  });
   await db.event.deleteMany({
     where: { organizationId, year: { in: ALL_TEST_YEARS } },
   });
@@ -635,6 +647,74 @@ describe("copying from the previous year", () => {
     expect(items.length).toBeGreaterThan(0);
     expect(items.every((item) => item.isLive)).toBe(true);
     expect(items.every((item) => !item.needsReview)).toBe(true);
+  });
+});
+
+describe("internal events in the review inbox and emails", () => {
+  test("a reviewer outside the audience sees nothing and is not mailed; one inside is", async () => {
+    const reviewerIn = await makeUser("events-reviewer-in", [
+      grant(PERMISSIONS.events.view),
+      grant(PERMISSIONS.calendarInternal.view),
+    ]);
+    const reviewerOut = await makeUser("events-reviewer-out", [
+      grant(PERMISSIONS.events.view),
+      grant(PERMISSIONS.calendarInternal.view),
+    ]);
+    await db.editorialSettings.deleteMany({
+      where: { organizationId, contentType: "EVENT" },
+    });
+    await db.editorialSettings.create({
+      data: {
+        organizationId,
+        contentType: "EVENT",
+        reviewerUserIds: [reviewerIn.id, reviewerOut.id],
+      },
+    });
+    const mailer: RecordingMailer = createRecordingMailer();
+    setMailerForTests(mailer);
+
+    const internal = await createEvent(YEAR_B, {
+      visibility: "internal",
+      audienceRoleIds: [reviewerIn.roleIds[0] as string],
+      user: admin,
+    });
+    await saveDraft(internal.id, snapshotFor(YEAR_B), admin);
+    const submitted = await call(
+      "POST",
+      `/editorial/event/${internal.id}/submit`,
+      {
+        cookie: admin.cookie,
+      },
+    );
+    expect(submitted.status).toBe(200);
+
+    const inboxOf = async (user: TestUser): Promise<EditorialInboxDto> =>
+      (await (
+        await call("GET", "/editorial/inbox", { cookie: user.cookie })
+      ).json()) as EditorialInboxDto;
+    const inside = await inboxOf(reviewerIn);
+    expect(inside.toReview.map((item) => item.entityId)).toContain(internal.id);
+    const outside = await inboxOf(reviewerOut);
+    expect(outside.toReview.map((item) => item.entityId)).not.toContain(
+      internal.id,
+    );
+    expect(mailer.sent.map((message) => message.to)).toEqual([
+      reviewerIn.email,
+    ]);
+
+    // A public event reaches both reviewers.
+    mailer.sent.length = 0;
+    const open = await createEvent(YEAR_B, { user: admin });
+    await saveDraft(open.id, snapshotFor(YEAR_B), admin);
+    await call("POST", `/editorial/event/${open.id}/submit`, {
+      cookie: admin.cookie,
+    });
+    expect(mailer.sent.map((message) => message.to).sort()).toEqual(
+      [reviewerIn.email, reviewerOut.email].sort(),
+    );
+    expect(
+      (await inboxOf(reviewerOut)).toReview.map((item) => item.entityId),
+    ).toContain(open.id);
   });
 });
 

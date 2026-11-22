@@ -11,7 +11,13 @@ import type { EditorialContentType, Prisma } from "@ancla/db";
 import type { z } from "zod";
 import type { Access } from "../../../core/context";
 import { blogPostBeforeGoLive, blogPostExists } from "./blogPost";
-import { eventBeforeGoLive, eventExists, eventVisibleTo } from "./event";
+import {
+  eventBeforeGoLive,
+  eventExists,
+  eventsVisibleTo,
+  eventUsersWhoCanSee,
+  eventVisibleTo,
+} from "./event";
 import { ministryBeforeGoLive, ministryExists } from "./ministry";
 import { assertSimplePageSlugsFree, simplePageExists } from "./simplePage";
 import { validateSnapshotLocales } from "./validateSnapshotLocales";
@@ -61,6 +67,20 @@ export interface EditorialTypeDefinition {
     entityId: string,
     access: Access,
   ): Promise<boolean>;
+  /** `entityVisibleTo` for many entities at once (the inbox): the ids this access may see. */
+  entitiesVisibleTo?(
+    tx: Prisma.TransactionClient,
+    organizationId: string,
+    entityIds: readonly string[],
+    access: Access,
+  ): Promise<Set<string>>;
+  /** Of these users, the ones who may see the entity (who an email may mention it to). */
+  usersWhoCanSee?(
+    tx: Prisma.TransactionClient,
+    organizationId: string,
+    entityId: string,
+    userIds: readonly string[],
+  ): Promise<Set<string>>;
   /** Runs in the transaction of publish, approve and resume; throws to refuse going live. */
   beforeGoLive?(context: GoLiveContext): Promise<void>;
   /** Rules that depend on the organization; a message means the snapshot is a 400. */
@@ -137,6 +157,8 @@ export const EDITORIAL_TYPES: Record<
     crmPath: (entityId) => `/calendar/events/${entityId}`,
     entityExists: eventExists,
     entityVisibleTo: eventVisibleTo,
+    entitiesVisibleTo: eventsVisibleTo,
+    usersWhoCanSee: eventUsersWhoCanSee,
     beforeGoLive: eventBeforeGoLive,
     validateSnapshot: validateSnapshotLocales,
   },
