@@ -1,3 +1,6 @@
+export { toCalendarYearDto } from "./toCalendarYearDto";
+export { toEventDto, toVisibilityDto } from "./toEventDto";
+export { type EventRevisions, toEventListItemDto } from "./toEventListItemDto";
 export { toPlaceDto } from "./toPlaceDto";
 export {
   toRecurringActivityDto,

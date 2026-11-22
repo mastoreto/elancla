@@ -2,6 +2,7 @@ export { approve } from "./approve";
 export { getEditorialSettings } from "./getEditorialSettings";
 export { getEditorialStatus } from "./getEditorialStatus";
 export { getInbox } from "./getInbox";
+export { goLiveWorkingRevision } from "./goLiveWorkingRevision";
 export { listHistory } from "./listHistory";
 export { pause } from "./pause";
 export { publish } from "./publish";

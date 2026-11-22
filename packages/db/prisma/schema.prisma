@@ -58,6 +58,8 @@ model Organization {
   scheduleExceptions  ScheduleException[]
   places              Place[]
   calendarYears       CalendarYear[]
+  events              Event[]
+  calendarReminders   CalendarReminderSettings[]
 
   @@map("organizations")
 }
@@ -364,15 +366,15 @@ model PersonRoleTranslation {
 // Authorization lives in the RBAC models below (roles, permissions, ministries).
 
 model User {
-  id                     String            @id @default(uuid(7)) @db.Uuid
+  id                     String               @id @default(uuid(7)) @db.Uuid
   name                   String
-  email                  String            @unique
-  emailVerified          Boolean           @default(false)
+  email                  String               @unique
+  emailVerified          Boolean              @default(false)
   image                  String?
   /// Better Auth two-factor plugin flag.
-  twoFactorEnabled       Boolean           @default(false)
-  createdAt              DateTime          @default(now()) @db.Timestamptz(3)
-  updatedAt              DateTime          @updatedAt @db.Timestamptz(3)
+  twoFactorEnabled       Boolean              @default(false)
+  createdAt              DateTime             @default(now()) @db.Timestamptz(3)
+  updatedAt              DateTime             @updatedAt @db.Timestamptz(3)
   sessions               Session[]
   accounts               Account[]
   twoFactors             TwoFactor[]
@@ -381,10 +383,11 @@ model User {
   userRoles              UserRole[]
   userMinistries         UserMinistry[]
   mediaFiles             MediaFile[]
-  authoredRevisions      ContentRevision[] @relation("RevisionAuthor")
-  reviewedRevisions      ContentRevision[] @relation("RevisionReviewer")
+  authoredRevisions      ContentRevision[]    @relation("RevisionAuthor")
+  reviewedRevisions      ContentRevision[]    @relation("RevisionReviewer")
   personProfiles         PersonProfile[]
   publishedCalendarYears CalendarYear[]
+  confirmedYearReviews   ActivityYearReview[]
 
   @@map("users")
 }
@@ -571,20 +574,21 @@ model MinistryCategoryTranslation {
 
 /// `key` is set only for seeded roles (`admin` has implicit full access and no permission rows).
 model Role {
-  id                String           @id @default(uuid(7)) @db.Uuid
-  organizationId    String           @db.Uuid
-  organization      Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  id                String              @id @default(uuid(7)) @db.Uuid
+  organizationId    String              @db.Uuid
+  organization      Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   key               String?
   name              String
-  description       String           @default("")
+  description       String              @default("")
   /// When false, the session cookie is dropped when the browser closes.
-  persistentSession Boolean          @default(true)
+  persistentSession Boolean             @default(true)
   /// Longest a session may live; null means the default.
   maxSessionSeconds Int?
   permissions       RolePermission[]
   members           UserRole[]
-  createdAt         DateTime         @default(now()) @db.Timestamptz(3)
-  updatedAt         DateTime         @updatedAt @db.Timestamptz(3)
+  eventAudiences    EventAudienceRole[]
+  createdAt         DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt         DateTime            @updatedAt @db.Timestamptz(3)
 
   @@unique([organizationId, key])
   @@unique([organizationId, name])
@@ -729,6 +733,7 @@ enum EditorialContentType {
   BLOG_POST
   MINISTRY
   SIMPLE_PAGE
+  EVENT
 }
 
 /// SUPERSEDED is internal: the live revision that a newer one replaced. History is never deleted.
@@ -864,6 +869,7 @@ model RecurringActivity {
   deletedAt      DateTime?                      @db.Timestamptz(3)
   translations   RecurringActivityTranslation[]
   ministries     RecurringActivityMinistry[]
+  yearReviews    ActivityYearReview[]
   createdAt      DateTime                       @default(now()) @db.Timestamptz(3)
   updatedAt      DateTime                       @updatedAt @db.Timestamptz(3)
 
@@ -971,4 +977,77 @@ model CalendarYear {
 
   @@unique([organizationId, year])
   @@map("calendar_years")
+}
+
+// ─── Calendar: events and year (phase 1.6b) ──────────────────────────────────
+
+enum EventVisibility {
+  PUBLIC
+  INTERNAL
+}
+
+/// The row of a calendar event. What the event says (dates, place, ministries, texts) lives in its
+/// editorial snapshot (`contentType` EVENT); the row keeps what the workflow does not own:
+/// the year, visibility and audience (edited directly with audit), the ICS counters and the
+/// "needs review" mark left by copying from a previous year.
+model Event {
+  id             String              @id @default(uuid(7)) @db.Uuid
+  organizationId String              @db.Uuid
+  organization   Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  /// Calendar year of the event; the snapshot's `startDate` must fall in it (409 year_mismatch).
+  year           Int
+  visibility     EventVisibility     @default(PUBLIC)
+  /// RFC 5545 SEQUENCE: +1 every time a revision goes live.
+  sequence       Int                 @default(0)
+  /// When the live revision went live (the ICS LAST-MODIFIED).
+  liveAt         DateTime?           @db.Timestamptz(3)
+  needsReview    Boolean             @default(false)
+  /// Optimistic lock for the settings (409 stale_version).
+  version        Int                 @default(1)
+  audienceRoles  EventAudienceRole[]
+  createdAt      DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime            @updatedAt @db.Timestamptz(3)
+
+  @@index([organizationId, year])
+  @@map("events")
+}
+
+/// The roles that see an INTERNAL event in the CRM (the admin always does).
+model EventAudienceRole {
+  eventId String @db.Uuid
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  roleId  String @db.Uuid
+  role    Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, roleId])
+  @@map("event_audience_roles")
+}
+
+/// Someone confirmed that a fixed activity with annual review is still right for that year.
+model ActivityYearReview {
+  id            String            @id @default(uuid(7)) @db.Uuid
+  activityId    String            @db.Uuid
+  activity      RecurringActivity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  year          Int
+  confirmedById String            @db.Uuid
+  confirmedBy   User              @relation(fields: [confirmedById], references: [id], onDelete: Restrict)
+  confirmedAt   DateTime          @default(now()) @db.Timestamptz(3)
+
+  @@unique([activityId, year])
+  @@map("activity_year_reviews")
+}
+
+/// Who gets the yearly reminder emails (phase 1.6d reads and writes it). The id arrays are not FKs,
+/// like `EditorialSettings`: a deleted role or user simply stops matching.
+model CalendarReminderSettings {
+  id               String       @id @default(uuid(7)) @db.Uuid
+  organizationId   String       @unique @db.Uuid
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  recipientRoleIds String[]     @default([]) @db.Uuid
+  recipientUserIds String[]     @default([]) @db.Uuid
+  /// Local date of the last reminder sent, so the cron job never sends twice in a day.
+  lastSentOn       DateTime?    @db.Date
+  updatedAt        DateTime     @updatedAt @db.Timestamptz(3)
+
+  @@map("calendar_reminder_settings")
 }

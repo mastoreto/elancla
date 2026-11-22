@@ -1347,6 +1347,149 @@ const rows: MatrixRow[] = [
     expected: 404,
   },
 
+  // calendar events and years: events:view reads, create/edit/delete write, calendar.year:publish
+  // publishes a year. Each write route is guarded by its own action, not by the others.
+  ...(
+    [
+      ["GET", "/content/calendar/events", undefined],
+      ["POST", "/content/calendar/events", {}],
+      ["PATCH", `/content/calendar/events/${UNKNOWN_ID}/settings`, {}],
+      ["DELETE", `/content/calendar/events/${UNKNOWN_ID}`, undefined],
+      ["GET", "/content/calendar/years", undefined],
+      ["POST", "/content/calendar/years", {}],
+      ["POST", "/content/calendar/years/2099/publish", undefined],
+      ["POST", "/content/calendar/years/2099/copy", {}],
+      ["POST", "/content/calendar/years/2099/reviews", {}],
+    ] as const
+  ).flatMap(([method, path, body]): MatrixRow[] => [
+    {
+      who: "anonymous",
+      caller: "anonymous",
+      method,
+      path,
+      body,
+      expected: 401,
+    },
+    { who: "no role", caller: NOTHING, method, path, body, expected: 403 },
+    {
+      who: PERMISSIONS.ministryFinance.view,
+      caller: [grant(PERMISSIONS.ministryFinance.view, "all")],
+      method,
+      path,
+      body,
+      expected: 403,
+    },
+    // Viewing is not writing.
+    ...(method === "GET"
+      ? []
+      : [
+          {
+            who: PERMISSIONS.events.view,
+            caller: [grant(PERMISSIONS.events.view)],
+            method,
+            path,
+            body,
+            expected: 403,
+          },
+        ]),
+  ]),
+  ...(
+    ["/content/calendar/events?year=2090", "/content/calendar/years"] as const
+  ).map(
+    (path): MatrixRow => ({
+      who: PERMISSIONS.events.view,
+      caller: [grant(PERMISSIONS.events.view)],
+      method: "GET",
+      path,
+      expected: 200,
+    }),
+  ),
+  {
+    who: PERMISSIONS.events.create,
+    caller: [grant(PERMISSIONS.events.create)],
+    method: "POST",
+    path: "/content/calendar/events",
+    body: {},
+    expected: 400,
+  },
+  // Creating needs `create`; `edit` alone does not.
+  {
+    who: PERMISSIONS.events.edit,
+    caller: [grant(PERMISSIONS.events.edit)],
+    method: "POST",
+    path: "/content/calendar/events",
+    body: {},
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.events.edit,
+    caller: [grant(PERMISSIONS.events.edit)],
+    method: "PATCH",
+    path: `/content/calendar/events/${UNKNOWN_ID}/settings`,
+    body: {},
+    expected: 400,
+  },
+  {
+    who: PERMISSIONS.events.edit,
+    caller: [grant(PERMISSIONS.events.edit)],
+    method: "DELETE",
+    path: `/content/calendar/events/${UNKNOWN_ID}`,
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.events.delete,
+    caller: [grant(PERMISSIONS.events.delete)],
+    method: "DELETE",
+    path: `/content/calendar/events/${UNKNOWN_ID}`,
+    expected: 404,
+  },
+  ...(
+    [
+      ["POST", "/content/calendar/years", {}],
+      ["POST", "/content/calendar/years/2099/copy", {}],
+      ["POST", "/content/calendar/years/2099/reviews", {}],
+    ] as const
+  ).map(
+    ([method, path, body]): MatrixRow => ({
+      who: PERMISSIONS.events.edit,
+      caller: [grant(PERMISSIONS.events.edit)],
+      method,
+      path,
+      body,
+      expected: 400,
+    }),
+  ),
+  // Publishing a year is its own permission: `events.publish` (a single event) does not reach it.
+  {
+    who: PERMISSIONS.events.publish,
+    caller: [grant(PERMISSIONS.events.publish)],
+    method: "POST",
+    path: "/content/calendar/years/2099/publish",
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.calendarYear.publish,
+    caller: [grant(PERMISSIONS.calendarYear.publish)],
+    method: "POST",
+    path: "/content/calendar/years/2099/publish",
+    expected: 404,
+  },
+  // An internal event is a 404 on the editorial routes for whoever is not in its audience.
+  {
+    who: PERMISSIONS.events.view,
+    caller: [grant(PERMISSIONS.events.view)],
+    method: "GET",
+    path: `/editorial/event/${UNKNOWN_ID}`,
+    expected: 404,
+  },
+  {
+    who: PERMISSIONS.ministryFinance.view,
+    caller: [grant(PERMISSIONS.ministryFinance.view, "all")],
+    method: "GET",
+    path: `/editorial/event/${UNKNOWN_ID}`,
+    expected: 403,
+  },
+
   // The seeded admin holds everything, resources added later included.
   {
     who: "admin",

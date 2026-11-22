@@ -1,0 +1,1 @@
+export { updateEventSettings } from "./updateEventSettings";

@@ -24,10 +24,12 @@ interface PublicWeekFilter {
   serviceOnly?: boolean;
   /** Only the activities linked to this ministry. */
   ministryId?: string;
+  /** The first day of the week, "YYYY-MM-DD"; today (in the church time zone) when absent. */
+  from?: string;
 }
 
 /**
- * The public activities of the week that starts today (in the church's time zone): for each of the
+ * The public activities of the week that starts today (in the church's time zone, or on `from`): for each of the
  * 7 days the schedule set that governs it (exception, manual switch, validity, default) and its
  * activities of that weekday. Fixed ones always; those of a year only if that year is published.
  */
@@ -38,7 +40,7 @@ export async function resolvePublicWeekActivities(
 ): Promise<PublicWeekSlot[]> {
   const organization = await findOrganizationTimezone(organizationId);
   if (!organization) return [];
-  const today = localDateIn(organization.timezone, now);
+  const today = filter.from ?? localDateIn(organization.timezone, now);
   const context = await findScheduleContext(organizationId, {
     from: today,
     to: addDays(today, WEEK_LENGTH - 1),
@@ -54,7 +56,8 @@ export async function resolvePublicWeekActivities(
   if (scheduleSetIds.length === 0) return [];
   const activities = await findPublicActivities(organizationId, {
     scheduleSetIds,
-    ...filter,
+    ...(filter.serviceOnly ? { serviceOnly: true } : {}),
+    ...(filter.ministryId ? { ministryId: filter.ministryId } : {}),
   });
   const publishedYears = new Set(context.publishedYears);
   return days.flatMap((day) =>

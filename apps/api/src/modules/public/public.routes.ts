@@ -1,6 +1,8 @@
 import {
   publicBlogIndexDto,
   publicBlogQuery,
+  publicCalendarDto,
+  publicCalendarQuery,
   publicLocaleQuery,
   publicMinistriesDto,
   publicMinistriesQuery,
@@ -28,6 +30,7 @@ import {
 import { requireSiteKey } from "./guards";
 import {
   getPublicBlogIndex,
+  getPublicCalendar,
   getPublicMinistries,
   getPublicMinistry,
   getPublicPage,
@@ -223,6 +226,24 @@ const postRoute = createRoute({
   },
 });
 
+const calendarRoute = createRoute({
+  method: "get",
+  path: "/{churchSlug}/calendar",
+  tags: ["calendar"],
+  summary:
+    "The calendar of a year (the current one by default): weekly activities, schedule exceptions and, when the year is published, its public events.",
+  middleware: [requireSiteKey],
+  request: { params: churchParams, query: publicCalendarQuery },
+  responses: {
+    200: jsonResponse("The calendar", publicCalendarDto),
+    400: problemResponse("The locale or the year is not valid"),
+    401: problemResponse(
+      "The site key is missing, invalid or not for this church",
+    ),
+    404: problemResponse("The church was not found"),
+  },
+});
+
 /** One bucket per forwarded visitor address; the web forwards the visitor's, not its own. */
 const POST_VIEWS_RATE_LIMIT = {
   name: "post-views",
@@ -340,6 +361,17 @@ export const publicRoutes = createRouter()
     });
     c.header("Cache-Control", PUBLIC_CACHE_CONTROL);
     return c.json(post, 200);
+  })
+  .openapi(calendarRoute, async (c) => {
+    const { organizationId } = c.get("ctx");
+    const { locale, year } = c.req.valid("query");
+    const calendar = await getPublicCalendar({
+      organizationId: organizationId as string,
+      requestedLocale: locale,
+      year,
+    });
+    c.header("Cache-Control", PUBLIC_CACHE_CONTROL);
+    return c.json(calendar, 200);
   })
   .openapi(postViewRoute, async (c) => {
     const { organizationId } = c.get("ctx");

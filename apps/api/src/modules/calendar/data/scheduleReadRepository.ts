@@ -71,10 +71,55 @@ export function findPublicActivities(
   };
   return forOrganization(db, organizationId).recurringActivity.findMany({
     where,
+    include: {
+      translations: true,
+      ministries: { select: { ministryId: true } },
+    },
     orderBy: [{ weekday: "asc" }, { start: "asc" }, { id: "asc" }],
   });
 }
 
 export type PublicActivityRow = Awaited<
   ReturnType<typeof findPublicActivities>
+>[number];
+
+/** The public events of a year (internal ones never leave the CRM); their content is in the snapshots. */
+export function findPublicEventRows(organizationId: string, year: number) {
+  return forOrganization(db, organizationId).event.findMany({
+    where: { year, visibility: "PUBLIC" },
+    select: { id: true, sequence: true, liveAt: true },
+  });
+}
+
+export type PublicEventRow = Awaited<
+  ReturnType<typeof findPublicEventRows>
+>[number];
+
+/** Whether the calendar year exists and is published. */
+export async function isYearPublished(
+  organizationId: string,
+  year: number,
+): Promise<boolean> {
+  const count = await forOrganization(db, organizationId).calendarYear.count({
+    where: { year, status: "PUBLISHED" },
+  });
+  return count > 0;
+}
+
+/** The exceptions of a calendar year, with their messages in every language. */
+export function findYearExceptions(organizationId: string, year: number) {
+  return forOrganization(db, organizationId).scheduleException.findMany({
+    where: {
+      date: {
+        gte: parseDateOnly(`${year}-01-01`),
+        lte: parseDateOnly(`${year}-12-31`),
+      },
+    },
+    include: { translations: true },
+    orderBy: { date: "asc" },
+  });
+}
+
+export type PublicExceptionRow = Awaited<
+  ReturnType<typeof findYearExceptions>
 >[number];

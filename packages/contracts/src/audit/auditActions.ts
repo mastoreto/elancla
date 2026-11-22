@@ -95,6 +95,17 @@ export const AUDIT_ACTIONS = {
     updated: "place.updated",
     deleted: "place.deleted",
   },
+  event: {
+    created: "event.created",
+    settingsUpdated: "event.settingsUpdated",
+    deleted: "event.deleted",
+  },
+  calendarYear: {
+    created: "calendarYear.created",
+    published: "calendarYear.published",
+    copied: "calendarYear.copied",
+  },
+  activityReview: { confirmed: "activityReview.confirmed" },
   series: {
     created: "series.created",
     updated: "series.updated",

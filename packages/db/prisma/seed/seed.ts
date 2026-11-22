@@ -7,6 +7,7 @@ import {
 } from "./elAncla";
 import { seedBlog } from "./seedBlog";
 import { seedCalendar } from "./seedCalendar";
+import { seedCalendarEvents } from "./seedCalendarEvents";
 import { seedMinistries } from "./seedMinistries";
 import { seedPeople } from "./seedPeople";
 import { seedRoles } from "./seedRoles";
@@ -52,6 +53,7 @@ async function seed(): Promise<void> {
   await seedSimplePages(db, organization.id);
   await seedBlog(db, organization.id);
   await seedCalendar(db, organization.id);
+  await seedCalendarEvents(db, organization.id);
 
   console.info(`Seeded organization "${organization.slug}".`);
 }
