@@ -391,6 +391,8 @@ predeterminado.
 `Organization.timezone` vía `Intl`) son funciones puras del módulo `calendar` de la API. Activar
 `isDefault` o `forcedActive` en un conjunto se lo quita al que lo tenía (índices únicos parciales como
 red de seguridad). Una excepción cuyo reemplazo es un conjunto impide borrarlo (`schedule_set_in_use`).
+El switch manual se opera desde el CRM (1.6d, `/calendar/schedule`, "Forzar este horario"); el e2e
+comprueba que al activar "Verano" cambian la landing y Visítanos y que al apagarlo vuelve el habitual.
 
 ## D-28 — Landing: fijo vs. editable
 
@@ -521,6 +523,20 @@ por request). El "próximo" evento es el primero programado que no terminó hoy.
 filtro y sus nombres vienen de la API. Las páginas de impresión siguen en español (decisión de diseño
 previa) pero sin años ni fechas fijas. El `.ics` usa `TZID` sin bloque `VTIMEZONE` (se apoya en
 `X-WR-TIMEZONE`) y omite `DTEND` cuando el evento no tiene hora de fin.
+
+*Notas de implementación (1.6d):* `shouldRemind(fechaLocal, { targetYearPublished, pendingReviews,
+lastSentOn })` es pura y solo dispara en diciembre y enero (año objetivo: el siguiente en diciembre,
+el actual en enero), los días con `(días desde el 1/12) % 2 === 0`; el 1/1 es impar, así que enero
+sigue el 2, 4, 6... El cron diario (`GET /internal/calendar/reminders`; `?now=` solo fuera de
+producción, para probar la cadencia a mano) recorre las organizaciones, avisa a los destinatarios
+configurados (roles y personas) o, si no hay ninguno, a los administradores, y guarda `lastSentOn` solo
+si al menos un email salió. Audita `calendarReminder.sent` (actor `cron`) y `calendarReminder.settingsUpdated`.
+`GET /content/calendar/pending` habla del año por empezar (el siguiente en diciembre, el actual el resto
+del año): su estado (falta crearlo, borrador o publicado) y las actividades fijas con revisión anual
+sin confirmar; alimenta las cards de `/calendar` y del `/dashboard`. Guardar una actividad desde el CRM
+limpia `needsReview` (la confirmación de lo copiado del año anterior). El CRM no tiene i18n: sus textos
+son en español; los colores de ministerio se resuelven a hex en el CRM (`ministryColorValue`, espejo de
+los tokens de `apps/web/src/styles/global.css`), porque el CRM no carga el `@theme` de la web.
 
 ## D-32 — Blog
 
