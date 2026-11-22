@@ -1,11 +1,7 @@
 ---
+import type { PublicCalendar } from '@ancla/content';
+import { cn } from '@ancla/utils';
 import AnchorMark from 'src/components/AnchorMark';
-import {
-  CALENDAR_YEAR,
-  events,
-  eventsOfMonth,
-  weeklySorted,
-} from 'src/data/calendar';
 import PrintMonthGrid from 'src/sections/calendar/CalendarPrint/components/PrintMonthGrid';
 import {
   EYEBROW,
@@ -15,13 +11,26 @@ import {
   SLIDE_TONE,
 } from 'src/sections/calendar/CalendarPrint/styles';
 import {
-  dayOf,
   MONTHS_ES,
-  weekdayLong,
+  PRINT_LANG,
+  printableEvents,
 } from 'src/sections/calendar/CalendarPrint/utils/printFormat';
-import cn from 'src/utils/cn';
+import {
+  dayOfEvent,
+  eventsOfMonth,
+  WEEK_COLUMNS,
+  weekdayOfColumn,
+  weeklyOfColumn,
+} from 'src/sections/calendar/utils';
+import { weekdayName } from 'src/utils/formatServiceTimes';
 
-const weekly = weeklySorted();
+interface Props {
+  calendar: PublicCalendar;
+}
+const { calendar } = Astro.props;
+
+const year = calendar.year;
+const events = printableEvents(calendar.events);
 const halves = [
   { title: 'Enero a junio', months: [0, 1, 2, 3, 4, 5] },
   { title: 'Julio a diciembre', months: [6, 7, 8, 9, 10, 11] },
@@ -49,7 +58,6 @@ const printDigital = {
   activity: cn('rounded-[18px] bg-obra-mist p-3.5'),
   activityTime: cn(SERIF, 'text-[28px] text-obra-red'),
   activityTitle: cn('mt-1 text-[16px] leading-[1.25] font-bold'),
-  weeklyNote: cn('mt-auto text-[14px] text-obra-muted'),
   year: cn(SLIDE, SLIDE_TONE.light),
   yearEyebrow: cn(EYEBROW, EYEBROW_TONE.red),
   yearTitle: cn(SLIDE_TITLE),
@@ -72,7 +80,7 @@ const printDigital = {
 <section class={printDigital.cover}>
   <span class={printDigital.coverMark} aria-hidden="true"><AnchorMark id="cp-sl" outline={false} color="#ff2e34" /></span>
   <span class={printDigital.coverChurch}>Iglesia Bautista El Ancla · Montevideo</span>
-  <b class={printDigital.coverTitle}>Calendario<br />{CALENDAR_YEAR}</b>
+  <b class={printDigital.coverTitle}>Calendario<br />{year}</b>
   <span class={printDigital.coverTagline}>Todo el año, para caminar juntos.</span>
 </section>
 
@@ -80,29 +88,28 @@ const printDigital = {
   <span class={printDigital.weeklyEyebrow}>Todas las semanas</span>
   <b class={printDigital.weeklyTitle}>Actividades recurrentes</b>
   <div class={printDigital.weeklyGrid}>
-    {Array.from({ length: 7 }, (_, day) => (
+    {Array.from({ length: WEEK_COLUMNS }, (_, column) => (
       <div class={printDigital.weekday}>
-        <b class={printDigital.weekdayName}>{weekdayLong(day)}</b>
-        {weekly.filter((a) => a.day === day).map((a) => (
+        <b class={printDigital.weekdayName}>{weekdayName(weekdayOfColumn(column), PRINT_LANG, 'long')}</b>
+        {weeklyOfColumn(calendar.weekly, column).map((a) => (
           <div class={printDigital.activity}>
-            <b class={printDigital.activityTime}>{a.time}</b>
+            <b class={printDigital.activityTime}>{a.start}</b>
             <div class={printDigital.activityTitle}>{a.title}</div>
           </div>
         ))}
       </div>
     ))}
   </div>
-  <span class={printDigital.weeklyNote}>Horarios del domingo reales; el resto, de ejemplo.</span>
 </section>
 
 <section class={printDigital.year}>
-  <span class={printDigital.yearEyebrow}>Calendario {CALENDAR_YEAR}</span>
+  <span class={printDigital.yearEyebrow}>Calendario {year}</span>
   <b class={printDigital.yearTitle}>El año de un vistazo</b>
   <div class={printDigital.yearGrid}>
     {MONTHS_ES.map((name, month) => (
       <div class={printDigital.yearMonth}>
         <b class={printDigital.yearMonthName}>{name}</b>
-        <PrintMonthGrid year={CALENDAR_YEAR} month={month} eventDays={eventsOfMonth(events, month).map(dayOf)} size="slide" />
+        <PrintMonthGrid year={year} month={month} eventDays={eventsOfMonth(events, month).map(dayOfEvent)} size="slide" />
       </div>
     ))}
   </div>
@@ -110,14 +117,14 @@ const printDigital = {
 
 {halves.map((half) => (
   <section class={printDigital.half}>
-    <span class={printDigital.halfLabel}>Calendario {CALENDAR_YEAR}</span>
+    <span class={printDigital.halfLabel}>Calendario {year}</span>
     <b class={printDigital.halfTitle}>{half.title}</b>
     <div class={printDigital.halfMonths}>
       {half.months.map((month) => (
         <div class={printDigital.month}>
           <b class={printDigital.monthName}>{MONTHS_ES[month]}</b>
           {eventsOfMonth(events, month).map((e) => (
-            <div class={printDigital.event}><b class={printDigital.eventDay}>{dayOf(e)}</b><span>{e.title}</span></div>
+            <div class={printDigital.event}><b class={printDigital.eventDay}>{dayOfEvent(e)}</b><span>{e.title}</span></div>
           ))}
         </div>
       ))}

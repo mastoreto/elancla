@@ -1,6 +1,6 @@
 {
   "seo": {
-    "title": "Calendario anual 2027: actividades de la iglesia",
+    "title": "Calendario anual {year}: actividades de la iglesia",
     "description": "Todas las actividades de Iglesia Bautista El Ancla: lo que se repite cada semana y los eventos de cada mes. Agrégalos a tu calendario o pide el calendario impreso.",
     "keywords": [
       "calendario iglesia",
@@ -14,21 +14,22 @@
     "current": "Calendario anual"
   },
   "hero": {
-    "eyebrow": "Calendario anual 2027",
+    "eyebrow": "Calendario anual {year}",
     "titleBefore": "Todo el año, para ",
     "titleEmphasis": "caminar juntos.",
     "body": "Primero lo que se repite cada semana, después los eventos de cada mes. Agrégalos a tu calendario o llévate el calendario de la iglesia impreso.",
     "orderCta": "Pedir calendario impreso",
     "downloadCta": "Descargar",
-    "nextLabel": "Próxima actividad · ejemplo"
+    "nextLabel": "Próxima actividad"
   },
   "weekly": {
     "eyebrow": "Todas las semanas",
     "title": "Actividades ",
     "emphasis": "recurrentes.",
-    "body": "Se repiten cada semana, todo el año. Los horarios del domingo son los reales; el resto son de ejemplo.",
+    "body": "Se repiten cada semana, todo el año.",
     "empty": "Sin actividades fijas",
-    "example": "Ejemplo"
+    "exceptionsTitle": "Cambios de horario",
+    "noMeeting": "Sin reunión"
   },
   "months": {
     "eyebrow": "Fechas puntuales",
@@ -38,13 +39,15 @@
     "ministryFilterLabel": "Filtrar por ministerio",
     "allYear": "Todo el año",
     "allMinistries": "Todos",
-    "notice": "Estas fechas son de muestra. Se reemplazan con el listado real de la iglesia.",
-    "noticeLabel": "Ejemplo",
-    "countOne": "1 actividad · ejemplo",
-    "countMany": "{n} actividades · ejemplo",
+    "countOne": "1 actividad",
+    "countMany": "{n} actividades",
     "add": "Agregar a mi calendario",
     "tbc": "Por confirmar",
-    "timeSuffix": "h"
+    "timeSuffix": "h",
+    "empty": "Todavía no hay eventos publicados para {year}.",
+    "cancelled": "Cancelado",
+    "allDay": "Todo el día",
+    "church": "Iglesia en general"
   },
   "take": {
     "title": "Llévalo contigo, ",
@@ -82,17 +85,5 @@
     "title": "Suscríbete y las fechas llegan a tu teléfono.",
     "google": "Google Calendar",
     "ics": "Apple / Outlook (.ics)"
-  },
-  "ministries": {
-    "preaching": "Predicación",
-    "men": "Hombres",
-    "teaching": "Enseñanza",
-    "youth": "Jóvenes",
-    "missions": "Misiones",
-    "teens": "Adolescentes",
-    "worship": "Alabanza",
-    "media": "Multimedia",
-    "prayer": "Oración",
-    "women": "Espacio Mujer"
   }
 }

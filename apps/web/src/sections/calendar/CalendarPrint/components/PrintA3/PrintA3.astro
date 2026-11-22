@@ -1,11 +1,7 @@
 ---
+import type { PublicCalendar } from '@ancla/content';
+import { cn } from '@ancla/utils';
 import AnchorMark from 'src/components/AnchorMark';
-import {
-  CALENDAR_YEAR,
-  events,
-  eventsOfMonth,
-  weeklySorted,
-} from 'src/data/calendar';
 import PrintMonthGrid from 'src/sections/calendar/CalendarPrint/components/PrintMonthGrid';
 import {
   EYEBROW,
@@ -15,14 +11,25 @@ import {
   SHEET_TONE,
 } from 'src/sections/calendar/CalendarPrint/styles';
 import {
-  capitalize,
-  dayOf,
   MONTHS_ES,
-  weekdayShortByIndex,
+  PRINT_LANG,
+  printableEvents,
 } from 'src/sections/calendar/CalendarPrint/utils/printFormat';
-import cn from 'src/utils/cn';
+import {
+  dayOfEvent,
+  eventsOfMonth,
+  sortWeekly,
+} from 'src/sections/calendar/utils';
+import { weekdayName } from 'src/utils/formatServiceTimes';
 
-const weekly = weeklySorted();
+interface Props {
+  calendar: PublicCalendar;
+}
+const { calendar } = Astro.props;
+
+const year = calendar.year;
+const events = printableEvents(calendar.events);
+const weekly = sortWeekly(calendar.weekly);
 
 const printA3 = {
   container: cn(
@@ -56,12 +63,12 @@ const printA3 = {
       <AnchorMark id="cp-a3" outline={false} color="#a8141b" class={printA3.brandMark} />
       <div class={printA3.brandCopy}>
         <span class={printA3.brandChurch}>Iglesia Bautista El Ancla · Montevideo</span>
-        <b class={printA3.brandTitle}>Calendario {CALENDAR_YEAR}</b>
+        <b class={printA3.brandTitle}>Calendario {year}</b>
       </div>
     </div>
     <div class={printA3.weekly}>
       <span class={printA3.weeklyEyebrow}>Cada semana</span>
-      {weekly.map((a) => <span><b>{capitalize(weekdayShortByIndex(a.day))} {a.time}</b> {a.title}</span>)}
+      {weekly.map((a) => <span><b>{weekdayName(a.weekday, PRINT_LANG, 'short')} {a.start}</b> {a.title}</span>)}
     </div>
   </header>
 
@@ -71,10 +78,10 @@ const printA3 = {
       return (
         <div class={printA3.month}>
           <b class={printA3.monthName}>{name}</b>
-          <PrintMonthGrid year={CALENDAR_YEAR} month={month} eventDays={list.map(dayOf)} />
+          <PrintMonthGrid year={year} month={month} eventDays={list.map(dayOfEvent)} />
           <div class={printA3.events}>
             {list.map((e) => (
-              <div class={printA3.event}><b class={printA3.eventDay}>{dayOf(e)}</b><span>{e.title}</span></div>
+              <div class={printA3.event}><b class={printA3.eventDay}>{dayOfEvent(e)}</b><span>{e.title}</span></div>
             ))}
           </div>
         </div>
@@ -83,7 +90,7 @@ const printA3 = {
   </div>
 
   <footer class={printA3.footer}>
-    <span>Círculos rojos: actividades de los ministerios. Fechas de ejemplo.</span>
+    <span>Círculos rojos: eventos del año.</span>
     <span>Para imprimir en A3 · escala 100%</span>
   </footer>
 </section>

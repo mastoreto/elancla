@@ -1,7 +1,6 @@
 ---
 import AnchorMark from 'src/components/AnchorMark';
 import Button from 'src/components/ui/Button';
-import { CALENDAR_YEAR } from 'src/data/calendar';
 import type { Messages } from 'src/i18n/messages';
 import {
   EMPHASIS,
@@ -14,8 +13,9 @@ import cn from 'src/utils/cn';
 
 interface Props {
   copy: Messages['calendar'];
+  year: string;
 }
-const { copy } = Astro.props;
+const { copy, year } = Astro.props;
 const { print, download } = copy.take;
 // Printable views are in Spanish and shared by every locale.
 const PRINT_BASE = '/calendario-anual/imprimir';
@@ -127,7 +127,7 @@ const calendarTakeHome = {
         </div>
         <div class={calendarTakeHome.digitalCard}>
           <div class={calendarTakeHome.digitalPreview} aria-hidden="true">
-            <b class={calendarTakeHome.digitalCover}>{download.digital.cover}<br />{CALENDAR_YEAR}</b>
+            <b class={calendarTakeHome.digitalCover}>{download.digital.cover}<br />{year}</b>
             <AnchorMark id="cal-dl" outline={false} color="#ff2e34" class={calendarTakeHome.digitalMark} />
           </div>
           <b class={calendarTakeHome.digitalTitle}>{download.digital.title}</b>

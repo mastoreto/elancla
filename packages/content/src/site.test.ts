@@ -57,6 +57,9 @@ function clientReturning(
       throw new Error("not used");
     },
     getMinistry: async () => null,
+    getCalendar: async () => {
+      throw new Error("not used");
+    },
     async getSettings() {
       const result = results[Math.min(calls.count, results.length - 1)];
       calls.count += 1;
@@ -180,6 +183,9 @@ describe("createSiteConfigLoader", () => {
         throw new Error("not used");
       },
       getMinistry: async () => null,
+      getCalendar: async () => {
+        throw new Error("not used");
+      },
       async getSettings(locale) {
         locales.push(locale);
         return { ...SETTINGS, name: `site-${locale ?? "default"}` };

@@ -1,0 +1,1 @@
+export { ministryColorVar } from './ministryColorVar';

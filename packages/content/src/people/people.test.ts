@@ -26,6 +26,9 @@ function clientReturning(
       throw new Error("not used");
     },
     getMinistry: async () => null,
+    getCalendar: async () => {
+      throw new Error("not used");
+    },
     getSettings: async () => {
       throw new Error("not used");
     },

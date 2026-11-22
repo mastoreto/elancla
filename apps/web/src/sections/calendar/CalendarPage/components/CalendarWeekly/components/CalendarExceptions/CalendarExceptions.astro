@@ -1,0 +1,51 @@
+---
+// Schedule changes of specific dates ("no meeting on ..."), listed under the weekly grid.
+import { cn } from '@ancla/utils';
+import type { Locale } from 'src/i18n/config';
+import type { Messages } from 'src/i18n/messages';
+import { getHtmlLang } from 'src/i18n/utils';
+import type { CalendarException } from 'src/sections/calendar/types';
+import { monthName } from 'src/sections/calendar/utils';
+
+interface Props {
+  copy: Messages['calendar'];
+  exceptions: CalendarException[];
+  locale: Locale;
+}
+const { copy, exceptions, locale } = Astro.props;
+const lang = getHtmlLang(locale);
+
+const rows = exceptions.map((exception) => ({
+  ...exception,
+  label: `${Number(exception.date.slice(8))} ${monthName(
+    Number(exception.date.slice(5, 7)) - 1,
+    lang,
+    'short'
+  )}`,
+}));
+
+const calendarExceptions = {
+  container: cn(
+    'flex flex-col gap-2.5 rounded-[20px] border-[1.5px] border-dashed',
+    'border-obra-red bg-obra-white px-4.5 py-3.5 text-[0.875rem] leading-[1.45]'
+  ),
+  title: cn('tracking-[0.12em] text-obra-red uppercase'),
+  list: cn('m-0 flex list-none flex-col gap-1.5 p-0'),
+  item: cn('flex flex-wrap items-baseline gap-x-2.5'),
+  date: cn('font-obra-sans-bold'),
+  noMeeting: cn('font-obra-sans-bold text-obra-red'),
+};
+---
+
+<div class={calendarExceptions.container}>
+  <b class={calendarExceptions.title}>{copy.weekly.exceptionsTitle}</b>
+  <ul class={calendarExceptions.list}>
+    {rows.map((row) => (
+      <li class={calendarExceptions.item}>
+        <time class={calendarExceptions.date} datetime={row.date}>{row.label}</time>
+        {row.noMeeting && <span class={calendarExceptions.noMeeting}>{copy.weekly.noMeeting}</span>}
+        <span>{row.message}</span>
+      </li>
+    ))}
+  </ul>
+</div>
