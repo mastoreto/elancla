@@ -459,6 +459,8 @@ sistema. Editar algo publicado no lo cambia en la web hasta aprobar/publicar.
 - Cada transición y cada cambio de configuración deja su fila de `AuditLog` (`editorial.*`) en la
   misma transacción, sin el snapshot.
 
+**Notas de implementación (1.6b, eventos):** el registro editorial suma un hook opcional `entityVisibleTo(tx, organizationId, entityId, access)` que el motor llama en todas las rutas por entidad (`requireEditorialPermission`, después de `entityExists`): `false` es un 404. Solo lo implementa `event` (un evento interno no existe para quien no esté en su audiencia, ni siquiera para ver su historial); los demás tipos no cambian. `goLiveWorkingRevision` es la primitiva de go-live sin la regla de revisión, para actos que aprueban por sí mismos (publicar un año del calendario).
+
 **Notas de implementación (1.4, blog):** `blog-post` es el primer tipo con esquema real y los tres hooks del registro: `entityExists` (fila `Post` de la organización), `validateSnapshot` (idiomas habilitados) y `beforeGoLive` (409 `slug_taken` y `slug_locked`, 400 `invalid_media|author|category|series`, y fija `Post.firstLiveAt` mientras el artículo nunca fue visible). `crmPath` es `/blog/<id>`, así que la bandeja y los correos de revisión abren el editor. El CRM traduce esos códigos a toasts (`describeEditorialFailure`).
 
 ## D-31 — Calendario
@@ -498,6 +500,20 @@ usan los tokens del sitio. `SiteSettings.serviceTimes` se borró: el DTO públic
 `serviceKind` de la semana en curso (fijas más las del año si está publicado), y suma `timezone`.
 Las actividades se editan directo con auditoría (`recurringActivity.*`, `scheduleSet.*`,
 `scheduleException.*`, `place.*`), sin flujo editorial. `publicMinistryDto` suma `schedule` (el "cuándo").
+
+*Notas de implementación (1.6b):* el evento es un tipo editorial (`event`) con el snapshot como
+fuente; la fila `Event` lleva año, visibilidad y audiencia (configuración directa con auditoría
+`event.*`), `sequence` (+1 cada vez que una revisión entra en vivo) y `liveAt`. Publicar el año
+(`calendar.year:publish`) es la aprobación: pasa a vivo todas las revisiones de trabajo de sus eventos
+en una transacción (`goLiveWorkingRevision`) y, si alguna no puede, no se publica nada. Con el año en
+borrador publicar un evento suelto es 409 `year_not_published`. Un evento publicado no se borra
+(409 `event_live`), se cancela; uno nunca publicado se borra y su borrador queda `SUPERSEDED`. Un lugar
+usado por un evento (en cualquiera de sus revisiones vigentes) tampoco se borra (`place_in_use`).
+`shiftDateKeepingWeekday` traslada la fecha al mismo día del mes (29/2 pasa al 28/2) y luego al día de
+la semana más cercano (nunca hay empate: una semana tiene 7 días); si ese día cae fuera del año
+destino se usa el más cercano dentro de él. La API pública del calendario expone el `uid` del evento
+(`<uid>@<host>` en el `.ics`), con `sequence` y `lastModified`: la única excepción a "sin ids
+internos", porque el UID de RFC 5545 debe ser estable.
 
 ## D-32 — Blog
 
