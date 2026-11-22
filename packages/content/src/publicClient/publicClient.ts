@@ -1,6 +1,7 @@
 import {
   type PersonContext,
   type PublicBlogIndexDto,
+  type PublicCalendarDto,
   type PublicMinistriesDto,
   type PublicMinistryDto,
   type PublicPageDto,
@@ -10,6 +11,7 @@ import {
   type PublicSiteSettingsDto,
   type PublicVisitDto,
   publicBlogIndexDto,
+  publicCalendarDto,
   publicMinistriesDto,
   publicMinistryDto,
   publicPageDto,
@@ -53,6 +55,8 @@ export interface PublicClient {
   getMinistries(locale: string): Promise<PublicMinistriesDto>;
   /** One visible ministry by the slug of any of its languages; `null` when there is none. */
   getMinistry(slug: string, locale: string): Promise<PublicMinistryDto | null>;
+  /** One calendar year (the current one in the church time zone when omitted) in `locale`. */
+  getCalendar(locale: string, year?: number): Promise<PublicCalendarDto>;
   /**
    * Counts an anonymous view. `visitor.ip` is also sent as `x-forwarded-for`: the API rate limits
    * per forwarded address, so without it every visitor of the site would share one bucket.
@@ -257,6 +261,21 @@ export function createPublicClient(options: PublicClientOptions): PublicClient {
       if (!parsed.success) {
         throw new PublicApiError(
           "Public API ministry does not match the contract",
+          null,
+        );
+      }
+      return parsed.data;
+    },
+    async getCalendar(locale, year) {
+      const yearQuery = year === undefined ? "" : `&year=${year}`;
+      const parsed = publicCalendarDto.safeParse(
+        await getJson(
+          `/calendar?locale=${encodeURIComponent(locale)}${yearQuery}`,
+        ),
+      );
+      if (!parsed.success) {
+        throw new PublicApiError(
+          "Public API calendar does not match the contract",
           null,
         );
       }

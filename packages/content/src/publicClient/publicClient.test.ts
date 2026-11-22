@@ -106,6 +106,41 @@ describe("createPublicClient", () => {
     expect(calls[0]?.url).toEndWith("/settings?locale=pt");
   });
 
+  test("asks the calendar endpoint with the locale and the optional year", async () => {
+    const calls: Call[] = [];
+    const calendar = {
+      year: 2027,
+      published: false,
+      timezone: "America/Montevideo",
+      ministries: [],
+      weekly: [],
+      exceptions: [],
+      events: [],
+    };
+    const client = createPublicClient({
+      baseUrl: "https://crm.example.org",
+      apiKey: "k",
+      churchSlug: "el-ancla",
+      fetch: fakeFetch(() => json(calendar), calls),
+    });
+    expect(await client.getCalendar("en", 2027)).toEqual(calendar);
+    await client.getCalendar("es");
+    expect(calls[0]?.url).toEndWith("/calendar?locale=en&year=2027");
+    expect(calls[1]?.url).toEndWith("/calendar?locale=es");
+  });
+
+  test("rejects a calendar that does not match the contract", async () => {
+    const client = createPublicClient({
+      baseUrl: "https://crm.example.org",
+      apiKey: "k",
+      churchSlug: "el-ancla",
+      fetch: fakeFetch(() => json({ year: 2026 })),
+    });
+    await expect(client.getCalendar("es")).rejects.toBeInstanceOf(
+      PublicApiError,
+    );
+  });
+
   test("throws on a non-2xx answer", async () => {
     const client = createPublicClient({
       baseUrl: "https://crm.example.org",
