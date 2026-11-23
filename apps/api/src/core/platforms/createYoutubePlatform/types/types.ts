@@ -34,10 +34,12 @@ export interface YoutubePlaylistResource {
     description: string;
     thumbnails?: YoutubeThumbnails;
   };
+  contentDetails?: { itemCount?: number };
 }
 
 export interface YoutubeListResponse<TItem> {
   items?: TItem[];
+  nextPageToken?: string;
 }
 
 /** The part of `fetch` the adapter needs, so tests can serve recorded responses. */

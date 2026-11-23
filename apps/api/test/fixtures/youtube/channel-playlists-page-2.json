@@ -1,0 +1,37 @@
+{
+  "kind": "youtube#playlistListResponse",
+  "etag": "recorded",
+  "pageInfo": {
+    "totalResults": 3,
+    "resultsPerPage": 3
+  },
+  "items": [
+    {
+      "kind": "youtube#playlist",
+      "etag": "etag-PLc2Wq5Er8Ty1Ui4Op7As0Df3Gh6Jk9Lz",
+      "id": "PLc2Wq5Er8Ty1Ui4Op7As0Df3Gh6Jk9Lz",
+      "snippet": {
+        "publishedAt": "2026-09-01T12:00:00Z",
+        "channelId": "UCqQ0ff1ineCh4nnelXyZ_93",
+        "title": "Navidad 2025",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Iglesia El Ancla"
+      },
+      "contentDetails": {
+        "itemCount": 6
+      }
+    }
+  ]
+}

@@ -13,6 +13,25 @@ export const VIDEO_PLATFORM_CONTRACT_IDS = {
   missingVideoId: "Mi5sSiNg_42",
   playlistId: "PLm4Zk8Qe2Vt7Hn0Ba5Rw3Ys6Ju9Cd1Fg",
   missingPlaylistId: "PLz9Yx8Wv7Ut6Ss5Rr4Qq3Pp2Oo1Nn0Mm",
+  /**
+   * `playlistId` as listed by `listPlaylistVideos`: public videos in playlist order, served in two
+   * pages (a private video sits in the first one).
+   */
+  playlistVideoIds: [
+    "Xr2hP9vKq1M",
+    "Sd7kJ4bTe-9",
+    "Ab3dEf5GhIj",
+    "Qw8nBv3Cx6A",
+  ],
+  /**
+   * The playlists `offlineChannelId` has, in the order listed (two pages); the first one is
+   * `playlistId`.
+   */
+  channelPlaylistIds: [
+    "PLm4Zk8Qe2Vt7Hn0Ba5Rw3Ys6Ju9Cd1Fg",
+    "PLb7Nn2Kd5Xs8Fq1Hj4Lm6Pw9Rt0Vy3Za",
+    "PLc2Wq5Er8Ty1Ui4Op7As0Df3Gh6Jk9Lz",
+  ],
   /** A channel with a stream on air. */
   liveChannelId: "UCl1veCh4nnelAbcDefGhiJk",
   /** A channel with uploads (one of them private) and nothing on air. */
@@ -108,6 +127,43 @@ export function runVideoPlatformContract(
       expect(await platform.getPlaylist(IDS.missingPlaylistId)).toBe(
         "not_found",
       );
+    });
+
+    test("listPlaylistVideos follows the pages, drops private videos and honours max", async () => {
+      const videos = await platform.listPlaylistVideos(IDS.playlistId, 50);
+      expect(videos.map((video) => video.id)).toEqual([
+        ...IDS.playlistVideoIds,
+      ]);
+      expect(videos[0]?.title.length).toBeGreaterThan(0);
+      expect(videos[0]?.publishedAt).toMatch(ISO_INSTANT);
+      expect(videos[0]?.thumbnailUrl).toStartWith("https://");
+
+      const capped = await platform.listPlaylistVideos(IDS.playlistId, 3);
+      expect(capped.map((video) => video.id)).toEqual(
+        IDS.playlistVideoIds.slice(0, 3),
+      );
+      expect(await platform.listPlaylistVideos(IDS.playlistId, 0)).toEqual([]);
+    });
+
+    test("listChannelPlaylists follows the pages and says how many videos each has", async () => {
+      const playlists = await platform.listChannelPlaylists(
+        IDS.offlineChannelId,
+        50,
+      );
+      expect(playlists.map((playlist) => playlist.id)).toEqual([
+        ...IDS.channelPlaylistIds,
+      ]);
+      expect(playlists[0]).toEqual({
+        id: IDS.playlistId,
+        title: "Firmes en la tormenta",
+        videoCount: 5,
+      });
+      const capped = await platform.listChannelPlaylists(
+        IDS.offlineChannelId,
+        1,
+      );
+      expect(capped.map((playlist) => playlist.id)).toEqual([IDS.playlistId]);
+      expect(await platform.listChannelPlaylists("@iglesia", 10)).toEqual([]);
     });
 
     test("getLiveStream returns the stream on air, and null when there is none", async () => {

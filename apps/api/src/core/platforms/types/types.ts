@@ -27,6 +27,14 @@ export interface PlaylistInfo {
   thumbnailUrl: string | null;
 }
 
+/** A playlist of a channel, enough to decide whether it is a series (`listChannelPlaylists`). */
+export interface ChannelPlaylistSummary {
+  id: string;
+  title: string;
+  /** How many videos the platform counts in it (private ones included). */
+  videoCount: number;
+}
+
 export interface LiveStream {
   videoId: string;
   title: string;
@@ -37,6 +45,9 @@ export type VideoLookupFailure = "not_found" | "private";
 
 /** Largest batch `getVideos` accepts (the platform's own limit per request). */
 export const MAX_VIDEOS_PER_BATCH = 50;
+
+/** Most items `listPlaylistVideos` and `listChannelPlaylists` return, however many are asked for. */
+export const MAX_LISTED_ITEMS = 500;
 
 /**
  * A video platform seen from the CRM. Transport failures (network, quota, bad key) throw
@@ -59,6 +70,20 @@ export interface VideoPlatform {
   listRecentUploads(channelId: string, max: number): Promise<VideoSummary[]>;
   /** `"not_found"` when the playlist does not exist or is private. */
   getPlaylist(id: string): Promise<PlaylistInfo | "not_found">;
+  /**
+   * The public videos of a playlist in playlist order, at most `max` (capped at
+   * `MAX_LISTED_ITEMS`). Follows the platform's pages, so it costs one quota unit per 50 videos.
+   * A playlist that does not exist or is private throws `PlatformRequestError` (404).
+   */
+  listPlaylistVideos(playlistId: string, max: number): Promise<VideoSummary[]>;
+  /**
+   * The public playlists of a channel, at most `max` (capped at `MAX_LISTED_ITEMS`), one quota
+   * unit per 50. A channel id that is not one yields an empty list without a request.
+   */
+  listChannelPlaylists(
+    channelId: string,
+    max: number,
+  ): Promise<ChannelPlaylistSummary[]>;
   /** The stream on air right now, or `null`. */
   getLiveStream(channelId: string): Promise<LiveStream | null>;
 }

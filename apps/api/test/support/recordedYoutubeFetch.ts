@@ -22,11 +22,18 @@ const RECORDED_RESPONSES: Record<string, string> = {
   [`playlistItems?playlistId=${uploadsOf(IDS.liveChannelId)}`]:
     "uploads-live-channel",
   [`playlistItems?playlistId=${uploadsOf(IDS.offlineChannelId)}`]: "uploads",
+  // Paged listings: the first page has no token, the next one is asked with `&pageToken=`.
+  [`playlistItems?playlistId=${IDS.playlistId}`]: "playlist-items-page-1",
+  [`playlistItems?playlistId=${IDS.playlistId}&pageToken=CAMQAA`]:
+    "playlist-items-page-2",
+  [`playlists?channelId=${IDS.offlineChannelId}`]: "channel-playlists-page-1",
+  [`playlists?channelId=${IDS.offlineChannelId}&pageToken=CAIQAA`]:
+    "channel-playlists-page-2",
   [`playlists?id=${IDS.playlistId}`]: "playlist",
   [`playlists?id=${IDS.missingPlaylistId}`]: "playlist-missing",
 };
 
-const ROUTE_PARAMS = ["id", "playlistId"] as const;
+const ROUTE_PARAMS = ["id", "playlistId", "channelId"] as const;
 
 export interface RecordedYoutubeFetch {
   (input: string): Promise<Response>;
@@ -52,7 +59,8 @@ export function createRecordedYoutubeFetch(): RecordedYoutubeFetch {
     }
     const endpoint = url.pathname.split("/").pop() ?? "";
     const param = ROUTE_PARAMS.find((name) => url.searchParams.has(name));
-    const route = `${endpoint}?${param}=${param ? url.searchParams.get(param) : ""}`;
+    const pageToken = url.searchParams.get("pageToken");
+    const route = `${endpoint}?${param}=${param ? url.searchParams.get(param) : ""}${pageToken ? `&pageToken=${pageToken}` : ""}`;
     const fixture = RECORDED_RESPONSES[route];
     if (!fixture) {
       return Response.json(

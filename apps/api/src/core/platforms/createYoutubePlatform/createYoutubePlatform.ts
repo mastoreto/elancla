@@ -1,7 +1,9 @@
 import { YOUTUBE_CHANNEL_ID_PATTERN } from "@ancla/contracts";
 import { PlatformRequestError } from "../PlatformRequestError";
 import {
+  type ChannelPlaylistSummary,
   type LiveStream,
+  MAX_LISTED_ITEMS,
   MAX_VIDEOS_PER_BATCH,
   type PlaylistInfo,
   type VideoInfo,
@@ -87,10 +89,10 @@ export function createYoutubePlatform({
   apiKey,
   fetch,
 }: YoutubePlatformConfig): VideoPlatform {
-  async function request<TItem>(
+  async function requestPage<TItem>(
     endpoint: string,
     params: Record<string, string>,
-  ): Promise<TItem[]> {
+  ): Promise<YoutubeListResponse<TItem>> {
     const url = new URL(`${API_BASE_URL}/${endpoint}`);
     for (const [name, value] of Object.entries({ ...params, key: apiKey })) {
       url.searchParams.set(name, value);
@@ -110,8 +112,44 @@ export function createYoutubePlatform({
         response.status,
       );
     }
-    const body = (await response.json()) as YoutubeListResponse<TItem>;
-    return body.items ?? [];
+    return (await response.json()) as YoutubeListResponse<TItem>;
+  }
+
+  async function request<TItem>(
+    endpoint: string,
+    params: Record<string, string>,
+  ): Promise<TItem[]> {
+    return (await requestPage<TItem>(endpoint, params)).items ?? [];
+  }
+
+  /**
+   * Follows `nextPageToken` until `max` results are collected or the pages run out. `toResult`
+   * returns `null` for the items the platform lists but we do not return (private videos). Each
+   * page costs one quota unit and 50 items is the platform's page maximum.
+   */
+  async function collectPages<TItem, TResult>(
+    endpoint: string,
+    params: Record<string, string>,
+    max: number,
+    toResult: (item: TItem) => TResult | null,
+  ): Promise<TResult[]> {
+    const limit = Math.min(Math.floor(max), MAX_LISTED_ITEMS);
+    const results: TResult[] = [];
+    let pageToken: string | undefined;
+    while (results.length < limit) {
+      const page = await requestPage<TItem>(endpoint, {
+        ...params,
+        maxResults: String(MAX_VIDEOS_PER_BATCH),
+        ...(pageToken ? { pageToken } : {}),
+      });
+      for (const item of page.items ?? []) {
+        const result = toResult(item);
+        if (result !== null) results.push(result);
+      }
+      pageToken = page.nextPageToken;
+      if (!pageToken) break;
+    }
+    return results.slice(0, limit);
   }
 
   const fetchVideoItems = (ids: readonly string[]) =>
@@ -165,6 +203,38 @@ export function createYoutubePlatform({
         .filter((item) => item.status?.privacyStatus !== "private")
         .slice(0, limit)
         .map(toVideoSummary);
+    },
+
+    listPlaylistVideos(
+      playlistId: string,
+      max: number,
+    ): Promise<VideoSummary[]> {
+      return collectPages<YoutubePlaylistItem, VideoSummary>(
+        "playlistItems",
+        { part: "snippet,contentDetails,status", playlistId },
+        max,
+        (item) =>
+          item.status?.privacyStatus === "private"
+            ? null
+            : toVideoSummary(item),
+      );
+    },
+
+    async listChannelPlaylists(
+      channelId: string,
+      max: number,
+    ): Promise<ChannelPlaylistSummary[]> {
+      if (!YOUTUBE_CHANNEL_ID_PATTERN.test(channelId)) return [];
+      return collectPages<YoutubePlaylistResource, ChannelPlaylistSummary>(
+        "playlists",
+        { part: "snippet,contentDetails", channelId },
+        max,
+        (playlist) => ({
+          id: playlist.id,
+          title: playlist.snippet.title,
+          videoCount: playlist.contentDetails?.itemCount ?? 0,
+        }),
+      );
     },
 
     async getPlaylist(id: string): Promise<PlaylistInfo | "not_found"> {

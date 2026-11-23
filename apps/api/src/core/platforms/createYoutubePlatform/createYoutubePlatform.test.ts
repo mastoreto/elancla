@@ -4,11 +4,13 @@ import {
   RECORDED_YOUTUBE_API_KEY,
 } from "../../../../test/support/recordedYoutubeFetch";
 import { PlatformRequestError } from "../PlatformRequestError";
+import { MAX_LISTED_ITEMS } from "../types";
 import {
   VIDEO_PLATFORM_CONTRACT_IDS as IDS,
   runVideoPlatformContract,
 } from "../videoPlatformContract";
 import { createYoutubePlatform } from "./createYoutubePlatform";
+import type { FetchLike } from "./types";
 
 const recordedFetch = createRecordedYoutubeFetch();
 const createPlatform = () =>
@@ -72,6 +74,57 @@ describe("createYoutubePlatform", () => {
     expect(endpoints).toEqual(["playlistItems", "videos"]);
   });
 
+  test("a paged listing costs one call per page and stops once max is reached", async () => {
+    const countingFetch = createRecordedYoutubeFetch();
+    const platform = createYoutubePlatform({
+      apiKey: RECORDED_YOUTUBE_API_KEY,
+      fetch: countingFetch,
+    });
+    await platform.listPlaylistVideos(IDS.playlistId, 50);
+    expect(countingFetch.requests).toHaveLength(2);
+
+    countingFetch.requests.length = 0;
+    expect(await platform.listPlaylistVideos(IDS.playlistId, 2)).toHaveLength(
+      2,
+    );
+    expect(countingFetch.requests).toHaveLength(1);
+    expect(
+      new URL(countingFetch.requests[0] ?? "").searchParams.get("maxResults"),
+    ).toBe("50");
+  });
+
+  test("a listing never returns more than MAX_LISTED_ITEMS however much is asked", async () => {
+    const requested: string[] = [];
+    const endlessFetch: FetchLike = async (input) => {
+      requested.push(input);
+      const items = Array.from({ length: 50 }, (_, index) => ({
+        id: `PLendless${requested.length}x${index}0`,
+        snippet: { title: "Endless", description: "" },
+        contentDetails: { itemCount: 1 },
+      }));
+      return Response.json({
+        items,
+        nextPageToken: `page-${requested.length}`,
+      });
+    };
+    const platform = createYoutubePlatform({
+      apiKey: "any",
+      fetch: endlessFetch,
+    });
+    const playlists = await platform.listChannelPlaylists(
+      IDS.offlineChannelId,
+      10_000,
+    );
+    expect(playlists).toHaveLength(MAX_LISTED_ITEMS);
+    expect(requested).toHaveLength(MAX_LISTED_ITEMS / 50);
+  });
+
+  test("a playlist that does not exist throws PlatformRequestError when listing its videos", async () => {
+    await expect(
+      createPlatform().listPlaylistVideos(IDS.missingPlaylistId, 10),
+    ).rejects.toMatchObject({ name: "PlatformRequestError", status: 404 });
+  });
+
   test("a channel id that is not one never reaches the platform", async () => {
     const countingFetch = createRecordedYoutubeFetch();
     const platform = createYoutubePlatform({
@@ -80,6 +133,7 @@ describe("createYoutubePlatform", () => {
     });
     expect(await platform.getLiveStream("@iglesia")).toBeNull();
     expect(await platform.listRecentUploads("@iglesia", 10)).toEqual([]);
+    expect(await platform.listChannelPlaylists("@iglesia", 10)).toEqual([]);
     expect(countingFetch.requests).toEqual([]);
   });
 

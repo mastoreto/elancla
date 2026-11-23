@@ -1,0 +1,65 @@
+{
+  "kind": "youtube#playlistListResponse",
+  "etag": "recorded",
+  "nextPageToken": "CAIQAA",
+  "pageInfo": {
+    "totalResults": 3,
+    "resultsPerPage": 3
+  },
+  "items": [
+    {
+      "kind": "youtube#playlist",
+      "etag": "etag-PLm4Zk8Qe2Vt7Hn0Ba5Rw3Ys6Ju9Cd1Fg",
+      "id": "PLm4Zk8Qe2Vt7Hn0Ba5Rw3Ys6Ju9Cd1Fg",
+      "snippet": {
+        "publishedAt": "2026-09-01T12:00:00Z",
+        "channelId": "UCqQ0ff1ineCh4nnelXyZ_93",
+        "title": "Firmes en la tormenta",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Iglesia El Ancla"
+      },
+      "contentDetails": {
+        "itemCount": 5
+      }
+    },
+    {
+      "kind": "youtube#playlist",
+      "etag": "etag-PLb7Nn2Kd5Xs8Fq1Hj4Lm6Pw9Rt0Vy3Za",
+      "id": "PLb7Nn2Kd5Xs8Fq1Hj4Lm6Pw9Rt0Vy3Za",
+      "snippet": {
+        "publishedAt": "2026-09-01T12:00:00Z",
+        "channelId": "UCqQ0ff1ineCh4nnelXyZ_93",
+        "title": "Sermones dominicales",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Iglesia El Ancla"
+      },
+      "contentDetails": {
+        "itemCount": 120
+      }
+    }
+  ]
+}
