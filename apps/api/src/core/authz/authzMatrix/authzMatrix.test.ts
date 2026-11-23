@@ -1663,6 +1663,83 @@ const rows: MatrixRow[] = [
     },
   ]),
 
+  // sermon series: view lists, edit creates, imports, changes and deletes.
+  ...(
+    [
+      ["GET", "/content/sermon-series", undefined],
+      ["POST", "/content/sermon-series", {}],
+      ["POST", "/content/sermon-series/import", {}],
+      ["PATCH", `/content/sermon-series/${UNKNOWN_ID}`, {}],
+      ["DELETE", `/content/sermon-series/${UNKNOWN_ID}`, undefined],
+    ] as const
+  ).flatMap(([method, path, body]): MatrixRow[] => [
+    {
+      who: "anonymous",
+      caller: "anonymous",
+      method,
+      path,
+      body,
+      expected: 401,
+    },
+    { who: "no role", caller: NOTHING, method, path, body, expected: 403 },
+    {
+      who: PERMISSIONS.ministryFinance.view,
+      caller: [grant(PERMISSIONS.ministryFinance.view, "all")],
+      method,
+      path,
+      body,
+      expected: 403,
+    },
+  ]),
+  {
+    who: PERMISSIONS.sermons.view,
+    caller: [grant(PERMISSIONS.sermons.view)],
+    method: "GET",
+    path: "/content/sermon-series",
+    expected: 200,
+  },
+  ...(
+    [
+      ["POST", "/content/sermon-series", {}],
+      ["POST", "/content/sermon-series/import", {}],
+      ["PATCH", `/content/sermon-series/${UNKNOWN_ID}`, {}],
+      ["DELETE", `/content/sermon-series/${UNKNOWN_ID}`, undefined],
+    ] as const
+  ).flatMap(([method, path, body]): MatrixRow[] => [
+    {
+      who: PERMISSIONS.sermons.view,
+      caller: [grant(PERMISSIONS.sermons.view)],
+      method,
+      path,
+      body,
+      expected: 403,
+    },
+    {
+      who: PERMISSIONS.sermons.create,
+      caller: [grant(PERMISSIONS.sermons.create)],
+      method,
+      path,
+      body,
+      expected: 403,
+    },
+    {
+      who: PERMISSIONS.sermons.edit,
+      caller: [grant(PERMISSIONS.sermons.edit)],
+      method,
+      path,
+      body,
+      // An empty body never reaches the use case; the delete reaches it and finds nothing.
+      expected: method === "DELETE" ? 404 : 400,
+    },
+  ]),
+  {
+    who: PERMISSIONS.sermons.edit,
+    caller: [grant(PERMISSIONS.sermons.edit)],
+    method: "GET",
+    path: "/content/sermon-series",
+    expected: 403,
+  },
+
   // The seeded admin holds everything, resources added later included.
   {
     who: "admin",

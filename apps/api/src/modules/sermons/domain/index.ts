@@ -19,4 +19,5 @@ export {
   youtubeWatchUrl,
 } from "./platformLinkFields";
 export { pickFreeSlug, slugifyTitle } from "./slugifyTitle";
+export { type SeriesSummary, summarizeSeries } from "./summarizeSeries";
 export { truncateText } from "./truncateText";

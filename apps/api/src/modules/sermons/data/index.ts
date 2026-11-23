@@ -14,11 +14,19 @@ export {
 } from "./platformLinksRepository";
 export {
   createMinimalSeriesRow,
+  createSeriesRow,
   findPreacherNames,
   findSeriesId,
+  findSeriesIdByPlaylist,
+  findSeriesRow,
   findSeriesTitles,
+  findTakenSeriesSlug,
+  listSeriesRows,
   listSeriesSlugs,
   type MinimalSeries,
+  replaceSeriesIfVersion,
+  type SeriesRow,
+  softDeleteSeries,
 } from "./seriesRepository";
 export {
   createSermonRow,
