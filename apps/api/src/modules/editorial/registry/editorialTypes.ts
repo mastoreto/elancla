@@ -20,6 +20,7 @@ import {
   eventVisibleTo,
 } from "./event";
 import { ministryBeforeGoLive, ministryExists } from "./ministry";
+import { sermonBeforeGoLive, sermonExists } from "./sermon";
 import { assertSimplePageSlugsFree, simplePageExists } from "./simplePage";
 import { validateSnapshotLocales } from "./validateSnapshotLocales";
 
@@ -163,7 +164,6 @@ export const EDITORIAL_TYPES: Record<
     beforeGoLive: eventBeforeGoLive,
     validateSnapshot: validateSnapshotLocales,
   },
-  // `entityExists` and `beforeGoLive` arrive with the sermons module.
   sermon: {
     contentType: "SERMON",
     param: "sermon",
@@ -176,6 +176,8 @@ export const EDITORIAL_TYPES: Record<
     ministryScoped: false,
     snapshotSchema: sermonSnapshot,
     crmPath: (entityId) => `/sermons/${entityId}`,
+    entityExists: sermonExists,
+    beforeGoLive: sermonBeforeGoLive,
     validateSnapshot: validateSnapshotLocales,
   },
 };

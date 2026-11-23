@@ -1,0 +1,1 @@
+export { assertSermonPreacherValid } from "./assertSermonPreacherValid";
