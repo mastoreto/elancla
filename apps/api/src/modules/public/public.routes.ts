@@ -60,6 +60,12 @@ export const PUBLIC_CACHE_CONTROL =
 export const PUBLIC_LIVE_CACHE_CONTROL =
   "public, s-maxage=60, stale-while-revalidate=30";
 
+/**
+ * When the platform could not answer the status is "not live" as a guess: the CDN keeps it as
+ * long as the API does in memory (15 seconds) and never serves it stale.
+ */
+export const PUBLIC_LIVE_DEGRADED_CACHE_CONTROL = "public, s-maxage=15";
+
 const churchParams = z.object({ churchSlug: z.string() });
 
 const settingsRoute = createRoute({
@@ -302,7 +308,7 @@ const liveRoute = createRoute({
   path: "/{churchSlug}/live",
   tags: ["sermons"],
   summary:
-    "Whether the church's channel is streaming right now (not live when there is no channel or no platform key).",
+    "Whether the church's channel is streaming right now. Always 200: not live when there is no channel or no platform key, and also when the video platform cannot answer (then cached for 15 seconds instead of 60).",
   middleware: [requireSiteKey],
   request: { params: churchParams },
   responses: {
@@ -310,7 +316,6 @@ const liveRoute = createRoute({
     401: problemResponse(
       "The site key is missing, invalid or not for this church",
     ),
-    503: problemResponse("The video platform could not answer"),
   },
 });
 
@@ -464,8 +469,11 @@ export const publicRoutes = createRouter()
   })
   .openapi(liveRoute, async (c) => {
     const { organizationId } = c.get("ctx");
-    const live = await getPublicLive(organizationId as string);
-    c.header("Cache-Control", PUBLIC_LIVE_CACHE_CONTROL);
+    const { live, degraded } = await getPublicLive(organizationId as string);
+    c.header(
+      "Cache-Control",
+      degraded ? PUBLIC_LIVE_DEGRADED_CACHE_CONTROL : PUBLIC_LIVE_CACHE_CONTROL,
+    );
     return c.json(live, 200);
   })
   .openapi(postViewRoute, async (c) => {

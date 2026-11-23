@@ -1,1 +1,5 @@
-export { clearPublicLiveCache, getPublicLive } from "./getPublicLive";
+export {
+  clearPublicLiveCache,
+  getPublicLive,
+  type PublicLiveResult,
+} from "./getPublicLive";

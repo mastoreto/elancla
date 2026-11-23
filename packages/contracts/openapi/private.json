@@ -42542,7 +42542,7 @@
         "tags": [
           "sermons"
         ],
-        "summary": "Whether the church's channel is streaming right now (not live when there is no channel or no platform key).",
+        "summary": "Whether the church's channel is streaming right now. Always 200: not live when there is no channel or no platform key, and also when the video platform cannot answer (then cached for 15 seconds instead of 60).",
         "parameters": [
           {
             "schema": {
@@ -42605,61 +42605,6 @@
           },
           "401": {
             "description": "The site key is missing, invalid or not for this church",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string"
-                    },
-                    "title": {
-                      "type": "string"
-                    },
-                    "status": {
-                      "type": "integer"
-                    },
-                    "code": {
-                      "type": "string"
-                    },
-                    "detail": {
-                      "type": "string"
-                    },
-                    "requestId": {
-                      "type": "string"
-                    },
-                    "errors": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "path": {
-                            "type": "string"
-                          },
-                          "message": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "path",
-                          "message"
-                        ]
-                      }
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "title",
-                    "status",
-                    "code",
-                    "requestId"
-                  ]
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "The video platform could not answer",
             "content": {
               "application/problem+json": {
                 "schema": {

@@ -1,9 +1,11 @@
 import {
   afterAll,
+  afterEach,
   beforeAll,
   beforeEach,
   describe,
   expect,
+  setSystemTime,
   test,
 } from "bun:test";
 import { db } from "@ancla/db";
@@ -18,7 +20,10 @@ import {
   setVideoPlatformForTests,
 } from "../../core/platforms";
 import { VIDEO_PLATFORM_CONTRACT_IDS as IDS } from "../../core/platforms/videoPlatformContract";
-import { PUBLIC_LIVE_CACHE_CONTROL } from "./public.routes";
+import {
+  PUBLIC_LIVE_CACHE_CONTROL,
+  PUBLIC_LIVE_DEGRADED_CACHE_CONTROL,
+} from "./public.routes";
 import { clearPublicLiveCache } from "./useCases";
 
 const fixtures = createFixtures();
@@ -127,19 +132,81 @@ describe("GET /public/v1/:churchSlug/live", () => {
     expect(recorded.requests).toHaveLength(requestsAfterFirst);
   });
 
-  test("a platform that cannot answer is a 503 that is not remembered", async () => {
-    const failing = createYoutubePlatform({
-      apiKey: RECORDED_YOUTUBE_API_KEY,
-      fetch: async () => new Response("down", { status: 500 }),
-    });
-    setVideoPlatformForTests(failing);
-    await setChannel(IDS.liveChannelId);
-    const down = await getLive();
-    expect(down.status).toBe(503);
-    // An error is never cached by the CDN.
-    expect(down.headers.get("Cache-Control")).toBe("private, no-store");
+  describe("when the platform cannot answer", () => {
+    const DEGRADED_TTL_MS = 15 * 1000;
+    const warn = console.warn;
+    let warnings: unknown[][] = [];
 
-    setVideoPlatformForTests(recordedPlatform().platform);
-    expect((await getLive()).status).toBe(200);
+    beforeEach(() => {
+      warnings = [];
+      console.warn = (...args: unknown[]) => {
+        warnings.push(args);
+      };
+    });
+
+    afterEach(() => {
+      console.warn = warn;
+      setSystemTime();
+    });
+
+    function failingPlatform() {
+      const requests: string[] = [];
+      const platform = createYoutubePlatform({
+        apiKey: RECORDED_YOUTUBE_API_KEY,
+        fetch: async (input) => {
+          requests.push(input);
+          return new Response("down", { status: 500 });
+        },
+      });
+      return { platform, requests };
+    }
+
+    test("it answers 200 not live, with a 15 second cache header, and logs a warning", async () => {
+      setVideoPlatformForTests(failingPlatform().platform);
+      await setChannel(IDS.liveChannelId);
+      const res = await getLive();
+      expect(res.status).toBe(200);
+      expect(await res.json()).toEqual({ live: false });
+      expect(res.headers.get("Cache-Control")).toBe(
+        PUBLIC_LIVE_DEGRADED_CACHE_CONTROL,
+      );
+      expect(PUBLIC_LIVE_DEGRADED_CACHE_CONTROL).toBe("public, s-maxage=15");
+      expect(warnings).toHaveLength(1);
+      expect(warnings[0]?.[0]).toBe(
+        "Live status unavailable, answering not live",
+      );
+    });
+
+    test("the failure is remembered for 15 seconds, not 60", async () => {
+      const { platform, requests } = failingPlatform();
+      setVideoPlatformForTests(platform);
+      await setChannel(IDS.liveChannelId);
+      await getLive();
+      const requestsAfterFailure = requests.length;
+      await getLive();
+      expect(requests).toHaveLength(requestsAfterFailure);
+
+      // The platform is back: once the 15 seconds pass the answer is read again, and a good
+      // answer carries the normal 60 second header.
+      setVideoPlatformForTests(recordedPlatform().platform);
+      setSystemTime(new Date(Date.now() + DEGRADED_TTL_MS + 1000));
+      const recovered = await getLive();
+      expect(recovered.status).toBe(200);
+      expect(await recovered.json()).toMatchObject({ live: true });
+      expect(recovered.headers.get("Cache-Control")).toBe(
+        PUBLIC_LIVE_CACHE_CONTROL,
+      );
+    });
+
+    test("a good answer is still kept for the full minute", async () => {
+      const { platform, recorded } = recordedPlatform();
+      setVideoPlatformForTests(platform);
+      await setChannel(IDS.liveChannelId);
+      await getLive();
+      const requestsAfterFirst = recorded.requests.length;
+      setSystemTime(new Date(Date.now() + DEGRADED_TTL_MS + 1000));
+      await getLive();
+      expect(recorded.requests).toHaveLength(requestsAfterFirst);
+    });
   });
 });
