@@ -1,1 +1,1 @@
-export { originalKey, variantKey } from "./mediaKey";
+export { documentKey, originalKey, variantKey } from "./mediaKey";

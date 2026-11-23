@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import {
   AUDIT_ACTIONS,
+  isImageContentType,
   type MediaFileDto,
   mediaPurposeOf,
 } from "@ancla/contracts";
@@ -22,6 +23,7 @@ import {
 } from "../../data";
 import {
   detectContentType,
+  documentKey,
   type StoredVariant,
   variantKey,
 } from "../../domain";
@@ -94,6 +96,7 @@ async function publishVariants(
   row: MediaFile,
   bytes: Uint8Array,
   stored: StoredVariant[],
+  publishedKeys: string[],
 ): Promise<void> {
   const publicStorage = getStorage("public");
   const rendered = await renderVariants(bytes).catch((error: unknown) => {
@@ -114,6 +117,7 @@ async function publishVariants(
       contentType: `image/${variant.format}`,
       cacheControl: IMMUTABLE_CACHE_CONTROL,
     });
+    publishedKeys.push(key);
     stored.push({
       width: variant.width,
       height: variant.height,
@@ -124,32 +128,51 @@ async function publishVariants(
   }
 }
 
+/** A public document is served as it was uploaded: the verified original, no variants. */
+async function publishDocument(
+  row: MediaFile,
+  bytes: Uint8Array,
+  publishedKeys: string[],
+): Promise<void> {
+  const key = documentKey(row.organizationId, row.id);
+  await getStorage("public").put({
+    key,
+    body: bytes,
+    contentType: row.contentType,
+    cacheControl: IMMUTABLE_CACHE_CONTROL,
+  });
+  publishedKeys.push(key);
+}
+
 async function verifyAndPublish(row: MediaFile): Promise<{
   verified: VerifiedFile;
-  stored: StoredVariant[];
+  publishedKeys: string[];
 }> {
   const { size, checksum, bytes } = await verifyOriginal(row);
   const stored: StoredVariant[] = [];
+  const publishedKeys: string[] = [];
   if (mediaPurposeOf(row.purpose).visibility === "public") {
     try {
-      await publishVariants(row, bytes, stored);
+      if (isImageContentType(row.contentType)) {
+        await publishVariants(row, bytes, stored, publishedKeys);
+      } else {
+        await publishDocument(row, bytes, publishedKeys);
+      }
     } catch (error) {
-      // Do not leave half of a variant set in the public bucket.
-      await removeVariants(stored);
+      // Do not leave half of a published set in the public bucket.
+      await removePublished(publishedKeys);
       throw error;
     }
   }
   return {
     verified: { size, checksum, variants: stored.length > 0 ? stored : null },
-    stored,
+    publishedKeys,
   };
 }
 
-async function removeVariants(variants: StoredVariant[]): Promise<void> {
+async function removePublished(keys: string[]): Promise<void> {
   const publicStorage = getStorage("public");
-  await Promise.allSettled(
-    variants.map((variant) => publicStorage.delete(variant.key)),
-  );
+  await Promise.allSettled(keys.map((key) => publicStorage.delete(key)));
 }
 
 /** Deletes the object and the row, audits the rejection, and answers 422. */
@@ -203,7 +226,7 @@ async function markReady(
 
 /**
  * Proves the quarantined upload is what was declared (size, then real type by magic bytes, then
- * SHA-256), publishes the variants of a public image and marks the file ready. Only the uploader
+ * SHA-256), publishes the variants of a public image (or the original of a public document) and marks the file ready. Only the uploader
  * may finalize, and only once. Anything that fails verification is deleted, never kept.
  */
 export async function finalizeUpload(
@@ -228,9 +251,9 @@ export async function finalizeUpload(
   try {
     return await markReady(ctx, row, published.verified);
   } catch (error) {
-    // Variant keys are deterministic: after a lost race the winner owns those very objects.
+    // Published keys are deterministic: after a lost race the winner owns those very objects.
     if (!(error instanceof ConflictError))
-      await removeVariants(published.stored);
+      await removePublished(published.publishedKeys);
     throw error;
   }
 }

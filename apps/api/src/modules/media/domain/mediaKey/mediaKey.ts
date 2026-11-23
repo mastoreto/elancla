@@ -17,3 +17,8 @@ export function variantKey(
 ): string {
   return `${organizationId}/${fileId}/${width}.${format}`;
 }
+
+/** Key of a public document (PDF) in the public bucket: a verified copy of the original. */
+export function documentKey(organizationId: string, fileId: string): string {
+  return `${organizationId}/${fileId}/document.pdf`;
+}
