@@ -14,6 +14,9 @@ import {
   publicPeopleQuery,
   publicPersonDto,
   publicPostDto,
+  publicSermonDto,
+  publicSermonIndexDto,
+  publicSermonQuery,
   publicSiteSettingsDto,
   publicVisitDto,
   recordPostViewBody,
@@ -37,6 +40,8 @@ import {
   getPublicPages,
   getPublicPeople,
   getPublicPost,
+  getPublicSermon,
+  getPublicSermonIndex,
   getPublicSiteSettings,
   getPublicVisit,
   recordPublicPostView,
@@ -244,6 +249,45 @@ const calendarRoute = createRoute({
   },
 });
 
+const sermonsRoute = createRoute({
+  method: "get",
+  path: "/{churchSlug}/sermons",
+  tags: ["sermons"],
+  summary:
+    "The sermons index: published sermons, featured, series, preachers and cited books.",
+  middleware: [requireSiteKey],
+  request: { params: churchParams, query: publicSermonQuery },
+  responses: {
+    200: jsonResponse("The sermons index", publicSermonIndexDto),
+    400: problemResponse("The locale is not valid"),
+    401: problemResponse(
+      "The site key is missing, invalid or not for this church",
+    ),
+    404: problemResponse("The church was not found"),
+  },
+});
+
+const sermonRoute = createRoute({
+  method: "get",
+  path: "/{churchSlug}/sermons/{slug}",
+  tags: ["sermons"],
+  summary:
+    "A published sermon by its slug (in any of its languages), in the requested language.",
+  middleware: [requireSiteKey],
+  request: {
+    params: churchParams.extend({ slug: z.string() }),
+    query: publicSermonQuery,
+  },
+  responses: {
+    200: jsonResponse("The sermon", publicSermonDto),
+    400: problemResponse("The locale is not valid"),
+    401: problemResponse(
+      "The site key is missing, invalid or not for this church",
+    ),
+    404: problemResponse("There is no published sermon with that slug"),
+  },
+});
+
 /** One bucket per forwarded visitor address; the web forwards the visitor's, not its own. */
 const POST_VIEWS_RATE_LIMIT = {
   name: "post-views",
@@ -372,6 +416,25 @@ export const publicRoutes = createRouter()
     });
     c.header("Cache-Control", PUBLIC_CACHE_CONTROL);
     return c.json(calendar, 200);
+  })
+  .openapi(sermonsRoute, async (c) => {
+    const { organizationId } = c.get("ctx");
+    const index = await getPublicSermonIndex({
+      organizationId: organizationId as string,
+      requestedLocale: c.req.valid("query").locale,
+    });
+    c.header("Cache-Control", PUBLIC_CACHE_CONTROL);
+    return c.json(index, 200);
+  })
+  .openapi(sermonRoute, async (c) => {
+    const { organizationId } = c.get("ctx");
+    const sermon = await getPublicSermon({
+      organizationId: organizationId as string,
+      slug: c.req.valid("param").slug,
+      requestedLocale: c.req.valid("query").locale,
+    });
+    c.header("Cache-Control", PUBLIC_CACHE_CONTROL);
+    return c.json(sermon, 200);
   })
   .openapi(postViewRoute, async (c) => {
     const { organizationId } = c.get("ctx");

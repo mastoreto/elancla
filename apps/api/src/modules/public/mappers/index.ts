@@ -13,5 +13,13 @@ export {
   toPublicPostSummaryDto,
 } from "./toPublicPostSummaryDto";
 export { toPublicSeriesDto } from "./toPublicSeriesDto";
+export { toPublicSermonAttachment } from "./toPublicSermonAttachment";
+export { toPublicImageCover, toPublicSermonCover } from "./toPublicSermonCover";
+export { toPublicSermonDto } from "./toPublicSermonDto";
+export {
+  byNewestPreached,
+  toPublicSermonIndexDto,
+} from "./toPublicSermonIndexDto";
+export { toPublicSermonSummaryDto } from "./toPublicSermonSummaryDto";
 export { toPublicSiteSettingsDto } from "./toPublicSiteSettingsDto";
 export { toPublicVisitDto } from "./toPublicVisitDto";
