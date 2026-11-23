@@ -22,6 +22,7 @@ const TITLES: Record<number, string> = {
   409: "Conflict",
   422: "Unprocessable Content",
   429: "Too Many Requests",
+  503: "Service Unavailable",
 };
 
 function problem(

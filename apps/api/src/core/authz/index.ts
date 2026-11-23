@@ -9,6 +9,7 @@ export { loadAccess } from "./loadAccess";
 export { lockRole, lockRoles } from "./lockRole";
 export { mergeGrants } from "./mergeGrants";
 export { mergeSessionPolicy } from "./mergeSessionPolicy";
+export { requireAnyPermission } from "./requireAnyPermission";
 export { requirePermission } from "./requirePermission";
 export {
   findUnguardedRoutes,

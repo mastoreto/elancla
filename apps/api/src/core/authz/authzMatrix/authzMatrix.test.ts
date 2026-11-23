@@ -1559,6 +1559,110 @@ const rows: MatrixRow[] = [
     expected: 403,
   },
 
+  // sermons: view lists, create makes a sermon from a video, delete removes one that is not live.
+  // The video lookup and the channel suggestions are open to whoever may create a sermon or a
+  // podcast episode. With no YOUTUBE_API_KEY in the test environment a permitted call that gets
+  // past validation is a 503.
+  ...(
+    [
+      ["GET", "/content/sermons", undefined],
+      ["POST", "/content/sermons", {}],
+      ["DELETE", `/content/sermons/${UNKNOWN_ID}`, undefined],
+      ["POST", "/content/platform-lookup", {}],
+      ["GET", "/content/platform/suggestions", undefined],
+    ] as const
+  ).flatMap(([method, path, body]): MatrixRow[] => [
+    {
+      who: "anonymous",
+      caller: "anonymous",
+      method,
+      path,
+      body,
+      expected: 401,
+    },
+    { who: "no role", caller: NOTHING, method, path, body, expected: 403 },
+    {
+      who: PERMISSIONS.ministryFinance.view,
+      caller: [grant(PERMISSIONS.ministryFinance.view, "all")],
+      method,
+      path,
+      body,
+      expected: 403,
+    },
+  ]),
+  {
+    who: PERMISSIONS.sermons.view,
+    caller: [grant(PERMISSIONS.sermons.view)],
+    method: "GET",
+    path: "/content/sermons",
+    expected: 200,
+  },
+  ...(
+    [
+      ["POST", "/content/sermons", {}],
+      ["DELETE", `/content/sermons/${UNKNOWN_ID}`, undefined],
+      ["POST", "/content/platform-lookup", {}],
+      ["GET", "/content/platform/suggestions", undefined],
+    ] as const
+  ).map(
+    ([method, path, body]): MatrixRow => ({
+      who: PERMISSIONS.sermons.view,
+      caller: [grant(PERMISSIONS.sermons.view)],
+      method,
+      path,
+      body,
+      expected: 403,
+    }),
+  ),
+  {
+    who: PERMISSIONS.sermons.create,
+    caller: [grant(PERMISSIONS.sermons.create)],
+    method: "GET",
+    path: "/content/sermons",
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.sermons.create,
+    caller: [grant(PERMISSIONS.sermons.create)],
+    method: "POST",
+    path: "/content/sermons",
+    body: {},
+    expected: 400,
+  },
+  {
+    who: PERMISSIONS.sermons.create,
+    caller: [grant(PERMISSIONS.sermons.create)],
+    method: "DELETE",
+    path: `/content/sermons/${UNKNOWN_ID}`,
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.sermons.delete,
+    caller: [grant(PERMISSIONS.sermons.delete)],
+    method: "DELETE",
+    path: `/content/sermons/${UNKNOWN_ID}`,
+    expected: 404,
+  },
+  ...(
+    [PERMISSIONS.sermons.create, PERMISSIONS.podcasts.create] as const
+  ).flatMap((permission): MatrixRow[] => [
+    {
+      who: permission,
+      caller: [grant(permission)],
+      method: "POST",
+      path: "/content/platform-lookup",
+      body: {},
+      expected: 400,
+    },
+    {
+      who: permission,
+      caller: [grant(permission)],
+      method: "GET",
+      path: "/content/platform/suggestions",
+      expected: 503,
+    },
+  ]),
+
   // The seeded admin holds everything, resources added later included.
   {
     who: "admin",

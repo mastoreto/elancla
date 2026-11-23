@@ -4,6 +4,7 @@ export {
   findLiveRevision,
   findLiveSnapshot,
   findWorkingRevision,
+  isUniqueViolation,
   type LiveSnapshot,
   listCurrentRevisionRows,
   listLiveSnapshots,
@@ -15,5 +16,6 @@ export { toRevisionSummaryDto } from "./mappers";
 export { EDITORIAL_TYPES } from "./registry";
 export { canSeeEvent } from "./registry/event";
 export { assertMediaValid } from "./registry/media";
+export { InvalidSermonReferenceError } from "./registry/sermon/errors";
 export { goLiveWorkingRevision } from "./useCases";
 export type { EditorialInput } from "./useCases/editorialState";

@@ -1,0 +1,1 @@
+export { withVideoPlatform } from "./withVideoPlatform";
