@@ -3,6 +3,7 @@ import {
   publicBlogQuery,
   publicCalendarDto,
   publicCalendarQuery,
+  publicLiveDto,
   publicLocaleQuery,
   publicMinistriesDto,
   publicMinistriesQuery,
@@ -34,6 +35,7 @@ import { requireSiteKey } from "./guards";
 import {
   getPublicBlogIndex,
   getPublicCalendar,
+  getPublicLive,
   getPublicMinistries,
   getPublicMinistry,
   getPublicPage,
@@ -50,6 +52,13 @@ import {
 /** Content is public by nature: the CDN may keep it a minute and serve it stale for five more. */
 export const PUBLIC_CACHE_CONTROL =
   "public, s-maxage=60, stale-while-revalidate=300";
+
+/**
+ * The live status moves faster than content: the CDN keeps it a minute (as the API does in
+ * memory) and may serve it stale only for half of that.
+ */
+export const PUBLIC_LIVE_CACHE_CONTROL =
+  "public, s-maxage=60, stale-while-revalidate=30";
 
 const churchParams = z.object({ churchSlug: z.string() });
 
@@ -288,6 +297,23 @@ const sermonRoute = createRoute({
   },
 });
 
+const liveRoute = createRoute({
+  method: "get",
+  path: "/{churchSlug}/live",
+  tags: ["sermons"],
+  summary:
+    "Whether the church's channel is streaming right now (not live when there is no channel or no platform key).",
+  middleware: [requireSiteKey],
+  request: { params: churchParams },
+  responses: {
+    200: jsonResponse("The live status", publicLiveDto),
+    401: problemResponse(
+      "The site key is missing, invalid or not for this church",
+    ),
+    503: problemResponse("The video platform could not answer"),
+  },
+});
+
 /** One bucket per forwarded visitor address; the web forwards the visitor's, not its own. */
 const POST_VIEWS_RATE_LIMIT = {
   name: "post-views",
@@ -435,6 +461,12 @@ export const publicRoutes = createRouter()
     });
     c.header("Cache-Control", PUBLIC_CACHE_CONTROL);
     return c.json(sermon, 200);
+  })
+  .openapi(liveRoute, async (c) => {
+    const { organizationId } = c.get("ctx");
+    const live = await getPublicLive(organizationId as string);
+    c.header("Cache-Control", PUBLIC_LIVE_CACHE_CONTROL);
+    return c.json(live, 200);
   })
   .openapi(postViewRoute, async (c) => {
     const { organizationId } = c.get("ctx");

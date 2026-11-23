@@ -1,5 +1,6 @@
 export { getPublicBlogIndex } from "./getPublicBlogIndex";
 export { getPublicCalendar } from "./getPublicCalendar";
+export { clearPublicLiveCache, getPublicLive } from "./getPublicLive";
 export { getPublicMinistries } from "./getPublicMinistries";
 export { getPublicMinistry } from "./getPublicMinistry";
 export { getPublicPage } from "./getPublicPage";
