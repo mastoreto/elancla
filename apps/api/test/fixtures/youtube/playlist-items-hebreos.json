@@ -1,0 +1,121 @@
+{
+  "kind": "youtube#playlistItemListResponse",
+  "etag": "recorded",
+  "pageInfo": {
+    "totalResults": 3,
+    "resultsPerPage": 3
+  },
+  "items": [
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "etag-pi-Xr2hP9vKq1M",
+      "id": "pi-Xr2hP9vKq1M",
+      "snippet": {
+        "publishedAt": "2026-09-02T10:00:00Z",
+        "channelId": "UCqQ0ff1ineCh4nnelXyZ_93",
+        "title": "La fe que permanece | Serie Firmes en la tormenta",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Iglesia El Ancla",
+        "playlistId": "PLb7Nn2Kd5Xs8Fq1Hj4Lm6Pw9Rt0Vy3Za",
+        "position": 0,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "Xr2hP9vKq1M"
+        }
+      },
+      "contentDetails": {
+        "videoId": "Xr2hP9vKq1M",
+        "videoPublishedAt": "2026-11-15T15:30:12Z"
+      },
+      "status": {
+        "privacyStatus": "public"
+      }
+    },
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "etag-pi-Sd7kJ4bTe-9",
+      "id": "pi-Sd7kJ4bTe-9",
+      "snippet": {
+        "publishedAt": "2026-09-02T10:00:00Z",
+        "channelId": "UCqQ0ff1ineCh4nnelXyZ_93",
+        "title": "Esperanza firme | Serie Firmes en la tormenta",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Sd7kJ4bTe-9/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Sd7kJ4bTe-9/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Iglesia El Ancla",
+        "playlistId": "PLb7Nn2Kd5Xs8Fq1Hj4Lm6Pw9Rt0Vy3Za",
+        "position": 1,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "Sd7kJ4bTe-9"
+        }
+      },
+      "contentDetails": {
+        "videoId": "Sd7kJ4bTe-9",
+        "videoPublishedAt": "2026-11-08T15:30:00Z"
+      },
+      "status": {
+        "privacyStatus": "public"
+      }
+    },
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "etag-pi-Zt4mLk9Pr2D",
+      "id": "pi-Zt4mLk9Pr2D",
+      "snippet": {
+        "publishedAt": "2026-09-02T10:00:00Z",
+        "channelId": "UCqQ0ff1ineCh4nnelXyZ_93",
+        "title": "A video that is in no sermons playlist",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Zt4mLk9Pr2D/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Zt4mLk9Pr2D/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Iglesia El Ancla",
+        "playlistId": "PLb7Nn2Kd5Xs8Fq1Hj4Lm6Pw9Rt0Vy3Za",
+        "position": 2,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "Zt4mLk9Pr2D"
+        }
+      },
+      "contentDetails": {
+        "videoId": "Zt4mLk9Pr2D",
+        "videoPublishedAt": "2026-10-01T15:30:00Z"
+      },
+      "status": {
+        "privacyStatus": "public"
+      }
+    }
+  ]
+}

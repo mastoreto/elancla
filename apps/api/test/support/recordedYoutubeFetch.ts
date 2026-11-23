@@ -26,6 +26,12 @@ const RECORDED_RESPONSES: Record<string, string> = {
   [`playlistItems?playlistId=${IDS.playlistId}`]: "playlist-items-page-1",
   [`playlistItems?playlistId=${IDS.playlistId}&pageToken=CAMQAA`]:
     "playlist-items-page-2",
+  // The series playlists of the channel and the details of the four videos of `playlistId`.
+  [`playlistItems?playlistId=${IDS.channelPlaylistIds[1]}`]:
+    "playlist-items-hebreos",
+  [`playlistItems?playlistId=${IDS.channelPlaylistIds[2]}`]:
+    "playlist-items-navidad",
+  [`videos?id=${IDS.playlistVideoIds.join(",")}`]: "videos-playlist-batch",
   [`playlists?channelId=${IDS.offlineChannelId}`]: "channel-playlists-page-1",
   [`playlists?channelId=${IDS.offlineChannelId}&pageToken=CAIQAA`]:
     "channel-playlists-page-2",

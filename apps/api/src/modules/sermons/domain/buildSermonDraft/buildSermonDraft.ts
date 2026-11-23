@@ -6,7 +6,7 @@ import {
 } from "@ancla/contracts";
 import type { VideoInfo } from "../../../../core/platforms";
 import { urlDate } from "../../../blog";
-import { slugifyTitle } from "../slugifyTitle";
+import { pickFreeSlug, slugifyTitle } from "../slugifyTitle";
 import { truncateText } from "../truncateText";
 
 export interface SermonDraftInput {
@@ -16,6 +16,8 @@ export interface SermonDraftInput {
   /** IANA zone: `preachedOn` is the day the video went up in the church's own time. */
   timezone: string;
   series?: { id: string; order: number };
+  /** Slugs the default language already uses: the draft takes the next free one. */
+  takenSlugs?: ReadonlySet<string>;
 }
 
 /**
@@ -28,6 +30,7 @@ export function buildSermonDraft({
   locale,
   timezone,
   series,
+  takenSlugs = new Set(),
 }: SermonDraftInput): SermonSnapshot {
   const title = truncateText(video.title, SERMON_TITLE_MAX_LENGTH);
   const summary = truncateText(video.description, SERMON_SUMMARY_MAX_LENGTH);
@@ -35,7 +38,7 @@ export function buildSermonDraft({
     translations: {
       [locale]: {
         title,
-        slug: slugifyTitle(title),
+        slug: pickFreeSlug(slugifyTitle(title), takenSlugs),
         ...(summary === "" ? {} : { summary }),
       },
     },

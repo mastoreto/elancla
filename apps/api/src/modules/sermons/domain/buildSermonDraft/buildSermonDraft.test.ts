@@ -50,6 +50,18 @@ describe("buildSermonDraft", () => {
     expect(empty.translations.es?.summary).toBeUndefined();
   });
 
+  test("takes the next free slug when the title's one is already in use", () => {
+    const draft = buildSermonDraft({
+      video,
+      locale: "es",
+      timezone: "UTC",
+      takenSlugs: new Set(["la-fe-que-permanece-serie-firmes-en-la-tormenta"]),
+    });
+    expect(draft.translations.es?.slug).toBe(
+      "la-fe-que-permanece-serie-firmes-en-la-tormenta-2",
+    );
+  });
+
   test("puts the sermon in its series at the given position", () => {
     const draft = buildSermonDraft({
       video,
