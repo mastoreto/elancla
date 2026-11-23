@@ -45,7 +45,7 @@ apps/api/
     │   ├── storage/                     # puerto FileStorage (uno por bucket), adaptador S3 (createS3Storage), getStorage, getStorageEnv y suite de contrato
     │   ├── ids/                         # uuidV7 (cuando la clave del objeto se deriva del id antes del insert)
     │   ├── mail/                        # interfaz Mailer + adaptador SMTP (Mailpit en dev); plantillas en packages/emails
-    │   └── platforms/                   # puerto VideoPlatform (1.7a): createYoutubePlatform({ apiKey, fetch }), getVideoPlatform/setVideoPlatformForTests, PlatformRequestError (transporte → 503) y suite de contrato runVideoPlatformContract; PodcastPlatform llega con el adaptador de Spotify
+    │   └── platforms/                   # puerto VideoPlatform (1.7a): createYoutubePlatform({ apiKey, fetch }) con getVideo(s), listRecentUploads, listPlaylistVideos y listChannelPlaylists (paginados, tope 500), getPlaylist y getLiveStream, getVideoPlatform/setVideoPlatformForTests, PlatformRequestError (transporte → 503; en `live`, 200 `{ live: false }` con caché de 15 s) y suite de contrato runVideoPlatformContract; PodcastPlatform llega con el adaptador de Spotify
     │
     ├── modules/
     │   ├── identity/

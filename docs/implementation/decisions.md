@@ -593,13 +593,17 @@ entre series vivas (índice único parcial) y la importación responde 422 `inva
 `playlist_not_found` y 409 `playlist_already_imported`. Borrar una serie con sermones es 409 `series_in_use`;
 borrar un sermón con revisión viva, 409 `sermon_live`. Sin `YOUTUBE_API_KEY` la precarga es 503
 `platform_unavailable`; un fallo de transporte del adaptador (`PlatformRequestError`: red, cuota, clave
-rechazada) también se traduce a 503 y nunca se cachea como "no en vivo". Con una API key YouTube omite los
+rechazada) también se traduce a 503, salvo en el "en vivo" público: ahí responde 200 `{ live: false }` y lo
+cachea solo 15 s (`PlatformRequestError` → `warn`, sin 503; el éxito sigue 60 s). Con una API key YouTube omite los
 videos privados, así que `video_private` casi no se detecta: lo normal es `video_not_found`. Los PDFs usan el
 propósito de media `contentDocument` (público, 20 MB, `content.sermons:edit`). Las rutas de sermones tienen su
 propio tipo de app (`SermonsAppType`) para no pasar el límite de instanciación de `hc<AppType>`. Un cron diario
-(`GET /internal/platforms/refresh`, 05:00, `requireCronSecret`) refresca las métricas. El script de importación
-inicial (`importYoutubeSermons`) queda pendiente de decisión: el puerto del plan no puede listar los videos de
-una playlist ni las playlists del canal.
+(`GET /internal/platforms/refresh`, 05:00, `requireCronSecret`) refresca las métricas. El puerto sumó `listPlaylistVideos` y
+`listChannelPlaylists` (tope 500, paginados, 1 unidad de cuota por página de 50) para el script de importación
+inicial `importYoutubeSermons` (`bun run --filter @ancla/api import:sermons -- --org <slug> --playlist <id>
+[--dry-run]`): idempotente, crea los sermones publicados con la primitiva de go-live del motor (autor de la revisión y
+actor del go-live: el admin más antiguo de la organización; `sermon.imported` con el actor de sistema `import:sermons`) y
+vincula las series desde las playlists del canal; se corre en la 1.10.
 
 ## D-36 — Podcasts
 
