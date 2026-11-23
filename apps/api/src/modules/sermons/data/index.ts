@@ -7,10 +7,13 @@ export {
   createSermonLinkRow,
   deleteSermonLinks,
   findLinkedVideoIds,
+  findSermonLink,
   isVideoLinked,
   listSermonLinks,
+  listYoutubeLinkBatch,
   type NewSermonLink,
   type PlatformLinkRow,
+  updatePlatformLinkFields,
 } from "./platformLinksRepository";
 export {
   createMinimalSeriesRow,

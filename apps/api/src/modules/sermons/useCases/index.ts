@@ -10,4 +10,6 @@ export {
 export { listSermonSeries } from "./listSermonSeries";
 export { listSermons } from "./listSermons";
 export { lookupVideo } from "./lookupVideo";
+export { refreshPlatformLinks } from "./refreshPlatformLinks";
+export { refreshSermonPlatform } from "./refreshSermonPlatform";
 export { updateSermonSeries } from "./updateSermonSeries";

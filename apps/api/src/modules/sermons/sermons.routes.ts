@@ -2,6 +2,7 @@ import {
   createSermonBody,
   createSermonResponse,
   PERMISSIONS,
+  platformLinkDto,
   sermonListDto,
 } from "@ancla/contracts";
 import { createRoute, z } from "@hono/zod-openapi";
@@ -14,7 +15,12 @@ import {
   jsonResponse,
   problemResponse,
 } from "../../core/openapi";
-import { createSermon, deleteSermon, listSermons } from "./useCases";
+import {
+  createSermon,
+  deleteSermon,
+  listSermons,
+  refreshSermonPlatform,
+} from "./useCases";
 
 const TAGS = ["sermons"];
 
@@ -78,6 +84,23 @@ const deleteRoute = createRoute({
   },
 });
 
+const refreshRouteDef = createRoute({
+  method: "post",
+  path: "/content/sermons/{id}/platform/refresh",
+  tags: TAGS,
+  summary:
+    "Read the video again and rewrite its platform data (cover, duration, views, original date). The sermon's text is never touched.",
+  middleware: [requireSession, requirePermission(PERMISSIONS.sermons.edit)],
+  request: { params: idParams },
+  responses: {
+    200: jsonResponse("The platform data after the refresh", platformLinkDto),
+    404: problemResponse("The sermon, or its video, does not exist"),
+    422: problemResponse("The video is private now (video_private)"),
+    503: problemResponse("No video platform to ask (platform_unavailable)"),
+    ...guardedResponses,
+  },
+});
+
 export const sermonsRoutes = createRouter()
   .openapi(listRoute, async (c) =>
     c.json(
@@ -89,6 +112,15 @@ export const sermonsRoutes = createRouter()
     c.json(
       await createSermon(asAuthenticated(c.get("ctx")), c.req.valid("json")),
       201,
+    ),
+  )
+  .openapi(refreshRouteDef, async (c) =>
+    c.json(
+      await refreshSermonPlatform(
+        asAuthenticated(c.get("ctx")),
+        c.req.valid("param").id,
+      ),
+      200,
     ),
   )
   .openapi(deleteRoute, async (c) => {

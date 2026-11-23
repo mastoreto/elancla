@@ -1000,6 +1000,21 @@ const rows: MatrixRow[] = [
     expected: 401,
   },
 
+  {
+    who: "anonymous",
+    caller: "anonymous",
+    method: "GET",
+    path: "/internal/platforms/refresh",
+    expected: 401,
+  },
+  {
+    who: "admin (a session is not the cron secret)",
+    caller: ["admin"],
+    method: "GET",
+    path: "/internal/platforms/refresh",
+    expected: 401,
+  },
+
   // editorial: each route is guarded by the permission of the content type (blog posts here).
   ...(
     [
@@ -1662,6 +1677,36 @@ const rows: MatrixRow[] = [
       expected: 503,
     },
   ]),
+
+  // Refreshing the platform data of one sermon changes it: it asks for edit, view is not enough.
+  {
+    who: "anonymous",
+    caller: "anonymous",
+    method: "POST",
+    path: `/content/sermons/${UNKNOWN_ID}/platform/refresh`,
+    expected: 401,
+  },
+  {
+    who: "no role",
+    caller: NOTHING,
+    method: "POST",
+    path: `/content/sermons/${UNKNOWN_ID}/platform/refresh`,
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.sermons.view,
+    caller: [grant(PERMISSIONS.sermons.view)],
+    method: "POST",
+    path: `/content/sermons/${UNKNOWN_ID}/platform/refresh`,
+    expected: 403,
+  },
+  {
+    who: PERMISSIONS.sermons.edit,
+    caller: [grant(PERMISSIONS.sermons.edit)],
+    method: "POST",
+    path: `/content/sermons/${UNKNOWN_ID}/platform/refresh`,
+    expected: 404,
+  },
 
   // sermon series: view lists, edit creates, imports, changes and deletes.
   ...(

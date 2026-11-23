@@ -77,3 +77,44 @@ export async function deleteSermonLinks(
     where: { organizationId, entityType: "SERMON", entityId: sermonId },
   });
 }
+
+/** The YouTube link of a sermon, or `null`. */
+export function findSermonLink(
+  client: Client,
+  organizationId: string,
+  sermonId: string,
+): Promise<PlatformLinkRow | null> {
+  return client.platformLink.findFirst({
+    where: {
+      organizationId,
+      entityType: "SERMON",
+      entityId: sermonId,
+      platform: "YOUTUBE",
+    },
+  });
+}
+
+/** Rewrites what the platform says about a link; nothing edited anywhere else is touched. */
+export function updatePlatformLinkFields(
+  client: Client,
+  id: string,
+  fields: PlatformLinkFields,
+): Promise<PlatformLinkRow> {
+  return client.platformLink.update({ where: { id }, data: fields });
+}
+
+/**
+ * The next batch of YouTube links of every organization, by id after `afterId` (the cron job
+ * works across tenants: it has no organization).
+ */
+export function listYoutubeLinkBatch(
+  afterId: string | null,
+  size: number,
+): Promise<{ id: string; externalId: string }[]> {
+  return db.platformLink.findMany({
+    where: { platform: "YOUTUBE", ...(afterId ? { id: { gt: afterId } } : {}) },
+    select: { id: true, externalId: true },
+    orderBy: { id: "asc" },
+    take: size,
+  });
+}

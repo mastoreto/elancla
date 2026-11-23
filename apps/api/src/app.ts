@@ -29,6 +29,7 @@ import { pagesRoutes } from "./modules/pages";
 import { peopleRoutes } from "./modules/people";
 import { publicRoutes } from "./modules/public";
 import {
+  platformsInternalRoutes,
   platformsRoutes,
   sermonSeriesRoutes,
   sermonsRoutes,
@@ -87,7 +88,8 @@ const calendarRoutes = createRouter()
 const sermonRoutes = createRouter()
   .route("/", sermonsRoutes)
   .route("/", sermonSeriesRoutes)
-  .route("/", platformsRoutes);
+  .route("/", platformsRoutes)
+  .route("/", platformsInternalRoutes);
 
 // Better Auth is mounted next to the typed routes but kept out of `AppType`: it has its own client.
 export const app = createApp()
