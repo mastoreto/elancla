@@ -24,6 +24,7 @@ const CONTENT_TYPE_LABELS: Record<EditorialContentTypeParam, string> = {
   ministry: "Ministerios",
   "simple-page": "Páginas",
   event: "Eventos",
+  sermon: "Sermones",
 };
 
 const editorialSettingsPanelSettingsPage = {

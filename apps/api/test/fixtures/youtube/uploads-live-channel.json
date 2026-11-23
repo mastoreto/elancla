@@ -1,0 +1,166 @@
+{
+  "kind": "youtube#playlistItemListResponse",
+  "etag": "recorded",
+  "pageInfo": {
+    "totalResults": 3,
+    "resultsPerPage": 3
+  },
+  "items": [
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "etag-pi-Lv3aZ8qWx1C",
+      "id": "item-Lv3aZ8qWx1C",
+      "contentDetails": {
+        "videoId": "Lv3aZ8qWx1C",
+        "videoPublishedAt": "2026-11-22T14:00:00Z"
+      },
+      "snippet": {
+        "publishedAt": "2026-11-22T14:00:00Z",
+        "channelId": "UCl1veCh4nnelAbcDefGhiJk",
+        "title": "EN VIVO | Culto de domingo",
+        "description": "Transmisión en directo.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Lv3aZ8qWx1C/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/Lv3aZ8qWx1C/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Lv3aZ8qWx1C/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/Lv3aZ8qWx1C/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/Lv3aZ8qWx1C/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "Iglesia El Ancla",
+        "playlistId": "UUl1veCh4nnelAbcDefGhiJk",
+        "position": 0,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "Lv3aZ8qWx1C"
+        }
+      },
+      "status": {
+        "privacyStatus": "public"
+      }
+    },
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "etag-pi-Xr2hP9vKq1M",
+      "id": "item-Xr2hP9vKq1M",
+      "contentDetails": {
+        "videoId": "Xr2hP9vKq1M",
+        "videoPublishedAt": "2026-11-15T15:30:12Z"
+      },
+      "snippet": {
+        "publishedAt": "2026-11-15T15:30:12Z",
+        "channelId": "UCqQ0ff1ineCh4nnelXyZ_93",
+        "title": "La fe que permanece | Serie Firmes en la tormenta",
+        "description": "Mensaje del domingo sobre Hebreos 11.\n\nSuscríbete y activa la campana.\nwww.elancla.example",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "Iglesia El Ancla",
+        "playlistId": "UUl1veCh4nnelAbcDefGhiJk",
+        "position": 1,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "Xr2hP9vKq1M"
+        }
+      },
+      "status": {
+        "privacyStatus": "public"
+      }
+    },
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "etag-pi-Sd7kJ4bTe-9",
+      "id": "item-Sd7kJ4bTe-9",
+      "contentDetails": {
+        "videoId": "Sd7kJ4bTe-9",
+        "videoPublishedAt": "2026-11-08T15:28:40Z"
+      },
+      "snippet": {
+        "publishedAt": "2026-11-08T15:28:40Z",
+        "channelId": "UCqQ0ff1ineCh4nnelXyZ_93",
+        "title": "Esperanza en medio de la prueba",
+        "description": "Segundo mensaje de la serie.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Sd7kJ4bTe-9/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/Sd7kJ4bTe-9/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Sd7kJ4bTe-9/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/Sd7kJ4bTe-9/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/Sd7kJ4bTe-9/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "Iglesia El Ancla",
+        "playlistId": "UUl1veCh4nnelAbcDefGhiJk",
+        "position": 2,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "Sd7kJ4bTe-9"
+        }
+      },
+      "status": {
+        "privacyStatus": "public"
+      }
+    }
+  ]
+}

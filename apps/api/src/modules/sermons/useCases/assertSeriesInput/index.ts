@@ -1,0 +1,1 @@
+export { assertSeriesInput } from "./assertSeriesInput";

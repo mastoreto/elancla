@@ -29,7 +29,7 @@ import { getAuth } from "../../core/auth";
 import { getStorage, getStorageEnv } from "../../core/storage";
 import { resolveOrganizationId } from "../../core/tenancy";
 import { findMediaFileRow } from "./data";
-import { originalKey, variantKey } from "./domain";
+import { documentKey, originalKey, variantKey } from "./domain";
 
 const fixtures = createFixtures();
 const call = createApiCaller(fixtures);
@@ -45,6 +45,7 @@ const VARIANT_FORMATS = ["webp", "avif"] as const;
 let organizationId = "";
 let adminCookie = "";
 let editorCookie = "";
+let sermonEditorCookie = "";
 let otherEditorCookie = "";
 let clerkCookie = "";
 let clerkId = "";
@@ -64,6 +65,9 @@ beforeAll(async () => {
   adminCookie = (await signedIn("media-admin", ["admin"])).cookie;
   editorCookie = (
     await signedIn("media-editor", [grant(PERMISSIONS.content.create)])
+  ).cookie;
+  sermonEditorCookie = (
+    await signedIn("media-sermon-editor", [grant(PERMISSIONS.sermons.edit)])
   ).cookie;
   otherEditorCookie = (
     await signedIn("media-editor2", [grant(PERMISSIONS.content.create)])
@@ -86,6 +90,7 @@ afterAll(async () => {
   const publicStorage = getStorage("public");
   for (const id of createdIds) {
     await privateStorage.delete(originalKey(organizationId, id));
+    await publicStorage.delete(documentKey(organizationId, id));
     for (const width of VARIANT_WIDTHS) {
       for (const format of VARIANT_FORMATS) {
         await publicStorage.delete(
@@ -103,7 +108,7 @@ afterAll(async () => {
 
 interface UploadOptions {
   cookie: string;
-  purpose: "contentImage" | "voucherDocument";
+  purpose: "contentImage" | "contentDocument" | "voucherDocument";
   fileName: string;
   /** What the client claims. */
   contentType: string;
@@ -243,6 +248,30 @@ describe("POST /api/media/uploads", () => {
     expect(res.status).toBe(403);
   });
 
+  test("contentDocument asks for content.sermons:edit and only takes PDFs up to 20 MB", async () => {
+    const body = (contentType: string, size: number) => ({
+      purpose: "contentDocument",
+      contentType,
+      size,
+      fileName: "outline.pdf",
+    });
+    const denied = await call("POST", "/media/uploads", {
+      cookie: editorCookie,
+      body: body("application/pdf", 10),
+    });
+    const wrongType = await call("POST", "/media/uploads", {
+      cookie: sermonEditorCookie,
+      body: body("image/png", 10),
+    });
+    const tooBig = await call("POST", "/media/uploads", {
+      cookie: sermonEditorCookie,
+      body: body("application/pdf", 21 * 1024 * 1024),
+    });
+    expect([denied.status, wrongType.status, tooBig.status]).toEqual([
+      403, 400, 400,
+    ]);
+  });
+
   test("400 for a type or a size outside the purpose", async () => {
     const wrongType = await call("POST", "/media/uploads", {
       cookie: editorCookie,
@@ -325,6 +354,45 @@ describe("POST /api/media/uploads/:id/finalize", () => {
     expect([...new Set(file.variants.map((variant) => variant.width))]).toEqual(
       [64],
     );
+  });
+
+  test("a public PDF is copied as it is to the public bucket, with no variants", async () => {
+    const bytes = await readMediaFixture("document.pdf");
+    const file = await uploadAndFinalize({
+      cookie: sermonEditorCookie,
+      purpose: "contentDocument",
+      fileName: "outline.pdf",
+      contentType: "application/pdf",
+      bytes,
+    });
+    expect(file.status).toBe("ready");
+    expect(file.variants).toEqual([]);
+
+    const publicUrl = `${getStorageEnv().MEDIA_PUBLIC_BASE_URL}/${documentKey(organizationId, file.id)}`;
+    const res = await fetch(publicUrl); // anonymous: no credentials
+    expect(res.status).toBe(200);
+    expect(res.headers.get("content-type")).toBe("application/pdf");
+    expect(new Uint8Array(await res.arrayBuffer())).toEqual(bytes);
+    // The quarantined original is still there, still private.
+    expect(await privateHas(file.id)).toBe(true);
+  });
+
+  test("a public PDF that is really HTML is rejected and leaves nothing public", async () => {
+    const ticket = await upload({
+      cookie: sermonEditorCookie,
+      purpose: "contentDocument",
+      fileName: "fake.pdf",
+      contentType: "application/pdf",
+      bytes: await readMediaFixture("page.html"),
+    });
+    await expectRejected(
+      ticket.id,
+      await finalize(ticket.id, sermonEditorCookie),
+      "contentTypeMismatch",
+    );
+    expect(
+      await getStorage("public").head(documentKey(organizationId, ticket.id)),
+    ).toBeNull();
   });
 
   test("a PDF declared as image/png is rejected and removed", async () => {

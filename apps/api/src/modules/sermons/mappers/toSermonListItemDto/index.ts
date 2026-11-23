@@ -1,0 +1,1 @@
+export { toSermonListItemDto } from "./toSermonListItemDto";

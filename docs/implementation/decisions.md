@@ -583,11 +583,38 @@ consentimiento (Ley 18.331). Envío **manual** desde el CRM (se arma eligiendo a
   (descripción, portada, tags). Si no existe al cargar un sermón, se crea en el momento y se edita
   después. Cantidad y fechas, calculadas.
 
+*Implementación (1.7a):* el sermón es un tipo editorial (`sermon`) con el snapshot como fuente: sin
+`SermonTranslation` ni `SermonPassage`; la fila `Sermon` es `{ id, organizationId, firstLiveAt? }` y los
+pasajes (≤6) y adjuntos PDF (≤3) viven en el snapshot. Lo que viene de YouTube (portada, duración, vistas,
+fecha original) vive en `PlatformLink`, así refrescarlo nunca pisa lo editado; el video es la identidad del
+sermón (`video_already_linked` si ya está cargado). `SermonSeries` se guarda directo con auditoría
+(`sermonSeries.*`, `sermon.*`), sin flujo editorial; `youtubePlaylistId` es único por organización solo
+entre series vivas (índice único parcial) y la importación responde 422 `invalid_playlist_id`, 404
+`playlist_not_found` y 409 `playlist_already_imported`. Borrar una serie con sermones es 409 `series_in_use`;
+borrar un sermón con revisión viva, 409 `sermon_live`. Sin `YOUTUBE_API_KEY` la precarga es 503
+`platform_unavailable`; un fallo de transporte del adaptador (`PlatformRequestError`: red, cuota, clave
+rechazada) también se traduce a 503, salvo en el "en vivo" público: ahí responde 200 `{ live: false }` y lo
+cachea solo 15 s (`PlatformRequestError` → `warn`, sin 503; el éxito sigue 60 s). Con una API key YouTube omite los
+videos privados, así que `video_private` casi no se detecta: lo normal es `video_not_found`. Los PDFs usan el
+propósito de media `contentDocument` (público, 20 MB, `content.sermons:edit`). Las rutas de sermones tienen su
+propio tipo de app (`SermonsAppType`) para no pasar el límite de instanciación de `hc<AppType>`. Un cron diario
+(`GET /internal/platforms/refresh`, 05:00, `requireCronSecret`) refresca las métricas. El puerto sumó `listPlaylistVideos` y
+`listChannelPlaylists` (tope 500, paginados, 1 unidad de cuota por página de 50) para el script de importación
+inicial `importYoutubeSermons` (`bun run --filter @ancla/api import:sermons -- --org <slug> --playlist <id>
+[--dry-run]`): idempotente, crea los sermones publicados con la primitiva de go-live del motor (autor de la revisión y
+actor del go-live: el admin más antiguo de la organización; `sermon.imported` con el actor de sistema `import:sermons`) y
+vincula las series desde las playlists del canal; se corre en la 1.10.
+
 ## D-36 — Podcasts
 
 **Aceptada.** Uno o varios programas (hoy hay uno, aparte de las prédicas). Los episodios viven en
 plataformas externas (hoy YouTube; preparado para Spotify for Creators y otras) y se cargan igual que
 los sermones: por identificador, con precarga. Nunca se aloja audio propio.
+
+*Implementación (1.7a, solo lo que ya queda fijado):* el puerto `VideoPlatform` (`core/platforms`) tiene el
+adaptador de YouTube y se reusa para los episodios; no habrá `PodcastPlatform` hasta que exista el adaptador de
+Spotify for Creators. Los enlaces por plataforma se guardan en `PlatformLink` (`entityType` `PODCAST_EPISODE`,
+`platform` `YOUTUBE | SPOTIFY | APPLE_PODCASTS`); los modelos de podcast llegan en 1.7d.
 
 ## D-37 — Galería diferida
 

@@ -50,6 +50,8 @@ const optionalText = (max: number = SHORT_TEXT_MAX_LENGTH) =>
   z.string().trim().max(max).nullable();
 // A social link ends up in an href: only web schemes.
 const httpUrl = z.url({ protocol: /^https?$/ }).max(URL_MAX_LENGTH);
+/** `UC` followed by 22 URL-safe characters: what the YouTube API calls a channel id. */
+export const YOUTUBE_CHANNEL_ID_PATTERN = /^UC[\w-]{22}$/;
 const HEX_COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/;
 
 const seoTranslationDto = z.strictObject({
@@ -80,6 +82,8 @@ export const siteSettingsDto = z.strictObject({
   twitter: z.string().nullable(),
   spotify: z.string().nullable(),
   linkedin: z.string().nullable(),
+  /** YouTube channel the sermon suggestions and the live status read from (`UC…`). */
+  youtubeChannelId: z.string().nullable(),
   /** Complete map: keys never configured come back as `active`. */
   sections: siteSectionsDto,
   translations: z.record(z.string(), seoTranslationDto),
@@ -116,6 +120,7 @@ const editableFields = z.strictObject({
   twitter: httpUrl.nullable(),
   spotify: httpUrl.nullable(),
   linkedin: httpUrl.nullable(),
+  youtubeChannelId: z.string().regex(YOUTUBE_CHANNEL_ID_PATTERN).nullable(),
   /** Replaces the whole map; a key left out falls back to `active`. */
   sections: siteSectionsDto.partial(),
   /** Replaces only the locales sent; locales the organization does not use are rejected (400). */

@@ -1,11 +1,14 @@
 export { getPublicBlogIndex } from "./getPublicBlogIndex";
 export { getPublicCalendar } from "./getPublicCalendar";
+export { clearPublicLiveCache, getPublicLive } from "./getPublicLive";
 export { getPublicMinistries } from "./getPublicMinistries";
 export { getPublicMinistry } from "./getPublicMinistry";
 export { getPublicPage } from "./getPublicPage";
 export { getPublicPages } from "./getPublicPages";
 export { getPublicPeople } from "./getPublicPeople";
 export { getPublicPost } from "./getPublicPost";
+export { getPublicSermon } from "./getPublicSermon";
+export { getPublicSermonIndex } from "./getPublicSermonIndex";
 export { getPublicSiteSettings } from "./getPublicSiteSettings";
 export { getPublicVisit } from "./getPublicVisit";
 export { recordPublicPostView } from "./recordPublicPostView";

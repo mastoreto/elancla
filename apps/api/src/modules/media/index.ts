@@ -1,3 +1,4 @@
+export { documentKey } from "./domain";
 export { requireCronSecret } from "./guards";
 export { mediaInternalRoutes } from "./internal.routes";
 export {

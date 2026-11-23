@@ -1,0 +1,47 @@
+{
+  "kind": "youtube#playlistItemListResponse",
+  "etag": "recorded",
+  "pageInfo": {
+    "totalResults": 1,
+    "resultsPerPage": 3
+  },
+  "items": [
+    {
+      "kind": "youtube#playlistItem",
+      "etag": "etag-pi-Qw8nBv3Cx6A",
+      "id": "pi-Qw8nBv3Cx6A",
+      "snippet": {
+        "publishedAt": "2026-09-02T10:00:00Z",
+        "channelId": "UCqQ0ff1ineCh4nnelXyZ_93",
+        "title": "Fe que obra | Serie Firmes en la tormenta",
+        "description": "",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Qw8nBv3Cx6A/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Qw8nBv3Cx6A/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Iglesia El Ancla",
+        "playlistId": "PLc2Wq5Er8Ty1Ui4Op7As0Df3Gh6Jk9Lz",
+        "position": 0,
+        "resourceId": {
+          "kind": "youtube#video",
+          "videoId": "Qw8nBv3Cx6A"
+        }
+      },
+      "contentDetails": {
+        "videoId": "Qw8nBv3Cx6A",
+        "videoPublishedAt": "2026-10-18T15:30:00Z"
+      },
+      "status": {
+        "privacyStatus": "public"
+      }
+    }
+  ]
+}

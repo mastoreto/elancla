@@ -13,4 +13,5 @@ export {
   siteSettingsDto,
   type UpdateSiteSettingsBody,
   updateSiteSettingsBody,
+  YOUTUBE_CHANNEL_ID_PATTERN,
 } from "./siteSettingsDto";

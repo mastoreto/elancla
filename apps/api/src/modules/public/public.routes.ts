@@ -3,6 +3,7 @@ import {
   publicBlogQuery,
   publicCalendarDto,
   publicCalendarQuery,
+  publicLiveDto,
   publicLocaleQuery,
   publicMinistriesDto,
   publicMinistriesQuery,
@@ -14,6 +15,9 @@ import {
   publicPeopleQuery,
   publicPersonDto,
   publicPostDto,
+  publicSermonDto,
+  publicSermonIndexDto,
+  publicSermonQuery,
   publicSiteSettingsDto,
   publicVisitDto,
   recordPostViewBody,
@@ -31,12 +35,15 @@ import { requireSiteKey } from "./guards";
 import {
   getPublicBlogIndex,
   getPublicCalendar,
+  getPublicLive,
   getPublicMinistries,
   getPublicMinistry,
   getPublicPage,
   getPublicPages,
   getPublicPeople,
   getPublicPost,
+  getPublicSermon,
+  getPublicSermonIndex,
   getPublicSiteSettings,
   getPublicVisit,
   recordPublicPostView,
@@ -45,6 +52,19 @@ import {
 /** Content is public by nature: the CDN may keep it a minute and serve it stale for five more. */
 export const PUBLIC_CACHE_CONTROL =
   "public, s-maxage=60, stale-while-revalidate=300";
+
+/**
+ * The live status moves faster than content: the CDN keeps it a minute (as the API does in
+ * memory) and may serve it stale only for half of that.
+ */
+export const PUBLIC_LIVE_CACHE_CONTROL =
+  "public, s-maxage=60, stale-while-revalidate=30";
+
+/**
+ * When the platform could not answer the status is "not live" as a guess: the CDN keeps it as
+ * long as the API does in memory (15 seconds) and never serves it stale.
+ */
+export const PUBLIC_LIVE_DEGRADED_CACHE_CONTROL = "public, s-maxage=15";
 
 const churchParams = z.object({ churchSlug: z.string() });
 
@@ -244,6 +264,61 @@ const calendarRoute = createRoute({
   },
 });
 
+const sermonsRoute = createRoute({
+  method: "get",
+  path: "/{churchSlug}/sermons",
+  tags: ["sermons"],
+  summary:
+    "The sermons index: published sermons, featured, series, preachers and cited books.",
+  middleware: [requireSiteKey],
+  request: { params: churchParams, query: publicSermonQuery },
+  responses: {
+    200: jsonResponse("The sermons index", publicSermonIndexDto),
+    400: problemResponse("The locale is not valid"),
+    401: problemResponse(
+      "The site key is missing, invalid or not for this church",
+    ),
+    404: problemResponse("The church was not found"),
+  },
+});
+
+const sermonRoute = createRoute({
+  method: "get",
+  path: "/{churchSlug}/sermons/{slug}",
+  tags: ["sermons"],
+  summary:
+    "A published sermon by its slug (in any of its languages), in the requested language.",
+  middleware: [requireSiteKey],
+  request: {
+    params: churchParams.extend({ slug: z.string() }),
+    query: publicSermonQuery,
+  },
+  responses: {
+    200: jsonResponse("The sermon", publicSermonDto),
+    400: problemResponse("The locale is not valid"),
+    401: problemResponse(
+      "The site key is missing, invalid or not for this church",
+    ),
+    404: problemResponse("There is no published sermon with that slug"),
+  },
+});
+
+const liveRoute = createRoute({
+  method: "get",
+  path: "/{churchSlug}/live",
+  tags: ["sermons"],
+  summary:
+    "Whether the church's channel is streaming right now. Always 200: not live when there is no channel or no platform key, and also when the video platform cannot answer (then cached for 15 seconds instead of 60).",
+  middleware: [requireSiteKey],
+  request: { params: churchParams },
+  responses: {
+    200: jsonResponse("The live status", publicLiveDto),
+    401: problemResponse(
+      "The site key is missing, invalid or not for this church",
+    ),
+  },
+});
+
 /** One bucket per forwarded visitor address; the web forwards the visitor's, not its own. */
 const POST_VIEWS_RATE_LIMIT = {
   name: "post-views",
@@ -372,6 +447,34 @@ export const publicRoutes = createRouter()
     });
     c.header("Cache-Control", PUBLIC_CACHE_CONTROL);
     return c.json(calendar, 200);
+  })
+  .openapi(sermonsRoute, async (c) => {
+    const { organizationId } = c.get("ctx");
+    const index = await getPublicSermonIndex({
+      organizationId: organizationId as string,
+      requestedLocale: c.req.valid("query").locale,
+    });
+    c.header("Cache-Control", PUBLIC_CACHE_CONTROL);
+    return c.json(index, 200);
+  })
+  .openapi(sermonRoute, async (c) => {
+    const { organizationId } = c.get("ctx");
+    const sermon = await getPublicSermon({
+      organizationId: organizationId as string,
+      slug: c.req.valid("param").slug,
+      requestedLocale: c.req.valid("query").locale,
+    });
+    c.header("Cache-Control", PUBLIC_CACHE_CONTROL);
+    return c.json(sermon, 200);
+  })
+  .openapi(liveRoute, async (c) => {
+    const { organizationId } = c.get("ctx");
+    const { live, degraded } = await getPublicLive(organizationId as string);
+    c.header(
+      "Cache-Control",
+      degraded ? PUBLIC_LIVE_DEGRADED_CACHE_CONTROL : PUBLIC_LIVE_CACHE_CONTROL,
+    );
+    return c.json(live, 200);
   })
   .openapi(postViewRoute, async (c) => {
     const { organizationId } = c.get("ctx");

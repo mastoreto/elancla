@@ -11,6 +11,7 @@ const CONTENT_TYPE_LABELS: Record<InboxItemDto["contentType"], string> = {
   ministry: "Perfil de ministerio",
   "simple-page": "Página del sitio",
   event: "Evento del calendario",
+  sermon: "Sermón",
 };
 
 const editorialInboxBellEditorialPage = {

@@ -110,6 +110,18 @@ export const AUDIT_ACTIONS = {
     settingsUpdated: "calendarReminder.settingsUpdated",
     sent: "calendarReminder.sent",
   },
+  sermon: {
+    created: "sermon.created",
+    imported: "sermon.imported",
+    deleted: "sermon.deleted",
+    platformRefreshed: "sermon.platformRefreshed",
+  },
+  sermonSeries: {
+    created: "sermonSeries.created",
+    updated: "sermonSeries.updated",
+    deleted: "sermonSeries.deleted",
+    imported: "sermonSeries.imported",
+  },
   series: {
     created: "series.created",
     updated: "series.updated",

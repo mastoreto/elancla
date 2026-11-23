@@ -1,0 +1,1 @@
+export { toPlatformLinkDto } from "./toPlatformLinkDto";

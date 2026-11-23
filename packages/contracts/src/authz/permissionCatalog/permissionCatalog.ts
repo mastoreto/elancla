@@ -97,6 +97,18 @@ export const PERMISSION_CATALOG = {
     actions: CRUD_AND_PUBLISH,
     scopes: ALL_ONLY,
   },
+  // Sermons go through the editorial workflow; their series are edited directly (with audit).
+  sermons: {
+    resource: "content.sermons",
+    actions: CRUD_AND_PUBLISH,
+    scopes: ALL_ONLY,
+  },
+  // Podcast episodes go through the editorial workflow; shows are edited directly (with audit).
+  podcasts: {
+    resource: "content.podcasts",
+    actions: CRUD_AND_PUBLISH,
+    scopes: ALL_ONLY,
+  },
   // Internal events are visible only to the roles of their audience, and only with this permission.
   calendarInternal: {
     resource: "calendar.internal",

@@ -28,6 +28,12 @@ import {
 import { pagesRoutes } from "./modules/pages";
 import { peopleRoutes } from "./modules/people";
 import { publicRoutes } from "./modules/public";
+import {
+  platformsInternalRoutes,
+  platformsRoutes,
+  sermonSeriesRoutes,
+  sermonsRoutes,
+} from "./modules/sermons";
 import { siteRoutes } from "./modules/site";
 import { siteKeysRoutes } from "./modules/siteKeys";
 import { visitRoutes } from "./modules/visit";
@@ -74,10 +80,22 @@ const calendarRoutes = createRouter()
   .route("/", remindersRoutes)
   .route("/", calendarInternalRoutes);
 
+/**
+ * The sermon routes have their own type for the same reason as the calendar: chained into
+ * `routes` they push `hc<AppType>` over the instantiation depth limit. The CRM sermon pages use
+ * `hc<SermonsAppType>`.
+ */
+const sermonRoutes = createRouter()
+  .route("/", sermonsRoutes)
+  .route("/", sermonSeriesRoutes)
+  .route("/", platformsRoutes)
+  .route("/", platformsInternalRoutes);
+
 // Better Auth is mounted next to the typed routes but kept out of `AppType`: it has its own client.
 export const app = createApp()
   .route("/", routes)
   .route("/", calendarRoutes)
+  .route("/", sermonRoutes)
   .route("/public/v1", publicRoutes)
   .route("/", createAuthRouter());
 
@@ -88,3 +106,4 @@ if (process.env.NODE_ENV !== "production") {
 
 export type AppType = typeof routes;
 export type CalendarAppType = typeof calendarRoutes;
+export type SermonsAppType = typeof sermonRoutes;

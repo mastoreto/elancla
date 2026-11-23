@@ -4825,6 +4825,2218 @@
         }
       }
     },
+    "/{churchSlug}/sermons": {
+      "get": {
+        "tags": [
+          "sermons"
+        ],
+        "summary": "The sermons index: published sermons, featured, series, preachers and cited books.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "churchSlug",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z]{2}(-[A-Z]{2})?$"
+            },
+            "required": false,
+            "name": "locale",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The sermons index",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "locale": {
+                      "type": "string"
+                    },
+                    "sermons": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "slug": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "summary": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "locale": {
+                            "type": "string"
+                          },
+                          "preachedOn": {
+                            "type": "string"
+                          },
+                          "videoId": {
+                            "type": "string"
+                          },
+                          "durationSeconds": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ],
+                            "minimum": 0
+                          },
+                          "cover": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "enum": [
+                                      "image"
+                                    ]
+                                  },
+                                  "images": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "url": {
+                                          "type": "string"
+                                        },
+                                        "width": {
+                                          "type": "integer",
+                                          "exclusiveMinimum": 0
+                                        },
+                                        "height": {
+                                          "type": "integer",
+                                          "exclusiveMinimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "url",
+                                        "width",
+                                        "height"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "minItems": 1
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "images"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "enum": [
+                                      "thumbnail"
+                                    ]
+                                  },
+                                  "url": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "url"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "series": {
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "properties": {
+                              "slug": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "order": {
+                                "type": "integer",
+                                "minimum": 1
+                              }
+                            },
+                            "required": [
+                              "slug",
+                              "title",
+                              "order"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "preacher": {
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "name"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "passages": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "book": {
+                                  "type": "string",
+                                  "enum": [
+                                    "Gen",
+                                    "Exod",
+                                    "Lev",
+                                    "Num",
+                                    "Deut",
+                                    "Josh",
+                                    "Judg",
+                                    "Ruth",
+                                    "1Sam",
+                                    "2Sam",
+                                    "1Kgs",
+                                    "2Kgs",
+                                    "1Chr",
+                                    "2Chr",
+                                    "Ezra",
+                                    "Neh",
+                                    "Esth",
+                                    "Job",
+                                    "Ps",
+                                    "Prov",
+                                    "Eccl",
+                                    "Song",
+                                    "Isa",
+                                    "Jer",
+                                    "Lam",
+                                    "Ezek",
+                                    "Dan",
+                                    "Hos",
+                                    "Joel",
+                                    "Amos",
+                                    "Obad",
+                                    "Jonah",
+                                    "Mic",
+                                    "Nah",
+                                    "Hab",
+                                    "Zeph",
+                                    "Hag",
+                                    "Zech",
+                                    "Mal",
+                                    "Matt",
+                                    "Mark",
+                                    "Luke",
+                                    "John",
+                                    "Acts",
+                                    "Rom",
+                                    "1Cor",
+                                    "2Cor",
+                                    "Gal",
+                                    "Eph",
+                                    "Phil",
+                                    "Col",
+                                    "1Thess",
+                                    "2Thess",
+                                    "1Tim",
+                                    "2Tim",
+                                    "Titus",
+                                    "Phlm",
+                                    "Heb",
+                                    "Jas",
+                                    "1Pet",
+                                    "2Pet",
+                                    "1John",
+                                    "2John",
+                                    "3John",
+                                    "Jude",
+                                    "Rev"
+                                  ]
+                                },
+                                "chapter": {
+                                  "type": "integer",
+                                  "minimum": 1
+                                },
+                                "verseFrom": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ],
+                                  "minimum": 1
+                                },
+                                "chapterTo": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ],
+                                  "minimum": 1
+                                },
+                                "verseTo": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ],
+                                  "minimum": 1
+                                }
+                              },
+                              "required": [
+                                "book",
+                                "chapter",
+                                "verseFrom",
+                                "chapterTo",
+                                "verseTo"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "tags": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "slug",
+                          "title",
+                          "summary",
+                          "locale",
+                          "preachedOn",
+                          "videoId",
+                          "durationSeconds",
+                          "cover",
+                          "series",
+                          "preacher",
+                          "passages",
+                          "tags"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "featured": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "slug": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "summary": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "locale": {
+                          "type": "string"
+                        },
+                        "preachedOn": {
+                          "type": "string"
+                        },
+                        "videoId": {
+                          "type": "string"
+                        },
+                        "durationSeconds": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "cover": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "kind": {
+                                  "type": "string",
+                                  "enum": [
+                                    "image"
+                                  ]
+                                },
+                                "images": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "url": {
+                                        "type": "string"
+                                      },
+                                      "width": {
+                                        "type": "integer",
+                                        "exclusiveMinimum": 0
+                                      },
+                                      "height": {
+                                        "type": "integer",
+                                        "exclusiveMinimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "url",
+                                      "width",
+                                      "height"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "minItems": 1
+                                }
+                              },
+                              "required": [
+                                "kind",
+                                "images"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "kind": {
+                                  "type": "string",
+                                  "enum": [
+                                    "thumbnail"
+                                  ]
+                                },
+                                "url": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "kind",
+                                "url"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "series": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "slug": {
+                              "type": "string"
+                            },
+                            "title": {
+                              "type": "string"
+                            },
+                            "order": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          },
+                          "required": [
+                            "slug",
+                            "title",
+                            "order"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "preacher": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "passages": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "book": {
+                                "type": "string",
+                                "enum": [
+                                  "Gen",
+                                  "Exod",
+                                  "Lev",
+                                  "Num",
+                                  "Deut",
+                                  "Josh",
+                                  "Judg",
+                                  "Ruth",
+                                  "1Sam",
+                                  "2Sam",
+                                  "1Kgs",
+                                  "2Kgs",
+                                  "1Chr",
+                                  "2Chr",
+                                  "Ezra",
+                                  "Neh",
+                                  "Esth",
+                                  "Job",
+                                  "Ps",
+                                  "Prov",
+                                  "Eccl",
+                                  "Song",
+                                  "Isa",
+                                  "Jer",
+                                  "Lam",
+                                  "Ezek",
+                                  "Dan",
+                                  "Hos",
+                                  "Joel",
+                                  "Amos",
+                                  "Obad",
+                                  "Jonah",
+                                  "Mic",
+                                  "Nah",
+                                  "Hab",
+                                  "Zeph",
+                                  "Hag",
+                                  "Zech",
+                                  "Mal",
+                                  "Matt",
+                                  "Mark",
+                                  "Luke",
+                                  "John",
+                                  "Acts",
+                                  "Rom",
+                                  "1Cor",
+                                  "2Cor",
+                                  "Gal",
+                                  "Eph",
+                                  "Phil",
+                                  "Col",
+                                  "1Thess",
+                                  "2Thess",
+                                  "1Tim",
+                                  "2Tim",
+                                  "Titus",
+                                  "Phlm",
+                                  "Heb",
+                                  "Jas",
+                                  "1Pet",
+                                  "2Pet",
+                                  "1John",
+                                  "2John",
+                                  "3John",
+                                  "Jude",
+                                  "Rev"
+                                ]
+                              },
+                              "chapter": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "verseFrom": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ],
+                                "minimum": 1
+                              },
+                              "chapterTo": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ],
+                                "minimum": 1
+                              },
+                              "verseTo": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ],
+                                "minimum": 1
+                              }
+                            },
+                            "required": [
+                              "book",
+                              "chapter",
+                              "verseFrom",
+                              "chapterTo",
+                              "verseTo"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "slug",
+                        "title",
+                        "summary",
+                        "locale",
+                        "preachedOn",
+                        "videoId",
+                        "durationSeconds",
+                        "cover",
+                        "series",
+                        "preacher",
+                        "passages",
+                        "tags"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "series": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "slug": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "cover": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "enum": [
+                                      "image"
+                                    ]
+                                  },
+                                  "images": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "url": {
+                                          "type": "string"
+                                        },
+                                        "width": {
+                                          "type": "integer",
+                                          "exclusiveMinimum": 0
+                                        },
+                                        "height": {
+                                          "type": "integer",
+                                          "exclusiveMinimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "url",
+                                        "width",
+                                        "height"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "minItems": 1
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "images"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "enum": [
+                                      "thumbnail"
+                                    ]
+                                  },
+                                  "url": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "url"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "count": {
+                            "type": "integer",
+                            "minimum": 1
+                          },
+                          "firstPreachedOn": {
+                            "type": "string"
+                          },
+                          "lastPreachedOn": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "slug",
+                          "title",
+                          "description",
+                          "cover",
+                          "count",
+                          "firstPreachedOn",
+                          "lastPreachedOn"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "preachers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "minimum": 1
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "count"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "books": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "book": {
+                            "type": "string",
+                            "enum": [
+                              "Gen",
+                              "Exod",
+                              "Lev",
+                              "Num",
+                              "Deut",
+                              "Josh",
+                              "Judg",
+                              "Ruth",
+                              "1Sam",
+                              "2Sam",
+                              "1Kgs",
+                              "2Kgs",
+                              "1Chr",
+                              "2Chr",
+                              "Ezra",
+                              "Neh",
+                              "Esth",
+                              "Job",
+                              "Ps",
+                              "Prov",
+                              "Eccl",
+                              "Song",
+                              "Isa",
+                              "Jer",
+                              "Lam",
+                              "Ezek",
+                              "Dan",
+                              "Hos",
+                              "Joel",
+                              "Amos",
+                              "Obad",
+                              "Jonah",
+                              "Mic",
+                              "Nah",
+                              "Hab",
+                              "Zeph",
+                              "Hag",
+                              "Zech",
+                              "Mal",
+                              "Matt",
+                              "Mark",
+                              "Luke",
+                              "John",
+                              "Acts",
+                              "Rom",
+                              "1Cor",
+                              "2Cor",
+                              "Gal",
+                              "Eph",
+                              "Phil",
+                              "Col",
+                              "1Thess",
+                              "2Thess",
+                              "1Tim",
+                              "2Tim",
+                              "Titus",
+                              "Phlm",
+                              "Heb",
+                              "Jas",
+                              "1Pet",
+                              "2Pet",
+                              "1John",
+                              "2John",
+                              "3John",
+                              "Jude",
+                              "Rev"
+                            ]
+                          },
+                          "count": {
+                            "type": "integer",
+                            "minimum": 1
+                          }
+                        },
+                        "required": [
+                          "book",
+                          "count"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "locale",
+                    "sermons",
+                    "featured",
+                    "series",
+                    "preachers",
+                    "books"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The locale is not valid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The site key is missing, invalid or not for this church",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The church was not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{churchSlug}/sermons/{slug}": {
+      "get": {
+        "tags": [
+          "sermons"
+        ],
+        "summary": "A published sermon by its slug (in any of its languages), in the requested language.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "churchSlug",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "slug",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z]{2}(-[A-Z]{2})?$"
+            },
+            "required": false,
+            "name": "locale",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The sermon",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "slug": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "summary": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "seoTitle": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "seoDescription": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "locale": {
+                      "type": "string"
+                    },
+                    "preachedOn": {
+                      "type": "string"
+                    },
+                    "videoId": {
+                      "type": "string"
+                    },
+                    "durationSeconds": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "uploadedAt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "modifiedAt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "cover": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "image"
+                              ]
+                            },
+                            "images": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "url": {
+                                    "type": "string"
+                                  },
+                                  "width": {
+                                    "type": "integer",
+                                    "exclusiveMinimum": 0
+                                  },
+                                  "height": {
+                                    "type": "integer",
+                                    "exclusiveMinimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "url",
+                                  "width",
+                                  "height"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 1
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "images"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "thumbnail"
+                              ]
+                            },
+                            "url": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "url"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "preacher": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "passages": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "book": {
+                            "type": "string",
+                            "enum": [
+                              "Gen",
+                              "Exod",
+                              "Lev",
+                              "Num",
+                              "Deut",
+                              "Josh",
+                              "Judg",
+                              "Ruth",
+                              "1Sam",
+                              "2Sam",
+                              "1Kgs",
+                              "2Kgs",
+                              "1Chr",
+                              "2Chr",
+                              "Ezra",
+                              "Neh",
+                              "Esth",
+                              "Job",
+                              "Ps",
+                              "Prov",
+                              "Eccl",
+                              "Song",
+                              "Isa",
+                              "Jer",
+                              "Lam",
+                              "Ezek",
+                              "Dan",
+                              "Hos",
+                              "Joel",
+                              "Amos",
+                              "Obad",
+                              "Jonah",
+                              "Mic",
+                              "Nah",
+                              "Hab",
+                              "Zeph",
+                              "Hag",
+                              "Zech",
+                              "Mal",
+                              "Matt",
+                              "Mark",
+                              "Luke",
+                              "John",
+                              "Acts",
+                              "Rom",
+                              "1Cor",
+                              "2Cor",
+                              "Gal",
+                              "Eph",
+                              "Phil",
+                              "Col",
+                              "1Thess",
+                              "2Thess",
+                              "1Tim",
+                              "2Tim",
+                              "Titus",
+                              "Phlm",
+                              "Heb",
+                              "Jas",
+                              "1Pet",
+                              "2Pet",
+                              "1John",
+                              "2John",
+                              "3John",
+                              "Jude",
+                              "Rev"
+                            ]
+                          },
+                          "chapter": {
+                            "type": "integer",
+                            "minimum": 1
+                          },
+                          "verseFrom": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ],
+                            "minimum": 1
+                          },
+                          "chapterTo": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ],
+                            "minimum": 1
+                          },
+                          "verseTo": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ],
+                            "minimum": 1
+                          }
+                        },
+                        "required": [
+                          "book",
+                          "chapter",
+                          "verseFrom",
+                          "chapterTo",
+                          "verseTo"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "preacherNotes": {},
+                    "outline": {},
+                    "attachments": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "url": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "sizeBytes": {
+                            "type": "integer",
+                            "minimum": 0
+                          }
+                        },
+                        "required": [
+                          "url",
+                          "name",
+                          "sizeBytes"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "series": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "slug": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "order": {
+                          "type": "integer",
+                          "minimum": 1
+                        }
+                      },
+                      "required": [
+                        "slug",
+                        "title",
+                        "order"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "previous": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "slug": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "summary": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "locale": {
+                          "type": "string"
+                        },
+                        "preachedOn": {
+                          "type": "string"
+                        },
+                        "videoId": {
+                          "type": "string"
+                        },
+                        "durationSeconds": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "cover": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "kind": {
+                                  "type": "string",
+                                  "enum": [
+                                    "image"
+                                  ]
+                                },
+                                "images": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "url": {
+                                        "type": "string"
+                                      },
+                                      "width": {
+                                        "type": "integer",
+                                        "exclusiveMinimum": 0
+                                      },
+                                      "height": {
+                                        "type": "integer",
+                                        "exclusiveMinimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "url",
+                                      "width",
+                                      "height"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "minItems": 1
+                                }
+                              },
+                              "required": [
+                                "kind",
+                                "images"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "kind": {
+                                  "type": "string",
+                                  "enum": [
+                                    "thumbnail"
+                                  ]
+                                },
+                                "url": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "kind",
+                                "url"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "series": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "slug": {
+                              "type": "string"
+                            },
+                            "title": {
+                              "type": "string"
+                            },
+                            "order": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          },
+                          "required": [
+                            "slug",
+                            "title",
+                            "order"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "preacher": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "passages": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "book": {
+                                "type": "string",
+                                "enum": [
+                                  "Gen",
+                                  "Exod",
+                                  "Lev",
+                                  "Num",
+                                  "Deut",
+                                  "Josh",
+                                  "Judg",
+                                  "Ruth",
+                                  "1Sam",
+                                  "2Sam",
+                                  "1Kgs",
+                                  "2Kgs",
+                                  "1Chr",
+                                  "2Chr",
+                                  "Ezra",
+                                  "Neh",
+                                  "Esth",
+                                  "Job",
+                                  "Ps",
+                                  "Prov",
+                                  "Eccl",
+                                  "Song",
+                                  "Isa",
+                                  "Jer",
+                                  "Lam",
+                                  "Ezek",
+                                  "Dan",
+                                  "Hos",
+                                  "Joel",
+                                  "Amos",
+                                  "Obad",
+                                  "Jonah",
+                                  "Mic",
+                                  "Nah",
+                                  "Hab",
+                                  "Zeph",
+                                  "Hag",
+                                  "Zech",
+                                  "Mal",
+                                  "Matt",
+                                  "Mark",
+                                  "Luke",
+                                  "John",
+                                  "Acts",
+                                  "Rom",
+                                  "1Cor",
+                                  "2Cor",
+                                  "Gal",
+                                  "Eph",
+                                  "Phil",
+                                  "Col",
+                                  "1Thess",
+                                  "2Thess",
+                                  "1Tim",
+                                  "2Tim",
+                                  "Titus",
+                                  "Phlm",
+                                  "Heb",
+                                  "Jas",
+                                  "1Pet",
+                                  "2Pet",
+                                  "1John",
+                                  "2John",
+                                  "3John",
+                                  "Jude",
+                                  "Rev"
+                                ]
+                              },
+                              "chapter": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "verseFrom": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ],
+                                "minimum": 1
+                              },
+                              "chapterTo": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ],
+                                "minimum": 1
+                              },
+                              "verseTo": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ],
+                                "minimum": 1
+                              }
+                            },
+                            "required": [
+                              "book",
+                              "chapter",
+                              "verseFrom",
+                              "chapterTo",
+                              "verseTo"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "slug",
+                        "title",
+                        "summary",
+                        "locale",
+                        "preachedOn",
+                        "videoId",
+                        "durationSeconds",
+                        "cover",
+                        "series",
+                        "preacher",
+                        "passages",
+                        "tags"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "next": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "slug": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "summary": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "locale": {
+                          "type": "string"
+                        },
+                        "preachedOn": {
+                          "type": "string"
+                        },
+                        "videoId": {
+                          "type": "string"
+                        },
+                        "durationSeconds": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "cover": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "kind": {
+                                  "type": "string",
+                                  "enum": [
+                                    "image"
+                                  ]
+                                },
+                                "images": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "url": {
+                                        "type": "string"
+                                      },
+                                      "width": {
+                                        "type": "integer",
+                                        "exclusiveMinimum": 0
+                                      },
+                                      "height": {
+                                        "type": "integer",
+                                        "exclusiveMinimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "url",
+                                      "width",
+                                      "height"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "minItems": 1
+                                }
+                              },
+                              "required": [
+                                "kind",
+                                "images"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "kind": {
+                                  "type": "string",
+                                  "enum": [
+                                    "thumbnail"
+                                  ]
+                                },
+                                "url": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "kind",
+                                "url"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "series": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "slug": {
+                              "type": "string"
+                            },
+                            "title": {
+                              "type": "string"
+                            },
+                            "order": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          },
+                          "required": [
+                            "slug",
+                            "title",
+                            "order"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "preacher": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "passages": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "book": {
+                                "type": "string",
+                                "enum": [
+                                  "Gen",
+                                  "Exod",
+                                  "Lev",
+                                  "Num",
+                                  "Deut",
+                                  "Josh",
+                                  "Judg",
+                                  "Ruth",
+                                  "1Sam",
+                                  "2Sam",
+                                  "1Kgs",
+                                  "2Kgs",
+                                  "1Chr",
+                                  "2Chr",
+                                  "Ezra",
+                                  "Neh",
+                                  "Esth",
+                                  "Job",
+                                  "Ps",
+                                  "Prov",
+                                  "Eccl",
+                                  "Song",
+                                  "Isa",
+                                  "Jer",
+                                  "Lam",
+                                  "Ezek",
+                                  "Dan",
+                                  "Hos",
+                                  "Joel",
+                                  "Amos",
+                                  "Obad",
+                                  "Jonah",
+                                  "Mic",
+                                  "Nah",
+                                  "Hab",
+                                  "Zeph",
+                                  "Hag",
+                                  "Zech",
+                                  "Mal",
+                                  "Matt",
+                                  "Mark",
+                                  "Luke",
+                                  "John",
+                                  "Acts",
+                                  "Rom",
+                                  "1Cor",
+                                  "2Cor",
+                                  "Gal",
+                                  "Eph",
+                                  "Phil",
+                                  "Col",
+                                  "1Thess",
+                                  "2Thess",
+                                  "1Tim",
+                                  "2Tim",
+                                  "Titus",
+                                  "Phlm",
+                                  "Heb",
+                                  "Jas",
+                                  "1Pet",
+                                  "2Pet",
+                                  "1John",
+                                  "2John",
+                                  "3John",
+                                  "Jude",
+                                  "Rev"
+                                ]
+                              },
+                              "chapter": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "verseFrom": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ],
+                                "minimum": 1
+                              },
+                              "chapterTo": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ],
+                                "minimum": 1
+                              },
+                              "verseTo": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ],
+                                "minimum": 1
+                              }
+                            },
+                            "required": [
+                              "book",
+                              "chapter",
+                              "verseFrom",
+                              "chapterTo",
+                              "verseTo"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "slug",
+                        "title",
+                        "summary",
+                        "locale",
+                        "preachedOn",
+                        "videoId",
+                        "durationSeconds",
+                        "cover",
+                        "series",
+                        "preacher",
+                        "passages",
+                        "tags"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "alternates": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "slug",
+                    "title",
+                    "summary",
+                    "seoTitle",
+                    "seoDescription",
+                    "locale",
+                    "preachedOn",
+                    "videoId",
+                    "durationSeconds",
+                    "uploadedAt",
+                    "modifiedAt",
+                    "cover",
+                    "preacher",
+                    "passages",
+                    "tags",
+                    "preacherNotes",
+                    "outline",
+                    "attachments",
+                    "series",
+                    "previous",
+                    "next",
+                    "alternates"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The locale is not valid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The site key is missing, invalid or not for this church",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "There is no published sermon with that slug",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{churchSlug}/live": {
+      "get": {
+        "tags": [
+          "sermons"
+        ],
+        "summary": "Whether the church's channel is streaming right now. Always 200: not live when there is no channel or no platform key, and also when the video platform cannot answer (then cached for 15 seconds instead of 60).",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "churchSlug",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The live status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "live": {
+                          "type": "boolean",
+                          "enum": [
+                            false
+                          ]
+                        }
+                      },
+                      "required": [
+                        "live"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "live": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        },
+                        "videoId": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "live",
+                        "videoId",
+                        "title"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The site key is missing, invalid or not for this church",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "message"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "status",
+                    "code",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/{churchSlug}/posts/{slug}/views": {
       "post": {
         "tags": [

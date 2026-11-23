@@ -11,6 +11,7 @@ import { seedCalendarEvents } from "./seedCalendarEvents";
 import { seedMinistries } from "./seedMinistries";
 import { seedPeople } from "./seedPeople";
 import { seedRoles } from "./seedRoles";
+import { seedSermons } from "./seedSermons";
 import { seedSimplePages } from "./seedSimplePages";
 import { seedVisit } from "./seedVisit";
 
@@ -54,6 +55,7 @@ async function seed(): Promise<void> {
   await seedBlog(db, organization.id);
   await seedCalendar(db, organization.id);
   await seedCalendarEvents(db, organization.id);
+  await seedSermons(db, organization.id);
 
   console.info(`Seeded organization "${organization.slug}".`);
 }
