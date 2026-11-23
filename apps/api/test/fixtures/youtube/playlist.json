@@ -1,0 +1,53 @@
+{
+  "kind": "youtube#playlistListResponse",
+  "etag": "recorded",
+  "pageInfo": {
+    "totalResults": 1,
+    "resultsPerPage": 1
+  },
+  "items": [
+    {
+      "kind": "youtube#playlist",
+      "etag": "etag-pl",
+      "id": "PLm4Zk8Qe2Vt7Hn0Ba5Rw3Ys6Ju9Cd1Fg",
+      "snippet": {
+        "publishedAt": "2026-09-01T12:00:00Z",
+        "channelId": "UCqQ0ff1ineCh4nnelXyZ_93",
+        "title": "Firmes en la tormenta",
+        "description": "Serie sobre la fe en tiempos difíciles.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/Xr2hP9vKq1M/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "Iglesia El Ancla",
+        "localized": {
+          "title": "Firmes en la tormenta",
+          "description": "Serie sobre la fe en tiempos difíciles."
+        }
+      }
+    }
+  ]
+}

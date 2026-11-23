@@ -9,6 +9,9 @@ const apiEnvSchema = z.object({
   // Empty or missing disables Google sign-in, so local work and tests do not need credentials.
   GOOGLE_CLIENT_ID: z.string().default(""),
   GOOGLE_CLIENT_SECRET: z.string().default(""),
+  // Empty or missing disables the video platform (`getVideoPlatform()` is null): lookup answers
+  // 503 and the live check says "not live".
+  YOUTUBE_API_KEY: z.string().default(""),
   SMTP_URL: z.string().min(1),
   MAIL_FROM: z.string().min(1),
   // Secret of the anonymous post-view hash (HMAC of day + ip + user agent).
