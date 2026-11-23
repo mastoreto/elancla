@@ -44,6 +44,23 @@ describe("editorial presets", () => {
   });
 });
 
+describe("sermons and podcasts presets", () => {
+  test("only the content editor manages sermons and podcasts", () => {
+    for (const resource of ["content.sermons", "content.podcasts"]) {
+      const holders = SYSTEM_ROLE_PRESETS.filter((preset) =>
+        preset.grants.some((g) => g.resource === resource),
+      ).map((preset) => preset.key);
+      expect(holders).toEqual(["content-editor"]);
+    }
+    const editor = SYSTEM_ROLE_PRESETS.find((p) => p.key === "content-editor");
+    const publishers = editor?.grants
+      .filter((g) => g.action === "publish")
+      .map((g) => g.resource);
+    expect(publishers).toContain("content.sermons");
+    expect(publishers).toContain("content.podcasts");
+  });
+});
+
 describe("institutional site presets", () => {
   test("the content editor manages settings, people, visit and pages", () => {
     const editor = SYSTEM_ROLE_PRESETS.find((p) => p.key === "content-editor");

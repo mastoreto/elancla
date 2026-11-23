@@ -5,6 +5,7 @@ import {
   ministrySnapshot,
   PERMISSIONS,
   type Permission,
+  sermonSnapshot,
   simplePageSnapshot,
 } from "@ancla/contracts";
 import type { EditorialContentType, Prisma } from "@ancla/db";
@@ -160,6 +161,21 @@ export const EDITORIAL_TYPES: Record<
     entitiesVisibleTo: eventsVisibleTo,
     usersWhoCanSee: eventUsersWhoCanSee,
     beforeGoLive: eventBeforeGoLive,
+    validateSnapshot: validateSnapshotLocales,
+  },
+  // `entityExists` and `beforeGoLive` arrive with the sermons module.
+  sermon: {
+    contentType: "SERMON",
+    param: "sermon",
+    label: "un sermón",
+    permissions: {
+      view: PERMISSIONS.sermons.view,
+      edit: PERMISSIONS.sermons.edit,
+      publish: PERMISSIONS.sermons.publish,
+    },
+    ministryScoped: false,
+    snapshotSchema: sermonSnapshot,
+    crmPath: (entityId) => `/sermons/${entityId}`,
     validateSnapshot: validateSnapshotLocales,
   },
 };

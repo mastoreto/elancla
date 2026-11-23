@@ -1,0 +1,17 @@
+export const SERMON_TITLE_MAX_LENGTH = 140;
+export const SERMON_SLUG_MAX_LENGTH = 80;
+export const SERMON_SUMMARY_MAX_LENGTH = 500;
+export const SERMON_TAGS_MAX_COUNT = 8;
+export const SERMON_TAG_MAX_LENGTH = 40;
+export const SERMON_SEO_TITLE_MAX_LENGTH = 70;
+export const SERMON_SEO_DESCRIPTION_MAX_LENGTH = 160;
+export const SERMON_PASSAGES_MAX_COUNT = 6;
+export const SERMON_ATTACHMENTS_MAX_COUNT = 3;
+export const SERMON_SERIES_ORDER_MAX = 999;
+/** Longest verse count of any chapter (Psalm 119). */
+export const BIBLE_VERSE_MAX = 176;
+
+export const SERMON_SERIES_TITLE_MAX_LENGTH = 80;
+export const SERMON_SERIES_DESCRIPTION_MAX_LENGTH = 600;
+export const SERMON_SERIES_ORDER_MAX_VALUE = 9999;
+export const SERMON_SERIES_PLANNED_COUNT_MAX = 999;

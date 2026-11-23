@@ -39,6 +39,18 @@ describe("updateSiteSettingsBody", () => {
     expect(updateSiteSettingsBody.safeParse(body).success).toBe(false);
   });
 
+  test("accepts a YouTube channel id or null and rejects anything else", () => {
+    const channel = (youtubeChannelId: string | null) =>
+      updateSiteSettingsBody.safeParse({ version: 0, youtubeChannelId })
+        .success;
+    expect(channel("UCabcdefghijklmnopqrstuv")).toBe(true);
+    expect(channel("UC_-bcdefghijklmnopqrst1")).toBe(true);
+    expect(channel(null)).toBe(true);
+    expect(channel("UCshort")).toBe(false);
+    expect(channel("XXabcdefghijklmnopqrstuv")).toBe(false);
+    expect(channel("https://youtube.com/@iglesia")).toBe(false);
+  });
+
   test("rejects a SEO description over 160 characters", () => {
     const body = {
       version: 0,

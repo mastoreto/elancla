@@ -213,6 +213,8 @@
                               "content.visit",
                               "content.pages",
                               "content.events",
+                              "content.sermons",
+                              "content.podcasts",
                               "calendar.internal",
                               "calendar.year",
                               "ministries.profile",
@@ -2065,6 +2067,8 @@
                                 "content.visit",
                                 "content.pages",
                                 "content.events",
+                                "content.sermons",
+                                "content.podcasts",
                                 "calendar.internal",
                                 "calendar.year",
                                 "ministries.profile",
@@ -2105,7 +2109,7 @@
                           ],
                           "additionalProperties": false
                         },
-                        "maxItems": 150
+                        "maxItems": 162
                       }
                     },
                     "required": [
@@ -2292,6 +2296,8 @@
                             "content.visit",
                             "content.pages",
                             "content.events",
+                            "content.sermons",
+                            "content.podcasts",
                             "calendar.internal",
                             "calendar.year",
                             "ministries.profile",
@@ -2332,7 +2338,7 @@
                       ],
                       "additionalProperties": false
                     },
-                    "maxItems": 150
+                    "maxItems": 162
                   }
                 },
                 "required": [
@@ -2404,6 +2410,8 @@
                               "content.visit",
                               "content.pages",
                               "content.events",
+                              "content.sermons",
+                              "content.podcasts",
                               "calendar.internal",
                               "calendar.year",
                               "ministries.profile",
@@ -2444,7 +2452,7 @@
                         ],
                         "additionalProperties": false
                       },
-                      "maxItems": 150
+                      "maxItems": 162
                     }
                   },
                   "required": [
@@ -2761,6 +2769,8 @@
                               "content.visit",
                               "content.pages",
                               "content.events",
+                              "content.sermons",
+                              "content.podcasts",
                               "calendar.internal",
                               "calendar.year",
                               "ministries.profile",
@@ -2801,7 +2811,7 @@
                         ],
                         "additionalProperties": false
                       },
-                      "maxItems": 150
+                      "maxItems": 162
                     }
                   },
                   "required": [
@@ -3053,6 +3063,8 @@
                             "content.visit",
                             "content.pages",
                             "content.events",
+                            "content.sermons",
+                            "content.podcasts",
                             "calendar.internal",
                             "calendar.year",
                             "ministries.profile",
@@ -3093,7 +3105,7 @@
                       ],
                       "additionalProperties": false
                     },
-                    "maxItems": 150
+                    "maxItems": 162
                   }
                 },
                 "required": [
@@ -3165,6 +3177,8 @@
                               "content.visit",
                               "content.pages",
                               "content.events",
+                              "content.sermons",
+                              "content.podcasts",
                               "calendar.internal",
                               "calendar.year",
                               "ministries.profile",
@@ -3205,7 +3219,7 @@
                         ],
                         "additionalProperties": false
                       },
-                      "maxItems": 150
+                      "maxItems": 162
                     }
                   },
                   "required": [
@@ -8743,6 +8757,7 @@
                     "type": "string",
                     "enum": [
                       "contentImage",
+                      "contentDocument",
                       "voucherDocument"
                     ]
                   },
@@ -9010,6 +9025,7 @@
                       "type": "string",
                       "enum": [
                         "contentImage",
+                        "contentDocument",
                         "voucherDocument"
                       ]
                     },
@@ -10577,6 +10593,12 @@
                         "null"
                       ]
                     },
+                    "youtubeChannelId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
                     "sections": {
                       "type": "object",
                       "properties": {
@@ -10685,6 +10707,7 @@
                     "twitter",
                     "spotify",
                     "linkedin",
+                    "youtubeChannelId",
                     "sections",
                     "translations",
                     "locales",
@@ -11036,6 +11059,13 @@
                     "maxLength": 300,
                     "format": "uri"
                   },
+                  "youtubeChannelId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^UC[\\w-]{22}$"
+                  },
                   "sections": {
                     "type": "object",
                     "properties": {
@@ -11250,6 +11280,12 @@
                         "null"
                       ]
                     },
+                    "youtubeChannelId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
                     "sections": {
                       "type": "object",
                       "properties": {
@@ -11358,6 +11394,7 @@
                     "twitter",
                     "spotify",
                     "linkedin",
+                    "youtubeChannelId",
                     "sections",
                     "translations",
                     "locales",
@@ -11687,6 +11724,7 @@
                                 "type": "string",
                                 "enum": [
                                   "contentImage",
+                                  "contentDocument",
                                   "voucherDocument"
                                 ]
                               },
@@ -12220,6 +12258,7 @@
                           "type": "string",
                           "enum": [
                             "contentImage",
+                            "contentDocument",
                             "voucherDocument"
                           ]
                         },
@@ -12738,6 +12777,7 @@
                           "type": "string",
                           "enum": [
                             "contentImage",
+                            "contentDocument",
                             "voucherDocument"
                           ]
                         },
@@ -13331,6 +13371,7 @@
                           "type": "string",
                           "enum": [
                             "contentImage",
+                            "contentDocument",
                             "voucherDocument"
                           ]
                         },
@@ -18183,7 +18224,8 @@
                               "blog-post",
                               "ministry",
                               "simple-page",
-                              "event"
+                              "event",
+                              "sermon"
                             ]
                           },
                           "entityId": {
@@ -18252,7 +18294,8 @@
                               "blog-post",
                               "ministry",
                               "simple-page",
-                              "event"
+                              "event",
+                              "sermon"
                             ]
                           },
                           "entityId": {
@@ -18396,7 +18439,8 @@
                           "blog-post",
                           "ministry",
                           "simple-page",
-                          "event"
+                          "event",
+                          "sermon"
                         ]
                       },
                       "reviewerRoleIds": {
@@ -18572,7 +18616,8 @@
                 "blog-post",
                 "ministry",
                 "simple-page",
-                "event"
+                "event",
+                "sermon"
               ]
             },
             "required": true,
@@ -18645,7 +18690,8 @@
                         "blog-post",
                         "ministry",
                         "simple-page",
-                        "event"
+                        "event",
+                        "sermon"
                       ]
                     },
                     "reviewerRoleIds": {
@@ -18875,7 +18921,8 @@
                 "blog-post",
                 "ministry",
                 "simple-page",
-                "event"
+                "event",
+                "sermon"
               ]
             },
             "required": true,
@@ -19332,7 +19379,8 @@
                 "blog-post",
                 "ministry",
                 "simple-page",
-                "event"
+                "event",
+                "sermon"
               ]
             },
             "required": true,
@@ -19646,7 +19694,8 @@
                 "blog-post",
                 "ministry",
                 "simple-page",
-                "event"
+                "event",
+                "sermon"
               ]
             },
             "required": true,
@@ -20233,7 +20282,8 @@
                 "blog-post",
                 "ministry",
                 "simple-page",
-                "event"
+                "event",
+                "sermon"
               ]
             },
             "required": true,
@@ -20745,7 +20795,8 @@
                 "blog-post",
                 "ministry",
                 "simple-page",
-                "event"
+                "event",
+                "sermon"
               ]
             },
             "required": true,
@@ -21257,7 +21308,8 @@
                 "blog-post",
                 "ministry",
                 "simple-page",
-                "event"
+                "event",
+                "sermon"
               ]
             },
             "required": true,
@@ -21769,7 +21821,8 @@
                 "blog-post",
                 "ministry",
                 "simple-page",
-                "event"
+                "event",
+                "sermon"
               ]
             },
             "required": true,
@@ -22281,7 +22334,8 @@
                 "blog-post",
                 "ministry",
                 "simple-page",
-                "event"
+                "event",
+                "sermon"
               ]
             },
             "required": true,

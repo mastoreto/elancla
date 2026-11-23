@@ -41,6 +41,7 @@ export function toSiteSettingsDto(
     twitter: settings.twitter,
     spotify: settings.spotify,
     linkedin: settings.linkedin,
+    youtubeChannelId: settings.youtubeChannelId,
     sections: resolveSectionStatuses(settings.sectionStatuses),
     translations: Object.fromEntries(
       settings.translations.map((translation) => [
