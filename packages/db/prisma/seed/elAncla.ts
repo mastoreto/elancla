@@ -1,5 +1,6 @@
 // Seed data for the first organization. Site values mirror SITE_FALLBACK in
 // packages/content/src/site.ts so the public site renders the same after the rework.
+import { YOUTUBE_CHANNEL_ID_PATTERN } from "@ancla/contracts";
 
 export const EL_ANCLA_ORGANIZATION = {
   slug: "el-ancla",
@@ -10,6 +11,14 @@ export const EL_ANCLA_ORGANIZATION = {
   locales: ["es", "en", "pt"],
   currencies: ["UYU", "USD"],
 } as const;
+
+/** Only a well-formed channel id from the environment is stored; anything else leaves it unset. */
+function youtubeChannelIdFromEnv(): string | null {
+  const channelId = process.env.YOUTUBE_CHANNEL_ID;
+  return channelId && YOUTUBE_CHANNEL_ID_PATTERN.test(channelId)
+    ? channelId
+    : null;
+}
 
 export const EL_ANCLA_SITE_SETTINGS = {
   name: "Iglesia Bautista El Ancla",
@@ -28,6 +37,7 @@ export const EL_ANCLA_SITE_SETTINGS = {
   youtube: "https://youtube.com/@iglesiaelanclauy",
   instagram: "https://www.instagram.com/iglesiaelancla",
   facebook: "https://www.facebook.com/iglesiabautistaelancla",
+  youtubeChannelId: youtubeChannelIdFromEnv(),
 } as const;
 
 /** Default meta description per locale; hours and address are composed by the web from the data. */
