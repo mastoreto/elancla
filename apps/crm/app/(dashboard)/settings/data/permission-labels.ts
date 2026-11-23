@@ -34,6 +34,14 @@ export const PERMISSION_RESOURCE_INFO: Record<PermissionResource, { label: strin
       label: "Calendario: horarios y eventos",
       hint: "Horarios, lugares, excepciones y eventos",
     },
+    "content.sermons": {
+      label: "Sermones",
+      hint: "Cargar, editar y publicar sermones y sus series",
+    },
+    "content.podcasts": {
+      label: "Podcasts",
+      hint: "Cargar, editar y publicar programas y episodios",
+    },
     "calendar.internal": {
       label: "Calendario: eventos internos",
       hint: "Ver los eventos internos de su audiencia",

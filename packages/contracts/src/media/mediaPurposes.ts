@@ -36,6 +36,13 @@ export const MEDIA_PURPOSES = {
     maxBytes: 15 * BYTES_PER_MEGABYTE,
     uploadPermission: PERMISSIONS.content.create,
   },
+  // Public PDFs attached to content (sermon outlines). Served as they are: no variants.
+  contentDocument: {
+    visibility: "public",
+    contentTypes: ["application/pdf"],
+    maxBytes: 20 * BYTES_PER_MEGABYTE,
+    uploadPermission: PERMISSIONS.sermons.edit,
+  },
   voucherDocument: {
     visibility: "private",
     contentTypes: [

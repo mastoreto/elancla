@@ -30,4 +30,7 @@ export const TENANT_MODELS: ReadonlySet<string> = new Set([
   "CalendarYear",
   "Event",
   "CalendarReminderSettings",
+  "Sermon",
+  "SermonSeries",
+  "PlatformLink",
 ]);

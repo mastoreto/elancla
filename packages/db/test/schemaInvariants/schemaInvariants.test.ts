@@ -23,6 +23,7 @@ const TABLES_WITHOUT_TENANT = new Set([
   "category_translations",
   "ministry_category_translations",
   "series_translations",
+  "sermon_series_translations",
   "schedule_set_translations",
   "recurring_activity_translations",
   "recurring_activity_ministries",
