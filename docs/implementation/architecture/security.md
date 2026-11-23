@@ -125,7 +125,7 @@ Decisiones de origen: D-07, D-08, D-10, D-11, D-16, D-21, D-24, D-25.
 | Cabecera | CRM | Web |
 |---|---|---|
 | `Strict-Transport-Security` | sí | sí |
-| `Content-Security-Policy` | estricta con nonce (generado en `proxy.ts`), `frame-ancestors 'none'`; `connect-src` suma el origen de subida (`S3_PRESIGN_ENDPOINT`) e `img-src` el de `MEDIA_PUBLIC_BASE_URL`, ambos desde env | estricta; orígenes de YouTube/Spotify/media explícitos |
+| `Content-Security-Policy` | estricta con nonce (generado en `proxy.ts`), `frame-ancestors 'none'`; `connect-src` suma el origen de subida (`S3_PRESIGN_ENDPOINT`) e `img-src` el de `MEDIA_PUBLIC_BASE_URL`, ambos desde env | estricta; orígenes de YouTube/Spotify/media explícitos. **Requisito para la web de 1.7c** (la API ya sirve `videoId` y miniaturas): `frame-src https://www.youtube-nocookie.com` (reproductor del sermón) e `img-src https://i.ytimg.com` (miniaturas de YouTube cuando el sermón no tiene portada propia), sin abrir `youtube.com` ni `*.ytimg.com` |
 | `X-Content-Type-Options: nosniff` | sí | sí |
 | `Referrer-Policy: strict-origin-when-cross-origin` | sí | sí |
 | `Permissions-Policy` | todo deshabilitado salvo geolocalización en `/informe` | ya existe en `vercel.json` |
